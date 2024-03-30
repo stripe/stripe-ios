@@ -39,6 +39,9 @@ struct FormSpec: Decodable {
 
         case iban(BaseFieldSpec)
         case sepa_mandate
+
+        case placeholder(PlaceholderSpec)
+
         case unknown(String)
 
         private enum CodingKeys: String, CodingKey {
@@ -77,6 +80,8 @@ struct FormSpec: Decodable {
                 self = .iban(try BaseFieldSpec(from: decoder))
             case "sepa_mandate":
                 self = .sepa_mandate
+            case "placeholder":
+                self = .placeholder(try PlaceholderSpec(from: decoder))
             default:
                 self = .unknown(field_type)
             }
@@ -181,12 +186,12 @@ struct FormSpec: Decodable {
 }
 extension FormSpec {
     static func nextActionSpec(paymentIntent: STPPaymentIntent, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec? {
-        var nextActionSpec: FormSpec.NextActionSpec?
-        if let paymentMethod = paymentIntent.paymentMethod?.paymentSheetPaymentMethodType(),
-           let paymentMethodString = PaymentSheet.PaymentMethodType.string(from: paymentMethod) {
-            nextActionSpec = formSpecProvider.nextActionSpec(for: paymentMethodString)
+        // Don't use LUXE to handle Amazon Pay's next action b/c it requires polling
+        // TODO(porter) Figure out a better way to handle FormSpecPaymentHandler vs STPPaymentHandler
+        guard let paymentMethod = paymentIntent.paymentMethod, paymentMethod.type != .amazonPay else {
+            return nil
         }
-        return nextActionSpec
+        return formSpecProvider.nextActionSpec(for: paymentMethod.type.identifier)
     }
 }
 
@@ -229,6 +234,27 @@ extension FormSpec {
         /// The list of countries to be displayed for this component
         let allowedCountryCodes: [String]?
     }
+
+    struct PlaceholderSpec: Decodable, Equatable {
+        let field: PlaceholderField
+
+        enum CodingKeys: String, CodingKey {
+            case field = "for"
+        }
+
+        enum PlaceholderField: String, Decodable, Equatable {
+            case name
+            case email
+            case phone
+            case billingAddress = "billing_address"
+            case billingAddressWithoutCountry = "billing_address_without_country"
+            case unknown
+
+            init(from decoder: Decoder) throws {
+                self = try .init(rawValue: decoder.singleValueContainer().decode(RawValue.self)) ?? .unknown
+            }
+        }
+    }
 }
 
 extension FormSpec {
@@ -236,6 +262,7 @@ extension FormSpec {
         case ideal_bank = "upe.labels.ideal.bank"
         case eps_bank =  "upe.labels.eps.bank"
         case p24_bank = "upe.labels.p24.bank"
+        case fpx_bank = "upe.labels.fpx.bank"
 
         case nameLabel_given = "upe.labels.name.given"
         case nameLabel_family = "upe.labels.name.family"
@@ -250,6 +277,8 @@ extension FormSpec {
                 return STPLocalizedString("EPS Bank", "Label title for EPS Bank")
             case .p24_bank:
                 return STPLocalizedString("Przelewy24 Bank", "Label title for Przelewy24 Bank")
+            case .fpx_bank:
+                return STPLocalizedString("FPX Bank", "Select a bank dropdown for FPX")
 
             case .nameLabel_given:
                 return String.Localized.given_name

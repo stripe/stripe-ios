@@ -10,16 +10,19 @@ import CoreMedia
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
 
-    func financialConnectionsWebFlow(
-        viewController: FinancialConnectionsWebFlowViewController,
+    func webFlowViewController(
+        _ viewController: FinancialConnectionsWebFlowViewController,
         didFinish result: FinancialConnectionsSheet.Result
+    )
+
+    func webFlowViewController(
+        _ webFlowViewController: UIViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class FinancialConnectionsWebFlowViewController: UIViewController {
 
     // MARK: - Properties
@@ -32,11 +35,22 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
-        let view = ContinueStateView(institutionImageUrl: nil) { [weak self] in
-            guard let self = self else { return }
-            self.startAuthenticationSession(manifest: self.manifest)
-        }
-        return view
+        let continueStateViews = ContinueStateViews(
+            institutionImageUrl: nil,
+            didSelectContinue: { [weak self] in
+                guard let self else { return }
+                if let url = self.lastOpenedNativeURL {
+                    self.redirect(to: url)
+                } else {
+                    self.startAuthenticationSession(manifest: self.manifest)
+                }
+            },
+            didSelectCancel: nil
+        )
+        return PaneLayoutView(
+            contentView: continueStateViews.contentView,
+            footerView: continueStateViews.footerView
+        ).createView()
     }()
 
     /**
@@ -47,6 +61,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private var unprocessedReturnURLParameters: String?
     private var subscribedToURLNotifications = false
     private var subscribedToAppActiveNotifications = false
+    private var lastOpenedNativeURL: URL?
 
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
@@ -63,7 +78,8 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .textDisabled
+        item.tintColor = .iconDefault
+        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
 
@@ -118,27 +134,25 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 
 // MARK: - Helpers
 
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegate(result: FinancialConnectionsSheet.Result) {
-        delegate?.financialConnectionsWebFlow(viewController: self, didFinish: result)
+        delegate?.webFlowViewController(self, didFinish: result)
         delegate = nil  // prevent the delegate from being called again
     }
 
-    @available(iOSApplicationExtension, unavailable)
     private func startAuthenticationSession(
         manifest: FinancialConnectionsSessionManifest,
         additionalQueryParameters: String? = nil
     ) {
         guard authSessionManager == nil else { return }
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.showLoading(true)
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
             .observe(using: { [weak self] (result) in
                 guard let self = self else { return }
-                self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
+                self.loadingView.showLoading(false)
                 switch result {
                 case .success(.success):
                     self.fetchSession()
@@ -147,7 +161,7 @@ extension FinancialConnectionsWebFlowViewController {
                 case .success(.nativeCancelled):
                     self.fetchSession(userDidCancelInNative: true)
                 case .failure(let error):
-                    self.notifyDelegate(result: .failed(error: error))
+                    self.notifyDelegateOfFailure(error: error)
                 case .success(.redirect(url: let url)):
                     self.redirect(to: url)
                 }
@@ -159,18 +173,19 @@ extension FinancialConnectionsWebFlowViewController {
         DispatchQueue.main.async {
             self.continueStateView.isHidden = false
             self.subscribeToURLAndAppActiveNotifications()
+            self.lastOpenedNativeURL = url
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
 
     private func fetchSession(userDidCancelInNative: Bool = false, webCancelled: Bool = false) {
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.showLoading(true)
         loadingView.errorView.isHidden = true
         sessionFetcher
             .fetchSession()
             .observe { [weak self] (result) in
                 guard let self = self else { return }
-                self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
+                self.loadingView.showLoading(false)
                 switch result {
                 case .success(let session):
                     if userDidCancelInNative {
@@ -180,8 +195,12 @@ extension FinancialConnectionsWebFlowViewController {
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
                         {
-                            self.notifyDelegate(result: .completed(session: session))
+                            self.notifyDelegateOfSuccess(session: session)
                         } else {
+                            self.delegate?.webFlowViewController(
+                                self,
+                                didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+                            )
                             self.notifyDelegate(result: .canceled)
                         }
                     } else if webCancelled {
@@ -191,7 +210,7 @@ extension FinancialConnectionsWebFlowViewController {
                             self.notifyDelegate(result: .canceled)
                         }
                     } else {
-                        self.notifyDelegate(result: .completed(session: session))
+                        self.notifyDelegateOfSuccess(session: session)
                     }
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
@@ -199,11 +218,34 @@ extension FinancialConnectionsWebFlowViewController {
                 }
             }
     }
+
+    private func notifyDelegateOfSuccess(session: StripeAPI.FinancialConnectionsSession) {
+        delegate?.webFlowViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .success,
+                metadata: FinancialConnectionsEvent.Metadata(
+                    manualEntry: session.paymentAccount?.isManualEntry ?? false
+                )
+            )
+        )
+        notifyDelegate(result: .completed(session: session))
+    }
+
+    // all failures except custom manual entry failure
+    private func notifyDelegateOfFailure(error: Error) {
+        FinancialConnectionsEvent
+            .events(fromError: error)
+            .forEach { event in
+                delegate?.webFlowViewController(self, didReceiveEvent: event)
+            }
+
+        notifyDelegate(result: .failed(error: error))
+    }
 }
 
 // MARK: - STPURLCallbackListener
 
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsWebFlowViewController: STPURLCallbackListener {
     func handleURLCallback(_ url: URL) -> Bool {
         DispatchQueue.main.async {
@@ -218,7 +260,6 @@ extension FinancialConnectionsWebFlowViewController: STPURLCallbackListener {
 
 // MARK: - UI Helpers
 
-@available(iOSApplicationExtension, unavailable)
 private extension FinancialConnectionsWebFlowViewController {
 
     @objc
@@ -233,7 +274,7 @@ private extension FinancialConnectionsWebFlowViewController {
 
     private func manuallyCloseWebFlowViewController() {
         if let fetchSessionError = fetchSessionError {
-            notifyDelegate(result: .failed(error: fetchSessionError))
+            notifyDelegateOfFailure(error: fetchSessionError)
         } else {
             notifyDelegate(result: .canceled)
         }
@@ -242,7 +283,6 @@ private extension FinancialConnectionsWebFlowViewController {
 
 // MARK: - Authentication restart helpers
 
-@available(iOSApplicationExtension, unavailable)
 private extension FinancialConnectionsWebFlowViewController {
 
     private func restartAuthenticationIfNeeded() {
@@ -257,6 +297,7 @@ private extension FinancialConnectionsWebFlowViewController {
         }
         startAuthenticationSession(manifest: manifest, additionalQueryParameters: parameters)
         unprocessedReturnURLParameters = nil
+        lastOpenedNativeURL = nil
         continueStateView.isHidden = true
         unsubscribeFromNotifications()
     }

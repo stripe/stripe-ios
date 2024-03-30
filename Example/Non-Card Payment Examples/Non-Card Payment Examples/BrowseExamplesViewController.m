@@ -25,6 +25,7 @@
 #import "SofortExampleViewController.h"
 #import "WeChatPayExampleViewController.h"
 #import "EPSExampleViewController.h"
+#import "PayPalExampleViewController.h"
 
 /**
  This view controller presents different examples, each of which demonstrates creating a payment using a different payment method or integration.
@@ -46,7 +47,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 24;
+    return 30;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -123,6 +124,24 @@
             break;
         case 23:
             cell.textLabel.text = @"Cash App Pay";
+            break;
+        case 24:
+            cell.textLabel.text = @"BLIK";
+            break;
+        case 25:
+            cell.textLabel.text = @"PayPal";
+            break;
+        case 26:
+            cell.textLabel.text = @"RevolutPay";
+            break;
+        case 27:
+            cell.textLabel.text = @"Swish";
+            break;
+        case 28:
+            cell.textLabel.text = @"Amazon Pay";
+            break;
+        case 29:
+            cell.textLabel.text = @"Alma";
             break;
     }
     return cell;
@@ -278,6 +297,42 @@
         }
         case 23: {
             CashAppExampleViewController *exampleVC = [CashAppExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 24: {
+            BlikExampleViewController *exampleVC = [BlikExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 25: {
+            PayPalExampleViewController *exampleVC = [PayPalExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 26: {
+            RevolutPayExampleViewController *exampleVC = [RevolutPayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 27: {
+            SwishExampleViewController *exampleVC = [SwishExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 28: {
+            AmazonPayExampleViewController *exampleVC = [AmazonPayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 29: {
+            AlmaExampleViewController *exampleVC = [AlmaExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

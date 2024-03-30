@@ -14,12 +14,8 @@ let HTTPMethodGET = "GET"
 let HTTPMethodDELETE = "DELETE"
 let JSONKeyObject = "object"
 
-/// The shape of this class is only for backwards compatibility with the rest of the codebase.
-///
-/// Ideally, we should do something like:
-/// 1) Use Codable
-/// 2) Define every Stripe API resource explicitly as a Resource { URL, HTTPMethod, ReturnType }
-/// 3) Make this class generic on the Resource
+/// - Note: The shape of this class is only for backwards compatibility with `STPAPIResponseDecodable` public API bindings.
+///         If you're not dealing with `STPAPIResponseDecodable` objects, use STPAPIClient's `get`, `post`, etc. methods.
 @_spi(STP) public class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
     @_spi(STP) public typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) ->
         Void
@@ -48,25 +44,28 @@ let JSONKeyObject = "object"
         )
     }
 
-    @_spi(STP) public class func getWith(
-        _ apiClient: STPAPIClient,
+    /// Async version
+    @_spi(STP) public class func post(
+        with apiClient: STPAPIClient,
         endpoint: String,
-        parameters: [String: Any],
-        completion: @escaping STPAPIResponseBlock
-    ) {
-        self.getWith(
-            apiClient,
-            endpoint: endpoint,
-            additionalHeaders: [:],
-            parameters: parameters,
-            completion: completion
-        )
+        additionalHeaders: [String: String] = [:],
+        parameters: [String: Any]
+    ) async throws -> (ResponseType) {
+        return try await withCheckedThrowingContinuation { continuation in
+            post(with: apiClient, endpoint: endpoint, additionalHeaders: additionalHeaders, parameters: parameters) { responseObject, _, error in
+                guard let responseObject else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    return
+                }
+                continuation.resume(returning: responseObject)
+            }
+        }
     }
 
     @_spi(STP) public class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
-        additionalHeaders: [String: String],
+        additionalHeaders: [String: String] = [:],
         parameters: [String: Any],
         completion: @escaping STPAPIResponseBlock
     ) {
@@ -87,25 +86,28 @@ let JSONKeyObject = "object"
         )
     }
 
-    @_spi(STP) public class func delete(
-        with apiClient: STPAPIClient,
+    /// Async version
+    @_spi(STP) public class func getWith(
+        _ apiClient: STPAPIClient,
         endpoint: String,
-        parameters: [String: Any],
-        completion: @escaping STPAPIResponseBlock
-    ) {
-        self.delete(
-            with: apiClient,
-            endpoint: endpoint,
-            additionalHeaders: [:],
-            parameters: parameters,
-            completion: completion
-        )
+        additionalHeaders: [String: String] = [:],
+        parameters: [String: Any]
+    ) async throws -> ResponseType {
+        return try await withCheckedThrowingContinuation { continuation in
+            getWith(apiClient, endpoint: endpoint, additionalHeaders: additionalHeaders, parameters: parameters) { responseObject, _, error in
+                guard let responseObject else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    return
+                }
+                continuation.resume(returning: responseObject)
+            }
+        }
     }
 
     @_spi(STP) public class func delete(
         with apiClient: STPAPIClient,
         endpoint: String,
-        additionalHeaders: [String: String],
+        additionalHeaders: [String: String] = [:],
         parameters: [String: Any],
         completion: @escaping STPAPIResponseBlock
     ) {
@@ -126,7 +128,7 @@ let JSONKeyObject = "object"
         )
     }
 
-    class func parseResponse<ResponseType: STPAPIResponseDecodable>(
+    class func parseResponse(
         _ response: URLResponse?,
         body: Data?,
         error: Error?,

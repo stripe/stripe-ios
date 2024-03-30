@@ -15,13 +15,17 @@ import UIKit
 extension PaymentSheetFormFactory {
 
     func makeUPI() -> FormElement {
-        let contactInformationElement = makeContactInformation(
-            includeName: configuration.billingDetailsCollectionConfiguration.name == .always,
-            includeEmail: configuration.billingDetailsCollectionConfiguration.email == .always,
-            includePhone: configuration.billingDetailsCollectionConfiguration.phone == .always)
+        let contactInformationElement = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
         let billingAddressElement = configuration.billingDetailsCollectionConfiguration.address == .full
             ? makeBillingAddressSection(countries: nil)
             : nil
+        let phoneElement = contactInformationElement?.elements.compactMap {
+            $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
+        }.first
+        connectBillingDetailsFields(
+            countryElement: nil,
+            addressElement: billingAddressElement,
+            phoneElement: phoneElement)
 
         let allElements: [Element?] = [
             makeUPIHeader(),

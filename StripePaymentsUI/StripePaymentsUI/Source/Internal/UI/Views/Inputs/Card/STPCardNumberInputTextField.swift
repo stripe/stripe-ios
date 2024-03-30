@@ -6,6 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
@@ -24,23 +25,62 @@ import UIKit
         static let loadingIndicatorOffset: CGFloat = 4
     }
 
-    @_spi(STP) public var cardBrand: STPCardBrand {
-        return (validator as! STPCardNumberInputTextFieldValidator).cardBrand
+    var cardBrandState: STPCBCController.BrandState {
+        return (validator as! STPCardNumberInputTextFieldValidator).cardBrandState
+    }
+
+    var brandForCVC: STPCardBrand {
+        return (validator as! STPCardNumberInputTextFieldValidator).cbcController.brandForCVC
+    }
+
+    var preferredNetworks: [STPCardBrand]? {
+        get {
+            return (validator as? STPCardNumberInputTextFieldValidator)?.cbcController.preferredNetworks
+        }
+        set {
+            (validator as? STPCardNumberInputTextFieldValidator)?.cbcController.preferredNetworks = newValue
+        }
+    }
+
+    open override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
+        let pointInBrandImageView = CGPoint(x: brandImageView.bounds.midX, y: brandImageView.bounds.maxY)
+        return self.convert(pointInBrandImageView, from: brandImageView)
+    }
+
+    open override func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let validator = (validator as? STPCardNumberInputTextFieldValidator), validator.cbcController.brandState.isCBC else {
+            // Don't pop a menu if the CBC indicator isn't visible
+            return nil
+        }
+
+        let targetPointInBrandView = brandImageView.convert(location, from: self)
+        let targetRect = brandImageView.bounds
+        if !targetRect.contains(targetPointInBrandView) {
+            // Don't pop a menu outside the brand selector area
+            return nil
+        }
+        return validator.cbcController.contextMenuConfiguration
     }
 
     @_spi(STP) public convenience init(
         inputMode: InputMode = .standard,
-        prefillDetails: STPCardFormView.PrefillDetails? = nil
+        prefillDetails: STPCardFormView.PrefillDetails? = nil,
+        cbcEnabledOverride: Bool? = nil
     ) {
+        let validator = STPCardNumberInputTextFieldValidator(
+            inputMode: inputMode,
+            cardBrand: prefillDetails?.cardBrand,
+            cbcEnabledOverride: cbcEnabledOverride
+        )
         // Don't format for panLocked input mode
         self.init(
             formatter: inputMode == .panLocked
                 ? STPInputTextFieldFormatter() : STPCardNumberInputTextFieldFormatter(),
-            validator: STPCardNumberInputTextFieldValidator(
-                inputMode: inputMode,
-                cardBrand: prefillDetails?.cardBrand
-            )
+            validator: validator
         )
+        validator.cbcController.updateHandler = { [weak self] in
+            self?.updateRightView()
+        }
 
         self.text = prefillDetails?.formattedLast4  // pre-fill last 4 if available
     }
@@ -63,6 +103,11 @@ import UIKit
         textContentType = .creditCardNumber
         addAccessoryViews([brandImageView])
         updateRightView()
+        // Set up CBC menu interactions
+        if #available(iOS 14.0, *) {
+            self.showsMenuAsPrimaryAction = true
+            self.isContextMenuInteractionEnabled = true
+        }
     }
 
     required init?(
@@ -85,7 +130,7 @@ import UIKit
             brandImageView.setCardBrand(.unknown, animated: true)
         case .valid, .incomplete:
             loadingIndicator.removeFromSuperview()
-            brandImageView.setCardBrand(cardBrand, animated: true)
+            brandImageView.setCardBrand(cardBrandState, animated: true)
         case .invalid:
             loadingIndicator.removeFromSuperview()
             brandImageView.setCardBrand(.unknown, animated: true)
@@ -118,6 +163,10 @@ import UIKit
                     }
                 )
             }
+        }
+        if let cardValidator = validator as? STPCardNumberInputTextFieldValidator {
+            let isCBC = cardValidator.cbcController.brandState.isCBC
+            brandImageView.isShowingCBCIndicator = isCBC
         }
     }
 

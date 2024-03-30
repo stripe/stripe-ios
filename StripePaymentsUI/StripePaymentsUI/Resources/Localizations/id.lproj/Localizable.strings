@@ -1,4 +1,4 @@
-"%1$@ account ending in %2$@" = "%1$@ rekening berakhiran dengan %2$@";
+"%1$@ account ending in %2$@" = "Rekening %1$@ berakhiran dengan %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ berakhiran %2$@";
 
@@ -21,6 +21,8 @@
 "Card information" = "Informasi kartu";
 
 "Card number" = "Nomor kartu";
+
+"Confirm your %@" = "Konfirmasikan %@ Anda";
 
 "Invalid data." = "Data tidak valid.";
 

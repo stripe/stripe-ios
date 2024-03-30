@@ -16,7 +16,7 @@
 
 "Free" = "免費";
 
-"Invalid Shipping Address" = "收货地址無效";
+"Invalid Shipping Address" = "收貨地址無效";
 
 "Loading…" = "正在載入...";
 
@@ -32,8 +32,8 @@
 
 "Shipping Method" = "配送方式";
 
-"Use Billing" = "使用帳單地址";
+"Use Billing" = "使用賬單地址";
 
 "Use Delivery" = "使用收貨地址";
 
-"Use Shipping" = "使用收货地址";
+"Use Shipping" = "使用收貨地址";

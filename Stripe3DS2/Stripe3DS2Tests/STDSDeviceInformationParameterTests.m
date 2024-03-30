@@ -200,7 +200,7 @@
 #pragma mark - App ID
 
 - (void)testSDKAppIdentifier {
-    // xctest in Xcode 13 uses the Xcode version for the current app id string, previous versions are empty
+    // xctest in Xcode 13+ uses the Xcode version for the current app id string, previous versions are empty
     NSString *appIdentifierKeyPrefix = @"STDSStripe3DS2AppIdentifierKey";
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] ?: @"";
     NSString *appIdentifierUserDefaultsKey = [appIdentifierKeyPrefix stringByAppendingString:appVersion];

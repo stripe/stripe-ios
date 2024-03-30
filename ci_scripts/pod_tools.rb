@@ -49,14 +49,9 @@ def push
   expected_pod_version = File.open('VERSION', &:readline).strip
 
   PODSPECS.each do |podspec|
-    if get_pod_version(podspec) == expected_pod_version
-      puts "No need to push: #{podspec}.  Latest version is already #{expected_pod_version}"
-    else
-      run_retrying("pod trunk push #{podspec} --synchronous", max_retries: 4)
-      unless $?.success?
-        abort "Unable to push pod #{podspec}.\n"\
-              'If the spec failed to validate due to not finding a compatible version of a pod that was just pushed, wait a few minutes and try again.'
-      end
+    unless push_retrying(podspec, expected_pod_version, max_retries: 4)
+      abort "Unable to push pod #{podspec}.\n"\
+            'If the spec failed to validate due to not finding a compatible version of a pod that was just pushed, wait a few minutes and try again.'
     end
   end
 end
@@ -65,31 +60,32 @@ def capture_retrying(cmd, max_retries: 10)
   retries = 0
   loop do
     stdout, stderr, status = Open3.capture3(cmd)
-    if !status.success? && retries <= max_retries
-      retries += 1
-      delay = [2**retries, 32].min
-      puts "Something went wrong. Trying again in #{delay} seconds..."
-      sleep(delay)
-      puts 'Retrying...'
-    else
-      return stdout, stderr, status
-    end
+    return stdout, stderr, status unless !status.success? && retries <= max_retries
+
+    retries += 1
+    delay = [2**retries, 32].min
+    puts "Something went wrong. Trying again in #{delay} seconds..."
+    sleep(delay)
+    puts 'Retrying...'
   end
 end
 
-def run_retrying(cmd, max_retries: 10)
+def push_retrying(podspec, expected_pod_version, max_retries: 10)
   retries = 0
   loop do
-    result = system(cmd)
-    if !$?.success? && retries <= max_retries
-      retries += 1
-      delay = [2**retries, 32].min
-      puts "Something went wrong. Trying again in #{delay} seconds..."
-      sleep(delay)
-      puts 'Retrying...'
-    else
-      return result
+    if get_pod_version(podspec) == expected_pod_version
+      puts "No need to push: #{podspec}.  Latest version is already #{expected_pod_version}"
+      return true
     end
+    system("pod trunk push #{podspec} --synchronous --allow-warnings")
+    success = $?.success?
+    return success unless !success && retries <= max_retries
+
+    retries += 1
+    delay = [2**retries, 32].min
+    puts "Something went wrong. Trying again in #{delay} seconds..."
+    sleep(delay)
+    puts 'Retrying...'
   end
 end
 

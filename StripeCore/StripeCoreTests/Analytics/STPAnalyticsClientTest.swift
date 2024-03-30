@@ -41,4 +41,14 @@ class STPAnalyticsClientTest: XCTestCase {
         XCTAssertEqual("pk_foo", payload["publishable_key"] as? String)
     }
 
+    func testLogShouldRespectAPIClient() {
+        STPAPIClient.shared.publishableKey = "pk_shared"
+        let apiClient = STPAPIClient(publishableKey: "pk_not_shared")
+        let analyticsClient = STPAnalyticsClient()
+        // ...logging an arbitrary analytic and passing apiClient...
+        analyticsClient.log(analytic: GenericAnalytic.init(event: .addressShow, params: [:]), apiClient: apiClient)
+        // ...should use the passed in apiClient publishable key and not the shared apiClient
+        let payload = analyticsClient._testLogHistory.first!
+        XCTAssertEqual("pk_not_shared", payload["publishable_key"] as? String)
+    }
 }

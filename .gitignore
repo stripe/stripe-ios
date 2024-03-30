@@ -47,9 +47,4 @@ fastlane/.env
 .swiftpm
 
 # Xcode Related files
-
-.package.resolved
-Stripe.xcworkspace
-Stripe*/*.xcodeproj
-Example/**/*.xcodeproj
-Testers/**/*.xcodeproj
+Stripe.xcworkspace/xcuserdata/*

@@ -34,7 +34,6 @@ final class IdentityImageUploader {
 
     let apiClient: IdentityAPIClient
     let analyticsClient: IdentityAnalyticsClient
-    let idDocumentType: DocumentType?
 
     /// Worker queue to encode the image to jpeg
     let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
@@ -42,13 +41,11 @@ final class IdentityImageUploader {
     init(
         configuration: Configuration,
         apiClient: IdentityAPIClient,
-        analyticsClient: IdentityAnalyticsClient,
-        idDocumentType: DocumentType?
+        analyticsClient: IdentityAnalyticsClient
     ) {
         self.configuration = configuration
         self.apiClient = apiClient
         self.analyticsClient = analyticsClient
-        self.idDocumentType = idDocumentType
     }
 
     func uploadLowAndHighResImages(
@@ -162,7 +159,6 @@ final class IdentityImageUploader {
                     case .success((let file, let metrics)) = result
                 {
                     self.analyticsClient.logImageUpload(
-                        idDocumentType: self.idDocumentType,
                         timeToUpload: metrics.timeToUpload,
                         compressionQuality: jpegCompressionQuality,
                         fileId: file.id,

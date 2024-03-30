@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "stp_bank_fpx_affin_bank.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "stp_bank_fpx_affin_bank@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "stp_bank_fpx_affin_bank@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

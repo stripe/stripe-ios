@@ -32,7 +32,6 @@ extension Optional: ScanningState {
 
 // MARK: - ImageScanningSession
 
-@available(iOSApplicationExtension, unavailable)
 final class ImageScanningSession<
     ExpectedClassificationType: Equatable,
     ScanningStateType: Equatable & ScanningState,
@@ -268,7 +267,7 @@ final class ImageScanningSession<
 
             // Configure camera session
             // Tell the camera to automatically adjust focus to the center of
-            // the image
+            // the image and restrict autofocus range to .near.
             self.cameraSession.configureSession(
                 configuration: .init(
                     initialCameraPosition: self.initialCameraPosition,
@@ -279,7 +278,8 @@ final class ImageScanningSession<
                         (kCVPixelBufferPixelFormatTypeKey as String): Int(
                             IDDetectorConstants.requiredPixelFormat
                         ),
-                    ]
+                    ],
+                    autoFocusRangeRestriction: .near
                 ),
                 delegate: self,
                 completeOn: .main
@@ -355,7 +355,6 @@ enum EmptyClassificationType: Equatable {
     case empty
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension ImageScanningSession where ExpectedClassificationType == EmptyClassificationType {
 
     func setStateScanned(capturedData: CapturedDataType) {

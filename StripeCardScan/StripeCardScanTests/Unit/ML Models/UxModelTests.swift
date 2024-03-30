@@ -27,7 +27,6 @@ class UxModelTests: XCTestCase {
             XCTAssert(false)
             return
         }
-        guard #available(iOS 13.0, *) else { return }
         let ocr = AppleCreditCardOcr(dispatchQueueLabel: "test")
         let uxAnalyzer = UxAnalyzer(with: ocr)
 
@@ -40,7 +39,6 @@ class UxModelTests: XCTestCase {
             XCTAssert(false)
             return
         }
-        guard #available(iOS 13.0, *) else { return }
         let ocr = SSDCreditCardOcr(dispatchQueueLabel: "test")
         let uxAnalyzer = UxAnalyzer(with: ocr)
 

@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Ghi nợ trực tiếp AU Becs";
+"AU Direct Debit" = "Ghi nợ trực tiếp AU";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Ghi nợ Trực tiếp Bacs";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "Ngân hàng";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "Thẻ";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "Link";
 
@@ -39,6 +45,8 @@
 "SEPA Debit" = "Ghi nợ SEPA";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Đã hết thời gian xác thực phương thức thanh toán -- hãy thử lại sau";
 

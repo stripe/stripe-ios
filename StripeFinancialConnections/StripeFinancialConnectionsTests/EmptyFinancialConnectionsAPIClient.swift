@@ -11,6 +11,7 @@ import Foundation
 @testable import StripeFinancialConnections
 
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
+
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList
     > {
@@ -21,7 +22,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+    func synchronize(
+        clientSecret: String,
+        returnURL: String?
+    ) -> Future<FinancialConnectionsSynchronize> {
         return Promise<FinancialConnectionsSynchronize>()
     }
 
@@ -33,8 +37,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsInstitutionList>()
     }
 
-    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
-        return Promise<FinancialConnectionsInstitutionList>()
+    func fetchInstitutions(clientSecret: String, query: String) -> Future<FinancialConnectionsInstitutionSearchResultResource> {
+        return Promise<FinancialConnectionsInstitutionSearchResultResource>()
     }
 
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
@@ -42,6 +46,13 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     }
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
+        return Promise<FinancialConnectionsAuthSession>()
+    }
+
+    func retrieveAuthSession(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
 
@@ -105,5 +116,74 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         eventName: String
     ) -> Future<EmptyResponse> {
         return Promise<EmptyResponse>()
+    }
+
+    func saveAccountsToLink(
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
+        selectedAccountIds: [String],
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<StripeFinancialConnections.FinancialConnectionsSessionManifest> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    }
+
+    func disableNetworking(
+        disabledReason: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    }
+
+    func fetchNetworkedAccounts(
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsNetworkedAccountsResponse> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsNetworkedAccountsResponse>()
+    }
+
+    func markLinkVerified(
+        clientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsSessionManifest> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    }
+
+    func selectNetworkedAccounts(
+        selectedAccountIds: [String],
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsInstitutionList> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsInstitutionList>()
+    }
+
+    func consumerSessionLookup(
+        emailAddress: String,
+        clientSecret: String
+    ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {
+        return Promise<StripeFinancialConnections.LookupConsumerSessionResponse>()
+    }
+
+    func consumerSessionStartVerification(
+        otpType: String,
+        customEmailType: String?,
+        connectionsMerchantName: String?,
+        consumerSessionClientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
+        return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
+    }
+
+    func consumerSessionConfirmVerification(
+        otpCode: String,
+        otpType: String,
+        consumerSessionClientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
+        return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
+    }
+
+    func markLinkStepUpAuthenticationVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
     }
 }

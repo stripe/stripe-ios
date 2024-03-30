@@ -11,6 +11,9 @@ import Foundation
 import Vision
 
 extension DocumentScanner.Configuration {
+    // TODO: collect historical data and update the threshold from server.
+    static let defaultBlurThreshold: Decimal = 0.0
+
     init(
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
         for locale: Locale = .autoupdatingCurrent
@@ -22,7 +25,9 @@ extension DocumentScanner.Configuration {
             motionBlurMinDuration: TimeInterval(capturePageConfig.motionBlurMinDuration) / 1000,
             backIdCardBarcodeSymbology: capturePageConfig.symbology(for: locale),
             backIdCardBarcodeTimeout: TimeInterval(capturePageConfig.iosIdCardBackBarcodeTimeout)
-                / 1000
+                / 1000,
+            blurThreshold: (capturePageConfig.blurThreshold ?? DocumentScanner.Configuration.defaultBlurThreshold).floatValue,
+            highResImageCorpPadding: capturePageConfig.highResImageCropPadding
         )
     }
 }

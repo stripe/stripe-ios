@@ -18,6 +18,10 @@ import UIKit
 }
 
 class STPPaymentCardTextFieldViewModel: NSObject {
+    init(brandUpdateHandler: @escaping () -> Void) {
+        self.cbcController = STPCBCController(updateHandler: brandUpdateHandler)
+    }
+
     private var _cardNumber: String?
     @objc dynamic var cardNumber: String? {
         get {
@@ -37,6 +41,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
                     to: Int(STPBINController.shared.maxCardNumberLength())
                 )
             }
+            cbcController.cardNumber = _cardNumber
         }
     }
 
@@ -108,8 +113,17 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
+    let cbcController: STPCBCController
+
     @objc dynamic var brand: STPCardBrand {
-        return STPCardValidator.brand(forNumber: cardNumber ?? "")
+        switch cbcController.brandState {
+        case .brand(let brand):
+            return brand
+        case .cbcBrandSelected(let brand):
+            return brand
+        case .unknown, .unknownMultipleOptions:
+            return .unknown
+        }
     }
 
     @objc dynamic var isValid: Bool {
@@ -176,7 +190,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     func validationStateForCVC() -> STPCardValidationState {
-        return STPCardValidator.validationState(forCVC: cvc ?? "", cardBrand: brand)
+        return STPCardValidator.validationState(forCVC: cvc ?? "", cardBrand: cbcController.brandForCVC)
     }
 
     func validationStateForPostalCode() -> STPCardValidationState {

@@ -12,18 +12,13 @@ import UIKit
 
 @testable @_spi(STP) import StripeUICore
 
-class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
+class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
 
     let attributedLinkText: NSAttributedString = {
         let attributedText = NSMutableAttributedString(string: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum auctor justo sit amet luctus egestas. Sed id urna dolor.")
         attributedText.addAttributes([.link: URL(string: "https://stripe.com")!], range: NSRange(location: 0, length: 26))
         return attributedText
     }()
-
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
 
     func testShortText() {
         let checkbox = CheckboxButton(text: "Save this card for future [Merchant] payments")
@@ -40,7 +35,7 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
     func testMultiline() {
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
-            description: "Pay faster at [Merchant] and thousands of merchants."
+            description: "Pay faster at [Merchant] and thousands of businesses."
         )
 
         verify(checkbox)
@@ -53,22 +48,26 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
-            description: "Pay faster at [Merchant] and thousands of merchants.",
+            description: "Pay faster at [Merchant] and thousands of businesses.",
             theme: theme
         )
 
         verify(checkbox)
     }
 
-    func testLocalization() {
+    func testLocalization_greek() {
         let greekCheckbox = CheckboxButton(text: "Αποθηκεύστε αυτή την κάρτα για μελλοντικές [Merchant] πληρωμές")
         verify(greekCheckbox, identifier: "Greek")
+    }
 
+    func testLocalization_chinese() {
         let chineseCheckbox = CheckboxButton(
             text: "保存我的信息以便一键结账",
             description: "在[Merchant]及千万商家使用快捷支付")
         verify(chineseCheckbox, identifier: "Chinese")
+    }
 
+    func testLocalization_hindi() {
         let hindiCheckbox = CheckboxButton(
             text: "सुरक्षित 1-क्लिक चेकआउट के लिए मेरी जानकारी सहेजें",
             description: "[Merchant] और हज़ारों व्यापारियों पर तेज़ी से भुगतान करें।")

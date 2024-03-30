@@ -18,14 +18,24 @@ import UIKit
     func log(analytic: Analytic, apiClient: STPAPIClient)
 }
 
+/// This exists so our example/test apps can hook into when STPAnalyticsClient.sharedClient sends events.
+@_spi(STP) public protocol STPAnalyticsClientDelegate: AnyObject {
+    func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any])
+}
+
 @_spi(STP) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
     @objc public static let sharedClient = STPAnalyticsClient()
+    /// When this class logs a payload in an XCTestCase, it's added to `_testLogHistory` instead of being sent over the network.
+    /// This is a hack - ideally, we inject a different analytics client in our tests. This is an escape hatch until we can make that (significant) refactor
+    public var _testLogHistory: [[String: Any]] = []
+    public weak var delegate: STPAnalyticsClientDelegate?
 
     @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
     private(set) var urlSession: URLSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
+    let url = URL(string: "https://q.stripe.com")!
 
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
@@ -56,35 +66,20 @@ import UIKit
         additionalInfoSet.removeAll()
     }
 
-    // MARK: - Card Scanning
-
-    @objc class func shouldCollectAnalytics() -> Bool {
+    public static var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
-            return false
+            return true
         #else
-            return NSClassFromString("XCTest") == nil
+            return NSClassFromString("XCTest") != nil
         #endif
+    }
+
+    @objc public class func shouldCollectAnalytics() -> Bool {
+        return !isSimulatorOrTest
     }
 
     public func additionalInfo() -> [String] {
         return additionalInfoSet.sorted()
-    }
-
-    func logPayload(_ payload: [String: Any]) {
-        #if DEBUG
-            NSLog("LOG ANALYTICS: \(payload)")
-        #endif
-
-        guard type(of: self).shouldCollectAnalytics(),
-            let url = URL(string: "https://q.stripe.com")
-        else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.stp_addParameters(toURL: payload)
-        let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
-        task.resume()
     }
 
     /// Creates a payload dictionary for the given analytic that includes the event name,
@@ -101,12 +96,7 @@ import UIKit
         payload["additional_info"] = additionalInfo()
         payload["product_usage"] = productUsage.sorted()
 
-        // Attach error information if this is an error analytic
-        if let errorAnalytic = analytic as? ErrorAnalytic {
-            payload["error_dictionary"] = errorAnalytic.error.serializeForLogging()
-        }
-
-        payload.merge(analytic.params) { (_, new) in new }
+        payload.mergeAssertingOnOverwrites(analytic.params)
         return payload
     }
 
@@ -118,7 +108,25 @@ import UIKit
     ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
     ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
     public func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
-        logPayload(payload(from: analytic))
+        let payload = payload(from: analytic, apiClient: apiClient)
+
+        #if DEBUG
+        NSLog("LOG ANALYTICS: \(analytic.event.rawValue) - \(analytic.params.sorted { $0.0 > $1.0 })")
+        delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
+        #endif
+
+        guard type(of: self).shouldCollectAnalytics() else {
+            // Don't send the analytic, but add it to `_testLogHistory` if we're in a test.
+            if NSClassFromString("XCTest") != nil {
+                _testLogHistory.append(payload)
+            }
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.stp_addParameters(toURL: payload)
+        let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
+        task.resume()
     }
 }
 
@@ -139,6 +147,7 @@ extension STPAnalyticsClient {
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
+        payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
 

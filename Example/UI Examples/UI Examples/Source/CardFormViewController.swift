@@ -7,21 +7,18 @@
 //
 
 import Stripe
+@_spi(STP) import StripePaymentsUI
 import UIKit
 
 class CardFormViewController: UIViewController {
+    var alwaysEnableCBC: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Card Form"
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            // Fallback on earlier versions
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .systemBackground
 
-        let cardForm = STPCardFormView()
+        let cardForm = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: alwaysEnableCBC ? true : nil)
         cardForm.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(cardForm)
 

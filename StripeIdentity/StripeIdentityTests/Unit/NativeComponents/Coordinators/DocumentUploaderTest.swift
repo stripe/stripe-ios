@@ -72,13 +72,16 @@ final class DocumentUploaderTest: XCTestCase {
             duration: 0
         ),
         cameraProperties: .init(
-            exposureDuration: CMTime(value: 250, timescale: 1000),
-            cameraDeviceType: .builtInDualCamera,
-            isVirtualDevice: true,
-            lensPosition: 0.3,
-            exposureISO: 0.4,
-            isAdjustingFocus: false
-        )
+            .init(
+                exposureDuration: CMTime(value: 250, timescale: 1000),
+                cameraDeviceType: .builtInDualCamera,
+                isVirtualDevice: true,
+                lensPosition: 0.3,
+                exposureISO: 0.4,
+                isAdjustingFocus: false
+            )
+        ),
+        blurResult: .init(isBlurry: false, variance: 0.1)
     )
 
     override class func setUp() {
@@ -96,8 +99,7 @@ final class DocumentUploaderTest: XCTestCase {
             imageUploader: IdentityImageUploader(
                 configuration: mockConfig,
                 apiClient: mockAPIClient,
-                analyticsClient: .init(verificationSessionId: ""),
-                idDocumentType: .passport
+                analyticsClient: .init(verificationSessionId: "")
             )
         )
         mockDelegate = MockDocumentUploaderDelegate()

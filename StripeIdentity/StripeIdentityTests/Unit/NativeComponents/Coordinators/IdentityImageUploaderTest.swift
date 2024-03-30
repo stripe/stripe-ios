@@ -44,8 +44,7 @@ final class IdentityImageUploaderTest: XCTestCase {
             analyticsClient: IdentityAnalyticsClient(
                 verificationSessionId: "",
                 analyticsClient: mockAnalyticsClient
-            ),
-            idDocumentType: .passport
+            )
         )
     }
 
@@ -157,7 +156,6 @@ final class IdentityImageUploaderTest: XCTestCase {
             hasMetadata: "compression_quality",
             withValue: CGFloat(0.9)
         )
-        XCTAssert(analytic: uploadAnalytic, hasMetadata: "scan_type", withValue: "passport")
         XCTAssert(analytic: uploadAnalytic, hasMetadata: "id", withValue: "file_id")
         XCTAssert(analytic: uploadAnalytic, hasMetadata: "file_name", withValue: "mock_file_name")
         XCTAssert(analytic: uploadAnalytic, hasMetadata: "file_size", withValue: 2)

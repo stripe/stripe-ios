@@ -41,6 +41,7 @@ import UIKit
 
     private let theme: ElementsUITheme
 
+#if !canImport(CompositorServices)
     public var inputAccessoryView: UIView? {
         get {
             return textFieldView.textField.inputAccessoryView
@@ -50,6 +51,7 @@ import UIKit
             textFieldView.textField.inputAccessoryView = newValue
         }
     }
+#endif
 
     // MARK: - ViewModel
     public struct KeyboardProperties {
@@ -72,6 +74,7 @@ import UIKit
         let validationState: ValidationState
         let accessoryView: UIView?
         let shouldShowClearButton: Bool
+        let isEditable: Bool
         let theme: ElementsUITheme
     }
 
@@ -92,6 +95,7 @@ import UIKit
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
             accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
+            isEditable: configuration.isEditable,
             theme: theme
         )
     }

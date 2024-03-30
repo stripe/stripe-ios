@@ -11,7 +11,6 @@ import Foundation
 import SwiftUI
 import UIKit
 
-@available(iOS 12, *)
 @_spi(STP) public struct FinancialConnectionsSDKAvailability {
     static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? =
         NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
@@ -19,8 +18,8 @@ import UIKit
 
     static let isUnitOrUITest: Bool = {
         #if targetEnvironment(simulator)
-            return NSClassFromString("XCTest") != nil
-                || ProcessInfo.processInfo.environment["UITesting"] != nil
+        let useProductionSDK = ProcessInfo.processInfo.environment["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK"] == "true"
+        return !useProductionSDK && (NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil)
         #else
             return false
         #endif
@@ -52,6 +51,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {

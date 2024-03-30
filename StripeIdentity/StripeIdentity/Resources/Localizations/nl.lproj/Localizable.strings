@@ -1,12 +1,12 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "In de volgende stap worden er automatisch een paar foto's gemaakt om te verifiëren dat jij het bent";
+
+"Accepted forms of ID include" = "Geaccepteerde identiteitsbewijzen";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Als alternatief kun je ook handmatig een foto van je identiteitsbewijs uploaden.";
 
 "App Settings" = "App-instellingen";
 
-"Back driver's license photo successfully uploaded" = "Foto van achterkant van rijbewijs is geüpload";
-
 "Back identity card photo successfully uploaded" = "Foto van achterkant van identiteitskaart is geüpload";
-
-"Back of driver's license" = "Achterkant van rijbewijs";
 
 "Back of identity card" = "Achterkant van identiteitskaart";
 
@@ -22,57 +22,59 @@
 
 "Could not capture image" = "Niet gelukt om afbeelding vast te leggen";
 
-"Date of birth" = "Geboortedatum";
+"Date of Birth" = "Geboortedatum";
 
-"File Upload" = "Bestand uploaden";
-
-"File upload" = "Bestand uploaden";
-
-"Flip your driver's license over to the other side" = "Draai je rijbewijs om, zodat de andere kant zichtbaar is";
+"Date of birth does not look valid" = "Geboortedatum lijkt ongeldig te zijn";
 
 "Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
 
-"Front driver's license photo successfully uploaded" = "Foto van voorkant van rijbewijs is geüpload";
-
 "Front identity card photo successfully uploaded" = "Foto van voorkant van identiteitskaart is geüpload";
 
-"Front of driver's license" = "Voorkant van rijbewijs";
-
 "Front of identity card" = "Voorkant van identiteitskaart";
+
+"Get ready to scan your photo ID" = "Bereid je voor om je foto-ID te scannen";
+
+"Get ready to take a selfie" = "Maak je klaar om een selfie te nemen";
 
 "Go Back" = "Terug";
 
 "Hold still, scanning" = "Niet bewegen, het document wordt gescand";
 
+"I'm ready" = "Ik ben klaar";
+
 "ID Number" = "Identificatienummer";
 
-"ID Type" = "ID-type";
+"Individual CPF" = "CPF natuurlijk persoon";
 
-"Image of passport" = "Afbeelding van paspoort";
+"Last 4 of Social Security number" = "Laatste vier cijfers van socialezekerheidsnummer";
 
 "Loading" = "Bezig met laden";
 
-"Passport" = "Paspoort";
+"Make sure you're in a well lit space." = "Zorg dat er voldoende belichting is.";
 
-"Passport photo successfully uploaded" = "Foto van paspoort is geüpload";
+"Move closer" = "Dichterbij houden";
+
+"Move farther" = "Verder weg houden";
+
+"NRIC or FIN" = "NRIC of FIN";
 
 "Personal ID number" = "Persoonlijk identificatienummer";
 
+"Personal Information" = "Persoonlijke gegevens";
+
+"Phone Number" = "Telefoonnummer";
+
+"Phone Verification" = "Telefonische verificatie";
+
 "Photo Library" = "Fotobibliotheek";
 
-"Please upload an image of your passport" = "Upload een afbeelding van je paspoort";
-
-"Please upload images of the front and back of your driver's license" = "Upload afbeeldingen van de voor- en achterkant van je rijbewijs";
-
 "Please upload images of the front and back of your identity card" = "Upload afbeeldingen van de voor- en achterkant van je identiteitskaart";
-
-"Position your driver's license in the center of the frame" = "Plaats je rijbewijs midden in het frame";
 
 "Position your face in the center of the frame." = "Houd je gezicht in het midden van het frame.";
 
 "Position your identity card in the center of the frame" = "Plaats je identiteitskaart midden in het frame";
 
-"Position your passport in the center of the frame" = "Plaats je paspoort midden in het frame";
+"Retake Photos" = "Nieuwe foto's maken";
 
 "Scan" = "Scannen";
 
@@ -84,15 +86,9 @@
 
 "Select a location to upload the front of your identity document from" = "Selecteer een locatie vanwaar je de voorkant van je identiteitsbewijs wilt uploaden";
 
-"Select back driver's license photo" = "Foto van achterkant van rijbewijs selecteren";
-
 "Select back identity card photo" = "Foto van achterkant van identiteitskaart selecteren";
 
-"Select front driver's license photo" = "Foto van voorkant van rijbewijs selecteren";
-
 "Select front identity card photo" = "Foto van voorkant van identiteitskaart selecteren";
-
-"Select passport photo" = "Foto van paspoort selecteren";
 
 "Selfie" = "Selfie";
 
@@ -116,15 +112,11 @@
 
 "Upload a Photo" = "Een foto uploaden";
 
-"Uploading back driver's license photo" = "Foto van achterkant van rijbewijs uploaden";
+"Upload your photo ID" = "Je identiteitsbewijs uploaden";
 
 "Uploading back identity card photo" = "Foto van achterkant van identiteitskaart uploaden";
 
-"Uploading front driver's license photo" = "Foto van voorkant van rijbewijs uploaden";
-
 "Uploading front identity card photo" = "Foto van voorkant van identiteitskaart uploaden";
-
-"Uploading passport photo" = "Foto van paspoort uploaden";
 
 "Verify your identity" = "Je identiteit verifiëren";
 
@@ -132,6 +124,14 @@
 
 "We need permission to use your camera. Please allow camera access in app settings." = "We hebben toestemming nodig om je camera te gebruiken. Sta dit toe via de app-instellingen.";
 
+"Welcome" = "Welkom";
+
 "You can either try again or upload an image from your device." = "Probeer het nogmaals of upload een afbeelding van je apparaat.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "De afbeeldingen van je selfie zijn niet opgeslagen. Wil je afsluiten?";
+
+"driver's license" = "rijbewijs";
+
+"government-issued photo ID" = "Overheids-ID met foto";
+
+"passport" = "paspoort";

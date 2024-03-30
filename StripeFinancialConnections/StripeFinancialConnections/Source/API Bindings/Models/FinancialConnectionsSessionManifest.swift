@@ -18,15 +18,19 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case accountPicker = "account_picker"
         case attachLinkedPaymentAccount = "attach_linked_payment_account"
         case authOptions = "auth_options"
+        case bankAuthRepair = "bank_auth_repair"
         case consent = "consent"
         case institutionPicker = "institution_picker"
+        case linkAccountPicker = "link_account_picker"
         case linkConsent = "link_consent"
         case linkLogin = "link_login"
         case manualEntry = "manual_entry"
         case manualEntrySuccess = "manual_entry_success"
         case networkingLinkLoginWarmup = "networking_link_login_warmup"
         case networkingLinkSignupPane = "networking_link_signup_pane"
+        case networkingLinkStepUpVerification = "networking_link_step_up_verification"
         case networkingLinkVerification = "networking_link_verification"
+        case networkingSaveToLinkVerification = "networking_save_to_link_verification"
         case partnerAuth = "partner_auth"
         case success = "success"
         case unexpectedError = "unexpected_error"
@@ -49,6 +53,14 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case automatic
         case custom
         case unparsable
+    }
+
+    struct DisplayText: Decodable {
+        let successPane: SuccessPane?
+
+        struct SuccessPane: Decodable {
+            let subCaption: String?
+        }
     }
 
     // MARK: - Properties
@@ -85,4 +97,8 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let assignmentEventId: String?
     let skipSuccessPane: Bool?
     let manualEntryMode: ManualEntryMode
+    let accountholderCustomerEmailAddress: String?
+    let accountholderPhoneNumber: String?
+    let stepUpAuthenticationRequired: Bool?
+    let displayText: DisplayText?
 }

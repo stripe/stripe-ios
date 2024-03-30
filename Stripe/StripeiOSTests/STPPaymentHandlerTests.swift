@@ -17,6 +17,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
@@ -30,7 +31,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             description: "createPaymentIntentExpectation"
         )
         var retrievedClientSecret: String?
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) {
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) {
             (createdPIClientSecret, _) in
             if let createdPIClientSecret = createdPIClientSecret {
                 retrievedClientSecret = createdPIClientSecret
@@ -195,19 +196,20 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             boletoDisplayDetails: nil,
             verifyWithMicrodeposits: nil,
             cashAppRedirectToApp: nil,
+            payNowDisplayQrCode: nil,
+            konbiniDisplayDetails: nil,
+            promptPayDisplayQrCode: nil,
+            swishHandleRedirect: nil,
             allResponseFields: [:]
         )
         let setupIntent = STPSetupIntent(
             stripeID: "test",
             clientSecret: "test",
             created: Date(),
-            countryCode: "US",
             customerID: nil,
             stripeDescription: nil,
-            linkSettings: nil,
             livemode: false,
             nextAction: action,
-            orderedPaymentMethodTypes: [],
             paymentMethodID: "test",
             paymentMethod: nil,
             paymentMethodOptions: nil,
@@ -215,8 +217,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             status: .requiresAction,
             usage: .none,
             lastSetupError: nil,
-            allResponseFields: [:],
-            unactivatedPaymentMethodTypes: []
+            allResponseFields: [:]
         )
 
         // We expect this request to retry a few times with exponential backoff before calling the completion handler.
@@ -241,7 +242,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             checkedStillInProgress.fulfill()
         }
 
-        wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 30)
+        wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 60)
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
     }
 }

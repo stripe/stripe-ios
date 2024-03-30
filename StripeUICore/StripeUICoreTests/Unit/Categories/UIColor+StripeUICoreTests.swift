@@ -190,4 +190,33 @@ final class UIColorStripeUICoreTests: XCTestCase {
         // in LAB all 1's is dark
         testColorSpace?(CGColorSpace.genericLab, false)
     }
+
+    func testDisabledColor() {
+        let eps = 1e-12
+        var color = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        var (r, g, b, a) = color.disabled(true).rgba
+        XCTAssertEqual(r, 0, accuracy: eps)
+        XCTAssertEqual(g, 0, accuracy: eps)
+        XCTAssertEqual(b, 0, accuracy: eps)
+        XCTAssertEqual(a, 0.4, accuracy: eps)
+
+        (r, g, b, a) = color.disabled(false).rgba
+        XCTAssertEqual(r, 0, accuracy: eps)
+        XCTAssertEqual(g, 0, accuracy: eps)
+        XCTAssertEqual(b, 0, accuracy: eps)
+        XCTAssertEqual(a, 1, accuracy: eps)
+
+        color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
+        (r, g, b, a) = color.disabled(true).rgba
+        XCTAssertEqual(r, 0, accuracy: eps)
+        XCTAssertEqual(g, 0, accuracy: eps)
+        XCTAssertEqual(b, 0, accuracy: eps)
+        XCTAssertEqual(a, 0.24, accuracy: eps)
+
+        (r, g, b, a) = color.disabled(false).rgba
+        XCTAssertEqual(r, 0, accuracy: eps)
+        XCTAssertEqual(g, 0, accuracy: eps)
+        XCTAssertEqual(b, 0, accuracy: eps)
+        XCTAssertEqual(a, 0.6, accuracy: eps)
+    }
 }

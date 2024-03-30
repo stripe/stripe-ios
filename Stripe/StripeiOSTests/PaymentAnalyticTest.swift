@@ -21,9 +21,6 @@ final class PaymentAnalyticTest: XCTestCase {
         let analytic = GenericPaymentAnalytic(
             event: .cardScanCancelled,
             paymentConfiguration: STPPaymentConfiguration(),
-            productUsage: [
-                STPPaymentContext.stp_analyticsIdentifier
-            ],
             additionalParams: [:]
         )
 

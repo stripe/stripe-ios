@@ -121,38 +121,21 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
     }
 
     func testSubmitIdentityVerificationSession() throws {
-        let mockVerificationPageData = VerificationPageDataMock.response200
-        let mockResponseData = try mockVerificationPageData.data()
-        let mockResponse = try mockVerificationPageData.make()
-
-        stub { urlRequest in
-            XCTAssertEqual(
-                urlRequest.url?.absoluteString.hasSuffix(
-                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/submit"
-                ),
-                true
-            )
-            XCTAssertEqual(urlRequest.httpMethod, "POST")
-
-            verifyHeaders(urlRequest: urlRequest)
-
-            XCTAssertEqual(urlRequest.ohhttpStubs_httpBody?.isEmpty, true)
-            return true
-        } response: { _ in
-            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/submit") {
+            apiClient.submitIdentityVerificationPage()
         }
+    }
 
-        apiClient.submitIdentityVerificationPage().observe { result in
-            switch result {
-            case .success(let response):
-                XCTAssertEqual(response, mockResponse)
-            case .failure(let error):
-                XCTFail("Request returned error \(error)")
-            }
-            self.exp.fulfill()
+    func testGeneratePhoneOtp() throws {
+        try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/phone_otp/generate") {
+            apiClient.generatePhoneOtp()
         }
+    }
 
-        wait(for: [exp], timeout: 1)
+    func testCannotPhoneVerifyOtp() throws {
+        try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/phone_otp/cannot_verify") {
+            apiClient.cannotPhoneVerifyOtp()
+        }
     }
 
     func testUploadImage() throws {
@@ -232,6 +215,40 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
 
         wait(for: [exp], timeout: 1)
     }
+
+    private func verifyPostWithSuffix(expectedSuffix: String, apiCall: () -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData>) throws {
+        let mockVerificationPageData = VerificationPageDataMock.response200
+        let mockResponseData = try mockVerificationPageData.data()
+        let mockResponse = try mockVerificationPageData.make()
+
+        stub { urlRequest in
+            XCTAssertEqual(
+                urlRequest.url?.absoluteString.hasSuffix(expectedSuffix),
+                true
+            )
+            XCTAssertEqual(urlRequest.httpMethod, "POST")
+
+            verifyHeaders(urlRequest: urlRequest)
+
+            XCTAssertEqual(urlRequest.ohhttpStubs_httpBody?.isEmpty, true)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        apiCall().observe { result in
+            switch result {
+            case .success(let response):
+                XCTAssertEqual(response, mockResponse)
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            self.exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+
+    }
 }
 
 private func verifyHeaders(
@@ -247,7 +264,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v3",
+        "2020-08-27; identity_client_api=v5",
         file: file,
         line: line
     )

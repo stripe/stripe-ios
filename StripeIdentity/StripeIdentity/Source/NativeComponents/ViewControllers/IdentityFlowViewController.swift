@@ -6,7 +6,6 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
@@ -92,30 +91,20 @@ class IdentityFlowViewController: UIViewController {
     // MARK: Configure
 
     func configure(
-        backButtonTitle: String?,
-        viewModel: IdentityFlowView.ViewModel
-    ) {
+            backButtonTitle: String?,
+            viewModel: IdentityFlowView.ViewModel
+        ) {
         navigationItem.backButtonTitle = backButtonTitle
-        flowView.configure(with: viewModel)
+        do {
+            try flowView.configure(with: viewModel)
+        } catch {
+            sheetController?.analyticsClient.logGenericError(error: error)
+        }
         navBarBackgroundColor = viewModel.headerViewModel?.backgroundColor
 
         if navigationController?.viewControllers.last === self {
             navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
         }
-    }
-}
-
-@available(iOSApplicationExtension, unavailable)
-extension IdentityFlowViewController {
-    func openInSafariViewController(url: URL) {
-        guard url.scheme == "http" || url.scheme == "https" else {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            return
-        }
-
-        let safariVC = SFSafariViewController(url: url)
-        safariVC.modalPresentationStyle = .popover
-        present(safariVC, animated: true, completion: nil)
     }
 }
 
@@ -154,5 +143,67 @@ extension IdentityFlowViewController {
 
     @objc fileprivate func didTapCancelButton() {
         dismiss(animated: true, completion: nil)
+    }
+}
+
+// MARK: - parse bottomsheet URL
+extension URL {
+    func parseBottomSheetID() -> String? {
+        let urlString = self.absoluteString
+
+        guard let range = urlString.range(of: "stripe_bottomsheet://open/") else {
+            return nil // Return nil if the key is not found in the url string
+        }
+
+        // Return the string after the key
+        return String(urlString[range.upperBound...])
+    }
+}
+
+// MARK: - Bottomsheet helpers
+extension IdentityFlowViewController {
+    fileprivate func logBottomsheetError(_ errorContent: String) {
+        self.sheetController?.analyticsClient.logGenericError(error: BottomSheetError(loggableType: errorContent))
+    }
+
+    func presentBottomsheet(withUrl bottomSheetUrl: URL) {
+        guard let bottomSheetID = bottomSheetUrl.parseBottomSheetID()
+        else {
+            self.logBottomsheetError("error presenting bottomsheet, error parsing id from \(bottomSheetUrl)")
+            return
+        }
+        self.presentBottomsheet(withID: bottomSheetID)
+    }
+
+    func presentBottomsheet(withID bottomSheetID: String) {
+
+        guard let verificationPage = try? sheetController?.verificationPageResponse?.get()
+        else {
+            self.logBottomsheetError("error presenting bottomsheet, can't get VerficationPageResponse")
+            return
+
+        }
+
+        guard let bottomSheetContent = verificationPage.bottomsheet?[bottomSheetID]
+        else {
+            self.logBottomsheetError("error presenting bottomsheet, can't find bottomsheet with \(bottomSheetID)")
+            return
+        }
+        do {
+            try self.presentBottomsheet(withContent: bottomSheetContent)
+        } catch {
+            self.logBottomsheetError("error presenting bottomsheet, fail to present bottomsheet with \(bottomSheetID)")
+        }
+    }
+
+    func presentBottomsheet(
+        withContent content: BottomSheetViewController.BottomSheetContent
+    ) throws {
+        let consentBottomSheetViewController = try BottomSheetViewController(
+            content: content
+        )
+        consentBottomSheetViewController.modalTransitionStyle = .coverVertical
+        consentBottomSheetViewController.modalPresentationStyle = .pageSheet
+        self.present(consentBottomSheetViewController, animated: true, completion: nil)
     }
 }

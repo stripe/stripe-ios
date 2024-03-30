@@ -16,12 +16,14 @@ import UIKit
  In addition to the physical address, it can collect other related fields like name.
  */
 @_spi(STP) public class AddressSectionElement: ContainerElement {
+    public typealias DidUpdateAddress = (AddressDetails) -> Void
+
     /// Describes an address to use as a default for AddressSectionElement
     public struct AddressDetails: Equatable {
         @_spi(STP) public static let empty = AddressDetails()
-        var name: String?
-        var phone: String?
-        var address: Address
+        public var name: String?
+        public var phone: String?
+        public var address: Address
 
         /// Initializes an Address
         public init(name: String? = nil, phone: String? = nil, address: Address = .init()) {
@@ -32,22 +34,22 @@ import UIKit
 
         public struct Address: Equatable {
             /// City, district, suburb, town, or village.
-            var city: String?
+            public var city: String?
 
             /// Two-letter country code (ISO 3166-1 alpha-2).
-            var country: String?
+            public var country: String?
 
             /// Address line 1 (e.g., street, PO Box, or company name).
-            var line1: String?
+            public var line1: String?
 
             /// Address line 2 (e.g., apartment, suite, unit, or building).
-            var line2: String?
+            public var line2: String?
 
             /// ZIP or postal code.
-            var postalCode: String?
+            public var postalCode: String?
 
             /// State, county, province, or region.
-            var state: String?
+            public var state: String?
 
             /// Initializes an Address
             public init(city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
@@ -71,6 +73,8 @@ import UIKit
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
         /// Replaces the address line 1 field with `self.autoCompleteLine`
         case autoCompletable
+        /// Special case used by some Payment Methods that collect country separately.
+        case noCountry
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -126,17 +130,28 @@ import UIKit
         }
     }
     public var selectedCountryCode: String {
-        return countryCodes[country.selectedIndex]
+        get {
+            return countryCodes[country.selectedIndex]
+        }
+        set {
+            guard let index = countryCodes.firstIndex(of: newValue) else { return }
+            country.selectedIndex = index
+            updateAddressFields(
+                for: countryCodes[index]
+            )
+        }
     }
     var addressDetails: AddressDetails {
         let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.rawData)
         return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
     }
+
     public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsUITheme
     private(set) var defaults: AddressDetails
-    public var didTapAutocompleteButton: () -> Void = { }
+    let didTapAutocompleteButton: () -> Void
+    public var didUpdate: DidUpdateAddress?
 
     // MARK: - Implementation
     /**
@@ -157,7 +172,8 @@ import UIKit
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
         additionalFields: AdditionalFields = .init(),
-        theme: ElementsUITheme = .default
+        theme: ElementsUITheme = .default,
+        presentAutoComplete: @escaping () -> Void = { }
     ) {
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
@@ -173,6 +189,8 @@ import UIKit
         self.defaults = defaults
         self.addressSpecProvider = addressSpecProvider
         self.theme = theme
+        self.didTapAutocompleteButton = presentAutoComplete
+
         let initialCountry = countryCodes[country.selectedIndex]
 
         // Initialize additional fields
@@ -280,7 +298,7 @@ import UIKit
         let spec = addressSpecProvider.addressSpec(for: countryCode)
         let fieldOrdering = spec.fieldOrdering.filter {
             switch collectionMode {
-            case .all:
+            case .all, .noCountry:
                 return true
             case .countryAndPostal(let countriesRequiringPostalCollection):
                 if case .postal = $0 {
@@ -294,7 +312,7 @@ import UIKit
         }
 
         if collectionMode == .autoCompletable {
-            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme)
+            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: didTapAutocompleteButton)
         } else {
             autoCompleteLine = nil
         }
@@ -335,7 +353,11 @@ import UIKit
             }
         }
 
-        let initialElements: [Element?] = [name, country, autoCompleteLine]
+        var initialElements: [Element?] = [name]
+        if collectionMode != .noCountry {
+            initialElements.append(country)
+        }
+        initialElements.append(autoCompleteLine)
         let phoneElement: [Element?] = [phone]
         addressSection.elements = (initialElements + addressFields + phoneElement).compactMap { $0 }
     }
@@ -395,6 +417,7 @@ extension AddressSectionElement: ElementDelegate {
             sameAsCheckbox.isSelected = false
         }
         delegate?.didUpdate(element: self)
+        didUpdate?(addressDetails)
 
         // Update the selected country in the phone element if the no defaults have been provided
         // and the phone number element hasn't been modified

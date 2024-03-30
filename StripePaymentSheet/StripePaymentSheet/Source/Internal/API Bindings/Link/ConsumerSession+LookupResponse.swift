@@ -21,6 +21,18 @@ extension ConsumerSession {
 
             /// Lookup call was not provided an email and no cookies stored
             case noAvailableLookupParams
+
+            var analyticValue: String {
+                switch self {
+                case .found:
+                    return "found"
+                case .notFound:
+                    return "notFound"
+                case .noAvailableLookupParams:
+                    return "noAvailableLookupParams"
+
+                }
+            }
         }
 
         let responseType: ResponseType

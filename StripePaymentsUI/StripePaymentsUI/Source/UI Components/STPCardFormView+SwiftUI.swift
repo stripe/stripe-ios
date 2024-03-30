@@ -9,8 +9,6 @@
 @_spi(STP) import StripePayments
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension STPCardFormView {
 
     /// A SwiftUI representation of STPCardFormView

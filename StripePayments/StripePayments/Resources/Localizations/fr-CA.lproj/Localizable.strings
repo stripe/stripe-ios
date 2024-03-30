@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Prélèvement automatique BECS (Australie)";
+"AU Direct Debit" = "Prélèvement automatique AU";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Prélèvement automatique Bacs";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "Institution financière";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "Carte";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "Link";
 
@@ -39,6 +45,8 @@
 "SEPA Debit" = "Prélèvement SEPA";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Le délai d'authentification de votre moyen de paiement est dépassé, veuillez réessayer.";
 

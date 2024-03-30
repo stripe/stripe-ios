@@ -18,12 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-#ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        self.view.backgroundColor = [UIColor systemBackgroundColor];
-    }
-#endif
+    self.view.backgroundColor = [UIColor systemBackgroundColor];
     self.title = @"Payment Example";
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
@@ -37,12 +32,7 @@
     UILabel *label = [UILabel new];
     label.text = @"Waiting for payment authorization";
     [label sizeToFit];
-    label.textColor = [UIColor grayColor];
-#ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        label.textColor = [UIColor secondaryLabelColor];
-    }
-#endif
+    label.textColor = [UIColor secondaryLabelColor];
     label.alpha = 0;
     [self.view addSubview:label];
     self.waitingLabel = label;

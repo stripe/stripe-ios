@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 import UIKit
 
 @testable@_spi(STP) import Stripe
@@ -16,12 +17,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-class LinkLegalTermsViewSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
+class LinkLegalTermsViewSnapshotTests: STPSnapshotTestCase {
 
     func testDefault() {
         let sut = makeSUT()
@@ -40,13 +36,25 @@ class LinkLegalTermsViewSnapshotTests: FBSnapshotTestCase {
         verify(sut)
     }
 
-    func testLocalization() {
+    func testLocalization_de() {
         performLocalizedSnapshotTest(forLanguage: "de")
+    }
+    func testLocalization_es() {
         performLocalizedSnapshotTest(forLanguage: "es")
+    }
+    func testLocalization_el_GR() {
         performLocalizedSnapshotTest(forLanguage: "el-GR")
+    }
+    func testLocalization_it() {
         performLocalizedSnapshotTest(forLanguage: "it")
+    }
+    func testLocalization_ja() {
         performLocalizedSnapshotTest(forLanguage: "ja")
+    }
+    func testLocalization_ko() {
         performLocalizedSnapshotTest(forLanguage: "ko")
+    }
+    func testLocalization_zh_hans() {
         performLocalizedSnapshotTest(forLanguage: "zh-Hans")
     }
 

@@ -9,7 +9,6 @@
 import Foundation
 
 /// A [Radar Session](https://stripe.com/docs/radar/radar-session).
-/// - Note: This API and the guide linked above require special permissions to use. Contact support@stripe.com if you're interested.
 public final class STPRadarSession: NSObject, STPAPIResponseDecodable {
     /// The Stripe identifier of the RadarSession
     @objc public let id: String

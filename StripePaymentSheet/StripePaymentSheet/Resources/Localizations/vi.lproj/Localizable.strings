@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Thêm";
 
 "Add a card" = "Thêm một thẻ";
@@ -12,10 +14,6 @@
 
 "Approve payment" = "Chấp nhận thanh toán";
 
-"Are you sure you want to remove this card?" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
-
-"Are you sure you want to remove this linked account?" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
-
 "Back" = "Quay lại";
 
 "Bank account" = "Tài khoản ngân hàng";
@@ -24,45 +22,63 @@
 
 "Buy using a UPI ID" = "Mua bằng cách sử dụng ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Bằng việc tiếp tục với Klarna, bạn cho phép %1$@ tính phí vào tài khoản Klarna của bạn cho các khoản thanh toán trong tương lai căn cứ theo các điều khoản của khoản thanh toán và của Klarna. Bạn có thể thay đổi tùy chọn này bất kỳ lúc nào trong ứng dụng Klarna của mình hoặc bằng cách liên hệ với %2$@.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách tiếp tục với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Revolut Pay, bạn cho phép %@ tính phí tài khoản Revolut Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Bằng việc tiếp tục, quý vị đồng ý xác thực thanh toán tuân theo các <terms>điều khoản</terms> sau.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Bằng cách tiếp tục, quý vị ủy quyền cho %1$@ ghi nợ tài khoản Cash App của quý vị cho khoản thanh toán này và các khoản thanh toán trong tương lai theo các điều khoản của %2$@, cho đến khi ủy quyền này bị thu hồi. Quý vị có thể thay đổi điều này bất cứ lúc nào trong mục Cài đặt của Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp email, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp số điện thoại, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
-"Cancel and pay another way" = "Hủy và thanh toán theo cách khác";
+"CPF/CPNJ" = "CPF/CPNJ";
 
-"Change email" = "Đổi email";
+"Cancel and pay another way" = "Hủy và thanh toán theo cách khác";
 
 "Choose a payment method" = "Chọn phương thức thanh toán";
 
 "Close card scanner" = "Đóng máy quét thẻ";
 
-"Code sent" = "Mã đã được gửi";
+"Confirm" = "Xác nhận";
 
-"Default" = "Mặc định";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
+
+"Confirm your CVC" = "Xác nhận CVC của bạn";
+
+"Confirm your CVV" = "Xác nhận CVV của bạn";
+
+"Contact information" = "Thông tin liên lạc";
 
 "EPS Bank" = "Ngân hàng EPS";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Nhập mã được gửi tới %@ để dùng Link làm phương thức thanh toán mặc định.";
+"FPX Bank" = "Ngân hàng FPX";
 
-"Enter your verification code" = "Nhập mã xác minh của bạn";
-
-"For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Tham gia Link";
+"Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
 
-"Log out of Link" = "Đăng xuất khỏi Link";
-
-"Not %@?" = "Không phải %@?";
+"Name on card" = "Tên trên thẻ";
 
 "Open your UPI app to approve your payment within %@" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
 
@@ -72,29 +88,25 @@
 
 "Or pay with a card" = "Hoặc thanh toán bằng thẻ";
 
+"Or use" = "Hoặc dùng";
+
+"Or use a card" = "Hoặc dùng thẻ";
+
 "Pay %@" = "Thanh toán %@";
 
 "Pay another way" = "Thanh toán theo cách khác";
 
-"Pay faster at %@ and thousands of merchants." = "Thanh toán nhanh hơn tại %@ và hàng ngàn người bán.";
+"Pay faster at %@ and thousands of businesses." = "Thanh toán nhanh hơn tại %@ và hàng ngàn doanh nghiệp.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Trả bằng <num_installments/> khoản thanh toán không lãi suất là <installment_price/> bằng <img/>";
 
-"Pay later with Klarna." = "Thanh toán sau bằng Klarna.";
-
 "Pay over time with %@" = "Trả dần bằng %@";
 
-"Pay using" = "Thanh toán bằng";
-
-"Pay with %@" = "Thanh toán bằng %@";
+"Pay with Link" = "Thanh toán bằng Link";
 
 "Pay with your bank account in just a few steps." = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
 
-"Payment" = "Thanh toán";
-
 "Payment failed" = "Thanh toán không thành công";
-
-"Payment methods" = "Phương thức thanh toán";
 
 "Please go back and select another payment method" = "Vui lòng quay lại và chọn phương thức thanh toán khác";
 
@@ -104,33 +116,25 @@
 
 "Przelewy24 Bank" = "Ngân hàng Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Xóa thẻ %1$@ kết thúc bằng %2$@";
+"Remove card?" = "Xóa thẻ?";
 
-"Remove Card" = "Xóa thẻ";
+"Save" = "Lưu";
 
-"Remove card" = "Xóa thẻ";
-
-"Remove linked account" = "Xóa tài khoản liên kết";
-
-"Resend code" = "Gửi lại mã";
+"Save a new payment method" = "Lưu một phương thức thanh toán mới";
 
 "Save address" = "Lưu địa chỉ";
 
 "Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
 
-"Save my info for secure 1-click checkout" = "Lưu thông tin của tôi để thanh toán bảo mật bằng 1 cú nhấp chuột";
-
 "Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
 
 "Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
 
-"Secure 1⁠-⁠click checkout" = "Thanh toán bảo mật bằng một cú nhấp chuột";
+"Save your bank account in just a few steps." = "Lưu tài khoản ngân hàng chỉ trong vài bước.";
+
+"Save your info for secure 1-click checkout with Link" = "Lưu thông tin của bạn để thanh toán an toàn bằng 1 cú nhấp chuột với Link";
 
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
-
-"Set as default" = "Đặt làm mặc định";
-
-"Set as default payment method" = "Đặt làm phương thức thanh toán mặc định";
 
 "Set up" = "Cài đặt";
 
@@ -138,31 +142,13 @@
 
 "Show menu" = "Hiển thị trình đơn";
 
-"Sign in to your Link account" = "Đăng nhập vào tài khoản Link của bạn";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe sẽ gửi 0,01 đô la vào tài khoản của bạn sau 1-2 ngày làm việc. Sau đó, bạn sẽ nhận được email kèm theo hướng dẫn để hoàn tất quá trình lưu tài khoản ngân hàng với %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
 
-"Tap to close" = "Nhấp chạm vào để đóng";
-
-"Tap to expand" = "Nhấp chạm vào để mở rộng";
-
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
-"The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
-
-"The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Thẻ này đã hết hạn. Hãy cập nhật thông tin thẻ của bạn hoặc chọn một phương thức thanh toán khác.";
-
-"This is your default" = "Đây là thông tin mặc định của bạn";
-
-"Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
-
-"Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
-
 "Update card" = "Cập nhật thẻ";
-
-"Use your saved info to check out faster" = "Sử dụng thông tin đã lưu của bạn để thanh toán nhanh hơn";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 

@@ -71,11 +71,6 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
 
 // MARK: - PaymentMethodElement
 extension PaymentMethodElementWrapper: PaymentMethodElement {
-    func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
-        guard let defaultsApplier = defaultsApplier else { return params }
-        return defaultsApplier(element, params)
-    }
-
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         guard !element.view.isHidden else {
             return params
@@ -111,5 +106,29 @@ extension PaymentMethodElementWrapper: ElementDelegate {
 
     public func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: self)
+    }
+}
+
+extension Element {
+    public func getAllUnwrappedSubElements() -> [Element] {
+        switch self {
+        case let container as ContainerElement:
+            return [container] + container.elements.flatMap { $0.getAllUnwrappedSubElements() }
+        case let wrapper as AnyPaymentMethodElementWrapper:
+            return wrapper.anyElement.getAllUnwrappedSubElements()
+        default:
+            return [self]
+        }
+    }
+}
+
+/// Helper protocol easily switch over `PaymentMethodElementWrapper`
+private protocol AnyPaymentMethodElementWrapper {
+    var anyElement: Element { get }
+}
+
+extension PaymentMethodElementWrapper: AnyPaymentMethodElementWrapper {
+    var anyElement: Element {
+        return element
     }
 }

@@ -149,9 +149,7 @@ class SimpleScanViewController: ScanBaseViewController {
             torchLevel: 1.0
         )
 
-        if #available(iOS 13.0, *) {
-            setUpMainLoop(errorCorrectionDuration: maxErrorCorrectionDuration)
-        }
+        setUpMainLoop(errorCorrectionDuration: maxErrorCorrectionDuration)
 
         startCameraPreview()
     }
@@ -166,7 +164,6 @@ class SimpleScanViewController: ScanBaseViewController {
         torchButton.removeTarget(self, action: #selector(torchButtonPress), for: .touchUpInside)
     }
 
-    @available(iOS 13.0, *)
     func setUpMainLoop(errorCorrectionDuration: Double) {
         if scanPerformancePriority == .accurate {
             let mainLoop = self.mainLoop as? OcrMainLoop

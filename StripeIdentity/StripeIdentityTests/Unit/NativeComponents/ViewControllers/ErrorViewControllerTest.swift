@@ -51,4 +51,30 @@ final class ErrorViewControllerTest: XCTestCase {
         XCTAssertEqual(errorDict?["file"] as? String, "mock_file_path")
         XCTAssertEqual(errorDict?["line"] as? UInt, 123)
     }
+
+    func testTappingContinueButton() {
+        let continueText = "continue"
+        let backText = "back"
+        let vc = ErrorViewController(
+            sheetController: mockSheetController,
+            error: .inputError(
+                .init(
+                    backButtonText: backText, body: "body", continueButtonText: continueText, requirement: .idDocumentFront, title: "title"
+                )
+            )
+        )
+
+        XCTAssertEqual(vc.buttonViewModels.count, 2)
+        XCTAssertEqual(vc.buttonViewModels[0].text, continueText)
+        XCTAssertEqual(vc.buttonViewModels[0].state, .enabled)
+
+        XCTAssertEqual(vc.buttonViewModels[1].text, backText)
+        XCTAssertEqual(vc.buttonViewModels[1].state, .enabled)
+
+        // mock click button tap
+        vc.buttonViewModels[0].didTap()
+        XCTAssertEqual(vc.buttonViewModels[0].state, .loading)
+        XCTAssertEqual(vc.buttonViewModels[1].state, .disabled)
+
+    }
 }

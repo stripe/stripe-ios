@@ -19,7 +19,7 @@ private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
     let mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>] = [
-        [.biometricConsent], [.idDocumentType], [.idDocumentFront, .idDocumentBack],
+        [.biometricConsent], [.idDocumentFront, .idDocumentBack],
     ]
 
     let flowController = VerificationSheetFlowController(brandLogo: UIImage())
@@ -99,6 +99,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // API error on data save
         let staticAPIErrExp = expectation(description: "Static API error")
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: .failure(mockError),
             updateDataResult: nil,
             sheetController: mockSheetController,
@@ -112,6 +113,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // API error on data save
         let updateAPIErrExp = expectation(description: "Update API error")
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: .success(try VerificationPageMock.response200.make()),
             updateDataResult: .failure(mockError),
             sheetController: mockSheetController,
@@ -125,6 +127,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // requiredDataErrors
         let reqDataErrExp = expectation(description: "requiredDataErrors")
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: .success(try VerificationPageMock.response200.make()),
             updateDataResult: .success(try VerificationPageDataMock.response200.make()),
             sheetController: mockSheetController,
@@ -140,40 +143,31 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [staticAPIErrExp, updateAPIErrExp, reqDataErrExp], timeout: 1)
     }
 
-    func testNoMoreMissingFieldsError() throws {
+    func testNoMoreMissingFieldsReturnSuccessViewController() throws {
         let exp = expectation(description: "No more missing fields")
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: .success(try VerificationPageMock.response200.make()),
             updateDataResult: .success(try VerificationPageDataMock.noErrors.make()),
             sheetController: mockSheetController,
             completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(VerificationSheetFlowControllerError.noScreenForRequirements([]))
-                )
+                XCTAssertIs(nextVC, SuccessViewController.self)
                 exp.fulfill()
             }
         )
         wait(for: [exp], timeout: 1)
     }
 
-    // Requires document photo but user has not selected type
-    func testDocumentPhotoNoTypeError() throws {
+    // Requires document photo without type - should return DocumentTypeSelectViewController
+    func testMissingDocFrontNoType() throws {
         // Mock that document ML models successfully loaded
         mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
 
-        let exp = expectation(description: "testDocumentPhotoNoTypeError")
+        let exp = expectation(description: "testMissingDocFrontNoType")
         try nextViewController(
             missingRequirements: [.idDocumentFront],
             completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(
-                        VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType])
-                    )
-                )
+                XCTAssertIs(nextVC, DocumentWarmupViewController.self)
                 exp.fulfill()
             }
         )
@@ -182,55 +176,49 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     func testNoSelfieConfigError() throws {
         let exp = expectation(description: "testNoSelfieConfigError")
-        try nextViewController(
-            missingRequirements: [.face],
-            staticContentResult: .success(try VerificationPageMock.noSelfie.make()),
-            completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(VerificationSheetFlowControllerError.missingSelfieConfig)
-                )
-                exp.fulfill()
-            }
+
+        let nextVC = flowController.makeSelfieCaptureViewController(
+            faceScannerResult: .failure(IdentityMLModelLoaderError.mlModelNeverLoaded),
+            staticContent: try VerificationPageMock.noSelfie.make(),
+            sheetController: mockSheetController
         )
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual(
+            (nextVC as? ErrorViewController)?.model,
+            .error(VerificationSheetFlowControllerError.missingSelfieConfig)
+        )
+        exp.fulfill()
         wait(for: [exp], timeout: 1)
     }
 
     func testMLModelsNeverLoadedError() throws {
         let exp = expectation(description: "testMLModelsNeverLoadedError")
 
-        try nextViewController(
-            missingRequirements: [.face],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(
-                        VerificationSheetFlowControllerError.unknown(
-                            IdentityMLModelLoaderError.mlModelNeverLoaded
-                        )
-                    )
-                )
-                exp.fulfill()
-            }
+        let nextVC = flowController.makeSelfieCaptureViewController(
+            faceScannerResult: .failure(IdentityMLModelLoaderError.mlModelNeverLoaded),
+            staticContent: try VerificationPageMock.response200.make(),
+            sheetController: mockSheetController
         )
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual(
+            (nextVC as? ErrorViewController)?.model,
+            .error(
+                VerificationSheetFlowControllerError.unknown(
+                    IdentityMLModelLoaderError.mlModelNeverLoaded
+                )
+            )
+        )
+        exp.fulfill()
         wait(for: [exp], timeout: 1)
     }
 
-    func testDocumentMLModelsNotLoadedError() throws {
-        let exp = expectation(description: "testDocumentMLModelsNotLoadedError")
-
-        // Mock that user has selected document type
-        mockSheetController.collectedData = .init(idDocumentType: .idCard)
-
-        // Mock that document ML models failed to load
-        mockMLModelLoader.documentModelsPromise.reject(with: mockError)
-
+    func testTestMode() throws {
+        let exp = expectation(description: "testTestMode")
         try nextViewController(
-            missingRequirements: [.idDocumentFront],
+            missingRequirements: [.face],
+            staticContentResult: .success(try VerificationPageMock.response200TestMode.make()),
             completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentFileUploadViewController.self)
+                XCTAssertIs(nextVC, DebugViewController.self)
                 exp.fulfill()
             }
         )
@@ -290,18 +278,6 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    func testNextViewControllerDocumentSelect() throws {
-        let exp = expectation(description: "testNextViewControllerDocumentSelect")
-        try nextViewController(
-            missingRequirements: [.idDocumentType],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentTypeSelectViewController.self)
-                exp.fulfill()
-            }
-        )
-        wait(for: [exp], timeout: 1)
-    }
-
     func testNextViewControllerIndividualFields() throws {
         // When verification type is document and address/idNumber is requested,
         // after user submitted consent and document, missing should only remain .address or .idNumber.
@@ -341,9 +317,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    func testNextViewControllerDocumentCapture() throws {
+    func testNextViewControllerDocumentWarmup() throws {
         // Mock that user has selected document type
-        mockSheetController.collectedData = .init(idDocumentType: .idCard)
+        mockSheetController.collectedData = .init()
 
         // Mock that document ML models successfully loaded
         mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
@@ -352,7 +328,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         try nextViewController(
             missingRequirements: [.idDocumentFront],
             completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentCaptureViewController.self)
+                XCTAssertIs(nextVC, DocumentWarmupViewController.self.self)
                 frontExp.fulfill()
             }
         )
@@ -361,35 +337,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         try nextViewController(
             missingRequirements: [.idDocumentBack],
             completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentCaptureViewController.self)
-                backExp.fulfill()
-            }
-        )
-
-        wait(for: [frontExp, backExp], timeout: 1)
-    }
-
-    func testNextViewControllerDocumentFileUpload() throws {
-        // Mock that user has selected document type
-        mockSheetController.collectedData = .init(idDocumentType: .idCard)
-
-        // Mock that document ML models failed to load
-        mockMLModelLoader.documentModelsPromise.reject(with: mockError)
-
-        let frontExp = expectation(description: "front")
-        try nextViewController(
-            missingRequirements: [.idDocumentFront],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentFileUploadViewController.self)
-                frontExp.fulfill()
-            }
-        )
-
-        let backExp = expectation(description: "back")
-        try nextViewController(
-            missingRequirements: [.idDocumentBack],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentFileUploadViewController.self)
+                XCTAssertIs(nextVC, DocumentWarmupViewController.self)
                 backExp.fulfill()
             }
         )
@@ -405,7 +353,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         try nextViewController(
             missingRequirements: [.face],
             completion: { nextVC in
-                XCTAssertIs(nextVC, SelfieCaptureViewController.self)
+                XCTAssertIs(nextVC, SelfieWarmupViewController.self)
                 exp.fulfill()
             }
         )
@@ -435,7 +383,6 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         )
 
         XCTAssertTrue(flowController.canPopToScreen(withField: .biometricConsent))
-        XCTAssertTrue(flowController.canPopToScreen(withField: .idDocumentType))
         XCTAssertFalse(flowController.canPopToScreen(withField: .idDocumentFront))
         XCTAssertFalse(flowController.canPopToScreen(withField: .idDocumentBack))
     }
@@ -453,12 +400,12 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     func testPopToMiddleScreenAndReset() {
         let viewControllers = popToScreen(
             mockCollectedFields: mockCollectedFields,
-            popToField: .idDocumentType,
+            popToField: .idDocumentFront,
             shouldResetViewController: true
         )
         XCTAssertEqual(
             viewControllers.map { $0.collectedFields },
-            [[.biometricConsent], [.idDocumentType]]
+            [[.biometricConsent], [.idDocumentFront, .idDocumentBack]]
         )
         XCTAssertEqual(viewControllers.last?.didReset, true)
     }
@@ -498,6 +445,7 @@ extension VerificationSheetFlowControllerTest {
             : try VerificationPageDataMock.noErrorsWithMissings(with: missingRequirements)
 
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: staticContentResult,
             updateDataResult: .success(dataResponse),
             sheetController: mockSheetController,

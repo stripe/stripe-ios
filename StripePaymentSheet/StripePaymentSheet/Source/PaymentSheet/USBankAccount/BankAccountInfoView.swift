@@ -139,8 +139,8 @@ class BankAccountInfoView: UIView {
     }
 
     func updateUI() {
-        bankNameLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : .tertiaryLabel
-        bankAccountNumberLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : .tertiaryLabel
+        bankNameLabel.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
+        bankAccountNumberLabel.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
         bankIconImageView.alpha = isUserInteractionEnabled ? 1.0 : 0.5
         xIcon.alpha = isUserInteractionEnabled ? 1.0 : 0.5
     }
@@ -153,6 +153,8 @@ extension BankAccountInfoView: EventHandler {
             self.isUserInteractionEnabled = true
         case .shouldDisableUserInteraction:
             self.isUserInteractionEnabled = false
+        default:
+            break
         }
     }
 }

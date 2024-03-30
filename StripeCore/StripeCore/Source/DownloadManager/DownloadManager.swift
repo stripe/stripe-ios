@@ -36,21 +36,19 @@ import UIKit
         downloadOperationQueue.underlyingQueue = downloadQueue
 
         let configuration = urlSessionConfiguration
-        if #available(iOS 13.0, *) {
-            if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
-                .first
-            {
-                let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
-                // 5MB memory cache, 30MB Disk cache
-                let cache = URLCache(
-                    memoryCapacity: 5_000_000,
-                    diskCapacity: 30_000_000,
-                    directory: diskCacheURL
-                )
-                configuration.urlCache = cache
-                configuration.requestCachePolicy = .useProtocolCachePolicy
-                self.urlCache = cache
-            }
+        if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+            .first
+        {
+            let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
+            // 5MB memory cache, 30MB Disk cache
+            let cache = URLCache(
+                memoryCapacity: 5_000_000,
+                diskCapacity: 30_000_000,
+                directory: diskCacheURL
+            )
+            configuration.urlCache = cache
+            configuration.requestCachePolicy = .useProtocolCachePolicy
+            self.urlCache = cache
         }
 
         session = URLSession(configuration: configuration)
@@ -68,15 +66,16 @@ import UIKit
 
 // MARK: - Download management
 extension DownloadManager {
-    public func downloadImage(url: URL, updateHandler: UpdateImageHandler?) -> UIImage {
+    public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
         if updateHandler == nil {
-            return downloadImageBlocking(url: url)
+            return downloadImageBlocking(placeholder: placeholder, url: url)
         } else {
-            return downloadImageAsync(url: url, updateHandler: updateHandler)
+            return downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
         }
     }
 
-    func downloadImageBlocking(url: URL) -> UIImage {
+    func downloadImageBlocking(placeholder: UIImage?, url: URL) -> UIImage {
+        let placeholder = placeholder ?? imagePlaceHolder()
         let imageName = imageNameFromURL(url: url)
         if let image = cachedImageNamed(imageName) {
             return image
@@ -107,24 +106,26 @@ extension DownloadManager {
         }
         task.resume()
         blockingDownloadSemaphore.wait()
-        return blockingDownloadedImage ?? imagePlaceHolder()
+        return blockingDownloadedImage ?? placeholder
     }
 
-    func downloadImageAsync(url: URL, updateHandler: UpdateImageHandler?) -> UIImage {
+    func downloadImageAsync(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
+        let placeholder = placeholder ?? imagePlaceHolder()
         let imageName = imageNameFromURL(url: url)
         if let image = cachedImageNamed(imageName) {
             return image
         }
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { tempURL, response, _ in
-            guard let tempURL = tempURL,
+        let task = self.session.downloadTask(with: url) { [weak self] tempURL, response, _ in
+            guard let self = self,
+                  let tempURL = tempURL,
                 let response = response,
                 let data = self.getDataFromURL(tempURL),
                 let image = self.persistToMemory(data, forImageName: imageName)
             else {
-                self.pendingRequestsSemaphore.wait()
-                self.pendingRequests.removeValue(forKey: imageName)
-                self.pendingRequestsSemaphore.signal()
+                self?.pendingRequestsSemaphore.wait()
+                self?.pendingRequests.removeValue(forKey: imageName)
+                self?.pendingRequestsSemaphore.signal()
                 return
             }
             self.urlCache?.storeCachedResponse(
@@ -147,14 +148,14 @@ extension DownloadManager {
         guard self.pendingRequests[imageName] == nil else {
             addUpdateHandlerWithoutLocking(updateHandler, forImageName: imageName)
             self.pendingRequestsSemaphore.signal()
-            return imagePlaceHolder()
+            return placeholder
         }
         self.pendingRequests[imageName] = task
         addUpdateHandlerWithoutLocking(updateHandler, forImageName: imageName)
         self.pendingRequestsSemaphore.signal()
         task.resume()
 
-        return imagePlaceHolder()
+        return placeholder
     }
 
     func imageNameFromURL(url: URL) -> String {
@@ -198,7 +199,12 @@ extension DownloadManager {
     }
 
     func persistToMemory(_ imageData: Data, forImageName imageName: String) -> UIImage? {
-        guard let image = UIImage(data: imageData, scale: UIScreen.main.scale) else {
+        #if canImport(CompositorServices)
+        let scale = 1.0
+        #else
+        let scale = UIScreen.main.scale
+        #endif
+        guard let image = UIImage(data: imageData, scale: scale) else {
             return nil
         }
         imageCacheSemaphore.wait()

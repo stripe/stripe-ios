@@ -19,6 +19,7 @@ class STPImageLibraryTestSwift: XCTestCase {
 
     static let cardBrands: [STPCardBrand] = [
         .amex,
+        .cartesBancaires,
         .dinersClub,
         .discover,
         .JCB,
@@ -110,6 +111,11 @@ class STPImageLibraryTestSwift: XCTestCase {
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_unionpay", templateIfAvailable: false)
                 )
+            case .cartesBancaires:
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_cartes_bancaires", templateIfAvailable: false)
+                )
             case .unknown:
                 STPAssertEqualImages(
                     image,
@@ -180,12 +186,28 @@ class STPImageLibraryTestSwift: XCTestCase {
                         templateIfAvailable: true
                     )
                 )
+            case .cartesBancaires:
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_cartes_bancaires_template",
+                        templateIfAvailable: true
+                    )
+                )
             case .unknown:
                 STPAssertEqualImages(
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: true)
                 )
             }
+        }
+    }
+
+    func testUnpaddedImageForCardBrands() {
+        for brand in STPCardBrand.allCases {
+            let image = STPImageLibrary.unpaddedCardBrandImage(for: brand)
+            // Assert image exists
+            XCTAssert(image.size != .zero)
         }
     }
 
@@ -211,22 +233,10 @@ class STPImageLibraryTestSwift: XCTestCase {
     func testErrorImageForCardBrand() {
         for brand in Self.cardBrands {
             let image = STPImageLibrary.errorImage(for: brand)
-
-            switch brand {
-            case .amex:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_error_amex",
-                        templateIfAvailable: false
-                    )
-                )
-            default:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed("stp_card_error", templateIfAvailable: false)
-                )
-            }
+            STPAssertEqualImages(
+                image,
+                STPImageLibrary.safeImageNamed("stp_card_error", templateIfAvailable: false)
+            )
         }
     }
 

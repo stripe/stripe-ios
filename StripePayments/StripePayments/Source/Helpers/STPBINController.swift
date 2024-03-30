@@ -94,9 +94,21 @@ extension STPBINRange {
     }
 
     func compare(_ other: STPBINRange) -> ComparisonResult {
-        return NSNumber(value: accountRangeLow.count).compare(
+        let result = NSNumber(value: accountRangeLow.count).compare(
             NSNumber(value: other.accountRangeLow.count)
         )
+
+        // If they are the same range unknown brands go first.
+        if result == .orderedSame {
+            if brand == .unknown && other.brand != .unknown {
+                return .orderedAscending
+            } else if brand != .unknown && other.brand == .unknown {
+                return .orderedDescending
+            }
+        }
+
+        return result
+
     }
 }
 
@@ -188,7 +200,7 @@ extension STPBINRange {
     /// Returns the shortest possible card number length for the brand
     @_spi(STP) public func minCardNumberLength(for brand: STPCardBrand) -> Int {
         switch brand {
-        case .visa, .amex, .mastercard, .discover, .JCB, .dinersClub:
+        case .visa, .amex, .mastercard, .discover, .JCB, .dinersClub, .cartesBancaires:
             return allRanges().reduce(Int.max) { currentMinimum, range in
                 if range.brand == brand {
                     return min(currentMinimum, Int(range.panLength))
@@ -237,9 +249,14 @@ extension STPBINRange {
     /// This will asynchronously check if we have already fetched metadata for this prefix and if we have not will
     /// issue a network request to retrieve it if possible.
     /// - Parameter recordErrorsAsSuccess: An unfortunate toggle for behavior that STPCardFormView/STPPaymentCardTextField depends on. See https://jira.corp.stripe.com/browse/MOBILESDK-724
+    /// - Parameter onlyFetchForVariableLengthBINs: Only hit the network if a BIN is known to be variable length. (e.g. UnionPay).
+    /// If this is disabled, we will *always* fetch and cache BIN information for the passed BIN.
+    /// Use caution when disabling this: The BIN length information coming from the service may not be correct, which will
+    /// cause issues when validating PAN length.
     @_spi(STP) public func retrieveBINRanges(
         forPrefix binPrefix: String,
         recordErrorsAsSuccess: Bool = true,
+        onlyFetchForVariableLengthBINs: Bool = true,
         completion: @escaping STPRetrieveBINRangesCompletionBlock
     ) {
         self._retrievalQueue.async(execute: {
@@ -247,7 +264,7 @@ extension STPBINRange {
             if self.sRetrievedRanges[binPrefixKey] != nil
                 || (binPrefixKey.count) < kPrefixLengthForMetadataRequest
                 || self.isInvalidBINPrefix(binPrefixKey)
-                || !self.isVariableLengthBINPrefix(binPrefix)
+                || (onlyFetchForVariableLengthBINs && !self.isVariableLengthBINPrefix(binPrefix))
             {
                 // if we already have a metadata response or the binPrefix isn't long enough to make a request,
                 // or we know that this is not a valid BIN prefix
@@ -303,7 +320,6 @@ extension STPBINRange {
                 )
             }
         })
-
     }
 
     // MARK: - Class Utilities
@@ -370,7 +386,7 @@ extension STPBINRange {
         return binRanges
     }()
 
-    private var sAllRanges: [STPBINRange] = {
+    var sAllRanges: [STPBINRange] = {
         return STPBINRangeInitialRanges
     }()
 

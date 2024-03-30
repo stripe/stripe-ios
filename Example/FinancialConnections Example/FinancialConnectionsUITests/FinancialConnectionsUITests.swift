@@ -20,98 +20,48 @@ final class FinancialConnectionsUITests: XCTestCase {
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testDataTestModeOAuthNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
-        let playgroundCell = app.tables.staticTexts["Playground"]
-        XCTAssertTrue(playgroundCell.waitForExistence(timeout: 60.0))
-        playgroundCell.tap()
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundDataFlowButton.tap()
+        app.fc_playgroundNativeButton.tap()
 
-        let dataSegmentPickerButton = app.collectionViews.buttons["Data"]
-        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-        dataSegmentPickerButton.tap()
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        enableTestModeSwitch.turnSwitch(on: true)
 
-        let nativeSegmentPickerButton = app.collectionViews.buttons["Native"]
-        XCTAssertTrue(nativeSegmentPickerButton.waitForExistence(timeout: 60.0))
-        nativeSegmentPickerButton.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+        app.fc_nativeConsentAgreeButton.tap()
 
-        let enableTestModeSwitch = app.collectionViews.switches["Enable Test Mode"]
-        XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
-        if (enableTestModeSwitch.value as? String) == "0" {
-            enableTestModeSwitch.tap()
-        }
-
-        let showAuthFlowButton = app.buttons["Show Auth Flow"]
-        XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
-        showAuthFlowButton.tap()
-
-        let consentAgreeButton = app.buttons["Agree"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
-        consentAgreeButton.tap()
-
-        let featuredLegacyTestInstitution = app.collectionViews.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
-        let prepaneContinueButton = app.buttons["Continue"]
-        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0))
-        prepaneContinueButton.tap()
-
-        let accountPickerLinkAccountsButton = app.buttons["Link accounts"]
-        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0))  // wait for accounts to fetch
-        accountPickerLinkAccountsButton.tap()
-
-        let successPaneDoneButton = app.buttons["Done"]
-        XCTAssertTrue(successPaneDoneButton.waitForExistence(timeout: 120.0))  // wait for accounts to link
-        successPaneDoneButton.tap()
-
-        let playgroundSuccessAlert = app.alerts["Success"]
-        XCTAssertTrue(playgroundSuccessAlert.waitForExistence(timeout: 60.0))
+        app.fc_nativePrepaneContinueButton.tap()
+        app.fc_nativeAccountPickerLinkAccountsButton.tap()
+        app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
         XCTAssert(
-            playgroundSuccessAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
                 .exists
         )
     }
 
     func testPaymentTestModeLegacyNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
-        let playgroundCell = app.tables.staticTexts["Playground"]
-        XCTAssertTrue(playgroundCell.waitForExistence(timeout: 60.0))
-        playgroundCell.tap()
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundPaymentFlowButton.tap()
+        app.fc_playgroundNativeButton.tap()
 
-        let dataSegmentPickerButton = app.collectionViews.buttons["Payments"]
-        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-        dataSegmentPickerButton.tap()
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        enableTestModeSwitch.turnSwitch(on: true)
 
-        let nativeSegmentPickerButton = app.collectionViews.buttons["Native"]
-        XCTAssertTrue(nativeSegmentPickerButton.waitForExistence(timeout: 60.0))
-        nativeSegmentPickerButton.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+        app.fc_nativeConsentAgreeButton.tap()
 
-        let enableTestModeSwitch = app.collectionViews.switches["Enable Test Mode"]
-        XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
-        if (enableTestModeSwitch.value as? String) == "0" {
-            enableTestModeSwitch.tap()
-        }
-
-        let showAuthFlowButton = app.buttons["Show Auth Flow"]
-        XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
-        showAuthFlowButton.tap()
-
-        let consentAgreeButton = app.buttons["Agree"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
-        consentAgreeButton.tap()
-
-        let featuredLegacyTestInstitution = app.collectionViews.staticTexts["Test Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test Institution"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -119,111 +69,154 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(successAccountRow.waitForExistence(timeout: 60.0))
         successAccountRow.tap()
 
-        let accountPickerLinkAccountButton = app.buttons["Link account"]
-        XCTAssertTrue(accountPickerLinkAccountButton.waitForExistence(timeout: 120.0))  // wait for accounts to fetch
-        accountPickerLinkAccountButton.tap()
-
-        let successPaneDoneButton = app.buttons["Done"]
-        XCTAssertTrue(successPaneDoneButton.waitForExistence(timeout: 120.0))  // wait for accounts to link
-        successPaneDoneButton.tap()
-
-        let playgroundSuccessAlert = app.alerts["Success"]
-        XCTAssertTrue(playgroundSuccessAlert.waitForExistence(timeout: 60.0))
+        app.fc_nativeAccountPickerLinkAccountsButton.tap()
+        app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
         XCTAssert(
-            playgroundSuccessAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
                 .exists
         )
+    }
+
+    func testPaymentTestModeManualEntryNativeAuthFlow() throws {
+        let app = XCUIApplication.fc_launch()
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundPaymentFlowButton.tap()
+        app.fc_playgroundNativeButton.tap()
+
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        enableTestModeSwitch.turnSwitch(on: true)
+
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        let manuallyVerifyLabel = app
+            .otherElements["consent_manually_verify_label"]
+            .links
+            .firstMatch
+        XCTAssertTrue(manuallyVerifyLabel.waitForExistence(timeout: 120.0))
+        manuallyVerifyLabel.tap()
+
+        let manualEntryRoutingNumberTextField = app.textFields["manual_entry_routing_number_text_field"]
+        XCTAssertTrue(manualEntryRoutingNumberTextField.waitForExistence(timeout: 60.0))
+        manualEntryRoutingNumberTextField.tap()
+        manualEntryRoutingNumberTextField.typeText("110000000")
+
+        app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
+
+        let manualEntryAccountNumberTextField = app.textFields["manual_entry_account_number_text_field"]
+        XCTAssertTrue(manualEntryAccountNumberTextField.waitForExistence(timeout: 60.0))
+        manualEntryAccountNumberTextField.tap()
+        manualEntryAccountNumberTextField.typeText("000123456789")
+
+        app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
+
+        let manualEntryAccountNumberConfirmationTextField = app.textFields["manual_entry_account_number_confirmation_text_field"]
+        XCTAssertTrue(manualEntryAccountNumberConfirmationTextField.waitForExistence(timeout: 60.0))
+        manualEntryAccountNumberConfirmationTextField.tap()
+        manualEntryAccountNumberConfirmationTextField.typeText("000123456789")
+
+        app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
+
+        let manualEntryContinueButton = app.buttons["manual_entry_continue_button"]
+        XCTAssertTrue(manualEntryContinueButton.waitForExistence(timeout: 120.0))
+        manualEntryContinueButton.tap()
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
     }
 
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
-        let playgroundCell = app.tables.staticTexts["Playground"]
-        XCTAssertTrue(playgroundCell.waitForExistence(timeout: 60.0))
-        playgroundCell.tap()
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundDataFlowButton.tap()
+        app.fc_playgroundNativeButton.tap()
 
-        let dataSegmentPickerButton = app.collectionViews.buttons["Data"]
-        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-        dataSegmentPickerButton.tap()
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        enableTestModeSwitch.turnSwitch(on: false)
 
-        let nativeSegmentPickerButton = app.collectionViews.buttons["Native"]
-        XCTAssertTrue(nativeSegmentPickerButton.waitForExistence(timeout: 60.0))
-        nativeSegmentPickerButton.tap()
-
-        let enableTestModeSwitch = app.collectionViews.switches["Enable Test Mode"]
-        XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
-        if (enableTestModeSwitch.value as? String) == "1" {
-            enableTestModeSwitch.tap()
-        }
-
-        let showAuthFlowButton = app.buttons["Show Auth Flow"]
-        XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
-        showAuthFlowButton.tap()
-
-        let consentAgreeButton = app.buttons["Agree"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
-        consentAgreeButton.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+        app.fc_nativeConsentAgreeButton.tap()
 
         // find + tap an institution; we add extra institutions in case
         // they don't get featured
         let institutionButton: XCUIElement?
-        let institutionTextInWebView: String?
-        let chaseInstitutionButton = app.cells["Chase"]
+        let institutionName: String?
+        let chaseBankName = "Chase"
+        let chaseInstitutionButton = app.tables.staticTexts[chaseBankName]
         if chaseInstitutionButton.waitForExistence(timeout: 10) {
             institutionButton = chaseInstitutionButton
-            institutionTextInWebView = "Chase"
+            institutionName = chaseBankName
         } else {
-            let bankOfAmericaInstitutionButton = app.cells["Bank of America"]
+            let bankOfAmericaBankName = "Bank of America"
+            let bankOfAmericaInstitutionButton = app.tables.staticTexts[bankOfAmericaBankName]
             if bankOfAmericaInstitutionButton.waitForExistence(timeout: 10) {
                 institutionButton = bankOfAmericaInstitutionButton
-                institutionTextInWebView = "Bank of America"
+                institutionName = bankOfAmericaBankName
             } else {
-                let wellsFargoInstitutionButton = app.cells["Wells Fargo"]
+                let wellsFargoBankName = "Wells Fargo"
+                let wellsFargoInstitutionButton = app.tables.staticTexts[wellsFargoBankName]
                 if wellsFargoInstitutionButton.waitForExistence(timeout: 10) {
                     institutionButton = wellsFargoInstitutionButton
-                    institutionTextInWebView = "Wells Fargo"
+                    institutionName = wellsFargoBankName
                 } else {
                     institutionButton = nil
-                    institutionTextInWebView = nil
+                    institutionName = nil
                 }
             }
         }
-        guard let institutionButton = institutionButton, let institutionTextInWebView = institutionTextInWebView else {
+        guard let institutionButton = institutionButton, let institutionName = institutionName else {
             XCTFail("Couldn't find a Live Mode institution.")
             return
         }
         institutionButton.tap()
 
-        let prepaneContinueButton = app.buttons["Continue"]
-        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0))
-        prepaneContinueButton.tap()
+        // ...at this point the bank is either:
+        // 1. active, which means prepane is visible
+        // 2. under maintenance, which means an 'error' screen is visible
 
-        // check that the WebView loaded
-        let institutionWebViewText = app.webViews
-            .staticTexts
-            .containing(NSPredicate(format: "label CONTAINS '\(institutionTextInWebView)'"))
-            .firstMatch
-        XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
+        // (1) bank is NOT under maintenance
+        if app.fc_nativePrepaneContinueButton_noWait.waitForExistence(timeout: 60) {
+            app.fc_nativePrepaneContinueButton.tap()
 
-        let secureWebViewCancelButton = app.buttons["Cancel"]
-        XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 60.0))
-        secureWebViewCancelButton.tap()
+            // check that the WebView loaded
+            var predicateString = "label CONTAINS '\(institutionName)'"
+            if institutionName == "Chase" {
+                // Chase does not contain the word "Chase" on their log-in page
+                predicateString = "label CONTAINS 'username' OR label CONTAINS 'password'"
+            }
+            let institutionWebViewText = app.webViews
+                .staticTexts
+                .containing(NSPredicate(format: predicateString))
+                .firstMatch
+            XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
+
+            app.fc_secureWebViewCancelButton.tap()
+
+            app.fc_nativePrepaneCancelButton.tap()
+        }
+        // (2) bank IS under maintenance
+        else {
+            // check that we see a maintenance error
+            let errorViewText = app
+                .textViews
+                .containing(NSPredicate(format: "label CONTAINS 'unavailable' OR label CONTAINS 'maintenance' OR label CONTAINS 'scheduled'"))
+                .firstMatch
+            XCTAssertTrue(errorViewText.waitForExistence(timeout: 10))
+        }
 
         let navigationBarCloseButton = app.navigationBars.buttons["close"]
         XCTAssertTrue(navigationBarCloseButton.waitForExistence(timeout: 60.0))
         navigationBarCloseButton.tap()
 
-        let cancelAlert = app.alerts["Are you sure you want to cancel?"]
-        XCTAssertTrue(cancelAlert.waitForExistence(timeout: 60.0))
-
-        let cancelAlertButon = app.alerts.buttons["Yes, cancel"]
-        XCTAssertTrue(cancelAlertButon.waitForExistence(timeout: 60.0))
-        cancelAlertButon.tap()
+        let exitConfirmationOKButton = app.buttons["close_confirmation_ok"]
+        XCTAssertTrue(exitConfirmationOKButton.waitForExistence(timeout: 5))
+        exitConfirmationOKButton.tap()
 
         let playgroundCancelAlert = app.alerts["Cancelled"]
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 60.0))
@@ -232,107 +225,165 @@ final class FinancialConnectionsUITests: XCTestCase {
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthWebAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
-        let playgroundCell = app.tables.staticTexts["Playground"]
-        XCTAssertTrue(playgroundCell.waitForExistence(timeout: 60.0))
-        playgroundCell.tap()
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundDataFlowButton.tap()
 
-        let dataSegmentPickerButton = app.collectionViews.buttons["Data"]
-        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-        dataSegmentPickerButton.tap()
+        let webSegmentPickerButton = app.segmentedControls.buttons["Web"]
+        XCTAssertTrue(webSegmentPickerButton.waitForExistence(timeout: 60.0))
+        webSegmentPickerButton.tap()
 
-        let nativeSegmentPickerButton = app.collectionViews.buttons["Web"]
-        XCTAssertTrue(nativeSegmentPickerButton.waitForExistence(timeout: 60.0))
-        nativeSegmentPickerButton.tap()
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        enableTestModeSwitch.turnSwitch(on: false)
 
-        let enableTestModeSwitch = app.collectionViews.switches["Enable Test Mode"]
-        XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
-        if (enableTestModeSwitch.value as? String) == "1" {
-            enableTestModeSwitch.tap()
-        }
+        app.fc_playgroundShowAuthFlowButton.tap()
 
-        let showAuthFlowButton = app.buttons["Show Auth Flow"]
-        XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
-        showAuthFlowButton.tap()
-
-        let consentAgreeButton = app.webViews.buttons["Agree"]
+        let consentAgreeButton = app.webViews
+            .buttons
+            .containing(NSPredicate(format: "label CONTAINS 'Agree'"))
+            .firstMatch
         XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to load
         consentAgreeButton.tap()
 
         // find + tap an institution; we add extra institutions in case
         // they don't get featured
         let institutionButton: XCUIElement?
-        let institutionTextInWebView: String?
-        let chaseInstitutionButton = app.webViews.buttons["Chase"]
-        if chaseInstitutionButton.waitForExistence(timeout: 10) {
-            institutionButton = chaseInstitutionButton
-            institutionTextInWebView = "Chase"
+        let institutionName: String?
+        let capitalOneBankName = "Capital One"
+        let capitalOneInstitutionButton = app.webViews
+            .buttons
+            .containing(NSPredicate(format: "label CONTAINS '\(capitalOneBankName)'"))
+            .firstMatch
+        if capitalOneInstitutionButton.waitForExistence(timeout: 10) {
+            institutionButton = capitalOneInstitutionButton
+            institutionName = capitalOneBankName
         } else {
-            let bankOfAmericaInstitutionButton = app.webViews.buttons["Bank of America"]
-            if bankOfAmericaInstitutionButton.waitForExistence(timeout: 10) {
-                institutionButton = bankOfAmericaInstitutionButton
-                institutionTextInWebView = "Bank of America"
+            let wellsFargoBankName = "Wells Fargo"
+            let wellsFargoInstitutionButton = app.webViews
+                .buttons
+                .containing(NSPredicate(format: "label CONTAINS '\(wellsFargoBankName)'"))
+                .firstMatch
+            if wellsFargoInstitutionButton.waitForExistence(timeout: 10) {
+                institutionButton = wellsFargoInstitutionButton
+                institutionName = wellsFargoBankName
             } else {
-                let wellsFargoInstitutionButton = app.webViews.buttons["Wells Fargo"]
-                if wellsFargoInstitutionButton.waitForExistence(timeout: 10) {
-                    institutionButton = wellsFargoInstitutionButton
-                    institutionTextInWebView = "Wells Fargo"
-                } else {
-                    institutionButton = nil
-                    institutionTextInWebView = nil
-                }
+                institutionButton = nil
+                institutionName = nil
             }
         }
-        guard let institutionButton = institutionButton, let institutionTextInWebView = institutionTextInWebView else {
+        guard let institutionButton = institutionButton, let institutionName = institutionName else {
             XCTFail("Couldn't find a Live Mode institution.")
             return
         }
         institutionButton.tap()
 
+        // ...at this point the bank is either:
+        // 1. active, which means prepane is visible
+        // 2. under maintenance, which means an 'error' screen is visible
+
         let prepaneContinueButton = app.webViews
             .buttons
             .containing(NSPredicate(format: "label CONTAINS 'Continue'"))
             .firstMatch
-        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0))
-        prepaneContinueButton.tap()
 
-        // check that the WebView loaded
-        let institutionWebViewText = app.webViews
-            .staticTexts
-            .containing(NSPredicate(format: "label CONTAINS '\(institutionTextInWebView)'"))
-            .firstMatch
-        XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
+        // (1) bank is NOT under maintenance
+        if prepaneContinueButton.waitForExistence(timeout: 60.0) {
+            prepaneContinueButton.tap()
 
-        let secureWebViewCancelButton = app.buttons["Cancel"]
-        XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 60.0))
-        secureWebViewCancelButton.tap()
+            // check that the WebView loaded
+            var predicateString = "label CONTAINS '\(institutionName)'"
+            if institutionName == capitalOneBankName {
+                // Capital One does not contain the word "Capital One" on their log-in page
+                predicateString = "label CONTAINS 'Username' OR label CONTAINS 'Password'"
+            }
+            let institutionWebViewText = app.webViews
+                .staticTexts
+                .containing(NSPredicate(format: predicateString))
+                .firstMatch
+            XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
+        }
+        // (2) bank IS under maintenance
+        else {
+            // check that we see a maintenance error
+            let errorViewText = app.webViews
+                .staticTexts
+                .containing(NSPredicate(format: "label CONTAINS 'unavailable' OR label CONTAINS 'maintenance' OR label CONTAINS 'scheduled'"))
+                .firstMatch
+            XCTAssertTrue(errorViewText.waitForExistence(timeout: 10))
+        }
+
+        app.fc_secureWebViewCancelButton.tap()
 
         let playgroundCancelAlert = app.alerts["Cancelled"]
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 60.0))
     }
-}
 
-extension XCTestCase {
-    fileprivate func wait(timeout: TimeInterval) {
-        _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
+    func testSearchInLiveModeNativeAuthFlow() throws {
+        let app = XCUIApplication.fc_launch()
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundPaymentFlowButton.tap()
+        app.fc_playgroundNativeButton.tap()
+
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        enableTestModeSwitch.turnSwitch(on: false)
+
+        app.fc_playgroundShowAuthFlowButton.tap()
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let searchBarTextField = app
+            .tables
+            .otherElements
+            .textFields["search_bar_text_field"]
+        XCTAssertTrue(searchBarTextField.waitForExistence(timeout: 120.0))
+        searchBarTextField.tap()
+        searchBarTextField.typeText("Bank of America")
+
+        let bankOfAmericaSearchRow = app.tables.staticTexts["Bank of America"]
+        XCTAssertTrue(bankOfAmericaSearchRow.waitForExistence(timeout: 120.0))
+        bankOfAmericaSearchRow.tap()
+
+        // ...at this point the bank is either:
+        // 1. active, which means prepane is visible
+        // 2. under maintenance, which means an 'error' screen is visible
+
+        // (1) bank is NOT under maintenance
+        if app.fc_nativePrepaneContinueButton_noWait.waitForExistence(timeout: 60) {
+            // close prepane
+            app.fc_nativePrepaneCancelButton.tap()
+
+            searchBarTextField.tap()
+            clear(textField: searchBarTextField)
+            searchBarTextField.typeText("testing123")
+
+            let institutionSearchNoResultsSubtitle = app
+                .otherElements["institution_search_no_results_subtitle"]
+                .links
+                .firstMatch
+            XCTAssertTrue(institutionSearchNoResultsSubtitle.waitForExistence(timeout: 120.0))
+            institutionSearchNoResultsSubtitle.tap()
+
+            // check that manual entry screen is opened
+            let manualEntryContinueButton = app.buttons["manual_entry_continue_button"]
+            XCTAssertTrue(manualEntryContinueButton.waitForExistence(timeout: 60.0))
+        }
+        // (2) bank IS under maintenance
+        else {
+            // check that we see a maintenance error
+            let errorViewText = app
+                .textViews
+                .containing(NSPredicate(format: "label CONTAINS 'unavailable' OR label CONTAINS 'maintenance' OR label CONTAINS 'scheduled'"))
+                .firstMatch
+            XCTAssertTrue(errorViewText.waitForExistence(timeout: 10))
+
+            // 'cancel' the test as the bank is under the maintenance
+        }
     }
 }
 
-extension XCUIElement {
-
-    fileprivate func wait(
-        until expression: @escaping (XCUIElement) -> Bool,
-        timeout: TimeInterval
-    ) -> Bool {
-        let expectation = XCTNSPredicateExpectation(
-            predicate: NSPredicate { _, _ in
-                expression(self)
-            },
-            object: nil
-        )
-        let result = XCTWaiter().wait(for: [expectation], timeout: timeout)
-        return (result == .completed)
+extension XCTestCase {
+    func wait(timeout: TimeInterval) {
+        _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
     }
 }

@@ -10,11 +10,15 @@
 
 "Area" = "Área";
 
+"BLIK code" = "Código BLIK";
+
 "BSB number" = "Número BSB";
 
 "Billing address is same as shipping" = "O endereço de faturamento é igual ao de envio";
 
 "Cancel" = "Cancelar";
+
+"Card brand" = "Bandeira do cartão";
 
 "City" = "Cidade";
 
@@ -30,11 +34,15 @@
 
 "County" = "Condado";
 
+"Date is empty." = "A data está vazia.";
+
 "Department" = "Departamento";
 
 "District" = "Distrito";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Deseja fechar este formulário?";
 
 "Done" = "Concluído";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "Telefone";
 
+"Phone number" = "Telefone";
+
 "Postal code" = "Código postal";
 
 "Prefecture" = "Prefeitura";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "Remover conta bancária com final %@";
 
+"Remove card" = "Remover cartão";
+
 "Search" = "Pesquisar";
+
+"Select card brand (optional)" = "Selecionar bandeira de cartão (opcional)";
+
+"Sort code" = "Sort code";
 
 "State" = "Estado";
 
@@ -102,6 +118,8 @@
 
 "The account number you entered is incomplete." = "O número de conta inserido está incompleto.";
 
+"The sort code you entered is invalid." = "O sorte code que você inseriu é inválido.";
+
 "Town or city" = "Cidade ou município";
 
 "UPI ID" = "ID UPI";
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "Use o rotor para acessar os links";
 
+"Your BLIK code is incomplete." = "Seu código BLIK está incompleto.";
+
+"Your BLIK code is invalid." = "Seu código BLIK é inválido.";
+
 "Your ZIP is incomplete." = "Código postal incompleto.";
 
 "Your email is invalid." = "Seu e-mail é inválido.";
+
+"Your payment information will not be saved." = "Seus dados de pagamento não serão salvos.";
 
 "Your postal code is incomplete." = "Código postal incompleto.";
 

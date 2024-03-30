@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
+@available(iOS 14.0, *)
 final class PlaygroundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()

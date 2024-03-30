@@ -28,31 +28,16 @@ protocol LinkAccountServiceProtocol {
         withEmail email: String?,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
-
-    /// Checks if we have seen this email log out before
-    /// - Parameter email: true if this email has logged out before, false otherwise
-    func hasEmailLoggedOut(email: String) -> Bool
 }
 
 final class LinkAccountService: LinkAccountServiceProtocol {
 
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
-
-    /// The default cookie store used by new instances of the service.
-    static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
 
     init(
-        apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = defaultCookieStore
+        apiClient: STPAPIClient = .shared
     ) {
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
-    }
-
-    /// Returns true if we have a session cookie stored on device
-    var hasSessionCookie: Bool {
-        return cookieStore.formattedSessionCookies() != nil
     }
 
     func lookupAccount(
@@ -61,11 +46,11 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     ) {
         ConsumerSession.lookupSession(
             for: email,
-            with: apiClient,
-            cookieStore: cookieStore
-        ) { [apiClient, cookieStore] result in
+            with: apiClient
+        ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
                     completion(.success(
@@ -73,8 +58,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             email: session.consumerSession.emailAddress,
                             session: session.consumerSession,
                             publishableKey: session.publishableKey,
-                            apiClient: apiClient,
-                            cookieStore: cookieStore
+                            apiClient: apiClient
                         )
                     ))
                 case .notFound:
@@ -84,8 +68,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 email: email,
                                 session: nil,
                                 publishableKey: nil,
-                                apiClient: self.apiClient,
-                                cookieStore: self.cookieStore
+                                apiClient: self.apiClient
                             )
                         ))
                     } else {
@@ -95,22 +78,9 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     completion(.success(nil))
                 }
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure()
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
                 completion(.failure(error))
             }
         }
     }
-
-    func hasEmailLoggedOut(email: String) -> Bool {
-        guard let hashedEmail = email.lowercased().sha256 else {
-            return false
-        }
-
-        return cookieStore.read(key: .lastLogoutEmail) == hashedEmail
-    }
-
-    func getLastSignUpEmail() -> String? {
-        return cookieStore.read(key: .lastSignupEmail)
-    }
-
 }

@@ -41,6 +41,11 @@ import UIKit
         return string(as: .national).count >= metadata.pattern.count
     }
 
+    /// Whether the phone number is empty (it may have a country code, but it has no other digits)
+    public var isEmpty: Bool {
+        return number.isEmpty
+    }
+
     /// The phone number without the country prefix and containing only digits
     public let number: String
     private let metadata: Metadata
@@ -101,7 +106,7 @@ import UIKit
         }
 
         // This second filter uses the device's locale to pick a winner out of N candidates.
-        if let winner = candidates.first(where: { $0.regionCode == locale.regionCode }) {
+        if let winner = candidates.first(where: { $0.regionCode == locale.stp_regionCode }) {
             return makePhoneNumber(winner)
         }
 
@@ -337,7 +342,7 @@ import UIKit
             Metadata(prefix: "+508", regionCode: "PM", pattern: "## ## ##"),
             Metadata(prefix: "+509", regionCode: "HT", pattern: "## ## ####"),
             Metadata(prefix: "+51", regionCode: "PE", pattern: "### ### ###"),
-            Metadata(prefix: "+52", regionCode: "MX", pattern: "### ### ### ####"),
+            Metadata(prefix: "+52", regionCode: "MX", pattern: "### ### ####"),
             Metadata(prefix: "+537", regionCode: "CY", pattern: ""),
             Metadata(prefix: "+54", regionCode: "AR", pattern: "## ##-####-####"),
             Metadata(prefix: "+55", regionCode: "BR", pattern: "## #####-####"),

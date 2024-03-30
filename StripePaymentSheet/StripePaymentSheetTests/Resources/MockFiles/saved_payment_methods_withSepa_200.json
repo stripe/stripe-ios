@@ -1,0 +1,39 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "pm_1OAhdyKG6vc7r7YCoWxTo7uE",
+      "object": "payment_method",
+      "billing_details": {
+        "address": {
+          "city": "San Francisco",
+          "country": "US",
+          "line1": "123 Main",
+          "line2": "",
+          "postal_code": "94016",
+          "state": "CA"
+        },
+        "email": "test@stripe.com",
+        "name": "Jane Doe",
+        "phone": null
+      },
+      "created": 1699572494,
+      "customer": "cus_Oyag123456789",
+      "livemode": false,
+      "sepa_debit": {
+        "bank_code": "37040044",
+        "branch_code": "",
+        "country": "DE",
+        "fingerprint": "vifs0Ho7vwRn1Miu",
+        "generated_from": {
+          "charge": null,
+          "setup_attempt": null
+        },
+        "last4": "3000"
+      },
+      "type": "sepa_debit"
+    }
+  ],
+  "has_more": false,
+  "url": "/v1/payment_methods"
+}

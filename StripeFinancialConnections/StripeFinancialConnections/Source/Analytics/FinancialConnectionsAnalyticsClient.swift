@@ -9,10 +9,18 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
+protocol FinancialConnectionsAnalyticsClientDelegate: AnyObject {
+    func analyticsClient(
+        _ analyticsClient: FinancialConnectionsAnalyticsClient,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
+}
+
 final class FinancialConnectionsAnalyticsClient {
 
     private let analyticsClient: AnalyticsClientV2
     private var additionalParameters: [String: Any] = [:]
+    weak var delegate: FinancialConnectionsAnalyticsClientDelegate?
 
     init(
         analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(
@@ -22,12 +30,22 @@ final class FinancialConnectionsAnalyticsClient {
     ) {
         self.analyticsClient = analyticsClient
         additionalParameters["is_webview"] = false
-        additionalParameters["navigator_language"] = Locale.current.identifier
+        additionalParameters["navigator_language"] = Locale.current.toLanguageTag()
     }
 
-    public func log(eventName: String, parameters: [String: Any] = [:]) {
+    public func log(
+        eventName: String,
+        parameters: [String: Any] = [:],
+        pane: FinancialConnectionsSessionManifest.NextPane
+    ) {
         let eventName = "linked_accounts.\(eventName)"
-        let parameters = parameters.merging(
+
+        var parameters = parameters
+        // !!! BE CAREFUL MODIFYING "PANE" ANALYTICS CODE
+        // ITS CRITICAL FOR PANE CONVERSION !!!
+        assert(parameters["pane"] == nil, "Unexpected logic: will override 'pane' parameter.")
+        parameters["pane"] = pane.rawValue
+        parameters = parameters.merging(
             additionalParameters,
             uniquingKeysWith: { eventParameter, _ in
                 // prioritize event `parameters` over `additionalParameters`
@@ -43,7 +61,7 @@ final class FinancialConnectionsAnalyticsClient {
             !parameters.contains(where: { type(of: $0.value) == FinancialConnectionsSessionManifest.NextPane.self }),
             "Do not pass NextPane enum. Use the raw value."
         )
-
+        assert((parameters["pane"] as? String) != nil, "We expect pane to be set as a String for all analytics events.")
         analyticsClient.log(eventName: eventName, parameters: parameters)
     }
 
@@ -65,13 +83,13 @@ final class FinancialConnectionsAnalyticsClient {
 extension FinancialConnectionsAnalyticsClient {
 
     func logPaneLoaded(pane: FinancialConnectionsSessionManifest.NextPane) {
-        log(eventName: "pane.loaded", parameters: ["pane": pane.rawValue])
+        log(eventName: "pane.loaded", pane: pane)
     }
 
     func logExpectedError(
         _ error: Error,
-        errorName: String?,
-        pane: FinancialConnectionsSessionManifest.NextPane?
+        errorName: String,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) {
         log(
             error: error,
@@ -83,8 +101,8 @@ extension FinancialConnectionsAnalyticsClient {
 
     func logUnexpectedError(
         _ error: Error,
-        errorName: String?,
-        pane: FinancialConnectionsSessionManifest.NextPane?
+        errorName: String,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) {
         log(
             error: error,
@@ -96,12 +114,18 @@ extension FinancialConnectionsAnalyticsClient {
 
     private func log(
         error: Error,
-        errorName: String?,
+        errorName: String,
         eventName: String,
-        pane: FinancialConnectionsSessionManifest.NextPane?
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) {
+        FeedbackGeneratorAdapter.errorOccurred()
+        FinancialConnectionsEvent
+            .events(fromError: error)
+            .forEach { event in
+                delegate?.analyticsClient(self, didReceiveEvent: event)
+            }
+
         var parameters: [String: Any] = [:]
-        parameters["pane"] = pane?.rawValue
         parameters["error"] = errorName
         if let stripeError = error as? StripeError,
             case .apiError(let apiError) = stripeError
@@ -111,16 +135,25 @@ extension FinancialConnectionsAnalyticsClient {
             parameters["code"] = apiError.code
         } else {
             parameters["error_type"] = (error as NSError).domain
-            parameters["error_message"] = (error as NSError).localizedDescription
+            parameters["error_message"] = {
+                if let sheetError = error as? FinancialConnectionsSheetError {
+                    switch sheetError {
+                    case .unknown(let debugDescription):
+                        return debugDescription
+                    }
+                } else {
+                    return (error as NSError).localizedDescription
+                }
+            }() as String
             parameters["code"] = (error as NSError).code
         }
-        log(eventName: eventName, parameters: parameters)
+        log(eventName: eventName, parameters: parameters, pane: pane)
     }
 
     func logMerchantDataAccessLearnMore(pane: FinancialConnectionsSessionManifest.NextPane) {
         log(
             eventName: "click.data_access.learn_more",
-            parameters: ["pane": pane.rawValue]
+            pane: pane
         )
     }
 
@@ -143,7 +176,6 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["account_holder_id"] = manifest.accountholderToken
     }
 
-    @available(iOSApplicationExtension, unavailable)
     static func paneFromViewController(
         _ viewController: UIViewController?
     ) -> FinancialConnectionsSessionManifest.NextPane {
@@ -162,12 +194,24 @@ extension FinancialConnectionsAnalyticsClient {
             return .success
         case is ManualEntryViewController:
             return .manualEntry
-        case is ManualEntrySuccessViewController:
-            return .manualEntrySuccess
         case is ResetFlowViewController:
             return .resetFlow
         case is TerminalErrorViewController:
             return .terminalError
+        case is NetworkingLinkSignupViewController:
+            return .networkingLinkSignupPane
+        case is NetworkingLinkLoginWarmupViewController:
+            return .networkingLinkLoginWarmup
+        case is NetworkingLinkVerificationViewController:
+            return .networkingLinkVerification
+        case is NetworkingLinkStepUpVerificationViewController:
+            return .networkingLinkStepUpVerification
+        case is NetworkingSaveToLinkVerificationViewController:
+            return .networkingSaveToLinkVerification
+        case is LinkAccountPickerViewController:
+            return .linkAccountPicker
+        case is ErrorViewController:
+            return .unexpectedError
         default:
             return .unparsable
         }

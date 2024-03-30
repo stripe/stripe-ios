@@ -10,11 +10,15 @@
 
 "Area" = "Area";
 
+"BLIK code" = "Kode BLIK";
+
 "BSB number" = "Nomor BSB";
 
 "Billing address is same as shipping" = "Alamat tagihan sama dengan pengiriman";
 
 "Cancel" = "Batalkan";
+
+"Card brand" = "Brand kartu";
 
 "City" = "Kota";
 
@@ -30,11 +34,15 @@
 
 "County" = "County";
 
+"Date is empty." = "Data kosong.";
+
 "Department" = "Departemen";
 
 "District" = "Distrik";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Anda ingin menutup formulir ini?";
 
 "Done" = "Selesai";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "Telepon";
 
+"Phone number" = "Nomor telepon";
+
 "Postal code" = "Kode pos";
 
 "Prefecture" = "Prefektur";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "Hapus rekening bank yang berakhiran dengan %@";
 
+"Remove card" = "Hapus kartu";
+
 "Search" = "Cari";
+
+"Select card brand (optional)" = "Pilih brand kartu (opsional)";
+
+"Sort code" = "Kode sort";
 
 "State" = "Negara Bagian";
 
@@ -102,6 +118,8 @@
 
 "The account number you entered is incomplete." = "Nomor rekening yang Anda masukkan tidak lengkap.";
 
+"The sort code you entered is invalid." = "Kode sort yang Anda masukkan tidak valid.";
+
 "Town or city" = "Kabupaten atau kota";
 
 "UPI ID" = "Identifikasi UPI";
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "Gunakan rotor untuk mengakses tautan";
 
+"Your BLIK code is incomplete." = "Kode BLIK Anda tidak lengkap.";
+
+"Your BLIK code is invalid." = "Kode BLIK Anda tidak valid.";
+
 "Your ZIP is incomplete." = "ZIP Anda tidak lengkap.";
 
 "Your email is invalid." = "Email Anda tidak valid.";
+
+"Your payment information will not be saved." = "Informasi pembayaran Anda tidak akan disimpan.";
 
 "Your postal code is incomplete." = "Kode pos Anda tidak lengkap.";
 

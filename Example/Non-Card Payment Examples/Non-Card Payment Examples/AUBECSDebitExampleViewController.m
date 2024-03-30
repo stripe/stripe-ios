@@ -35,15 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
     STPAUBECSDebitFormView *formView = [[STPAUBECSDebitFormView alloc] initWithCompanyName:@"Great Company Inc."];
     formView.becsDebitFormDelegate = self;
     formView.translatesAutoresizingMaskIntoConstraints = NO;
-#ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        self.view.backgroundColor = [UIColor secondarySystemBackgroundColor];
-    } else
-#endif
-    {
-        // Fallback on earlier versions
-        self.view.backgroundColor = [UIColor systemGroupedBackgroundColor];
-    }
+    self.view.backgroundColor = [UIColor secondarySystemBackgroundColor];
 
     [self.view addSubview:formView];
 

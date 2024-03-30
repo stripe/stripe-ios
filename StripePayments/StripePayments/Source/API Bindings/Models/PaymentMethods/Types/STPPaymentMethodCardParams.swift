@@ -39,8 +39,10 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     @objc public var token: String?
     /// Card security code. It is highly recommended to always include this value.
     @objc public var cvc: String?
-    /// The last 4 digits of the card.
+    /// Information about the networks to use with this payment method.
+    @objc public var networks: STPPaymentMethodCardNetworksParams?
 
+    /// The last 4 digits of the card.
     @objc public var last4: String? {
         if number != nil && (number?.count ?? 0) >= 4 {
             return (number as NSString?)?.substring(from: (number?.count ?? 0) - 4) ?? ""
@@ -60,6 +62,7 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
             "expMonth = \(expMonth ?? 0)",
             "expYear = \(expYear ?? 0)",
             "cvc = \(((cvc) != nil ? "<redacted>" : nil) ?? "")",
+            "networks = \(networks?.description ?? "")",
             // Token
             "token = \(token ?? "")",
         ]
@@ -82,6 +85,7 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: expYear)): "exp_year",
             NSStringFromSelector(#selector(getter: cvc)): "cvc",
             NSStringFromSelector(#selector(getter: token)): "token",
+            NSStringFromSelector(#selector(getter: networks)): "networks",
         ]
     }
 
@@ -93,6 +97,7 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
         copyCardParams.expMonth = expMonth
         copyCardParams.expYear = expYear
         copyCardParams.cvc = cvc
+        copyCardParams.networks = networks
         return copyCardParams
     }
 
@@ -119,6 +124,6 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
         }
 
         return number == other?.number && expMonth == other?.expMonth && expYear == other?.expYear
-            && cvc == other?.cvc && token == other?.token
+            && cvc == other?.cvc && token == other?.token && networks?.preferred == other?.networks?.preferred
     }
 }

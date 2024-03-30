@@ -57,6 +57,8 @@ class SavedPaymentMethodCollectionView: UICollectionView {
 protocol PaymentOptionCellDelegate: AnyObject {
     func paymentOptionCellDidSelectRemove(
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
+    func paymentOptionCellDidSelectEdit(
+        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
 }
 
 extension SavedPaymentMethodCollectionView {
@@ -84,7 +86,7 @@ extension SavedPaymentMethodCollectionView {
                 top: 15, left: 24, bottom: 15, right: 24)
             return shadowRoundedRectangle
         }()
-        lazy var deleteButton: CircularButton = {
+        lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .remove,
                                         dangerColor: appearance.colors.danger)
             button.backgroundColor = appearance.colors.danger
@@ -110,6 +112,15 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
+        var cbcEligible: Bool = false
+
+        /// Indicates whether the cell should be editable or just removable.
+        /// If the card is a co-branded card and the merchant is eligible for card brand choice, then
+        /// the cell should be editable. Otherwise, it should be just removable.
+        var shouldAllowEditing: Bool {
+            return (viewModel?.isCoBrandedCard ?? false) && cbcEligible
+        }
+
         // MARK: - UICollectionViewCell
 
         override init(frame: CGRect) {
@@ -125,13 +136,14 @@ extension SavedPaymentMethodCollectionView {
             isAccessibilityElement = false
             // We choose the rectangle to represent the cell
             label.isAccessibilityElement = false
-            accessibilityElements = [shadowRoundedRectangle, deleteButton]
+            accessibilityElements = [shadowRoundedRectangle, accessoryButton]
             shadowRoundedRectangle.isAccessibilityElement = true
+            shadowRoundedRectangle.accessibilityTraits = [.button]
 
             paymentMethodLogo.contentMode = .scaleAspectFit
-            deleteButton.addTarget(self, action: #selector(didSelectDelete), for: .touchUpInside)
+            accessoryButton.addTarget(self, action: #selector(didSelectAccessory), for: .touchUpInside)
             let views = [
-                label, shadowRoundedRectangle, paymentMethodLogo, plus, selectedIcon, deleteButton,
+                label, shadowRoundedRectangle, paymentMethodLogo, plus, selectedIcon, accessoryButton,
             ]
             views.forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -173,9 +185,9 @@ extension SavedPaymentMethodCollectionView {
                 selectedIcon.bottomAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: 6),
 
-                deleteButton.trailingAnchor.constraint(
+                accessoryButton.trailingAnchor.constraint(
                     equalTo: shadowRoundedRectangle.trailingAnchor, constant: 6),
-                deleteButton.topAnchor.constraint(
+                accessoryButton.topAnchor.constraint(
                     equalTo: shadowRoundedRectangle.topAnchor, constant: -6),
             ])
         }
@@ -188,10 +200,12 @@ extension SavedPaymentMethodCollectionView {
             fatalError("init(coder:) has not been implemented")
         }
 
+        #if !canImport(CompositorServices)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             update()
         }
+        #endif
 
         override var isSelected: Bool {
             didSet {
@@ -200,11 +214,11 @@ extension SavedPaymentMethodCollectionView {
         }
 
         override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-            let translatedPoint = deleteButton.convert(point, from: self)
+            let translatedPoint = accessoryButton.convert(point, from: self)
 
-            // Ensures taps on the delete button are handled properly as it lives outside its cells' bounds
-            if deleteButton.bounds.contains(translatedPoint) && !deleteButton.isHidden {
-                return deleteButton.hitTest(translatedPoint, with: event)
+            // Ensures taps on the accessory button are handled properly as it lives outside its cells' bounds
+            if accessoryButton.bounds.contains(translatedPoint) && !accessoryButton.isHidden {
+                return accessoryButton.hitTest(translatedPoint, with: event)
             }
 
             return super.hitTest(point, with: event)
@@ -212,11 +226,12 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
 
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
+            self.cbcEligible = cbcEligible
             update()
         }
 
@@ -227,14 +242,20 @@ extension SavedPaymentMethodCollectionView {
                     self.label.alpha = 0.6
                 case .shouldEnableUserInteraction:
                     self.label.alpha = 1
+                default:
+                    break
                 }
             }
         }
 
         // MARK: - Private Methods
         @objc
-        private func didSelectDelete() {
-            delegate?.paymentOptionCellDidSelectRemove(self)
+        private func didSelectAccessory() {
+            if shouldAllowEditing {
+                delegate?.paymentOptionCellDidSelectEdit(self)
+            } else {
+                delegate?.paymentOptionCellDidSelectRemove(self)
+            }
         }
 
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
@@ -274,20 +295,23 @@ extension SavedPaymentMethodCollectionView {
                     } else {
                         label.text = paymentMethod.paymentSheetLabel
                     }
+                    accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                    paymentMethodLogo.image = paymentMethod.makeCarouselImage(for: self)
+                    paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage()
                 case .applePay:
                     // TODO (cleanup) - get this from PaymentOptionDisplayData?
                     label.text = String.Localized.apple_pay
+                    accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(for: self)
                 case .link:
                     label.text = STPPaymentMethodType.link.displayName
+                    accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeCarouselImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(for: self)
                     paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
                         forBackgroundColor: appearance.colors.componentBackground
                     )
@@ -317,13 +341,21 @@ extension SavedPaymentMethodCollectionView {
 
             if isRemovingPaymentMethods {
                 if case .saved = viewModel {
-                    deleteButton.isHidden = false
-                    deleteButton.backgroundColor = appearance.colors.danger
-                    deleteButton.iconColor = appearance.colors.danger.contrastingColor
-                    contentView.bringSubviewToFront(deleteButton)
+                    accessoryButton.isHidden = false
+                    if shouldAllowEditing {
+                        accessoryButton.set(style: .edit, with: appearance.colors.danger)
+                        accessoryButton.backgroundColor = UIColor.dynamic(
+                            light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
+                        accessoryButton.iconColor = appearance.colors.icon
+                    } else {
+                        accessoryButton.set(style: .remove, with: appearance.colors.danger)
+                        accessoryButton.backgroundColor = appearance.colors.danger
+                        accessoryButton.iconColor = appearance.colors.danger.contrastingColor
+                    }
+                    contentView.bringSubviewToFront(accessoryButton)
                     applyDefaultStyle()
                 } else {
-                    deleteButton.isHidden = true
+                    accessoryButton.isHidden = true
 
                     // apply disabled style
                     shadowRoundedRectangle.isEnabled = false
@@ -335,7 +367,7 @@ extension SavedPaymentMethodCollectionView {
                 }
 
             } else if isSelected {
-                deleteButton.isHidden = true
+                accessoryButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
                 label.textColor = appearance.colors.text
                 paymentMethodLogo.alpha = 1
@@ -348,11 +380,11 @@ extension SavedPaymentMethodCollectionView {
                 shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
                 shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
             } else {
-                deleteButton.isHidden = true
+                accessoryButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
                 applyDefaultStyle()
             }
-            deleteButton.isAccessibilityElement = !deleteButton.isHidden
+            accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
             shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.colors.componentBackground
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
 

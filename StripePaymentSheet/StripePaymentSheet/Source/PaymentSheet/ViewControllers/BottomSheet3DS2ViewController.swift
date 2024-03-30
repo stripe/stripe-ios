@@ -87,6 +87,10 @@ extension BottomSheet3DS2ViewController: BottomSheetContentViewController {
     var requiresFullScreen: Bool {
         return true
     }
+
+    func didFinishAnimatingHeight() {
+        // no-op
+    }
 }
 
 // MARK: - SheetNavigationBarDelegate

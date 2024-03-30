@@ -8,228 +8,136 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(CustomerSessionBetaAccess) @_spi(STP) import StripePayments
 
 extension STPAPIClient {
-    func listPaymentMethods(
-        forCustomer customerID: String,
-        using ephemeralKeySecret: String,
-        types: [STPPaymentMethodType] = [.card],
-        completion: @escaping STPPaymentMethodsCompletionBlock
-    ) {
-        let header = authorizationHeader(using: ephemeralKeySecret)
-        // Unfortunately, this API only supports fetching saved pms for one type at a time
-        var shared_allPaymentMethods = [STPPaymentMethod]()
-        var shared_lastError: Error?
-        let group = DispatchGroup()
-
-        for type in types {
-            group.enter()
-            let params = [
-                "customer": customerID,
-                "type": STPPaymentMethod.string(from: type),
-            ]
-            APIRequest<STPPaymentMethodListDeserializer>.getWith(
-                self,
-                endpoint: APIEndpointPaymentMethods,
-                additionalHeaders: header,
-                parameters: params as [String: Any]
-            ) { deserializer, _, error in
-                DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
-                    // .barrier ensures we're the only thing writing to shared_ vars
-                    if let error = error {
-                        shared_lastError = error
-                    }
-                    if let paymentMethods = deserializer?.paymentMethods {
-                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
-                    }
-                    group.leave()
-                }
-            }
-        }
-
-        group.notify(queue: DispatchQueue.main) {
-            completion(shared_allPaymentMethods, shared_lastError)
-        }
-    }
-
-    internal func detachPaymentMethod(
-        _ paymentMethodID: String,
-        fromCustomerUsing ephemeralKeySecret: String,
-        completion: @escaping STPErrorBlock
-    ) {
-        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
-        APIRequest<STPPaymentMethod>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
-            parameters: [:]
-        ) { _, _, error in
-            completion(error)
-        }
-    }
-
-    /// Retrieve a customer
-    /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    func retrieveCustomer(
-        _ customerID: String,
-        using ephemeralKey: String,
-        completion: @escaping STPCustomerCompletionBlock
-    ) {
-        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
-        APIRequest<STPCustomer>.getWith(
-            self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey),
-            parameters: [:]
-        ) { object, _, error in
-            completion(object, error)
-        }
-    }
-}
-
-extension STPAPIClient {
-    typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
-    typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
-    typealias STPElementsSessionCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
 
-    func retrievePaymentIntentWithPreferences(
-        withClientSecret secret: String,
-        completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
-    ) {
-        var parameters: [String: Any] = [:]
-
-        guard STPPaymentIntentParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
-            completion(.failure(NSError.stp_clientSecretError()))
-            return
+    func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode,
+                                    epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
+                                    customerAccessProvider: PaymentSheet.CustomerAccessProvider?) -> [String: Any] {
+        var parameters: [String: Any] = [
+            "locale": Locale.current.toLanguageTag(),
+            "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
+        ]
+        if case .customerSession(let clientSecret) = customerAccessProvider {
+            parameters["customer_session_client_secret"] = clientSecret
         }
+        switch mode {
+        case .deferredIntent(let intentConfig):
+            parameters["type"] = "deferred_intent"
+            parameters["key"] = publishableKey
+            parameters["deferred_intent"] = {
+                var deferredIntent = [String: Any]()
+                deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes
+                deferredIntent["on_behalf_of"] = intentConfig.onBehalfOf
+                if let paymentMethodConfigurationId = intentConfig.paymentMethodConfigurationId {
+                    deferredIntent["payment_method_configuration"] = ["id": paymentMethodConfigurationId]
+                }
+                switch intentConfig.mode {
+                case .payment(let amount, let currency, let setupFutureUsage, let captureMethod):
+                    deferredIntent["mode"] = "payment"
+                    deferredIntent["amount"] = amount
+                    deferredIntent["currency"] = currency
+                    deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
+                    deferredIntent["capture_method"] = captureMethod.rawValue
+                case .setup(let currency, let setupFutureUsage):
+                    deferredIntent["mode"] = "setup"
+                    deferredIntent["currency"] = currency
+                    deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
+                }
+                return deferredIntent
+            }()
+        case .paymentIntentClientSecret(let clientSecret):
+            parameters["type"] = "payment_intent"
+            parameters["client_secret"] = clientSecret
+            parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
+        case .setupIntentClientSecret(let clientSecret):
+            parameters["type"] = "setup_intent"
+            parameters["client_secret"] = clientSecret
+            parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
+        }
+        return parameters
+    }
 
-        parameters["client_secret"] = secret
-        parameters["type"] = "payment_intent"
-        parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
-        parameters["locale"] = Locale.current.toLanguageTag()
-
-        APIRequest<STPPaymentIntent>.getWith(
+    func retrieveElementsSession(
+        paymentIntentClientSecret: String,
+        configuration: PaymentSheet.Configuration
+    ) async throws -> (STPPaymentIntent, STPElementsSession) {
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
-            endpoint: APIEndpointIntentWithPreferences,
-            parameters: parameters
-        ) { paymentIntentWithPreferences, _, error in
-            guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
-                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
-                return
-            }
-
-            completion(.success(paymentIntentWithPreferences))
+            endpoint: APIEndpointElementsSessions,
+            parameters: makeElementsSessionsParams(mode: .paymentIntentClientSecret(paymentIntentClientSecret),
+                                                   epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                   customerAccessProvider: configuration.customer?.customerAccessProvider)
+        )
+        // The v1/elements/sessions response contains a PaymentIntent hash that we parse out into a PaymentIntent
+        guard
+            let paymentIntentJSON = elementsSession.allResponseFields[jsonDict: "payment_method_preference"]?[jsonDict: "payment_intent"],
+            let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)
+        else {
+            throw PaymentSheetError.unknown(debugDescription: "PaymentIntent missing from v1/elements/sessions response")
         }
+        return (paymentIntent, elementsSession)
+    }
+
+    func retrieveElementsSession(
+        setupIntentClientSecret: String,
+        configuration: PaymentSheet.Configuration
+    ) async throws -> (STPSetupIntent, STPElementsSession) {
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
+            self,
+            endpoint: APIEndpointElementsSessions,
+            parameters: makeElementsSessionsParams(mode: .setupIntentClientSecret(setupIntentClientSecret),
+                                                   epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                   customerAccessProvider: configuration.customer?.customerAccessProvider)
+        )
+        // The v1/elements/sessions response contains a SetupIntent hash that we parse out into a SetupIntent
+        guard
+            let setupIntentJSON = elementsSession.allResponseFields[jsonDict: "payment_method_preference"]?[jsonDict: "setup_intent"],
+            let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: setupIntentJSON)
+        else {
+            throw PaymentSheetError.unknown(debugDescription: "SetupIntent missing from v1/elements/sessions response")
+        }
+        return (setupIntent, elementsSession)
     }
 
     func retrieveElementsSession(
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
-        completion: @escaping STPElementsSessionCompletionBlock
-    ) {
+        configuration: PaymentSheet.Configuration
+    ) async throws -> STPElementsSession {
+        let parameters = makeElementsSessionsParams(mode: .deferredIntent(intentConfig),
+                                                    epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                    customerAccessProvider: configuration.customer?.customerAccessProvider)
+        return try await APIRequest<STPElementsSession>.getWith(
+            self,
+            endpoint: APIEndpointElementsSessions,
+            parameters: parameters
+        )
+    }
+
+    func retrieveElementsSessionForCustomerSheet(paymentMethodTypes: [String]?, customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
         var parameters: [String: Any] = [:]
-        parameters["key"] = publishableKey
-        parameters["type"] = "deferred_intent" // TODO(porter) hardcoded to deferred for now
+        parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
+
+        if let customerSessionClientSecret {
+            parameters["customer_session_client_secret"] = customerSessionClientSecret.clientSecret
+        }
 
         var deferredIntent = [String: Any]()
-        deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes
-        deferredIntent["capture_method"] = intentConfig.captureMethod?.rawValue
-
-        switch intentConfig.mode {
-        case .payment(amount: let amount, currency: let currency, setupFutureUsage: let setupFutureUsage):
-            deferredIntent["mode"] = "payment"
-            deferredIntent["amount"] = amount
-            deferredIntent["currency"] = currency
-            deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
-        case .setup(currency: let currency, setupFutureUsage: let setupFutureUsage):
-            deferredIntent["mode"] = "setup"
-            deferredIntent["currency"] = currency
-            deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
+        deferredIntent["mode"] = "setup"
+        if let paymentMethodTypes {
+            deferredIntent["payment_method_types"] = paymentMethodTypes
         }
-
         parameters["deferred_intent"] = deferredIntent
 
-        APIRequest<STPElementsSession>.getWith(
+        return try await APIRequest<STPElementsSession>.getWith(
             self,
-            endpoint: APIEndpointIntentWithPreferences,
+            endpoint: APIEndpointElementsSessions,
             parameters: parameters
-        ) { elementsSession, _, error in
-            guard let elementsSession = elementsSession else {
-                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
-                return
-            }
-
-            completion(.success(elementsSession))
-        }
-    }
-
-    func retrieveSetupIntentWithPreferences(
-        withClientSecret secret: String,
-        completion: @escaping STPSetupIntentWithPreferencesCompletionBlock
-    ) {
-        var parameters: [String: Any] = [:]
-
-        guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
-            completion(.failure(NSError.stp_clientSecretError()))
-            return
-        }
-
-        parameters["client_secret"] = secret
-        parameters["type"] = "setup_intent"
-        parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
-        parameters["locale"] = Locale.current.toLanguageTag()
-
-        APIRequest<STPSetupIntent>.getWith(
-            self,
-            endpoint: APIEndpointIntentWithPreferences,
-            parameters: parameters
-        ) { setupIntentWithPreferences, _, error in
-
-            guard let setupIntentWithPreferences = setupIntentWithPreferences else {
-                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
-                return
-            }
-
-            completion(.success(setupIntentWithPreferences))
-        }
-    }
-
-    /// Retrieves either the Payment or Setup intent for the intent configuration
-    /// - Parameters:
-    ///   - intentConfig: a `PaymentSheet.IntentConfiguration`
-    ///   - secret: The client secret of the intent to be retreved
-    ///   - completion: completion callback for when the request completes
-    func retrieveIntent(
-        for intentConfig: PaymentSheet.IntentConfiguration,
-        withClientSecret secret: String
-    ) async throws -> Intent {
-        switch intentConfig.mode {
-        case .payment:
-            return try await withCheckedThrowingContinuation { continuation in
-                retrievePaymentIntent(withClientSecret: secret) { paymentIntent, error in
-                    guard let paymentIntent = paymentIntent else {
-                        continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
-                        return
-                    }
-
-                    continuation.resume(returning: .paymentIntent(paymentIntent))
-                }
-            }
-        case .setup:
-            return try await withCheckedThrowingContinuation { continuation in
-                retrieveSetupIntent(withClientSecret: secret) { setupIntent, error in
-                    guard let setupIntent = setupIntent else {
-                        continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
-                        return
-                    }
-
-                    continuation.resume(returning: .setupIntent(setupIntent))
-                }
-            }
-        }
+        )
     }
 }
 
-private let APIEndpointIntentWithPreferences = "elements/sessions"
+private let APIEndpointElementsSessions = "elements/sessions"

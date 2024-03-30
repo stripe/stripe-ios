@@ -45,9 +45,9 @@ final class DateFieldElementTest: XCTestCase {
         // Emulate a user changing the picker and hitting done button
         element.datePickerView.date = oct3_2021
         element.didSelectDate()
-        element.didFinish(element.pickerFieldView)
+        element.didFinish(element.pickerFieldView, shouldAutoAdvance: true)
 
-        XCTAssertEqual(element.pickerFieldView.displayText, "10032021")
+        XCTAssertEqual(element.pickerFieldView.displayText?.string, "10032021")
     }
 
     func testDidUpdate() {
@@ -57,7 +57,7 @@ final class DateFieldElementTest: XCTestCase {
         // Emulate a user changing the picker and hitting done button
         element.datePickerView.date = oct3_2021
         element.didSelectDate()
-        element.didFinish(element.pickerFieldView)
+        element.didFinish(element.pickerFieldView, shouldAutoAdvance: true)
         XCTAssertEqual(date, oct3_2021)
     }
 
@@ -79,7 +79,7 @@ final class DateFieldElementTest: XCTestCase {
         XCTAssertNil(date)
 
         // Emulate user hitting the done button
-        element.didFinish(element.pickerFieldView)
+        element.didFinish(element.pickerFieldView, shouldAutoAdvance: true)
         XCTAssertNil(date)
     }
 }

@@ -116,13 +116,7 @@ public class AddressViewController: UIViewController {
         return button
     }()
 
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        if #available(iOS 13.0, *) {
-            return UIActivityIndicatorView(style: .medium)
-        } else {
-            return UIActivityIndicatorView(style: .gray)
-        }
-    }()
+    private lazy var activityIndicator = UIActivityIndicatorView(style: .medium)
 
     private var hasLoadedSpecs = false
 
@@ -246,7 +240,7 @@ extension AddressViewController {
     }
 
     @objc func didTapCloseButton() {
-        delegate?.addressViewControllerDidFinish(self, with: addressDetails)
+        delegate?.addressViewControllerDidFinish(self, with: nil)
     }
 }
 
@@ -273,14 +267,11 @@ extension AddressViewController {
             defaults: .init(from: defaultValues),
             collectionMode: configuration.defaultValues.address != .init() ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
             additionalFields: .init(from: additionalFields),
-            theme: configuration.appearance.asElementsTheme
+            theme: configuration.appearance.asElementsTheme,
+            presentAutoComplete: { [weak self] in
+                self?.presentAutocomplete()
+            }
         )
-        addressSection?.didTapAutocompleteButton = { [weak self] in
-            self?.presentAutocomplete()
-        }
-        addressSection?.autoCompleteLine?.didTap = { [weak self] in
-            self?.presentAutocomplete()
-        }
     }
 
     private func loadUI() {

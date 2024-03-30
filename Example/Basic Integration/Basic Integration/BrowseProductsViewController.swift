@@ -86,15 +86,8 @@ class BrowseProductsViewController: UICollectionViewController {
         super.viewDidLoad()
         self.navigationItem.title = "Emoji Apparel"
         self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.view.backgroundColor = .white
-        collectionView?.backgroundColor = UIColor(
-            red: 246 / 255, green: 249 / 255, blue: 252 / 255, alpha: 1)
-        #if canImport(CryptoKit)
-            if #available(iOS 13.0, *) {
-                self.navigationController?.view.backgroundColor = .systemBackground
-                collectionView?.backgroundColor = .systemGray6
-            }
-        #endif
+        self.navigationController?.view.backgroundColor = .systemBackground
+        collectionView?.backgroundColor = .systemGray6
         self.navigationItem.backBarButtonItem = UIBarButtonItem(
             title: "Products", style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(

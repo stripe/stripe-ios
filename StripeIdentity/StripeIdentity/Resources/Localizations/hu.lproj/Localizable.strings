@@ -1,12 +1,12 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Automatikusan elkészítünk néhány fényképet a következő lépés során, hogy ellenőrizhessük a személyazonosságát";
+
+"Accepted forms of ID include" = "Elfogadott igazolványok, többek között";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Emellett lehetősége van arra is, hogy fotót töltsön fel az azonosító okmányáról.";
 
 "App Settings" = "Alkalmazásbeállítások";
 
-"Back driver's license photo successfully uploaded" = "Vezetői engedély hátlapfotója sikeresen feltöltve";
-
 "Back identity card photo successfully uploaded" = "Személyazonosító igazolvány hátlapfotója sikeresen feltöltve";
-
-"Back of driver's license" = "Vezetői engedély hátlapja";
 
 "Back of identity card" = "Személyazonosító igazolvány hátlapja";
 
@@ -22,57 +22,59 @@
 
 "Could not capture image" = "Nem sikerült felvételt készíteni";
 
-"Date of birth" = "Születési idő";
+"Date of Birth" = "Születési idő";
 
-"File Upload" = "Fájlfeltöltés";
-
-"File upload" = "Fájlfeltöltés";
-
-"Flip your driver's license over to the other side" = "Fordítsa vezetői engedélyét a másik oldalára";
+"Date of birth does not look valid" = "A születési idő megadása kötelező";
 
 "Flip your identity card over to the other side" = "Fordítsa személyazonosító igazolványát a másik oldalára";
 
-"Front driver's license photo successfully uploaded" = "Vezetői engedély előlapfotója sikeresen feltöltve";
-
 "Front identity card photo successfully uploaded" = "Személyazonosító igazolvány előlapfotója sikeresen feltöltve";
 
-"Front of driver's license" = "Vezetői engedély előlapja";
-
 "Front of identity card" = "Személyazonosító igazolvány előlapja";
+
+"Get ready to scan your photo ID" = "Készítse elő fényképes igazolványát a beolvasásra";
+
+"Get ready to take a selfie" = "Készüljön fel egy szelfi elkészítésére";
 
 "Go Back" = "Visszalépés";
 
 "Hold still, scanning" = "Ne mozgassa, beolvasás folyamatban";
 
+"I'm ready" = "Készen állok";
+
 "ID Number" = "Azonosítószám";
 
-"ID Type" = "Azonosító okmány típusa";
+"Individual CPF" = "Személyes CPF";
 
-"Image of passport" = "Útlevél képe";
+"Last 4 of Social Security number" = "A társadalombiztosítási szám utolsó 4 számjegye";
 
 "Loading" = "Betöltés folyamatban";
 
-"Passport" = "Útlevél";
+"Make sure you're in a well lit space." = "Válasszon jól megvilágított helyet.";
 
-"Passport photo successfully uploaded" = "Útlevélfotó sikeresen feltöltve";
+"Move closer" = "Helyezze közelebb";
+
+"Move farther" = "Helyezze távolabb";
+
+"NRIC or FIN" = "NRIC vagy FIN";
 
 "Personal ID number" = "Személyazonosító szám";
 
+"Personal Information" = "Személyes adatok";
+
+"Phone Number" = "Telefonszám";
+
+"Phone Verification" = "Telefonos ellenőrzés";
+
 "Photo Library" = "Képek";
 
-"Please upload an image of your passport" = "Töltse fel az útlevele képét";
-
-"Please upload images of the front and back of your driver's license" = "Töltse fel a vezetői engedélyének előlapját és hátlapját";
-
 "Please upload images of the front and back of your identity card" = "Töltse fel a személyazonosító igazolványának előlapját és hátlapját";
-
-"Position your driver's license in the center of the frame" = "Igazítsa vezetői engedélyét a kép közepére";
 
 "Position your face in the center of the frame." = "Igazítsa az arcát a kép közepére.";
 
 "Position your identity card in the center of the frame" = "Igazítsa személyazonosító igazolványát a kép közepére";
 
-"Position your passport in the center of the frame" = "Igazítsa útlevelét a kép közepére";
+"Retake Photos" = "Fényképek megismétlése";
 
 "Scan" = "Beolvasás";
 
@@ -84,15 +86,9 @@
 
 "Select a location to upload the front of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának előlapját";
 
-"Select back driver's license photo" = "Vezetői engedély hátlapfotójának kiválasztása";
-
 "Select back identity card photo" = "Személyazonosító igazolvány hátlapfotójának kiválasztása";
 
-"Select front driver's license photo" = "Vezetői engedély előlapfotójának kiválasztása";
-
 "Select front identity card photo" = "Személyazonosító igazolvány előlapfotójának kiválasztása";
-
-"Select passport photo" = "Útlevélfotó kiválasztása";
 
 "Selfie" = "Szelfi";
 
@@ -116,15 +112,11 @@
 
 "Upload a Photo" = "Fotó feltöltése";
 
-"Uploading back driver's license photo" = "Vezetői engedély hátlapfotójának feltöltése";
+"Upload your photo ID" = "Fényképes azonosító igazolvány feltöltése";
 
 "Uploading back identity card photo" = "Személyazonosító igazolvány hátlapfotójának feltöltése";
 
-"Uploading front driver's license photo" = "Vezetői engedély előlapfotójának feltöltése";
-
 "Uploading front identity card photo" = "Személyazonosító igazolvány előlapfotójának feltöltése";
-
-"Uploading passport photo" = "Útlevélfotó feltöltése";
 
 "Verify your identity" = "A személyazonosság igazolása";
 
@@ -132,6 +124,14 @@
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Engedélyre van szükségünk, hogy hozzáférjünk a kamerához. Engedélyezze a kamerához való hozzáférést az alkalmazásbeállításokban.";
 
+"Welcome" = "Üdvözöljük!";
+
 "You can either try again or upload an image from your device." = "Próbálkozhat újra vagy feltölthet egy képet eszközéről is.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Nincs mentve a szelfi, biztos kilép?";
+
+"driver's license" = "vezetői engedély";
+
+"government-issued photo ID" = "Állam által kiadott fényképes igazolvány";
+
+"passport" = "útlevél";

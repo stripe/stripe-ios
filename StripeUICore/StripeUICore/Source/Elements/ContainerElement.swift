@@ -52,7 +52,8 @@ extension ContainerElement {
             .drop { $0 !== element } // Drop elements (starting from the first) until we find `element`
             .dropFirst() // Drop `element` too
         for next in remainingElements {
-            if next.beginEditing() {
+            // Don't auto select hidden elements
+            if !(next is SectionElement.HiddenElement), next.beginEditing() {
                 UIAccessibility.post(notification: .screenChanged, argument: next.view)
                 return
             }

@@ -102,7 +102,7 @@ class AddressSectionElementTest: XCTestCase {
 
         // Hack to switch the country
         country.pickerView(country.pickerView, didSelectRow: 1, inComponent: 0)
-        country.didFinish(country.pickerFieldView)
+        country.didFinish(country.pickerFieldView, shouldAutoAdvance: true)
         let ZZTextFields = section.elements.compactMap { $0 as? TextFieldElement }
         let expectedZZFields = [
             Expected(label: "Postal code", isOptional: true),

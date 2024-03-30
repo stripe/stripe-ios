@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "AU BECS 直接借記";
+"AU Direct Debit" = "AU Direct Debit";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Bacs 直接借記";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "銀行";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "卡";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "Link";
 
@@ -40,17 +46,19 @@
 
 "Sofort" = "Sofort";
 
-"Timed out authenticating your payment method -- try again" = "驗證您的付款方式時超時 -- 請重試";
+"Swish" = "Swish";
+
+"Timed out authenticating your payment method -- try again" = "驗證您的支付方式時超時 -- 請重試";
 
 "UPI" = "UPI";
 
-"US Bank Account" = "美國銀行帳戶";
+"US Bank Account" = "美國銀行賬戶";
 
 "Unknown" = "未知";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我們無法驗證您的付款方式。請選擇另一付款方式並重試。";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我們未能驗證您的支付方式。請選擇另一支付方式並重試。";
 
-"WeChat Pay" = "WeChat Pay";
+"WeChat Pay" = "微信支付";
 
 "giropay" = "Giropay";
 

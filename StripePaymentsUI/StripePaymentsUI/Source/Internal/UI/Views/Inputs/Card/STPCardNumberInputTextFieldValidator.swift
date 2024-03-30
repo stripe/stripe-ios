@@ -18,21 +18,27 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     }
 
     private var overridenCardBrand: STPCardBrand?
-    var cardBrand: STPCardBrand {
+    var cardBrandState: STPCBCController.BrandState {
         if let overridenCardBrand = overridenCardBrand {
-            return overridenCardBrand
+            return .brand(overridenCardBrand)
         }
+
+        if cbcController.cbcEnabled {
+            return cbcController.brandState
+        }
+
         guard let inputValue = inputValue,
             STPBINController.shared.hasBINRanges(forPrefix: inputValue)
         else {
             return .unknown
         }
 
-        return STPCardValidator.brand(forNumber: inputValue)
+        return .brand(STPCardValidator.brand(forNumber: inputValue))
     }
 
     override public var inputValue: String? {
         didSet {
+            cbcController.cardNumber = inputValue
             guard let inputValue = inputValue else {
                 validationState = .incomplete(description: nil)
                 return
@@ -75,11 +81,15 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
         }
     }
 
+    let cbcController = STPCBCController()
+
     init(
         inputMode: STPCardNumberInputTextField.InputMode = .standard,
-        cardBrand: STPCardBrand? = nil
+        cardBrand: STPCardBrand? = nil,
+        cbcEnabledOverride: Bool? = nil
     ) {
         self.inputMode = inputMode
         self.overridenCardBrand = cardBrand
+        self.cbcController.cbcEnabledOverride = cbcEnabledOverride
     }
 }

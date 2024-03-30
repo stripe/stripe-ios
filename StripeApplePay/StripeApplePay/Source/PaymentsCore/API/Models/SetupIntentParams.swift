@@ -16,14 +16,14 @@ extension StripeAPI {
             clientSecret: String,
             paymentMethodData: StripeAPI.PaymentMethodParams? = nil,
             paymentMethod: String? = nil,
-            returnURL: String? = nil,
+            returnUrl: String? = nil,
             useStripeSdk: Bool? = nil,
             _additionalParametersStorage: NonEncodableParameters? = nil
         ) {
             self.clientSecret = clientSecret
             self.paymentMethodData = paymentMethodData
             self.paymentMethod = paymentMethod
-            self.returnURL = returnURL
+            self.returnUrl = returnUrl
             self.useStripeSdk = useStripeSdk
             self._additionalParametersStorage = _additionalParametersStorage
         }
@@ -40,7 +40,7 @@ extension StripeAPI {
         /// The URL to redirect your customer back to after they authenticate or cancel
         /// their payment on the payment method’s app or site.
         /// This should probably be a URL that opens your iOS app.
-        @_spi(STP) public var returnURL: String?
+        @_spi(STP) public var returnUrl: String?
         /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any SetupIntent next actions.
         /// If set to false, SetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
         /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your

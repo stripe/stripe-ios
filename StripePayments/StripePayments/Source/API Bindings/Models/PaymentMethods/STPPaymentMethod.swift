@@ -78,6 +78,15 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var usBankAccount: STPPaymentMethodUSBankAccount?
     /// If this is an Cash App PaymentMethod (i.e. `self.type == STPPaymentMethodTypeCashApp`), this contains additional details.
     @objc private(set) public var cashApp: STPPaymentMethodCashApp?
+    /// If this is an RevolutPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeRevolutPay`), this contains additional details.
+    @objc private(set) public var revolutPay: STPPaymentMethodRevolutPay?
+    /// If this is a Swish PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSwish`), this contains additional details.
+    @objc private(set) public var swish: STPPaymentMethodSwish?
+    /// If this is a Amazon Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAmazonPay`), this contains additional details.
+    @objc private(set) public var amazonPay: STPPaymentMethodAmazonPay?
+    /// If this is a Alma PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAlma`), this contains additional details.
+    @objc private(set) public var alma: STPPaymentMethodAlma?
+
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
@@ -134,6 +143,10 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "affirm = \(String(describing: affirm))",
             "usBankAccount = \(String(describing: usBankAccount))",
             "cashapp = \(String(describing: cashApp))",
+            "revolutPay = \(String(describing: revolutPay))",
+            "swish = \(String(describing: swish))",
+            "amazon_pay = \(String(describing: amazonPay))",
+            "alma = \(String(describing: alma))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -141,55 +154,19 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPPaymentMethodType
-    class func stringToTypeMapping() -> [String: NSNumber] {
-        return [
-            "card": NSNumber(value: STPPaymentMethodType.card.rawValue),
-            "ideal": NSNumber(value: STPPaymentMethodType.iDEAL.rawValue),
-            "fpx": NSNumber(value: STPPaymentMethodType.FPX.rawValue),
-            "card_present": NSNumber(value: STPPaymentMethodType.cardPresent.rawValue),
-            "sepa_debit": NSNumber(value: STPPaymentMethodType.SEPADebit.rawValue),
-            "bacs_debit": NSNumber(value: STPPaymentMethodType.bacsDebit.rawValue),
-            "au_becs_debit": NSNumber(value: STPPaymentMethodType.AUBECSDebit.rawValue),
-            "grabpay": NSNumber(value: STPPaymentMethodType.grabPay.rawValue),
-            "giropay": NSNumber(value: STPPaymentMethodType.giropay.rawValue),
-            "p24": NSNumber(value: STPPaymentMethodType.przelewy24.rawValue),
-            "eps": NSNumber(value: STPPaymentMethodType.EPS.rawValue),
-            "bancontact": NSNumber(value: STPPaymentMethodType.bancontact.rawValue),
-            "netbanking": NSNumber(value: STPPaymentMethodType.netBanking.rawValue),
-            "oxxo": NSNumber(value: STPPaymentMethodType.OXXO.rawValue),
-            "sofort": NSNumber(value: STPPaymentMethodType.sofort.rawValue),
-            "upi": NSNumber(value: STPPaymentMethodType.UPI.rawValue),
-            "alipay": NSNumber(value: STPPaymentMethodType.alipay.rawValue),
-            "paypal": NSNumber(value: STPPaymentMethodType.payPal.rawValue),
-            "afterpay_clearpay": NSNumber(value: STPPaymentMethodType.afterpayClearpay.rawValue),
-            "blik": NSNumber(value: STPPaymentMethodType.blik.rawValue),
-            "link": NSNumber(value: STPPaymentMethodType.link.rawValue),
-            "wechat_pay": NSNumber(value: STPPaymentMethodType.weChatPay.rawValue),
-            "boleto": NSNumber(value: STPPaymentMethodType.boleto.rawValue),
-            "klarna": NSNumber(value: STPPaymentMethodType.klarna.rawValue),
-            "affirm": NSNumber(value: STPPaymentMethodType.affirm.rawValue),
-            "us_bank_account": NSNumber(value: STPPaymentMethodType.USBankAccount.rawValue),
-            "cashapp": NSNumber(value: STPPaymentMethodType.cashApp.rawValue),
-        ]
-    }
 
     @_spi(STP) public class func string(from type: STPPaymentMethodType) -> String? {
-        return
-            (self.stringToTypeMapping() as NSDictionary).allKeys(
-                for: NSNumber(value: type.rawValue)
-            )
-            .first as? String
+        guard type != .unknown else {
+            return nil
+        }
+        return type.identifier
     }
 
     @_spi(STP) public class func type(from string: String) -> STPPaymentMethodType {
         let key = string.lowercased()
-        let typeNumber = self.stringToTypeMapping()[key]
-
-        if let typeNumber = typeNumber {
-            return STPPaymentMethodType(rawValue: Int(truncating: typeNumber)) ?? .unknown
-        }
-
-        return .unknown
+        return STPPaymentMethodType.allCases.first(where: { type in
+            type.identifier == key
+        }) ?? .unknown
     }
 
     class func types(from strings: [String]) -> [NSNumber] {
@@ -210,10 +187,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPAPIResponseDecodable
     /// :nodoc:
-    @objc required init(
-        stripeId: String
+    @objc @_spi(STP) public required init(
+        stripeId: String,
+        type: STPPaymentMethodType
     ) {
         self.stripeId = stripeId
+        self.type = type
         super.init()
     }
 
@@ -229,7 +208,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             return nil
         }
 
-        let paymentMethod = self.init(stripeId: stripeId)
+        let paymentMethod = self.init(stripeId: stripeId,
+                                      type: self.type(from: dict.stp_string(forKey: "type") ?? ""))
         paymentMethod.allResponseFields = response
         paymentMethod.stripeId = stripeId
         paymentMethod.created = dict.stp_date(forKey: "created")
@@ -240,7 +220,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.card = STPPaymentMethodCard.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "card")
         )
-        paymentMethod.type = self.type(from: dict.stp_string(forKey: "type") ?? "")
         paymentMethod.iDEAL = STPPaymentMethodiDEAL.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "ideal")
         )
@@ -321,6 +300,18 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.cashApp = STPPaymentMethodCashApp.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "cashapp")
+        )
+        paymentMethod.revolutPay = STPPaymentMethodRevolutPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "revolut_pay")
+        )
+        paymentMethod.swish = STPPaymentMethodSwish.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "swish")
+        )
+        paymentMethod.amazonPay = STPPaymentMethodAmazonPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "amazon_pay")
+        )
+        paymentMethod.alma = STPPaymentMethodAlma.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "alma")
         )
 
         return paymentMethod

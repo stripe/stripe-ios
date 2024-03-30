@@ -157,9 +157,6 @@ def build_module_docs(modules, release_version, docs_root_directory)
 
     info "Executing xcodebuild for #{m['framework_name']}..."
 
-    # Regenerate the project after adding the docc bundle
-    `tuist generate -n`
-
     # Build the docs
     puts `xcodebuild docbuild \
      -scheme #{m['scheme']} \
@@ -168,9 +165,6 @@ def build_module_docs(modules, release_version, docs_root_directory)
      -configuration Release \
      -derivedDataPath "#{$TEMP_BUILD_DIR}" \
      OTHER_DOCC_FLAGS="--transform-for-static-hosting --hosting-base-path #{$HOSTING_BASE_PATH}#{m['framework_name'].downcase}/"`
-
-    # Delete temp readme docc
-    FileUtils.remove_entry_secure(docc_container) if File.exist?(docc_container)
 
     # Verify exit code
     xcodebuild_exit_code = $?.exitstatus
@@ -206,7 +200,7 @@ def build_index_page(modules, release_version, docs_root_directory)
   modules.each do |m|
     # Load podspec to get module name and summary
     podspec = Pod::Specification.from_file(File.join_if_safe($ROOT_DIR, m['podspec']))
-    index_content += "**[#{podspec.name}](#{$HOSTING_BASE_PATH}#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
+    index_content += "**[#{podspec.name}](../../#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
   end
 
   File.write(index_path, index_content)

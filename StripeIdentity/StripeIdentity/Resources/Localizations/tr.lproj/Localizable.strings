@@ -1,12 +1,12 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Gerçekten siz olduğunuzu doğrulamak için sonraki adımda otomatik olarak birkaç fotoğraf çekilecek";
+
+"Accepted forms of ID include" = "Kabul edilen kimlik türleri kapsamı";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Kimlik belgenizin fotoğrafını manuel olarak da yükleyebilirsiniz.";
 
 "App Settings" = "Uygulama Ayarları";
 
-"Back driver's license photo successfully uploaded" = "Sürücü belgesinin arka yüz fotoğrafı başarıyla yüklendi";
-
 "Back identity card photo successfully uploaded" = "Kimliğin arka yüz fotoğrafı başarıyla yüklendi";
-
-"Back of driver's license" = "Sürücü belgesinin arka yüzü";
 
 "Back of identity card" = "Kimliğin arka yüzü";
 
@@ -22,57 +22,59 @@
 
 "Could not capture image" = "Fotoğraf alınamadı";
 
-"Date of birth" = "Doğum tarihi";
+"Date of Birth" = "Doğum Tarihi";
 
-"File Upload" = "Dosya Yükle";
-
-"File upload" = "Dosya yükle";
-
-"Flip your driver's license over to the other side" = "Sürücü belgenizin diğer yüzünü çevirin";
+"Date of birth does not look valid" = "Doğum tarihi geçerli görünmüyor";
 
 "Flip your identity card over to the other side" = "Kimliğinizin diğer yüzünü çevirin";
 
-"Front driver's license photo successfully uploaded" = "Sürücü belgesinin ön yüz fotoğrafı başarıyla yüklendi";
-
 "Front identity card photo successfully uploaded" = "Kimliğin ön yüz fotoğrafı başarıyla yüklendi";
 
-"Front of driver's license" = "Sürücü belgesinin ön yüzü";
-
 "Front of identity card" = "Kimliğin ön yüzü";
+
+"Get ready to scan your photo ID" = "Fotoğraflı kimliğinizi taramak için hazırlanın";
+
+"Get ready to take a selfie" = "Selfie çekmeye hazırlanın";
 
 "Go Back" = "Geri Git";
 
 "Hold still, scanning" = "Bekleyin, taranıyor";
 
+"I'm ready" = "Hazırım";
+
 "ID Number" = "Kimlik Numarası";
 
-"ID Type" = "Kimlik Belgesi Türü";
+"Individual CPF" = "Bireysel CPF";
 
-"Image of passport" = "Pasaport fotoğrafı";
+"Last 4 of Social Security number" = "Sosyal Güvenlik numarasının son 4 hanesi";
 
 "Loading" = "Yükleniyor";
 
-"Passport" = "Pasaport";
+"Make sure you're in a well lit space." = "İyi ışık alan bir alanda olduğunuzdan emin olun.";
 
-"Passport photo successfully uploaded" = "Pasaport fotoğrafı başarıyla yüklendi";
+"Move closer" = "Yakınlaştırın";
+
+"Move farther" = "Uzaklaştırın";
+
+"NRIC or FIN" = "NRIC veya FIN";
 
 "Personal ID number" = "Kişisel kimlik numarası";
 
+"Personal Information" = "Kişisel Bilgiler";
+
+"Phone Number" = "Telefon Numarası";
+
+"Phone Verification" = "Telefon doğrulama";
+
 "Photo Library" = "Fotoğraf Kitaplığı";
 
-"Please upload an image of your passport" = "Lütfen pasaportunuzun bir fotoğrafını yükleyin";
-
-"Please upload images of the front and back of your driver's license" = "Lütfen sürücü belgenizin ön ve arka yüzünün fotoğraflarını yükleyin";
-
 "Please upload images of the front and back of your identity card" = "Lütfen kimlik belgenizin ön ve arka yüzlerinin fotoğraflarını yükleyin";
-
-"Position your driver's license in the center of the frame" = "Sürücü belgenizi çerçevenin ortasına yerleştirin";
 
 "Position your face in the center of the frame." = "Yüzünüzü çerçevenin ortasına yerleştirin.";
 
 "Position your identity card in the center of the frame" = "Kimliğinizi çerçevenin ortasına yerleştirin";
 
-"Position your passport in the center of the frame" = "Pasaportunuzu çerçevenin ortasına yerleştirin";
+"Retake Photos" = "Fotoğrafları Tekrar Çek";
 
 "Scan" = "Tara";
 
@@ -84,15 +86,9 @@
 
 "Select a location to upload the front of your identity document from" = "Kimlik belgenizin ön yüzünü yükleyeceğiniz konumu seçin";
 
-"Select back driver's license photo" = "Sürücü belgesinin arka yüz fotoğrafını seç";
-
 "Select back identity card photo" = "Kimliğin arka yüz fotoğrafını seç";
 
-"Select front driver's license photo" = "Sürücü belgesinin ön yüz fotoğrafını seç";
-
 "Select front identity card photo" = "Kimliğin ön yüz fotoğrafını seç";
-
-"Select passport photo" = "Pasaport fotoğrafı seç";
 
 "Selfie" = "Özçekim";
 
@@ -116,15 +112,11 @@
 
 "Upload a Photo" = "Fotoğraf Yükle";
 
-"Uploading back driver's license photo" = "Sürücü belgesinin arka yüz fotoğrafı yükleniyor";
+"Upload your photo ID" = "Fotoğraflı kimliğinizi yükleyin";
 
 "Uploading back identity card photo" = "Kimliğin arka yüz fotoğrafı yükleniyor";
 
-"Uploading front driver's license photo" = "Sürücü belgesinin ön yüz fotoğrafı yükleniyor";
-
 "Uploading front identity card photo" = "Kimliğin ön yüz fotoğrafı yükleniyor";
-
-"Uploading passport photo" = "Pasaport fotoğrafı yükleniyor";
 
 "Verify your identity" = "Kimliğinizi doğrulayın";
 
@@ -132,6 +124,14 @@
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Kameranızı kullanmamız için izniniz gerekiyor. Lütfen uygulama ayarlarından kamera erişimine izin verin.";
 
+"Welcome" = "Hoş Geldiniz";
+
 "You can either try again or upload an image from your device." = "Tekrar deneyebilir veya cihazınızdan bir fotoğraf yükleyebilirsiniz.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Özçekim görüntüleriniz kaydedilmedi. Çıkmak istiyor musunuz?";
+
+"driver's license" = "ehliyet";
+
+"government-issued photo ID" = "devlet tarafından verilen fotoğraflı kimlik";
+
+"passport" = "pasaport";

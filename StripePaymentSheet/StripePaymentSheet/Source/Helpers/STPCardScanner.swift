@@ -5,6 +5,7 @@
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
+#if !canImport(CompositorServices)
 
 import AVFoundation
 import Foundation
@@ -19,7 +20,7 @@ enum STPCardScannerError: Int {
     case cameraNotAvailable
 }
 
-@available(iOS 13, macCatalyst 14, *)
+@available(macCatalyst 14.0, *)
 @objc protocol STPCardScannerDelegate: NSObjectProtocol {
     @objc(cardScanner:didFinishWithCardParams:error:) func cardScanner(
         _ scanner: STPCardScanner,
@@ -28,9 +29,9 @@ enum STPCardScannerError: Int {
         error: Error?)
 }
 
-@available(iOS 13, macCatalyst 14, *)
+@available(macCatalyst 14.0, *)
 @objc(STPCardScanner)
-class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, STPCardScanningProtocol {
+class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     static let cardScanningAvailableCameraHasUsageDescription = {
         return
@@ -105,8 +106,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
         startTime = Date()
 
         isScanning = true
-        didTimeout = false
-        timeoutStarted = false
+        timeoutTime = nil
         feedbackGenerator = UINotificationFeedbackGenerator()
         feedbackGenerator?.prepare()
 
@@ -116,8 +116,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
                 self.stopWithError(STPCardScanner.stp_cardScanningError())
                 return
             #else
-                self.detectedNumbers = NSCountedSet()  // capacity: 5
-                self.detectedExpirations = NSCountedSet()  // capacity: 5
+                self.detectedNumbers = NSCountedSet()
+                self.detectedExpirations = NSCountedSet()
                 self.setupCamera()
                 DispatchQueue.main.async(execute: {
                     self.cameraView?.captureSession = self.captureSession
@@ -140,14 +140,21 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
     private var videoDataOutputQueue: DispatchQueue?
     private var textRequest: VNRecognizeTextRequest?
     private var isScanning = false
-    private var didTimeout = false
-    private var timeoutStarted = false
+
+    private var timeoutTime: Date?
+    private var didTimeout: Bool {
+        if let timeoutTime = timeoutTime {
+            return timeoutTime <= Date()
+        }
+        return false
+    }
+
     private var stp_deviceOrientation: UIDeviceOrientation!
     private var videoOrientation: AVCaptureVideoOrientation!
     private var textOrientation: CGImagePropertyOrientation!
     private var regionOfInterest = CGRect.zero
-    private var detectedNumbers: NSCountedSet?
-    private var detectedExpirations: NSCountedSet?
+    private var detectedNumbers = NSCountedSet()
+    private var detectedExpirations = NSCountedSet()
     private var startTime: Date?
 
     // MARK: Public
@@ -359,38 +366,36 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
     }
 
     func addDetectedNumber(_ number: String) {
-        detectedNumbers?.add(number)
+        detectedNumbers.add(number)
 
-        // Set a timeout: If we don't get enough scans in the next 1 second, we'll use the best option we have.
-        if !timeoutStarted {
-            timeoutStarted = true
+        // Set a timeout: If we don't get enough scans in the next 0.6 seconds, we'll use the best option we have.
+        if timeoutTime == nil {
+            self.timeoutTime = Date().addingTimeInterval(kSTPCardScanningTimeout)
             weak var weakSelf = self
             DispatchQueue.main.async(execute: {
                 let strongSelf = weakSelf
                 strongSelf?.cameraView?.playSnapshotAnimation()
                 strongSelf?.feedbackGenerator?.notificationOccurred(.success)
             })
+            // Just in case we don't get any frames, add another call to `finishIfReady` after timeoutTime to check
             videoDataOutputQueue?.asyncAfter(
-                deadline: DispatchTime.now() + Double(
-                    Int64(kSTPCardScanningTimeout * Double(NSEC_PER_SEC)))
-                    / Double(NSEC_PER_SEC),
+                deadline: DispatchTime.now() + kSTPCardScanningTimeout,
                 execute: {
                     let strongSelf = weakSelf
                     if strongSelf?.isScanning ?? false {
-                        strongSelf?.didTimeout = true
                         strongSelf?.finishIfReady()
                     }
                 })
         }
 
-        if (detectedNumbers?.count(for: number) ?? 0) >= kSTPCardScanningMinimumValidScans {
+        if (detectedNumbers.count(for: number)) >= kSTPCardScanningMinimumValidScans {
             finishIfReady()
         }
     }
 
     func addDetectedExpiration(_ expiration: String) {
-        detectedExpirations?.add(expiration)
-        if (detectedExpirations?.count(for: expiration) ?? 0) >= kSTPCardScanningMinimumValidScans {
+        detectedExpirations.add(expiration)
+        if (detectedExpirations.count(for: expiration)) >= kSTPCardScanningMinimumValidScans {
             finishIfReady()
         }
     }
@@ -403,10 +408,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
         let detectedNumbers = self.detectedNumbers
         let detectedExpirations = self.detectedExpirations
 
-        let topNumber = (detectedNumbers?.allObjects as NSArray?)?.sortedArray(comparator: {
+        let topNumber = (detectedNumbers.allObjects as NSArray).sortedArray(comparator: {
             obj1, obj2 in
-            let c1 = detectedNumbers?.count(for: obj1) ?? 0
-            let c2 = detectedNumbers?.count(for: obj2) ?? 0
+            let c1 = detectedNumbers.count(for: obj1)
+            let c2 = detectedNumbers.count(for: obj2)
             if c1 < c2 {
                 return .orderedAscending
             } else if c1 > c2 {
@@ -415,10 +420,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
                 return .orderedSame
             }
         }).last
-        let topExpiration = (detectedExpirations?.allObjects as NSArray?)?.sortedArray(comparator: {
+        let topExpiration = (detectedExpirations.allObjects as NSArray).sortedArray(comparator: {
             obj1, obj2 in
-            let c1 = detectedExpirations?.count(for: obj1) ?? 0
-            let c2 = detectedExpirations?.count(for: obj2) ?? 0
+            let c1 = detectedExpirations.count(for: obj1)
+            let c2 = detectedExpirations.count(for: obj2)
             if c1 < c2 {
                 return .orderedAscending
             } else if c1 > c2 {
@@ -428,13 +433,12 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
             }
         }).last
 
-        if didTimeout
-            || (((detectedNumbers?.count(for: topNumber ?? 0) ?? 0)
-                >= kSTPCardScanningMinimumValidScans)
-                && ((detectedExpirations?.count(for: topExpiration ?? 0) ?? 0)
-                    >= kSTPCardScanningMinimumValidScans))
-            || ((detectedNumbers?.count(for: topNumber ?? 0) ?? 0) >= kSTPCardScanningMaxValidScans)
-        {
+        var didSeeEnoughScans = false
+        if let topNumber = topNumber, let topExpiration = topExpiration {
+            didSeeEnoughScans = detectedNumbers.count(for: topNumber) >= kSTPCardScanningMinimumValidScans &&
+                detectedExpirations.count(for: topExpiration) >= kSTPCardScanningMinimumValidScans
+        }
+        if didTimeout || didSeeEnoughScans {
             let params = STPPaymentMethodCardParams()
             params.number = topNumber as? String
             if let topExpiration = topExpiration {
@@ -474,14 +478,14 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
 
 // The number of successful scans required for both card number and expiration date before returning a result.
 private let kSTPCardScanningMinimumValidScans = 2
-// If no expiration date is found, we'll return a result after this many successful scans.
-private let kSTPCardScanningMaxValidScans = 3
 // Once one successful scan is found, we'll stop scanning after this many seconds.
-private let kSTPCardScanningTimeout: TimeInterval = 1.0
+private let kSTPCardScanningTimeout: TimeInterval = 0.6
 let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 
-@available(iOS 13, macCatalyst 14, *)
 /// :nodoc:
+@available(macCatalyst 14.0, *)
 extension STPCardScanner: STPAnalyticsProtocol {
     static var stp_analyticsIdentifier = "STPCardScanner"
 }
+
+#endif

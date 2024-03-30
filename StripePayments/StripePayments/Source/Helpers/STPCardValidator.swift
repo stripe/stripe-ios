@@ -414,6 +414,54 @@ public class STPCardValidator: NSObject {
         return Set(brands)
     }
 
+    // This is a bit of a hack: We want to fetch BIN information for Card Brand Choice, but some
+    // of the BIN length information coming from the service is incorrect: We're receiving a maximum
+    // length, but we really should receive a min-max range.
+    // We don't want to pollute the main STPBINController cache with this bad data.
+    //
+    // We currently prevent cache pollution with an `isVariableLengthBINPrefix` check in
+    // `retrieveBinRanges()`, but we'll bypass that check when using the CBC BIN controller.
+    static let cbcBinController = STPBINController()
+
+    /// Returns available brands for the provided card details.
+    /// - Parameter card: The card details to validate.
+    /// - Parameter completion: Will be called with the set of available STPCardBrands or an error.
+    /// - seealso: https://stripe.com/docs/card-brand-choice
+    public class func possibleBrands(forCard cardParams: STPPaymentMethodCardParams,
+                                     completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+        guard let cardNumber = cardParams.number else {
+            // If the number is nil or empty, any brand is possible.
+            completion(.success(Set(STPCardBrand.allCases)))
+            return
+        }
+        possibleBrands(forNumber: cardNumber, completion: completion)
+    }
+
+    public class func possibleBrands(forNumber cardNumber: String,
+                                     completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+        // Hardcoded test cards that are in our docs but not supported by the card metadata service
+        // https://stripe.com/docs/card-brand-choice#testing
+        let testCards: [String: [STPCardBrand]] = ["4000002500001001": [.cartesBancaires, .visa],
+                                                   "5555552500001001": [.cartesBancaires, .mastercard], ]
+
+        if let testBrands = testCards[cardNumber] {
+            completion(.success(Set<STPCardBrand>(testBrands)))
+            return
+        }
+
+        cbcBinController.retrieveBINRanges(forPrefix: cardNumber, recordErrorsAsSuccess: false, onlyFetchForVariableLengthBINs: false) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success:
+                let binRanges = cbcBinController.binRanges(forNumber: cardNumber)
+                let brands = binRanges.map { $0.brand }
+                                      .filter { $0 != .unknown }
+                completion(.success(Set(brands)))
+            }
+        }
+    }
+
     class func currentYear() -> Int {
         let calendar = Calendar(identifier: .gregorian)
         return (calendar.component(.year, from: Date())) % 100

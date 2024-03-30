@@ -69,6 +69,9 @@ import Foundation
     ///
     /// - seealso: https://stripe.com/docs/declines/codes
     @objc public static let stripeDeclineCodeKey = "com.stripe.lib:DeclineCodeKey"
+
+    /// The Stripe API request ID, if available. Looks like `req_123`.
+    @_spi(STP) public static let stripeRequestIDKey = "com.stripe.lib:StripeRequestIDKey"
 }
 
 extension NSError {
@@ -205,6 +208,11 @@ extension NSError {
                     }
                 }
             }
+        }
+
+        // Add the Stripe request id if it exists
+        if let requestId = httpResponse?.value(forHTTPHeaderField: "request-id") {
+            userInfo[STPError.stripeRequestIDKey] = requestId
         }
 
         return NSError(

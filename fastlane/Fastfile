@@ -16,7 +16,7 @@
 default_platform(:ios)
 
 DEFAULT_TEST_DEVICE = 'iPhone 12 mini'.freeze
-DEFAULT_TEST_VERSION = '16.1'.freeze
+DEFAULT_TEST_VERSION = '16.4'.freeze
 # SPM-using .xcodeproj files can take a while to respond to `showBuildSettings`,
 # set Fastlane's timeout to a more reasonable value.
 ENV['FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT'] = '60'
@@ -46,7 +46,6 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme 'UI Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'Non-Card Payment Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
-      sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
       sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
     end
@@ -75,7 +74,7 @@ platform :ios do
 
   private_lane :legacy_tests do |options|
     # TODO(bmelts): would be nice to read these from modules.yaml
-    schemes = %w[StripeiOS StripePayments StripePaymentsUI StripePaymentSheet StripeCameraCore StripeCore StripeUICore StripeApplePay StripeCardScan StripeLinkCore]
+    schemes = %w[StripeiOS StripePayments StripePaymentsUI StripePaymentSheet StripeCameraCore StripeCore StripeUICore StripeApplePay StripeCardScan]
     Dir.chdir('..') do
       schemes.each do |scheme|
         sh("./ci_scripts/test.rb --scheme '#{scheme}' --device '#{options[:device]}' --version #{options[:version]} --skip-snapshot-tests --retry-on-failure")
@@ -84,11 +83,19 @@ platform :ios do
   end
 
   lane :legacy_tests_13 do
-    legacy_tests(device: 'iPhone 8', version: '13.7')
+    legacy_tests(device: 'iPhone 11', version: '13.7')
   end
 
   lane :legacy_tests_14 do
-    legacy_tests(device: 'iPhone 8', version: '14.5')
+    legacy_tests(device: 'iPhone 11', version: '14.5')
+  end
+
+  lane :legacy_tests_15 do
+    legacy_tests(device: 'iPhone 12 mini', version: '15.5')
+  end
+
+  lane :legacy_tests_16 do
+    legacy_tests(device: 'iPhone 12 mini', version: '16.4')
   end
 
   lane :e2e_only do

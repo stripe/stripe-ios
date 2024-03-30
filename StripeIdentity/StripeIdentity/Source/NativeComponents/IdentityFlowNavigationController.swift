@@ -119,7 +119,6 @@ extension IdentityFlowNavigationController {
 
 // MARK: - IdentityFlowNavigationController: UINavigationBarDelegate Delegate
 
-@available(iOSApplicationExtension, unavailable)
 extension IdentityFlowNavigationController: UINavigationBarDelegate {
     public func navigationBar(
         _ navigationBar: UINavigationBar,

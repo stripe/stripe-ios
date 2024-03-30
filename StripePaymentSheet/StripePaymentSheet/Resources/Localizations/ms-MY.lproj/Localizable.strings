@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Tambah";
 
 "Add a card" = "Tambah kad";
@@ -12,10 +14,6 @@
 
 "Approve payment" = "Luluskan pembayaran";
 
-"Are you sure you want to remove this card?" = "Anda pasti ingin mengalih keluar kad ini?";
-
-"Are you sure you want to remove this linked account?" = "Anda pasti ingin mengalih keluar akaun yang dipautkan ini?";
-
 "Back" = "Undur";
 
 "Bank account" = "Akaun bank";
@@ -24,45 +22,63 @@
 
 "Buy using a UPI ID" = "Beli menggunakan ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengesahkan pembayaran anda dengan PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
+
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Amazon Pay, anda membenarkan %@ mengecaj akaun Amazon Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Dengan meneruskan langkah ke Klarna, anda membenarkan %1$@ mengecaj akaun Klarna anda bagi pembayaran masa hadapan menurut terma mereka dan terma Klarna. Anda boleh mengubah tetapan ini pada bila-bila masa dalam app Klarna anda atau dengan menghubungi %2$@.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
+
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Revolut Pay, anda membenarkan %@ mengecaj akaun Revolut Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma</terms> ini.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Dengan memberikan maklumat pembayaran anda dan mengesahkan pembayaran ini, anda mengizinkan (A) %@ dan Stripe, iaitu penyedia perkhidmatan pembayaran kami, untuk menghantar arahan kepada bank untuk mendebitkan akaun anda dan (B) bank anda untuk mendebitkan akaun anda menurut arahan tersebut. Sebagai sebahagian daripada hak anda, anda layak mendapat bayaran balik daripada bank menurut terma dan syarat perjanjian dengan bank anda. Bayaran balik mesti dituntut dalam tempoh 8 minggu mulai tarikh akaun anda didebitkan. Hak anda dijelaskan dalam pernyataan yang boleh anda dapatkan daripada bank anda. Anda bersetuju untuk menerima pemberitahuan bagi debit masa hadapan sehingga 2 hari sebelum debit tersebut dibuat.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan e-mel anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Dengan memberikan maklumat pembayaran anda dan mengesahkan pembayaran ini, anda mengizinkan (A) %@ dan Stripe, iaitu penyedia khidmat pembayaran kami, untuk menghantar arahan kepada bank untuk mendebitkan akaun anda dan (B) bank anda untuk mendebitkan akaun anda menurut arahan tersebut. Sebagai sebahagian daripada hak anda, anda layak mendapat bayaran balik daripada bank menurut terma dan syarat perjanjian dengan bank anda. Bayaran balik mesti dituntut dalam tempoh 8 minggu mulai tarikh akaun anda didebitkan. Hak anda dijelaskan dalam pernyataan yang boleh anda dapatkan daripada bank anda. Anda bersetuju untuk menerima pemberitahuan bagi debit masa hadapan sehingga 2 hari sebelum debit tersebut dibuat.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nombor telefon anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
 
-"Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
+"CPF/CPNJ" = "CPF/CPNJ";
 
-"Change email" = "Ubah e-mel";
+"Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
 
 "Choose a payment method" = "Pilih kaedah pembayaran";
 
 "Close card scanner" = "Tutup pengimbas kad";
 
-"Code sent" = "Kod dihantar";
+"Confirm" = "Sahkan";
 
-"Default" = "Tetapan Asal";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank anda dalam %@ untuk menyelesaikan pembelian.";
+
+"Confirm your CVC" = "Sahkan CVC anda";
+
+"Confirm your CVV" = "Sahkan CVV anda";
+
+"Contact information" = "Maklumat hubungan";
 
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Masukkan kod yang dihantar ke %@ untuk menggunakan Link sebagai kaedah pembayaran tetapan asal.";
+"FPX Bank" = "Bank untuk FPX";
 
-"Enter your verification code" = "Masukkan kod penentusahan anda";
-
-"For security, please re-enter your card’s security code." = "Bagi tujuan keselamatan, sila masukkan semula kod keselamatan kad anda.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya faham bahawa Stripe akan mengutip Debit Terus bagi pihak %@ dan mengesahkan sayalah pemegang akaun dan satu-satunya individu yang diperlukan untuk mengizinkan debit daripada akaun ini.";
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Sertai Link";
+"Manage your payment methods" = "Urus kaedah pembayaran anda";
 
-"Log out of Link" = "Log keluar dari Link";
-
-"Not %@?" = "Bukan %@?";
+"Name on card" = "Nama pada kad";
 
 "Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI untuk meluluskan pembayaran anda dalam masa %@";
 
@@ -72,29 +88,25 @@
 
 "Or pay with a card" = "Atau bayar dengan kad";
 
+"Or use" = "Atau gunakan";
+
+"Or use a card" = "Atau gunakan kad";
+
 "Pay %@" = "Bayar %@";
 
 "Pay another way" = "Bayar dengan cara lain";
 
-"Pay faster at %@ and thousands of merchants." = "Bayar dengan lebih cepat di %@ dan ribuan peniaga.";
+"Pay faster at %@ and thousands of businesses." = "Bayar dengan lebih cepat di %@ dan beribu-ribu perniagaan.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> kali pembayaran tanpa faedah sebanyak <installment_price/> dengan <img/>";
 
-"Pay later with Klarna." = "Bayar kemudian dengan Klarna.";
-
 "Pay over time with %@" = "Bayar dari semasa ke semasa dengan %@";
 
-"Pay using" = "Bayar menggunakan";
-
-"Pay with %@" = "Bayar dengan %@";
+"Pay with Link" = "Bayar dengan Link";
 
 "Pay with your bank account in just a few steps." = "Bayar dengan akaun bank anda dengan hanya beberapa langkah.";
 
-"Payment" = "Pembayaran";
-
 "Payment failed" = "Pembayaran tidak berjaya";
-
-"Payment methods" = "Kaedah pembayaran";
 
 "Please go back and select another payment method" = "Sila undur dan pilih kaedah pembayaran yang lain";
 
@@ -104,33 +116,25 @@
 
 "Przelewy24 Bank" = "Bank Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Alih keluar %1$@ yang berakhir dengan %2$@";
+"Remove card?" = "Alih keluar kad?";
 
-"Remove Card" = "Alih Keluar Kad";
+"Save" = "Simpan";
 
-"Remove card" = "Alih keluar kad";
-
-"Remove linked account" = "Alih keluar akaun yang dipautkan";
-
-"Resend code" = "Hantar semula kod";
+"Save a new payment method" = "Simpan kaedah pembayaran baharu";
 
 "Save address" = "Simpan alamat";
 
 "Save for future payments" = "Simpan untuk pembayaran masa hadapan";
 
-"Save my info for secure 1-click checkout" = "Simpan maklumat saya untuk proses bayar dan keluar yang selamat dengan satu klik";
-
 "Save this account for future %@ payments" = "Simpan akaun ini untuk pembayaran %@ masa hadapan";
 
 "Save this card for future %@ payments" = "Simpan kad ini untuk pembayaran %@ masa hadapan";
 
-"Secure 1⁠-⁠click checkout" = "Proses bayar dan keluar yang selamat dengan satu klik";
+"Save your bank account in just a few steps." = "Simpan akaun bank anda dengan hanya beberapa langkah.";
+
+"Save your info for secure 1-click checkout with Link" = "Simpan maklumat anda untuk proses bayar dan keluar dengan sekali klik yang selamat dengan Link";
 
 "Select your payment method" = "Pilih kaedah pembayaran anda";
-
-"Set as default" = "Tetapkan sebagai tetapan asal";
-
-"Set as default payment method" = "Tetapkan sebagai kaedah pembayaran tetapan asal";
 
 "Set up" = "Sediakan";
 
@@ -138,31 +142,13 @@
 
 "Show menu" = "Paparkan menu";
 
-"Sign in to your Link account" = "Daftar masuk ke akaun Link anda";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan proses menyimpan akaun bank anda dengan %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan pembayaran kepada %@.";
 
-"Tap to close" = "Ketik untuk tutup";
-
-"Tap to expand" = "Ketik untuk kembangkan";
-
 "The IBAN you entered is incomplete." = "IBAN yang anda masukkan tidak lengkap.";
 
-"The provided verification code has expired." = "Kod penentusahan yang diberikan telah tamat tempoh.";
-
-"The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Kad ini telah tamat tempoh. Kemas kinikan maklumat kad anda atau pilih kaedah pembayaran yang lain.";
-
-"This is your default" = "Ini tetapan asal anda";
-
-"Too many attempts. Please try again in a few minutes." = "Terlalu banyak percubaan. Sila cuba lagi dalam beberapa minit.";
-
-"Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
-
 "Update card" = "Kemas kinikan kad";
-
-"Use your saved info to check out faster" = "Gunakan maklumat anda yang tersimpan untuk keluar dan bayar dengan lebih cepat";
 
 "Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
 

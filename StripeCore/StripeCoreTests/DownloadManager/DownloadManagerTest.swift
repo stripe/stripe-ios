@@ -37,7 +37,7 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
-        let image = rm.downloadImage(url: validURL, updateHandler: nil)
+        let image = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
         XCTAssertEqual(image.size, validImageSize)
     }
 
@@ -51,12 +51,12 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
-        let image = rm.downloadImage(url: validURL, updateHandler: nil)
+        let image = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
         XCTAssertEqual(image.size, validImageSize)
 
         wait(for: [expectedRequest], timeout: 1.0)
 
-        let cachedImageWithoutNetworkCall = rm.downloadImage(url: validURL, updateHandler: nil)
+        let cachedImageWithoutNetworkCall = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
         XCTAssertEqual(cachedImageWithoutNetworkCall.size, validImageSize)
     }
 
@@ -78,14 +78,14 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
-        let image = rm.downloadImage(url: validURL, updateHandler: nil)
+        let image = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
         XCTAssertEqual(image.size, validImageSize)
         wait(for: [expectedRequest1], timeout: 1.0)
 
         rm.resetDiskCache()
         rm.resetMemoryCache()
 
-        let cachedImageWithoutNetworkCall = rm.downloadImage(url: validURL, updateHandler: nil)
+        let cachedImageWithoutNetworkCall = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
         XCTAssertEqual(cachedImageWithoutNetworkCall.size, validImageSize)
         wait(for: [expectedRequest2], timeout: 1.0)
     }
@@ -97,7 +97,7 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(error: NotFoundError())
         }
 
-        let image = rm.downloadImage(url: invalidURL, updateHandler: nil)
+        let image = rm.downloadImage(url: invalidURL, placeholder: nil, updateHandler: nil)
 
         XCTAssertEqual(image.size, placeholderImageSize)
     }
@@ -112,7 +112,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         }
 
         let image = rm.downloadImage(
-            url: validURL,
+            url: validURL, placeholder: nil,
             updateHandler: { image in
                 XCTAssertEqual(image.size, self.validImageSize)
                 expected_imageUpdaterCalled.fulfill()
@@ -139,7 +139,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         }
 
         let image = rm.downloadImage(
-            url: validURL,
+            url: validURL, placeholder: nil,
             updateHandler: { image in
                 XCTAssertEqual(image.size, self.validImageSize)
                 expected1.fulfill()
@@ -154,7 +154,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         )
         expected2.isInverted = true
         let imageCached = rm.downloadImage(
-            url: validURL,
+            url: validURL, placeholder: nil,
             updateHandler: { _ in
                 expected2.fulfill()
             }
@@ -178,7 +178,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         }
 
         let image = rm.downloadImage(
-            url: validURL,
+            url: validURL, placeholder: nil,
             updateHandler: { image in
                 XCTAssertEqual(image.size, self.validImageSize)
                 expected1.fulfill()
@@ -193,7 +193,7 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         let expected2 = expectation(description: "updateHandler us called a second time")
         let image2 = rm.downloadImage(
-            url: validURL,
+            url: validURL, placeholder: nil,
             updateHandler: { image in
                 XCTAssertEqual(image.size, self.validImageSize)
                 expected2.fulfill()
@@ -214,7 +214,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         }
 
         let image = rm.downloadImage(
-            url: invalidURL,
+            url: invalidURL, placeholder: nil,
             updateHandler: { image in
                 XCTAssertEqual(image.size, self.validImageSize)
                 expected.fulfill()
@@ -242,12 +242,12 @@ class DownloadManagerTest: APIStubbedTestCase {
         }
 
         let image = rm.downloadImage(
-            url: validURL,
+            url: validURL, placeholder: nil,
             updateHandler: { cb_image1 in
                 XCTAssertEqual(cb_image1.size, self.validImageSize)
                 expected_imageUpdater1.fulfill()
                 let image2 = self.rm.downloadImage(
-                    url: self.validURL2,
+                    url: self.validURL2, placeholder: nil,
                     updateHandler: { cb_image2 in
                         XCTAssertEqual(cb_image2.size, self.validImageSize2)
                         expected_imageUpdater2.fulfill()

@@ -53,7 +53,7 @@ import UIKit
         // MARK: - AUBECS Account Number
         struct AUBECSAccountNumberConfiguration: TextFieldElementConfiguration {
             static let incompleteError = Error.incomplete(localizedDescription:
-                                                            STPLocalizedString("The account number you entered is incomplete.", "Error description for incomplete account number"))
+                                                            String.Localized.incompleteAccountNumber)
             let label = String.Localized.accountNumber
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             let numberOfDigitsRequired = 9
@@ -77,6 +77,69 @@ import UIKit
 
         public static func makeAUBECSAccountNumber(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
             return TextFieldElement(configuration: AUBECSAccountNumberConfiguration(defaultValue: defaultValue), theme: theme)
+        }
+
+        // MARK: - Bacs Sort Code
+        struct SortCodeConfiguration: TextFieldElementConfiguration {
+            static let invalidError = Error.incomplete(localizedDescription: String.Localized.invalidSortCodeEntered)
+
+            let label = STPLocalizedString("Sort code", "Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland)")
+            let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+            func maxLength(for text: String) -> Int {
+                return 6
+            }
+            let defaultValue: String?
+
+            public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
+                if text.isEmpty {
+                    return isOptional ? .valid : .invalid(Error.empty)
+                }
+
+                let sortCode = SortCode(number: text)
+                return sortCode.isComplete ? .valid :
+                    .invalid(Account.SortCodeConfiguration.invalidError)
+            }
+
+            func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+                return .init(type: .numberPad, textContentType: .none, autocapitalization: .none)
+            }
+
+            public func makeDisplayText(for text: String) -> NSAttributedString {
+                let sortCode = SortCode(number: text)
+                return NSAttributedString(string: sortCode.formattedNumber())
+            }
+        }
+
+        public static func makeSortCode(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+            return TextFieldElement(configuration: SortCodeConfiguration(defaultValue: defaultValue), theme: theme)
+        }
+
+        // MARK: - Bacs Account Number
+        struct BacsAccountNumberConfiguration: TextFieldElementConfiguration {
+            static let incompleteError = Error.incomplete(localizedDescription: String.Localized.incompleteAccountNumber)
+            let label = String.Localized.accountNumber
+            let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+            let numberOfDigitsRequired = 8
+
+            func maxLength(for text: String) -> Int {
+                return numberOfDigitsRequired
+            }
+            let defaultValue: String?
+
+            public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
+                if text.isEmpty {
+                    return isOptional ? .valid : .invalid(Error.empty)
+                }
+                return text.count == numberOfDigitsRequired ? .valid : .invalid(BacsAccountNumberConfiguration.incompleteError)
+            }
+
+            func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+                return .init(type: .numberPad, textContentType: .none, autocapitalization: .none)
+            }
+        }
+
+        public static func makeBacsAccountNumber(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+            return TextFieldElement(configuration: BacsAccountNumberConfiguration(defaultValue: defaultValue), theme: theme)
         }
     }
 }

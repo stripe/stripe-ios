@@ -10,11 +10,15 @@
 
 "Area" = "Bölge";
 
+"BLIK code" = "BLIK kodu";
+
 "BSB number" = "BSB numarası";
 
 "Billing address is same as shipping" = "Faturalama adresi, gönderim adresiyle aynı";
 
 "Cancel" = "İptal";
+
+"Card brand" = "Kartın markası";
 
 "City" = "Şehir";
 
@@ -30,11 +34,15 @@
 
 "County" = "Ülke";
 
+"Date is empty." = "Tarih boş.";
+
 "Department" = "İdari Bölüm";
 
 "District" = "İlçe";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Bu formu kapatmak istiyor musunuz?";
 
 "Done" = "Tamam";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Telefon numarası";
+
 "Postal code" = "Posta kodu";
 
 "Prefecture" = "İdari bölge";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "%@ ile biten banka hesabını kaldır";
 
+"Remove card" = "Kartı kaldır";
+
 "Search" = "Ara";
+
+"Select card brand (optional)" = "Kart markasını seçin (isteğe bağlı)";
+
+"Sort code" = "Şube kodu";
 
 "State" = "Eyalet";
 
@@ -102,6 +118,8 @@
 
 "The account number you entered is incomplete." = "Girdiğiniz hesap numarası eksik.";
 
+"The sort code you entered is invalid." = "Girdiğiniz banka/şube kodu geçersiz.";
+
 "Town or city" = "Kasaba veya şehir";
 
 "UPI ID" = "UPI Numarası";
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "Linklere erişmek için rotoru kullanın.";
 
+"Your BLIK code is incomplete." = "BLIK kodunuz eksik.";
+
+"Your BLIK code is invalid." = "BLIK kodunuz geçersiz.";
+
 "Your ZIP is incomplete." = "Posta kodunuz eksik.";
 
 "Your email is invalid." = "E-postanız geçersiz.";
+
+"Your payment information will not be saved." = "Ödeme bilgileriniz kaydedilmeyecek.";
 
 "Your postal code is incomplete." = "Posta kodunuz eksik.";
 

@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "AU BECS Izravno terećenje";
+"AU Direct Debit" = "AU izravno terećenje";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Bacs Direct Debit";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "Banka";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "Kartica";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "Link";
 
@@ -39,6 +45,8 @@
 "SEPA Debit" = "SEPA Debit";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Istek vremena pri provjeri načina plaćanja -- pokušajte ponovno";
 

@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ 추가";
 
 "Add a card" = "카드 추가";
@@ -12,10 +14,6 @@
 
 "Approve payment" = "결제 승인";
 
-"Are you sure you want to remove this card?" = "이 카드를 삭제하시겠습니까?";
-
-"Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
-
 "Back" = "뒤로";
 
 "Bank account" = "은행 계좌";
@@ -24,45 +22,63 @@
 
 "Buy using a UPI ID" = "UPI ID를 사용하여 구매";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal 결제를 확인하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
+
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 Amazon Pay 계정에 결제 대금을 청구할 수 있습니다.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Klarna를 계속 사용하면 %1$@에서 해당 회사 및 Klarna의 약관에 따라 향후 Klarna 계정에 결제 대금을 청구할 수 있습니다. 이 설정은 언제든지 Klarna 앱에서 또는 %2$@에 문의하여 변경할 수 있습니다.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal을 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
+
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 Revolut Pay 계정에 대금을 청구할 수 있습니다.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "계속하면 해당 <terms>약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "계속하면 이 승인이 취소될 때까지 %2$@의 약관에 따라 이 결제 및 향후 결제에 대해 %1$@이(가) Cash App 계좌에서 인출하도록 승인하는 것입니다. 이는 Cash App 설정에서 언제든지 변경할 수 있습니다.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 이메일을 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 전화번호를 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
-"Cancel and pay another way" = "취소 및 다른 방법으로 결제";
+"CPF/CPNJ" = "CPF/CPNJ";
 
-"Change email" = "이메일 변경";
+"Cancel and pay another way" = "취소 및 다른 방법으로 결제";
 
 "Choose a payment method" = "결제 방식 선택";
 
 "Close card scanner" = "카드 스캐너 닫기";
 
-"Code sent" = "코드 전송 완료";
+"Confirm" = "확인";
 
-"Default" = "기본값";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 이내에 은행 또는 결제 앱에서 결제를 확인하여 구매를 완료하십시오.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ 이내에 은행 앱에서 결제를 확인하여 구매를 완료하십시오.";
+
+"Confirm your CVC" = "CVC 확인";
+
+"Confirm your CVV" = "CVV 확인";
+
+"Contact information" = "연락처 정보";
 
 "EPS Bank" = "EPS 은행";
 
 "Enter address manually" = "주소 직접 입력";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Link를 기본값으로 결제하려면 %@에 전송된 코드를 입력해 주십시오.";
+"FPX Bank" = "FPX 은행";
 
-"Enter your verification code" = "확인 코드 입력";
-
-"For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Link 가입";
+"Manage your payment methods" = "내 결제 방식 관리";
 
-"Log out of Link" = "Link 로그아웃";
-
-"Not %@?" = "%@ 님이 아니십니까?";
+"Name on card" = "카드 명의자";
 
 "Open your UPI app to approve your payment within %@" = "결제를 승인하려면 %@ 안에 UPI 앱을 여십시오.";
 
@@ -72,29 +88,25 @@
 
 "Or pay with a card" = "또는 카드 결제";
 
+"Or use" = "또는 다음 결제 방식을 사용하기";
+
+"Or use a card" = "또는 카드를 사용하기";
+
 "Pay %@" = "%@ 결제";
 
 "Pay another way" = "다른 방법으로 결제";
 
-"Pay faster at %@ and thousands of merchants." = "%@ 및 수많은 가맹점에서 더 빠르게 결제하십시오.";
+"Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
 
-"Pay later with Klarna." = "Klarna로 나중에 결제";
-
 "Pay over time with %@" = "%@으로 할부 결제";
 
-"Pay using" = "사용할 결제 수단";
-
-"Pay with %@" = "%@(으)로 결제";
+"Pay with Link" = "Link로 결제";
 
 "Pay with your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌로 결제하십시오.";
 
-"Payment" = "결제";
-
 "Payment failed" = "결제 실패";
-
-"Payment methods" = "결제 방식";
 
 "Please go back and select another payment method" = "뒤로 돌아가서 다른 결제 방식을 선택해 주십시오.";
 
@@ -104,33 +116,25 @@
 
 "Przelewy24 Bank" = "Przelewy24 은행";
 
-"Remove %1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 제거";
+"Remove card?" = "카드를 삭제하시겠습니까?";
 
-"Remove Card" = "카드 제거";
+"Save" = "저장";
 
-"Remove card" = "카드 제거";
-
-"Remove linked account" = "연결된 계좌 제거";
-
-"Resend code" = "코드 재전송";
+"Save a new payment method" = "새 결제 방식 저장";
 
 "Save address" = "주소 저장";
 
 "Save for future payments" = "향후 결제에 사용하도록 저장";
 
-"Save my info for secure 1-click checkout" = "보안 원클릭 체크아웃을 위해 정보 저장";
-
 "Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
 
 "Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
 
-"Secure 1⁠-⁠click checkout" = "보안 원클릭 체크아웃";
+"Save your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌를 저장하십시오.";
+
+"Save your info for secure 1-click checkout with Link" = "Link로 안전한 원클릭 결제를 위해 사용자 정보 저장";
 
 "Select your payment method" = "결제 수단을 선택하세요.";
-
-"Set as default" = "기본값으로 설정";
-
-"Set as default payment method" = "결제 방식 기본값으로 설정";
 
 "Set up" = "설정";
 
@@ -138,31 +142,13 @@
 
 "Show menu" = "메뉴 표시";
 
-"Sign in to your Link account" = "Link 계정에 로그인";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe는 영업일 기준 1~2일 후에 계좌에 0.01$를 예금할 예정입니다. 이후 %@에 은행 계좌 저장을 완료하라는 지침이 포함된 이메일이 전송됩니다.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
 
-"Tap to close" = "탭하여 닫기";
-
-"Tap to expand" = "탭하여 확장";
-
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 
-"The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
-
-"The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
-
-"This card has expired. Update your card info or choose a different payment method." = "이 카드의 유효기간이 만료되었습니다. 카드 정보를 업데이트하거나 다른 결제 방식을 선택하십시오.";
-
-"This is your default" = "기본값입니다";
-
-"Too many attempts. Please try again in a few minutes." = "너무 많이 시도했습니다. 몇 분 후에 다시 시도해 주십시오.";
-
-"Unavailable for this purchase" = "해당 구매에는 사용 불가능";
-
 "Update card" = "카드 업데이트";
-
-"Use your saved info to check out faster" = "저장된 정보를 사용하여 더 빠르게 체크아웃";
 
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
 

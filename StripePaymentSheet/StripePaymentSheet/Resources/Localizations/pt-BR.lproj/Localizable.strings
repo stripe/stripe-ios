@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Adicionar";
 
 "Add a card" = "Adicione um cartão";
@@ -12,10 +14,6 @@
 
 "Approve payment" = "Aprovar pagamento";
 
-"Are you sure you want to remove this card?" = "Tem certeza de que deseja remover este cartão?";
-
-"Are you sure you want to remove this linked account?" = "Tem certeza de que deseja remover esta conta vinculada?";
-
 "Back" = "Voltar";
 
 "Bank account" = "Conta bancária";
@@ -24,45 +22,63 @@
 
 "Buy using a UPI ID" = "Comprar usando um ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao confirmar seu pagamento com o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos pela empresa.";
+
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ao continuar para o Amazon Pay, você permite que %@ cobre sua conta do Amazon Pay por pagamentos futuros em conformidade com os termos da empresa.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Ao continuar para a Klarna, você permite que %1$@ cobre sua conta Klarna por pagamentos futuros em conformidade com os termos da empresa e da Klarna. É possível alterar essa opção a qualquer momento no aplicativo Klarna ou entrando em contato com %2$@.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao continuar para o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos com a empresa.";
+
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ao continuar para o Revolut Pay, você permite que %@ cobre sua conta do Revolut Pay por pagamentos futuros em conformidade com os termos da empresa.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, você aceita autorizar pagamentos de acordo com <terms>estes termos</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ao continuar, você concorda em autorizar pagamentos conforme estes <terms>termos</terms>.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ao continuar, você autoriza %1$@ a debitar sua conta do Cash App para este pagamento e futuros pagamentos, em conformidade com os temos da empresa %2$@, até que a autorização seja revogada. É possível alterar isso a qualquer momento nas Configurações do Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao entrar no Link, você concorda com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao informar seu e-mail, você concorda em criar uma conta do Link e salvar seus dados de pagamento no Link, segundo os <terms>Termos</terms> e a <privacy>Política de Privacidade</privacy> do Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ao fornecer seus dados de pagamento e confirmar este pagamento, você autoriza (A) %@ e a Stripe, o nosso provedor de serviços de pagamento, a enviar instruções ao seu banco para debitar sua conta e (B) seu banco a debitar sua conta, de acordo com as referidas instruções. Os seus direitos incluem a possibilidade de exigir do banco o reembolso do valor debitado, nos termos e condições acordados com a instituição. O reembolso deve ser solicitado dentro de um prazo de 8 semanas a partir da data do débito na conta. Você concorda em receber notificações de débitos futuros em até 2 dias antes do débito.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao informar seu número de telefone, você concorda em criar uma conta do Link e salvar seus dados de pagamento no Link, segundo os <terms>Termos</terms> e a <privacy>Política de Privacidade</privacy> do Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao salvar sua conta bancária para %@, você autoriza pagamentos de acordo com <terms>estes termos</terms>.";
 
-"Cancel and pay another way" = "Cancele e pague de outra forma";
+"CPF/CPNJ" = "CPF/CPNJ";
 
-"Change email" = "Alterar e-mail";
+"Cancel and pay another way" = "Cancele e pague de outra forma";
 
 "Choose a payment method" = "Escolha uma forma de pagamento";
 
 "Close card scanner" = "Fechar máquina de cartão";
 
-"Code sent" = "Código enviado";
+"Confirm" = "Confirmar";
 
-"Default" = "Padrão";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirme o pagamento no seu banco ou aplicativo de pagamento em até %@ para concluir a compra.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirme o pagamento no aplicativo do seu banco em até %@ para concluir a compra.";
+
+"Confirm your CVC" = "Confirme seu CVC";
+
+"Confirm your CVV" = "Confirme seu CVV";
+
+"Contact information" = "Dados de contato";
 
 "EPS Bank" = "Banco EPS";
 
 "Enter address manually" = "Inserir endereço manualmente";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Insira o código enviado para %@ para o usar o Link por padrão em pagamentos.";
+"FPX Bank" = "Banco do FPX";
 
-"Enter your verification code" = "Insira seu código de verificação";
-
-"For security, please re-enter your card’s security code." = "Por segurança, digite novamente o código de segurança do cartão.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entendo que a Stripe fará débitos automáticos em nome de %@ e confirmo que sou titular da conta e a única pessoa necessária para autorizar débitos nesta conta.";
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Cadastre-se no Link";
+"Manage your payment methods" = "Gerencie suas formas de pagamento";
 
-"Log out of Link" = "Sair do Link";
-
-"Not %@?" = "Não é %@?";
+"Name on card" = "Nome no cartão";
 
 "Open your UPI app to approve your payment within %@" = "Abra o aplicativo UPI para aprovar o pagamento em até %@";
 
@@ -72,29 +88,25 @@
 
 "Or pay with a card" = "Ou pagar com cartão";
 
+"Or use" = "Ou use";
+
+"Or use a card" = "Ou use um cartão";
+
 "Pay %@" = "Pagar %@";
 
 "Pay another way" = "Pagar de outra forma";
 
-"Pay faster at %@ and thousands of merchants." = "Pague mais rápido em %@ e milhares de estabelecimentos comerciais.";
+"Pay faster at %@ and thousands of businesses." = "Pague mais rápido em %@ e milhares de empresas.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pague em <num_installments/> vezes sem juros de <installment_price/> com <img/>";
 
-"Pay later with Klarna." = "Pagar depois com Klarna.";
-
 "Pay over time with %@" = "Pagar depois com %@";
 
-"Pay using" = "Pagar com";
-
-"Pay with %@" = "Pagar com %@";
+"Pay with Link" = "Pagar com Link";
 
 "Pay with your bank account in just a few steps." = "Pague com sua conta bancária em poucos passos.";
 
-"Payment" = "Pagamento";
-
 "Payment failed" = "Falha no pagamento";
-
-"Payment methods" = "Formas de pagamento";
 
 "Please go back and select another payment method" = "Volte e selecione outra forma de pagamento";
 
@@ -104,33 +116,25 @@
 
 "Przelewy24 Bank" = "Banco Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Remover %1$@ com final %2$@";
+"Remove card?" = "Remover cartão?";
 
-"Remove Card" = "Remover cartão";
+"Save" = "Salvar";
 
-"Remove card" = "Remover cartão";
-
-"Remove linked account" = "Remover conta vinculada";
-
-"Resend code" = "Reenviar código";
+"Save a new payment method" = "Salvar nova forma de pagamento";
 
 "Save address" = "Salvar endereço";
 
 "Save for future payments" = "Salvar para pagamentos futuros";
 
-"Save my info for secure 1-click checkout" = "Salvar meus dados para um checkout seguro com 1 clique";
-
 "Save this account for future %@ payments" = "Salvar esta conta para pagamentos futuros de %@";
 
 "Save this card for future %@ payments" = "Salvar este cartão para pagamentos futuros a %@";
 
-"Secure 1⁠-⁠click checkout" = "Checkout seguro em 1 clique";
+"Save your bank account in just a few steps." = "Salve sua conta bancária em poucos passos.";
+
+"Save your info for secure 1-click checkout with Link" = "Salve seus dados para fazer checkout seguro em 1 clique com o Link";
 
 "Select your payment method" = "Selecione sua forma de pagamento";
-
-"Set as default" = "Definir como padrão";
-
-"Set as default payment method" = "Definir como forma de pagamento padrão";
 
 "Set up" = "Configurar";
 
@@ -138,31 +142,13 @@
 
 "Show menu" = "Mostrar o menu";
 
-"Sign in to your Link account" = "Entrar em sua conta Link";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe depositará US$ 0,01 na sua conta em até 2 dias úteis. Em seguida, você receberá um e-mail com instruções de como salvar sua conta bancária com a %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe depositará $ 0,01 na sua conta em 1 a 2 dias úteis. Depois disso, você receberá um e-mail com instruções de como concluir o pagamento para %@.";
 
-"Tap to close" = "Toque para fechar";
-
-"Tap to expand" = "Toque para expandir";
-
 "The IBAN you entered is incomplete." = "O IBAN inserido está incompleto.";
 
-"The provided verification code has expired." = "O código de verificação informado expirou.";
-
-"The provided verification code is incorrect." = "O código de verificação informado está incorreto.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Este cartão expirou. Atualize as informações do seu cartão ou escolha outra forma de pagamento.";
-
-"This is your default" = "Este é o seu padrão";
-
-"Too many attempts. Please try again in a few minutes." = "Excesso de tentativas. Tente novamente em alguns minutos.";
-
-"Unavailable for this purchase" = "Indisponível para esta compra";
-
 "Update card" = "Atualizar cartão";
-
-"Use your saved info to check out faster" = "Use as informações salvas para pagar mais rápido";
 
 "Your IBAN should start with a two-letter country code." = "Seu IBAN deve começar com um código de país de duas letras.";
 

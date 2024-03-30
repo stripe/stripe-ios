@@ -13,11 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation STDSOSVersionChecker
 
 + (BOOL)isSupportedOSVersion {
-    if (@available(iOS 11, *)) {
-        return YES;
-    } else {
-        return NO;
-    }
+    return YES;
 }
 
 @end

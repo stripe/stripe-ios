@@ -1,4 +1,4 @@
-"%1$@ account ending in %2$@" = "끝자리가 %2$@인 %1$@ 계좌 삭제";
+"%1$@ account ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 계좌";
 
 "%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
 
@@ -21,6 +21,8 @@
 "Card information" = "카드 정보";
 
 "Card number" = "카드 번호";
+
+"Confirm your %@" = "%@ 확인";
 
 "Invalid data." = "잘못된 데이터입니다.";
 

@@ -1,12 +1,12 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "U sljedećem koraku automatski će se snimiti nekoliko fotografija kako bi se potvrdilo da ste to vi";
+
+"Accepted forms of ID include" = "Prihvaćeni oblici identifikacijskih dokumenata uključuju";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Umjesto toga možete ručno prenijeti fotografiju svog osobnog dokumenta.";
 
 "App Settings" = "Postavke aplikacije";
 
-"Back driver's license photo successfully uploaded" = "Fotografija stražnje strane vozačke dozvole je uspješno učitana";
-
 "Back identity card photo successfully uploaded" = "Fotografija stražnje strane osobne iskaznice je uspješno učitana";
-
-"Back of driver's license" = "Stražnja strana vozačke dozvole";
 
 "Back of identity card" = "Stražnja strana osobne iskaznice";
 
@@ -22,57 +22,59 @@
 
 "Could not capture image" = "Nismo uspjeli snimiti fotografiju";
 
-"Date of birth" = "Datum rođenja";
+"Date of Birth" = "Datum rođenja";
 
-"File Upload" = "Učitavanje datoteke";
-
-"File upload" = "Postavljanje datoteke";
-
-"Flip your driver's license over to the other side" = "Okrenite svoju vozačku dozvolu na drugu stranu";
+"Date of birth does not look valid" = "Datum rođenja ne izgleda ispravno";
 
 "Flip your identity card over to the other side" = "Okrenite svoju osobnu iskaznicu na drugu stranu";
 
-"Front driver's license photo successfully uploaded" = "Fotografija prednje strane vozačke dozvole uspješno je učitana";
-
 "Front identity card photo successfully uploaded" = "Fotografija prednje strane osobne iskaznice uspješno je učitana";
 
-"Front of driver's license" = "Prednja strana vozačke dozvole";
-
 "Front of identity card" = "Prednja strana osobne iskaznice";
+
+"Get ready to scan your photo ID" = "Pripremite se za skeniranje svog osobnog dokumenta s fotografijom";
+
+"Get ready to take a selfie" = "Pripremite se za snimanje selfija";
 
 "Go Back" = "Vrati se natrag";
 
 "Hold still, scanning" = "Ne pomičite se, skeniranje u tijeku";
 
+"I'm ready" = "Spreman sam";
+
 "ID Number" = "ID broj";
 
-"ID Type" = "Vrsta osobnog dokumenta";
+"Individual CPF" = "CPF porezni broj";
 
-"Image of passport" = "Slika putovnice";
+"Last 4 of Social Security number" = "4 zadnja broja socijalnog osiguranja";
 
 "Loading" = "Učitavanje";
 
-"Passport" = "Putovnica";
+"Make sure you're in a well lit space." = "Provjerite jeste li u dobro osvijetljenom prostoru.";
 
-"Passport photo successfully uploaded" = "Fotografija putovnice uspješno učitana";
+"Move closer" = "Pomaknite bliže";
+
+"Move farther" = "Pomaknite dalje";
+
+"NRIC or FIN" = "NRIC ili FIN";
 
 "Personal ID number" = "Osobni identifikacijski broj";
 
+"Personal Information" = "Osobni podaci";
+
+"Phone Number" = "Telefonski broj";
+
+"Phone Verification" = "Provjera uz pomoć telefona";
+
 "Photo Library" = "Biblioteka fotografija";
 
-"Please upload an image of your passport" = "Molimo učitajte sliku vaše putovnice";
-
-"Please upload images of the front and back of your driver's license" = "Molimo vas učitajte slike prednje i stražnje strane vaše vozačke dozvole";
-
 "Please upload images of the front and back of your identity card" = "Molimo vas učitajte slike prednje i stražnje strane vaše osobne iskaznice";
-
-"Position your driver's license in the center of the frame" = "Postavite svoju vozačku dozvolu u sredinu okvira";
 
 "Position your face in the center of the frame." = "Postavite svoje lice u središte okvira.";
 
 "Position your identity card in the center of the frame" = "Postavite svoju osobnu iskaznicu u sredinu okvira";
 
-"Position your passport in the center of the frame" = "Postavite svoju putovnicu u sredinu okvira";
+"Retake Photos" = "Ponovo snimi fotografije";
 
 "Scan" = "Skenirani dokument";
 
@@ -84,15 +86,9 @@
 
 "Select a location to upload the front of your identity document from" = "Odaberite lokaciju s koje ćete učitati prednju stranu svog dokumenta";
 
-"Select back driver's license photo" = "Odaberite fotografiju stražnje strane osobne iskaznica";
-
 "Select back identity card photo" = "Odaberite fotografiju stražnje strane osobne iskaznice";
 
-"Select front driver's license photo" = "Odaberite fotografiju prednje strane vozačke dozvole";
-
 "Select front identity card photo" = "Odaberite fotografiju prednje strane osobne iskaznice";
-
-"Select passport photo" = "Odaberite fotografiju putovnice";
 
 "Selfie" = "Selfie";
 
@@ -116,15 +112,11 @@
 
 "Upload a Photo" = "Učitaj fotografiju";
 
-"Uploading back driver's license photo" = "Učitavanje fotografije stražnje strane vozačke dozvole";
+"Upload your photo ID" = "Učitajte svoj identifikacijski dokument s fotografijom";
 
 "Uploading back identity card photo" = "Učitavanje fotografije stražnje strane osobne iskaznice";
 
-"Uploading front driver's license photo" = "Učitavanje fotografije prednje strane vozačke dozvole";
-
 "Uploading front identity card photo" = "Učitavanje fotografije prednje strane osobne iskaznice";
-
-"Uploading passport photo" = "Učitavanje fotografije putovnice";
 
 "Verify your identity" = "Potvrdite svoj identitet";
 
@@ -132,6 +124,14 @@
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Potrebna nam je dozvola za uporabu kamere. Molimo dozvolite pristup kameri u postavkama aplikacije.";
 
+"Welcome" = "Dobrodošli";
+
 "You can either try again or upload an image from your device." = "Možete pokušati ponovno ili prenijeti sliku sa svog uređaja.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Vaše selfie slike nisu pohranjene. Želite li napustiti?";
+
+"driver's license" = "vozačka dozvola";
+
+"government-issued photo ID" = "Državni identifikacijski dokument s fotografijom";
+
+"passport" = "putovnica";

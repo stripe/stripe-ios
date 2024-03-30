@@ -13,6 +13,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPAnalyticsClientPaymentsTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -43,7 +44,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         let mockAnalytic = MockAnalytic()
         let payload = client.payload(from: mockAnalytic)
 
-        XCTAssertEqual(payload.count, 13)
+        XCTAssertEqual(payload.count, 14)
 
         // Verify event name is included
         XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
@@ -62,33 +63,32 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         XCTAssertEqual(payload["install"] as? String, "X")
     }
 
-    func testPayloadFromErrorAnalytic() throws {
-        client.addAdditionalInfo("test_additional_info")
+    // MARK: - Error tests
 
-        let mockAnalytic = MockErrorAnalytic()
-        let payload = client.payload(from: mockAnalytic)
-
-        // Verify event name is included
-        XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
-
-        // Verify additionalInfo is included
-        XCTAssertEqual(payload["additional_info"] as? [String], ["test_additional_info"])
-
-        // Verify all the analytic params are in the payload
-        XCTAssertEqual(payload["test_param1"] as? Int, 1)
-        XCTAssertEqual(payload["test_param2"] as? String, "two")
-
-        // Verify productUsage is included
-        XCTAssertNotNil(payload["product_usage"])
-
-        // Verify error_dictionary is included
-        let errorDict = try XCTUnwrap(payload["error_dictionary"] as? [String: Any])
-        XCTAssertTrue(
-            NSDictionary(dictionary: errorDict).isEqual(
-                to: mockAnalytic.error.serializeForLogging()
-            )
-        )
+    enum MockError: Error {
+        case someErrorCase
     }
+
+    func testLogErrorAnalytic() {
+        let error = MockError.someErrorCase
+        let errorAnalytic = ErrorAnalytic(event: .luxeSerializeFailure, error: error)
+        let payload = client.payload(from: errorAnalytic)
+
+        // Verify payload event name is correct
+        XCTAssertEqual(payload["event"] as? String, STPAnalyticEvent.luxeSerializeFailure.rawValue)
+
+        // Verify error details are included
+        XCTAssertEqual(payload["error_type"] as? String, "StripeiOS_Tests.STPAnalyticsClientPaymentsTest.MockError")
+        XCTAssertEqual(payload["error_code"] as? String, "someErrorCase")
+
+        let errorAnalyticWithAdditionalParams = ErrorAnalytic(event: .luxeSerializeFailure, error: error, additionalNonPIIParams: ["additional_param": "value"])
+        let payloadWithAdditionalParams = client.payload(from: errorAnalyticWithAdditionalParams)
+
+        // Verify additional params in ErrorAnalytic are included
+        XCTAssertEqual(payloadWithAdditionalParams["additional_param"] as? String, "value")
+    }
+
+    // MARK: - Other tests
 
     func testTokenTypeFromParameters() {
         let card = STPFixtures.cardParams()
@@ -125,8 +125,9 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         )
         let apiClient = STPAPIClient()
         let customerContext = STPCustomerContext.init(keyManager: keyManager, apiClient: apiClient)
-        _ = STPPaymentContext(customerContext: customerContext)
+        let paymentContext = STPPaymentContext(customerContext: customerContext)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPCustomerContext"))
+        XCTAssertEqual(paymentContext.analyticsLogger.product, "STPPaymentContext")
     }
 
     func testApplePayContextAddsUsage() {
@@ -146,10 +147,24 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     }
 
     func testAddCardVCAddsUsage() {
-        _ = STPAddCardViewController()
+        let addCardVC = STPAddCardViewController()
         XCTAssertTrue(
             STPAnalyticsClient.sharedClient.productUsage.contains("STPAddCardViewController")
         )
+        XCTAssertEqual(addCardVC.analyticsLogger.product, "STPAddCardViewController")
+    }
+
+    func testPaymentOptionsVCAddsUsage() {
+        let customerContext = Testing_StaticCustomerContext.init(
+            customer: STPFixtures.customerWithCardTokenAndSourceSources(),
+            paymentMethods: []
+        )
+        let delegate = MockSTPPaymentOptionsViewControllerDelegate()
+        let paymentOptionsVC = STPPaymentOptionsViewController(configuration: .shared, theme: .defaultTheme, customerContext: customerContext, delegate: delegate)
+        XCTAssertTrue(
+            STPAnalyticsClient.sharedClient.productUsage.contains("STPPaymentOptionsViewController")
+        )
+        XCTAssertEqual(paymentOptionsVC.analyticsLogger.product, "STPPaymentOptionsViewController")
     }
 
     func testBankSelectionVCAddsUsage() {
@@ -160,7 +175,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     }
 
     func testShippingVCAddsUsage() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.requiredShippingAddressFields = [STPContactField.postalAddress]
         _ = STPShippingAddressViewController(
             configuration: config,
@@ -202,17 +217,6 @@ private struct MockAnalytic: Analytic {
         "test_param1": 1,
         "test_param2": "two",
     ]
-}
-
-private struct MockErrorAnalytic: ErrorAnalytic {
-    let event = STPAnalyticEvent.sourceCreation
-
-    let params: [String: Any] = [
-        "test_param1": 1,
-        "test_param2": "two",
-    ]
-
-    let error: Error = NSError(domain: "domain", code: 100, userInfo: nil)
 }
 
 private struct MockAnalyticsClass1: STPAnalyticsProtocol {

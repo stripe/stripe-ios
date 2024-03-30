@@ -35,7 +35,8 @@ class AnyAPIResponse: NSObject, STPAPIResponseDecodable {
 class APIRequestTest: XCTestCase {
     let apiClient = STPAPIClient()
     override func setUp() {
-        apiClient.apiURL = URL(string: "https://httpbin.org/")
+        // HTTPBin clone
+        apiClient.apiURL = URL(string: "https://luxurious-alpine-devourer.glitch.me")
     }
 
     func testPublishableKeyAuthorization() {

@@ -23,7 +23,7 @@ protocol TextFieldViewDelegate: AnyObject {
 @objc(STP_Internal_TextFieldView)
 class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
-    private lazy var toolbar = DoneButtonToolbar(delegate: self)
+    private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)
     var text: String {
         return textField.text ?? ""
     }
@@ -68,9 +68,20 @@ class TextFieldView: UIView {
                 return
             }
             oldValue?.removeFromSuperview()
-            if let accessoryView = accessoryView {
+
+            if let accessoryView = accessoryView as? PickerFieldView {
+                // Hack, disable the ability for the picker to take focus while it's being added as a sub view
+                // Occasionally the OS will attempt to call `becomeFirstResponder` on it, causing it to take focus
+                accessoryView.setCanBecomeFirstResponder(false)
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
+                // Don't have trailing padding when showing a picker view in the accessory view
+                hStack.updateTrailingAnchor(constant: 0)
+                accessoryView.setCanBecomeFirstResponder(true)
+            } else if let accessoryView = accessoryView {
+                accessoryContainerView.addAndPinSubview(accessoryView)
+                accessoryView.setContentHuggingPriority(.required, for: .horizontal)
+                hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
             }
         }
     }
@@ -185,7 +196,9 @@ class TextFieldView: UIView {
         textField.textContentType = viewModel.keyboardProperties.textContentType
         if viewModel.keyboardProperties.type != textField.keyboardType {
             textField.keyboardType = viewModel.keyboardProperties.type
+#if !canImport(CompositorServices)
             textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
+#endif
             textField.reloadInputViews()
         }
 
@@ -198,7 +211,7 @@ class TextFieldView: UIView {
             textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
-            textField.textColor = isUserInteractionEnabled ? viewModel.theme.colors.textFieldText : .tertiaryLabel
+            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.isEditable)
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }
@@ -215,15 +228,22 @@ class TextFieldView: UIView {
         layoutIfNeeded()
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI(with: viewModel)
     }
+#endif
 }
 
 // MARK: - UITextFieldDelegate
 
 extension TextFieldView: UITextFieldDelegate {
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return viewModel.isEditable
+    }
+
     @objc func textDidChange() {
         // If the text updates to non-empty, ensure the clear button is visible
         if let text = textField.text, !text.isEmpty, viewModel.shouldShowClearButton {
@@ -275,6 +295,8 @@ extension TextFieldView: EventHandler {
             isUserInteractionEnabled = true
         case .shouldDisableUserInteraction:
             isUserInteractionEnabled = false
+        default:
+            break
         }
     }
 }

@@ -15,6 +15,8 @@ public enum IdentityVerificationSheetError: Error {
     case invalidClientSecret
     /// An unknown error.
     case unknown(debugDescription: String)
+    /// Sample error returned form test mode.
+    case testModeSampleError
 }
 
 extension IdentityVerificationSheetError: LocalizedError {
@@ -31,12 +33,14 @@ extension IdentityVerificationSheetError: CustomDebugStringConvertible {
             return "Invalid client secret"
         case .unknown(let debugDescription):
             return debugDescription
+        case .testModeSampleError:
+            return "Sample test model error"
         }
     }
 }
 
 /// :nodoc:
-@_spi(STP) extension IdentityVerificationSheetError: AnalyticLoggableError {
+@_spi(STP) extension IdentityVerificationSheetError: AnalyticLoggableErrorV2 {
 
     /// The error code
     public var errorCode: Int {
@@ -45,6 +49,8 @@ extension IdentityVerificationSheetError: CustomDebugStringConvertible {
             return 0
         case .unknown:
             return 1
+        case .testModeSampleError:
+            return 2
         }
     }
 

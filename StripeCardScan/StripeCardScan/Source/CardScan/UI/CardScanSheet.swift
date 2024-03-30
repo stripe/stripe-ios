@@ -29,9 +29,7 @@ public class CardScanSheet {
     /// Presents a sheet for a customer to scan their card
     /// - Parameter presentingViewController: The view controller to present a card scan sheet
     /// - Parameter completion: Called with the result of the scan after the card scan sheet is dismissed
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    public func present(
+            public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (CardScanSheetResult) -> Void,
         animated: Bool = true
@@ -81,7 +79,8 @@ extension CardScanSheet: SimpleScanDelegate {
         _ scanViewController: SimpleScanViewController,
         creditCard: CreditCard
     ) {
-        let scannedCard = ScannedCard(pan: creditCard.number)
+        let scannedCard = ScannedCard(scannedCard: creditCard)
+
         completion?(.completed(card: scannedCard))
     }
 }

@@ -19,7 +19,7 @@ public class STPMandateOnlineParams: NSObject {
 
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc internal var inferFromClient: NSNumber?
+    @objc @_spi(STP) public var inferFromClient: NSNumber?
 
     /// Initializes an STPMandateOnlineParams.
     /// - Parameter ipAddress: The IP address from which the Mandate was accepted by the customer.

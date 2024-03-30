@@ -24,15 +24,26 @@ class FormSpecProvider {
         DispatchQueue(label: "com.stripe.Form.FormSpecProvider", qos: .userInitiated)
     }()
 
+    var isLoaded: Bool {
+        return !formSpecs.isEmpty
+    }
+
+    var hasLoadedFromDisk: Bool = false
+
     /// Loads the JSON form spec from disk into memory
     func load(completion: ((Bool) -> Void)? = nil) {
         formSpecsUpdateQueue.async { [weak self] in
+            if self?.hasLoadedFromDisk == true {
+                completion?(true)
+                return
+            }
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
                 let data = try Data(contentsOf: formSpecsURL)
                 let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
                 self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
+                self?.hasLoadedFromDisk = true
                 completion?(true)
             } catch {
                 completion?(false)
@@ -49,46 +60,47 @@ class FormSpecProvider {
             return false
         }
 
+        var decodedSuccessfully = true
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        do {
-            let data = try JSONSerialization.data(withJSONObject: formSpecs)
-            let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
-            guard !containsUnknownNextActions(formSpecs: decodedFormSpecs) else {
-                STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
-                return false
+        for formSpec in formSpecs {
+            do {
+                let data = try JSONSerialization.data(withJSONObject: formSpec)
+                let decodedFormSpec = try decoder.decode(FormSpec.self, from: data)
+                guard !containsUnknownNextActions(formSpec: decodedFormSpec) else {
+                    STPAnalyticsClient.sharedClient.logLUXEUnknownActionsFailure()
+                    decodedSuccessfully = false
+                    continue
+                }
+                self.formSpecs[decodedFormSpec.type] = decodedFormSpec
+            } catch {
+                STPAnalyticsClient.sharedClient.logLUXESpecSerilizeFailure(error: error)
+                decodedSuccessfully = false
             }
-            for formSpec in decodedFormSpecs {
-                self.formSpecs[formSpec.type] = formSpec
-            }
-        } catch {
-            STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
-            return false
         }
-        return true
+        return decodedSuccessfully
     }
 
     func formSpec(for paymentMethodType: String) -> FormSpec? {
         assert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
         return formSpecs[paymentMethodType]
     }
+
     func nextActionSpec(for paymentMethodType: String) -> FormSpec.NextActionSpec? {
         return formSpecs[paymentMethodType]?.nextActionSpec
     }
 
-    func containsUnknownNextActions(formSpecs: [FormSpec]) -> Bool {
-        for lpmSpec in formSpecs {
-            if let nextActionSpec = lpmSpec.nextActionSpec {
-                for (_, nextActionStatusValue) in nextActionSpec.confirmResponseStatusSpecs {
+    func containsUnknownNextActions(formSpec: FormSpec) -> Bool {
+        if let nextActionSpec = formSpec.nextActionSpec {
+            for (_, nextActionStatusValue) in nextActionSpec.confirmResponseStatusSpecs {
+                if case .unknown = nextActionStatusValue.type {
+                    return true
+                }
+            }
+            if let postConfirmSpecs = nextActionSpec.postConfirmHandlingPiStatusSpecs {
+                for (_, nextActionStatusValue) in postConfirmSpecs {
                     if case .unknown = nextActionStatusValue.type {
                         return true
-                    }
-                }
-                if let postConfirmSpecs = nextActionSpec.postConfirmHandlingPiStatusSpecs {
-                    for (_, nextActionStatusValue) in postConfirmSpecs {
-                        if case .unknown = nextActionStatusValue.type {
-                            return true
-                        }
                     }
                 }
             }

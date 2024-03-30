@@ -10,11 +10,15 @@
 
 "Area" = "Àrea";
 
+"BLIK code" = "Codi BLIK";
+
 "BSB number" = "Número BSB";
 
 "Billing address is same as shipping" = "L'adreça de facturació és la mateixa que la d'enviament";
 
 "Cancel" = "Cancel·la";
+
+"Card brand" = "Marca de la targeta";
 
 "City" = "Ciutat";
 
@@ -30,11 +34,15 @@
 
 "County" = "Comtat";
 
+"Date is empty." = "La data és buida.";
+
 "Department" = "Departament";
 
 "District" = "Districte";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Voleu tancar el formulari?";
 
 "Done" = "Fet";
 
@@ -56,7 +64,7 @@
 
 "Incomplete phone number" = "Número de telèfon incomplet";
 
-"Invalid UPI ID" = "ID UPI no vàlida";
+"Invalid UPI ID" = "ID d'UPI no vàlid";
 
 "Island" = "Illa";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "Telèfon";
 
+"Phone number" = "Número de telèfon";
+
 "Postal code" = "Codi postal";
 
 "Prefecture" = "Prefectura";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "Elimina el compte bancari que acaba en %@";
 
+"Remove card" = "Elimina la targeta";
+
 "Search" = "Cerca";
+
+"Select card brand (optional)" = "Seleccioneu la marca de la targeta (opcional)";
+
+"Sort code" = "Codi de classificació";
 
 "State" = "País";
 
@@ -102,17 +118,25 @@
 
 "The account number you entered is incomplete." = "El número de compte que heu introduït és incomplet.";
 
+"The sort code you entered is invalid." = "El codi d'ordenació que heu introduït no és vàlid.";
+
 "Town or city" = "Municipi o ciutat";
 
-"UPI ID" = "ID UPI";
+"UPI ID" = "ID d'UPI";
 
 "Unable to parse phone number" = "No s'ha pogut analitzar el número de telèfon";
 
 "Use rotor to access links" = "Empreu el rotor per accedir als enllaços";
 
+"Your BLIK code is incomplete." = "El codi BLIK no està complet.";
+
+"Your BLIK code is invalid." = "El codi BLIK no és vàlid.";
+
 "Your ZIP is incomplete." = "El teu ZIP no està complet.";
 
 "Your email is invalid." = "L'adreça electrònica no és vàlida.";
+
+"Your payment information will not be saved." = "La informació de pagament no es desarà.";
 
 "Your postal code is incomplete." = "El teu codi postal no està complet.";
 

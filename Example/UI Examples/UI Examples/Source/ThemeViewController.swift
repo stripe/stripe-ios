@@ -30,93 +30,56 @@ class ThemeViewController: UITableViewController {
                 return STPTheme.defaultTheme
             case .Custom:
                 let theme = STPTheme.init()
-                theme.primaryBackgroundColor = UIColor(
-                    red: 230.0 / 255.0, green: 235.0 / 255.0, blue: 241.0 / 255.0,
-                    alpha: 255.0 / 255.0)
-                theme.secondaryBackgroundColor = UIColor.white
-                theme.primaryForegroundColor = UIColor(
-                    red: 55.0 / 255.0, green: 53.0 / 255.0, blue: 100.0 / 255.0,
-                    alpha: 255.0 / 255.0)
-                theme.secondaryForegroundColor = UIColor(
-                    red: 148.0 / 255.0, green: 163.0 / 255.0, blue: 179.0 / 255.0,
-                    alpha: 255.0 / 255.0)
-                theme.accentColor = UIColor(
-                    red: 101.0 / 255.0, green: 101.0 / 255.0, blue: 232.0 / 255.0,
-                    alpha: 255.0 / 255.0)
-                theme.errorColor = UIColor(
-                    red: 240.0 / 255.0, green: 2.0 / 255.0, blue: 36.0 / 255.0, alpha: 255.0 / 255.0
-                )
-                #if canImport(CryptoKit)
-                    if #available(iOS 13.0, *) {
-                        theme.primaryBackgroundColor = UIColor.init(dynamicProvider: {
-                            (tc) -> UIColor in
-                            return (tc.userInterfaceStyle == .light)
-                                ? UIColor(
-                                    red: 230.0 / 255.0, green: 235.0 / 255.0, blue: 241.0 / 255.0,
-                                    alpha: 255.0 / 255.0)
-                                : UIColor(
-                                    red: 66.0 / 255.0, green: 69.0 / 255.0, blue: 112.0 / 255.0,
-                                    alpha: 255.0 / 255.0)
-                        })
-                        theme.secondaryBackgroundColor = UIColor.init(dynamicProvider: {
-                            (tc) -> UIColor in
-                            return (tc.userInterfaceStyle == .light)
-                                ? .white : theme.primaryBackgroundColor
-                        })
-                        theme.primaryForegroundColor = UIColor.init(dynamicProvider: {
-                            (tc) -> UIColor in
-                            return (tc.userInterfaceStyle == .light)
-                                ? UIColor(
-                                    red: 55.0 / 255.0, green: 53.0 / 255.0, blue: 100.0 / 255.0,
-                                    alpha: 255.0 / 255.0) : .white
-                        })
-                        theme.secondaryForegroundColor = UIColor.init(dynamicProvider: {
-                            (tc) -> UIColor in
-                            return (tc.userInterfaceStyle == .light)
-                                ? UIColor(
-                                    red: 148.0 / 255.0, green: 163.0 / 255.0, blue: 179.0 / 255.0,
-                                    alpha: 255.0 / 255.0)
-                                : UIColor(
-                                    red: 130.0 / 255.0, green: 147.0 / 255.0, blue: 168.0 / 255.0,
-                                    alpha: 255.0 / 255.0)
-                        })
-                        theme.accentColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
-                            return (tc.userInterfaceStyle == .light)
-                                ? UIColor(
-                                    red: 101.0 / 255.0, green: 101.0 / 255.0, blue: 232.0 / 255.0,
-                                    alpha: 255.0 / 255.0)
-                                : UIColor(
-                                    red: 14.0 / 255.0, green: 211.0 / 255.0, blue: 140.0 / 255.0,
-                                    alpha: 255.0 / 255.0)
-                        })
-                        theme.errorColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
-                            return (tc.userInterfaceStyle == .light)
-                                ? UIColor(
-                                    red: 240.0 / 255.0, green: 2.0 / 255.0, blue: 36.0 / 255.0,
-                                    alpha: 255.0 / 255.0)
-                                : UIColor(
-                                    red: 237.0 / 255.0, green: 83.0 / 255.0, blue: 69.0 / 255.0,
-                                    alpha: 255.0 / 255.0)
-                        })
-                    } else {
-                        theme.primaryBackgroundColor = UIColor(
-                            red: 230.0 / 255.0, green: 235.0 / 255.0, blue: 241.0 / 255.0,
-                            alpha: 255.0 / 255.0)
-                        theme.secondaryBackgroundColor = UIColor.white
-                        theme.primaryForegroundColor = UIColor(
-                            red: 55.0 / 255.0, green: 53.0 / 255.0, blue: 100.0 / 255.0,
-                            alpha: 255.0 / 255.0)
-                        theme.secondaryForegroundColor = UIColor(
-                            red: 148.0 / 255.0, green: 163.0 / 255.0, blue: 179.0 / 255.0,
-                            alpha: 255.0 / 255.0)
-                        theme.accentColor = UIColor(
-                            red: 101.0 / 255.0, green: 101.0 / 255.0, blue: 232.0 / 255.0,
-                            alpha: 255.0 / 255.0)
-                        theme.errorColor = UIColor(
-                            red: 240.0 / 255.0, green: 2.0 / 255.0, blue: 36.0 / 255.0,
-                            alpha: 255.0 / 255.0)
-                    }
-                #endif
+                    theme.primaryBackgroundColor = UIColor.init(dynamicProvider: {
+                        (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light)
+                            ? UIColor(
+                                red: 230.0 / 255.0, green: 235.0 / 255.0, blue: 241.0 / 255.0,
+                                alpha: 255.0 / 255.0)
+                            : UIColor(
+                                red: 66.0 / 255.0, green: 69.0 / 255.0, blue: 112.0 / 255.0,
+                                alpha: 255.0 / 255.0)
+                    })
+                    theme.secondaryBackgroundColor = UIColor.init(dynamicProvider: {
+                        (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light)
+                            ? .white : theme.primaryBackgroundColor
+                    })
+                    theme.primaryForegroundColor = UIColor.init(dynamicProvider: {
+                        (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light)
+                            ? UIColor(
+                                red: 55.0 / 255.0, green: 53.0 / 255.0, blue: 100.0 / 255.0,
+                                alpha: 255.0 / 255.0) : .white
+                    })
+                    theme.secondaryForegroundColor = UIColor.init(dynamicProvider: {
+                        (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light)
+                            ? UIColor(
+                                red: 148.0 / 255.0, green: 163.0 / 255.0, blue: 179.0 / 255.0,
+                                alpha: 255.0 / 255.0)
+                            : UIColor(
+                                red: 130.0 / 255.0, green: 147.0 / 255.0, blue: 168.0 / 255.0,
+                                alpha: 255.0 / 255.0)
+                    })
+                    theme.accentColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light)
+                            ? UIColor(
+                                red: 101.0 / 255.0, green: 101.0 / 255.0, blue: 232.0 / 255.0,
+                                alpha: 255.0 / 255.0)
+                            : UIColor(
+                                red: 14.0 / 255.0, green: 211.0 / 255.0, blue: 140.0 / 255.0,
+                                alpha: 255.0 / 255.0)
+                    })
+                    theme.errorColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light)
+                            ? UIColor(
+                                red: 240.0 / 255.0, green: 2.0 / 255.0, blue: 36.0 / 255.0,
+                                alpha: 255.0 / 255.0)
+                            : UIColor(
+                                red: 237.0 / 255.0, green: 83.0 / 255.0, blue: 69.0 / 255.0,
+                                alpha: 255.0 / 255.0)
+                    })
                 return theme
             }
         }

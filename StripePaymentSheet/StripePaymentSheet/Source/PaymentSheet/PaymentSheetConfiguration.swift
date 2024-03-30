@@ -10,13 +10,13 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 import UIKit
 
 // MARK: - Configuration
 extension PaymentSheet {
 
     /// Style options for colors in PaymentSheet
-    @available(iOS 13.0, *)
     public enum UserInterfaceStyle: Int {
 
         /// (default) PaymentSheet will automatically switch between standard and dark mode compatible colors based on device settings
@@ -62,7 +62,7 @@ extension PaymentSheet {
             switch self {
             case .automatic:
                 // only enable the save checkbox by default for US
-                return Locale.current.regionCode == "US"
+                return Locale.current.stp_regionCode == "US"
             case .requiresOptIn:
                 return false
             case .requiresOptOut:
@@ -73,6 +73,9 @@ extension PaymentSheet {
 
     /// Configuration for PaymentSheet
     public struct Configuration {
+        // The text that shows in the header of the payment sheet when adding a card.
+        // If nil default text will be used.
+        @_spi(DashboardOnly) public var addCardHeaderText: String?
 
         /// If true, allows payment methods that do not move money at the end of the checkout. Defaults to false.
         /// - Description: Some payment methods can't guarantee you will receive funds from your customer at the end of the checkout because they take time to settle (eg. most bank debits, like SEPA or ACH) or require customer action to complete (e.g. OXXO, Konbini, Boleto). If this is set to true, make sure your integration listens to webhooks for notifications on whether a payment has succeeded or not.
@@ -112,7 +115,6 @@ extension PaymentSheet {
         /// The color styling to use for PaymentSheet UI
         /// Default value is SheetStyle.automatic
         /// @see SheetStyle
-        @available(iOS 13.0, *)
         public var style: UserInterfaceStyle {  // stored properties can't be marked @available which is why this uses the styleRawValue private var
             get {
                 return UserInterfaceStyle(rawValue: styleRawValue)!
@@ -127,7 +129,6 @@ extension PaymentSheet {
         public var customer: CustomerConfiguration?
 
         /// Your customer-facing business name.
-        /// This is used to display a "Pay \(merchantDisplayName)" line item in the Apple Pay sheet
         /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName
         public var merchantDisplayName: String = Bundle.displayName ?? ""
 
@@ -136,6 +137,8 @@ extension PaymentSheet {
         public var returnURL: String?
 
         /// PaymentSheet pre-populates fields with the values provided.
+        /// If `billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod` is `true`, these values will
+        /// be attached to the payment method even if they are not collected by the PaymentSheet UI.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
 
         /// PaymentSheet offers users an option to save some payment methods for later use.
@@ -151,23 +154,53 @@ extension PaymentSheet {
         /// If `name` and `line1` are populated, it's also [attached to the PaymentIntent](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping) during payment.
         public var shippingDetails: () -> AddressViewController.AddressDetails? = { return nil }
 
+        /// The list of preferred networks that should be used to process payments made with a co-branded card.
+        /// This value will only be used if your user hasn't selected a network themselves.
+        public var preferredNetworks: [STPCardBrand]? {
+            didSet {
+                guard let preferredNetworks = preferredNetworks else { return }
+                assert(Set<STPCardBrand>(preferredNetworks).count == preferredNetworks.count,
+                       "preferredNetworks must not contain any duplicate card brands")
+            }
+        }
+
         /// Initializes a Configuration with default values
         public init() {}
 
         // MARK: Internal
         internal var linkPaymentMethodsOnly: Bool = false
 
-        /// The amount of billing address details to collect
-        /// Intentionally non-public.
-        /// @see BillingAddressCollection
-        var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
+        /// Override country for test purposes
+        @_spi(STP) public var userOverrideCountry: String?
 
-        /// 🚧 Under construction
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.
         /// If `never` is used for a required field for the Payment Method used during checkout,
         /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
-        @_spi(STP) public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
+        public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
+
+        /// Optional configuration to display a custom message when a saved payment method is removed.
+        public var removeSavedPaymentMethodMessage: String?
+
+        /// Configuration for external payment methods.
+        public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
+
+        /// By default, PaymentSheet will use a dynamic ordering that optimizes payment method display for the customer.
+        /// You can override the default order in which payment methods are displayed in PaymentSheet with a list of payment method types.
+        /// See https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for the list of valid types.  You may also pass external payment methods.
+        /// - Example: ["card", "external_paypal", "klarna"]
+        /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
+        public var paymentMethodOrder: [String]?
+
+        /// This is an experimental feature that may be removed at any time.
+        /// If true (the default), the customer can delete all saved payment methods.
+        /// If false, the customer can't delete if they only have one saved payment method remaining.
+        @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
+    }
+
+    internal enum CustomerAccessProvider {
+        case legacyCustomerEphemeralKey(String)
+        case customerSession(String)
     }
 
     /// Configuration related to the Stripe Customer
@@ -179,10 +212,21 @@ extension PaymentSheet {
         /// A short-lived token that allows the SDK to access a Customer's payment methods
         public let ephemeralKeySecret: String
 
-        /// Initializes a CustomerConfiguration
+        internal let customerAccessProvider: CustomerAccessProvider
+
+        /// Initializes a CustomerConfiguration with an ephemeralKeySecret
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
+            self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
             self.ephemeralKeySecret = ephemeralKeySecret
+        }
+
+        /// Initializes a CustomerConfiguration with a customerSessionClientSecret
+        @_spi(CustomerSessionBetaAccess)
+        public init(id: String, customerSessionClientSecret: String) {
+            self.id = id
+            self.customerAccessProvider = .customerSession(customerSessionClientSecret)
+            self.ephemeralKeySecret = ""
         }
     }
 
@@ -237,7 +281,7 @@ extension PaymentSheet {
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
             public let authorizationResultHandler:
-                ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+            ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
 
             /// Initializes the ApplePayConfiguration Handlers.
             public init(
@@ -316,22 +360,38 @@ extension PaymentSheet {
         public var address: Address = Address()
 
         /// The customer's email
-        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        /// - Note: When used with defaultBillingDetails, the value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var email: String?
 
         /// The customer's full name
-        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        /// - Note: When used with defaultBillingDetails, the value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var name: String?
 
-        /// The customer's phone number without formatting (e.g. 5551234567)
+        /// The customer's phone number in e164 formatting (e.g. +15551234567)
+        /// - Note: When used with defaultBillingDetails, omitting '+' will assume a US based phone number.
         public var phone: String?
+
+        /// The customer's phone number formatted for display in your UI (e.g. "+1 (555) 555-5555")
+        public var phoneNumberForDisplay: String? {
+            guard let phone = self.phone else {
+                return nil
+            }
+            return PhoneNumber.fromE164(phone)?.string(as: .international)
+        }
+
+        /// Initializes billing details
+        public init(address: PaymentSheet.Address = Address(), email: String? = nil, name: String? = nil, phone: String? = nil) {
+            self.address = address
+            self.email = email
+            self.name = name
+            self.phone = phone
+        }
     }
 
-    /// 🚧 Under construction
     /// Configuration for how billing details are collected during checkout.
-    @_spi(STP) public struct BillingDetailsCollectionConfiguration: Equatable {
+    public struct BillingDetailsCollectionConfiguration: Equatable {
         /// Billing details fields collection options.
-        public enum CollectionMode: CaseIterable {
+        public enum CollectionMode: String, CaseIterable {
             /// The field will be collected depending on the Payment Method's requirements.
             case automatic
             /// The field will never be collected.
@@ -342,7 +402,7 @@ extension PaymentSheet {
         }
 
         /// Billing address collection options.
-        public enum AddressCollectionMode: CaseIterable {
+        public enum AddressCollectionMode: String, CaseIterable {
             /// Only the fields required by the Payment Method will be collected, this may be none.
             case automatic
             /// Address will never be collected.
@@ -374,5 +434,72 @@ extension PaymentSheet {
         ///
         /// If `false` (the default), those values will only be used to prefill the corresponding fields in the form.
         public var attachDefaultsToPaymentMethod = false
+    }
+
+    /// Configuration for external payment methods
+    /// - Seealso: See the [integration guide](https://stripe.com/docs/payments/external-payment-methods?platform=ios).
+    public struct ExternalPaymentMethodConfiguration {
+
+        /// Initializes an `ExternalPaymentMethodConfiguration`
+        /// - Parameter externalPaymentMethods: A list of external payment methods to display in PaymentSheet e.g., ["external_paypal"].
+        /// - Parameter externalPaymentMethodConfirmHandler: A handler called when the customer confirms the payment using an external payment method.
+        /// - Seealso: See the [integration guide](https://stripe.com/docs/payments/external-payment-methods?platform=ios).
+        public init(externalPaymentMethods: [String], externalPaymentMethodConfirmHandler: @escaping PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler) {
+            self.externalPaymentMethods = externalPaymentMethods
+            self.externalPaymentMethodConfirmHandler = externalPaymentMethodConfirmHandler
+        }
+
+        /// A list of external payment methods to display in PaymentSheet.
+        /// e.g. ["external_paypal"].
+        public var externalPaymentMethods: [String] = []
+
+        /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with e.g., "external_paypal"
+        /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
+        /// - Parameter completion: Call this after payment has completed, passing the result of the payment.
+        /// - Returns: The result of the attempt to confirm payment using the given external payment method.
+        public typealias ExternalPaymentMethodConfirmHandler = (
+            _ externalPaymentMethodType: String,
+            _ billingDetails: STPPaymentMethodBillingDetails,
+            _ completion: @escaping ((PaymentSheetResult) -> Void)
+        ) -> Void
+
+        /// This handler is called when the customer confirms the payment using an external payment method.
+        /// Your implementation should complete the payment and call the `completion` parameter with the result.
+        /// - Note: This is always called on the main thread.
+        public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
+    }
+}
+
+extension PaymentSheet.Configuration {
+    func isUsingBillingAddressCollection() -> Bool {
+        return billingDetailsCollectionConfiguration.name == .always
+        || billingDetailsCollectionConfiguration.phone == .always
+        || billingDetailsCollectionConfiguration.email == .always
+        || billingDetailsCollectionConfiguration.address == .full
+    }
+}
+
+extension STPPaymentMethodBillingDetails {
+    func toPaymentSheetBillingDetails() -> PaymentSheet.BillingDetails {
+        let address = PaymentSheet.Address(city: self.address?.city,
+                                           country: self.address?.country,
+                                           line1: self.address?.line1,
+                                           line2: self.address?.line2,
+                                           postalCode: self.address?.postalCode,
+                                           state: self.address?.state)
+        return PaymentSheet.BillingDetails(address: address,
+                                           email: self.email,
+                                           name: self.name,
+                                           phone: self.phone)
+    }
+}
+extension PaymentSheet.CustomerConfiguration {
+    func ephemeralKeySecretBasedOn(intent: Intent?) -> String? {
+        switch customerAccessProvider {
+        case .legacyCustomerEphemeralKey(let legacy):
+            return legacy
+        case .customerSession:
+            return intent?.elementsSession.customer?.customerSession.apiKey
+        }
     }
 }

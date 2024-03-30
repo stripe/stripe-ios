@@ -118,10 +118,8 @@ NS_INLINE NSString * _Nullable STDSDirectoryServerImageName(STDSDirectoryServer 
         case STDSDirectoryServerSTPTestRSA:
         case STDSDirectoryServerSTPTestEC:
         case STDSDirectoryServerVisa:
-            if (@available(iOS 13.0, *)) {
-                if ([[UITraitCollection currentTraitCollection] userInterfaceStyle] == UIUserInterfaceStyleDark) {
-                    return @"visa-white-logo";
-                }
+            if ([[UITraitCollection currentTraitCollection] userInterfaceStyle] == UIUserInterfaceStyleDark) {
+                return @"visa-white-logo";
             }
             return @"visa-logo";
         case STDSDirectoryServerCustom:

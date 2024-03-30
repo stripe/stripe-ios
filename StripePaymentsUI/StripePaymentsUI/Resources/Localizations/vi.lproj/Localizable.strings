@@ -1,4 +1,4 @@
-"%1$@ account ending in %2$@" = "%1$@ tài khoản kết thúc bằng %2$@";
+"%1$@ account ending in %2$@" = "Tài khoản %1$@ kết thúc bằng %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
 
@@ -21,6 +21,8 @@
 "Card information" = "Thông tin thẻ";
 
 "Card number" = "Số thẻ";
+
+"Confirm your %@" = "Xác nhận %@ của bạn";
 
 "Invalid data." = "Dữ liệu không hợp lệ.";
 

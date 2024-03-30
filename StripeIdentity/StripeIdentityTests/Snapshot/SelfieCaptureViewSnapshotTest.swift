@@ -10,18 +10,13 @@ import Foundation
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCameraCoreTestUtils
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class SelfieCaptureViewSnapshotTest: FBSnapshotTestCase {
+final class SelfieCaptureViewSnapshotTest: STPSnapshotTestCase {
 
     let view = SelfieCaptureView()
-
-    override func setUp() {
-        super.setUp()
-
-        //        recordMode = true
-    }
 
     func testError() {
         verifyView(
@@ -53,7 +48,8 @@ final class SelfieCaptureViewSnapshotTest: FBSnapshotTestCase {
                         Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
                         consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
                         consentHandler: { _ in },
-                        openURLHandler: { _ in }
+                        openURLHandler: { _ in },
+                        retakeSelfieHandler: { }
                     ),
                     instructionalText: SelfieScanningViewSnapshotTest.mockText
                 )

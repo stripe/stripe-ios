@@ -13,10 +13,11 @@ import UIKit
 final class HTMLViewWithIconLabels: UIView {
 
     struct Styling {
-        static let iconTextSpacing: CGFloat = 8
+        static let iconTextSpacing: CGFloat = 16
         static let verticalIconTextSpacing: CGFloat = 12
         static let stackViewSpacing: CGFloat = 16
         static let separatorVerticalSpacing: CGFloat = 24
+        static let baseIconLenght: CGFloat = 20
 
         private static let iconLabelTextStyle = UIFont.TextStyle.caption1
         private static let nonIconLabelTextStyle = UIFont.TextStyle.caption1
@@ -136,15 +137,12 @@ extension HTMLViewWithIconLabels {
         addAndPinSubview(vStack)
         vStack.addArrangedSubview(separatorView)
         vStack.addArrangedSubview(textView)
+        vStack.setCustomSpacing(Styling.separatorVerticalSpacing, after: separatorView)
     }
 
     fileprivate func installConstraints() {
         NSLayoutConstraint.activate([
             separatorView.heightAnchor.constraint(equalToConstant: IdentityUI.separatorHeight),
-            separatorView.bottomAnchor.constraint(
-                equalTo: textView.topAnchor,
-                constant: -Styling.separatorVerticalSpacing
-            ),
             separatorView.leadingAnchor.constraint(equalTo: vStack.leadingAnchor),
             separatorView.trailingAnchor.constraint(equalTo: vStack.trailingAnchor),
             textView.leadingAnchor.constraint(equalTo: vStack.leadingAnchor),

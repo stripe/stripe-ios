@@ -33,8 +33,9 @@ final class InstitutionSearchBar: UIView {
 
     private lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
-        textField.textColor = .textPrimary
-        textField.font = .stripeFont(forTextStyle: .body)
+        textField.textColor = .textDefault
+        textField.tintColor = textField.textColor // caret color
+        textField.font = FinancialConnectionsFont.label(.large).uiFont
         // this removes the `searchTextField` background color.
         // for an unknown reason, setting the `backgroundColor` to
         // a white color is a no-op
@@ -46,24 +47,36 @@ final class InstitutionSearchBar: UIView {
                 "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."
             ),
             attributes: [
-                .foregroundColor: UIColor.textSecondary,
-                .font: UIFont.stripeFont(forTextStyle: .body),
+                .foregroundColor: UIColor.textSubdued,
+                .font: FinancialConnectionsFont.label(.large).uiFont,
             ]
         )
         textField.returnKeyType = .search
+        // fixes a 'bug' where if a user types a keyword, and autocorrect
+        // wants to correct it, pressing "search" button will choose
+        // the autocorrected word even though the intent was to use the
+        // typed-in word
+        //
+        // also, bank names are not always friendly to autocorrect suggestions
+        textField.autocorrectionType = .no
         textField.delegate = self
         textField.addTarget(
             self,
             action: #selector(textFieldTextDidChange),
             for: .editingChanged
         )
+        textField.accessibilityIdentifier = "search_bar_text_field"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 24)
+        ])
         return textField
     }()
     private lazy var textFieldClearButton: UIButton = {
         let imageView = UIImageView()
         let textFieldClearButton = TextFieldClearButton()
         let cancelImage = Image.cancel_circle.makeImage()
-            .withTintColor(.textDisabled)
+            .withTintColor(.textSubdued)
         textFieldClearButton.setImage(cancelImage, for: .normal)
         textFieldClearButton.addTarget(
             self,
@@ -80,18 +93,18 @@ final class InstitutionSearchBar: UIView {
     private lazy var searchIconView: UIView = {
         let searchIconImageView = UIImageView()
         searchIconImageView.image = Image.search.makeImage()
-            .withTintColor(.textPrimary)
+            .withTintColor(.iconDefault)
         searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            searchIconImageView.widthAnchor.constraint(equalToConstant: 16),
-            searchIconImageView.heightAnchor.constraint(equalToConstant: 16),
+            searchIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            searchIconImageView.heightAnchor.constraint(equalToConstant: 20),
         ])
         return searchIconImageView
     }()
 
     init() {
         super.init(frame: .zero)
-        layer.cornerRadius = 8
+        layer.cornerRadius = 12
 
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
@@ -102,7 +115,7 @@ final class InstitutionSearchBar: UIView {
         )
         horizontalStackView.axis = .horizontal
         horizontalStackView.alignment = .center
-        horizontalStackView.spacing = 10
+        horizontalStackView.spacing = 12
         horizontalStackView.isLayoutMarginsRelativeArrangement = true
         horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
@@ -120,6 +133,10 @@ final class InstitutionSearchBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    @discardableResult override func becomeFirstResponder() -> Bool {
+        return textField.becomeFirstResponder()
+    }
+
     @discardableResult override func resignFirstResponder() -> Bool {
         return textField.resignFirstResponder()
     }
@@ -130,6 +147,7 @@ final class InstitutionSearchBar: UIView {
     }
 
     @objc private func didSelectClearButton() {
+        FeedbackGeneratorAdapter.buttonTapped()
         text = ""
     }
 
@@ -140,34 +158,25 @@ final class InstitutionSearchBar: UIView {
     private func highlightBorder(_ shouldHighlightBorder: Bool) {
         let searchBarBorderColor: UIColor
         let searchBarBorderWidth: CGFloat
+        let shadowOpacity: Float
         if shouldHighlightBorder {
-            searchBarBorderColor = .textBrand
+            searchBarBorderColor = .textActionPrimaryFocused
             searchBarBorderWidth = 2
+            shadowOpacity = 0.1
         } else {
-            searchBarBorderColor = .borderNeutral
+            searchBarBorderColor = .borderDefault
             searchBarBorderWidth = 1
+            shadowOpacity = 0
         }
         layer.borderColor = searchBarBorderColor.cgColor
         layer.borderWidth = searchBarBorderWidth
-    }
-
-    func updateSearchingIndicator(_ isSearching: Bool) {
-        guard isSearching else {
-            searchIconView.layer.removeAnimation(forKey: "pulseAnimation")
-            return
-        }
-        guard searchIconView.layer.animation(forKey: "pulseAnimation") == nil else {
-            return
-        }
-
-        let opacityAnimation = CABasicAnimation(keyPath: "opacity")
-        opacityAnimation.fromValue = 0.6
-        opacityAnimation.toValue = 0.3
-        opacityAnimation.repeatCount = .infinity
-        opacityAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        opacityAnimation.duration = 0.3
-        opacityAnimation.autoreverses = true
-        searchIconView.layer.add(opacityAnimation, forKey: "pulseAnimation")
+        layer.shadowOpacity = shadowOpacity
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 2 / UIScreen.main.nativeScale
+        layer.shadowOffset = CGSize(
+            width: 0,
+            height: 1 / UIScreen.main.nativeScale
+        )
     }
 }
 

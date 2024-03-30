@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Tilføj";
 
 "Add a card" = "Tilføj et kort";
@@ -12,10 +14,6 @@
 
 "Approve payment" = "Godkend betaling";
 
-"Are you sure you want to remove this card?" = "Er du sikker på, at du vil fjerne dette kort?";
-
-"Are you sure you want to remove this linked account?" = "Er du sikker på, at du vil fjerne denne linket konto?";
-
 "Back" = "Tilbage";
 
 "Bank account" = "Bankkonto";
@@ -24,45 +22,63 @@
 
 "Buy using a UPI ID" = "Køb ved hjælp af et UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at bekræfte din betaling med PayPal, tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved at fortsætte til Amazon Pay, tillader du %@ at debitere din Revolut Pay-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Når du fortsætter til Klarna, giver du %1$@ tilladelse til at debitere din Klarna-konto for fremtidige betalinger i overensstemmelse med deres vilkår og Klarnas vilkår. Du kan til enhver tid ændre dette i din Klarna-app eller ved at kontakte %2$@.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at fortsætte til PayPal tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ved at fortsætte til Revolut Pay tillader du %@ at debitere din Revolut Pay-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til disse <terms>vilkår</terms>.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved at fortsætte giver du %1$@ tilladelse til at debitere din Cash App-konto for denne betaling og fremtidige betalinger i overensstemmelse med %2$@s vilkår, indtil denne tilladelse tilbagekaldes. Du kan til enhver tid ændre dette i dine Cash App-indstillinger.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at tilmelde dig Link accepterer du <terms>vilkårene</terms> og <privacy>privatlivspolitikken</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du angiver din e-mail, accepterer du at oprette en Link-konto og gemme dine betalingsoplysninger på Link i henhold til Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved at give dine betalingsoplysninger og bekræfte denne betaling giver du (A) %@ og Stripe, vores betalingstjenesteudbyder, tilladelse til at sende instruktioner til din bank om at debitere din konto og (B) din bank til at debitere din konto i overensstemmelse med disse instruktioner. Som en del af dine rettigheder har du ret til en refusion fra din bank under vilkårene og betingelserne i din aftale med din bank. Der skal kræves refusion inden for 8 uger fra den dato, hvor din konto blev debiteret. Dine rettigheder forklares i en erklæring, som du kan få fra din bank. Du accepterer at modtage underretninger om fremtidig debitering op til to dage før de opstår.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du angiver dit telefonnummer, accepterer du at oprette en Link-konto og gemme dine betalingsoplysninger på Link i henhold til Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at gemme din bankkonto for %@ accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
-"Cancel and pay another way" = "Annuller, og betal på en anden måde";
+"CPF/CPNJ" = "CPF/CPNJ";
 
-"Change email" = "Skift e-mail";
+"Cancel and pay another way" = "Annuller, og betal på en anden måde";
 
 "Choose a payment method" = "Vælg en betalingsmetode";
 
 "Close card scanner" = "Luk kortscanner";
 
-"Code sent" = "Kode sendt";
+"Confirm" = "Bekræft";
 
-"Default" = "Standard";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekræft betalingen i din bank- eller betalingsapp indenfor %@ for at gennemføre købet.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekræft betalingen i din banks app  indenfor %@ for at gennemføre købet.";
+
+"Confirm your CVC" = "Bekræft dit CVC";
+
+"Confirm your CVV" = "Bekræft dit CVV";
+
+"Contact information" = "Kontaktoplysninger";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Indtast adresse manuelt";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Indtast koden, der blev sendt til %@, for at bruge Link som standardbetaling.";
+"FPX Bank" = "FPX Bank";
 
-"Enter your verification code" = "Indtast din bekræftelseskode";
-
-"For security, please re-enter your card’s security code." = "Af hensyn til sikkerheden skal du indtaste dit korts sikkerhedskode igen.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg er indforstået med, at Stripe vil opkræve direkte debiteringer på vegne af %@ og bekræfter, at jeg er kontoindehaveren og den eneste person, der skal godkende debiteringer fra denne konto.";
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Tilmeld Link";
+"Manage your payment methods" = "Administrer dine betalingsmetoder";
 
-"Log out of Link" = "Log ud af Link";
-
-"Not %@?" = "Ikke %@?";
+"Name on card" = "Kortholderens navn";
 
 "Open your UPI app to approve your payment within %@" = "Åbn din UPI-app for at godkende din betaling i %@";
 
@@ -72,29 +88,25 @@
 
 "Or pay with a card" = "Eller betal med et kort";
 
+"Or use" = "Eller brug";
+
+"Or use a card" = "Eller brug et kort";
+
 "Pay %@" = "Betal %@";
 
 "Pay another way" = "Betal på en anden måde";
 
-"Pay faster at %@ and thousands of merchants." = "Betal hurtigere hos %@ og tusinder af forhandlere.";
+"Pay faster at %@ and thousands of businesses." = "Betal hurtigere hos %@ og tusinder af virksomheder.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal i <num_installments/> rentefri afdrag på <installment_price/> hver med <img/>";
 
-"Pay later with Klarna." = "Betal senere med Klarna.";
-
 "Pay over time with %@" = "Betal over tid med %@";
 
-"Pay using" = "Betal med";
-
-"Pay with %@" = "Betal med %@";
+"Pay with Link" = "Betal med Link";
 
 "Pay with your bank account in just a few steps." = "Betal med din bankkonto i blot få trin.";
 
-"Payment" = "Betaling";
-
 "Payment failed" = "Betalingen mislykkedes";
-
-"Payment methods" = "Betalingsmetoder";
 
 "Please go back and select another payment method" = "Gå tilbage, og vælg en anden betalingsmetode";
 
@@ -104,33 +116,25 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Fjern %1$@, der slutter på %2$@";
+"Remove card?" = "Vil du fjerne kortet?";
 
-"Remove Card" = "Fjern kort";
+"Save" = "Gem";
 
-"Remove card" = "Fjern kort";
-
-"Remove linked account" = "Fjern linket konto";
-
-"Resend code" = "Send kode igen";
+"Save a new payment method" = "Gem en ny betalingsmetode";
 
 "Save address" = "Gem adresse";
 
 "Save for future payments" = "Gem til fremtidige betalinger";
 
-"Save my info for secure 1-click checkout" = "Gem mine oplysninger for sikker 1-kliks-betaling";
-
 "Save this account for future %@ payments" = "Gem denne konto til fremtidige %@-betalinger";
 
 "Save this card for future %@ payments" = "Gem dette kort til fremtidige %@ betalinger";
 
-"Secure 1⁠-⁠click checkout" = "Sikker 1-kliks-betaling";
+"Save your bank account in just a few steps." = "Gem din bankkonto med blot nogle få trin.";
+
+"Save your info for secure 1-click checkout with Link" = "Gem dine oplysninger om sikker betaling med 1 klik med Link";
 
 "Select your payment method" = "Vælg din betalingsmetode";
-
-"Set as default" = "Brug som standard";
-
-"Set as default payment method" = "Angiv som standardbetalingsmetode";
 
 "Set up" = "Opsætning";
 
@@ -138,31 +142,13 @@
 
 "Show menu" = "Vis menu";
 
-"Sign in to your Link account" = "Log ind på din Link-konto";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre lagring af din bankkonto hos %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre betalingen til %@.";
 
-"Tap to close" = "Tryk for at lukke";
-
-"Tap to expand" = "Tryk for at udvide";
-
 "The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
 
-"The provided verification code has expired." = "Den angivne verifikationskode er udløbet.";
-
-"The provided verification code is incorrect." = "Den angivne verifikationskode er forkert.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Dette kort er udløbet. Opdater dine kortoplysninger eller vælg en anden betalingsmetode.";
-
-"This is your default" = "Dette er din standard";
-
-"Too many attempts. Please try again in a few minutes." = "For mange forsøg. Prøv igen om et par minutter.";
-
-"Unavailable for this purchase" = "Ikke tilgængelig for dette køb";
-
 "Update card" = "Opdater kort";
-
-"Use your saved info to check out faster" = "Brug dine gemte oplysninger til hurtigere betaling";
 
 "Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
 

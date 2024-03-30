@@ -1,12 +1,12 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "다음 단계에서 본인임을 확인하기 위해 몇 장의 사진이 자동으로 촬영됩니다.";
+
+"Accepted forms of ID include" = "허용되는 신분증 형식은 다음과 같음";
+
 "Alternatively, you may manually upload a photo of your identity document." = "또는 신분증 사진을 직접 업로드하실 수도 있습니다.";
 
 "App Settings" = "앱 설정";
 
-"Back driver's license photo successfully uploaded" = "운전 면허증 뒷면 사진 업로드 성공";
-
 "Back identity card photo successfully uploaded" = "신분증 뒷면 사진 업로드 성공";
-
-"Back of driver's license" = "운전 면허증 뒷면";
 
 "Back of identity card" = "신분증 뒷면";
 
@@ -22,57 +22,59 @@
 
 "Could not capture image" = "이미지를 캡처할 수 없음";
 
-"Date of birth" = "생년월일";
+"Date of Birth" = "생년월일";
 
-"File Upload" = "파일 업로드";
-
-"File upload" = "파일 업로드";
-
-"Flip your driver's license over to the other side" = "운전 면허증 반대쪽 면이 보이게 뒤집으십시오.";
+"Date of birth does not look valid" = "생년월일이 유효하지 않습니다.";
 
 "Flip your identity card over to the other side" = "신분증 반대쪽 면이 보이게 뒤집으십시오.";
 
-"Front driver's license photo successfully uploaded" = "운전 면허증 앞면 사진 업로드 성공";
-
 "Front identity card photo successfully uploaded" = "신분증 앞면 사진 업로드 성공";
 
-"Front of driver's license" = "운전 면허증 앞면";
-
 "Front of identity card" = "신분증 앞면";
+
+"Get ready to scan your photo ID" = "사진이 있는 신분증 스캔 준비";
+
+"Get ready to take a selfie" = "셀카 촬영 준비";
 
 "Go Back" = "돌아가기";
 
 "Hold still, scanning" = "움직이지 마십시오. 스캔하는 중입니다.";
 
+"I'm ready" = "준비됨";
+
 "ID Number" = "ID 번호";
 
-"ID Type" = "신분증 유형";
+"Individual CPF" = "개별 CPF";
 
-"Image of passport" = "여권 이미지";
+"Last 4 of Social Security number" = "사회 보장 번호의 마지막 4자리 숫자";
 
 "Loading" = "로드 중";
 
-"Passport" = "여권";
+"Make sure you're in a well lit space." = "공간의 조명이 밝은지 확인하십시오.";
 
-"Passport photo successfully uploaded" = "여권 사진 업로드 성공";
+"Move closer" = "더 가까이";
+
+"Move farther" = "더 멀리 이동하십시오";
+
+"NRIC or FIN" = "NRIC 또는 FIN";
 
 "Personal ID number" = "개인 ID 번호";
 
+"Personal Information" = "개인 정보";
+
+"Phone Number" = "전화번호";
+
+"Phone Verification" = "전화 확인";
+
 "Photo Library" = "사진 라이브러리";
 
-"Please upload an image of your passport" = "여권의 앞면과 뒷면 이미지를 업로드하십시오.";
-
-"Please upload images of the front and back of your driver's license" = "운전 면허증의 앞면과 뒷면 이미지를 업로드하십시오.";
-
 "Please upload images of the front and back of your identity card" = "신분증의 앞면과 뒷면 이미지를 업로드하십시오.";
-
-"Position your driver's license in the center of the frame" = "프레임 중앙에 운전 면허증을 놓으십시오.";
 
 "Position your face in the center of the frame." = "프레임 중앙에 얼굴을 놓으십시오.";
 
 "Position your identity card in the center of the frame" = "프레임 중앙에 신분증을 놓으십시오.";
 
-"Position your passport in the center of the frame" = "프레임 중앙에 여권을 놓으십시오.";
+"Retake Photos" = "사진 다시 찍기";
 
 "Scan" = "스캔";
 
@@ -84,15 +86,9 @@
 
 "Select a location to upload the front of your identity document from" = "신분 증명서 앞면을 업로드할 위치 선택 -";
 
-"Select back driver's license photo" = "운전 면허증 뒷면 사진 선택";
-
 "Select back identity card photo" = "신분증 뒷면 사진 선택";
 
-"Select front driver's license photo" = "운전 면허증 앞면 사진 선택";
-
 "Select front identity card photo" = "신분증 앞면 사진 선택";
-
-"Select passport photo" = "여권 사진 선택";
 
 "Selfie" = "셀카";
 
@@ -116,15 +112,11 @@
 
 "Upload a Photo" = "사진 업로드";
 
-"Uploading back driver's license photo" = "운전 면허증 뒷면 사진 업로드하는 중";
+"Upload your photo ID" = "사진 ID 업로드";
 
 "Uploading back identity card photo" = "신분증 뒷면 사진 업로드하는 중";
 
-"Uploading front driver's license photo" = "운전 면허증 앞면 사진 업로드하는 중";
-
 "Uploading front identity card photo" = "신분증 앞면 사진 업로드하는 중";
-
-"Uploading passport photo" = "여권 사진 업로드하는 중";
 
 "Verify your identity" = "ID 확인";
 
@@ -132,6 +124,14 @@
 
 "We need permission to use your camera. Please allow camera access in app settings." = "카메라 사용 권한이 필요합니다. 앱 설정에서 카메라 액세스를 허용해 주십시오.";
 
+"Welcome" = "환영합니다.";
+
 "You can either try again or upload an image from your device." = "다시 시도하거나 디바이스에 있는 이미지를 업로드하실 수 있습니다.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "셀카 이미지가 저장되지 않았습니다. 종료하시겠습니까?";
+
+"driver's license" = "운전 면허증";
+
+"government-issued photo ID" = "정부에서 발급한 사진이 있는 신분증";
+
+"passport" = "여권";

@@ -431,6 +431,71 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                                   paymentHandler: paymentHandler,
                                   paymentIntentParams: paymentIntentParams)
     }
+
+    func testCallConfirmBlikSucceeds() {
+        let nextActionData = """
+              {
+                "type": "blik_authorize"
+              }
+            """
+        let paymentMethodData = """
+              {
+                "id": "pm_123123123123123",
+                "object": "payment_method",
+                "billing_details": {
+                  "address": {
+                    "city": null,
+                    "country": null,
+                    "line1": null,
+                    "line2": null,
+                    "postal_code": null,
+                    "state": null
+                  },
+                  "email": null,
+                  "name": null,
+                  "phone": null
+                },
+                "blik": {},
+                "created": 1658187899,
+                "customer": null,
+                "livemode": false,
+                "type": "blik"
+              }
+            """
+        let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider())
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.returnURL = "payments-example://stripe-redirect"
+        paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
+            blik: STPPaymentMethodBLIKParams(),
+            billingDetails: nil,
+            metadata: nil
+        )
+
+        stubRetrievePaymentIntent(
+            fileMock: .paymentIntentResponse,
+            responseCallback: { data in
+                self.replaceData(
+                    data: data,
+                    variables: [
+                        "<next_action>": nextActionData,
+                        "<payment_method>": paymentMethodData,
+                        "<status>": "\"requires_action\"",
+                    ]
+                )
+            }
+        )
+
+        let expectConfirmSucceeded = expectation(description: "didSucceed")
+        paymentHandler.confirmPayment(
+            paymentIntentParams,
+            with: self) { status, _, _ in
+                if case .succeeded = status {
+                    expectConfirmSucceeded.fulfill()
+                }
+            }
+        waitForExpectations(timeout: 2.0)
+    }
+
     private func confirmPaymentWithSucceed(
         nextActionData: String,
         paymentMethodData: String,
@@ -447,6 +512,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                 expectConfirmSucceeded.fulfill()
             }
         }
+
         guard XCTWaiter.wait(for: [didRedirect], timeout: 2.0) != .timedOut else {
             XCTFail("Unable to redirect")
             return

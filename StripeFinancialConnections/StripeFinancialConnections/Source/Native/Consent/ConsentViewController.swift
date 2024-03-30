@@ -11,7 +11,6 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol ConsentViewControllerDelegate: AnyObject {
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController)
     func consentViewController(
@@ -20,19 +19,18 @@ protocol ConsentViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 class ConsentViewController: UIViewController {
 
     private let dataSource: ConsentDataSource
     weak var delegate: ConsentViewControllerDelegate?
 
-    private lazy var titleLabel: ClickableLabel = {
-        let titleLabel = ClickableLabel(
-            font: .stripeFont(forTextStyle: .subtitle),
-            boldFont: .stripeFont(forTextStyle: .subtitle),
-            linkFont: .stripeFont(forTextStyle: .subtitle),
-            textColor: .textPrimary,
-            alignCenter: dataSource.merchantLogo != nil
+    private lazy var titleLabel: AttributedTextView = {
+        let titleLabel = AttributedTextView(
+            font: .heading(.extraLarge),
+            boldFont: .heading(.extraLarge),
+            linkFont: .heading(.extraLarge),
+            textColor: .textDefault,
+            alignCenter: true
         )
         titleLabel.setText(
             dataSource.consent.title,
@@ -58,6 +56,7 @@ class ConsentViewController: UIViewController {
             }
         )
     }()
+    private var consentLogoView: ConsentLogoView?
 
     init(dataSource: ConsentDataSource) {
         self.dataSource = dataSource
@@ -72,31 +71,34 @@ class ConsentViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
 
-        let paneLayoutView = PaneWithCustomHeaderLayoutView(
-            headerView: {
+        let paneLayoutView = PaneLayoutView(
+            contentView: {
+                let verticalStackView = HitTestStackView()
+                verticalStackView.axis = .vertical
+                verticalStackView.spacing = 24
+                verticalStackView.isLayoutMarginsRelativeArrangement = true
+                verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                    top: 24,
+                    leading: 24,
+                    bottom: 8,
+                    trailing: 24
+                )
                 if let merchantLogo = dataSource.merchantLogo {
-                    let stackView = UIStackView(
-                        arrangedSubviews: [
-                            ConsentLogoView(merchantLogo: merchantLogo),
-                            titleLabel,
-                        ]
+                    let consentLogoView = ConsentLogoView(merchantLogo: merchantLogo)
+                    self.consentLogoView = consentLogoView
+                    verticalStackView.addArrangedSubview(consentLogoView)
+                }
+                verticalStackView.addArrangedSubview(titleLabel)
+                verticalStackView.addArrangedSubview(
+                    ConsentBodyView(
+                        bulletItems: dataSource.consent.body.bullets,
+                        didSelectURL: { [weak self] url in
+                            self?.didSelectURLInTextFromBackend(url)
+                        }
                     )
-                    stackView.axis = .vertical
-                    stackView.spacing = 20
-                    stackView.alignment = .center
-                    return stackView
-                } else {
-                    return titleLabel
-                }
+                )
+                return verticalStackView
             }(),
-            headerTopMargin: (dataSource.merchantLogo == nil) ? 16 : 4,
-            contentView: ConsentBodyView(
-                bulletItems: dataSource.consent.body.bullets,
-                didSelectURL: { [weak self] url in
-                    self?.didSelectURLInTextFromBackend(url)
-                }
-            ),
-            headerAndContentSpacing: 28.0,
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
@@ -104,10 +106,17 @@ class ConsentViewController: UIViewController {
         dataSource.analyticsClient.logPaneLoaded(pane: .consent)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // this fixes an issue where presenting a UIViewController
+        // on top of ConsentViewController would stop the dot animation
+        consentLogoView?.animateDots()
+    }
+
     private func didSelectAgree() {
         dataSource.analyticsClient.log(
             eventName: "click.agree",
-            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
+            pane: .consent
         )
 
         footerView.setIsLoading(true)
@@ -140,41 +149,22 @@ class ConsentViewController: UIViewController {
                 if urlHost == "manual-entry" {
                     delegate?.consentViewControllerDidSelectManuallyVerify(self)
                 } else if urlHost == "data-access-notice" {
-                    let dataAccessNoticeModel = dataSource.consent.dataAccessNotice
-                    let consentBottomSheetModel = ConsentBottomSheetModel(
-                        title: dataAccessNoticeModel.title,
-                        subtitle: dataAccessNoticeModel.subtitle,
-                        body: ConsentBottomSheetModel.Body(
-                            bullets: dataAccessNoticeModel.body.bullets
-                        ),
-                        extraNotice: dataAccessNoticeModel.connectedAccountNotice,
-                        learnMore: dataAccessNoticeModel.learnMore,
-                        cta: dataAccessNoticeModel.cta
-                    )
-                    ConsentBottomSheetViewController.present(
-                        withModel: consentBottomSheetModel,
+                    let dataAccessNoticeViewController = DataAccessNoticeViewController(
+                        dataAccessNotice: dataSource.consent.dataAccessNotice,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }
                     )
+                    dataAccessNoticeViewController.present(on: self)
                 } else if urlHost == "legal-details-notice" {
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
-                    let consentBottomSheetModel = ConsentBottomSheetModel(
-                        title: legalDetailsNoticeModel.title,
-                        subtitle: nil,
-                        body: ConsentBottomSheetModel.Body(
-                            bullets: legalDetailsNoticeModel.body.bullets
-                        ),
-                        extraNotice: nil,
-                        learnMore: legalDetailsNoticeModel.learnMore,
-                        cta: legalDetailsNoticeModel.cta
-                    )
-                    ConsentBottomSheetViewController.present(
-                        withModel: consentBottomSheetModel,
+                    let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
+                        legalDetailsNotice: legalDetailsNoticeModel,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }
                     )
+                    legalDetailsNoticeViewController.present(on: self)
                 }
             }
         )

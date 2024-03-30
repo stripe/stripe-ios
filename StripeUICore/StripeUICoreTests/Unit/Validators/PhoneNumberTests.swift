@@ -116,6 +116,12 @@ class PhoneNumberTests: XCTestCase {
             format: .national,
             formattedNumber: "(671) 123-1234"
           ),
+          (
+            number: "1234567890",
+            country: "MX",
+            format: .international,
+            formattedNumber: "+52 123 456 7890"
+          ),
         ]
 
         for c in cases {

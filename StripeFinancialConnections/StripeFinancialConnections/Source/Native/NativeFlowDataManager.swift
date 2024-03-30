@@ -13,17 +13,24 @@ protocol NativeFlowDataManager: AnyObject {
     var reducedBranding: Bool { get }
     var merchantLogo: [String]? { get }
     var returnURL: String? { get }
-    var consentPaneModel: FinancialConnectionsConsent { get }
+    var consentPaneModel: FinancialConnectionsConsent? { get }
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var reduceManualEntryProminenceInErrors: Bool { get }
 
     var institution: FinancialConnectionsInstitution? { get set }
     var authSession: FinancialConnectionsAuthSession? { get set }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get set }
     var terminalError: Error? { get set }
+    var errorPaneError: Error? { get set }
+    var errorPaneReferrerPane: FinancialConnectionsSessionManifest.NextPane? { get set }
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get set }
     var accountNumberLast4: String? { get set }
+    var consumerSession: ConsumerSessionData? { get set }
+    var saveToLinkWithStripeSucceeded: Bool? { get set }
+    var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
+    var customSuccessPaneMessage: String? { get set }
 
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
@@ -68,8 +75,11 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             return nil
         }
     }
+    var reduceManualEntryProminenceInErrors: Bool {
+        return visualUpdate.reduceManualEntryProminenceInErrors
+    }
     let returnURL: String?
-    let consentPaneModel: FinancialConnectionsConsent
+    let consentPaneModel: FinancialConnectionsConsent?
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -78,14 +88,20 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var authSession: FinancialConnectionsAuthSession?
     var linkedAccounts: [FinancialConnectionsPartnerAccount]?
     var terminalError: Error?
+    var errorPaneError: Error?
+    var errorPaneReferrerPane: FinancialConnectionsSessionManifest.NextPane?
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     var accountNumberLast4: String?
+    var consumerSession: ConsumerSessionData?
+    var saveToLinkWithStripeSucceeded: Bool?
+    var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
+    var customSuccessPaneMessage: String?
 
     init(
         manifest: FinancialConnectionsSessionManifest,
         visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
-        consentPaneModel: FinancialConnectionsConsent,
+        consentPaneModel: FinancialConnectionsConsent?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient

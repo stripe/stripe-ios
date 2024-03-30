@@ -38,7 +38,7 @@ extension DropdownFieldElement: TextOrDropdownElement {
 
     public func setRawData(_ rawData: String) {
         guard let itemIndex = items.firstIndex(where: {$0.rawData.lowercased() == rawData.lowercased()
-            || $0.pickerDisplayName.lowercased() == rawData.lowercased()}) else {
+            || $0.pickerDisplayName.string.lowercased() == rawData.lowercased()}) else {
                 return
             }
 

@@ -22,6 +22,12 @@ class NSDecimalNumberStripeTest: XCTestCase {
         "aud",
         "sek",
         "sgd",
+
+        // Special cases:
+        "cop",
+        "pkr",
+        "lak",
+        "rsd",
     ]
 
     private let noDecimalPointCurrencies = [

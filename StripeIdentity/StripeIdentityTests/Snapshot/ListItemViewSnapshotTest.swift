@@ -8,11 +8,12 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 
 @testable import StripeIdentity
 
-final class ListItemViewSnapshotTest: FBSnapshotTestCase {
+final class ListItemViewSnapshotTest: STPSnapshotTestCase {
 
     let listItemView = ListItemView()
 
@@ -25,8 +26,6 @@ final class ListItemViewSnapshotTest: FBSnapshotTestCase {
         super.setUp()
 
         ActivityIndicator.isAnimationEnabled = false
-
-        //        recordMode = true
     }
 
     override func tearDown() {

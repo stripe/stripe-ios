@@ -23,8 +23,12 @@ class STPCardTest: XCTestCase {
         XCTAssertEqual(STPCard.brand(from: "visa"), .visa)
         XCTAssertEqual(STPCard.brand(from: "VISA"), .visa)
 
+        XCTAssertEqual(STPCard.brand(from: "amex"), .amex)
+        XCTAssertEqual(STPCard.brand(from: "AMEX"), .amex)
         XCTAssertEqual(STPCard.brand(from: "american express"), .amex)
         XCTAssertEqual(STPCard.brand(from: "AMERICAN EXPRESS"), .amex)
+        XCTAssertEqual(STPCard.brand(from: "american_express"), .amex)
+        XCTAssertEqual(STPCard.brand(from: "AMERICAN_EXPRESS"), .amex)
 
         XCTAssertEqual(STPCard.brand(from: "mastercard"), .mastercard)
         XCTAssertEqual(STPCard.brand(from: "MASTERCARD"), .mastercard)
@@ -37,9 +41,17 @@ class STPCardTest: XCTestCase {
 
         XCTAssertEqual(STPCard.brand(from: "diners club"), .dinersClub)
         XCTAssertEqual(STPCard.brand(from: "DINERS CLUB"), .dinersClub)
+        XCTAssertEqual(STPCard.brand(from: "diners"), .dinersClub)
+        XCTAssertEqual(STPCard.brand(from: "DINERS"), .dinersClub)
+        XCTAssertEqual(STPCard.brand(from: "diners_club"), .dinersClub)
+        XCTAssertEqual(STPCard.brand(from: "DINERS_CLUB"), .dinersClub)
 
         XCTAssertEqual(STPCard.brand(from: "unionpay"), .unionPay)
         XCTAssertEqual(STPCard.brand(from: "UNIONPAY"), .unionPay)
+
+        XCTAssertEqual(STPCard.brand(from: "cartes bancaires"), .cartesBancaires)
+        XCTAssertEqual(STPCard.brand(from: "CARTES Bancaires"), .cartesBancaires)
+        XCTAssertEqual(STPCard.brand(from: "CARTES_Bancaires"), .cartesBancaires)
 
         XCTAssertEqual(STPCard.brand(from: "unknown"), .unknown)
         XCTAssertEqual(STPCard.brand(from: "UNKNOWN"), .unknown)

@@ -22,6 +22,8 @@
 
 "Card number" = "Card number";
 
+"Confirm your %@" = "Confirm your %@";
+
 "Invalid data." = "Invalid data.";
 
 "MM / YY" = "MM / YY";
@@ -48,9 +50,9 @@
 
 "Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
 
-"Your card's expiration month is invalid." = "Your card expiry month is invalid.";
+"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
 
-"Your card's expiration year is invalid." = "Your card's expiry year is invalid.";
+"Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
 
 "Your card's security code is incomplete." = "Your card's security code is incomplete.";
 

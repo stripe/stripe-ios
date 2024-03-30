@@ -14,12 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
 
-class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        self.recordMode = true
-    }
+class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
 
     func testApplePayButton() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
@@ -47,7 +42,6 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     }
 
     // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
-    @available(iOS 13.0, *)
     func testAdaptiveElements() {
         var darkMode = false
 
@@ -76,7 +70,6 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     }
 
     // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
-    @available(iOS 13.0, *)
     func testAdaptiveElementsWithCustomApplePayCta() {
         var darkMode = false
 
@@ -168,6 +161,18 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         verify(headerView)
     }
 
+    func testAllButtonsSetupIntent() {
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: [.applePay, .link],
+            isPaymentIntent: false,
+            delegate: nil
+        )
+        verify(headerView)
+
+        headerView.showsCardPaymentMessage = true
+        verify(headerView, identifier: "Card only")
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -176,23 +181,5 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 300)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
-    }
-}
-
-extension WalletHeaderViewSnapshotTests {
-    fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
-        let email: String
-        let redactedPhoneNumber: String?
-        let isRegistered: Bool
-        let isLoggedIn: Bool
-    }
-
-    fileprivate func makeLinkAccountStub() -> LinkAccountStub {
-        return LinkAccountStub(
-            email: "customer@example.com",
-            redactedPhoneNumber: "+1********55",
-            isRegistered: true,
-            isLoggedIn: true
-        )
     }
 }

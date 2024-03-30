@@ -14,6 +14,26 @@ import Foundation
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+@_exported @testable import StripePaymentsObjcTestUtils
+
+extension STPFixtures {
+    /// A customer-scoped ephemeral key that expires in 100 seconds.
+    class func ephemeralKey() -> STPEphemeralKey {
+        var response = STPTestUtils.jsonNamed("EphemeralKey")
+        let interval: TimeInterval = 100
+        response!["expires"] = NSNumber(value: Date(timeIntervalSinceNow: interval).timeIntervalSince1970)
+        return .decodedObject(fromAPIResponse: response)!
+    }
+
+    /// A customer-scoped ephemeral key that expires in 10 seconds.
+    class func expiringEphemeralKey() -> STPEphemeralKey {
+        var response = STPTestUtils.jsonNamed("EphemeralKey")
+        let interval: TimeInterval = 10
+        response!["expires"] = NSNumber(value: Date(timeIntervalSinceNow: interval).timeIntervalSince1970)
+        return .decodedObject(fromAPIResponse: response)!
+    }
+}
+
 class MockEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
     func createCustomerKey(
         withAPIVersion apiVersion: String,

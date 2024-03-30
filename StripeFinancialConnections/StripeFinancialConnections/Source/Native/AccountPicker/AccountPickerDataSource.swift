@@ -23,6 +23,8 @@ protocol AccountPickerDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var reduceManualEntryProminenceInErrors: Bool { get }
+    var dataAccessNotice: FinancialConnectionsDataAccessNotice? { get }
 
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts>
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
@@ -37,6 +39,8 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     let manifest: FinancialConnectionsSessionManifest
     let institution: FinancialConnectionsInstitution
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let reduceManualEntryProminenceInErrors: Bool
+    let dataAccessNotice: FinancialConnectionsDataAccessNotice?
 
     private(set) var selectedAccounts: [FinancialConnectionsPartnerAccount] = [] {
         didSet {
@@ -51,7 +55,9 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         authSession: FinancialConnectionsAuthSession,
         manifest: FinancialConnectionsSessionManifest,
         institution: FinancialConnectionsInstitution,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        reduceManualEntryProminenceInErrors: Bool,
+        dataAccessNotice: FinancialConnectionsDataAccessNotice?
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
@@ -59,6 +65,8 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.manifest = manifest
         self.institution = institution
         self.analyticsClient = analyticsClient
+        self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
+        self.dataAccessNotice = dataAccessNotice
     }
 
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts> {

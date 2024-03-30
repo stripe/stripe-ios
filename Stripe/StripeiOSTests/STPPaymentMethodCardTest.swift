@@ -87,39 +87,7 @@ class STPPaymentMethodCardTest: XCTestCase {
         XCTAssertEqual(card?.fingerprint, "6gVyxfIhqc8Z0g0X")
         XCTAssertNotNil(card?.threeDSecureUsage)
         XCTAssertEqual(card?.threeDSecureUsage?.supported, true)
+        XCTAssertEqual(card?.displayBrand, "cartes_bancaires")
         XCTAssertNotNil(card?.wallet)
-    }
-
-    func testBrandFromString() {
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "visa"), .visa)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "VISA"), .visa)
-
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "amex"), .amex)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "AMEX"), .amex)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "american_express"), .amex)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "AMERICAN_EXPRESS"), .amex)
-
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "mastercard"), .mastercard)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "MASTERCARD"), .mastercard)
-
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "discover"), .discover)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "DISCOVER"), .discover)
-
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "jcb"), .JCB)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "JCB"), .JCB)
-
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "diners"), .dinersClub)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "DINERS"), .dinersClub)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "diners_club"), .dinersClub)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "DINERS_CLUB"), .dinersClub)
-
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "unionpay"), .unionPay)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "UNIONPAY"), .unionPay)
-
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "unknown"), .unknown)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "UNKNOWN"), .unknown)
-
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "garbage"), .unknown)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "GARBAGE"), .unknown)
     }
 }

@@ -46,6 +46,64 @@ extension String.Localized {
         )
     }
 
+    static var last_4_of_ssn: String {
+        STPLocalizedString(
+            "Last 4 of Social Security number",
+            "Label for the ID field to collect last 4 of social security number for US ID"
+        )
+    }
+
+    static var individual_cpf: String {
+        STPLocalizedString(
+            "Individual CPF",
+            "Label for the ID field to collect individual CPF for Brazilian ID"
+        )
+    }
+
+    static var nric_or_fin: String {
+        STPLocalizedString(
+            "NRIC or FIN",
+            "Label for the ID field to collect NRIC or FIN for Singaporean ID"
+        )
+    }
+
+    // MARK: - Document Capture
+
+    static var position_in_center: String {
+        return STPLocalizedString(
+            "Position your identity card in the center of the frame",
+            "Instructional text for scanning front of a identity card"
+        )
+    }
+
+    static var flip_to_other_side: String {
+        return STPLocalizedString(
+            "Flip your identity card over to the other side",
+            "Instructional text for scanning back of a identity card"
+        )
+    }
+
+    static var scanning: String {
+        return STPLocalizedString(
+            "Hold still, scanning",
+            "Instructional text when camera is focusing on a document while scanning it"
+        )
+    }
+
+    static var move_closer: String {
+        return STPLocalizedString(
+            "Move closer",
+            "Instructional text when camera is too far from a document"
+        )
+    }
+
+    static var move_farther: String {
+        return STPLocalizedString(
+            "Move farther",
+            "Instructional text when camera is too close to a document"
+        )
+    }
+
     // MARK: - Document Upload
 
     static var app_settings: String {
@@ -62,11 +120,18 @@ extension String.Localized {
         )
     }
 
+    static var upload_your_photo_id: String {
+        STPLocalizedString(
+            "Upload your photo ID",
+            "Title of document upload screen"
+        )
+    }
+
     // MARK: - Camera Capturing
 
-    static var file_upload_button: String {
+    static var upload_a_photo: String {
         STPLocalizedString(
-            "File Upload",
+            "Upload a Photo",
             "Button that opens file upload screen"
         )
     }
@@ -126,4 +191,86 @@ extension String.Localized {
             "Error text displayed to the user when the device's camera is not available"
         )
     }
+
+    // MARK: - Phone
+    static var phoneNumber: String {
+        STPLocalizedString(
+            "Phone Number",
+            "Section title for collection phone number"
+        )
+    }
+
+    // MARK: - Selfie
+    static var selfieWarmupTitle: String {
+        STPLocalizedString(
+            "Get ready to take a selfie",
+            "Title for selfie warmup page"
+        )
+    }
+
+    static var selfieWarmupBody: String {
+        STPLocalizedString(
+            "A few photos will be taken automatically on the next step to verify it's you",
+            "Body for selfie warmup page"
+        )
+    }
+
+    // MARK: - DocumentFileUpload
+    static var fileUploadInstructionText: String {
+        STPLocalizedString(
+            "Please upload images of the front and back of your identity card",
+            "Instructions for uploading images of identity card"
+        )
+    }
+
+    // MARK: - DocumentWarmup
+    static var documentFrontWarmupTitle: String {
+        STPLocalizedString(
+            "Get ready to scan your photo ID",
+            "Title for document front warmup page"
+        )
+    }
+
+    static var documentFrontWarmupBody: String {
+        STPLocalizedString(
+            "Make sure you're in a well lit space.",
+            "Body for selfie warmup page"
+        )
+    }
+
+    static var acceptFormsOfId: String {
+        STPLocalizedString(
+            "Accepted forms of ID include",
+            "Title for accepted types of ids"
+        )
+    }
+
+    static var imReady: String {
+        STPLocalizedString(
+            "I'm ready",
+            "Ready button text on warmup screen"
+        )
+    }
+
+    static var passport: String {
+        STPLocalizedString(
+            "passport",
+            "passport"
+        )
+    }
+
+    static var governmentIssuedId: String {
+        STPLocalizedString(
+            "government-issued photo ID",
+            "id issued by government"
+        )
+    }
+
+    static var driverLicense: String {
+        STPLocalizedString(
+            "driver's license",
+            "driver's license"
+        )
+    }
+
 }

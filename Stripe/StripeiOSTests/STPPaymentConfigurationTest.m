@@ -71,6 +71,8 @@
 }
 
 - (void)testApplePayEnabledMisisngDeviceSupport {
+    // Change the supported networks list to reset the applePayEnabled cache
+    StripeAPI.additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];
     id paymentAuthControllerMock = OCMClassMock([PKPaymentAuthorizationController class]);
     OCMStub([paymentAuthControllerMock canMakePaymentsUsingNetworks:[OCMArg any]]).andReturn(NO);
     
@@ -79,6 +81,8 @@
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
     [paymentAuthControllerMock stopMocking];
+    // Re-reset cache:
+    StripeAPI.additionalEnabledApplePayNetworks = @[];
 }
 
 #pragma mark - Description

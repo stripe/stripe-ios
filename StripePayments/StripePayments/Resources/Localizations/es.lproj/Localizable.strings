@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Adeudo directo BECS (Australia)";
+"AU Direct Debit" = "Adeudo directo (Australia)";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Adeudo directo Bacs";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "Banco";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "Tarjeta";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "Link";
 
@@ -39,6 +45,8 @@
 "SEPA Debit" = "Adeudo SEPA";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Se agotó el tiempo de espera para autenticar el método de pago. Vuelve a intentarlo.";
 

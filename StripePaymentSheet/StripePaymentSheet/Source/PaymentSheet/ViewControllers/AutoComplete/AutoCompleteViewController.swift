@@ -28,9 +28,7 @@ class AutoCompleteViewController: UIViewController {
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
-        if #available(iOS 13.0, *) {
-            searchCompleter.resultTypes = .address
-        }
+        searchCompleter.resultTypes = .address
         return searchCompleter
     }()
 
@@ -70,7 +68,9 @@ class AutoCompleteViewController: UIViewController {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
+        #if !canImport(CompositorServices)
         tableView.keyboardDismissMode = .onDrag
+        #endif
         tableView.backgroundColor = configuration.appearance.colors.background
         tableView.separatorColor = configuration.appearance.colors.componentDivider
         tableView.tableFooterView = UIView()

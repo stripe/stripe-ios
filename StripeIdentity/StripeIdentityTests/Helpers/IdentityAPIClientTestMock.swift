@@ -28,7 +28,12 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     let verificationPageData = MockAPIRequests<
         StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData
     >()
+    let verifyUnverifyRequest = MockAPIRequests<
+        [String: Bool], StripeAPI.VerificationPageData
+    >()
     let verificationSessionSubmit = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
+    let verificationPageGeneratePhoneOtp = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
+    let verificationPageCannotVerifyPhoneOtp = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let imageUpload = MockAPIRequests<ImageUploadRequestParams, STPAPIClient.FileAndUploadMetrics>()
 
     var verificationSessionId: String
@@ -70,6 +75,21 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
                 fileName: fileName
             )
         )
+    }
+    func verifyTestVerificationSession(simulateDelay: Bool) -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
+    }
+
+    func unverifyTestVerificationSession(simulateDelay: Bool) -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
+    }
+
+    func generatePhoneOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return verificationPageGeneratePhoneOtp.makeRequest(with: ())
+    }
+
+    func cannotPhoneVerifyOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return verificationPageCannotVerifyPhoneOtp.makeRequest(with: ())
     }
 
     // Ensures `count` number of files are uploaded

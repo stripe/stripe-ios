@@ -10,7 +10,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class SuccessViewController: IdentityFlowViewController {
 
     private let htmlView = HTMLViewWithIconLabels()
@@ -74,7 +73,6 @@ final class SuccessViewController: IdentityFlowViewController {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension SuccessViewController {
     fileprivate func didTapButton() {
         dismiss(animated: true, completion: nil)

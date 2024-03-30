@@ -1,0 +1,1180 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0019E30E7B8189C3DEA719DC /* STPVPANumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D634B04FC897DFB74B81DED6 /* STPVPANumberValidator.swift */; };
+		019C76A03A30A67AE9F1FAEE /* PickerFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F3046A526D3A4CE402FB83 /* PickerFieldView.swift */; };
+		02B503A3227EF1409ABF53F1 /* UIColor+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C4AEB27F9734178E20836A /* UIColor+StripeUICore.swift */; };
+		073D41F1EC0560423FEF87AA /* AddressSpecProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BC5E25F42045563F4A660B /* AddressSpecProviderTest.swift */; };
+		08C773D1E6A5452B7BD7CF81 /* TextFieldElement+AddressFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57C3D398C94604889D9F61 /* TextFieldElement+AddressFactoryTest.swift */; };
+		0A3130227F7602524C9824D3 /* TextFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD7C1AAB9D26E00526AFB26 /* TextFieldElement+AddressFactory.swift */; };
+		0BA1E7C26903E45912FDE25A /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D558F65E4C23971C94BAD3E /* String+Localized.swift */; };
+		0CB675370A06DEC6F23608C4 /* AddressSpec+ElementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D27EC1A9207F327B1BF20 /* AddressSpec+ElementFactory.swift */; };
+		0D8AE1CEFBE7FA004A3DD62D /* CheckboxButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D917F78E89D67691EF760D14 /* CheckboxButtonSnapshotTests.swift */; };
+		0FBBB5C7FD2DA9A11E7FE2BC /* FloatingPlaceholderTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD764D16A365FD46700FB25 /* FloatingPlaceholderTextFieldView.swift */; };
+		11BD8DFB36FACB6966D0236F /* String+CountryEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73D88DFAB03D663217399D0 /* String+CountryEmoji.swift */; };
+		11C99D83A1DA88996A45BA47 /* DynamicImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE775CAF20488D81C9167B4 /* DynamicImageView.swift */; };
+		1424B1529E24582122F86149 /* PhoneNumberElementSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7796F7211034806DA24D1710 /* PhoneNumberElementSnapshotTests.swift */; };
+		159D7B9A2960A1CD7E661191 /* UIStackView+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5855EA2F4F38847E3E47935D /* UIStackView+StripeUICore.swift */; };
+		163A77E9E4C40AFFA5226E23 /* TestFieldElement+AccountFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83462E27CEA3580E1BD3E2CD /* TestFieldElement+AccountFactoryTest.swift */; };
+		1EB16D8F60923EE9C890CE43 /* STPEmailAddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE233EED40F9D3FADDFE5951 /* STPEmailAddressValidator.swift */; };
+		225B20CEF547BB1F6C6D447E /* BSBNumberProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3DD58BEF337017E7286459 /* BSBNumberProvider.swift */; };
+		2AA023A5031CFF0E56C7A14E /* DateFieldElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B0431535F20802E386624B /* DateFieldElementTest.swift */; };
+		2ADEF1482E62A173A0C7F7AD /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 6E66B0CF81D4F8EDBB642C9F /* au_becs_bsb.json */; };
+		2F1D03471202E25FD7682148 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36342ED77935BE9A32B082EC /* Locale+StripeUICore.swift */; };
+		2FD444AC5FC064EFCF6259ED /* STPVPANumberValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AA9FCEF2640C493D140033 /* STPVPANumberValidatorTest.swift */; };
+		30972A45F8A32DEEC17DA4F6 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA22461E52111D9A4E8B133 /* UITraitCollection+StripeUICore.swift */; };
+		32971AFF5D0DF9B28E9C464C /* SectionContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C0A3DE4BCF8DA03AD17144 /* SectionContainerView.swift */; };
+		32D69CBB3CE780A29AA553AB /* BSBNumberProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0408AC0298D342DADD1F84A5 /* BSBNumberProviderTest.swift */; };
+		336B882978CA47EE46260774 /* SectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB17B284B6D063AF0329DAD /* SectionElement.swift */; };
+		343DD093A6095DEAA06D245E /* InputFormColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5A05E653BFD01FF65E193C /* InputFormColors.swift */; };
+		36376E12AE7ABA21FFC474E6 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4844F0B5436706225DE5A176 /* Events.swift */; };
+		377058C2363FA0348AFBD32E /* AddressSectionElement+DummyAddressLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B66D666BB3EA733B92A60AA /* AddressSectionElement+DummyAddressLine.swift */; };
+		39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34178B51599FDCB0D0D7475A /* TextFieldFormatter.swift */; };
+		4755A24604B396D5A25058CD /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = CB8A9F7B4B2E8AA5A7E4FE98 /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		48D3B7C2983A8A25C6599119 /* OneTimeCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */; };
+		4A5EADAF2F6514299BA4B8D8 /* FormElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1FE2B6BCD6FC77117A2521 /* FormElement.swift */; };
+		4B05CF7F485F0AED498DAE49 /* OneTimeCodeTextField-TextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815DB8DE48AE3CE1609C8316 /* OneTimeCodeTextField-TextStorage.swift */; };
+		4B414F0A0E46D914C89B3741 /* StaticElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583B93BE0152CDF7383A37E7 /* StaticElement.swift */; };
+		4C519A87445AB16A55FE2408 /* PhoneNumberElementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794D2AA5365F9DE155083927 /* PhoneNumberElementTests.swift */; };
+		4C98A44C61BC71CABF8A9BF2 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40DF1A7FC5D84F937042D172 /* StripeCoreTestUtils.framework */; };
+		4CD207111219BF250A400ACC /* UIWindow+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215CEEBA0D56FF41C3E412 /* UIWindow+StripeUICore.swift */; };
+		504FA2DE5FE66FDE90842019 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F4CE2A0B16DA57DB249227 /* STPLocalizedString.swift */; };
+		57C288DFD2CC2CFC216E47CC /* PickerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0355EA21D04DDC29E620CEA /* PickerTextField.swift */; };
+		5936629C4665BC698C3458B1 /* TextFieldElementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8367A676E35A663E320E1B37 /* TextFieldElementConfiguration.swift */; };
+		5A9B21FE5A6941713087B94B /* SectionElement+MultiElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */; };
+		62601F856C41CFA1C7A8B18F /* UIView+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDBBC76FD31F07EC67C52075 /* UIView+StripeUICore.swift */; };
+		63632799CD2134991E0EA510 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 9B701A244243959A191FF16F /* iOSSnapshotTestCase */; };
+		64E61A5E0A705F1C4582381A /* PhoneNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263B7E56A83CFA4BA8385638 /* PhoneNumberTests.swift */; };
+		65B9A839BD4AAC315231B421 /* TextFieldElement+AccountFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69C3FF914611057972ABA41 /* TextFieldElement+AccountFactory.swift */; };
+		6606DC43D230ADD183AEF5DA /* RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00332BBDCE27F6F5A615C4 /* RegionCodeProvider.swift */; };
+		67216EB4E004BDB1D2E49BD4 /* IDNumberTextFieldConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92623B785C43F351D8A944D1 /* IDNumberTextFieldConfiguration.swift */; };
+		67FCE4493235656689E915F6 /* UIBarButtonItem+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5321D6CCBA2AA9162A96080C /* UIBarButtonItem+StripeUICore.swift */; };
+		68F7D5EEB894A68DDC184ADA /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20209CDCC3856CE548DA4D25 /* Image.swift */; };
+		69B082B15479DCC4560E3D92 /* UIColor+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C9A13C4663EA8ACA6EA2E5 /* UIColor+StripeUICoreTests.swift */; };
+		6CB223E48029E6BA6ED48041 /* LinkOpeningTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80F72A0A72DDC5F246ED51F /* LinkOpeningTextView.swift */; };
+		710D7FB87C39EEB0DB1F3E75 /* STPBlikCodeValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99B2D80F3FBAC287CBF86B0 /* STPBlikCodeValidator.swift */; };
+		717D176DAF084461C18F2A09 /* StripeUICore.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69B1E4AE618E237C0EE5036F /* StripeUICore.xcassets */; };
+		7272A43410D4BA1365D71E70 /* UIButton+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A60A0D2417D3A70D500EE30 /* UIButton+StripeUICore.swift */; };
+		74F65B6435E46B0FC8386FBB /* BSBNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCBFC1830139737F2E947F1 /* BSBNumberTests.swift */; };
+		778BACD1A29BEDEE21ED3FBE /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8678CFB3968AE5232932C461 /* ActivityIndicator.swift */; };
+		7B90479C19C30407FC21B228 /* ImageMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A681C4DEAE7B35B4DC0BD0FB /* ImageMaker.swift */; };
+		7E0A56FBC86BCBB58D0440AE /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8DC1E33CDF3B3FE549A7210 /* StripeCore.framework */; };
+		80B0519BC9CC21D9B650FC88 /* UISpringTimingParameters+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A81696ECEEF728F25202B6 /* UISpringTimingParameters+StripeUICore.swift */; };
+		824858D45F9D952BBDF822E2 /* CALayer+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8B1E38153B0C5ED6CD459C /* CALayer+StripeUICore.swift */; };
+		86427678E119E4AD22410E30 /* PhoneNumberElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0478259F9F7A04A8CF43BB /* PhoneNumberElement.swift */; };
+		88F53AB8F31B1DA2187E5740 /* IDNumberTextFieldConfigurationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995A59E3BC6D26B8030C874 /* IDNumberTextFieldConfigurationTest.swift */; };
+		8B8D3BD090415EFF9948D2C2 /* ContainerElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4893E4B43FEFCE920D432F0C /* ContainerElement.swift */; };
+		900EFF5918D96B9716CFB673 /* UIFont+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43943E8FF7CD279F8D8605D3 /* UIFont+StripeUICore.swift */; };
+		93CF3CE90B520B4A25208E95 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3C9C0D2302B8E7F421EFBD /* SectionView.swift */; };
+		976AFE0D02FE65BFA1757E4E /* NSAttributedString+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982AA7FCDBD1D5264A5FB040 /* NSAttributedString+StripeUICoreTests.swift */; };
+		986924FDA1EEF4146CD81B50 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A312A55A629CED2C6404F1 /* TextFieldView.swift */; };
+		993E51173490AAE5D7AF4C4E /* TextFieldElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9131CB11D2A0898B16D44C4E /* TextFieldElementTest.swift */; };
+		9DBFEB7045692EE931CE014D /* Locale+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2749BB93AD1B5A9FB3B9B97 /* Locale+StripeUICoreTests.swift */; };
+		9DEAD347B741A53E2F1764B4 /* TextFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A004788FA286E5ED22334238 /* TextFieldElement.swift */; };
+		9E308BC63E9FB185619E5859 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4621DA31A1A5FC51F76E562 /* XCTest.framework */; };
+		A21277FDCDD0C6BFB73A4B51 /* SectionElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62539E4F0904670C008DB18E /* SectionElementTest.swift */; };
+		A29B5AC2F03116E2F48970EE /* TextOrDropdownElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD864C601BFB09A851715FA /* TextOrDropdownElement.swift */; };
+		A3F0D42EB3A3FF2299F2F473 /* BankRoutingNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312236317D0DA79F2D32CBE2 /* BankRoutingNumber.swift */; };
+		A5C379C7D1EEF497FD845306 /* STPEmailAddressValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312E77021827300B2504F016 /* STPEmailAddressValidatorTest.swift */; };
+		A5E59185A9708613676988C6 /* DateFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */; };
+		AA8F938C3A8B7BC7F11B5048 /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EECCC1035F00C122B2B1ED /* Enums+CustomStringConvertible.swift */; };
+		B106FCB3D7C3DE7C40F0AE5C /* AddressSectionElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55F7532752871E779F47278 /* AddressSectionElementTest.swift */; };
+		B1B177526E04EE65A9D1C64A /* DynamicHeightContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E7CFED5747279A5976D7BA /* DynamicHeightContainerView.swift */; };
+		B6107E5E2D6E116417D22DD9 /* StripeUICoreBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68363D1C6BB6468AC1DDA4C /* StripeUICoreBundleLocator.swift */; };
+		BC40443B2A2F7130351589A7 /* NSAttributedString+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8AFA3891DA214D9FBEF650 /* NSAttributedString+StripeUICore.swift */; };
+		BE42104922DCA4DCB3919DD4 /* AddressSectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5CCD5D11A49D48D8D21C62 /* AddressSectionElement.swift */; };
+		BEB4F0E3B6218CA3E5DE95F9 /* STPBlikCodeValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055BFB32FE9CF519DC25C8F /* STPBlikCodeValidatorTest.swift */; };
+		C1CA6209591EDDBBE019FF22 /* FormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558DF5BAEF6E23E0C0F2CFF1 /* FormView.swift */; };
+		C23C78D87D8E6682F31345CB /* DropdownFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAD4C8EE686B0F9E86DBC8D /* DropdownFieldElement.swift */; };
+		C3D6D899B671398717F22520 /* CheckboxElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1EF8010A475D99C7190FF9 /* CheckboxElement.swift */; };
+		C44A57646A325EE26B75E6BF /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E799C8CB484FE83CB87E0 /* CheckboxButton.swift */; };
+		C6B11F4F219F7ED04321A33F /* DateFieldElementSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E2652D09C1A4EBBDE2FB61 /* DateFieldElementSnapshotTest.swift */; };
+		CF9D4CC40A7008DD1E8136A3 /* DoneButtonToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19F61D5356203ED977ED42E /* DoneButtonToolbar.swift */; };
+		D01976C07EB39B2BED64CCAC /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5E2F9A5B1A3E8E7B765E4F /* ButtonSnapshotTest.swift */; };
+		D083BAAF86707F9865AF2AF4 /* String+RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1688A2CE2037846F8E3937 /* String+RegionCodeProvider.swift */; };
+		D47D77A0B82DC6AE15E0A74E /* UIViewController+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12973742CA1AA39D3B84F072 /* UIViewController+StripeUICore.swift */; };
+		D6AEB6D5567AAD1B44E4AF70 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 868B2E8EDC242DB5AFFB3D0C /* StripeUICore.framework */; };
+		D6D8BCCF86C964B40D2FA58E /* UIKeyboardType+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE651DD3E5873538C7CE743 /* UIKeyboardType+StripeUICore.swift */; };
+		D7DB5C5724CD47E33245B25A /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB02AB36074791D39F0CDC1 /* Element.swift */; };
+		D912BF580DBAB7416040B637 /* localized_address_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 4E25905FCD05DF8B72888AAF /* localized_address_data.json */; };
+		DA6550F1FFA1376DB656D6E0 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB52FF6CAC981EFA60A81AFF /* NSDirectionalEdgeInsets+StripeUICore.swift */; };
+		E40999CDEDEA23451CA89707 /* TextFieldElement+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB80CA75F00847E4D74F821 /* TextFieldElement+Validation.swift */; };
+		E94BA0179485AED17D412865 /* AddressSpecProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844EED0578B990F4772CD01 /* AddressSpecProvider.swift */; };
+		E9CA12DAB591AC834CE9539A /* AddressSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC72344B4B313CE07A8AA33 /* AddressSpec.swift */; };
+		ECCA9BD118D763DBF658E5FD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71C8163AEB97D2FF8BB3A1C8 /* Localizable.strings */; };
+		EDDE1C83333AB1A1F2BD0F3E /* StackViewWithSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72394C7783071B1C6ED82A48 /* StackViewWithSeparator.swift */; };
+		EE28852FFCF42A8C47098051 /* TextFieldFormatterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FABC26C892C74FD444E88 /* TextFieldFormatterTest.swift */; };
+		F0EB247FEFF4600CD44B8261 /* DropdownFieldElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3B67DE90B0C1D71257D333 /* DropdownFieldElementTest.swift */; };
+		F86769C5CFD9AD3732127951 /* DropdownFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374D0BE980D58B75FA04DE66 /* DropdownFieldElement+AddressFactory.swift */; };
+		F901303E0B78F2D8E4C8A2F1 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF05370E4825D3225D9A6910 /* PhoneNumber.swift */; };
+		FAD790056C7A9E645A6B2C74 /* ElementsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC8D5E9700C8471D225C22 /* ElementsUI.swift */; };
+		FB33F2F446570394AABB7EC7 /* CompatibleColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657F1ABE46BA5C0692D9D41 /* CompatibleColor.swift */; };
+		FC1F8C4DC70C8212B507AE7E /* AddressSectionElementSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7836BA51814D0841B688E1 /* AddressSectionElementSnapshotTest.swift */; };
+		FC48FCDC5FD43E5E8AFC32D2 /* TextFieldElement+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4BD46908791D2E4150C4DC /* TextFieldElement+Factory.swift */; };
+		FDF52A43A01CD72D4B5A2CA9 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB48FCA3B2447A5F4CCEC69 /* Button.swift */; };
+		FF4E844383E5A5FD5C099B41 /* DropdownFieldElementSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62575FAAAAEFF31406C9B417 /* DropdownFieldElementSnapshotTest.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		980541F3E23EAD7E20DBCA47 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A39BBBD15F0F6B54725E52AF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE3C3F3D3BB67DD660A44B1E;
+			remoteInfo = StripeUICore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7823EBE0BD66DC6070DC1530 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8B58BADB5D787E66A0A50257 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		00455FBF8F3D7C9B0E65DA54 /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		011872F74559CB0D0D61170C /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		02DA3E661669718BD61C702D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0408AC0298D342DADD1F84A5 /* BSBNumberProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProviderTest.swift; sourceTree = "<group>"; };
+		08B0431535F20802E386624B /* DateFieldElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElementTest.swift; sourceTree = "<group>"; };
+		0D558F65E4C23971C94BAD3E /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
+		0ED24D748AEB8B1E0BA1FBAD /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		11C37DE7B064DC9E3F7E55CD /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		12973742CA1AA39D3B84F072 /* UIViewController+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+StripeUICore.swift"; sourceTree = "<group>"; };
+		18C5B42A6D5AF223F0CFB23F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1A50D68D24D1DE0459ED9529 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		20209CDCC3856CE548DA4D25 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		2055BFB32FE9CF519DC25C8F /* STPBlikCodeValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPBlikCodeValidatorTest.swift; sourceTree = "<group>"; };
+		263B7E56A83CFA4BA8385638 /* PhoneNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTests.swift; sourceTree = "<group>"; };
+		2AAE278AD27DB71B88C97B1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2BAA056C8170A4B0E8C763AD /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2D9B5640C88DD94D17666E0E /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		312236317D0DA79F2D32CBE2 /* BankRoutingNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankRoutingNumber.swift; sourceTree = "<group>"; };
+		312E77021827300B2504F016 /* STPEmailAddressValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPEmailAddressValidatorTest.swift; sourceTree = "<group>"; };
+		34178B51599FDCB0D0D7475A /* TextFieldFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatter.swift; sourceTree = "<group>"; };
+		34EC2F4C025AD1B1DD44CF78 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		36342ED77935BE9A32B082EC /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
+		374D0BE980D58B75FA04DE66 /* DropdownFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropdownFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
+		3A99D0F01D29E302C52217FE /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3B8AFA3891DA214D9FBEF650 /* NSAttributedString+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+StripeUICore.swift"; sourceTree = "<group>"; };
+		40DF1A7FC5D84F937042D172 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		40E0822DE6CFA0D3CCD5D513 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		43943E8FF7CD279F8D8605D3 /* UIFont+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+StripeUICore.swift"; sourceTree = "<group>"; };
+		4844F0B5436706225DE5A176 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
+		4893E4B43FEFCE920D432F0C /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
+		48C9A13C4663EA8ACA6EA2E5 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
+		48E2652D09C1A4EBBDE2FB61 /* DateFieldElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElementSnapshotTest.swift; sourceTree = "<group>"; };
+		4B66D666BB3EA733B92A60AA /* AddressSectionElement+DummyAddressLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSectionElement+DummyAddressLine.swift"; sourceTree = "<group>"; };
+		4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		4D4BD46908791D2E4150C4DC /* TextFieldElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Factory.swift"; sourceTree = "<group>"; };
+		4E25905FCD05DF8B72888AAF /* localized_address_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = localized_address_data.json; sourceTree = "<group>"; };
+		4EE651DD3E5873538C7CE743 /* UIKeyboardType+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKeyboardType+StripeUICore.swift"; sourceTree = "<group>"; };
+		4F37C42EA28BA31EC5CCDC7C /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		4FD764D16A365FD46700FB25 /* FloatingPlaceholderTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPlaceholderTextFieldView.swift; sourceTree = "<group>"; };
+		51C4AEB27F9734178E20836A /* UIColor+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICore.swift"; sourceTree = "<group>"; };
+		5321D6CCBA2AA9162A96080C /* UIBarButtonItem+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+StripeUICore.swift"; sourceTree = "<group>"; };
+		53900894BD0E2FF59029D2B6 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		53AA9FCEF2640C493D140033 /* STPVPANumberValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPVPANumberValidatorTest.swift; sourceTree = "<group>"; };
+		558DF5BAEF6E23E0C0F2CFF1 /* FormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormView.swift; sourceTree = "<group>"; };
+		583B93BE0152CDF7383A37E7 /* StaticElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticElement.swift; sourceTree = "<group>"; };
+		5855EA2F4F38847E3E47935D /* UIStackView+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+StripeUICore.swift"; sourceTree = "<group>"; };
+		59215CEEBA0D56FF41C3E412 /* UIWindow+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+StripeUICore.swift"; sourceTree = "<group>"; };
+		5B5CCD5D11A49D48D8D21C62 /* AddressSectionElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElement.swift; sourceTree = "<group>"; };
+		5BAD4C8EE686B0F9E86DBC8D /* DropdownFieldElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownFieldElement.swift; sourceTree = "<group>"; };
+		62539E4F0904670C008DB18E /* SectionElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionElementTest.swift; sourceTree = "<group>"; };
+		62575FAAAAEFF31406C9B417 /* DropdownFieldElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownFieldElementSnapshotTest.swift; sourceTree = "<group>"; };
+		64EECCC1035F00C122B2B1ED /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
+		67C454346BE566F9F689543B /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		68F3046A526D3A4CE402FB83 /* PickerFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerFieldView.swift; sourceTree = "<group>"; };
+		699ED5466892D95ADC151B64 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		69B1E4AE618E237C0EE5036F /* StripeUICore.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = StripeUICore.xcassets; sourceTree = "<group>"; };
+		6A4D27EC1A9207F327B1BF20 /* AddressSpec+ElementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSpec+ElementFactory.swift"; sourceTree = "<group>"; };
+		6E66B0CF81D4F8EDBB642C9F /* au_becs_bsb.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = au_becs_bsb.json; sourceTree = "<group>"; };
+		6F6E799C8CB484FE83CB87E0 /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
+		70B4BE2ACC46DF88949121CD /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		71A81696ECEEF728F25202B6 /* UISpringTimingParameters+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISpringTimingParameters+StripeUICore.swift"; sourceTree = "<group>"; };
+		71DCDDEE36E2CD98E4A03752 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		72394C7783071B1C6ED82A48 /* StackViewWithSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewWithSeparator.swift; sourceTree = "<group>"; };
+		72EB2DE23B3740D8DA3081E5 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		74EDF4CC65F409F55E14EB25 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7796F7211034806DA24D1710 /* PhoneNumberElementSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementSnapshotTests.swift; sourceTree = "<group>"; };
+		794D2AA5365F9DE155083927 /* PhoneNumberElementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementTests.swift; sourceTree = "<group>"; };
+		7B899349F7EF770D8F19509D /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		7B8B1E38153B0C5ED6CD459C /* CALayer+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+StripeUICore.swift"; sourceTree = "<group>"; };
+		7BB17B284B6D063AF0329DAD /* SectionElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionElement.swift; sourceTree = "<group>"; };
+		7D4E60C42E09A23ACD60BCD8 /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		7DC72344B4B313CE07A8AA33 /* AddressSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpec.swift; sourceTree = "<group>"; };
+		7EB48FCA3B2447A5F4CCEC69 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		815DB8DE48AE3CE1609C8316 /* OneTimeCodeTextField-TextStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OneTimeCodeTextField-TextStorage.swift"; sourceTree = "<group>"; };
+		81A4AE07CB9049B6D8C8D7D2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		8278020A829AE8C5CB8B6A9C /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		83462E27CEA3580E1BD3E2CD /* TestFieldElement+AccountFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestFieldElement+AccountFactoryTest.swift"; sourceTree = "<group>"; };
+		8367A676E35A663E320E1B37 /* TextFieldElementConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldElementConfiguration.swift; sourceTree = "<group>"; };
+		83BC5E25F42045563F4A660B /* AddressSpecProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProviderTest.swift; sourceTree = "<group>"; };
+		848196B6CCE964A735BFCD46 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		85AC8D5E9700C8471D225C22 /* ElementsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsUI.swift; sourceTree = "<group>"; };
+		8678CFB3968AE5232932C461 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		868B2E8EDC242DB5AFFB3D0C /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8995A59E3BC6D26B8030C874 /* IDNumberTextFieldConfigurationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDNumberTextFieldConfigurationTest.swift; sourceTree = "<group>"; };
+		8A60A0D2417D3A70D500EE30 /* UIButton+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+StripeUICore.swift"; sourceTree = "<group>"; };
+		8D0478259F9F7A04A8CF43BB /* PhoneNumberElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElement.swift; sourceTree = "<group>"; };
+		8F1EF8010A475D99C7190FF9 /* CheckboxElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxElement.swift; sourceTree = "<group>"; };
+		9131CB11D2A0898B16D44C4E /* TextFieldElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldElementTest.swift; sourceTree = "<group>"; };
+		92623B785C43F351D8A944D1 /* IDNumberTextFieldConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDNumberTextFieldConfiguration.swift; sourceTree = "<group>"; };
+		94FB3B96E7884F5B5C1C3EA8 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9559041BED6315C71F796A5F /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		982AA7FCDBD1D5264A5FB040 /* NSAttributedString+StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+StripeUICoreTests.swift"; sourceTree = "<group>"; };
+		9CCBFC1830139737F2E947F1 /* BSBNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberTests.swift; sourceTree = "<group>"; };
+		9E3254388F5DAB8E8C76AE04 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		A004788FA286E5ED22334238 /* TextFieldElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldElement.swift; sourceTree = "<group>"; };
+		A032BB17A6FA85EE4E3D00AE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A1A02A2319937F5033495984 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A360D5AE016620B560FB8A77 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A4F4CE2A0B16DA57DB249227 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		A681C4DEAE7B35B4DC0BD0FB /* ImageMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMaker.swift; sourceTree = "<group>"; };
+		A73D88DFAB03D663217399D0 /* String+CountryEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+CountryEmoji.swift"; sourceTree = "<group>"; };
+		AB2C786B198F91AE124C790A /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeCodeTextField.swift; sourceTree = "<group>"; };
+		AE4AB8A1DB70CDE06D9887CF /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B081CD063903B2FDBE327A15 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B2161853A89C273B745B8A60 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElement.swift; sourceTree = "<group>"; };
+		B32FABC26C892C74FD444E88 /* TextFieldFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatterTest.swift; sourceTree = "<group>"; };
+		B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
+		B844EED0578B990F4772CD01 /* AddressSpecProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProvider.swift; sourceTree = "<group>"; };
+		B84B32F86F684EA5233DDED5 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B871CED2EB8A1F7EEC0FE087 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B8DC1E33CDF3B3FE549A7210 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9CAB799E5645867F2400F0F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B9E7CFED5747279A5976D7BA /* DynamicHeightContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightContainerView.swift; sourceTree = "<group>"; };
+		BA1688A2CE2037846F8E3937 /* String+RegionCodeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+RegionCodeProvider.swift"; sourceTree = "<group>"; };
+		BA366F6105D04C9136240341 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		BB7836BA51814D0841B688E1 /* AddressSectionElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElementSnapshotTest.swift; sourceTree = "<group>"; };
+		BD52DCDA490D452AAA4B5E44 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C0355EA21D04DDC29E620CEA /* PickerTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerTextField.swift; sourceTree = "<group>"; };
+		C19F61D5356203ED977ED42E /* DoneButtonToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoneButtonToolbar.swift; sourceTree = "<group>"; };
+		C55F7532752871E779F47278 /* AddressSectionElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElementTest.swift; sourceTree = "<group>"; };
+		C85C015B47A8EBF87E5F662E /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		CB52FF6CAC981EFA60A81AFF /* NSDirectionalEdgeInsets+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDirectionalEdgeInsets+StripeUICore.swift"; sourceTree = "<group>"; };
+		CB8A9F7B4B2E8AA5A7E4FE98 /* StripeUICore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeUICore.h; sourceTree = "<group>"; };
+		CC3DD58BEF337017E7286459 /* BSBNumberProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProvider.swift; sourceTree = "<group>"; };
+		CDE775CAF20488D81C9167B4 /* DynamicImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicImageView.swift; sourceTree = "<group>"; };
+		CF3B67DE90B0C1D71257D333 /* DropdownFieldElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownFieldElementTest.swift; sourceTree = "<group>"; };
+		CF3C9C0D2302B8E7F421EFBD /* SectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
+		CFB80CA75F00847E4D74F821 /* TextFieldElement+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Validation.swift"; sourceTree = "<group>"; };
+		D1FB364DF60C1DEE0DA8EE75 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		D2749BB93AD1B5A9FB3B9B97 /* Locale+StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICoreTests.swift"; sourceTree = "<group>"; };
+		D4621DA31A1A5FC51F76E562 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		D59C1B7B69C92DFC9A25DAB2 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		D5A312A55A629CED2C6404F1 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
+		D634B04FC897DFB74B81DED6 /* STPVPANumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPVPANumberValidator.swift; sourceTree = "<group>"; };
+		D69C3FF914611057972ABA41 /* TextFieldElement+AccountFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+AccountFactory.swift"; sourceTree = "<group>"; };
+		D917F78E89D67691EF760D14 /* CheckboxButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButtonSnapshotTests.swift; sourceTree = "<group>"; };
+		DE233EED40F9D3FADDFE5951 /* STPEmailAddressValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPEmailAddressValidator.swift; sourceTree = "<group>"; };
+		E0C8DFA9A617506071C59815 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E242FECC90FE2644CF99692D /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
+		E395C593AC970A8C79A8109C /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
+		E522C47E0874F612E330DA38 /* StripeUICoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeUICoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E657F1ABE46BA5C0692D9D41 /* CompatibleColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompatibleColor.swift; sourceTree = "<group>"; };
+		E68363D1C6BB6468AC1DDA4C /* StripeUICoreBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeUICoreBundleLocator.swift; sourceTree = "<group>"; };
+		E80F72A0A72DDC5F246ED51F /* LinkOpeningTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkOpeningTextView.swift; sourceTree = "<group>"; };
+		E99B2D80F3FBAC287CBF86B0 /* STPBlikCodeValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPBlikCodeValidator.swift; sourceTree = "<group>"; };
+		EA00332BBDCE27F6F5A615C4 /* RegionCodeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionCodeProvider.swift; sourceTree = "<group>"; };
+		EAB02AB36074791D39F0CDC1 /* Element.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Element.swift; sourceTree = "<group>"; };
+		EB1FE2B6BCD6FC77117A2521 /* FormElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormElement.swift; sourceTree = "<group>"; };
+		EB5E2F9A5B1A3E8E7B765E4F /* ButtonSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTest.swift; sourceTree = "<group>"; };
+		EB942257C8B6B357AD0F6FC9 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EDD7C1AAB9D26E00526AFB26 /* TextFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
+		EDD864C601BFB09A851715FA /* TextOrDropdownElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOrDropdownElement.swift; sourceTree = "<group>"; };
+		F1C0A3DE4BCF8DA03AD17144 /* SectionContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionContainerView.swift; sourceTree = "<group>"; };
+		FAA22461E52111D9A4E8B133 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
+		FB5A05E653BFD01FF65E193C /* InputFormColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFormColors.swift; sourceTree = "<group>"; };
+		FDBBC76FD31F07EC67C52075 /* UIView+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+StripeUICore.swift"; sourceTree = "<group>"; };
+		FE57C3D398C94604889D9F61 /* TextFieldElement+AddressFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+AddressFactoryTest.swift"; sourceTree = "<group>"; };
+		FF05370E4825D3225D9A6910 /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0D674E67240745BB10E9C307 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E0A56FBC86BCBB58D0440AE /* StripeCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B361F19E111D84FD84927757 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E308BC63E9FB185619E5859 /* XCTest.framework in Frameworks */,
+				4C98A44C61BC71CABF8A9BF2 /* StripeCoreTestUtils.framework in Frameworks */,
+				D6AEB6D5567AAD1B44E4AF70 /* StripeUICore.framework in Frameworks */,
+				63632799CD2134991E0EA510 /* iOSSnapshotTestCase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0737F3733178B902986E6128 /* Form */ = {
+			isa = PBXGroup;
+			children = (
+				EB1FE2B6BCD6FC77117A2521 /* FormElement.swift */,
+				558DF5BAEF6E23E0C0F2CFF1 /* FormView.swift */,
+			);
+			path = Form;
+			sourceTree = "<group>";
+		};
+		14BA0999EF98D5C19F7A0018 /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				C55F7532752871E779F47278 /* AddressSectionElementTest.swift */,
+				83BC5E25F42045563F4A660B /* AddressSpecProviderTest.swift */,
+				0408AC0298D342DADD1F84A5 /* BSBNumberProviderTest.swift */,
+				08B0431535F20802E386624B /* DateFieldElementTest.swift */,
+				CF3B67DE90B0C1D71257D333 /* DropdownFieldElementTest.swift */,
+				8995A59E3BC6D26B8030C874 /* IDNumberTextFieldConfigurationTest.swift */,
+				794D2AA5365F9DE155083927 /* PhoneNumberElementTests.swift */,
+				62539E4F0904670C008DB18E /* SectionElementTest.swift */,
+				83462E27CEA3580E1BD3E2CD /* TestFieldElement+AccountFactoryTest.swift */,
+				FE57C3D398C94604889D9F61 /* TextFieldElement+AddressFactoryTest.swift */,
+				9131CB11D2A0898B16D44C4E /* TextFieldElementTest.swift */,
+				B32FABC26C892C74FD444E88 /* TextFieldFormatterTest.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
+		17217EBC2C89A90814900B85 /* Checkbox */ = {
+			isa = PBXGroup;
+			children = (
+				6F6E799C8CB484FE83CB87E0 /* CheckboxButton.swift */,
+				8F1EF8010A475D99C7190FF9 /* CheckboxElement.swift */,
+			);
+			path = Checkbox;
+			sourceTree = "<group>";
+		};
+		254AA347B50AF1B8370A43DF /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				17217EBC2C89A90814900B85 /* Checkbox */,
+				F08533861A4AC1BB01315CCE /* Factories */,
+				0737F3733178B902986E6128 /* Form */,
+				CF2B7051099FA08B7F0C446F /* PhoneNumber */,
+				B15F8A0D7BC00200896F00FD /* PickerField */,
+				B3A1C7E17AE91C2352DE42DB /* Section */,
+				82B232DB32C55ABC81F03EEA /* TextField */,
+				4893E4B43FEFCE920D432F0C /* ContainerElement.swift */,
+				B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */,
+				5BAD4C8EE686B0F9E86DBC8D /* DropdownFieldElement.swift */,
+				EAB02AB36074791D39F0CDC1 /* Element.swift */,
+				85AC8D5E9700C8471D225C22 /* ElementsUI.swift */,
+				583B93BE0152CDF7383A37E7 /* StaticElement.swift */,
+				EDD864C601BFB09A851715FA /* TextOrDropdownElement.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
+		361DA94D6B150221B8694910 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				D2749BB93AD1B5A9FB3B9B97 /* Locale+StripeUICoreTests.swift */,
+				982AA7FCDBD1D5264A5FB040 /* NSAttributedString+StripeUICoreTests.swift */,
+				48C9A13C4663EA8ACA6EA2E5 /* UIColor+StripeUICoreTests.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		36DAB16F61F10767C1FAA6CB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A33F87F760EA97E2416B5E3F /* JSON */,
+				4EE613673FA66E06A8963989 /* Localizations */,
+				69B1E4AE618E237C0EE5036F /* StripeUICore.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		3F7B82C31FE216F26BAA22BD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C19F61D5356203ED977ED42E /* DoneButtonToolbar.swift */,
+				B9E7CFED5747279A5976D7BA /* DynamicHeightContainerView.swift */,
+				CDE775CAF20488D81C9167B4 /* DynamicImageView.swift */,
+				E80F72A0A72DDC5F246ED51F /* LinkOpeningTextView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		47D21B13FCCDA3A340E0E45B /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				4FBEFD693426C6259B6BF7D6 /* Categories */,
+				91389CA21E7E02309F469572 /* Controls */,
+				254AA347B50AF1B8370A43DF /* Elements */,
+				6409D732BE9F9BD02673B79B /* Helpers */,
+				7C026500149D281CB84ECA33 /* Validators */,
+				3F7B82C31FE216F26BAA22BD /* Views */,
+				4844F0B5436706225DE5A176 /* Events.swift */,
+				20209CDCC3856CE548DA4D25 /* Image.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		4EE613673FA66E06A8963989 /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+				71C8163AEB97D2FF8BB3A1C8 /* Localizable.strings */,
+			);
+			path = Localizations;
+			sourceTree = "<group>";
+		};
+		4FBEFD693426C6259B6BF7D6 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				7B8B1E38153B0C5ED6CD459C /* CALayer+StripeUICore.swift */,
+				64EECCC1035F00C122B2B1ED /* Enums+CustomStringConvertible.swift */,
+				36342ED77935BE9A32B082EC /* Locale+StripeUICore.swift */,
+				3B8AFA3891DA214D9FBEF650 /* NSAttributedString+StripeUICore.swift */,
+				CB52FF6CAC981EFA60A81AFF /* NSDirectionalEdgeInsets+StripeUICore.swift */,
+				5321D6CCBA2AA9162A96080C /* UIBarButtonItem+StripeUICore.swift */,
+				8A60A0D2417D3A70D500EE30 /* UIButton+StripeUICore.swift */,
+				51C4AEB27F9734178E20836A /* UIColor+StripeUICore.swift */,
+				43943E8FF7CD279F8D8605D3 /* UIFont+StripeUICore.swift */,
+				4EE651DD3E5873538C7CE743 /* UIKeyboardType+StripeUICore.swift */,
+				71A81696ECEEF728F25202B6 /* UISpringTimingParameters+StripeUICore.swift */,
+				5855EA2F4F38847E3E47935D /* UIStackView+StripeUICore.swift */,
+				FAA22461E52111D9A4E8B133 /* UITraitCollection+StripeUICore.swift */,
+				FDBBC76FD31F07EC67C52075 /* UIView+StripeUICore.swift */,
+				12973742CA1AA39D3B84F072 /* UIViewController+StripeUICore.swift */,
+				59215CEEBA0D56FF41C3E412 /* UIWindow+StripeUICore.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		55059C90F775384FCFE9D116 /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				BB7836BA51814D0841B688E1 /* AddressSectionElementSnapshotTest.swift */,
+				D917F78E89D67691EF760D14 /* CheckboxButtonSnapshotTests.swift */,
+				48E2652D09C1A4EBBDE2FB61 /* DateFieldElementSnapshotTest.swift */,
+				62575FAAAAEFF31406C9B417 /* DropdownFieldElementSnapshotTest.swift */,
+				7796F7211034806DA24D1710 /* PhoneNumberElementSnapshotTests.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
+		5A4B0EAF2FA9E28C057A2AB2 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				67C454346BE566F9F689543B /* Project-Debug.xcconfig */,
+				D1FB364DF60C1DEE0DA8EE75 /* Project-Release.xcconfig */,
+				9E3254388F5DAB8E8C76AE04 /* StripeiOS Tests-Debug.xcconfig */,
+				E242FECC90FE2644CF99692D /* StripeiOS Tests-Release.xcconfig */,
+				E395C593AC970A8C79A8109C /* StripeiOS-Debug.xcconfig */,
+				4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		6053854E6A29F72565EEA479 /* Validators */ = {
+			isa = PBXGroup;
+			children = (
+				9CCBFC1830139737F2E947F1 /* BSBNumberTests.swift */,
+				263B7E56A83CFA4BA8385638 /* PhoneNumberTests.swift */,
+				2055BFB32FE9CF519DC25C8F /* STPBlikCodeValidatorTest.swift */,
+				312E77021827300B2504F016 /* STPEmailAddressValidatorTest.swift */,
+				53AA9FCEF2640C493D140033 /* STPVPANumberValidatorTest.swift */,
+			);
+			path = Validators;
+			sourceTree = "<group>";
+		};
+		6409D732BE9F9BD02673B79B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E657F1ABE46BA5C0692D9D41 /* CompatibleColor.swift */,
+				A681C4DEAE7B35B4DC0BD0FB /* ImageMaker.swift */,
+				FB5A05E653BFD01FF65E193C /* InputFormColors.swift */,
+				EA00332BBDCE27F6F5A615C4 /* RegionCodeProvider.swift */,
+				72394C7783071B1C6ED82A48 /* StackViewWithSeparator.swift */,
+				A4F4CE2A0B16DA57DB249227 /* STPLocalizedString.swift */,
+				A73D88DFAB03D663217399D0 /* String+CountryEmoji.swift */,
+				0D558F65E4C23971C94BAD3E /* String+Localized.swift */,
+				BA1688A2CE2037846F8E3937 /* String+RegionCodeProvider.swift */,
+				E68363D1C6BB6468AC1DDA4C /* StripeUICoreBundleLocator.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		69644936855065629CAD92BE /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				361DA94D6B150221B8694910 /* Categories */,
+				14BA0999EF98D5C19F7A0018 /* Elements */,
+				6053854E6A29F72565EEA479 /* Validators */,
+			);
+			path = Unit;
+			sourceTree = "<group>";
+		};
+		6A97BE4FB28466364C6C6F2D /* Snapshot */ = {
+			isa = PBXGroup;
+			children = (
+				B2DFE0CA51E45495789EAE0C /* Controls */,
+				55059C90F775384FCFE9D116 /* Elements */,
+			);
+			path = Snapshot;
+			sourceTree = "<group>";
+		};
+		6F2D1EDE6459166E8599C7F6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B8DC1E33CDF3B3FE549A7210 /* StripeCore.framework */,
+				40DF1A7FC5D84F937042D172 /* StripeCoreTestUtils.framework */,
+				868B2E8EDC242DB5AFFB3D0C /* StripeUICore.framework */,
+				E522C47E0874F612E330DA38 /* StripeUICoreTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		778494B821DEC0138FB4D78F /* Address */ = {
+			isa = PBXGroup;
+			children = (
+				5B5CCD5D11A49D48D8D21C62 /* AddressSectionElement.swift */,
+				4B66D666BB3EA733B92A60AA /* AddressSectionElement+DummyAddressLine.swift */,
+				7DC72344B4B313CE07A8AA33 /* AddressSpec.swift */,
+				6A4D27EC1A9207F327B1BF20 /* AddressSpec+ElementFactory.swift */,
+				B844EED0578B990F4772CD01 /* AddressSpecProvider.swift */,
+			);
+			path = Address;
+			sourceTree = "<group>";
+		};
+		7C026500149D281CB84ECA33 /* Validators */ = {
+			isa = PBXGroup;
+			children = (
+				312236317D0DA79F2D32CBE2 /* BankRoutingNumber.swift */,
+				FF05370E4825D3225D9A6910 /* PhoneNumber.swift */,
+				E99B2D80F3FBAC287CBF86B0 /* STPBlikCodeValidator.swift */,
+				DE233EED40F9D3FADDFE5951 /* STPEmailAddressValidator.swift */,
+				D634B04FC897DFB74B81DED6 /* STPVPANumberValidator.swift */,
+			);
+			path = Validators;
+			sourceTree = "<group>";
+		};
+		82B232DB32C55ABC81F03EEA /* TextField */ = {
+			isa = PBXGroup;
+			children = (
+				4FD764D16A365FD46700FB25 /* FloatingPlaceholderTextFieldView.swift */,
+				A004788FA286E5ED22334238 /* TextFieldElement.swift */,
+				CFB80CA75F00847E4D74F821 /* TextFieldElement+Validation.swift */,
+				8367A676E35A663E320E1B37 /* TextFieldElementConfiguration.swift */,
+				34178B51599FDCB0D0D7475A /* TextFieldFormatter.swift */,
+				D5A312A55A629CED2C6404F1 /* TextFieldView.swift */,
+			);
+			path = TextField;
+			sourceTree = "<group>";
+		};
+		89921F2BD8A1893F01033619 = {
+			isa = PBXGroup;
+			children = (
+				9F91E3826B63A2743D9EAFD8 /* Project */,
+				E4A3A33D13A26769A10EA12B /* Frameworks */,
+				6F2D1EDE6459166E8599C7F6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		89DCFAE23D35B3B8313A52E2 /* StripeUICore */ = {
+			isa = PBXGroup;
+			children = (
+				36DAB16F61F10767C1FAA6CB /* Resources */,
+				47D21B13FCCDA3A340E0E45B /* Source */,
+				40E0822DE6CFA0D3CCD5D513 /* Info.plist */,
+				CB8A9F7B4B2E8AA5A7E4FE98 /* StripeUICore.h */,
+			);
+			path = StripeUICore;
+			sourceTree = "<group>";
+		};
+		91389CA21E7E02309F469572 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				8678CFB3968AE5232932C461 /* ActivityIndicator.swift */,
+				7EB48FCA3B2447A5F4CCEC69 /* Button.swift */,
+				815DB8DE48AE3CE1609C8316 /* OneTimeCodeTextField-TextStorage.swift */,
+				AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		95A37FFB73E533980DEB7AC6 /* StripeUICoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				6A97BE4FB28466364C6C6F2D /* Snapshot */,
+				69644936855065629CAD92BE /* Unit */,
+				2AAE278AD27DB71B88C97B1A /* Info.plist */,
+			);
+			path = StripeUICoreTests;
+			sourceTree = "<group>";
+		};
+		9F91E3826B63A2743D9EAFD8 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				5A4B0EAF2FA9E28C057A2AB2 /* BuildConfigurations */,
+				89DCFAE23D35B3B8313A52E2 /* StripeUICore */,
+				95A37FFB73E533980DEB7AC6 /* StripeUICoreTests */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		A33F87F760EA97E2416B5E3F /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				6E66B0CF81D4F8EDBB642C9F /* au_becs_bsb.json */,
+				4E25905FCD05DF8B72888AAF /* localized_address_data.json */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		B15F8A0D7BC00200896F00FD /* PickerField */ = {
+			isa = PBXGroup;
+			children = (
+				68F3046A526D3A4CE402FB83 /* PickerFieldView.swift */,
+				C0355EA21D04DDC29E620CEA /* PickerTextField.swift */,
+			);
+			path = PickerField;
+			sourceTree = "<group>";
+		};
+		B2DFE0CA51E45495789EAE0C /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				EB5E2F9A5B1A3E8E7B765E4F /* ButtonSnapshotTest.swift */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		B3A1C7E17AE91C2352DE42DB /* Section */ = {
+			isa = PBXGroup;
+			children = (
+				F1C0A3DE4BCF8DA03AD17144 /* SectionContainerView.swift */,
+				7BB17B284B6D063AF0329DAD /* SectionElement.swift */,
+				B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */,
+				CF3C9C0D2302B8E7F421EFBD /* SectionView.swift */,
+			);
+			path = Section;
+			sourceTree = "<group>";
+		};
+		CF2B7051099FA08B7F0C446F /* PhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+				8D0478259F9F7A04A8CF43BB /* PhoneNumberElement.swift */,
+			);
+			path = PhoneNumber;
+			sourceTree = "<group>";
+		};
+		E4A3A33D13A26769A10EA12B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D4621DA31A1A5FC51F76E562 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E6F4FB2DDDAEEC6EAA177E77 /* BSB */ = {
+			isa = PBXGroup;
+			children = (
+				CC3DD58BEF337017E7286459 /* BSBNumberProvider.swift */,
+			);
+			path = BSB;
+			sourceTree = "<group>";
+		};
+		F08533861A4AC1BB01315CCE /* Factories */ = {
+			isa = PBXGroup;
+			children = (
+				778494B821DEC0138FB4D78F /* Address */,
+				E6F4FB2DDDAEEC6EAA177E77 /* BSB */,
+				374D0BE980D58B75FA04DE66 /* DropdownFieldElement+AddressFactory.swift */,
+				92623B785C43F351D8A944D1 /* IDNumberTextFieldConfiguration.swift */,
+				D69C3FF914611057972ABA41 /* TextFieldElement+AccountFactory.swift */,
+				EDD7C1AAB9D26E00526AFB26 /* TextFieldElement+AddressFactory.swift */,
+				4D4BD46908791D2E4150C4DC /* TextFieldElement+Factory.swift */,
+			);
+			path = Factories;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7124034061B4EB1E9FEE5082 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4755A24604B396D5A25058CD /* StripeUICore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		A4B3F8AEF10396425E1A79D0 /* StripeUICoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FBFE0F03077B5B14BAA451B5 /* Build configuration list for PBXNativeTarget "StripeUICoreTests" */;
+			buildPhases = (
+				1EEBDA54180851BDA264A95A /* Sources */,
+				22944EF7CA9505D7EAA24DDF /* Resources */,
+				8B58BADB5D787E66A0A50257 /* Embed Frameworks */,
+				B361F19E111D84FD84927757 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C47525D30F1B3DA22E5700ED /* PBXTargetDependency */,
+			);
+			name = StripeUICoreTests;
+			packageProductDependencies = (
+				9B701A244243959A191FF16F /* iOSSnapshotTestCase */,
+			);
+			productName = StripeUICoreTests;
+			productReference = E522C47E0874F612E330DA38 /* StripeUICoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DE3C3F3D3BB67DD660A44B1E /* StripeUICore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0F1ADFB3411970E0071C1BC7 /* Build configuration list for PBXNativeTarget "StripeUICore" */;
+			buildPhases = (
+				7124034061B4EB1E9FEE5082 /* Headers */,
+				8E796B4724BEBD4752011F86 /* Sources */,
+				5744B094678B91577696C76C /* Resources */,
+				7823EBE0BD66DC6070DC1530 /* Embed Frameworks */,
+				0D674E67240745BB10E9C307 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StripeUICore;
+			productName = StripeUICore;
+			productReference = 868B2E8EDC242DB5AFFB3D0C /* StripeUICore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A39BBBD15F0F6B54725E52AF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 2331F8341192F01F80C0469D /* Build configuration list for PBXProject "StripeUICore" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				"bg-BG",
+				"ca-ES",
+				"cs-CZ",
+				da,
+				de,
+				"el-GR",
+				en,
+				"en-GB",
+				es,
+				"es-419",
+				"et-EE",
+				fi,
+				fil,
+				fr,
+				"fr-CA",
+				hr,
+				hu,
+				id,
+				it,
+				ja,
+				ko,
+				"lt-LT",
+				"lv-LV",
+				"ms-MY",
+				mt,
+				nb,
+				nl,
+				"nn-NO",
+				"pl-PL",
+				"pt-BR",
+				"pt-PT",
+				"ro-RO",
+				ru,
+				"sk-SK",
+				"sl-SI",
+				sv,
+				tr,
+				vi,
+				"zh-HK",
+				"zh-Hans",
+				"zh-Hant",
+			);
+			mainGroup = 89921F2BD8A1893F01033619;
+			packageReferences = (
+				538E8F52DECFD138BE60A67D /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+			);
+			productRefGroup = 6F2D1EDE6459166E8599C7F6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DE3C3F3D3BB67DD660A44B1E /* StripeUICore */,
+				A4B3F8AEF10396425E1A79D0 /* StripeUICoreTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		22944EF7CA9505D7EAA24DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5744B094678B91577696C76C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ADEF1482E62A173A0C7F7AD /* au_becs_bsb.json in Resources */,
+				D912BF580DBAB7416040B637 /* localized_address_data.json in Resources */,
+				ECCA9BD118D763DBF658E5FD /* Localizable.strings in Resources */,
+				717D176DAF084461C18F2A09 /* StripeUICore.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1EEBDA54180851BDA264A95A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01976C07EB39B2BED64CCAC /* ButtonSnapshotTest.swift in Sources */,
+				FC1F8C4DC70C8212B507AE7E /* AddressSectionElementSnapshotTest.swift in Sources */,
+				0D8AE1CEFBE7FA004A3DD62D /* CheckboxButtonSnapshotTests.swift in Sources */,
+				C6B11F4F219F7ED04321A33F /* DateFieldElementSnapshotTest.swift in Sources */,
+				FF4E844383E5A5FD5C099B41 /* DropdownFieldElementSnapshotTest.swift in Sources */,
+				1424B1529E24582122F86149 /* PhoneNumberElementSnapshotTests.swift in Sources */,
+				9DBFEB7045692EE931CE014D /* Locale+StripeUICoreTests.swift in Sources */,
+				976AFE0D02FE65BFA1757E4E /* NSAttributedString+StripeUICoreTests.swift in Sources */,
+				69B082B15479DCC4560E3D92 /* UIColor+StripeUICoreTests.swift in Sources */,
+				B106FCB3D7C3DE7C40F0AE5C /* AddressSectionElementTest.swift in Sources */,
+				073D41F1EC0560423FEF87AA /* AddressSpecProviderTest.swift in Sources */,
+				32D69CBB3CE780A29AA553AB /* BSBNumberProviderTest.swift in Sources */,
+				2AA023A5031CFF0E56C7A14E /* DateFieldElementTest.swift in Sources */,
+				F0EB247FEFF4600CD44B8261 /* DropdownFieldElementTest.swift in Sources */,
+				88F53AB8F31B1DA2187E5740 /* IDNumberTextFieldConfigurationTest.swift in Sources */,
+				4C519A87445AB16A55FE2408 /* PhoneNumberElementTests.swift in Sources */,
+				A21277FDCDD0C6BFB73A4B51 /* SectionElementTest.swift in Sources */,
+				163A77E9E4C40AFFA5226E23 /* TestFieldElement+AccountFactoryTest.swift in Sources */,
+				08C773D1E6A5452B7BD7CF81 /* TextFieldElement+AddressFactoryTest.swift in Sources */,
+				993E51173490AAE5D7AF4C4E /* TextFieldElementTest.swift in Sources */,
+				EE28852FFCF42A8C47098051 /* TextFieldFormatterTest.swift in Sources */,
+				74F65B6435E46B0FC8386FBB /* BSBNumberTests.swift in Sources */,
+				64E61A5E0A705F1C4582381A /* PhoneNumberTests.swift in Sources */,
+				BEB4F0E3B6218CA3E5DE95F9 /* STPBlikCodeValidatorTest.swift in Sources */,
+				A5C379C7D1EEF497FD845306 /* STPEmailAddressValidatorTest.swift in Sources */,
+				2FD444AC5FC064EFCF6259ED /* STPVPANumberValidatorTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E796B4724BEBD4752011F86 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				824858D45F9D952BBDF822E2 /* CALayer+StripeUICore.swift in Sources */,
+				AA8F938C3A8B7BC7F11B5048 /* Enums+CustomStringConvertible.swift in Sources */,
+				2F1D03471202E25FD7682148 /* Locale+StripeUICore.swift in Sources */,
+				BC40443B2A2F7130351589A7 /* NSAttributedString+StripeUICore.swift in Sources */,
+				DA6550F1FFA1376DB656D6E0 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */,
+				67FCE4493235656689E915F6 /* UIBarButtonItem+StripeUICore.swift in Sources */,
+				7272A43410D4BA1365D71E70 /* UIButton+StripeUICore.swift in Sources */,
+				02B503A3227EF1409ABF53F1 /* UIColor+StripeUICore.swift in Sources */,
+				900EFF5918D96B9716CFB673 /* UIFont+StripeUICore.swift in Sources */,
+				D6D8BCCF86C964B40D2FA58E /* UIKeyboardType+StripeUICore.swift in Sources */,
+				80B0519BC9CC21D9B650FC88 /* UISpringTimingParameters+StripeUICore.swift in Sources */,
+				159D7B9A2960A1CD7E661191 /* UIStackView+StripeUICore.swift in Sources */,
+				30972A45F8A32DEEC17DA4F6 /* UITraitCollection+StripeUICore.swift in Sources */,
+				62601F856C41CFA1C7A8B18F /* UIView+StripeUICore.swift in Sources */,
+				D47D77A0B82DC6AE15E0A74E /* UIViewController+StripeUICore.swift in Sources */,
+				4CD207111219BF250A400ACC /* UIWindow+StripeUICore.swift in Sources */,
+				778BACD1A29BEDEE21ED3FBE /* ActivityIndicator.swift in Sources */,
+				FDF52A43A01CD72D4B5A2CA9 /* Button.swift in Sources */,
+				4B05CF7F485F0AED498DAE49 /* OneTimeCodeTextField-TextStorage.swift in Sources */,
+				48D3B7C2983A8A25C6599119 /* OneTimeCodeTextField.swift in Sources */,
+				C44A57646A325EE26B75E6BF /* CheckboxButton.swift in Sources */,
+				C3D6D899B671398717F22520 /* CheckboxElement.swift in Sources */,
+				8B8D3BD090415EFF9948D2C2 /* ContainerElement.swift in Sources */,
+				A5E59185A9708613676988C6 /* DateFieldElement.swift in Sources */,
+				C23C78D87D8E6682F31345CB /* DropdownFieldElement.swift in Sources */,
+				D7DB5C5724CD47E33245B25A /* Element.swift in Sources */,
+				FAD790056C7A9E645A6B2C74 /* ElementsUI.swift in Sources */,
+				377058C2363FA0348AFBD32E /* AddressSectionElement+DummyAddressLine.swift in Sources */,
+				BE42104922DCA4DCB3919DD4 /* AddressSectionElement.swift in Sources */,
+				0CB675370A06DEC6F23608C4 /* AddressSpec+ElementFactory.swift in Sources */,
+				E9CA12DAB591AC834CE9539A /* AddressSpec.swift in Sources */,
+				E94BA0179485AED17D412865 /* AddressSpecProvider.swift in Sources */,
+				225B20CEF547BB1F6C6D447E /* BSBNumberProvider.swift in Sources */,
+				F86769C5CFD9AD3732127951 /* DropdownFieldElement+AddressFactory.swift in Sources */,
+				67216EB4E004BDB1D2E49BD4 /* IDNumberTextFieldConfiguration.swift in Sources */,
+				65B9A839BD4AAC315231B421 /* TextFieldElement+AccountFactory.swift in Sources */,
+				0A3130227F7602524C9824D3 /* TextFieldElement+AddressFactory.swift in Sources */,
+				FC48FCDC5FD43E5E8AFC32D2 /* TextFieldElement+Factory.swift in Sources */,
+				4A5EADAF2F6514299BA4B8D8 /* FormElement.swift in Sources */,
+				C1CA6209591EDDBBE019FF22 /* FormView.swift in Sources */,
+				86427678E119E4AD22410E30 /* PhoneNumberElement.swift in Sources */,
+				019C76A03A30A67AE9F1FAEE /* PickerFieldView.swift in Sources */,
+				57C288DFD2CC2CFC216E47CC /* PickerTextField.swift in Sources */,
+				32971AFF5D0DF9B28E9C464C /* SectionContainerView.swift in Sources */,
+				5A9B21FE5A6941713087B94B /* SectionElement+MultiElementRow.swift in Sources */,
+				336B882978CA47EE46260774 /* SectionElement.swift in Sources */,
+				93CF3CE90B520B4A25208E95 /* SectionView.swift in Sources */,
+				4B414F0A0E46D914C89B3741 /* StaticElement.swift in Sources */,
+				0FBBB5C7FD2DA9A11E7FE2BC /* FloatingPlaceholderTextFieldView.swift in Sources */,
+				E40999CDEDEA23451CA89707 /* TextFieldElement+Validation.swift in Sources */,
+				9DEAD347B741A53E2F1764B4 /* TextFieldElement.swift in Sources */,
+				5936629C4665BC698C3458B1 /* TextFieldElementConfiguration.swift in Sources */,
+				39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */,
+				986924FDA1EEF4146CD81B50 /* TextFieldView.swift in Sources */,
+				A29B5AC2F03116E2F48970EE /* TextOrDropdownElement.swift in Sources */,
+				36376E12AE7ABA21FFC474E6 /* Events.swift in Sources */,
+				FB33F2F446570394AABB7EC7 /* CompatibleColor.swift in Sources */,
+				7B90479C19C30407FC21B228 /* ImageMaker.swift in Sources */,
+				343DD093A6095DEAA06D245E /* InputFormColors.swift in Sources */,
+				6606DC43D230ADD183AEF5DA /* RegionCodeProvider.swift in Sources */,
+				504FA2DE5FE66FDE90842019 /* STPLocalizedString.swift in Sources */,
+				EDDE1C83333AB1A1F2BD0F3E /* StackViewWithSeparator.swift in Sources */,
+				11BD8DFB36FACB6966D0236F /* String+CountryEmoji.swift in Sources */,
+				0BA1E7C26903E45912FDE25A /* String+Localized.swift in Sources */,
+				D083BAAF86707F9865AF2AF4 /* String+RegionCodeProvider.swift in Sources */,
+				B6107E5E2D6E116417D22DD9 /* StripeUICoreBundleLocator.swift in Sources */,
+				68F7D5EEB894A68DDC184ADA /* Image.swift in Sources */,
+				A3F0D42EB3A3FF2299F2F473 /* BankRoutingNumber.swift in Sources */,
+				F901303E0B78F2D8E4C8A2F1 /* PhoneNumber.swift in Sources */,
+				710D7FB87C39EEB0DB1F3E75 /* STPBlikCodeValidator.swift in Sources */,
+				1EB16D8F60923EE9C890CE43 /* STPEmailAddressValidator.swift in Sources */,
+				0019E30E7B8189C3DEA719DC /* STPVPANumberValidator.swift in Sources */,
+				CF9D4CC40A7008DD1E8136A3 /* DoneButtonToolbar.swift in Sources */,
+				B1B177526E04EE65A9D1C64A /* DynamicHeightContainerView.swift in Sources */,
+				11C99D83A1DA88996A45BA47 /* DynamicImageView.swift in Sources */,
+				6CB223E48029E6BA6ED48041 /* LinkOpeningTextView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C47525D30F1B3DA22E5700ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = StripeUICore;
+			target = DE3C3F3D3BB67DD660A44B1E /* StripeUICore */;
+			targetProxy = 980541F3E23EAD7E20DBCA47 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		71C8163AEB97D2FF8BB3A1C8 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7D4E60C42E09A23ACD60BCD8 /* bg-BG */,
+				7B899349F7EF770D8F19509D /* ca-ES */,
+				A360D5AE016620B560FB8A77 /* cs-CZ */,
+				A1A02A2319937F5033495984 /* da */,
+				848196B6CCE964A735BFCD46 /* de */,
+				B2161853A89C273B745B8A60 /* el-GR */,
+				02DA3E661669718BD61C702D /* en */,
+				BA366F6105D04C9136240341 /* en-GB */,
+				18C5B42A6D5AF223F0CFB23F /* es */,
+				D59C1B7B69C92DFC9A25DAB2 /* es-419 */,
+				C85C015B47A8EBF87E5F662E /* et-EE */,
+				AE4AB8A1DB70CDE06D9887CF /* fi */,
+				94FB3B96E7884F5B5C1C3EA8 /* fil */,
+				71DCDDEE36E2CD98E4A03752 /* fr */,
+				4F37C42EA28BA31EC5CCDC7C /* fr-CA */,
+				B081CD063903B2FDBE327A15 /* hr */,
+				0ED24D748AEB8B1E0BA1FBAD /* hu */,
+				3A99D0F01D29E302C52217FE /* id */,
+				74EDF4CC65F409F55E14EB25 /* it */,
+				53900894BD0E2FF59029D2B6 /* ja */,
+				11C37DE7B064DC9E3F7E55CD /* ko */,
+				AB2C786B198F91AE124C790A /* lt-LT */,
+				00455FBF8F3D7C9B0E65DA54 /* lv-LV */,
+				8278020A829AE8C5CB8B6A9C /* ms-MY */,
+				E0C8DFA9A617506071C59815 /* mt */,
+				34EC2F4C025AD1B1DD44CF78 /* nb */,
+				1A50D68D24D1DE0459ED9529 /* nl */,
+				B84B32F86F684EA5233DDED5 /* nn-NO */,
+				B871CED2EB8A1F7EEC0FE087 /* pl-PL */,
+				72EB2DE23B3740D8DA3081E5 /* pt-BR */,
+				B9CAB799E5645867F2400F0F /* pt-PT */,
+				699ED5466892D95ADC151B64 /* ro-RO */,
+				BD52DCDA490D452AAA4B5E44 /* ru */,
+				011872F74559CB0D0D61170C /* sk-SK */,
+				2BAA056C8170A4B0E8C763AD /* sl-SI */,
+				EB942257C8B6B357AD0F6FC9 /* sv */,
+				A032BB17A6FA85EE4E3D00AE /* tr */,
+				2D9B5640C88DD94D17666E0E /* vi */,
+				81A4AE07CB9049B6D8C8D7D2 /* zh-Hans */,
+				9559041BED6315C71F796A5F /* zh-Hant */,
+				70B4BE2ACC46DF88949121CD /* zh-HK */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0E538ACBF1E137ADF66DB8F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = StripeUICore/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
+				PRODUCT_NAME = StripeUICore;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Release;
+		};
+		4C7CEEDE1477774F09EA2E3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 67C454346BE566F9F689543B /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		6600E0743D5AD7028F6ABC2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E395C593AC970A8C79A8109C /* StripeiOS-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = StripeUICore/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
+				PRODUCT_NAME = StripeUICore;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Debug;
+		};
+		8D85CFA6FA82B62D41B6313A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1FB364DF60C1DEE0DA8EE75 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		918E06A524F977D2E40E149B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E242FECC90FE2644CF99692D /* StripeiOS Tests-Release.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				INFOPLIST_FILE = StripeUICoreTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeUICoreTests;
+				PRODUCT_NAME = StripeUICoreTests;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
+			};
+			name = Release;
+		};
+		FDF219D174EA73AC86665131 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9E3254388F5DAB8E8C76AE04 /* StripeiOS Tests-Debug.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				INFOPLIST_FILE = StripeUICoreTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeUICoreTests;
+				PRODUCT_NAME = StripeUICoreTests;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0F1ADFB3411970E0071C1BC7 /* Build configuration list for PBXNativeTarget "StripeUICore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6600E0743D5AD7028F6ABC2C /* Debug */,
+				0E538ACBF1E137ADF66DB8F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2331F8341192F01F80C0469D /* Build configuration list for PBXProject "StripeUICore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C7CEEDE1477774F09EA2E3F /* Debug */,
+				8D85CFA6FA82B62D41B6313A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FBFE0F03077B5B14BAA451B5 /* Build configuration list for PBXNativeTarget "StripeUICoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FDF219D174EA73AC86665131 /* Debug */,
+				918E06A524F977D2E40E149B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		538E8F52DECFD138BE60A67D /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9B701A244243959A191FF16F /* iOSSnapshotTestCase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSSnapshotTestCase;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A39BBBD15F0F6B54725E52AF /* Project object */;
+}

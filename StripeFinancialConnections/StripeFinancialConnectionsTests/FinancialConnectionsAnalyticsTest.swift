@@ -19,7 +19,7 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
         )
         XCTAssertNotNil(analytic.error)
 
-        let errorDict = analytic.error.serializeForLogging()
+        let errorDict = analytic.error.serializeForV2Logging()
         XCTAssertNil(errorDict["user_info"])
         XCTAssertEqual(errorDict["code"] as? Int, 0)
         XCTAssertEqual(errorDict["domain"] as? String, "Stripe.FinancialConnectionsSheetError")

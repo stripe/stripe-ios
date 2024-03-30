@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 
 @testable@_spi(STP) import Stripe
@@ -15,12 +16,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
+class STPStackViewWithSeparatorSnapshotTests: STPSnapshotTestCase {
 
     func embedInRenderableView(_ stackView: StackViewWithSeparator) -> UIView {
         let containingView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 400))

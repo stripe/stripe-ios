@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if !canImport(CompositorServices)
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -17,8 +18,8 @@ import UIKit
  A view that wraps a normal section and adds a "Scan card" button. Tapping the button displays a card scan view below the section.
  */
 /// For internal SDK use only
+@available(macCatalyst 14.0, *)
 @objc(STP_Internal_CardSectionWithScannerView)
-@available(iOS 13, macCatalyst 14, *)
 final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
     lazy var cardScanButton: UIButton = {
@@ -58,8 +59,8 @@ final class CardSectionWithScannerView: UIView {
         addAndPinSubview(stack)
     }
 
-    @available(iOS 13, macCatalyst 14, *)
     @objc func didTapCardScanButton() {
+        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: "card")
         setCardScanVisible(true)
         cardScanningView.start()
         becomeFirstResponder()
@@ -68,7 +69,7 @@ final class CardSectionWithScannerView: UIView {
     private func setCardScanVisible(_ isCardScanVisible: Bool) {
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
-            self.cardScanningView.isHidden = !isCardScanVisible
+            self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
             self.cardScanningView.alpha = isCardScanVisible ? 1 : 0
         }
     }
@@ -83,7 +84,7 @@ final class CardSectionWithScannerView: UIView {
     }
 }
 
-@available(iOS 13, macCatalyst 14, *)
+@available(macCatalyst 14.0, *)
 extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
     func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
         setCardScanVisible(false)
@@ -97,3 +98,5 @@ extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
 protocol CardSectionWithScannerViewDelegate: AnyObject {
     func didScanCard(cardParams: STPPaymentMethodCardParams)
 }
+
+#endif

@@ -12,7 +12,6 @@ import AVKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class SelfieCaptureViewController: IdentityFlowViewController {
 
     typealias SelfieImageScanningSession = ImageScanningSession<
@@ -133,8 +132,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         : SelfieCaptureViewController.capturingInstructionText
                 )
             )
-        case .scanned(_, let faceCaptureData),
-            .saving(_, let faceCaptureData):
+        case .scanned(_, let faceCaptureData):
             return .scan(
                 .init(
                     state: .scanned(
@@ -145,7 +143,20 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         },
                         openURLHandler: { [weak self] url in
                             self?.openInSafariViewController(url: url)
+                        },
+                        retakeSelfieHandler: { [weak self] in
+                            self?.imageScanningSession.startScanning()
                         }
+                    ),
+                    instructionalText: SelfieCaptureViewController.scannedInstructionText
+                )
+            )
+        case .saving(_, let faceCaptureData):
+            return .saving(
+                .init(
+                    state: .saving(
+                        faceCaptureData.toArray.map { UIImage(cgImage: $0.image) },
+                        consentHTMLText: apiConfig.trainingConsentText
                     ),
                     instructionalText: SelfieCaptureViewController.scannedInstructionText
                 )
@@ -268,7 +279,6 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 }
 
 // MARK: - Helpers
-@available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController {
     func updateUI() {
         configure(
@@ -322,7 +332,6 @@ extension SelfieCaptureViewController {
 }
 
 // MARK: - ImageScanningSessionDelegate
-@available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     func imageScanningSession(
         _ scanningSession: SelfieImageScanningSession,
@@ -453,7 +462,6 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.face]

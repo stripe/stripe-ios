@@ -22,17 +22,6 @@ def create_branch
   run_command("git checkout -b #{@branchname}")
 end
 
-def regenerate_project_files
-  run_command('ci_scripts/delete_project_files.rb')
-  puts 'Generating project files'
-  run_command('tuist generate -n')
-  # Delete xcuserdatad folders.
-  puts "Deleting user data files"
-  run_command('find Stripe* -type d -name "*.xcuserdatad" -exec rm -r {} +', false)
-  run_command('find Example* -type d -name "*.xcuserdatad" -exec rm -r {} +', false)
-  run_command('find Testers* -type d -name "*.xcuserdatad" -exec rm -r {} +', false)
-end
-
 def update_version
   # Overwrite the VERSION file with version
   File.open('VERSION', 'w') do |f|
@@ -51,19 +40,17 @@ end
 
 def commit_changes
   # Commit and push the changes
-  # Xcode project files are added to ensure compatibility with Carthage,
-  # -f is used because this files are included in .gitignore.
-  # Manually add the docs directory to pick up any new docs files generated as part of release
-  run_command("git add Stripe.xcworkspace -f &&
-    git add Stripe*/*.xcodeproj -f &&
-    git add Example/**/*.xcodeproj -f &&
-    git add Testers/**/*.xcodeproj -f &&
-    git add -u &&
+  run_command("git add -u &&
     git commit -m \"Update version to #{@version}\"")
 end
 
 def push_changes
   run_command("git push origin #{@branchname}") unless @is_dry_run
+end
+
+def run_download_localized_strings
+  return if @is_dry_run
+  `sh ci_scripts/download_localized_strings_from_lokalise.sh`
 end
 
 def create_pr
@@ -75,18 +62,19 @@ def create_pr
     - [ ] Version.xcconfig
     - [ ] All *.podspec files
     - [ ] StripeAPIConfiguration+Version.swift
+  - [ ] Verify any new localized strings.
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
   }
 
-  unless @is_dry_run
-    pr = @github_client.create_pull_request(
-      'stripe/stripe-ios',
-      'master',
-      @branchname,
-      "Release version #{@version}",
-      pr_body
-    )
-  end
+  return if @is_dry_run
+
+  pr = @github_client.create_pull_request(
+    'stripe/stripe-ios',
+    'master',
+    @branchname,
+    "Release version #{@version}",
+    pr_body
+  )
 end
 
 def check_for_missing_localizations
@@ -103,30 +91,30 @@ def check_for_missing_localizations
 end
 
 def propose_release
-  unless @is_dry_run
-    # Lookup PR
-    all_prs = @github_client.pull_requests('stripe/stripe-ios', state: 'open')
-    pr = all_prs.find { |pr| pr.head.ref == @branchname }
+  return if @is_dry_run
 
-    # Get list of new directories and save to a temp file
-    prev_release_tag = @github_client.latest_release('stripe/stripe-ios').tag_name
-    `git fetch origin --tags`
-    new_dirs = `ci_scripts/check_for_new_directories.sh HEAD #{prev_release_tag}`
-    temp_dir = `mktemp -d`.chomp("\n")
-    new_dir_file = File.join_if_safe(temp_dir, "new_directories_#{@version}.txt")
-    File.open(new_dir_file, 'w') { |file| file.puts new_dirs }
+  # Lookup PR
+  all_prs = @github_client.pull_requests('stripe/stripe-ios', state: 'open')
+  pr = all_prs.find { |pr| pr.head.ref == @branchname }
 
-    rputs "Complete the pull request checklist at #{pr.html_url} and the above docs PR, then run `bundle exec ruby ci_scripts/propose_release.rb`"
-    rputs "For a list of new directories since tag #{prev_release_tag}, `cat #{new_dir_file}`"
-    notify_user
-  end
+  # Get list of new directories and save to a temp file
+  prev_release_tag = @github_client.latest_release('stripe/stripe-ios').tag_name
+  `git fetch origin --tags`
+  new_dirs = `ci_scripts/check_for_new_directories.sh HEAD #{prev_release_tag}`
+  temp_dir = `mktemp -d`.chomp("\n")
+  new_dir_file = File.join_if_safe(temp_dir, "new_directories_#{@version}.txt")
+  File.open(new_dir_file, 'w') { |file| file.puts new_dirs }
+
+  rputs "Complete the pull request checklist at #{pr.html_url}"
+  rputs "For a list of new directories since tag #{prev_release_tag}, `cat #{new_dir_file}`"
+  notify_user
 end
 
 steps = [
   method(:create_branch),
-  method(:regenerate_project_files),
   method(:update_version),
   method(:update_placeholders),
+  method(:run_download_localized_strings),
   method(:commit_changes),
   method(:push_changes),
   method(:create_pr),

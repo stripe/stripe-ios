@@ -28,6 +28,18 @@ protocol IdentityAPIClient: AnyObject {
         purpose: String,
         fileName: String
     ) -> Future<STPAPIClient.FileAndUploadMetrics>
+
+    func verifyTestVerificationSession(
+        simulateDelay: Bool
+    ) -> Promise<StripeAPI.VerificationPageData>
+
+    func unverifyTestVerificationSession(
+        simulateDelay: Bool
+    ) -> Promise<StripeAPI.VerificationPageData>
+
+    func generatePhoneOtp() -> Promise<StripeAPI.VerificationPageData>
+
+    func cannotPhoneVerifyOtp() -> Promise<StripeAPI.VerificationPageData>
 }
 
 final class IdentityAPIClientImpl: IdentityAPIClient {
@@ -35,7 +47,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     /// SDK is capable of using.
     ///
     /// - Note: Update this value when a new API version is ready for use in production.
-    static let productionApiVersion: Int = 3
+    static let productionApiVersion: Int = 5
 
     var betas: Set<String> {
         return ["identity_client_api=v\(apiVersion)"]
@@ -110,6 +122,34 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
             ownedBy: verificationSessionId
         )
     }
+
+    func verifyTestVerificationSession(simulateDelay: Bool) -> Promise<StripeAPI.VerificationPageData> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPageTestingVerify(id: verificationSessionId),
+            parameters: ["simulate_delay": simulateDelay]
+        )
+    }
+
+    func unverifyTestVerificationSession(simulateDelay: Bool) -> Promise<StripeAPI.VerificationPageData> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPageTestingUnverify(id: verificationSessionId),
+            parameters: ["simulate_delay": simulateDelay]
+        )
+    }
+
+    func generatePhoneOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPagePhoneOtpGenerate(id: verificationSessionId),
+            parameters: [:]
+        )
+    }
+
+    func cannotPhoneVerifyOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPagePhoneOtpCannotVerify(id: verificationSessionId),
+            parameters: [:]
+        )
+    }
 }
 
 private func APIEndpointVerificationPage(id: String) -> String {
@@ -120,4 +160,16 @@ private func APIEndpointVerificationPageData(id: String) -> String {
 }
 private func APIEndpointVerificationPageSubmit(id: String) -> String {
     return "identity/verification_pages/\(id)/submit"
+}
+private func APIEndpointVerificationPageTestingVerify(id: String) -> String {
+    return "identity/verification_pages/\(id)/testing/verify"
+}
+private func APIEndpointVerificationPageTestingUnverify(id: String) -> String {
+    return "identity/verification_pages/\(id)/testing/unverify"
+}
+private func APIEndpointVerificationPagePhoneOtpGenerate(id: String) -> String {
+    return "identity/verification_pages/\(id)/phone_otp/generate"
+}
+private func APIEndpointVerificationPagePhoneOtpCannotVerify(id: String) -> String {
+    return "identity/verification_pages/\(id)/phone_otp/cannot_verify"
 }

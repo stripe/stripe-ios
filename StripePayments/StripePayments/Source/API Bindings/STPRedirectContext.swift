@@ -74,9 +74,7 @@ public typealias STPRedirectContextPaymentIntentCompletionBlock = (String, Error
 /// @note You must retain this instance for the duration of the redirect flow.
 /// This class dismisses any presented view controller upon deallocation.
 /// See https://stripe.com/docs/sources/best-practices
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
+public class STPRedirectContext: NSObject,
     UIViewControllerTransitioningDelegate, STPSafariViewControllerDismissalDelegate
 {
 
@@ -96,6 +94,15 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     @objc internal var completion: STPErrorBlock
     /// Error parameter for completion block.
     @objc internal var completionError: Error?
+    /// Hook for testing when unsubscribeFromNotifications is called
+    var _unsubscribeFromNotificationsCalled: Bool = false
+    /// Hook for testing when dismissPresentedViewController is called
+    var _dismissPresentedViewControllerCalled: Bool = false
+    /// Hook for testing when dismissPresentedViewController is called
+    var _handleRedirectCompletionWithErrorHook: ((Bool) -> Void)?
+    /// Hook for testing when startSafariAppRedirectFlowCalled is called
+    var _startSafariAppRedirectFlowCalled: Bool = false
+    var application: UIApplicationProtocol = UIApplication.shared
 
     /// Initializer for context from an `STPSource`.
     /// @note You must ensure that the returnURL set up in the created source
@@ -267,7 +274,9 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
             lastKnownSafariVCURL = redirectURL
             let safariVC = SFSafariViewController(url: lastKnownSafariVCURL!)
             safariVC.transitioningDelegate = self
+            #if !canImport(CompositorServices)
             safariVC.delegate = self
+            #endif
             safariVC.modalPresentationStyle = .custom
             self.safariVC = safariVC
             presentingViewController.present(
@@ -285,13 +294,14 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     /// `STPRedirectContextStateNotStarted` state.
     @objc
     public func startSafariAppRedirectFlow() {
+        _startSafariAppRedirectFlowCalled = true
         guard let redirectURL = redirectURL else {
             return
         }
         if state == .notStarted {
             state = .inProgress
             subscribeToURLAndAppActiveNotifications()
-            UIApplication.shared.open(redirectURL, options: [:], completionHandler: nil)
+            application._open(redirectURL, options: [:], completionHandler: nil)
         }
     }
 
@@ -337,6 +347,222 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
         unsubscribeFromNotificationsAndDismissPresentedViewControllers()
     }
 
+    // MARK: - UIViewControllerTransitioningDelegate
+    /// :nodoc:
+    @objc
+    public func presentationController(
+        forPresented presented: UIViewController,
+        presenting: UIViewController?,
+        source: UIViewController
+    ) -> UIPresentationController? {
+        let controller = STPSafariViewControllerPresentationController(
+            presentedViewController: presented,
+            presenting: presenting
+        )
+        controller.dismissalDelegate = self
+        return controller
+    }
+
+    // MARK: - Private methods -
+    func performAppRedirectIfPossible(withCompletion onCompletion: @escaping STPBoolCompletionBlock)
+    {
+
+        let nativeURL = nativeRedirectURL
+        if nativeURL == nil {
+            onCompletion(false)
+            return
+        }
+
+        if let nativeURL = nativeURL {
+            application._open(
+                nativeURL,
+                options: [:],
+                completionHandler: { success in
+                    onCompletion(success)
+                }
+            )
+        }
+    }
+
+    @objc func handleDidBecomeActiveNotification() {
+        // Always `dispatch_async` the `handleDidBecomeActiveNotification` function
+        // call to re-queue the task at the end of the run loop. This is so that the
+        // `handleURLCallback` gets handled first.
+        //
+        // Verified this works even if `handleURLCallback` performs `dispatch_async`
+        // but not completely sure why :)
+        //
+        // When returning from a `startSafariAppRedirectFlow` call, the
+        // `UIApplicationDidBecomeActiveNotification` handler and
+        // `STPURLCallbackHandler` compete. The problem is the
+        // `UIApplicationDidBecomeActiveNotification` handler is always queued
+        // first causing the `STPURLCallbackHandler` to always fail because the
+        // registered callback was already unregistered by the
+        // `UIApplicationDidBecomeActiveNotification` handler. We are patching
+        // this so that the`STPURLCallbackHandler` can succeed and the
+        // `UIApplicationDidBecomeActiveNotification` handler can silently fail.
+        DispatchQueue.main.async(execute: {
+            self.handleRedirectCompletionWithError(
+                nil,
+                shouldDismissViewController: true
+            )
+        })
+    }
+
+    @objc dynamic func handleRedirectCompletionWithError(
+        _ error: Error?,
+        shouldDismissViewController: Bool
+    ) {
+        if state != .inProgress {
+            return
+        }
+
+        state = .completed
+
+        unsubscribeFromNotifications()
+
+        if isSafariVCPresented() {
+            // SafariVC dismissal delegate will manage calling completion handler
+            completionError = error
+        } else {
+            completion(error)
+        }
+
+        if shouldDismissViewController {
+            dismissPresentedViewController()
+        }
+        _handleRedirectCompletionWithErrorHook?(shouldDismissViewController)
+    }
+
+    func subscribeToURLNotifications() {
+        guard let returnURL = returnURL else {
+            return
+        }
+        if !subscribedToURLNotifications {
+            subscribedToURLNotifications = true
+            STPURLCallbackHandler.shared().register(
+                self,
+                for: returnURL
+            )
+        }
+    }
+
+    func subscribeToURLAndAppActiveNotifications() {
+        subscribeToURLNotifications()
+        if !subscribedToAppActiveNotifications {
+            subscribedToAppActiveNotifications = true
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleDidBecomeActiveNotification),
+                name: UIApplication.didBecomeActiveNotification,
+                object: nil
+            )
+        }
+    }
+
+    func unsubscribeFromNotificationsAndDismissPresentedViewControllers() {
+        unsubscribeFromNotifications()
+        dismissPresentedViewController()
+    }
+
+    @objc dynamic func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+        STPURLCallbackHandler.shared().unregisterListener(self)
+        subscribedToURLNotifications = false
+        subscribedToAppActiveNotifications = false
+        _unsubscribeFromNotificationsCalled = true
+    }
+
+    @objc dynamic func dismissPresentedViewController() {
+        if isSafariVCPresented() {
+            safariVC?.presentingViewController?.dismiss(
+                animated: true
+            )
+            safariVC = nil
+        }
+        _dismissPresentedViewControllerCalled = true
+    }
+
+    // MARK: - STPSafariViewControllerDismissalDelegate -
+    func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController) {
+        completion(completionError)
+        completionError = nil
+    }
+
+    func isSafariVCPresented() -> Bool {
+        return safariVC != nil
+    }
+
+    class func nativeRedirectURL(for source: STPSource) -> URL? {
+        var nativeURLString: String?
+        switch source.type {
+        case .alipay:
+            nativeURLString = source.details?["native_url"] as? String
+        case .weChatPay:
+            nativeURLString = source.weChatPayDetails?.weChatAppURL
+        default:
+            // All other sources currently have no native url support
+            break
+        }
+
+        let nativeURL = nativeURLString != nil ? URL(string: nativeURLString ?? "") : nil
+        return nativeURL
+    }
+}
+
+/// :nodoc:
+@_spi(STP) extension STPRedirectContext: STPURLCallbackListener {
+    /// :nodoc:
+    @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
+        stpDispatchToMainThreadIfNecessary({
+            self.handleRedirectCompletionWithError(
+                nil,
+                shouldDismissViewController: true
+            )
+        })
+        // We handle all returned urls that match what we registered for
+        return true
+    }
+}
+
+@objc protocol STPSafariViewControllerDismissalDelegate: NSObjectProtocol {
+    func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController)
+}
+
+typealias STPBoolCompletionBlock = (Bool) -> Void
+// SFSafariViewController sometimes manages its own dismissal and does not currently provide
+// any easier API hooks to detect when the dismissal has completed. This machinery exists to
+// insert ourselves into the View Controller transitioning process and detect when a dismissal
+// transition has completed.
+class STPSafariViewControllerPresentationController: UIPresentationController {
+    weak var dismissalDelegate: STPSafariViewControllerDismissalDelegate?
+
+    override func dismissalTransitionDidEnd(_ completed: Bool) {
+        if presentedViewController is SFSafariViewController {
+            if let presentedViewController = presentedViewController as? SFSafariViewController {
+                dismissalDelegate?.safariViewControllerDidCompleteDismissal(presentedViewController)
+            }
+        }
+        return super.dismissalTransitionDidEnd(completed)
+    }
+}
+
+protocol UIApplicationProtocol {
+    func _open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any], completionHandler: ((Bool) -> Void)?)
+}
+
+extension UIApplication: UIApplicationProtocol {
+    func _open(_ url: URL, options: [OpenExternalURLOptionsKey: Any], completionHandler completion: ((Bool) -> Void)?) {
+        open(url, options: options, completionHandler: completion)
+    }
+}
+
+#if !canImport(CompositorServices)
+extension STPRedirectContext: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate -
     /// :nodoc:
     @objc
@@ -396,207 +622,5 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
             self.lastKnownSafariVCURL = URL
         })
     }
-
-    // MARK: - STPSafariViewControllerDismissalDelegate -
-    func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController) {
-        completion(completionError)
-        completionError = nil
-    }
-
-    // MARK: - UIViewControllerTransitioningDelegate
-    /// :nodoc:
-    @objc
-    public func presentationController(
-        forPresented presented: UIViewController,
-        presenting: UIViewController?,
-        source: UIViewController
-    ) -> UIPresentationController? {
-        let controller = STPSafariViewControllerPresentationController(
-            presentedViewController: presented,
-            presenting: presenting
-        )
-        controller.dismissalDelegate = self
-        return controller
-    }
-
-    // MARK: - Private methods -
-    func performAppRedirectIfPossible(withCompletion onCompletion: @escaping STPBoolCompletionBlock)
-    {
-
-        let nativeURL = nativeRedirectURL
-        if nativeURL == nil {
-            onCompletion(false)
-            return
-        }
-
-        let application = UIApplication.shared
-        if let nativeURL = nativeURL {
-            application.open(
-                nativeURL,
-                options: [:],
-                completionHandler: { success in
-                    onCompletion(success)
-                }
-            )
-        }
-    }
-
-    @objc func handleDidBecomeActiveNotification() {
-        // Always `dispatch_async` the `handleDidBecomeActiveNotification` function
-        // call to re-queue the task at the end of the run loop. This is so that the
-        // `handleURLCallback` gets handled first.
-        //
-        // Verified this works even if `handleURLCallback` performs `dispatch_async`
-        // but not completely sure why :)
-        //
-        // When returning from a `startSafariAppRedirectFlow` call, the
-        // `UIApplicationDidBecomeActiveNotification` handler and
-        // `STPURLCallbackHandler` compete. The problem is the
-        // `UIApplicationDidBecomeActiveNotification` handler is always queued
-        // first causing the `STPURLCallbackHandler` to always fail because the
-        // registered callback was already unregistered by the
-        // `UIApplicationDidBecomeActiveNotification` handler. We are patching
-        // this so that the`STPURLCallbackHandler` can succeed and the
-        // `UIApplicationDidBecomeActiveNotification` handler can silently fail.
-        DispatchQueue.main.async(execute: {
-            self.handleRedirectCompletionWithError(
-                nil,
-                shouldDismissViewController: true
-            )
-        })
-    }
-
-    @objc dynamic func handleRedirectCompletionWithError(
-        _ error: Error?,
-        shouldDismissViewController: Bool
-    ) {
-        if state != .inProgress {
-            return
-        }
-
-        state = .completed
-
-        unsubscribeFromNotifications()
-
-        if isSafariVCPresented() {
-            // SafariVC dismissal delegate will manage calling completion handler
-            completionError = error
-        } else {
-            completion(error)
-        }
-
-        if shouldDismissViewController {
-            dismissPresentedViewController()
-        }
-    }
-
-    func subscribeToURLNotifications() {
-        guard let returnURL = returnURL else {
-            return
-        }
-        if !subscribedToURLNotifications {
-            subscribedToURLNotifications = true
-            STPURLCallbackHandler.shared().register(
-                self,
-                for: returnURL
-            )
-        }
-    }
-
-    func subscribeToURLAndAppActiveNotifications() {
-        subscribeToURLNotifications()
-        if !subscribedToAppActiveNotifications {
-            subscribedToAppActiveNotifications = true
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(handleDidBecomeActiveNotification),
-                name: UIApplication.didBecomeActiveNotification,
-                object: nil
-            )
-        }
-    }
-
-    func unsubscribeFromNotificationsAndDismissPresentedViewControllers() {
-        unsubscribeFromNotifications()
-        dismissPresentedViewController()
-    }
-
-    @objc dynamic func unsubscribeFromNotifications() {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-        STPURLCallbackHandler.shared().unregisterListener(self)
-        subscribedToURLNotifications = false
-        subscribedToAppActiveNotifications = false
-    }
-
-    @objc dynamic func dismissPresentedViewController() {
-        if isSafariVCPresented() {
-            safariVC?.presentingViewController?.dismiss(
-                animated: true
-            )
-            safariVC = nil
-        }
-    }
-
-    func isSafariVCPresented() -> Bool {
-        return safariVC != nil
-    }
-
-    class func nativeRedirectURL(for source: STPSource) -> URL? {
-        var nativeURLString: String?
-        switch source.type {
-        case .alipay:
-            nativeURLString = source.details?["native_url"] as? String
-        case .weChatPay:
-            nativeURLString = source.weChatPayDetails?.weChatAppURL
-        default:
-            // All other sources currently have no native url support
-            break
-        }
-
-        let nativeURL = nativeURLString != nil ? URL(string: nativeURLString ?? "") : nil
-        return nativeURL
-    }
 }
-
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-/// :nodoc:
-@_spi(STP) extension STPRedirectContext: STPURLCallbackListener {
-    /// :nodoc:
-    @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
-        stpDispatchToMainThreadIfNecessary({
-            self.handleRedirectCompletionWithError(
-                nil,
-                shouldDismissViewController: true
-            )
-        })
-        // We handle all returned urls that match what we registered for
-        return true
-    }
-}
-
-@objc protocol STPSafariViewControllerDismissalDelegate: NSObjectProtocol {
-    func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController)
-}
-
-typealias STPBoolCompletionBlock = (Bool) -> Void
-// SFSafariViewController sometimes manages its own dismissal and does not currently provide
-// any easier API hooks to detect when the dismissal has completed. This machinery exists to
-// insert ourselves into the View Controller transitioning process and detect when a dismissal
-// transition has completed.
-class STPSafariViewControllerPresentationController: UIPresentationController {
-    weak var dismissalDelegate: STPSafariViewControllerDismissalDelegate?
-
-    override func dismissalTransitionDidEnd(_ completed: Bool) {
-        if presentedViewController is SFSafariViewController {
-            if let presentedViewController = presentedViewController as? SFSafariViewController {
-                dismissalDelegate?.safariViewControllerDidCompleteDismissal(presentedViewController)
-            }
-        }
-        return super.dismissalTransitionDidEnd(completed)
-    }
-}
+#endif

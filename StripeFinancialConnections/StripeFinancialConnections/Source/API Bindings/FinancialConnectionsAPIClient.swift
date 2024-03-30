@@ -10,7 +10,10 @@ import Foundation
 
 protocol FinancialConnectionsAPIClient {
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize>
+    func synchronize(
+        clientSecret: String,
+        returnURL: String?
+    ) -> Future<FinancialConnectionsSynchronize>
 
     func fetchFinancialConnectionsAccounts(
         clientSecret: String,
@@ -23,11 +26,16 @@ protocol FinancialConnectionsAPIClient {
 
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList>
 
-    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList>
+    func fetchInstitutions(clientSecret: String, query: String) -> Future<FinancialConnectionsInstitutionSearchResultResource>
 
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession>
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
+
+    func retrieveAuthSession(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession>
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
         FinancialConnectionsMixedOAuthParams
@@ -76,6 +84,61 @@ protocol FinancialConnectionsAPIClient {
         eventNamespace: String,
         eventName: String
     ) -> Future<EmptyResponse>
+
+    // MARK: - Networking
+
+    func saveAccountsToLink(
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
+        selectedAccountIds: [String],
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
+
+    func disableNetworking(
+        disabledReason: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
+
+    func fetchNetworkedAccounts(
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsNetworkedAccountsResponse>
+
+    func selectNetworkedAccounts(
+        selectedAccountIds: [String],
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsInstitutionList>
+
+    func markLinkStepUpAuthenticationVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
+
+    func consumerSessionLookup(
+        emailAddress: String,
+        clientSecret: String
+    ) -> Future<LookupConsumerSessionResponse>
+
+    // MARK: - Link API's
+
+    func consumerSessionStartVerification(
+        otpType: String,
+        customEmailType: String?,
+        connectionsMerchantName: String?,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse>
+
+    func consumerSessionConfirmVerification(
+        otpCode: String,
+        otpType: String,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse>
+
+    func markLinkVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -101,7 +164,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
     }
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+    func synchronize(
+        clientSecret: String,
+        returnURL: String?
+    ) -> Future<FinancialConnectionsSynchronize> {
         let parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
             "client_secret": clientSecret,
@@ -109,11 +175,12 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 var mobileParameters: [String: Any] = [
                     "fullscreen": true,
                     "hide_close_button": true,
+                    "forced_authflow_version": "v3",
                 ]
                 mobileParameters["app_return_url"] = returnURL
                 return mobileParameters
             }(),
-            "locale": Locale.current.identifier,
+            "locale": Locale.current.toLanguageTag(),
         ]
         return self.post(
             resource: "financial_connections/sessions/synchronize",
@@ -123,7 +190,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let parameters = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         return self.post(
             resource: APIEndpointConsentAcquired,
@@ -134,7 +201,6 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
         let parameters = [
             "client_secret": clientSecret,
-            "limit": "10",
         ]
         return self.get(
             resource: APIEndpointFeaturedInstitutions,
@@ -142,7 +208,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
     }
 
-    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
+    func fetchInstitutions(clientSecret: String, query: String) -> Future<FinancialConnectionsInstitutionSearchResultResource> {
         let parameters = [
             "client_secret": clientSecret,
             "query": query,
@@ -171,6 +237,17 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "id": authSessionId,
         ]
         return self.post(resource: APIEndpointAuthSessionsCancel, object: body)
+    }
+
+    func retrieveAuthSession(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession> {
+        let body: [String: Any] = [
+            "client_secret": clientSecret,
+            "id": authSessionId,
+        ]
+        return self.post(resource: APIEndpointAuthSessionsRetrieve, parameters: body)
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
@@ -216,9 +293,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         authSessionId: String,
         initialPollDelay: TimeInterval
     ) -> Future<FinancialConnectionsAuthSessionAccounts> {
-        let body = [
+        let body: [String: Any] = [
             "client_secret": clientSecret,
             "id": authSessionId,
+            "expand": ["data.institution"],
         ]
         let pollingHelper = APIPollingHelper(
             apiCall: { [weak self] in
@@ -227,7 +305,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
                     )
                 }
-                return self.post(resource: APIEndpointAuthSessionsAccounts, object: body)
+                return self.post(resource: APIEndpointAuthSessionsAccounts, parameters: body)
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSessionAccounts>.PollTimingOptions(
                 initialPollDelay: initialPollDelay
@@ -245,13 +323,14 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "id": authSessionId,
             "selected_accounts": selectedAccountIds,
+            "expand": ["data.institution"],
         ]
         return self.post(resource: APIEndpointAuthSessionsSelectedAccounts, parameters: body)
     }
 
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let body = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
     }
@@ -261,7 +340,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         terminalError: String?
     ) -> Future<StripeAPI.FinancialConnectionsSession> {
         var body: [String: Any] = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         body["terminal_error"] = terminalError
         return self.post(resource: APIEndpointComplete, parameters: body)
@@ -333,7 +412,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         consumerSessionClientSecret: String? = nil
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         var body: [String: Any] = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         if let accountNumber = accountNumber, let routingNumber = routingNumber {
             body["type"] = "bank_account"
@@ -344,7 +423,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         } else if let linkedAccountId = linkedAccountId {
             body["type"] = "linked_account"
             body["linked_account"] = [
-                "id": linkedAccountId
+                "id": linkedAccountId,
             ]
             body["consumer_session_client_secret"] = consumerSessionClientSecret  // optional for Link
         } else {
@@ -398,6 +477,139 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             parameters: body
         )
     }
+
+    // MARK: - Networking
+
+    func saveAccountsToLink(
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
+        selectedAccountIds: [String],
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        var body: [String: Any] = [
+            "client_secret": clientSecret,
+            "selected_accounts": selectedAccountIds,
+            "expand": ["active_auth_session"],
+        ]
+        body["email_address"] = emailAddress?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        body["phone_number"] = phoneNumber
+        body["country"] = country
+        body["locale"] = (phoneNumber != nil) ? Locale.current.toLanguageTag() : nil
+        body["consumer_session_client_secret"] = consumerSessionClientSecret
+        return post(resource: APIEndpointSaveAccountsToLink, parameters: body)
+    }
+
+    func disableNetworking(
+        disabledReason: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        var body: [String: Any] = [
+            "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
+        ]
+        body["disabled_reason"] = disabledReason
+        return post(resource: APIEndpointDisableNetworking, parameters: body)
+    }
+
+    func markLinkVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
+        ]
+        return post(resource: APIEndpointLinkVerified, parameters: parameters)
+    }
+
+    func fetchNetworkedAccounts(
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsNetworkedAccountsResponse> {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            "consumer_session_client_secret": consumerSessionClientSecret,
+            "expand": ["data.institution"],
+        ]
+        return get(resource: APIEndpointNetworkedAccounts, parameters: parameters)
+    }
+
+    func selectNetworkedAccounts(
+        selectedAccountIds: [String],
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsInstitutionList> {
+        let parameters: [String: Any] = [
+            "selected_accounts": selectedAccountIds,
+            "client_secret": clientSecret,
+            "consumer_session_client_secret": consumerSessionClientSecret,
+        ]
+        return post(resource: APIEndpointShareNetworkedAccount, parameters: parameters)
+    }
+
+    func markLinkStepUpAuthenticationVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
+        ]
+        return post(resource: APIEndpointLinkStepUpAuthenticationVerified, parameters: parameters)
+    }
+
+    func consumerSessionLookup(
+        emailAddress: String,
+        clientSecret: String
+    ) -> Future<LookupConsumerSessionResponse> {
+        let parameters: [String: Any] = [
+            "email_address":
+                emailAddress
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased(),
+            "client_secret": clientSecret,
+        ]
+        return post(resource: APIEndpointConsumerSessions, parameters: parameters)
+    }
+
+    // MARK: - Link API's
+
+    func consumerSessionStartVerification(
+        otpType: String,
+        customEmailType: String?,
+        connectionsMerchantName: String?,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse> {
+        var parameters: [String: Any] = [
+            "request_surface": "ios_connections",
+            "type": otpType,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret,
+            ],
+            "locale": Locale.current.toLanguageTag(),
+        ]
+        parameters["custom_email_type"] = customEmailType
+        parameters["connections_merchant_name"] = connectionsMerchantName
+        return post(resource: "consumers/sessions/start_verification", parameters: parameters)
+    }
+
+    func consumerSessionConfirmVerification(
+        otpCode: String,
+        otpType: String,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse> {
+        let parameters: [String: Any] = [
+            "type": otpType,
+            "code": otpCode,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret,
+            ],
+            "request_surface": "ios_connections",
+        ]
+        return post(resource: "consumers/sessions/confirm_verification", parameters: parameters)
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
@@ -411,8 +623,17 @@ private let APIEndpointFeaturedInstitutions = "connections/featured_institutions
 private let APIEndpointSearchInstitutions = "connections/institutions"
 private let APIEndpointAuthSessions = "connections/auth_sessions"
 private let APIEndpointAuthSessionsCancel = "connections/auth_sessions/cancel"
+private let APIEndpointAuthSessionsRetrieve = "connections/auth_sessions/retrieve"
 private let APIEndpointAuthSessionsOAuthResults = "connections/auth_sessions/oauth_results"
 private let APIEndpointAuthSessionsAuthorized = "connections/auth_sessions/authorized"
 private let APIEndpointAuthSessionsAccounts = "connections/auth_sessions/accounts"
 private let APIEndpointAuthSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
 private let APIEndpointAuthSessionsEvents = "connections/auth_sessions/events"
+// Networking
+private let APIEndpointDisableNetworking = "link_account_sessions/disable_networking"
+private let APIEndpointLinkStepUpAuthenticationVerified = "link_account_sessions/link_step_up_authentication_verified"
+private let APIEndpointLinkVerified = "link_account_sessions/link_verified"
+private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_accounts"
+private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"
+private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
+private let APIEndpointConsumerSessions = "connections/link_account_sessions/consumer_sessions"

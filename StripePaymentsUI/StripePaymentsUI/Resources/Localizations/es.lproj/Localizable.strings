@@ -1,4 +1,4 @@
-"%1$@ account ending in %2$@" = "Cuenta de %1$@ que acaba en %2$@";
+"%1$@ account ending in %2$@" = "Cuenta de %1$@ terminada en %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ terminada en %2$@";
 
@@ -21,6 +21,8 @@
 "Card information" = "Información de la tarjeta";
 
 "Card number" = "Número de tarjeta";
+
+"Confirm your %@" = "Confirma tu %@";
 
 "Invalid data." = "Datos no válidos.";
 

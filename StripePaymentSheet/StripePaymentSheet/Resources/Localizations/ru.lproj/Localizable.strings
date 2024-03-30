@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Добавить";
 
 "Add a card" = "Добавьте карту";
@@ -12,10 +14,6 @@
 
 "Approve payment" = "Подтвердить платеж";
 
-"Are you sure you want to remove this card?" = "Вы уверены, что хотите удалить эту карту?";
-
-"Are you sure you want to remove this linked account?" = "Вы уверены, что хотите удалить этот привязанный счет?";
-
 "Back" = "Назад";
 
 "Bank account" = "Банковский счет";
@@ -24,45 +22,63 @@
 
 "Buy using a UPI ID" = "Купить с помощью идентификатора UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
+
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Перейдя к Amazon Pay, вы тем самым разрешаете компании %@ списывать с вашего счета в Amazon Pay суммы будущих платежей согласно условиям компании.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Перейдя к Klarna, вы тем самым разрешаете компании %1$@ списывать с вашего счета в Klarna суммы будущих платежей согласно условиям компании и Klarna. Это разрешение можно отозвать в любой момент в вашем приложении Klarna или связавшись с %2$@.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
+
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Подтверждая платеж через Revolut Pay, вы тем самым разрешаете компании %@ списывать с вашего счета Revolut Pay суммы будущих платежей согласно условиям.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Продолжая использование, вы тем самым соглашаетесь авторизовать платежи согласно данным <terms>условиям</terms>.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой электронный адрес, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Указав свои платежные данные и подтвердив платеж, вы уполномочиваете (A) %@ и Stripe, нашего поставщика платежных услуг, на отправку вашему банку инструкций на списание средств с вашего счета и (B) ваш банк на списание средств с вашего счета согласно данным инструкциям. Вы имеете право на возврат средств от вашего банка согласно положениям и условиям Вашего соглашения с банком. Подать заявку на возврат средств следует в течение 8 недель с даты списания средств с вашего счета. Ваши права объясняются в выписке, которую вы можете получить в своем банке. Вы даете согласие на получение уведомлений о будущих дебетованиях в срок до 2 дней до их поступления.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой номер телефона, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Сохраняя реквизиты своего банковского счета у %@, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
-"Cancel and pay another way" = "Отменить платеж и оплатить другим способом";
+"CPF/CPNJ" = "CPF/CPNJ";
 
-"Change email" = "Изменить адрес электронной почты";
+"Cancel and pay another way" = "Отменить платеж и оплатить другим способом";
 
 "Choose a payment method" = "Выберите метод оплаты";
 
 "Close card scanner" = "Закрыть сканер карт";
 
-"Code sent" = "Код отправлен";
+"Confirm" = "Подтвердить";
 
-"Default" = "По умолчанию";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Чтобы завершить оформление покупки, подтвердите платеж в своем банковском или платежном приложении в течение %@.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Подтвердите платеж в вашем банковском приложении в течение %@ для оформления покупки.";
+
+"Confirm your CVC" = "Подтвердить код CVV карты";
+
+"Confirm your CVV" = "Подтвердить код CVV карты";
+
+"Contact information" = "Контактные данные";
 
 "EPS Bank" = "Банк EPS";
 
 "Enter address manually" = "Введите адрес вручную";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Введите код, отправленный на адрес %@, для оплаты с помощью Link по умолчанию.";
+"FPX Bank" = "Банк FPX";
 
-"Enter your verification code" = "Введите проверочный код";
-
-"For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Подключиться к Link";
+"Manage your payment methods" = "Управление способами оплаты";
 
-"Log out of Link" = "Выйти из Link";
-
-"Not %@?" = "Не %@?";
+"Name on card" = "Имя и фамилия, указанные на карте";
 
 "Open your UPI app to approve your payment within %@" = "Откройте приложение UPI, чтобы подтвердить платеж, не позднее чем через %@";
 
@@ -72,31 +88,27 @@
 
 "Or pay with a card" = "Или оплатить картой";
 
+"Or use" = "Или используйте";
+
+"Or use a card" = "Или используйте карту";
+
 "Pay %@" = "Оплатить %@";
 
 "Pay another way" = "Оплатить другим способом";
 
-"Pay faster at %@ and thousands of merchants." = "Ускоренная оплата на сайте %@ и тысячах других вебсайтов";
+"Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Оплатить в беспроцентную рассрочку <num_installments/> выплатами по <installment_price/> через <img/>";
 
-"Pay later with Klarna." = "Оплатить позже через систему Klarna.";
-
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
 
-"Pay using" = "Оплатить с помощью";
-
-"Pay with %@" = "Оплатить с помощью %@";
+"Pay with Link" = "Оплатить с помощью Link";
 
 "Pay with your bank account in just a few steps." = "Платите с использованием своего банковского счета в несколько простых действий.";
 
-"Payment" = "Платеж";
-
 "Payment failed" = "Выполнить платеж не удалось";
 
-"Payment methods" = "Способы оплаты";
-
-"Please go back and select another payment method" = "Вернитесь назад и выберите другой способ оплаты.";
+"Please go back and select another payment method" = "Вернитесь назад и выберите другой способ оплаты";
 
 "Point the camera at your card." = "Направьте камеру телефона на карту.";
 
@@ -104,33 +116,25 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Удалить карту %1$@, оканчивающуюся на %2$@";
+"Remove card?" = "Удалить карту?";
 
-"Remove Card" = "Удалить карту";
+"Save" = "Сохранить";
 
-"Remove card" = "Удалить карту";
-
-"Remove linked account" = "Удалить привязанный счет";
-
-"Resend code" = "Послать код вторично";
+"Save a new payment method" = "Сохраните новый способ оплаты";
 
 "Save address" = "Сохранить адрес";
 
 "Save for future payments" = "Сохранить данные для будущих платежей";
 
-"Save my info for secure 1-click checkout" = "Сохранить мои данные для безопасного оформления покупок одним щелчком";
-
 "Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
 
 "Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
 
-"Secure 1⁠-⁠click checkout" = "Безопасное оформление и оплата заказа одним щелчком";
+"Save your bank account in just a few steps." = "Сохраните реквизиты своего банковского счета всего за несколько шагов.";
+
+"Save your info for secure 1-click checkout with Link" = "Сохраните свои данные в Link для безопасного оформления покупок нажатием одной кнопки";
 
 "Select your payment method" = "Выберите способ оплаты";
-
-"Set as default" = "Назначить способом по умолчанию";
-
-"Set as default payment method" = "Назначить способом оплаты по умолчанию";
 
 "Set up" = "Настроить";
 
@@ -138,31 +142,13 @@
 
 "Show menu" = "Показать меню";
 
-"Sign in to your Link account" = "Войти в учетную запись Link";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Через 1-2 рабочих дня Stripe зачислит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями, которые помогут вам закончить сохранение реквизитов своего банковского счета у %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
 
-"Tap to close" = "Коснитесь, чтобы закрыть";
-
-"Tap to expand" = "Коснитесь, чтобы развернуть";
-
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
-"The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
-
-"The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Срок действия этой карты истек. Обновите данные карты или выберите другой способ оплаты.";
-
-"This is your default" = "Это ваше значение по умолчанию";
-
-"Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
-
-"Unavailable for this purchase" = "Не предусмотрено для этой покупки";
-
 "Update card" = "Обновить реквизиты карты";
-
-"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
 
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
 

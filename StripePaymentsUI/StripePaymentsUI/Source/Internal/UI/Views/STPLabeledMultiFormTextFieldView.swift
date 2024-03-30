@@ -20,22 +20,12 @@ class STPLabeledMultiFormTextFieldView: UIView {
         let formLabel = UILabel()
         formLabel.text = formLabelText
         formLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
-        if #available(iOS 13.0, *) {
-            formLabel.textColor = UIColor.secondaryLabel
-        } else {
-            // Fallback on earlier versions
-            formLabel.textColor = UIColor.darkGray
-        }
+        formLabel.textColor = UIColor.secondaryLabel
         formLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(formLabel)
 
         let fieldContainer = STPViewWithSeparator()
-        if #available(iOS 13.0, *) {
-            fieldContainer.backgroundColor = UIColor.systemBackground
-        } else {
-            // Fallback on earlier versions
-            fieldContainer.backgroundColor = UIColor.white
-        }
+        fieldContainer.backgroundColor = UIColor.systemBackground
 
         textField1.translatesAutoresizingMaskIntoConstraints = false
         textField2.translatesAutoresizingMaskIntoConstraints = false

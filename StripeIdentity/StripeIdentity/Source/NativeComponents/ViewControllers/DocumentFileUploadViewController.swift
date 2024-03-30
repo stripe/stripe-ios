@@ -11,7 +11,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringError {
+enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringErrorV2 {
     /// The app cannot access to the photo library on this device
     case imagePickerSourcePhotoLibraryUnavailable
     /// This device does not have a camera available or the app does not have permissions to access it
@@ -28,7 +28,6 @@ enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringError 
     case documentPickerDataNotFormattedAsImage
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     struct Styling {
@@ -40,9 +39,6 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     let imageLoadingQueue = DispatchQueue(label: "com.stripe.identity.document-image-loading")
 
     let instructionListView = InstructionListView()
-
-    /// The document type selected by the user
-    let documentType: DocumentType
 
     /// If the image must come from a live camera feed
     let requireLiveCapture: Bool
@@ -65,6 +61,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         didSet {
             updateUI()
         }
+    }
+
+    // MARK: - UIViewController
+
+    override func viewWillAppear(_ animated: Bool) {
+        self.updateUI()
     }
 
     // MARK: - Coordinators
@@ -91,8 +93,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 onTap: nil
             ),
         ]
-
-        if documentType.hasBack && sheetController?.collectedData.idDocumentFront != nil {
+        if sheetController?.collectedData.idDocumentFront != nil {
             items.append(
                 .init(
                     text: listItemText(for: .back),
@@ -110,7 +111,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             )
         }
 
-        return .init(instructionText: instructionText, listViewModel: .init(items: items))
+        return .init(instructionText: String.Localized.fileUploadInstructionText, listViewModel: .init(items: items))
     }
 
     var buttonState: IdentityFlowView.ViewModel.Button.State {
@@ -127,7 +128,6 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - Init
 
     init(
-        documentType: DocumentType,
         requireLiveCapture: Bool,
         sheetController: VerificationSheetControllerProtocol,
         documentUploader: DocumentUploaderProtocol,
@@ -135,7 +135,6 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             .shared,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
-        self.documentType = documentType
         self.requireLiveCapture = requireLiveCapture
         self.documentUploader = documentUploader
         self.cameraPermissionsManager = cameraPermissionsManager
@@ -166,10 +165,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 headerViewModel: .init(
                     backgroundColor: .systemBackground,
                     headerType: .plain,
-                    titleText: STPLocalizedString(
-                        "File upload",
-                        "Title of identity document file upload screen"
-                    )
+                    titleText: .Localized.upload_your_photo_id
                 ),
                 contentViewModel: .init(
                     view: instructionListView,
@@ -471,14 +467,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
 // MARK: - UINavigationControllerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: UINavigationControllerDelegate {
     // Conformance is required for UIImagePickerController
 }
 
 // MARK: - UIImagePickerControllerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: UIImagePickerControllerDelegate {
     func imagePickerController(
         _ picker: UIImagePickerController,
@@ -517,7 +511,6 @@ extension DocumentFileUploadViewController: UIImagePickerControllerDelegate {
 
 // MARK: - UIDocumentPickerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
     func documentPicker(
         _ controller: UIDocumentPickerViewController,
@@ -573,7 +566,6 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
 
 // MARK: - DocumentUploaderDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: DocumentUploaderDelegate {
     func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol) {
         sheetController?.saveDocumentFrontAndDecideBack(
@@ -601,7 +593,6 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         // Note: Always include the document back, even if the document type

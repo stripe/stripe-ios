@@ -32,10 +32,10 @@ extension AddressSpec {
         let items = stateDict.map({DropdownFieldElement.DropdownItem(pickerDisplayName: $0.value,
                                                                      labelDisplayName: $0.value,
                                                                      accessibilityValue: $0.value,
-                                                                     rawData: $0.key)}).sorted { $0.pickerDisplayName < $1.pickerDisplayName }
+                                                                     rawData: $0.key)}).sorted { $0.pickerDisplayName.string < $1.pickerDisplayName.string }
 
         let defaultIndex = items.firstIndex(where: {$0.rawData.lowercased() == defaultValue?.lowercased()
-             || $0.pickerDisplayName.lowercased() == defaultValue?.lowercased()}) ?? 0
+            || $0.pickerDisplayName.string.lowercased() == defaultValue?.lowercased()}) ?? 0
 
         return DropdownFieldElement(items: items,
                                     defaultIndex: defaultIndex,

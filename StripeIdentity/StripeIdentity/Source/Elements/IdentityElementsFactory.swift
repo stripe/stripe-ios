@@ -25,9 +25,9 @@ struct IdentityElementsFactory {
     let dateFormatter: DateFormatter
 
     static let supportedCountryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
-        "US": .init(type: .US_SSN_LAST4, label: "Last 4 of Social Security number"),
-        "BR": .init(type: .BR_CPF, label: "Individual CPF"),
-        "SG": .init(type: .SG_NRIC_OR_FIN, label: "NRIC or FIN"),
+        "US": .init(type: .US_SSN_LAST4, label: String.Localized.last_4_of_ssn),
+        "BR": .init(type: .BR_CPF, label: String.Localized.individual_cpf),
+        "SG": .init(type: .SG_NRIC_OR_FIN, label: String.Localized.nric_or_fin),
     ]
 
     init(
@@ -49,11 +49,12 @@ struct IdentityElementsFactory {
         return SectionElement(
             title: String.Localized.name,
             elements: [
-                TextFieldElement(configuration: NameConfiguration(type: .given, defaultValue: nil)),
+                TextFieldElement(configuration: NameConfiguration(type: .given, defaultValue: nil), theme: IdentityUI.identityElementsUITheme),
                 TextFieldElement(
-                    configuration: NameConfiguration(type: .family, defaultValue: nil)
+                    configuration: NameConfiguration(type: .family, defaultValue: nil), theme: IdentityUI.identityElementsUITheme
                 ),
-            ]
+            ],
+            theme: IdentityUI.identityElementsUITheme
         )
     }
 
@@ -79,8 +80,9 @@ struct IdentityElementsFactory {
         return  SectionElement(
             title: String.Localized.date_of_birth,
             elements: [
-                TextFieldElement(configuration: TextFieldElement.IdentityDobConfiguration())
-            ]
+                TextFieldElement(configuration: TextFieldElement.IdentityDobConfiguration(), theme: IdentityUI.identityElementsUITheme)
+            ],
+            theme: IdentityUI.identityElementsUITheme
         )
     }
 
@@ -91,7 +93,20 @@ struct IdentityElementsFactory {
             title: String.Localized.address,
             countries: countries,
             locale: locale,
-            addressSpecProvider: addressSpecProvider
+            addressSpecProvider: addressSpecProvider,
+            theme: IdentityUI.identityElementsUITheme
+        )
+    }
+
+    // MARK: Phone
+
+    func makePhoneSection(countries: [String]) -> SectionElement {
+        return SectionElement(
+            title: String.Localized.phoneNumber,
+            elements: [
+                PhoneNumberElement(allowedCountryCodes: countries),
+            ],
+            theme: IdentityUI.identityElementsUITheme
         )
     }
 }

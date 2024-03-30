@@ -19,8 +19,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         institutionSkipAccountSelection: Bool,
         numberOfIneligibleAccounts: Int,
         paymentMethodType: FinancialConnectionsPaymentMethodType,
-        didSelectAnotherBank: @escaping () -> Void,
-        didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
+        didSelectAnotherBank: @escaping () -> Void
     ) {
         super.init(frame: .zero)
         assert(
@@ -47,13 +46,13 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             if let bussinessName = bussinessName {
                 if numberOfIneligibleAccounts == 1 {
                     let localizedString = STPLocalizedString(
-                        "We found 1 %@ account but you can only link %@ to %@.",
+                        "We found 1 %@ account but you can only link %@ accounts to %@.",
                         "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.'"
                     )
                     return String(format: localizedString, institution.name, supportedAccountTypes, bussinessName)
                 } else {
                     let localizedString = STPLocalizedString(
-                        "We found %d %@ accounts but you can only link %@ to %@.",
+                        "We found %d %@ accounts but you can only link %@ accounts to %@.",
                         "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.'"
                     )
                     return String(
@@ -67,13 +66,13 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             } else {
                 if numberOfIneligibleAccounts == 1 {
                     let localizedString = STPLocalizedString(
-                        "We found 1 %@ account but you can only link %@.",
+                        "We found 1 %@ account but you can only link %@ accounts.",
                         "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.'"
                     )
                     return String(format: localizedString, institution.name, supportedAccountTypes)
                 } else {
                     let localizedString = STPLocalizedString(
-                        "We found %d %@ accounts but you can only link %@.",
+                        "We found %d %@ accounts but you can only link %@ accounts.",
                         "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.'"
                     )
                     return String(
@@ -86,18 +85,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             }
         }()
         let subtitleSecondSentence: String = {
-            let allowManualEntry = didSelectEnterBankDetailsManually != nil
-            if allowManualEntry && institutionSkipAccountSelection {
-                return STPLocalizedString(
-                    "Please enter your bank details manually or try selecting another bank account.",
-                    "The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to enter their bank details (account number, routing number) manually or to try selecting another bank account at the same bank."
-                )
-            } else if allowManualEntry {
-                return STPLocalizedString(
-                    "Please enter your bank details manually or try selecting another bank.",
-                    "The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to enter their bank details (account number, routing number) manually or to try selecting another bank."
-                )
-            } else if institutionSkipAccountSelection {
+            if institutionSkipAccountSelection {
                 return STPLocalizedString(
                     "Please try selecting another bank account.",
                     "The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at the same bank."
@@ -110,69 +98,53 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             }
         }()
 
-        let reusableInformationView = ReusableInformationView(
-            iconType: .view(
-                {
-                    let institutionIconView = InstitutionIconView(
-                        size: .large,
-                        showWarning: true
-                    )
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: {
+                    let institutionIconView = InstitutionIconView()
                     institutionIconView.setImageUrl(institution.icon?.default)
                     return institutionIconView
-                }()
-            ),
-            title: {
-                if institutionSkipAccountSelection {
-                    if numberOfIneligibleAccounts == 1 {
-                        return String(
-                            format: STPLocalizedString(
-                                "The account you selected isn't a %@ account",
-                                "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                            ),
-                            supportedAccountTypes
-                        )
-                    } else {
-                        return String(
-                            format: STPLocalizedString(
-                                "The accounts you selected aren't %@ accounts",
-                                "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                            ),
-                            supportedAccountTypes
-                        )
-                    }
-                } else {
-                    return String(
-                        format: STPLocalizedString(
-                            "No %@ account available",
-                            "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                        ),
-                        supportedAccountTypes
-                    )
-                }
-            }(),
-            subtitle: subtitleFirstSentence + " " + subtitleSecondSentence,
-            primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
+                }(),
                 title: {
                     if institutionSkipAccountSelection {
-                        return String.Localized.link_another_account
+                        if numberOfIneligibleAccounts == 1 {
+                            return STPLocalizedString(
+                                    "The account you selected isn't available for payments",
+                                    "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible."
+                                )
+                        } else {
+                            return STPLocalizedString(
+                                    "The accounts you selected aren't available for payments",
+                                    "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
+                                )
+                        }
                     } else {
-                        return String.Localized.select_another_bank
+                        return STPLocalizedString(
+                            "No payment accounts available",
+                            "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
+                        )
                     }
                 }(),
-                action: didSelectAnotherBank
+                subtitle: subtitleFirstSentence + " " + subtitleSecondSentence,
+                contentView: nil
             ),
-            secondaryButtonConfiguration: {
-                if let didSelectEnterBankDetailsManually = didSelectEnterBankDetailsManually {
-                    return ReusableInformationView.ButtonConfiguration(
-                        title: String.Localized.enter_bank_details_manually,
-                        action: didSelectEnterBankDetailsManually
-                    )
-                } else {
-                    return nil
-                }
-            }()
+            footerView: PaneLayoutView.createFooterView(
+                primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                    title: {
+                        if institutionSkipAccountSelection {
+                            return STPLocalizedString(
+                                "Connect another account",
+                                "The title of a button. The button presents the user an option to select another bank account. For example, we may show this button after user failed to link their primary bank account, but maybe the user can try to link their secondary bank account!"
+                            )
+                        } else {
+                            return String.Localized.select_another_bank
+                        }
+                    }(),
+                    action: didSelectAnotherBank
+                )
+            ).footerView
         )
-        addAndPinSubview(reusableInformationView)
+        paneLayoutView.addTo(view: self)
     }
 
     required init?(coder: NSCoder) {
@@ -184,7 +156,6 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
@@ -192,24 +163,27 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
     let institutionSkipAccountSelection: Bool
     let numberOfIneligibleAccounts: Int
     let paymentMethodType: FinancialConnectionsPaymentMethodType
-    let didSelectEnterBankDetailsManually: (() -> Void)?
 
     func makeUIView(context: Context) -> AccountPickerNoAccountEligibleErrorView {
         AccountPickerNoAccountEligibleErrorView(
-            institution: FinancialConnectionsInstitution(id: "123", name: institutionName, url: nil),
+            institution: FinancialConnectionsInstitution(
+                id: "123",
+                name: institutionName,
+                url: nil,
+                icon: nil,
+                logo: nil
+            ),
             bussinessName: businessName,
             institutionSkipAccountSelection: institutionSkipAccountSelection,
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
             paymentMethodType: paymentMethodType,
-            didSelectAnotherBank: {},
-            didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
+            didSelectAnotherBank: {}
         )
     }
 
     func updateUIView(_ uiView: AccountPickerNoAccountEligibleErrorView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
     static var previews: some View {
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
@@ -217,8 +191,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: "The Coca-Cola Company",
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 1,
-            paymentMethodType: .link,
-            didSelectEnterBankDetailsManually: {}
+            paymentMethodType: .link
         )
 
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
@@ -226,8 +199,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: "The Coca-Cola Company",
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 3,
-            paymentMethodType: .usBankAccount,
-            didSelectEnterBankDetailsManually: nil
+            paymentMethodType: .usBankAccount
         )
 
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
@@ -235,8 +207,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: nil,
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 1,
-            paymentMethodType: .link,
-            didSelectEnterBankDetailsManually: {}
+            paymentMethodType: .link
         )
 
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
@@ -244,8 +215,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: nil,
             institutionSkipAccountSelection: true,
             numberOfIneligibleAccounts: 3,
-            paymentMethodType: .unparsable,
-            didSelectEnterBankDetailsManually: {}
+            paymentMethodType: .unparsable
         )
     }
 }

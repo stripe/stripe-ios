@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Debit Terus BECS AU";
+"AU Direct Debit" = "Debit Terus AU";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Debit Terus Bacs";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "Bank";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "Kad";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "Link";
 
@@ -39,6 +45,8 @@
 "SEPA Debit" = "Debit SEPA";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Masa tamat ketika mensahihkan kaedah pembayaran anda -- cuba lagi";
 

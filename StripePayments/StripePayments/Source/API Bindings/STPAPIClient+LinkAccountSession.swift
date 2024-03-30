@@ -8,17 +8,23 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-typealias STPLinkAccountSessionBlock = (LinkAccountSession?, Error?) -> Void
-typealias STPLinkAccountSessionsAttachPaymentIntentBlock = (STPPaymentIntent?, Error?) -> Void
-typealias STPLinkAccountSessionsAttachSetupIntentBlock = (STPSetupIntent?, Error?) -> Void
+@_spi(STP)
+public typealias STPLinkAccountSessionBlock = (LinkAccountSession?, Error?) -> Void
+@_spi(STP)
+public typealias STPLinkAccountSessionsAttachPaymentIntentBlock = (STPPaymentIntent?, Error?) -> Void
+@_spi(STP)
+public typealias STPLinkAccountSessionsAttachSetupIntentBlock = (STPSetupIntent?, Error?) -> Void
 
-extension STPAPIClient {
+@_spi(STP)
+public extension STPAPIClient {
+
     func createLinkAccountSession(
         setupIntentID: String,
         clientSecret: String,
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        additionalParameteres: [String: Any] = [:],
         completion: @escaping STPLinkAccountSessionBlock
     ) {
         let endpoint: String = "setup_intents/\(setupIntentID)/link_account_sessions"
@@ -28,6 +34,7 @@ extension STPAPIClient {
             paymentMethodType: paymentMethodType,
             customerName: customerName,
             customerEmailAddress: customerEmailAddress,
+            additionalParameteres: additionalParameteres,
             completion: completion
         )
     }
@@ -38,6 +45,7 @@ extension STPAPIClient {
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        additionalParameteres: [String: Any] = [:],
         completion: @escaping STPLinkAccountSessionBlock
     ) {
         let endpoint: String = "payment_intents/\(paymentIntentID)/link_account_sessions"
@@ -47,9 +55,33 @@ extension STPAPIClient {
             paymentMethodType: paymentMethodType,
             customerName: customerName,
             customerEmailAddress: customerEmailAddress,
+            additionalParameteres: additionalParameteres,
             completion: completion
         )
+    }
 
+    func createLinkAccountSessionForDeferredIntent(
+        sessionId: String,
+        amount: Int?,
+        currency: String?,
+        onBehalfOf: String?,
+        additionalParameters: [String: Any] = [:],
+        completion: @escaping STPLinkAccountSessionBlock
+    ) {
+        let endpoint: String = "connections/link_account_sessions_for_deferred_payment"
+        var parameters = additionalParameters
+        parameters["unique_id"] = sessionId
+        parameters["verification_method"] = STPPaymentMethodOptions.USBankAccount.VerificationMethod.automatic.rawValue // Hardcoded b/c the merchant can't choose in the deferred flow
+        parameters["amount"] = amount
+        parameters["currency"] = currency
+        parameters["on_behalf_of"] = onBehalfOf
+        APIRequest<LinkAccountSession>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { linkAccountSession, _, error in
+            completion(linkAccountSession, error)
+        }
     }
 
     // MARK: - Helper
@@ -59,11 +91,12 @@ extension STPAPIClient {
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        additionalParameteres: [String: Any],
         completion: @escaping STPLinkAccountSessionBlock
     ) {
-        var parameters: [String: Any] = [
-            "client_secret": clientSecret
-        ]
+        var parameters = additionalParameteres
+        parameters["client_secret"] = clientSecret
+
         if let paymentMethodType = STPPaymentMethod.string(from: paymentMethodType) {
             parameters["payment_method_data[type]"] = paymentMethodType
         }

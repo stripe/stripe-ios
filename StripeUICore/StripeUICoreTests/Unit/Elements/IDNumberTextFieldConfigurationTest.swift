@@ -57,9 +57,9 @@ final class IDNumberTextFieldConfigurationTest: XCTestCase {
         XCTAssertEqual(config.makeDisplayText(for: "12345678901").string, "123.456.789-01")
 
         // Format as CNPJ if > 11 characters
-        XCTAssertEqual(config.makeDisplayText(for: "123456789012").string, "123.456.789/012")
-        XCTAssertEqual(config.makeDisplayText(for: "12345678901234").string, "123.456.789/012-34")
-        XCTAssertEqual(config.makeDisplayText(for: "12345678901234567").string, "123.456.789/012-34")
+        XCTAssertEqual(config.makeDisplayText(for: "123456789012").string, "12.345.678/9012")
+        XCTAssertEqual(config.makeDisplayText(for: "12345678901234").string, "12.345.678/9012-34")
+        XCTAssertEqual(config.makeDisplayText(for: "12345678901234567").string, "12.345.678/9012-34")
     }
 }
 

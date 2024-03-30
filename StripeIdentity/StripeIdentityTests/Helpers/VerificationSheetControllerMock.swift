@@ -15,6 +15,17 @@ import XCTest
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
+    func loadAndUpdateUI(skipTestMode: Bool) {
+        self.skipTestMode = skipTestMode
+    }
+
+    func overrideTestModeReturnValue(result: StripeIdentity.IdentityVerificationSheet.VerificationFlowResult) {
+        self.testModeReturnResult = result
+    }
+
+    func clearCollectedData(field: StripeCore.StripeAPI.VerificationPageFieldType) {
+        // no-op
+    }
     var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
 
     var apiClient: IdentityAPIClient
@@ -26,6 +37,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     weak var delegate: VerificationSheetControllerDelegate?
 
     var needBack: Bool = true
+
+    var testModeReturnResult: StripeIdentity.IdentityVerificationSheet.VerificationFlowResult?
+
+    var skipTestMode: Bool?
 
     private(set) var didLoadAndUpdateUI = false
 
@@ -41,6 +56,16 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
+    var transitionedToSelfieCapture: Bool = false
+    var transitionedToDocumentCapture: Bool = false
+
+    var completeOption: CompleteOptionView.CompleteOption?
+
+    var generatePhonOtpSuccessCallback: ((StripeCore.StripeAPI.VerificationPageData) -> Void)?
+    var cannotVerifyPhoneOtpCalled: Bool = false
+
+    var saveOtpAndMaybeTransitionCompletion: (() -> Void)?
+    var saveOtpAndMaybeTransitionInvalidOtp: (() -> Void)?
 
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
@@ -109,6 +134,17 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         }
     }
 
+    func forceDocumentFrontAndDecideBack(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, onCompletion: @escaping (Bool) -> Void) {
+        // no-op
+    }
+
+    func forceDocumentBackAndTransition(
+        from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName,
+        completion: @escaping () -> Void
+    ) {
+        // no-op
+    }
+
     func saveSelfieFileDataAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
@@ -122,12 +158,44 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         }
     }
 
+    func saveOtpAndMaybeTransition(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, otp otpValue: String, completion: @escaping () -> Void, invalidOtp: @escaping () -> Void) {
+        saveOtpAndMaybeTransitionCompletion = completion
+        saveOtpAndMaybeTransitionInvalidOtp = invalidOtp
+
+    }
+
+    func verifyAndTransition(simulateDelay: Bool, completion: @escaping () -> Void) {
+        testModeReturnResult = .flowCompleted
+        completeOption = simulateDelay ? .successAsync : .success
+    }
+
+    func unverifyAndTransition(simulateDelay: Bool, completion: @escaping () -> Void) {
+        testModeReturnResult = .flowCompleted
+        completeOption = simulateDelay ? .failureAsync : .failure
+    }
+
+    func generatePhoneOtp(using successCallback: @escaping (StripeCore.StripeAPI.VerificationPageData) -> Void) {
+        generatePhonOtpSuccessCallback = successCallback
+    }
+
+    func sendCannotVerifyPhoneOtpAndTransition(completion: @escaping () -> Void) {
+        self.cannotVerifyPhoneOtpCalled = true
+    }
+
     func transitionToCountryNotListed(missingType: StripeIdentity.IndividualFormElement.MissingType) {
         self.missingType = missingType
     }
 
     func transitionToIndividual() {
         self.transitionedToIndividual = true
+    }
+
+    func transitionToSelfieCapture() {
+        self.transitionedToSelfieCapture = true
+    }
+
+    func transitionToDocumentCapture() {
+        self.transitionedToDocumentCapture = true
     }
 
 }

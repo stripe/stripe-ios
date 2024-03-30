@@ -40,7 +40,7 @@ info "Executing carthage bootstrap..."
 
 cd "${script_dir}" || die "Executing \`cd\` failed"
 
-carthage bootstrap --platform ios --configuration Debug --no-use-binaries --cache-builds --use-xcframeworks
+carthage bootstrap --platform ios --no-use-binaries --cache-builds --use-xcframeworks
 
 carthage_exit_code="$?"
 

@@ -20,11 +20,17 @@ Section header for address fields */
 /* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "Billing address is same as shipping";
 
+/* Label for BLIK code number field on form */
+"BLIK code" = "BLIK code";
+
 /* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB number";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "Cancel";
+
+/* Label an input field to update card brand */
+"Card brand" = "Card brand";
 
 /* Caption for City field on address form */
 "City" = "City";
@@ -59,6 +65,9 @@ Label of an address field */
 
 /* Label of an address field */
 "Do Si" = "Do Si";
+
+/* Used as the title for prompting the user if they want to close the sheet */
+"Do you want to close this form?" = "Do you want to close this form?";
 
 /* Done button title */
 "Done" = "Done";
@@ -120,6 +129,9 @@ Label of an address field */
 /* Caption for Phone field on address form */
 "Phone" = "Phone";
 
+/* Caption for Phone number field on address form */
+"Phone number" = "Phone number";
+
 /* Label of an address field
 Short string for postal code (text used in non-US countries) */
 "Postal code" = "Postal code";
@@ -140,8 +152,17 @@ Label of an address field */
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 "Remove bank account ending in %@" = "Remove bank account ending in %@";
 
+/* Label on a button for removing a card */
+"Remove card" = "Remove card";
+
 /* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "Search";
+
+/* Message when a user is selecting a card brand in a dropdown */
+"Select card brand (optional)" = "Select card brand (optional)";
+
+/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+"Sort code" = "Sort code";
 
 /* Caption for State field on address form (only countries that use state , like United States)
 Label of an address field */
@@ -162,6 +183,9 @@ Label of an address field */
 /* An error message. */
 "The ID number you entered is incomplete." = "The ID number you entered is incomplete.";
 
+/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+"The sort code you entered is invalid." = "The sort code you entered is invalid.";
+
 /* Label of an address field */
 "Town or city" = "Town or city";
 
@@ -174,8 +198,17 @@ Label of an address field */
 /* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Use rotor to access links";
 
+/* Error message when BLIK code is incomplete */
+"Your BLIK code is incomplete." = "Your BLIK code is incomplete.";
+
+/* Error message when BLIK code is invalid */
+"Your BLIK code is invalid." = "Your BLIK code is invalid.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";
+
+/* Used as the title for prompting the user if they want to close the sheet */
+"Your payment information will not be saved." = "Your payment information will not be saved.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Your postal code is incomplete.";

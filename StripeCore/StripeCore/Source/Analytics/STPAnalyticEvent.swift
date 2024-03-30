@@ -18,6 +18,7 @@ import Foundation
     case sourceCreation = "stripeios.source_creationn"
 
     case paymentMethodCreation = "stripeios.payment_method_creation"
+    case paymentMethodUpdate = "stripeios.payment_method_update"
     case paymentMethodIntentCreation = "stripeios.payment_intent_confirmation"
     case setupIntentConfirmationAttempt = "stripeios.setup_intent_confirmation"
 
@@ -42,6 +43,9 @@ import Foundation
     // MARK: - Card Scanning
     case cardScanSucceeded = "stripeios.cardscan_success"
     case cardScanCancelled = "stripeios.cardscan_cancel"
+
+    // MARK: - Card Element Config
+    case cardElementConfigLoadFailure = "stripeios.card_element_config_load_failure"
 
     // MARK: - Identity Verification Flow
     case verificationSheetPresented = "stripeios.idprod.verification_sheet.presented"
@@ -110,23 +114,51 @@ import Foundation
     case linkSignupStart = "link.signup.start"
     case linkSignupComplete = "link.signup.complete"
     case linkSignupFailure = "link.signup.failure"
+    case linkCreatePaymentDetailsFailure = "link.payment.failure.create"
+    case linkSharePaymentDetailsFailure = "link.payment.failure.share"
+    case linkSignupFailureInvalidSessionState = "link.signup.failure.invalidSessionState"
+    case linkSignupFailureAccountExists = "link.signup.failure.account_exists"
 
-    // MARK: - Link 2FA
-    case link2FAStart = "link.2fa.start"
-    case link2FAStartFailure = "link.2fa.start_failure"
-    case link2FAComplete = "link.2fa.complete"
-    case link2FACancel = "link.2fa.cancel"
-    case link2FAFailure = "link.2fa.failure"
+    // MARK: - Link Popup
+    case linkPopupShow = "link.popup.show"
+    case linkPopupSuccess = "link.popup.success"
+    case linkPopupCancel = "link.popup.cancel"
+    case linkPopupSkipped = "link.popup.skipped"
+    case linkPopupError = "link.popup.error"
+    case linkPopupLogout = "link.popup.logout"
 
     // MARK: - Link Misc
+    case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"
 
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"
+    case luxeUnknownActionsFailure = "luxe_unknown_actions_failure"
+    case luxeSpecSerializeFailure = "luxe_spec_serialize_failure"
 
     case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
+
+    // MARK: - Customer Sheet
+    case cs_add_payment_method_screen_presented = "cs_add_payment_method_screen_presented"
+    case cs_select_payment_method_screen_presented = "cs_select_payment_method_screen_presented"
+
+    case cs_select_payment_method_screen_confirmed_savedpm_success = "cs_select_payment_method_screen_confirmed_savedpm_success"
+    case cs_select_payment_method_screen_confirmed_savedpm_failure = "cs_select_payment_method_screen_confirmed_savedpm_failure"
+
+    case cs_select_payment_method_screen_edit_tapped = "cs_select_payment_method_screen_edit_tapped"
+    case cs_select_payment_method_screen_done_tapped = "cs_select_payment_method_screen_done_tapped"
+
+    case cs_select_payment_method_screen_removepm_success = "cs_select_payment_method_screen_removepm_success"
+    case cs_select_payment_method_screen_removepm_failure = "cs_select_payment_method_screen_removepm_failure"
+
+    case cs_add_payment_method_via_setupintent_success = "cs_add_payment_method_via_setup_intent_success"
+    case cs_add_payment_method_via_setupintent_canceled = "cs_add_payment_method_via_setupintent_canceled"
+    case cs_add_payment_method_via_setupintent_failure = "cs_add_payment_method_via_setup_intent_failure"
+
+    case cs_add_payment_method_via_createAttach_success = "cs_add_payment_method_via_createAttach_success"
+    case cs_add_payment_method_via_createAttach_failure = "cs_add_payment_method_via_createAttach_failure"
 
     // MARK: - Address Element
     case addressShow = "mc_address_show"
@@ -136,4 +168,66 @@ import Foundation
     case paymentMethodMessagingViewLoadSucceeded = "pmmv_load_succeeded"
     case paymentMethodMessagingViewLoadFailed = "pmmv_load_failed"
     case paymentMethodMessagingViewTapped = "pmmv_tapped"
+
+    // MARK: - PaymentSheet Force Success
+    case paymentSheetForceSuccess = "mc_force_success"
+
+    // MARK: - PaymentSheet initialization
+    case paymentSheetLoadStarted = "mc_load_started"
+    case paymentSheetLoadSucceeded = "mc_load_succeeded"
+    case paymentSheetLoadFailed = "mc_load_failed"
+
+    // MARK: - PaymentSheet dismiss
+    case paymentSheetDismissed = "mc_dismiss"
+
+    // MARK: - PaymentSheet checkout
+    case paymentSheetCarouselPaymentMethodTapped = "mc_carousel_payment_method_tapped"
+    case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
+    case paymentSheetFormShown = "mc_form_shown"
+    case paymentSheetFormInteracted = "mc_form_interacted"
+    case paymentSheetCardNumberCompleted = "mc_card_number_completed"
+
+    // MARK: - v1/elements/session
+    case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
+    case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
+    case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"
+
+    // MARK: - PaymentSheet card brand choice
+    case paymentSheetDisplayCardBrandDropdownIndicator = "mc_display_cbc_dropdown"
+    case paymentSheetOpenCardBrandDropdown = "mc_open_cbc_dropdown"
+    case paymentSheetCloseCardBrandDropDown = "mc_close_cbc_dropdown"
+    case paymentSheetOpenCardBrandEditScreen = "mc_open_edit_screen"
+    case paymentSheetUpdateCardBrand = "mc_update_card"
+    case paymentSheetUpdateCardBrandFailed = "mc_update_card_failed"
+    case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
+
+    // MARK: - CustomerSheet card brand choice
+    case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
+    case customerSheetOpenCardBrandDropdown = "cs_open_cbc_dropdown"
+    case customerSheetCloseCardBrandDropDown = "cs_close_cbc_dropdown"
+    case customerSheetOpenCardBrandEditScreen = "cs_open_edit_screen"
+    case customerSheetUpdateCardBrand = "cs_update_card"
+    case customerSheetUpdateCardBrandFailed = "cs_update_card_failed"
+    case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
+
+    // MARK: - Basic Integration
+    // Loading
+    case biLoadStarted = "bi_load_started"
+    case biLoadSucceeded = "bi_load_succeeded"
+    case biLoadFailed = "bi_load_failed"
+
+    // Confirmation
+    case biPaymentCompleteNewPMSuccess = "bi_complete_payment_newpm_success"
+    case biPaymentCompleteSavedPMSuccess = "bi_complete_payment_savedpm_success"
+    case biPaymentCompleteApplePaySuccess = "bi_complete_payment_applepay_success"
+    case biPaymentCompleteNewPMFailure = "bi_complete_payment_newpm_failure"
+    case biPaymentCompleteSavedPMFailure = "bi_complete_payment_savedpm_failure"
+    case biPaymentCompleteApplePayFailure = "bi_complete_payment_applepay_failure"
+
+    // UI events
+    case biOptionsShown = "bi_options_shown"
+    case biFormShown = "bi_form_shown"
+    case biFormInteracted = "bi_form_interacted"
+    case biCardNumberCompleted = "bi_card_number_completed"
+    case biDoneButtonTapped = "bi_done_button_tapped"
 }

@@ -71,7 +71,7 @@ import Foundation
             .BR_CPF_CNPJ where text.count <= 11:
             return "###.###.###-##"
         case .BR_CPF_CNPJ:
-            return "###.###.###/###-##"
+            return "##.###.###/####-##"
         case .US_SSN_LAST4:
             return "••• - •• - ####"
         case .none:

@@ -8,6 +8,7 @@
 
 import CoreImage
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
@@ -16,19 +17,13 @@ import iOSSnapshotTestCase
 //
 // Solid lines represent the region of interest (ROI) and dotted lines
 // represent the expected crop area that includes padding.
-final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
+final class CGImage_StripeIdentitySnapshotTest: STPSnapshotTestCase {
 
     // Image dimensions are 3024 × 4032
     let image: CGImage = SnapshotTestMockData.cgImage(image: .cgImage)
 
     // Pixel padding = 0.08 * 4032 = 332.56
     let padding: CGFloat = 0.08
-
-    override func setUp() {
-        super.setUp()
-
-        //        recordMode = true
-    }
 
     // Tests the case that the region of interest + padding are complete contained
     // inside the image bounds:

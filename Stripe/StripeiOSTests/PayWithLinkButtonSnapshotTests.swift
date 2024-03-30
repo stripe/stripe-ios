@@ -16,15 +16,10 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
+class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
 
     private let emailAddress = "customer@example.com"
     private let longEmailAddress = "long.customer.name@example.com"
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     func testDefault() {
         let sut = makeSUT()
@@ -90,17 +85,13 @@ extension PayWithLinkButtonSnapshotTests {
 
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
-        let redactedPhoneNumber: String?
         let isRegistered: Bool
-        let isLoggedIn: Bool
     }
 
     fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
         return LinkAccountStub(
             email: email,
-            redactedPhoneNumber: "+1********55",
-            isRegistered: isRegistered,
-            isLoggedIn: false
+            isRegistered: isRegistered
         )
     }
 

@@ -23,83 +23,7 @@ enum ConfirmationBehavior {
     case threeDS2
 }
 
-class IntegrationTesterUITests: XCTestCase {
-    var app: XCUIApplication!
-    var appLaunched = false
-
-    override func setUpWithError() throws {
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        app = XCUIApplication()
-        app.launchEnvironment = ["UITesting": "true"]
-        if !appLaunched {
-            app.launch()
-            appLaunched = true
-        }
-        popToMainMenu()
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func popToMainMenu() {
-        let menuButton = app.buttons["Integrations"]
-        if menuButton.exists {
-            menuButton.tap()
-        }
-    }
-
-    func fillCardData(_ app: XCUIApplication, number: String = "4242424242424242") throws {
-        let numberField = app.textFields["card number"]
-        XCTAssertTrue(numberField.waitForExistence(timeout: 10.0))
-        numberField.tap()
-        numberField.typeText(number)
-        let expField = app.textFields["expiration date"]
-        expField.typeText("1228")
-        if STPCardValidator.brand(forNumber: number) == .amex {
-            let cvcField = app.textFields["CVV"]
-            cvcField.typeText("1234")
-        } else {
-            let cvcField = app.textFields["CVC"]
-            cvcField.typeText("123")
-        }
-        let postalField = app.textFields["ZIP"]
-        postalField.typeText("12345")
-    }
-
-    func testAuthentication(cardNumber: String, expectedResult: String = "Payment complete!", confirmationBehavior: ConfirmationBehavior = .none) {
-        print("Testing \(cardNumber)")
-        self.popToMainMenu()
-        let tablesQuery = app.collectionViews
-
-        let cardExampleElement = tablesQuery.cells.buttons["Card"]
-        cardExampleElement.tap()
-        try! fillCardData(app, number: cardNumber)
-
-        let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
-        buyButton.forceTapElement()
-
-        switch confirmationBehavior {
-        case .none: break
-        case .threeDS1:
-            let webViewsQuery = app.webViews
-            let completeAuth = webViewsQuery.buttons["COMPLETE AUTHENTICATION"]
-            XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
-            completeAuth.forceTapElement()
-        case .threeDS2:
-            let completeAuth = app.scrollViews.otherElements.staticTexts["Complete Authentication"]
-            XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
-            completeAuth.tap()
-        }
-
-        let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
-        XCTAssertNotNil(statusView.label.range(of: expectedResult))
-    }
-
+class IntegrationTesterUICardEntryTests: IntegrationTesterUITests {
     func testNoAuthenticationCustomCard() throws {
         let cardNumbers = [
             // Main test cards
@@ -127,11 +51,9 @@ class IntegrationTesterUITests: XCTestCase {
             testAuthentication(cardNumber: card)
         }
     }
+}
 
-    func testStandardCustomCard3DS1() throws {
-        testAuthentication(cardNumber: "4000000000003063", confirmationBehavior: .threeDS1)
-    }
-
+class IntegrationTesterUICardTests: IntegrationTesterUITests {
     func testStandardCustomCard3DS2() throws {
         testAuthentication(cardNumber: "4000000000003220", confirmationBehavior: .threeDS2)
     }
@@ -139,6 +61,9 @@ class IntegrationTesterUITests: XCTestCase {
     func testDeclinedCard() throws {
         testAuthentication(cardNumber: "4000000000000002", expectedResult: "declined")
     }
+}
+
+class IntegrationTesterUIPMTests: IntegrationTesterUITests {
 
     func testSetupIntents() throws {
         self.popToMainMenu()
@@ -294,6 +219,88 @@ class IntegrationTesterUITests: XCTestCase {
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
+    }
+}
+
+class IntegrationTesterUITests: XCTestCase {
+    var app: XCUIApplication!
+    var appLaunched = false
+
+    override func setUpWithError() throws {
+        // In UI tests it is usually best to stop immediately when a failure occurs.
+        continueAfterFailure = false
+
+        app = XCUIApplication()
+        app.launchEnvironment = ["UITesting": "true"]
+        if !appLaunched {
+            app.launch()
+            appLaunched = true
+        }
+        popToMainMenu()
+    }
+
+    override func tearDownWithError() throws {
+        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    }
+
+    func testNull() throws {
+        // Null test to appease XCTestCase
+    }
+
+    func popToMainMenu() {
+        let menuButton = app.buttons["Integrations"]
+        if menuButton.exists {
+            menuButton.tap()
+        }
+    }
+
+    func fillCardData(_ app: XCUIApplication, number: String = "4242424242424242") throws {
+        let numberField = app.textFields["card number"]
+        XCTAssertTrue(numberField.waitForExistence(timeout: 10.0))
+        numberField.tap()
+        numberField.typeText(number)
+        let expField = app.textFields["expiration date"]
+        expField.typeText("1228")
+        if STPCardValidator.brand(forNumber: number) == .amex {
+            let cvcField = app.textFields["CVV"]
+            cvcField.typeText("1234")
+        } else {
+            let cvcField = app.textFields["CVC"]
+            cvcField.typeText("123")
+        }
+        let postalField = app.textFields["ZIP"]
+        postalField.typeText("12345")
+    }
+
+    func testAuthentication(cardNumber: String, expectedResult: String = "Payment complete!", confirmationBehavior: ConfirmationBehavior = .none) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
+        buyButton.forceTapElement()
+
+        switch confirmationBehavior {
+        case .none: break
+        case .threeDS1:
+            let webViewsQuery = app.webViews
+            let completeAuth = webViewsQuery.buttons["COMPLETE AUTHENTICATION"]
+            XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+            completeAuth.forceTapElement()
+        case .threeDS2:
+            let completeAuth = app.scrollViews.otherElements.staticTexts["Complete Authentication"]
+            XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+            completeAuth.tap()
+        }
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: expectedResult))
     }
 
     func testNoInputIntegrationMethod(_ integrationMethod: IntegrationMethod, shouldConfirm: Bool) {

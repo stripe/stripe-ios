@@ -13,6 +13,7 @@
 
 #import "STDSIPAddress.h"
 #import "STDSSynchronousLocationManager.h"
+#import "STDSVisionSupport.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -213,7 +214,12 @@ static const NSString * const kParameterNilCode = @"RE04";
     return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C008"
                                                       permissionCheck:nil
                                                            valueCheck:^id _Nullable{
-                                                               CGRect boundsInPixels = [UIScreen mainScreen].nativeBounds;
+#if STP_TARGET_VISION
+        // Offer something reasonable
+        CGRect boundsInPixels = CGRectMake(0, 0, 512, 342);
+#else
+        CGRect boundsInPixels = [UIScreen mainScreen].nativeBounds;
+#endif
                                                                return [NSString stringWithFormat:@"%ldx%ld", (long)boundsInPixels.size.width, (long)boundsInPixels.size.height];
 
                                                            }];
@@ -224,7 +230,7 @@ static const NSString * const kParameterNilCode = @"RE04";
     return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C009"
                                                       permissionCheck:nil
                                                            valueCheck:^id _Nullable{
-                                                               return [UIDevice currentDevice].name;
+                                                               return [UIDevice currentDevice].localizedModel;
                                                            }];
 }
 

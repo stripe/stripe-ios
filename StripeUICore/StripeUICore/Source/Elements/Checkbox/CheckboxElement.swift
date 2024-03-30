@@ -24,7 +24,7 @@ import UIKit
     let isSelectedByDefault: Bool
     let theme: ElementsUITheme
     var didToggle: (Bool) -> Void
-    var isSelected: Bool {
+    @_spi(STP) public var isSelected: Bool {
         get {
             return checkboxButton.isSelected
         }

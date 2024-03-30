@@ -10,7 +10,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
-class AddressSectionElementSnapshotTest: FBSnapshotTestCase {
+class AddressSectionElementSnapshotTest: STPSnapshotTestCase {
     let dummyAddressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -18,11 +18,6 @@ class AddressSectionElementSnapshotTest: FBSnapshotTestCase {
         ]
         return specProvider
     }()
-
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
 
     func test_billing_address_same_as_shipping() throws {
         let sut = AddressSectionElement(

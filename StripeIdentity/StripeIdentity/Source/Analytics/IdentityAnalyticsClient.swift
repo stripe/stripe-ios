@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-enum IdentityAnalyticsClientError: AnalyticLoggableError {
+enum IdentityAnalyticsClientError: AnalyticLoggableErrorV2 {
     /// `startTrackingTimeToScreen` was called twice in a row without calling
     /// `stopTrackingTimeToScreenAndLogIfNeeded`
     case timeToScreenAlreadyStarted(
@@ -20,7 +20,7 @@ enum IdentityAnalyticsClientError: AnalyticLoggableError {
 
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any] = [
-            "domain": (self as NSError).domain
+            "domain": (self as NSError).domain,
         ]
         switch self {
         case .timeToScreenAlreadyStarted(let alreadyStartedForScreen, let requestedForScreen):
@@ -63,15 +63,18 @@ final class IdentityAnalyticsClient {
 
     enum ScreenName: String {
         case biometricConsent = "consent"
-        case documentTypeSelect = "document_select"
         case documentCapture = "live_capture"
         case documentFileUpload = "file_upload"
+        case documentWarmup = "document_warmup"
         case selfieCapture = "selfie"
+        case selfieWarmup = "selfie_warmup"
         case success = "confirmation"
         case individual = "individual"
+        case phoneOtp = "phone_otp"
         case individual_welcome = "individual_welcome"
         case error = "error"
         case countryNotListed = "country_not_listed"
+        case debug = "debug"
     }
 
     /// Name of the scanner logged in scanning performance events
@@ -102,6 +105,9 @@ final class IdentityAnalyticsClient {
     /// The last screen transitioned to for `timeToScreen` analytic
     private(set) var timeToScreenFromScreen: ScreenName?
 
+    private(set) var blurScoreFront: Float?
+    private(set) var blurScoreBack: Float?
+
     init(
         verificationSessionId: String,
         analyticsClient: AnalyticsClientV2Protocol = IdentityAnalyticsClient.sharedAnalyticsClient
@@ -125,6 +131,14 @@ final class IdentityAnalyticsClient {
     /// Increments the number of times a scan was initiated for a selfie
     func countDidStartSelfieScan() {
         numSelfieScanAttempts += 1
+    }
+
+    func updateBlurScore(_ blurScore: Float, for side: DocumentSide) {
+        if side == .front {
+            blurScoreFront = blurScore
+        } else {
+            blurScoreBack = blurScore
+        }
     }
 
     private func logAnalytic(
@@ -181,9 +195,6 @@ final class IdentityAnalyticsClient {
     ) -> [String: Any] {
         var metadata: [String: Any] = [:]
 
-        if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
         if let verificationPage = try? sheetController.verificationPageResponse?.get() {
             metadata["require_selfie"] = verificationPage.requirements.missing.contains(.face)
             metadata["from_fallback_url"] = verificationPage.unsupportedClient
@@ -203,7 +214,7 @@ final class IdentityAnalyticsClient {
         logAnalytic(
             .sheetClosed,
             metadata: [
-                "session_result": sessionResult
+                "session_result": sessionResult,
             ]
         )
     }
@@ -262,6 +273,12 @@ final class IdentityAnalyticsClient {
         if let bestFaceScore = sheetController.collectedData.face?.bestFaceScore {
             metadata["selfie_model_score"] = bestFaceScore.value
         }
+        if let blurScoreFront = blurScoreFront {
+            metadata["doc_front_blur_score"] = blurScoreFront
+        }
+        if let blurScoreBack = blurScoreBack {
+            metadata["doc_back_blur_score"] = blurScoreBack
+        }
 
         logAnalytic(.verificationSucceeded, metadata: metadata)
     }
@@ -271,12 +288,10 @@ final class IdentityAnalyticsClient {
         screenName: ScreenName,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        var metadata: [String: Any] = [
-            "screen_name": screenName.rawValue
+        let metadata: [String: Any] = [
+            "screen_name": screenName.rawValue,
         ]
-        if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
+
         logAnalytic(.screenAppeared, metadata: metadata)
     }
 
@@ -288,9 +303,6 @@ final class IdentityAnalyticsClient {
         line: UInt = #line
     ) {
         var metadata: [String: Any] = [:]
-        if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
         metadata["error"] = AnalyticsClientV2.serialize(
             error: error,
             filePath: filePath,
@@ -304,26 +316,19 @@ final class IdentityAnalyticsClient {
         sheetController: VerificationSheetControllerProtocol,
         isGranted: Bool?
     ) {
-        var metadata: [String: Any] = [:]
-        if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
-
         let eventName: EventName =
             (isGranted == true) ? .cameraPermissionGranted : .cameraPermissionDenied
 
-        logAnalytic(eventName, metadata: metadata)
+        logAnalytic(eventName, metadata: [:])
     }
 
     /// Logs an event when document capture times out
     func logDocumentCaptureTimeout(
-        idDocumentType: DocumentType,
         documentSide: DocumentSide
     ) {
         logAnalytic(
             .documentCaptureTimeout,
             metadata: [
-                "scan_type": idDocumentType.rawValue,
                 "side": documentSide.rawValue,
             ]
         )
@@ -390,7 +395,6 @@ final class IdentityAnalyticsClient {
 
     /// Logs the time it takes to upload an image along with its file size and compression quality
     func logImageUpload(
-        idDocumentType: DocumentType?,
         timeToUpload: TimeInterval,
         compressionQuality: CGFloat,
         fileId: String,
@@ -398,16 +402,13 @@ final class IdentityAnalyticsClient {
         fileSizeBytes: Int
     ) {
         // NOTE: File size is logged in kB
-        var metadata: [String: Any] = [
+        let metadata: [String: Any] = [
             "value": timeToUpload.milliseconds,
             "id": fileId,
             "compression_quality": compressionQuality,
             "file_name": fileName,
             "file_size": fileSizeBytes / 1024,
         ]
-        if let idDocumentType = idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
 
         logAnalytic(.imageUpload, metadata: metadata)
     }

@@ -9,7 +9,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class CountryNotListedViewController: IdentityFlowViewController {
 
     init(
@@ -100,7 +99,7 @@ final class CountryNotListedViewController: IdentityFlowViewController {
 fileprivate extension Button.Configuration {
     static var identityOtherCountry: Button.Configuration {
         var identityCountryNotListed = Button.Configuration.plain()
-        identityCountryNotListed.font = .boldSystemFont(ofSize: 15)
+        identityCountryNotListed.font = IdentityUI.preferredFont(forTextStyle: .body, weight: .bold).withSize(15)
         return identityCountryNotListed
     }
 }

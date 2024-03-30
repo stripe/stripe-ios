@@ -14,10 +14,17 @@ extension StripeAPI {
         case face = "face"
         case idDocumentBack = "id_document_back"
         case idDocumentFront = "id_document_front"
-        case idDocumentType = "id_document_type"
         case idNumber = "id_number"
         case dob = "dob"
         case name = "name"
         case address = "address"
+        case phoneNumber = "phone_number"
+        case phoneOtp = "phone_otp"
+    }
+}
+
+extension StripeAPI.VerificationPageFieldType {
+    func supportsForceConfirm() -> Bool {
+        return self == .idDocumentFront || self == .idDocumentBack
     }
 }

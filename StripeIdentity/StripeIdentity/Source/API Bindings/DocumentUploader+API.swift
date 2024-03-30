@@ -31,7 +31,8 @@ extension StripeAPI.VerificationPageDataDocumentFileData {
         highResImage: String,
         lowResImage: String?,
         exifMetadata: CameraExifMetadata?,
-        uploadMethod: FileUploadMethod
+        uploadMethod: FileUploadMethod,
+        forceConfirm: Bool = false
     ) {
         // TODO(mludowise|IDPROD-3269): Encode additional properties from scanner output
         let scores = documentScannerOutput?.idDetectorOutput.allClassificationScores
@@ -57,7 +58,8 @@ extension StripeAPI.VerificationPageDataDocumentFileData {
             isVirtualCamera: documentScannerOutput?.cameraProperties?.isVirtualDevice,
             lowResImage: lowResImage,
             passportScore: scores?[.passport].map { TwoDecimalFloat($0) },
-            uploadMethod: uploadMethod
+            uploadMethod: uploadMethod,
+            forceConfirm: forceConfirm
         )
     }
 }

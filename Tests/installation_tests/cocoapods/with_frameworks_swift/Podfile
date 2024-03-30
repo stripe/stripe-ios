@@ -25,3 +25,10 @@ target 'CocoapodsTest' do
     inherit! :search_paths
   end
 end
+
+target 'TestExtension' do
+  platform :ios, '13.0'
+  use_frameworks!
+  pod 'StripeApplePay', path: '../../../..'
+  pod 'StripeCore', path: '../../../..'
+end

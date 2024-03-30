@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -14,11 +15,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPLabeledMultiFormTextFieldViewSnapshotTests: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-        //        self.recordMode = true
-    }
+class STPLabeledMultiFormTextFieldViewSnapshotTests: STPSnapshotTestCase {
 
     func testAppearance() {
         let formTextField1 = STPFormTextField()

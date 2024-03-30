@@ -10,11 +10,15 @@
 
 "Area" = "Żona";
 
+"BLIK code" = "Kodiċi BLIK";
+
 "BSB number" = "Numru BSB";
 
 "Billing address is same as shipping" = "L-indirizz tal-fatturazzjoni huwa l-istess bħall-indirizz tal-posta";
 
 "Cancel" = "Ikkanċella";
+
+"Card brand" = "Id-ditta tal-karta";
 
 "City" = "Belt";
 
@@ -30,11 +34,15 @@
 
 "County" = "Kontea";
 
+"Date is empty." = "Id-data hija battala.";
+
 "Department" = "Dipartiment";
 
 "District" = "Distrett";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Trid tagħlaq din il-formola?";
 
 "Done" = "Bil-lest";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "In-numru tal-mowbajl";
+
 "Postal code" = "Kodiċi postali";
 
 "Prefecture" = "Prefettura";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "Neħħi l-kont tal-bank li jispiċċa b'%@";
 
+"Remove card" = "Neħħi l-karta";
+
 "Search" = "Fittex";
+
+"Select card brand (optional)" = "Agħżel id-ditta tal-karta (mhux obbligatorja)";
+
+"Sort code" = "Il-kodiċi Sort";
 
 "State" = "Stat";
 
@@ -102,6 +118,8 @@
 
 "The account number you entered is incomplete." = "In-numru tal-kont li daħħalt mhux komplut.";
 
+"The sort code you entered is invalid." = "Il-kodiċi sort li daħħalt mhux tajjeb.";
+
 "Town or city" = "Belt";
 
 "UPI ID" = "ID UPI";
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "Uża r-rotor biex tiftaħ il-ħoloq";
 
+"Your BLIK code is incomplete." = "Il-kodiċi BLIK li ktibt mhux komplut.";
+
+"Your BLIK code is invalid." = "Il-kodiċi BLIK li ktibt mhux tajjeb.";
+
 "Your ZIP is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
 
 "Your email is invalid." = "L-indirizz tal-email li daħħalt mhux tajjeb.";
+
+"Your payment information will not be saved." = "L-informazzjoni tal-pagament tiegħek mhux se tiġi merfugħa.";
 
 "Your postal code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
 

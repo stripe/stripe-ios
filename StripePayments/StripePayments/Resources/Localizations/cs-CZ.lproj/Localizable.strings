@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Přímé inkasa AU BECS";
+"AU Direct Debit" = "Přímý debet AU";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Přímý debet Bacs";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "Banka";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "Karta";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "Link";
 
@@ -39,6 +45,8 @@
 "SEPA Debit" = "Debet SEPA";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Časový limit ověření Vašeho způsobu platby uplynul -- zkuste to znovu";
 

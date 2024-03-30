@@ -78,10 +78,12 @@ class ShadowedRoundedRectangle: UIView {
         layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
     }
 
+    #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         setNeedsLayout()
     }
+    #endif
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

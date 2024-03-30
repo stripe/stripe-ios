@@ -34,35 +34,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockSheetController = .init()
     }
 
-    func testDrivingLicenseFront() {
-        let vc = makeViewController(documentType: .drivingLicense)
-        // Allows front
-        XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 1)
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license")
-    }
-
-    func testDrivingLicenseBack() {
-        // Mock front collected
-        mockSheetController.collectedData.merge(
-            VerificationPageDataUpdateMock.frontOnly.collectedData!
-        )
-
-        let vc = makeViewController(documentType: .drivingLicense)
-        // Allows front and back
-        XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license")
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of driver's license")
-
-        // Verify button is only enabled after both front and back images are uploaded
-        XCTAssertEqual(vc.buttonState, .disabled)
-        mockDocumentUploader.backUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .disabled)
-        mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .disabled)
-    }
-
     func testIdCardFront() {
-        let vc = makeViewController(documentType: .idCard)
+        let vc = makeViewController()
         // Allows front
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 1)
         XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
@@ -74,7 +47,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
             VerificationPageDataUpdateMock.frontOnly.collectedData!
         )
 
-        let vc = makeViewController(documentType: .idCard)
+        let vc = makeViewController()
         // Allows front and back
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
         XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
@@ -88,19 +61,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.buttonState, .disabled)
     }
 
-    func testPassport() {
-        let vc = makeViewController(documentType: .passport)
-        // Allows only front upload
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Image of passport")
-
-        // Verify button is enabled after front image is uploaded
-        XCTAssertEqual(vc.buttonState, .disabled)
-        mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .disabled)
-    }
-
     func testAlertNoRequireLiveCapture() {
-        let vc = makeViewController(documentType: .passport, requireLiveCapture: false)
+        let vc = makeViewController(requireLiveCapture: false)
         vc.didTapSelect(for: .front)
         guard let alert = vc.test_presentedViewController as? UIAlertController else {
             return XCTFail("Expected UIAlertController")
@@ -111,7 +73,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
 
     func testSelectPhotoFromLibrary() {
-        let vc = makeViewController(documentType: .drivingLicense)
+        let vc = makeViewController()
         // Mock that user selected to upload front of document
         vc.didTapSelect(for: .front)
         // Mock that user chooses to Photo Library
@@ -137,7 +99,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         // for camera use. So this will only test that camera access is
         // requested.
 
-        let vc = makeViewController(documentType: .idCard)
+        let vc = makeViewController()
         // Mock that user selected to upload front of document
         vc.didTapSelect(for: .back)
         // Mock that user chooses to Take Photo
@@ -156,7 +118,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
 
     func testSelectFileFromSystem() {
-        let vc = makeViewController(documentType: .passport)
+        let vc = makeViewController()
         // Mock that user selected to upload front of document
         vc.didTapSelect(for: .front)
         // Mock that user chooses to Select File
@@ -175,7 +137,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
 
     func testContinueButton() {
-        let vc = makeViewController(documentType: .drivingLicense)
+        let vc = makeViewController()
 
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
         let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
@@ -202,11 +164,9 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
 extension DocumentFileUploadViewControllerTest {
     fileprivate func makeViewController(
-        documentType: DocumentType,
         requireLiveCapture: Bool = false
     ) -> DocumentFileUploadViewController {
         return .init(
-            documentType: documentType,
             requireLiveCapture: requireLiveCapture,
             sheetController: mockSheetController,
             documentUploader: mockDocumentUploader,

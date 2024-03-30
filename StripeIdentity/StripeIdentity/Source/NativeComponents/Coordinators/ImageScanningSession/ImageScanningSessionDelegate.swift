@@ -10,7 +10,6 @@ import AVKit
 import Foundation
 @_spi(STP) import StripeCameraCore
 
-@available(iOSApplicationExtension, unavailable)
 protocol ImageScanningSessionDelegate: AnyObject {
 
     associatedtype ExpectedClassificationType: Equatable
@@ -66,7 +65,6 @@ protocol ImageScanningSessionDelegate: AnyObject {
 
 // MARK: - Default Implementation
 
-@available(iOSApplicationExtension, unavailable)
 extension ImageScanningSessionDelegate {
     func imageScanningSessionShouldScanCameraOutput(_ scanningSession: ScanningSession) -> Bool {
         return true
@@ -75,7 +73,6 @@ extension ImageScanningSessionDelegate {
 
 // MARK: - AnyDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension ImageScanningSession {
     /// Type-erased ImageScanningSessionDelegate
     struct AnyDelegate {

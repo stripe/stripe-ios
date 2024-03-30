@@ -11,7 +11,9 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPAPIClientTest: XCTestCase {
     func testSharedClient() {
@@ -89,7 +91,7 @@ class STPAPIClientTest: XCTestCase {
     }
 
     func testInitWithConfiguration() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         // #pragma clang diagnostic push
         // #pragma clang diagnostic ignored "-Wdeprecated"
         config.publishableKey = "pk_123"
@@ -112,11 +114,14 @@ class STPAPIClientTest: XCTestCase {
     }
 
     func testPaymentUserAgent() {
+        STPAnalyticsClient.sharedClient.productUsage = .init()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: MockUAUsageClass.self)
         var params: [String: Any] = [:]
         params = STPAPIClient.paramsAddingPaymentUserAgent(params)
-        XCTAssert((params["payment_user_agent"] as! String).contains("MockUAUsageClass"))
-        XCTAssert((params["payment_user_agent"] as! String).starts(with: "stripe-ios/"))
+        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.legacy; MockUAUsageClass")
+
+        params = STPAPIClient.paramsAddingPaymentUserAgent(params, additionalValues: ["foo"])
+        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.legacy; MockUAUsageClass; foo")
     }
 
     func testSetAppInfo() {

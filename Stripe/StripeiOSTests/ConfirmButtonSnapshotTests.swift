@@ -15,12 +15,7 @@ import UIKit
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
 
-class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        self.recordMode = true
-    }
+class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     func testConfirmButton() {
         let confirmButton = ConfirmButton(style: .stripe, callToAction: .setup, didTap: {})
@@ -67,6 +62,38 @@ class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
         let confirmButton = ConfirmButton(
             style: .stripe,
             callToAction: .custom(title: "Custom Title"),
+            appearance: appearance,
+            didTap: {}
+        )
+
+        verify(confirmButton)
+    }
+
+    // Tests that `primaryButton` success color is correct for the default theme
+    func testConfirmButtonDefaultSuccessColor() {
+        let confirmButton = ConfirmButton(
+            state: .succeeded,
+            style: .stripe,
+            callToAction: .setup,
+            appearance: .default,
+            didTap: {}
+        )
+
+        verify(confirmButton)
+    }
+
+    // Tests that `primaryButton` success color is updated properly
+    func testConfirmButtonSuccessColor() {
+        var appearance = PaymentSheet.Appearance.default
+        var button = PaymentSheet.Appearance.PrimaryButton()
+        button.successBackgroundColor = .red
+        button.successTextColor = .green
+        appearance.primaryButton = button
+
+        let confirmButton = ConfirmButton(
+            state: .succeeded,
+            style: .stripe,
+            callToAction: .setup,
             appearance: appearance,
             didTap: {}
         )

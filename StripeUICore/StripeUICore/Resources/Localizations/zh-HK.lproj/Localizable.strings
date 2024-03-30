@@ -1,6 +1,6 @@
 "%@ (optional)" = "%@（可選）";
 
-"Account number" = "帳號";
+"Account number" = "賬號";
 
 "Address" = "地址";
 
@@ -10,11 +10,15 @@
 
 "Area" = "地區";
 
+"BLIK code" = "BLIK 代碼";
+
 "BSB number" = "BSB 號碼";
 
 "Billing address is same as shipping" = "賬單地址與收貨地址相同";
 
 "Cancel" = "取消";
+
+"Card brand" = "銀行卡品牌";
 
 "City" = "城市";
 
@@ -30,11 +34,15 @@
 
 "County" = "縣";
 
+"Date is empty." = "日期為空。";
+
 "Department" = "部門";
 
 "District" = "地區";
 
 "Do Si" = "道/縣";
+
+"Do you want to close this form?" = "您確定要保存此表單嗎？";
 
 "Done" = "完成";
 
@@ -64,7 +72,7 @@
 
 "Name" = "姓名";
 
-"Name on account" = "帳戶戶主名";
+"Name on account" = "賬戶上的姓名";
 
 "OK" = "確定";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "電話";
 
+"Phone number" = "手機號碼";
+
 "Postal code" = "郵區編號";
 
 "Prefecture" = "轄區";
@@ -84,11 +94,17 @@
 
 "Remove" = "移除";
 
-"Remove bank account" = "移除銀行帳戶";
+"Remove bank account" = "移除銀行賬戶";
 
-"Remove bank account ending in %@" = "移除尾號為%@ 的銀行帳戶";
+"Remove bank account ending in %@" = "移除尾號為%@ 的銀行賬戶";
+
+"Remove card" = "解除綁定";
 
 "Search" = "搜尋";
+
+"Select card brand (optional)" = "選擇銀行卡品牌（可選）";
+
+"Sort code" = "分類代碼";
 
 "State" = "州";
 
@@ -100,7 +116,9 @@
 
 "The ID number you entered is incomplete." = "您輸入的證件號碼不完整。";
 
-"The account number you entered is incomplete." = "您輸入的帳號不完整。";
+"The account number you entered is incomplete." = "您輸入的賬號不完整。";
+
+"The sort code you entered is invalid." = "您輸入的分類代碼無效。";
 
 "Town or city" = "城鎮或城市";
 
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "用轉子訪問連結";
 
+"Your BLIK code is incomplete." = "您的 BLIK 代碼不完整。";
+
+"Your BLIK code is invalid." = "您的 BLIK 代碼無效。";
+
 "Your ZIP is incomplete." = "您的郵區編號不完整。";
 
 "Your email is invalid." = "您的電郵地址無效。";
+
+"Your payment information will not be saved." = "不會保存您的付款資訊。";
 
 "Your postal code is incomplete." = "您的郵區編號不完整。";
 

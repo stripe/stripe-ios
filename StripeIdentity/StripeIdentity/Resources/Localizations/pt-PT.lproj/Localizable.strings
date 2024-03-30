@@ -1,12 +1,12 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Serão tiradas algumas fotografias automaticamente no passo seguinte para verificar a sua identidade";
+
+"Accepted forms of ID include" = "Formas de documento de identificação aceites incluem";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Em alternativa, pode carregar manualmente uma fotografia do seu documento de identificação.";
 
 "App Settings" = "Definições da aplicação";
 
-"Back driver's license photo successfully uploaded" = "Fotografia do verso da carta de condução carregada com sucesso";
-
 "Back identity card photo successfully uploaded" = "Fotografia do verso do cartão de identidade carregada com sucesso";
-
-"Back of driver's license" = "Verso da carta de condução";
 
 "Back of identity card" = "Verso do cartão de identidade";
 
@@ -22,57 +22,59 @@
 
 "Could not capture image" = "Não foi possível capturar a imagem";
 
-"Date of birth" = "Data de nascimento";
+"Date of Birth" = "Data de nascimento";
 
-"File Upload" = "Carregar ficheiro";
-
-"File upload" = "Carregamento de ficheiros";
-
-"Flip your driver's license over to the other side" = "Vire a sua carta de condução para o outro lado";
+"Date of birth does not look valid" = "A data de nascimento não parece ser válida";
 
 "Flip your identity card over to the other side" = "Vire o seu cartão de identidade para o outro lado";
 
-"Front driver's license photo successfully uploaded" = "Fotografia da frente da carta de condução carregada com sucesso";
-
 "Front identity card photo successfully uploaded" = "Fotografia da frente do cartão de identidade carregada com sucesso";
 
-"Front of driver's license" = "Frente da carta de condução";
-
 "Front of identity card" = "Frente do cartão de identidade";
+
+"Get ready to scan your photo ID" = "Prepare-se para digitalizar o seu documento de identificação com fotografia";
+
+"Get ready to take a selfie" = "Prepare-se para tirar uma selfie";
 
 "Go Back" = "Voltar";
 
 "Hold still, scanning" = "Segure com firmeza, a capturar";
 
+"I'm ready" = "Estou pronto";
+
 "ID Number" = "Número de identificação";
 
-"ID Type" = "Tipo de identificação";
+"Individual CPF" = "CPF particular";
 
-"Image of passport" = "Imagem do passaporte";
+"Last 4 of Social Security number" = "Últimos 4 dígitos do número da segurança social";
 
 "Loading" = "A carregar";
 
-"Passport" = "Passaporte";
+"Make sure you're in a well lit space." = "Certifique-se de que se encontra num espaço bem iluminado.";
 
-"Passport photo successfully uploaded" = "Fotografia do passaporte carregada com sucesso";
+"Move closer" = "Aproxime o documento";
+
+"Move farther" = "Afaste a câmara";
+
+"NRIC or FIN" = "NRIC ou FIN";
 
 "Personal ID number" = "Número de identificação pessoal";
 
+"Personal Information" = "Informações pessoais";
+
+"Phone Number" = "Número de telefone";
+
+"Phone Verification" = "Verificação de telefone";
+
 "Photo Library" = "Biblioteca de fotografias";
 
-"Please upload an image of your passport" = "Carregue uma imagem do seu passaporte";
-
-"Please upload images of the front and back of your driver's license" = "Carregue imagens da parte da frente e do verso da sua carta de condução";
-
 "Please upload images of the front and back of your identity card" = "Carregue imagens da parte da frente e do verso do seu cartão de identidade";
-
-"Position your driver's license in the center of the frame" = "Posicione a sua carta de condução no centro da moldura";
 
 "Position your face in the center of the frame." = "Posicione o seu rosto no centro da moldura.";
 
 "Position your identity card in the center of the frame" = "Posicione o seu cartão de identidade no centro da moldura";
 
-"Position your passport in the center of the frame" = "Posicione o seu passaporte no centro da moldura";
+"Retake Photos" = "Voltar a tirar fotografias";
 
 "Scan" = "Digitalizar";
 
@@ -84,15 +86,9 @@
 
 "Select a location to upload the front of your identity document from" = "Selecione uma localização a partir da qual pretende carregar a frente do seu documento de identidade";
 
-"Select back driver's license photo" = "Selecione a fotografia do verso da sua carta de condução";
-
 "Select back identity card photo" = "Selecione a fotografia do verso do seu cartão de identidade";
 
-"Select front driver's license photo" = "Selecione a fotografia da frente da sua carta de condução";
-
 "Select front identity card photo" = "Selecione a fotografia da frente do seu cartão de identidade.";
-
-"Select passport photo" = "Selecione a fotografia do passaporte";
 
 "Selfie" = "Selfie";
 
@@ -116,15 +112,11 @@
 
 "Upload a Photo" = "Carregar fotografia";
 
-"Uploading back driver's license photo" = "A carregar a fotografia do verso da carta de condução";
+"Upload your photo ID" = "Carregar o seu documento de identificação com fotografia";
 
 "Uploading back identity card photo" = "A carregar a fotografia do verso do cartão de identidade";
 
-"Uploading front driver's license photo" = "A carregar a fotografia da frente da carta de condução";
-
 "Uploading front identity card photo" = "A carregar a fotografia da frente do cartão de identidade";
-
-"Uploading passport photo" = "A carregar a fotografia do passaporte";
 
 "Verify your identity" = "Verifique a sua identidade";
 
@@ -132,6 +124,14 @@
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Precisamos de permissão para utilizar a sua câmara. Permita o acesso à câmara nas definições da aplicação.";
 
+"Welcome" = "Bem-vindo";
+
 "You can either try again or upload an image from your device." = "Pode tentar novamente ou carregar uma imagem a partir do seu dispositivo.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "As suas imagens de selfie não foram guardadas. Pretende sair?";
+
+"driver's license" = "carta de condução";
+
+"government-issued photo ID" = "documento de identificação com fotografia, emitido pelo governo";
+
+"passport" = "passaporte";

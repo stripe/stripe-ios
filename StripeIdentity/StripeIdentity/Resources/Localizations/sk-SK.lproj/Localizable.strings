@@ -1,12 +1,12 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "V ďalšom kroku sa automaticky urobí pár fotografií na overenie, že ste to vy.";
+
+"Accepted forms of ID include" = "K prijateľným formám dokladu totožnosti patria";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Prípadne môžete nahrať fotografiu vášho dokladu totožnosti.";
 
 "App Settings" = "Nastavenia aplikácie";
 
-"Back driver's license photo successfully uploaded" = "Fotografia zadnej strany vodičského preukazu bola úspešne nahraná";
-
 "Back identity card photo successfully uploaded" = "Fotografia zadnej strany preukazu totožnosti bola úspešne nahraná";
-
-"Back of driver's license" = "Zadná strana vodičského preukazu";
 
 "Back of identity card" = "Zadná strana preukazu totožnosti";
 
@@ -22,57 +22,59 @@
 
 "Could not capture image" = "Nepodarilo sa nasnímať fotografiu";
 
-"Date of birth" = "Dátum narodenia";
+"Date of Birth" = "Dátum narodenia";
 
-"File Upload" = "Nahratie súboru";
-
-"File upload" = "Nahratie súboru";
-
-"Flip your driver's license over to the other side" = "Otočte svoj vodičský preukaz na druhú stranu";
+"Date of birth does not look valid" = "Zdá sa, že dátum narodenia je neplatný";
 
 "Flip your identity card over to the other side" = "Otočte svoj preukaz totožnosti na druhú stranu";
 
-"Front driver's license photo successfully uploaded" = "Fotografia prednej strany vodičského preukazu bola úspešne nahraná";
-
 "Front identity card photo successfully uploaded" = "Fotografia prednej strany preukazu totožnosti bola úspešne nahraná";
 
-"Front of driver's license" = "Predná strana vodičského preukazu";
-
 "Front of identity card" = "Predná strana preukazu totožnosti";
+
+"Get ready to scan your photo ID" = "Pripravte sa na naskenovanie dokladu totožnosti s fotografiou";
+
+"Get ready to take a selfie" = "Pripravte sa na nasnímanie selfie";
 
 "Go Back" = "Späť";
 
 "Hold still, scanning" = "Držte pokojne, skenuje sa";
 
+"I'm ready" = "Som pripravený/-á";
+
 "ID Number" = "Identifikačné číslo";
 
-"ID Type" = "Typ ID";
+"Individual CPF" = "Individuálne CPF";
 
-"Image of passport" = "Fotografia pasu";
+"Last 4 of Social Security number" = "Posledné 4 číslice čísla sociálneho poistenia";
 
 "Loading" = "Nahrávanie";
 
-"Passport" = "Pas";
+"Make sure you're in a well lit space." = "Uistite sa, že ste v dobre osvetlenom priestore.";
 
-"Passport photo successfully uploaded" = "Fotografia pasu bola úspešne nahraná";
+"Move closer" = "Prisuňte";
+
+"Move farther" = "Posuňte ďalej";
+
+"NRIC or FIN" = "NRIC alebo FIN";
 
 "Personal ID number" = "Osobné identifikačné číslo";
 
+"Personal Information" = "Osobné informácie";
+
+"Phone Number" = "Telefónne číslo";
+
+"Phone Verification" = "Telefonické overenie";
+
 "Photo Library" = "Knižnica fotografií";
 
-"Please upload an image of your passport" = "Nahrajte fotografiu pasu";
-
-"Please upload images of the front and back of your driver's license" = "Nahrajte fotografie prednej a zadnej strany vodičského preukazu";
-
 "Please upload images of the front and back of your identity card" = "Nahrajte fotografie prednej a zadnej strany preukazu totožnosti";
-
-"Position your driver's license in the center of the frame" = "Umiestnite svoj vodičský preukaz do stredu rámika";
 
 "Position your face in the center of the frame." = "Umiestnite tvár do stredu rámika.";
 
 "Position your identity card in the center of the frame" = "Umiestnite svoj preukaz totožnosti do stredu rámika";
 
-"Position your passport in the center of the frame" = "Umiestnite svoj pas do stredu rámika";
+"Retake Photos" = "Znova odfotiť";
 
 "Scan" = "Skenovať";
 
@@ -84,15 +86,9 @@
 
 "Select a location to upload the front of your identity document from" = "Vyberte umiestnenie, z ktorého chcete nahrať prednú stranu dokladu totožnosti";
 
-"Select back driver's license photo" = "Vyberte fotografiu zadnej strany vodičského preukazu";
-
 "Select back identity card photo" = "Vyberte fotografiu zadnej strany preukazu totožnosti";
 
-"Select front driver's license photo" = "Vyberte fotografiu prednej strany vodičského preukazu";
-
 "Select front identity card photo" = "Vyberte fotografiu prednej strany preukazu totožnosti";
-
-"Select passport photo" = "Vyberte fotografiu pasu";
 
 "Selfie" = "Selfie";
 
@@ -116,15 +112,11 @@
 
 "Upload a Photo" = "Nahrať fotografiu";
 
-"Uploading back driver's license photo" = "Nahrávanie fotografie zo zadnej strany vodičského preukazu";
+"Upload your photo ID" = "Nahrajte doklad totožnosti s fotografiou";
 
 "Uploading back identity card photo" = "Nahrávanie fotografie zo zadnej strany preukazu totožnosti";
 
-"Uploading front driver's license photo" = "Nahrávanie fotografie z prednej strany vodičského preukazu";
-
 "Uploading front identity card photo" = "Nahrávanie fotografie z prednej strany preukazu totožnosti";
-
-"Uploading passport photo" = "Nahrať fotografiu z pasu";
 
 "Verify your identity" = "Overiť totožnosť";
 
@@ -132,6 +124,14 @@
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Potrebujeme povolenie na použitie vášho fotoaparátu. Povoľte prístup k fotoaparátu v nastaveniach aplikácie.";
 
+"Welcome" = "Vitajte";
+
 "You can either try again or upload an image from your device." = "Môžete to skúsiť znova alebo nahrať obrázok zo svojho zariadenia.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Obrázky selfie sa neuložili. Chcete odísť?";
+
+"driver's license" = "vodičský preukaz";
+
+"government-issued photo ID" = "doklad totožnosti s fotografiou vydaný štátom";
+
+"passport" = "pas";

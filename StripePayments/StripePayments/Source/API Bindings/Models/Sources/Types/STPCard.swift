@@ -81,7 +81,7 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         let brand = string.lowercased()
         if brand == "visa" {
             return .visa
-        } else if (brand == "american express") || (brand == "american_express") {
+        } else if (brand == "american express") || (brand == "american_express") || brand == "amex" {
             return .amex
         } else if brand == "mastercard" {
             return .mastercard
@@ -89,10 +89,12 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             return .discover
         } else if brand == "jcb" {
             return .JCB
-        } else if (brand == "diners club") || (brand == "diners_club") {
+        } else if (brand == "diners club") || (brand == "diners_club") || (brand == "diners") {
             return .dinersClub
         } else if brand == "unionpay" {
             return .unionPay
+        } else if (brand == "cartes_bancaires") || (brand == "cartes bancaires") {
+            return .cartesBancaires
         } else {
             return .unknown
         }

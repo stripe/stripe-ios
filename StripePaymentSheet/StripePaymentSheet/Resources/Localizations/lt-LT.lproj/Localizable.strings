@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Pridėti";
 
 "Add a card" = "Pridėti kortelę";
@@ -12,10 +14,6 @@
 
 "Approve payment" = "Patvirtinti mokėjimą";
 
-"Are you sure you want to remove this card?" = "Ar tikrai norite pašalinti šią kortelę?";
-
-"Are you sure you want to remove this linked account?" = "Ar tikrai norite pašalinti šią susietą paskyrą?";
-
 "Back" = "Atgal";
 
 "Bank account" = "Banko sąskaita";
@@ -24,45 +22,63 @@
 
 "Buy using a UPI ID" = "Pirkti naudojant UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą „PayPal“ leidžiate „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
+
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie „Amazon Pay“ leisite „%@“ nuskaityti mokestį nuo jūsų „Amazon Pay“ sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pereidami prie „Klarna“ leidžiate „%1$@“ nuskaityti mokestį nuo jūsų „Klarna“ sąskaitos vėlesniems mokėjimams pagal jų ir „Klarna“ sąlygas. Galite bet kada tai pakeisti „Klarna“ programėlėje arba susisiekdami su „%2$@“.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į „PayPal“ leisite „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pereidami į „Revolut Pay“ leisite %@ nuskaityti mokestį nuo jūsų „Revolut Pay“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate „%1$@“ nurašyti mokestį nuo jūsų „Cash App“ sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal „%2$@“ sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti „Cash App“ nuostatose.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo el. pašto adresą sutinkate susikurti „Link“ paskyrą bei įrašyti savo mokėjimo informaciją į „Link“ pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Pateikdami mokėjimo duomenis ir patvirtindami šį mokėjimą, leidžiate (A) „%@“ ir „Stripe“ (mūsų mokėjimo paslaugų teikėjui) jūsų bankui siųsti nurodymus nurašyti pinigus iš jūsų sąskaitos ir (B) leidžiate savo bankui, gavus tokius nurodymus, nurašyti pinigus iš jūsų sąskaitos. Pagal jūsų su banku sudarytos sutarties sąlygas turite teisę iš banko reikalauti pinigų grąžinimo. Prašymą grąžinti pinigus turite pateikti per 8 savaites nuo pinigų iš jūsų sąskaitos nurašymo dienos. Jūsų teisės paaiškintos pareiškime, kurį galite gauti iš savo banko. Sutinkate gauti pranešimus apie būsimus nurašymus likus iki 2 dienų iki jų įvykdymo momento.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo telefono numerį sutinkate susikurti „Link“ paskyrą bei įrašyti savo mokėjimo informaciją į „Link“ pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
-"Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
+"CPF/CPNJ" = "CPF/CPNJ";
 
-"Change email" = "Pakeiskite el. paštą";
+"Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
 
 "Choose a payment method" = "Pasirinkite mokėjimo būdą";
 
 "Close card scanner" = "Išjungti kortelės skaitytuvą";
 
-"Code sent" = "Kodas išsiųstas";
+"Confirm" = "Patvirtinti";
 
-"Default" = "Numatytasis";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
+
+"Confirm your CVC" = "Patvirtinkite savo CVC";
+
+"Confirm your CVV" = "Patvirtinkite savo CVV";
+
+"Contact information" = "Kontaktinė informacija";
 
 "EPS Bank" = "EPS bankas";
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Įveskite kodą, išsiųstą numeriu %@, kad pagal numatytuosius nustatymus galėtumėte mokėti naudodami „Link“.";
+"FPX Bank" = "FPX bankas";
 
-"Enter your verification code" = "Įveskite patvirtinimo kodą";
-
-"For security, please re-enter your card’s security code." = "Saugumo sumetimais dar kartą įveskite kortelės saugumo kodą.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Suprantu, kad „Stripe“ atliks tiesioginio debeto nuskaitymus „%@“ vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Prisijungti prie „Link“";
+"Manage your payment methods" = "Valdykite savo mokėjimo būdus";
 
-"Log out of Link" = "Atsijungti nuo „Link“";
-
-"Not %@?" = "Ne %@?";
+"Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
 
 "Open your UPI app to approve your payment within %@" = "Atidarykite savo UPI programą mokėjimui patvirtinti per %@";
 
@@ -72,29 +88,25 @@
 
 "Or pay with a card" = "Arba mokėti kortele";
 
+"Or use" = "Arba naudokite";
+
+"Or use a card" = "Arba naudokite kortelę";
+
 "Pay %@" = "Mokėti %@";
 
 "Pay another way" = "Mokėkite kitu būdu";
 
-"Pay faster at %@ and thousands of merchants." = "Mokėkite greičiau „%@“ ir daugybei kitų prekybininkų.";
+"Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau „%@“ ir daugybei kitų įmonių.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Mokėti <num_installments/> be palūkanų <installment_price/> mokėjimus naudojant <img/>";
 
-"Pay later with Klarna." = "Mokėkite vėliau naudodami \"Klarna\".";
-
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 
-"Pay using" = "Mokėkite naudodami";
-
-"Pay with %@" = "Mokėti naudojant %@";
+"Pay with Link" = "Mokėti naudojant „Link“";
 
 "Pay with your bank account in just a few steps." = "Mokėkite naudodami savo banko sąskaitą vos keliais veiksmais.";
 
-"Payment" = "Mokėjimas";
-
 "Payment failed" = "Sumokėti nepavyko";
-
-"Payment methods" = "Mokėjimo būdai";
 
 "Please go back and select another payment method" = "Grįžkite atgal ir pasirinkite kitą mokėjimo būdą";
 
@@ -104,33 +116,25 @@
 
 "Przelewy24 Bank" = "Bankas „Przelewy24“";
 
-"Remove %1$@ ending in %2$@" = "Pašalinti %1$@, kuri baigiasi %2$@";
+"Remove card?" = "Ištraukti kortelę?";
 
-"Remove Card" = "Šalinti kortelę";
+"Save" = "Išsaugoti";
 
-"Remove card" = "Pašalinti kortelę";
-
-"Remove linked account" = "Pašalinti susietą paskyrą";
-
-"Resend code" = "Pakartotinai siųsti kodą";
+"Save a new payment method" = "Išsaugoti naują mokėjimo būdą";
 
 "Save address" = "išsaugoti adresą";
 
 "Save for future payments" = "Išsaugokite vėlesniems mokėjimams";
 
-"Save my info for secure 1-click checkout" = "Išsaugoti mano informaciją saugiam atsiskaitymui vienu spustelėjimu";
-
 "Save this account for future %@ payments" = "Išsaugoti šią sąskaitą vėlesniems %@ mokėjimams";
 
 "Save this card for future %@ payments" = "Išsaugoti kortelę vėlesniems %@ mokėjimams";
 
-"Secure 1⁠-⁠click checkout" = "Saugus atsiskaitymas vienu spustelėjimu";
+"Save your bank account in just a few steps." = "Vos keliais veiksmais įrašykite savo banko sąskaitą.";
+
+"Save your info for secure 1-click checkout with Link" = "Išsaugokite savo informaciją saugiam atsiskaitymui vienu spustelėjimu su „Link“";
 
 "Select your payment method" = "Pasirinkite mokėjimo būdą";
-
-"Set as default" = "Nustatyti kaip numatytąjį";
-
-"Set as default payment method" = "Nustatyti kaip numatytąjį mokėjimo būdą";
 
 "Set up" = "Nustatyti";
 
@@ -138,31 +142,13 @@
 
 "Show menu" = "Rodyti meniu";
 
-"Sign in to your Link account" = "Prisijunkite prie savo „Link“ paskyros";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant „%@“.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
 
-"Tap to close" = "Bakstelėkite, kad uždarytumėte";
-
-"Tap to expand" = "Bakstelėkite, kad išplėstumėte";
-
 "The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
 
-"The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
-
-"The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Ši kortelė nebegalioja. Atnaujinkite savo kortelės informaciją arba pasirinkite kitą mokėjimo būdą.";
-
-"This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
-
-"Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
-
-"Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
-
 "Update card" = "Atnaujinti kortelę";
-
-"Use your saved info to check out faster" = "Naudokite išsaugotą informaciją, kad atsiskaitytumėte greičiau";
 
 "Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
 

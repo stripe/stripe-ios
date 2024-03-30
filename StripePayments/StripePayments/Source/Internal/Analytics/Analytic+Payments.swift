@@ -15,15 +15,13 @@ import Foundation
 struct GenericPaymentAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
     let paymentConfiguration: NSObject?
-    let productUsage: Set<String>
     let additionalParams: [String: Any]
 }
 
 /// Represents a generic payment error analytic
-struct GenericPaymentErrorAnalytic: PaymentAnalytic, ErrorAnalytic {
+struct GenericPaymentErrorAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
     let paymentConfiguration: NSObject?
-    let productUsage: Set<String>
     let additionalParams: [String: Any]
     let error: Error
 }

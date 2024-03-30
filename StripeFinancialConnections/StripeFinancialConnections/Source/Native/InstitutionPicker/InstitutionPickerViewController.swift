@@ -10,54 +10,103 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
         didSelect institution: FinancialConnectionsInstitution
     )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didFinishSelecting institution: FinancialConnectionsInstitution,
+        authSession: FinancialConnectionsAuthSession
+    )
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
     )
+    func institutionPickerViewControllerDidSearch(
+        _ viewController: InstitutionPickerViewController
+    )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didReceiveError error: Error
+    )
 }
 
-@available(iOSApplicationExtension, unavailable)
 class InstitutionPickerViewController: UIViewController {
+
+    private static let headerAndSearchBarSpacing: CGFloat = 24
 
     // MARK: - Properties
 
     private let dataSource: InstitutionDataSource
     weak var delegate: InstitutionPickerViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
+    private lazy var headerView: UIView = {
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                CreateHeaderTitleLabel(),
+            ]
+        )
+        verticalStackView.axis = .vertical
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 16,
+            leading: Constants.Layout.defaultHorizontalMargin,
+            bottom: Self.headerAndSearchBarSpacing,
+            trailing: Constants.Layout.defaultHorizontalMargin
+        )
+        verticalStackView.backgroundColor = .customBackgroundColor
+        return verticalStackView
+    }()
+    private lazy var searchBarContainerView: UIView = {
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                searchBar,
+            ]
+        )
+        verticalStackView.axis = .vertical
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 0, // the `headerView` has bottom padding
+            leading: Constants.Layout.defaultHorizontalMargin,
+            bottom: 16,
+            trailing: Constants.Layout.defaultHorizontalMargin
+        )
+        verticalStackView.backgroundColor = .customBackgroundColor
+        // the "shadow" fixes an issue where the "search bar sticky header"
+        // has a visible 1 pixel gap. the shadow is not actually a shadow,
+        // but rather a "top border"
+        verticalStackView.layer.shadowOpacity = 1.0
+        verticalStackView.layer.shadowColor = verticalStackView.backgroundColor?.cgColor
+        verticalStackView.layer.shadowRadius = 0
+        verticalStackView.layer.shadowOffset = CGSize(
+            width: 0,
+            // the `height` is greater than 1 px because this also fixes
+            // an issue where the sticky header animates to final position
+            // (this is default iOS/UITableView behavior), and the animation
+            // is slow, which can cause the institution cells to temporarily
+            // appear IF the user scrolls up very quickly
+            height: -Self.headerAndSearchBarSpacing
+        )
+        return verticalStackView
     }()
     private lazy var searchBar: InstitutionSearchBar = {
         let searchBar = InstitutionSearchBar()
         searchBar.delegate = self
         return searchBar
     }()
-    private lazy var contentContainerView: UIView = {
-        let contentContainerView = UIView()
-        contentContainerView.backgroundColor = .clear
-        return contentContainerView
-    }()
-    private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
-        let featuredInstitutionGridView = FeaturedInstitutionGridView()
-        featuredInstitutionGridView.delegate = self
-        return featuredInstitutionGridView
-    }()
-    private lazy var institutionSearchTableView: InstitutionSearchTableView = {
-        let institutionSearchTableView = InstitutionSearchTableView(
+    private lazy var institutionTableView: InstitutionTableView = {
+        let institutionTableView = InstitutionTableView(
             frame: view.bounds,
-            allowManualEntry: dataSource.manifest.allowManualEntry
+            allowManualEntry: dataSource.manifest.allowManualEntry,
+            institutionSearchDisabled: dataSource.manifest.institutionSearchDisabled
         )
-        institutionSearchTableView.delegate = self
-        return institutionSearchTableView
+        institutionTableView.delegate = self
+        return institutionTableView
     }()
+    private var isUserCurrentlySearching: Bool {
+        return !searchBar.text.isEmpty
+    }
 
     // MARK: - Debouncing Support
 
@@ -90,30 +139,19 @@ class InstitutionPickerViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.customBackgroundColor
 
-        view.addAndPinSubview(loadingView)
-        view.addAndPinSubviewToSafeArea(
-            CreateMainView(
-                searchBar: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
-                contentContainerView: contentContainerView
-            )
-        )
-        contentContainerView.addAndPinSubview(featuredInstitutionGridView)
-        contentContainerView.addAndPinSubview(institutionSearchTableView)
-
-        toggleContentContainerViewVisbility()
+        view.addAndPinSubview(institutionTableView)
+        institutionTableView.setTableHeaderView(headerView)
+        if !dataSource.manifest.institutionSearchDisabled {
+            institutionTableView.searchBarContainerView = searchBarContainerView
+        }
 
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(didTapOutsideOfSearchBar)
         )
+        dismissSearchBarTapGestureRecognizer.cancelsTouchesInView = false
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
-    }
-
-    private func toggleContentContainerViewVisbility() {
-        let isUserCurrentlySearching = !searchBar.text.isEmpty
-        featuredInstitutionGridView.isHidden = isUserCurrentlySearching
-        institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
     }
 
     @IBAction private func didTapOutsideOfSearchBar() {
@@ -121,39 +159,118 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
-        searchBar.resignFirstResponder()
-        // clear search results
-        searchBar.text = ""
-        institutionSearchTableView.loadInstitutions([])
-        toggleContentContainerViewVisbility()
+        FeedbackGeneratorAdapter.selectionChanged()
         delegate?.institutionPickerViewController(self, didSelect: institution)
+
+        searchBar.resignFirstResponder()
+
+        let showLoadingView: (Bool) -> Void = { [weak self] show in
+            guard let self else { return }
+            self.view.isUserInteractionEnabled = !show // prevent accidental taps
+            self.institutionTableView.showLoadingView(show, forInstitution: institution)
+        }
+
+        showLoadingView(true)
+        institutionTableView.showOverlayView(
+            true,
+            exceptForInstitution: institution
+        )
+
+        dataSource.createAuthSession(institutionId: institution.id)
+            .observe { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let authSession):
+                    self.delegate?.institutionPickerViewController(
+                        self,
+                        didFinishSelecting: institution,
+                        authSession: authSession
+                    )
+
+                    if authSession.isOauthNonOptional {
+                        // oauth presents a sheet where we do not hide
+                        // the overlay until the sheet is dismissed
+                        self.observePartnerAuthDismissToHideOverlay()
+                    } else {
+                        self.hideOverlayView()
+                    }
+                case .failure(let error):
+                    self.delegate?.institutionPickerViewController(
+                        self,
+                        didReceiveError: error
+                    )
+                }
+                showLoadingView(false)
+            }
     }
 
     private func showLoadingView(_ show: Bool) {
-        loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
+        institutionTableView.showLoadingView(show)
+    }
+
+    private var partnerAuthDismissObserver: Any?
+    private func observePartnerAuthDismissToHideOverlay() {
+        partnerAuthDismissObserver = NotificationCenter.default.addObserver(
+            forName: .sheetViewControllerWillDismiss,
+            object: nil,
+            queue: nil
+        ) { [weak self] notification in
+            guard let self else { return }
+            guard notification.object is PartnerAuthViewController else {
+                return
+            }
+            self.hideOverlayView()
+            self.partnerAuthDismissObserver = nil
         }
-        view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
+    }
+
+    private func hideOverlayView() {
+        institutionTableView.showOverlayView(false)
+    }
+
+    private func scrollToTopOfSearchBar() {
+        let searchBarContainerFrame = CGRect(
+            x: 0,
+            y: headerView.frame.maxY,
+            width: institutionTableView.tableView.bounds.width,
+            height: searchBarContainerView.frame.height
+        )
+        institutionTableView.tableView.scrollRectToVisible(
+            searchBarContainerFrame,
+            animated: true
+        )
     }
 }
 
 // MARK: - Data
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController {
 
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
         assertMainQueue()
+        let fetchStartDate = Date()
         dataSource
             .fetchFeaturedInstitutions()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let institutions):
-                    self.featuredInstitutionGridView.loadInstitutions(institutions)
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "search.feature_institutions_loaded",
+                            parameters: [
+                                "institutions": institutions.map({ $0.id }),
+                                "result_count": institutions.count,
+                                "duration": Date().timeIntervalSince(fetchStartDate).milliseconds,
+                            ],
+                            pane: .institutionPicker
+                        )
+
+                    self.institutionTableView.load(
+                        institutions: institutions,
+                        isUserSearching: false
+                    )
                     self.dataSource
                         .analyticsClient
                         .logPaneLoaded(pane: .institutionPicker)
@@ -172,16 +289,20 @@ extension InstitutionPickerViewController {
 
     private func fetchInstitutions(searchQuery: String) {
         fetchInstitutionsDispatchWorkItem?.cancel()
-        institutionSearchTableView.showError(false)
+        institutionTableView.showError(false, isUserSearching: true)
 
         guard !searchQuery.isEmpty else {
-            searchBar.updateSearchingIndicator(false)
+            showLoadingView(false)
             // clear data because search query is empty
-            institutionSearchTableView.loadInstitutions([])
+            institutionTableView.load(
+                institutions: dataSource.featuredInstitutions,
+                isUserSearching: false
+            )
             return
         }
 
-        searchBar.updateSearchingIndicator(true)
+        showLoadingView(true)
+        scrollToTopOfSearchBar()
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
 
@@ -197,39 +318,73 @@ extension InstitutionPickerViewController {
                         return
                     }
                     switch result {
-                    case .success(let institutions):
-                        self.institutionSearchTableView.loadInstitutions(institutions)
-                        if institutions.isEmpty {
-                            self.institutionSearchTableView.showNoResultsNotice(query: searchQuery)
+                    case .success(let institutionList):
+                        if self.isUserCurrentlySearching {
+                            // only load the institutions IF the user has text in search box
+                            self.institutionTableView.load(
+                                institutions: institutionList.data,
+                                isUserSearching: true,
+                                showManualEntry: institutionList.showManualEntry
+                            )
+                        } else {
+                            self.institutionTableView.load(
+                                institutions: self.dataSource.featuredInstitutions,
+                                isUserSearching: false,
+                                showManualEntry: institutionList.showManualEntry
+                            )
                         }
                         self.dataSource
                             .analyticsClient
                             .log(
                                 eventName: "search.succeeded",
                                 parameters: [
-                                    "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                                     "query": searchQuery,
                                     "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate).milliseconds,
-                                    "result_count": institutions.count,
-                                ]
-                            )
-                    case .failure(let error):
-                        self.institutionSearchTableView.loadInstitutions([])
-                        self.institutionSearchTableView.showError(true)
-                        self.dataSource
-                            .analyticsClient
-                            .logUnexpectedError(
-                                error,
-                                errorName: "SearchInstitutionsError",
+                                    "result_count": institutionList.data.count,
+                                ],
                                 pane: .institutionPicker
                             )
+                        self.delegate?.institutionPickerViewControllerDidSearch(self)
+                    case .failure(let error):
+                        self.institutionTableView.load(
+                            institutions: [],
+                            isUserSearching: false
+                        )
+                        self.institutionTableView.showError(true, isUserSearching: false)
+
+                        if
+                            let error = error as? StripeError,
+                            case .apiError(let apiError) = error,
+                            apiError.type == .invalidRequestError,
+                            apiError.param == "client_secret",
+                            (apiError.message ?? "").contains("expired")
+                        {
+                            // Do not log for this case.
+                            //
+                            // This code fixes a a weird logging edge-case:
+                            // 1. Type an invalid keyword ("abcde") in the search that iOS
+                            //    will auto-correct
+                            // 2. While keyboard is still presented press to enter manual entry
+                            // 3. If merchant has manual entry handoff, we will call
+                            //    complete API but another search call will execute
+                            //    due to iOS auto-correct, which will fail because
+                            //    session is completed.
+                        } else {
+                            self.dataSource
+                                .analyticsClient
+                                .logUnexpectedError(
+                                    error,
+                                    errorName: "SearchInstitutionsError",
+                                    pane: .institutionPicker
+                                )
+                        }
                     }
-                    self.searchBar.updateSearchingIndicator(false)
+                    self.showLoadingView(false)
                 }
         })
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
         DispatchQueue.main.asyncAfter(
-            deadline: .now() + Constants.queryDelay,
+            deadline: .now() + TimeInterval(0.2),
             execute: newFetchInstitutionsDispatchWorkItem
         )
     }
@@ -237,128 +392,117 @@ extension InstitutionPickerViewController {
 
 // MARK: - InstitutioNSearchBarDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
-        toggleContentContainerViewVisbility()
         fetchInstitutions(searchQuery: text)
     }
 }
 
 // MARK: - UIGestureRecognizerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    ) -> Bool {
+        let scrollView = institutionTableView.tableView
+        let isTableViewScrolledToTop = scrollView.contentOffset.y <= -scrollView.contentInset.top
+        guard isTableViewScrolledToTop else {
+            // only consider `dismissSearchBarTapGestureRecognizer` when the
+            // table view is scrolled to the top
+            //
+            // because the dismiss functionality is purely optional, and because frame
+            // calculation gets complicated in a scroll view, this logic helps
+            // to keep the calculations simple so we avoid unintentionally
+            // blocking user interaction
+            return false
+        }
         let touchPoint = touch.location(in: view)
-        return !searchBar.frame.contains(touchPoint) && !contentContainerView.frame.contains(touchPoint)
+        return headerView.frame.contains(touchPoint) && !searchBar.frame.contains(touchPoint)
     }
 }
 
-// MARK: - FeaturedInstitutionGridViewDelegate
+// MARK: - InstitutionTableViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
-extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
+extension InstitutionPickerViewController: InstitutionTableViewDelegate {
 
-    func featuredInstitutionGridView(
-        _ view: FeaturedInstitutionGridView,
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     ) {
-        dataSource.analyticsClient.log(
-            eventName: "search.featured_institution_selected",
-            parameters: [
-                "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
-                "institution_id": institution.id,
-            ]
-        )
-        didSelectInstitution(institution)
-    }
-}
-
-// MARK: - InstitutionSearchTableViewDelegate
-
-@available(iOSApplicationExtension, unavailable)
-extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
-
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
-        didSelectInstitution institution: FinancialConnectionsInstitution
-    ) {
-        dataSource.analyticsClient.log(
-            eventName: "search.search_result_selected",
-            parameters: [
-                "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
-                "institution_id": institution.id,
-            ]
-        )
+        if isUserCurrentlySearching {
+            dataSource.analyticsClient.log(
+                eventName: "search.search_result_selected",
+                parameters: [
+                    "institution_id": institution.id,
+                ],
+                pane: .institutionPicker
+            )
+        } else {
+            dataSource.analyticsClient.log(
+                eventName: "search.featured_institution_selected",
+                parameters: [
+                    "institution_id": institution.id,
+                ],
+                pane: .institutionPicker
+            )
+        }
         didSelectInstitution(institution)
     }
 
-    func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView) {
+    func institutionTableViewDidSelectSearchForMoreBanks(_ tableView: InstitutionTableView) {
+        scrollToTopOfSearchBar()
+        searchBar.becomeFirstResponder()
+    }
+
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
+        didSelectManuallyAddYourAccountWithInstitutions institutions: [FinancialConnectionsInstitution]
+    ) {
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "click.manual_entry",
+                parameters: [
+                    "institution_ids": institutions.map({ $0.id }),
+                ],
+                pane: .institutionPicker
+            )
         delegate?.institutionPickerViewControllerDidSelectManuallyAddYourAccount(self)
     }
-}
 
-// MARK: - Constants
-
-@available(iOSApplicationExtension, unavailable)
-extension InstitutionPickerViewController {
-    enum Constants {
-        static let queryDelay = TimeInterval(0.2)
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
+        didScrollInstitutions institutions: [FinancialConnectionsInstitution]
+    ) {
+        if isUserCurrentlySearching {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "search.scroll",
+                    parameters: [
+                        "institution_ids": institutions.map({ $0.id }),
+                    ],
+                    pane: .institutionPicker
+                )
+        }
     }
 }
 
 // MARK: - Helpers
 
-private func CreateMainView(
-    searchBar: UIView?,
-    contentContainerView: UIView
-) -> UIView {
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            CreateHeaderView(
-                searchBar: searchBar
-            ),
-            contentContainerView,
-        ]
-    )
-    verticalStackView.axis = .vertical
-    verticalStackView.spacing = 16
-    return verticalStackView
-}
-
-private func CreateHeaderView(
-    searchBar: UIView?
-) -> UIView {
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            CreateHeaderTitleLabel()
-        ]
-    )
-    if let searchBar = searchBar {
-        verticalStackView.addArrangedSubview(searchBar)
-    }
-    verticalStackView.axis = .vertical
-    verticalStackView.spacing = 24
-    verticalStackView.isLayoutMarginsRelativeArrangement = true
-    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 16,
-        leading: 24,
-        bottom: 0,
-        trailing: 24
-    )
-    return verticalStackView
-}
-
 private func CreateHeaderTitleLabel() -> UIView {
-    let headerTitleLabel = UILabel()
-    headerTitleLabel.textColor = .textPrimary
-    headerTitleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    headerTitleLabel.text = STPLocalizedString(
-        "Select your bank",
-        "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
+    let headerTitleLabel = AttributedLabel(
+        font: .heading(.extraLarge),
+        textColor: .textDefault
+    )
+    headerTitleLabel.setText(
+        STPLocalizedString(
+            "Select bank",
+            "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
+        )
     )
     return headerTitleLabel
 }

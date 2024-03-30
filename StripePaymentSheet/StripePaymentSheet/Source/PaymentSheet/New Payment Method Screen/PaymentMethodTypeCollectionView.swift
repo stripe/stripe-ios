@@ -34,19 +34,30 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
+    let isPaymentSheet: Bool
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
     init(
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
+        isPaymentSheet: Bool = false,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
 
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
-        self.selected = paymentMethodTypes[0]
+        let selectedItemIndex: Int = {
+            if let initialPaymentMethodType = initialPaymentMethodType {
+                return paymentMethodTypes.firstIndex(of: initialPaymentMethodType) ?? 0
+            } else {
+                return 0
+            }
+        }()
+        self.selected = paymentMethodTypes[selectedItemIndex]
         self.appearance = appearance
+        self.isPaymentSheet = isPaymentSheet
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -56,7 +67,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
         self.delegate = self
-        selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: [])
+        selectItem(at: IndexPath(item: selectedItemIndex, section: 0), animated: false, scrollPosition: [])
 
         showsHorizontalScrollIndicator = false
         backgroundColor = appearance.colors.background
@@ -105,17 +116,26 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        // Only log this event when this collection view is being used by PaymentSheet
+        if isPaymentSheet {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCarouselPaymentMethodTapped,
+                                                                 paymentMethodTypeAnalyticsValue: paymentMethodTypes[indexPath.row].identifier)
+        }
         selected = paymentMethodTypes[indexPath.item]
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var useFixedSizeCells: Bool {
+            #if canImport(CompositorServices)
+            return true
+            #else
             // Prefer fixed size cells for iPads and Mac.
             if #available(iOS 14.0, macCatalyst 14.0, *) {
                 return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
             } else {
                 return UIDevice.current.userInterfaceIdiom == .pad
             }
+            #endif
         }
 
         if useFixedSizeCells {
@@ -136,7 +156,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 extension PaymentMethodTypeCollectionView {
     class PaymentTypeCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentTypeCell"
-        var paymentMethodType: PaymentSheet.PaymentMethodType = .card {
+        var paymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.card) {
             didSet {
                 update()
             }
@@ -181,15 +201,14 @@ extension PaymentMethodTypeCollectionView {
         private static var widthCache = [String: (PaymentSheet.Appearance, CGFloat)]()
 
         class func minWidth(for paymentMethodType: PaymentSheet.PaymentMethodType, appearance: PaymentSheet.Appearance) -> CGFloat {
-            let paymentMethodTypeString = PaymentSheet.PaymentMethodType.string(from: paymentMethodType) ?? "unknown"
-            if let (cachedAppearance, cachedWidth) = widthCache[paymentMethodTypeString],
+            if let (cachedAppearance, cachedWidth) = widthCache[paymentMethodType.identifier],
                cachedAppearance == appearance {
                 return cachedWidth
             }
             sizingInstance.paymentMethodType = paymentMethodType
             sizingInstance.appearance = appearance
             let size = sizingInstance.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-            widthCache[paymentMethodTypeString] = (appearance, size.width)
+            widthCache[paymentMethodType.identifier] = (appearance, size.width)
             return size.width
         }
 
@@ -239,10 +258,12 @@ extension PaymentMethodTypeCollectionView {
             fatalError("init(coder:) has not been implemented")
         }
 
+        #if !canImport(CompositorServices)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             update()
         }
+        #endif
 
         override var isSelected: Bool {
             didSet {
@@ -259,6 +280,8 @@ extension PaymentMethodTypeCollectionView {
                     self.label.alpha = 0.6
                 case .shouldEnableUserInteraction:
                     self.label.alpha = 1
+                default:
+                    break
                 }
             }
         }
@@ -299,7 +322,7 @@ extension PaymentMethodTypeCollectionView {
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
-            accessibilityIdentifier = PaymentSheet.PaymentMethodType.string(from: paymentMethodType)
+            accessibilityIdentifier = paymentMethodType.identifier
         }
         private func updateImage(_ imageParam: UIImage) {
             var image = imageParam

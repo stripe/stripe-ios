@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
@@ -70,13 +71,7 @@ import Foundation
         let countryCode = self.countryCodeOrCurrentLocaleCountry(from: nillableCode)
         let scanner = Scanner(string: string)
         var prefix: NSString? = NSString()
-        if #available(iOS 13.0, *) {
-            prefix = scanner.scanUpToString("*") as NSString?
-        } else {
-            #if !TARGET_OS_MACCATALYST
-                scanner.scanUpTo("*", into: &prefix)
-            #endif
-        }
+        prefix = scanner.scanUpToString("*") as NSString?
         var number = (string as NSString).replacingOccurrences(
             of: (prefix ?? "") as String,
             with: ""
@@ -92,7 +87,7 @@ import Foundation
     class func countryCodeOrCurrentLocaleCountry(from nillableCode: String?) -> String {
         var countryCode = nillableCode
         if countryCode == nil {
-            countryCode = NSLocale.autoupdatingCurrent.regionCode
+            countryCode = NSLocale.autoupdatingCurrent.stp_regionCode
         }
         return countryCode ?? ""
     }

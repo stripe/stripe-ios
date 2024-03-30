@@ -104,6 +104,7 @@ import WebKit
 
     // MARK: Overrides
 
+#if !canImport(CompositorServices)
     // Overriden so we can respond to changing dark mode by updating the image color
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -127,6 +128,7 @@ import WebKit
             label.textColor = configuration.textColor
         }
     }
+#endif
 
     // MARK: Internal
 
@@ -265,7 +267,7 @@ extension PaymentMethodMessagingView {
 
     static func makeMessagingContentEndpointParams(configuration: Configuration) -> [String: Any] {
         let logoColor: String
-        switch isDarkMode()
+        switch UITraitCollection.current.isDarkMode
             ? configuration.imageColor.userInterfaceStyleDark
             : configuration.imageColor.userInterfaceStyleLight
         {
@@ -294,23 +296,7 @@ extension PaymentMethodMessagingView {
 
     static func loadImage(url: URL, apiClient: STPAPIClient) async throws -> UIImage? {
         let request = apiClient.configuredRequest(for: url)
-        let data: Data
-        // An Xcode 13 compatible version of `data(for:)`
-        if #available(iOS 15.0, *) {
-            (data, _) = try await apiClient.urlSession.data(for: request)
-        } else {
-            /// Adapted from https://www.swiftbysundell.com/articles/making-async-system-apis-backward-compatible/
-            data = try await withCheckedThrowingContinuation { continuation in
-                let task = apiClient.urlSession.dataTask(with: request) { data, _, error in
-                    guard let data = data else {
-                        let error = error ?? URLError(.badServerResponse)
-                        return continuation.resume(throwing: error)
-                    }
-                    continuation.resume(returning: data)
-                }
-                task.resume()
-            }
-        }
+        let (data, _) = try await apiClient.urlSession.data(for: request)
         return UIImage(data: data, scale: 3)?.withRenderingMode(.alwaysOriginal)
     }
 }

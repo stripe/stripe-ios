@@ -10,11 +10,15 @@
 
 "Area" = "地区";
 
+"BLIK code" = "BLIK 代码";
+
 "BSB number" = "BSB 号码";
 
-"Billing address is same as shipping" = "账单地址与配送地址相同";
+"Billing address is same as shipping" = "账单地址与收货地址相同";
 
 "Cancel" = "取消";
+
+"Card brand" = "银行卡品牌";
 
 "City" = "城市";
 
@@ -30,11 +34,15 @@
 
 "County" = "县";
 
+"Date is empty." = "日期为空。";
+
 "Department" = "部门";
 
 "District" = "区";
 
 "Do Si" = "道/县";
+
+"Do you want to close this form?" = "您想关闭此表单吗？";
 
 "Done" = "完成";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "电话";
 
+"Phone number" = "手机号码";
+
 "Postal code" = "邮政编码";
 
 "Prefecture" = "辖区";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "移除尾号为 %@ 的银行账户";
 
+"Remove card" = "移除卡";
+
 "Search" = "搜索";
+
+"Select card brand (optional)" = "选择银行卡品牌（可选）";
+
+"Sort code" = "分类代码";
 
 "State" = "州";
 
@@ -102,6 +118,8 @@
 
 "The account number you entered is incomplete." = "您输入的账号不完整。";
 
+"The sort code you entered is invalid." = "您输入的分类代码无效。";
+
 "Town or city" = "城镇或城市";
 
 "UPI ID" = "UPI ID";
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "用转子访问链接";
 
+"Your BLIK code is incomplete." = "您的 BLIK 代码不完整。";
+
+"Your BLIK code is invalid." = "您的 BLIK 代码无效。";
+
 "Your ZIP is incomplete." = "您的邮编不完整。";
 
 "Your email is invalid." = "您的邮件地址无效。";
+
+"Your payment information will not be saved." = "不会保存您的付款信息。";
 
 "Your postal code is incomplete." = "您的邮编不完整。";
 

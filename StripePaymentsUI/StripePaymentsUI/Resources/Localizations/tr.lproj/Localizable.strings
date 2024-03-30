@@ -22,6 +22,8 @@
 
 "Card number" = "Kart numarası";
 
+"Confirm your %@" = "%@ kodunuzu onaylayın";
+
 "Invalid data." = "Geçersiz veri.";
 
 "MM / YY" = "AA / YY";

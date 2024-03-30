@@ -113,9 +113,7 @@ class OcrMainLoop: MachineLearningLoop {
             case .ssd:
                 ocrImplementations.append(SSDCreditCardOcr(dispatchQueueLabel: queueLabel))
             case .apple:
-                if #available(iOS 13.0, *) {
-                    ocrImplementations.append(AppleCreditCardOcr(dispatchQueueLabel: queueLabel))
-                }
+                ocrImplementations.append(AppleCreditCardOcr(dispatchQueueLabel: queueLabel))
             }
         }
         setupMl(ocrImplementations: ocrImplementations)

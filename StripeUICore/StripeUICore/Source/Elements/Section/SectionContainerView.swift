@@ -106,17 +106,19 @@ class SectionContainerView: UIView {
         )
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI()
     }
+#endif
 
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {
         layer.applyShadow(shadow: theme.shadow)
         layer.cornerRadius = theme.cornerRadius
 
-        if isUserInteractionEnabled || isDarkMode() {
+        if isUserInteractionEnabled || UITraitCollection.current.isDarkMode {
             backgroundColor = theme.colors.background
         } else {
             backgroundColor = .tertiarySystemGroupedBackground
@@ -185,6 +187,8 @@ extension SectionContainerView: EventHandler {
             isUserInteractionEnabled = true
         case .shouldDisableUserInteraction:
             isUserInteractionEnabled = false
+        default:
+            break
         }
     }
 }

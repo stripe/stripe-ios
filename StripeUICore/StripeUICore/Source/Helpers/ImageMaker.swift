@@ -18,14 +18,15 @@ import UIKit
 @_spi(STP) public extension ImageMaker {
     private static func imageNamed(
       _ imageName: String,
-      templateIfAvailable: Bool
+      templateIfAvailable: Bool,
+      compatibleWith traitCollection: UITraitCollection? = nil
     ) -> UIImage? {
 
       var image = UIImage(
-        named: imageName, in: BundleLocator.resourcesBundle, compatibleWith: nil)
+        named: imageName, in: BundleLocator.resourcesBundle, compatibleWith: traitCollection)
 
       if image == nil {
-        image = UIImage(named: imageName)
+          image = UIImage(named: imageName, in: nil, compatibleWith: traitCollection)
       }
 
       if templateIfAvailable {
@@ -38,34 +39,26 @@ import UIKit
     static func safeImageNamed(
         _ imageName: String,
         templateIfAvailable: Bool = false,
-        darkMode: Bool? = nil
+        overrideUserInterfaceStyle: UIUserInterfaceStyle? = nil
     ) -> UIImage {
-
-        let darkMode: Bool = darkMode ?? isDarkMode()
-
-        let image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
-        assert(image.size != .zero, "Failed to find an image named \(imageName)")
-        // Vend a dark variant if available
-        // Workaround until we can use image assets
-        if darkMode,
-           let darkImage = imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable) {
-            return darkImage
+        let image: UIImage
+        if let overrideUserInterfaceStyle = overrideUserInterfaceStyle {
+            let appearanceTrait = UITraitCollection(userInterfaceStyle: overrideUserInterfaceStyle)
+            image = imageNamed(imageName, templateIfAvailable: templateIfAvailable, compatibleWith: appearanceTrait) ?? UIImage()
         } else {
-            return image
+            image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
         }
+        assert(image.size != .zero, "Failed to find an image named \(imageName)")
+        return image
     }
 }
 
 @_spi(STP) public extension ImageMaker where Self: RawRepresentable, RawValue == String {
-    func makeImage(template: Bool = false, darkMode: Bool? = nil) -> UIImage {
+    func makeImage(template: Bool = false, overrideUserInterfaceStyle: UIUserInterfaceStyle? = nil) -> UIImage {
         return Self.safeImageNamed(
             self.rawValue,
             templateIfAvailable: template,
-            darkMode: darkMode ?? isDarkMode()
+            overrideUserInterfaceStyle: overrideUserInterfaceStyle
         )
     }
-}
-
-@_spi(STP) public func isDarkMode() -> Bool {
-    return UITraitCollection.current.isDarkMode
 }

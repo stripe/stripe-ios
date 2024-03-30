@@ -52,13 +52,13 @@ private enum ServerErrorPrefixes: String, CaseIterable {
 /// List of mobile friendly error messages for common upstream server errors.
 private enum MobileErrorMessage: String {
     case missingPublishableKey =
-        "No valid API key provided. Set `STPAPIClient.shared().publishableKey` to your publishable key, which you can find here: https://stripe.com/docs/keys"
+        "No valid API key provided. Set `STPAPIClient.shared.publishableKey` to your publishable key, which you can find here: https://stripe.com/docs/keys"
 
     case invalidCustomerEphKey =
         "Invalid customer ephemeral key secret. You can find more information at https://stripe.com/docs/payments/accept-a-payment?platform=ios#add-server-endpoint"
 
     case mismatchPublishableKey =
-        "The publishable key provided does not match the publishable key associated with the PaymentIntent/SetupIntent. This is most likley caused by using a different publishable key in `STPAPIClient.shared().publishableKey` than what your server is using."
+        "The publishable key provided does not match the publishable key associated with the PaymentIntent/SetupIntent. This is most likley caused by using a different publishable key in `STPAPIClient.shared.publishableKey` than what your server is using."
 
     case noSuchPaymentIntent =
         "No matching PaymentIntent could be found. Ensure you are creating a PaymentIntent server side and using the same publishable key on both client and server. You can find more information at https://stripe.com/docs/api/payment_intents/create"

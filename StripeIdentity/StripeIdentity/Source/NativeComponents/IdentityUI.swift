@@ -16,7 +16,7 @@ struct IdentityUI {
     // MARK: Font
 
     static var titleFont: UIFont {
-        preferredFont(forTextStyle: .title1, weight: .medium)
+        preferredFont(forTextStyle: .title1, weight: .bold)
     }
 
     static var instructionsFont: UIFont {
@@ -52,7 +52,17 @@ struct IdentityUI {
         return UILabel.appearance().textColor ?? .label
     }
 
+    static var secondaryLabelColor: UIColor {
+        return UIColor.systemGray
+    }
+
     static let iconColor = UIColor.systemGray
+    static let darkIconColor = UIColor.label
+
+    static let htmlLineTextColor = UIColor.dynamic(
+        light: UIColor(red: 0.408, green: 0.451, blue: 0.522, alpha: 1),
+        dark: UIColor(red: 0.922, green: 0.933, blue: 0.945, alpha: 1)
+    )
 
     // MARK: Separator
 
@@ -64,4 +74,19 @@ struct IdentityUI {
     static let documentCameraPreviewAspectRatio: CGFloat = 1.25  // 5:4
     static let scanningViewLabelMinHeightNumberOfLines: Int = 3
     static let scanningViewLabelBottomPadding: CGFloat = 24
+
+    static let identityElementsUITheme: ElementsUITheme = {
+        var identityElementsUITheme = ElementsUITheme.default
+
+        var fonts = ElementsUITheme.Font()
+        fonts.subheadline = preferredFont(forTextStyle: .body).withSize(14)
+        fonts.subheadlineBold = preferredFont(forTextStyle: .body, weight: .bold).withSize(14)
+        fonts.sectionHeader = preferredFont(forTextStyle: .body, weight: .semibold).withSize(13)
+        fonts.caption = preferredFont(forTextStyle: .caption1, weight: .regular).withSize(12)
+        fonts.footnote = preferredFont(forTextStyle: .footnote, weight: .regular)
+        fonts.footnoteEmphasis = preferredFont(forTextStyle: .footnote, weight: .medium)
+
+        identityElementsUITheme.fonts = fonts
+        return identityElementsUITheme
+    }()
 }

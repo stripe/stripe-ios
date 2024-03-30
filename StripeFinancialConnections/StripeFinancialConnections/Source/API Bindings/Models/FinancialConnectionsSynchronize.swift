@@ -10,14 +10,16 @@ import Foundation
 struct FinancialConnectionsSynchronize: Decodable {
     let manifest: FinancialConnectionsSessionManifest
     let text: Text?
-    let visual: VisualUpdate?
+    let visual: VisualUpdate
 
     struct Text: Decodable {
         let consentPane: FinancialConnectionsConsent?
+        let networkingLinkSignupPane: FinancialConnectionsNetworkingLinkSignup?
     }
 
     struct VisualUpdate: Decodable {
         let reducedBranding: Bool
         let merchantLogo: [String]
+        let reduceManualEntryProminenceInErrors: Bool
     }
 }

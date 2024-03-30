@@ -158,9 +158,9 @@ class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
                 XCTFail("Expected \(expected), got \(validationState) for number \"\(card)\"")
             }
             let expectedCardBrand = test.2
-            if !(validator.cardBrand == expectedCardBrand) {
+            if !(validator.cardBrandState.brand == expectedCardBrand) {
                 XCTFail(
-                    "Expected \(expectedCardBrand), got \(validator.cardBrand) for number \(card)"
+                    "Expected \(expectedCardBrand), got \(validator.cardBrandState.brand) for number \(card)"
                 )
             }
         }

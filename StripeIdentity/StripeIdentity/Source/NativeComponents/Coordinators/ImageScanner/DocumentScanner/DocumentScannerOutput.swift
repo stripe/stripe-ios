@@ -17,21 +17,26 @@ struct DocumentScannerOutput: Equatable {
     let barcode: BarcodeDetectorOutput?
     let motionBlur: MotionBlurDetector.Output
     let cameraProperties: CameraSession.DeviceProperties?
+    let blurResult: LaplacianBlurDetector.Output
 
     /// Determines if the document is high quality and matches the desired
     /// document type and side.
     /// - Parameters:
-    ///   - type: Type of the desired document
     ///   - side: Side of the desired document.
     func isHighQuality(
-        matchingDocumentType type: DocumentType,
         side: DocumentSide
     ) -> Bool {
-        // Don't check barcode result as it would end up returning fast and collecting a blury image
-        // that fails to decode on backend
-        // TODO(ccen|IDPROD-4697): Implement better heuristic to decode the back of ID.
-        return idDetectorOutput.classification.matchesDocument(type: type, side: side)
-            && cameraProperties?.isAdjustingFocus != true
-            && !motionBlur.hasMotionBlur
+        if barcode?.hasBarcode == true {
+            // If the barcode is clear enough to decode, then that's good enough and
+            // it doesn't matter if the MotionBlurDetector believes there's motion blur
+            // just need to make sure the zoom level is ok
+            return idDetectorOutput.computeZoomLevel() == .ok
+        } else {
+            return idDetectorOutput.classification.matchesDocument(side: side)
+                && cameraProperties?.isAdjustingFocus != true
+                && !motionBlur.hasMotionBlur
+                && blurResult.isBlurry != true
+                && idDetectorOutput.computeZoomLevel() == .ok
+        }
     }
 }

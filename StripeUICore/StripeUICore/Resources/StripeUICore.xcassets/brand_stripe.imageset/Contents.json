@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "brand_stripe.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

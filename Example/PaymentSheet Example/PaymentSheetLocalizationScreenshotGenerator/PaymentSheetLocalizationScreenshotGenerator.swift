@@ -60,16 +60,55 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         waitToAppear(targetCell)
     }
 
-    func testAllStrings() {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        app.segmentedControls["customer_mode_selector"].buttons["new"].tap() // new customer
-        app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
-        app.segmentedControls["currency_selector"].buttons["EUR"].tap() // EUR currency
-        app.segmentedControls["mode_selector"].buttons["Pay"].tap() // PaymentIntent
-        app.segmentedControls["automatic_payment_methods_selector"].buttons["off"].tap() // disable automatic payment methods
-        app.buttons["Reload PaymentSheet"].tap()
+    func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
+        if settings.uiStyle == .paymentSheet {
+            let presentButton = app.buttons["Present PaymentSheet"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: presentButton,
+                handler: nil
+            )
+            waitForExpectations(timeout: 10, handler: nil)
+        } else {
+            let confirm = app.buttons["Confirm"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: confirm,
+                handler: nil
+            )
+            waitForExpectations(timeout: 10, handler: nil)
+        }
+    }
+    func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
+        if #available(iOS 15.0, *) {
+            // Doesn't work on 16.4. Seems like a bug, can't see any confirmation that this works online.
+            //   var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
+            //   urlComponents.query = settings.base64Data
+            //   app.open(urlComponents.url!)
+            // This should work, but we get an "Open in 'PaymentSheet Example'" consent dialog the first time we run it.
+            // And while the dialog is appearing, `open()` doesn't return, so we can't install an interruption handler or anything to handle it.
+            //   XCUIDevice.shared.system.open(urlComponents.url!)
+            app.launchEnvironment = app.launchEnvironment.merging(["STP_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launch()
+        } else {
+            XCTFail("This test is only supported on iOS 15.0 or later.")
+        }
+        waitForReload(app, settings: settings)
+    }
 
-        let checkout = app.buttons["Checkout (Complete)"]
+    func testAllStrings() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.currency = .eur
+        settings.mode = .payment
+        settings.apmsEnabled = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let checkout = app.buttons["Present PaymentSheet"]
         expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: checkout,
@@ -181,10 +220,10 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         }
 
         app.buttons["UIButton.Close"].tap()
-        waitToAppear(app.buttons["Checkout (Complete)"])
+        waitToAppear(app.buttons["Present PaymentSheet"])
 
-        app.segmentedControls["mode_selector"].buttons["Setup"].tap() // setup intent
-        app.buttons["Reload PaymentSheet"].tap()
+        settings.mode = .setup
+        loadPlayground(app, settings)
 
         expectation(
             for: NSPredicate(format: "enabled == true"),
@@ -201,7 +240,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         app.buttons["UIButton.Close"].tap()
         // This section commented out for CI since it depends on global state
         // of the returning customer. Uncomment when generating screenshots
-//        waitToAppear(app.buttons["Checkout (Complete)"])
+//        waitToAppear(app.buttons["Present PaymentSheet"])
 //
 //        app.segmentedControls["mode_selector"].buttons["Pay"].tap() // payment intent
 //        app.segmentedControls["customer_mode_selector"].buttons["returning"].tap() // returning customer

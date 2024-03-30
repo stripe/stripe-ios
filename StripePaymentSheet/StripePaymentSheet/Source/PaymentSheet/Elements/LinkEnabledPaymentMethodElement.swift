@@ -9,7 +9,9 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class LinkEnabledPaymentMethodElement: Element {
+final class LinkEnabledPaymentMethodElement: ContainerElement {
+    public lazy var elements: [Element] = { [paymentMethodElement, inlineSignupElement] }()
+
     struct Constants {
         static let spacing: CGFloat = 12
     }
@@ -33,25 +35,27 @@ final class LinkEnabledPaymentMethodElement: Element {
         return stackView
     }()
 
-    let paymentMethodType: PaymentSheet.PaymentMethodType
+    let paymentMethodType: STPPaymentMethodType
 
     let paymentMethodElement: PaymentMethodElement
 
     let inlineSignupElement: LinkInlineSignupElement
 
     init(
-        type: PaymentSheet.PaymentMethodType,
+        type: STPPaymentMethodType,
         paymentMethodElement: PaymentMethodElement,
         configuration: PaymentSheet.Configuration,
         linkAccount: PaymentSheetLinkAccount?,
-        country: String?
+        country: String?,
+        showCheckbox: Bool
     ) {
         self.paymentMethodType = type
         self.paymentMethodElement = paymentMethodElement
         self.inlineSignupElement = LinkInlineSignupElement(
             configuration: configuration,
             linkAccount: linkAccount,
-            country: country
+            country: country,
+            showCheckbox: showCheckbox
         )
 
         paymentMethodElement.delegate = self
@@ -59,30 +63,28 @@ final class LinkEnabledPaymentMethodElement: Element {
     }
 
     func makePaymentOption() -> PaymentOption? {
-        guard let params = updateParams(params: .init(type: paymentMethodType)) else {
+        guard let params = updateParams(params: .init(type: .stripe(paymentMethodType))) else {
             return nil
         }
 
         switch inlineSignupElement.action {
-        case .pay(let account):
-            return .link(
-                option: .withPaymentMethodParams(
-                    account: account,
-                    paymentMethodParams: params.paymentMethodParams
-                )
-            )
         case .signupAndPay(let account, let phoneNumber, let legalName):
             return .link(
                 option: .signUp(
                     account: account,
                     phoneNumber: phoneNumber,
+                    consentAction: inlineSignupElement.viewModel.consentAction,
                     legalName: legalName,
-                    paymentMethodParams: params.paymentMethodParams
+                    intentConfirmParams: params
                 )
             )
         case .continueWithoutLink:
             return .new(confirmParams: params)
         case .none:
+            // Link is optional when in textFieldOnly mode
+            if inlineSignupElement.viewModel.mode != .checkbox {
+                return .new(confirmParams: params)
+            }
             return nil
         }
     }

@@ -1,12 +1,12 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Câteva fotografii vor fi efectuate automat la următorul pas pentru a verifica dacă sunteți dvs.";
+
+"Accepted forms of ID include" = "Formele de identificare acceptate includ";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Alternativ, puteți încărca manual o fotografie a documentului dvs. de identitate.";
 
 "App Settings" = "Setările aplicației";
 
-"Back driver's license photo successfully uploaded" = "Fotografia verso-ului permisului de conducere a fost încărcată cu succes";
-
 "Back identity card photo successfully uploaded" = "Fotografia verso-ului cărții de identitate a fost încărcată cu succes";
-
-"Back of driver's license" = "Verso-ul permisului de conducere";
 
 "Back of identity card" = "Verso-ul cărții de identitate";
 
@@ -22,57 +22,59 @@
 
 "Could not capture image" = "Nu s-a putut capta imaginea";
 
-"Date of birth" = "Data nașterii";
+"Date of Birth" = "Data nașterii";
 
-"File Upload" = "Încărcare fișier";
-
-"File upload" = "Încărcare fișier";
-
-"Flip your driver's license over to the other side" = "Întoarceți permisul de conducere pe partea cealaltă";
+"Date of birth does not look valid" = "Data nașterii pare a nu fi validă";
 
 "Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
 
-"Front driver's license photo successfully uploaded" = "Fotografia părții frontale a permisului de conducere a fost încărcată cu succes";
-
 "Front identity card photo successfully uploaded" = "Fotografia părții frontale a cărții de identitate a fost încărcată cu succes";
 
-"Front of driver's license" = "Partea frontală a permisului de conducere";
-
 "Front of identity card" = "Partea frontală a cărții de identitate";
+
+"Get ready to scan your photo ID" = "Pregătiți-vă să vă scanați documentul de identitate cu fotografie";
+
+"Get ready to take a selfie" = "Pregătiți-vă pentru a efectua un selfie";
 
 "Go Back" = "Înapoi";
 
 "Hold still, scanning" = "Nu mișcați, se scanează";
 
+"I'm ready" = "Sunt gata";
+
 "ID Number" = "Număr de identificare";
 
-"ID Type" = "Tip identificare";
+"Individual CPF" = "CPF persoană fizică";
 
-"Image of passport" = "Imaginea pașaportului";
+"Last 4 of Social Security number" = "Ultimele 4 cifre ale numărului de securitate socială";
 
 "Loading" = "Se încarcă";
 
-"Passport" = "Pașaport";
+"Make sure you're in a well lit space." = "Asigurați-vă că vă aflați într-un spațiu bine luminat.";
 
-"Passport photo successfully uploaded" = "Fotografia pașaportului a fost încărcată cu succes";
+"Move closer" = "Apropiați";
+
+"Move farther" = "Depărtați";
+
+"NRIC or FIN" = "NRIC sau FIN";
 
 "Personal ID number" = "Număr de identificare personal";
 
+"Personal Information" = "Informații cu caracter personal";
+
+"Phone Number" = "Număr de telefon";
+
+"Phone Verification" = "Verificare număr de telefon";
+
 "Photo Library" = "Galerie foto";
 
-"Please upload an image of your passport" = "Vă rugăm să încărcați o imagine a pașaportului dvs.";
-
-"Please upload images of the front and back of your driver's license" = "Vă rugăm să încărcați imagini cu partea frontală și verso-ul permisului dvs. de conducere";
-
 "Please upload images of the front and back of your identity card" = "Vă rugăm să încărcați imagini cu partea frontală și verso-ul cărții dvs. de identitate";
-
-"Position your driver's license in the center of the frame" = "Poziționați-vă permisul de conducere în centrul cadrului";
 
 "Position your face in the center of the frame." = "Poziționați-vă fața în centrul cadrului.";
 
 "Position your identity card in the center of the frame" = "Poziționați-vă cartea de identitate în centrul cadrului";
 
-"Position your passport in the center of the frame" = "Poziționați-vă pașaportul în centrul cadrului";
+"Retake Photos" = "Faceți din nou fotografii";
 
 "Scan" = "Scanare";
 
@@ -84,15 +86,9 @@
 
 "Select a location to upload the front of your identity document from" = "Selectați o locație din care să încărcați partea frontală a documentului dvs. de identitate";
 
-"Select back driver's license photo" = "Selectați fotografia verso-ului permisului de conducere";
-
 "Select back identity card photo" = "Selectați fotografia verso-ului cărții de identitate";
 
-"Select front driver's license photo" = "Selectați fotografia părții frontale a permisului de conducere";
-
 "Select front identity card photo" = "Selectați fotografia părții frontale a cărții de identitate";
-
-"Select passport photo" = "Selectați fotografia pașaportului";
 
 "Selfie" = "Selfie";
 
@@ -116,15 +112,11 @@
 
 "Upload a Photo" = "Încărcați o fotografie";
 
-"Uploading back driver's license photo" = "Se încarcă fotografia verso-ului permisului de conducere";
+"Upload your photo ID" = "Încărcați documentul de identitate cu fotografie";
 
 "Uploading back identity card photo" = "Se încarcă fotografia verso-ului cărții de identitate";
 
-"Uploading front driver's license photo" = "Se încarcă fotografia părții frontale a permisului de conducere";
-
 "Uploading front identity card photo" = "Se încarcă fotografia părții frontale a cărții de identitate";
-
-"Uploading passport photo" = "Se încarcă fotografia pașaportului";
 
 "Verify your identity" = "Verificați-vă identitatea";
 
@@ -132,6 +124,14 @@
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Avem nevoie de permisiunea de a utiliza camera dvs. Vă rugăm să permiteți accesul la cameră în setările aplicației.";
 
+"Welcome" = "Bine ați venit";
+
 "You can either try again or upload an image from your device." = "Puteți să încercați din nou sau să încărcați o imagine de pe dispozitivul dvs.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Fotografiile dvs. de tip selfie nu au fost salvate. Doriți să ieșiți?";
+
+"driver's license" = "permis de conducere";
+
+"government-issued photo ID" = "document de identitate cu fotografie emis de guvern";
+
+"passport" = "pașaport";

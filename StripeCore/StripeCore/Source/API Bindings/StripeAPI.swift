@@ -72,7 +72,12 @@ import PassKit
     ///
     /// Set this property to enable other card networks in addition to these.
     /// For example, `additionalEnabledApplePayNetworks = [.JCB]` enables JCB (note this requires onboarding from JCB and Stripe).
-    @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = []
+    @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = [] {
+        didSet {
+            // Reset deviceSupportsApplePay for the updated network list:
+            _deviceSupportsApplePay = nil
+        }
+    }
 
     /// Whether or not this device is capable of using Apple Pay.
     ///
@@ -94,15 +99,14 @@ import PassKit
         return paymentRequest.paymentSummaryItems.last?.amount.floatValue ?? 0.0 >= 0
     }
 
-    class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
-        var additionalOSSupportedNetworks: [PKPaymentNetwork] = []
-        additionalOSSupportedNetworks.append(.maestro)
+    @_spi(STP) public class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
         return [
             .amex,
             .masterCard,
+            .maestro,
             .visa,
             .discover,
-        ] + additionalEnabledApplePayNetworks + additionalOSSupportedNetworks
+        ] + additionalEnabledApplePayNetworks
     }
 
     /// Whether or not this can make Apple Pay payments via a card network supported
@@ -116,10 +120,22 @@ import PassKit
     /// of the supported networks. NO if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
     @objc public class func deviceSupportsApplePay() -> Bool {
-        return PKPaymentAuthorizationController.canMakePayments(
+        if let deviceSupportsApplePay = _deviceSupportsApplePay {
+            return deviceSupportsApplePay
+        }
+        let deviceSupportsApplePay = PKPaymentAuthorizationController.canMakePayments(
             usingNetworks: self.supportedPKPaymentNetworks()
         )
+        _deviceSupportsApplePay = deviceSupportsApplePay
+        return deviceSupportsApplePay
     }
+
+    /// Cached value of deviceSupportsApplePay
+    /// `PKPaymentAuthorizationController.canMakePayments` is very slow on macOS Catalyst, so we only request once per process
+    /// or when the additional networks list changes.
+    /// This should only return `false` based on the current hardware or parental controls. We don't expect these to change
+    /// during the life of the process.
+    private static var _deviceSupportsApplePay: Bool?
 
     /// A convenience method to build a `PKPaymentRequest` with sane default values.
     ///
@@ -144,7 +160,11 @@ import PassKit
         let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = merchantIdentifier
         paymentRequest.supportedNetworks = self.supportedPKPaymentNetworks()
+        #if canImport(CompositorServices)
+        paymentRequest.merchantCapabilities = .threeDSecure
+        #else
         paymentRequest.merchantCapabilities = .capability3DS
+        #endif
         paymentRequest.countryCode = countryCode.uppercased()
         paymentRequest.currencyCode = currencyCode.uppercased()
         paymentRequest.requiredBillingContactFields = Set([.postalAddress])

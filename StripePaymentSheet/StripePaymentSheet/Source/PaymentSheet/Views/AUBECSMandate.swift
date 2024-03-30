@@ -17,7 +17,7 @@ final class AUBECSLegalTermsView: UIView {
     private let links: [String: URL] = [
         "terms": URL(string: "https://stripe.com/au-becs-dd-service-agreement/legal")!
     ]
-    private let configuration: PaymentSheet.Configuration
+    private let configuration: PaymentSheetFormFactoryConfig
 
     private var theme: ElementsUITheme {
         return configuration.appearance.asElementsTheme
@@ -38,7 +38,7 @@ final class AUBECSLegalTermsView: UIView {
         return textView
     }()
 
-    init(configuration: PaymentSheet.Configuration, textAlignment: NSTextAlignment = .left) {
+    init(configuration: PaymentSheetFormFactoryConfig, textAlignment: NSTextAlignment = .left) {
         self.configuration = configuration
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
@@ -49,10 +49,12 @@ final class AUBECSLegalTermsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         textView.font = .preferredFont(forTextStyle: .caption1)
     }
+#endif
 
     private func formattedLegalText() -> NSAttributedString {
         let template = STPLocalizedString(

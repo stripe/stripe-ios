@@ -15,6 +15,13 @@ import UIKit
 enum PaymentSheetUI {
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button
     static let defaultPadding: CGFloat = 20
+
+#if canImport(CompositorServices)
+    static let navBarPadding: CGFloat = 30
+#else
+    static let navBarPadding = defaultPadding
+#endif
+
     static let defaultMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, trailing: defaultPadding)
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
@@ -22,7 +29,7 @@ enum PaymentSheetUI {
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
     static let defaultAnimationDuration: TimeInterval = 0.2
     static let quickAnimationDuration: TimeInterval = 0.1
-    /// The minimnum amount of time to spend processing before transitioning to success/failure
+    /// The minimum amount of time to spend processing before transitioning to success/failure
     static let minimumFlightTime: TimeInterval = 1
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
     static let minimumHitArea = CGSize(width: 44, height: 44)

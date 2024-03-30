@@ -17,6 +17,11 @@ extension Error {
         if let paymentSheetError = self as? PaymentSheetError {
             return paymentSheetError.debugDescription
         }
+        if localizedDescription == "The operation couldn’t be completed. (STPPaymentHandlerErrorDomain error 2.)",
+           let underlyingError = (self as NSError).userInfo["NSUnderlyingError"] as? NSError {
+            let errorMessage = underlyingError.userInfo[STPError.errorMessageKey] as? String ?? NSError.stp_unexpectedErrorMessage()
+            return errorMessage
+        }
         // If the `localizedDescription` is not generic, return the `localizedDescription`
         if localizedDescription != NSError.stp_unexpectedErrorMessage() { return localizedDescription }
 

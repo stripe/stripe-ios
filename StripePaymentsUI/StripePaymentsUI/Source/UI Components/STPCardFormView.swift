@@ -195,6 +195,12 @@ public class STPCardFormView: STPFormView {
             cardParams.expMonth = NSNumber(value: monthInt)
             cardParams.expYear = NSNumber(value: yearInt)
 
+            // If CBC is enabled, set the selected card brand
+            if let cardValidator = (numberField.validator as? STPCardNumberInputTextFieldValidator),
+                let selectedBrand = cardValidator.cbcController.selectedBrand {
+                cardParams.networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+            }
+
             return STPPaymentMethodParams(
                 card: cardParams,
                 billingDetails: billingDetails,
@@ -217,7 +223,14 @@ public class STPCardFormView: STPFormView {
                 if let cvc = card.cvc {
                     cvcField.text = cvc
                 }
+                // If a card brand is explicitly selected, retain that information
+                if let preferredBrandString = card.networks?.preferred,
+                   let cardValidator = (numberField.validator as? STPCardNumberInputTextFieldValidator)
+                    {
+                    cardValidator.cbcController.selectedBrand = STPCard.brand(from: preferredBrandString)
+                }
             }
+
             billingAddressSubForm.billingDetails = newValue?.billingDetails
             // MUST be called after setting field values
             _bindedPaymentMethodParams = newValue
@@ -295,36 +308,24 @@ public class STPCardFormView: STPFormView {
     ) {
         self.init(
             billingAddressCollection: .automatic,
-            includeCardScanning: false,
-            mergeBillingFields: true,
             style: style,
             prefillDetails: nil
         )
-
-        hideShadow = true
-        // manually call the didSet behavior of hideShadow since that's not triggered in initializers
-        sectionViews.forEach { (sectionView) in
-            sectionView.stackView.hideShadow = hideShadow
-            // remove default background coloring
-            sectionView.stackView.customBackgroundColor = nil
-        }
-
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCardFormView.self)
     }
 
     @_spi(STP) public convenience init(
         billingAddressCollection: BillingAddressCollectionLevel,
-        includeCardScanning: Bool = true,
-        mergeBillingFields: Bool = false,
         style: STPCardFormViewStyle = .standard,
         postalCodeRequirement: STPPostalCodeRequirement = .standard,
         prefillDetails: PrefillDetails? = nil,
-        inputMode: STPCardNumberInputTextField.InputMode = .standard
+        inputMode: STPCardNumberInputTextField.InputMode = .standard,
+        cbcEnabledOverride: Bool? = nil
     ) {
         self.init(
             numberField: STPCardNumberInputTextField(
                 inputMode: inputMode,
-                prefillDetails: prefillDetails
+                prefillDetails: prefillDetails,
+                cbcEnabledOverride: cbcEnabledOverride
             ),
             cvcField: STPCardCVCInputTextField(prefillDetails: prefillDetails),
             expiryField: STPCardExpiryInputTextField(prefillDetails: prefillDetails),
@@ -332,8 +333,6 @@ public class STPCardFormView: STPFormView {
                 billingAddressCollection: billingAddressCollection,
                 postalCodeRequirement: postalCodeRequirement
             ),
-            includeCardScanning: includeCardScanning,
-            mergeBillingFields: mergeBillingFields,
             style: style,
             postalCodeRequirement: postalCodeRequirement,
             prefillDetails: prefillDetails,
@@ -346,8 +345,6 @@ public class STPCardFormView: STPFormView {
         cvcField: STPCardCVCInputTextField,
         expiryField: STPCardExpiryInputTextField,
         billingAddressSubForm: BillingAddressSubForm,
-        includeCardScanning: Bool,
-        mergeBillingFields: Bool,
         style: STPCardFormViewStyle = .standard,
         postalCodeRequirement: STPPostalCodeRequirement = .standard,
         prefillDetails: PrefillDetails? = nil,
@@ -365,67 +362,25 @@ public class STPCardFormView: STPFormView {
             self.numberField.isUserInteractionEnabled = false
         }
 
-        var scanButton: UIButton?
-        if includeCardScanning {
-            if #available(iOS 13.0, macCatalyst 14.0, *) {
-                let cardScanningAvailable: Bool = {
-                    var scannerClassObject: AnyObject.Type?
-                    if let scanner = NSClassFromString("STPCardScanner") {
-                        scannerClassObject = scanner
-                    } else if let scanner = NSClassFromString("STPCardScanner_legacy") {
-                        scannerClassObject = scanner
-                    }
-                    let scannerClass = scannerClassObject as? STPCardScanningProtocol.Type
-                    return scannerClass?.cardScanningAvailable ?? false
-                }()
-                if cardScanningAvailable {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    let labelFont = fontMetrics.scaledFont(
-                        for: UIFont.systemFont(ofSize: 13, weight: .semibold)
-                    )
-                    let iconConfig = UIImage.SymbolConfiguration(
-                        font: fontMetrics.scaledFont(
-                            for: UIFont.systemFont(ofSize: 9, weight: .semibold)
-                        )
-                    )
-
-                    scanButton = UIButton(type: .system)
-                    scanButton?.setTitle(String.Localized.scan_card, for: .normal)
-                    scanButton?.setImage(
-                        UIImage(systemName: "camera.fill", withConfiguration: iconConfig),
-                        for: .normal
-                    )
-                    scanButton?.setContentSpacing(4, withEdgeInsets: .zero)
-                    scanButton?.tintColor = .label
-                    scanButton?.titleLabel?.font = labelFont
-                    scanButton?.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
-                }
-            }
-        }
-
         var rows: [[STPFormInput]] = [
             [numberField],
             [expiryField, cvcField],
         ]
-        if mergeBillingFields {
-            rows.append(contentsOf: billingAddressSubForm.formSection.rows)
-        }
+        rows.append(contentsOf: billingAddressSubForm.formSection.rows)
 
         let cardParamsSection = STPFormView.Section(
             rows: rows,
-            title: mergeBillingFields ? nil : String.Localized.card_information,
-            accessoryButton: scanButton
+            title: nil,
+            accessoryButton: nil
         )
 
         super.init(
-            sections: mergeBillingFields
-                ? [cardParamsSection] : [cardParamsSection, billingAddressSubForm.formSection]
+            sections: [cardParamsSection]
         )
         numberField.addObserver(self)
         cvcField.addObserver(self)
         expiryField.addObserver(self)
         billingAddressSubForm.formSection.rows.forEach({ $0.forEach({ $0.addObserver(self) }) })
-        scanButton?.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
         countryCode = countryField.inputValue
         updateCountryCodeValues()
 
@@ -441,6 +396,16 @@ public class STPCardFormView: STPFormView {
                 sectionView.insetFooterLabel = true
             }
         }
+
+        hideShadow = true
+        // manually call the didSet behavior of hideShadow since that's not triggered in initializers
+        sectionViews.forEach { (sectionView) in
+            sectionView.stackView.hideShadow = hideShadow
+            // remove default background coloring
+            sectionView.stackView.customBackgroundColor = nil
+        }
+
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCardFormView.self)
     }
 
     required init?(
@@ -502,7 +467,7 @@ public class STPCardFormView: STPFormView {
         }
 
         if textField == numberField {
-            cvcField.cardBrand = numberField.cardBrand
+            cvcField.cardBrand = numberField.brandForCVC
         } else if textField == countryField {
             let countryChanged = textField.inputValue != countryCode
 
@@ -585,6 +550,62 @@ public class STPCardFormView: STPFormView {
         default:
             return false
         }
+    }
+
+    // MARK: CBC
+    /// The list of preferred networks that should be used to process
+    /// payments made with a co-branded card if your user hasn't selected a
+    /// network themselves.
+    ///
+    /// The first preferred network that matches any available network will
+    /// be offered to the customer. If no preferred network is applicable, the
+    /// customer will select the network.
+    open var preferredNetworks: [STPCardBrand]? {
+        get {
+            numberField.preferredNetworks
+        }
+        set {
+            numberField.preferredNetworks = newValue
+        }
+    }
+
+    /// The list of preferred networks that should be used to process
+    /// payments made with a co-branded card if your user hasn't selected a
+    /// network themselves.
+    ///
+    /// The first preferred network that matches any available network will
+    /// be offered to the customer. If no preferred network is applicable, the
+    /// customer will select the network.
+    ///
+    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
+    /// For example:
+    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
+    @available(swift, obsoleted: 1.0)
+    @objc(preferredNetworks) open func preferredNetworks_objc() -> [NSNumber]? {
+        guard let preferredNetworks = self.preferredNetworks else {
+            return nil
+        }
+        return preferredNetworks.map { NSNumber(value: $0.rawValue) }
+    }
+
+    /// The list of preferred networks that should be used to process
+    /// payments made with a co-branded card if your user hasn't selected a
+    /// network themselves.
+    ///
+    /// The first preferred network that matches any available network will
+    /// be offered to the customer. If no preferred network is applicable, the
+    /// customer will select the network.
+    ///
+    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
+    /// For example:
+    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
+    @available(swift, obsoleted: 1.0)
+    @objc(setPreferredNetworks:) open func setPreferredNetworks_objc(preferredNetworks: [NSNumber]?) {
+        guard let preferredNetworks = preferredNetworks else {
+            self.preferredNetworks = nil
+            return
+        }
+        self.preferredNetworks = preferredNetworks.map { STPCardBrand(rawValue: $0.intValue) ?? .unknown }
     }
 }
 
@@ -708,7 +729,7 @@ extension STPCardFormView {
             case .required:
                 stateField = STPGenericInputTextField(
                     placeholder: StripeSharedStrings.localizedStateString(
-                        for: Locale.autoupdatingCurrent.regionCode
+                        for: Locale.autoupdatingCurrent.stp_regionCode
                     ),
                     textContentType: .addressState
                 )
@@ -785,10 +806,6 @@ extension STPCardFormView {
             self.cardBrand = cardBrand
         }
     }
-}
-
-@_spi(STP) public protocol STPCardScanningProtocol {
-    static var cardScanningAvailable: Bool { get }
 }
 
 /// Billing address collection modes for PaymentSheet

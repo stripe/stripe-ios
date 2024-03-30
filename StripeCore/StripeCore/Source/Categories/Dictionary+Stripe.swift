@@ -44,6 +44,16 @@ extension Dictionary {
         }
         return newDict
     }
+
+    @inlinable public mutating func mergeAssertingOnOverwrites(_ other: [Key: Value]) {
+        merge(other) { a, b in
+#if DEBUG
+assertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
+#endif
+            return a
+        }
+    }
+
 }
 
 extension Dictionary where Value == Any {
@@ -64,6 +74,19 @@ extension Dictionary where Value == Any {
             }
 
             return String(data: data, encoding: .utf8)
+        }
+    }
+}
+
+// From https://talk.objc.io/episodes/S01E31-mutating-untyped-dictionaries
+@_spi(STP) public extension Dictionary {
+    /// Example usage: `dict[jsonDict: "countries"]?[jsonDict: "japan"]?["capital"] = "berlin"`
+    subscript(jsonDict key: Key) -> [String: Any]? {
+        get {
+            return self[key] as? [String: Any]
+        }
+        set {
+            self[key] = newValue as? Value
         }
     }
 }

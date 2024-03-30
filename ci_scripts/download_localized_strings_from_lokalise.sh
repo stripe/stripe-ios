@@ -13,8 +13,9 @@ if [[ -z $(which recode) ]]; then
     brew install recode
 fi
 
-API_TOKEN=$(fetch-password mobile/lokalise/token -q)
-PROJECT_ID=$(fetch-password mobile/lokalise/ios -q)
+API_TOKEN=$(fetch-password lokalise-api-token-manual -q)
+# Android-iOS-SDK
+PROJECT_ID=747824695e51bc2f4aa912.89576472
 
 # Load LOCALIZATION_DIRECTORIES & LANGUAGES variables
 source ci_scripts/localization_vars.sh

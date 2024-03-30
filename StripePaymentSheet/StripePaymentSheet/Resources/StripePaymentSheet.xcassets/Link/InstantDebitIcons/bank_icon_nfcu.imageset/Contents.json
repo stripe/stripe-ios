@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "BrandIcon--navyfederal.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -12,6 +12,8 @@ final class AnalyticsHelper {
     enum TimeMeasurement {
         case checkout
         case linkSignup
+        case linkPopup
+        case formShown
     }
 
     static let shared = AnalyticsHelper()
@@ -21,6 +23,9 @@ final class AnalyticsHelper {
     private let timeProvider: () -> Date
 
     private var startTimes: [TimeMeasurement: Date] = [:]
+
+    /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.
+    var didSendPaymentSheetFormInteractedEventAfterFormShown: Bool = false
 
     init(timeProvider: @escaping () -> Date = Date.init) {
         self.timeProvider = timeProvider

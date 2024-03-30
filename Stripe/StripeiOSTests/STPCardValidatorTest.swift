@@ -11,6 +11,7 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+@testable import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
@@ -426,5 +427,46 @@ class STPCardValidatorTest: XCTestCase {
                 )
             }
         }
+    }
+
+    func testCBCFetch() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let mcExp = expectation(description: "Mastercard/CBC")
+        let visaExp = expectation(description: "Visa/CBC")
+        let justVisaExp = expectation(description: "Visa Only")
+        let paramsExp = expectation(description: "Params")
+        let emptyParamsExp = expectation(description: "Empty Params")
+        STPCardValidator.possibleBrands(forNumber: "513130") { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, [.cartesBancaires, .mastercard])
+            mcExp.fulfill()
+        }
+        STPCardValidator.possibleBrands(forNumber: "455673") { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, [.cartesBancaires, .visa])
+            visaExp.fulfill()
+        }
+        STPCardValidator.possibleBrands(forNumber: "424242") { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, [.visa])
+            justVisaExp.fulfill()
+        }
+
+        let params = STPPaymentMethodCardParams()
+        params.number = "5131301234"
+        STPCardValidator.possibleBrands(forCard: params) { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, [.cartesBancaires, .mastercard])
+            paramsExp.fulfill()
+        }
+
+        let paramsEmpty = STPPaymentMethodCardParams()
+        STPCardValidator.possibleBrands(forCard: paramsEmpty) { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, Set(STPCardBrand.allCases))
+            emptyParamsExp.fulfill()
+        }
+
+        wait(for: [mcExp, visaExp, justVisaExp, paramsExp, emptyParamsExp], timeout: STPTestingNetworkRequestTimeout)
     }
 }

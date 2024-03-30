@@ -2,7 +2,6 @@
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
 [![License](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
 
@@ -28,6 +27,7 @@ Table of contents
    * [Card scanning](#card-scanning)
    * [Contributing](#contributing)
    * [Migrating](#migrating-from-older-versions)
+   * [Code Stye](#code-style)
    * [Licenses](#licenses)
 
 <!--te-->
@@ -66,7 +66,7 @@ For help with Apple's App Privacy Details form in App Store Connect, visit [Stri
 |Module|Description|Compressed|Uncompressed|
 |------|-----------|----------|------------|
 |StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|2.7MB|6.3MB|
-|Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS) and [Basic Integration](/docs/mobile/ios/basic).|2.3MB|5.1MB|
+|Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS) and [Basic Integration](https://stripe.com/docs/mobile/ios/basic).|2.3MB|5.1MB|
 |StripeApplePay|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|0.4MB|1.0MB|
 |StripePayments|Bindings for the Stripe Payments API.|1.0MB|2.6MB|
 |StripePaymentsUI|Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements.|1.7MB|3.9MB|
@@ -97,11 +97,9 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 ## Requirements
 
-The Stripe iOS SDK requires Xcode 13.2.1 or later and is compatible with apps targeting iOS 13 or above. We support Catalyst on macOS 10.16 or later.
+The Stripe iOS SDK requires Xcode 15 or later and is compatible with apps targeting iOS 13 or above. We support Catalyst on macOS 11 or later.
 
 For iOS 12 support, please use [v22.8.4](https://github.com/stripe/stripe-ios/tree/v22.8.4). For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
-
-Requirements for the **Stripe Identity iOS SDK** can be found [here](StripeIdentity/README.md#requirements).
 
 ## Getting started
 
@@ -117,20 +115,6 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 - [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
 
-### Building from source
-
-We use [Tuist](https://tuist.io) to generate Xcode projects, and all Xcode related files have been removed from the master branch of the repository. Note that project files are still available on tagged releases.
-
-If you want to build from the master branch you need to follow these steps:
-
-- Clone the repository and `cd` into its directory.
-- Install Tuist by running `curl -Ls https://install.tuist.io | bash`
-- Run `tuist generate`, optionally pass the `-n` option if you don't want to open Xcode automatically.
-
-You can build any of the generated targets as you normally would.
-
-For more information about Tuist, visit https://tuist.io.
-
 ## Card scanning
 
 [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
@@ -145,11 +129,24 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 
 1. Install Carthage 0.37 or later (if you have homebrew installed, `brew install carthage`)
 2. From the root of the repo, run `bundle install && bundle exec fastlane stripeios_tests`. This will install the test dependencies and run the tests.
-3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`. Make sure to use the iPhone 12 mini, iOS 16.1 simulator so the snapshot tests will pass.
+3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`.
+
+To re-record snapshot tests, use the `bundle exec ruby ci_scripts/snapshots.rb --record`.
 
 ## Migrating from older versions
 
 See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md)
+
+## Code style
+We use [swiftlint](https://github.com/realm/SwiftLint) to enforce code style.
+
+To install it, run `brew install swiftlint`
+
+To lint your code before pushing you can run `ci_scripts/lint_modified_files.sh`
+
+You can also add this script as a pre-push hook by running `ln -s "$(pwd)/ci_scripts/lint_modified_files.sh" .git/hooks/pre-push && chmod +x .git/hooks/pre-push`
+
+To format modified files automatically, you can use `ci_scripts/format_modified_files.sh` and you can add it as a pre-commit hook using `ln -s "$(pwd)/ci_scripts/format_modified_files.sh" .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`
 
 ## Licenses
 

@@ -20,6 +20,11 @@ protocol HostViewControllerDelegate: AnyObject {
         _ viewController: HostViewController,
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     )
+
+    func hostViewController(
+        _ hostViewController: HostViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 final class HostViewController: UIViewController {
@@ -33,7 +38,8 @@ final class HostViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .textDisabled
+        item.tintColor = .iconDefault
+        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
 
@@ -92,9 +98,12 @@ final class HostViewController: UIViewController {
 extension HostViewController {
     private func getManifest() {
         loadingView.errorView.isHidden = true
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.showLoading(true)
         apiClient
-            .generateSessionManifest(clientSecret: clientSecret, returnURL: returnURL)
+            .synchronize(
+                clientSecret: clientSecret,
+                returnURL: returnURL
+            )
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
@@ -102,7 +111,13 @@ extension HostViewController {
                     self.lastError = nil
                     self.delegate?.hostViewController(self, didFetch: synchronizePayload)
                 case .failure(let error):
-                    self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
+                    FinancialConnectionsEvent
+                        .events(fromError: error)
+                        .forEach { event in
+                            self.delegate?.hostViewController(self, didReceiveEvent: event)
+                        }
+
+                    self.loadingView.showLoading(false)
                     self.loadingView.errorView.isHidden = false
                     self.lastError = error
                 }
@@ -121,6 +136,10 @@ private extension HostViewController {
 
     @objc
     func didTapClose() {
+        delegate?.hostViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+        )
         delegate?.hostViewControllerDidFinish(self, lastError: lastError)
     }
 }

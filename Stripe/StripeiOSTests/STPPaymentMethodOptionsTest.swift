@@ -10,6 +10,7 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
@@ -29,7 +30,7 @@ class STPPaymentMethodOptionsTest: XCTestCase {
         for verificationMethod in verificationMethods {
             var clientSecret: String?
             let createPIExpectation = expectation(description: "Create PaymentIntent")
-            STPTestingAPIClient.shared().createPaymentIntent(
+            STPTestingAPIClient.shared.createPaymentIntent(
                 withParams: [
                     "payment_method_types": ["us_bank_account"],
                     "payment_method_options": [
@@ -86,7 +87,7 @@ class STPPaymentMethodOptionsTest: XCTestCase {
         for verificationMethod in verificationMethods {
             var clientSecret: String?
             let createPIExpectation = expectation(description: "Create SetupIntent")
-            STPTestingAPIClient.shared().createSetupIntent(
+            STPTestingAPIClient.shared.createSetupIntent(
                 withParams: [
                     "payment_method_types": ["us_bank_account"],
                     "payment_method_options": [

@@ -24,12 +24,14 @@ import Foundation
     case dinersClub
     /// UnionPay card
     case unionPay
+    /// Cartes Bancaires
+    case cartesBancaires
     /// An unknown card brand type
     case unknown
 }
 
 /// :nodoc:
-extension STPCardBrand: CaseIterable {
+extension STPCardBrand: CaseIterable, Codable {
     // intentionally empty
 }
 
@@ -64,8 +66,37 @@ public class STPCardBrandUtilities: NSObject {
             return "UnionPay"
         case .visa:
             return "Visa"
+        case .cartesBancaires:
+            return "Cartes Bancaires"
         case .unknown:
             return "Unknown"
+        }
+    }
+
+    /// Returns brand API string value from given card brand.
+    ///
+    /// - Parameter brand: The `STPCardBrand` to transform into a string.
+    /// - Returns: A `String` representing the card brand. This could be "visa",
+    @objc(apiValueFromCardBrand:) public static func apiValue(from brand: STPCardBrand) -> String {
+        switch brand {
+        case .visa:
+            return "visa"
+        case .amex:
+            return "american_express"
+        case .mastercard:
+            return "mastercard"
+        case .discover:
+            return "discover"
+        case .JCB:
+            return "jcb"
+        case .dinersClub:
+            return "diners_club"
+        case .unionPay:
+            return "unionpay"
+        case .cartesBancaires:
+            return "cartes_bancaires"
+        default:
+            return "unknown"
         }
     }
 

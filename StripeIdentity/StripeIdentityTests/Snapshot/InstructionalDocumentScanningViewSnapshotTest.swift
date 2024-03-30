@@ -8,17 +8,12 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class InstructionalDocumentScanningViewSnapshotTest: FBSnapshotTestCase {
+final class InstructionalDocumentScanningViewSnapshotTest: STPSnapshotTestCase {
     let view = InstructionalDocumentScanningView()
-
-    override func setUp() {
-        super.setUp()
-
-        //        recordMode = true
-    }
 
     func testOneLineText() {
         // NOTE: This image should be the same height as `testMaxLinesText`

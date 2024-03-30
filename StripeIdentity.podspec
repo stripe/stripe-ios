@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '23.4.2'
+  s.version                        = '23.26.0'
 
   s.summary                        = 'Securely capture ID documents and selfies on iOS for use with Stripe\'s Identity API to confirm the identity of global users.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.swift_version		               = '5.0'
   s.weak_framework = 'SwiftUI'
   s.source_files                   = 'StripeIdentity/StripeIdentity/**/*.swift'
-  s.ios.resource_bundle            = { 'StripeIdentity' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,xcassets}' }
+  s.ios.resource_bundle            = { 'StripeIdentityBundle' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,xcassets}' }
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripeUICore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"

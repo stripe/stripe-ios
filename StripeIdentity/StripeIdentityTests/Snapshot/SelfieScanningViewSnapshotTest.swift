@@ -11,9 +11,10 @@ import iOSSnapshotTestCase
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCameraCoreTestUtils
 
+import StripeCoreTestUtils
 @testable import StripeIdentity
 
-final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
+final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
     static let mockText = "A long line of text that should wrap to multiple lines"
     static let consentText =
         "Allow Stripe to use your images to improve our biometric verification technology. You can remove Stripe's permissions at any time by contacting Stripe. <a href='https://stripe.com'>Learn how Stripe uses data</a>"
@@ -25,12 +26,6 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
         mockCameraSession.mockImage = CapturedImageMock.backDriversLicense.image
         return mockCameraSession
     }()
-
-    override func setUp() {
-        super.setUp()
-
-        //        recordMode = true
-    }
 
     func testBlank() {
         verifyView(
@@ -57,7 +52,8 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
                     Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
                     consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
                     consentHandler: { _ in },
-                    openURLHandler: { _ in }
+                    openURLHandler: { _ in },
+                    retakeSelfieHandler: {}
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
@@ -71,7 +67,20 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
                     [SelfieScanningViewSnapshotTest.mockImage],
                     consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
                     consentHandler: { _ in },
-                    openURLHandler: { _ in }
+                    openURLHandler: { _ in },
+                    retakeSelfieHandler: {}
+                ),
+                instructionalText: SelfieScanningViewSnapshotTest.mockText
+            )
+        )
+    }
+
+    func testSaving() {
+        verifyView(
+            with: .init(
+                state: .saving(
+                    Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
+                    consentHTMLText: SelfieScanningViewSnapshotTest.consentText
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
@@ -89,7 +98,8 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
                     Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
                     consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
                     consentHandler: { _ in },
-                    openURLHandler: { _ in }
+                    openURLHandler: { _ in },
+                    retakeSelfieHandler: {}
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )

@@ -12,7 +12,6 @@ import UIKit
  A drop-in class that presents a sheet for a user to connect their financial accounts.
  This class is in beta; see https://stripe.com/docs/financial-connections for access
  */
-@available(iOSApplicationExtension, unavailable)
 final public class FinancialConnectionsSheet {
 
     // MARK: - Types
@@ -53,6 +52,15 @@ final public class FinancialConnectionsSheet {
     /// get back to your app after completing authentication in another app (such as bank app or Safari).
     public let returnURL: String?
 
+    /// The `onEvent` closure is triggered upon the occurrence of specific events
+    /// during the process of a user connecting their financial accounts.
+    ///
+    /// Refer to `FinancialConnectionsEvent.Name` for a list of possible event types.
+    ///
+    /// Every `FinancialConnectionsEvent` can carry additional metadata,
+    /// the content of which can vary based on the specific type of occurring event.
+    public var onEvent: ((FinancialConnectionsEvent) -> Void)?
+
     /// The APIClient instance used to make requests to Stripe
     public var apiClient: STPAPIClient = STPAPIClient.shared {
         didSet {
@@ -63,7 +71,6 @@ final public class FinancialConnectionsSheet {
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((Result) -> Void)?
 
-    @available(iOSApplicationExtension, unavailable)
     private var hostController: HostController?
 
     private var wrapperViewController: ModalPresentationWrapperViewController?
@@ -103,7 +110,6 @@ final public class FinancialConnectionsSheet {
 
     // MARK: - Public
 
-    @available(iOSApplicationExtension, unavailable)
     public func presentForToken(
         from presentingViewController: UIViewController,
         completion: @escaping (TokenResult) -> Void
@@ -126,7 +132,6 @@ final public class FinancialConnectionsSheet {
        - presentingViewController: The view controller to present the financial connections sheet.
        - completion: Called with the result of the financial connections session after the financial connections  sheet is dismissed.
      */
-    @available(iOSApplicationExtension, unavailable)
     public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (Result) -> Void
@@ -210,7 +215,6 @@ final public class FinancialConnectionsSheet {
 // MARK: - HostControllerDelegate
 
 /// :nodoc:
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsSheet: HostControllerDelegate {
     func hostController(_ hostController: HostController, viewController: UIViewController, didFinish result: Result) {
         viewController.dismiss(
@@ -230,13 +234,16 @@ extension FinancialConnectionsSheet: HostControllerDelegate {
             }
         )
     }
+
+    func hostController(_ hostController: HostController, didReceiveEvent event: FinancialConnectionsEvent) {
+        onEvent?(event)
+    }
 }
 
 // MARK: - STPAnalyticsProtocol
 
 /// :nodoc:
 @_spi(STP)
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsSheet: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "FinancialConnectionsSheet"
 }

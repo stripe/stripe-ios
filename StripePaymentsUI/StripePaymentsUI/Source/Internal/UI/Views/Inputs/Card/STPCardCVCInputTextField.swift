@@ -71,7 +71,7 @@ import UIKit
     }
 
     func updateCVCImageAndPlaceholder() {
-        cvcHintView.setCardBrand(cardBrand, animated: true)
+        cvcHintView.setCardBrand(.brand(cardBrand), animated: true)
 
         if cardBrand == .amex {
             placeholder = String.Localized.cvv

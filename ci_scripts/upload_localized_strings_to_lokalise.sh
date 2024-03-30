@@ -12,8 +12,15 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-API_TOKEN=$(fetch-password mobile/lokalise/token -q)
-PROJECT_ID=$(fetch-password mobile/lokalise/ios -q)
+# Checks for Bitrise secret; if not found, fetches password from usual method
+if [[ -z "${LOKALISE_API_KEY}" ]]; then
+  API_TOKEN=$(fetch-password lokalise-api-token-manual -q)
+else
+  API_TOKEN="${LOKALISE_API_KEY}"
+fi
+
+# Android-iOS-SDK
+PROJECT_ID=747824695e51bc2f4aa912.89576472
 
 # Load LOCALIZATION_DIRECTORIES variable
 source ci_scripts/localization_vars.sh

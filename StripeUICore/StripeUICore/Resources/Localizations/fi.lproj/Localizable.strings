@@ -10,11 +10,15 @@
 
 "Area" = "Alue";
 
+"BLIK code" = "BLIK-koodi";
+
 "BSB number" = "BSB-numero";
 
 "Billing address is same as shipping" = "Laskutusosoite on sama kuin toimitusosoite";
 
 "Cancel" = "Peruuta";
+
+"Card brand" = "Kortin merkki";
 
 "City" = "Paikkakunta";
 
@@ -30,11 +34,15 @@
 
 "County" = "Lääni";
 
+"Date is empty." = "Päivämäärä on tyhjä.";
+
 "Department" = "Osasto";
 
 "District" = "Piirikunta";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Haluatko sulkea tämän lomakkeen?";
 
 "Done" = "Valmis";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "Puhelin";
 
+"Phone number" = "Puhelinnumero";
+
 "Postal code" = "Postinumero";
 
 "Prefecture" = "Prefektuuri";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "Poista pankkitili, joka päättyy numeroihin %@";
 
+"Remove card" = "Poista kortti";
+
 "Search" = "Etsi";
+
+"Select card brand (optional)" = "Valitse korttimerkki (valinnainen)";
+
+"Sort code" = "Pankin tunnusnumero";
 
 "State" = "Osavaltio";
 
@@ -102,6 +118,8 @@
 
 "The account number you entered is incomplete." = "Antamasi tilinumero on puutteellinen.";
 
+"The sort code you entered is invalid." = "Antamasi pankin tunnusnumero on virheellinen.";
+
 "Town or city" = "Kaupunki tai kunta";
 
 "UPI ID" = "UPI-tunnus";
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "Käytä roottoria linkeille";
 
+"Your BLIK code is incomplete." = "BLIK-koodisi on puutteellinen.";
+
+"Your BLIK code is invalid." = "BLIK-koodi ei kelpaa.";
+
 "Your ZIP is incomplete." = "Postinumero on puutteellinen.";
 
 "Your email is invalid." = "Sähköposti on virheellinen.";
+
+"Your payment information will not be saved." = "Maksutietojasi ei tallenneta.";
 
 "Your postal code is incomplete." = "Postinumero on puutteellinen.";
 

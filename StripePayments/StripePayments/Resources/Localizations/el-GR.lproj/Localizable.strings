@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Άμεση χρέωση AU BECS";
+"AU Direct Debit" = "Άμεση χρέωση AU";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Άμεση χρέωση Bacs";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "Τράπεζα";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "Κάρτα";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "Link";
 
@@ -39,6 +45,8 @@
 "SEPA Debit" = "Χρέωση SEPA";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Έληξε το χρονικό όριο επαλήθευσης της μεθόδου πληρωμής σας -- δοκιμάστε ξανά";
 

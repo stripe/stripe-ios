@@ -23,13 +23,3 @@ protocol SafeAreaLayoutGuide {
 
 extension UIView: SafeAreaLayoutGuide {}
 extension UILayoutGuide: SafeAreaLayoutGuide {}
-
-extension UIView {
-    var _safeAreaLayoutGuide: SafeAreaLayoutGuide {
-        if #available(iOSApplicationExtension 11.0, *) {
-            return safeAreaLayoutGuide
-        } else {
-            return self
-        }
-    }
-}

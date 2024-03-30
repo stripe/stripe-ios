@@ -20,6 +20,9 @@ enum VerificationPageMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     case response200 = "VerificationPage_200"
+    case response200NoConsentHeader = "VerificationPage_200_no_consent_header"
+    case response200TestMode = "VerificationPage_200_testMode"
+    case response200Submitted = "VerificationPage_200_submitted"
     case requireLiveCapture = "VerificationPage_require_live_capture"
     case noSelfie = "VerificationPage_no_selfie"
     case typeDocumentRequireIdNumber = "VerificationPage_type_doc_require_idNumber"
@@ -27,6 +30,7 @@ enum VerificationPageMock: String, MockData {
     case typeDocumentRequireIdNumberAndAddress = "VerificationPage_type_doc_require_idNumber_and_address"
     case typeIdNumber = "VerificationPage_type_idNumber"
     case typeAddress = "VerificationPage_type_address"
+    case typePhone = "VerificationPage_type_phone"
 }
 
 enum VerificationPageDataMock: String, MockData {
@@ -37,6 +41,7 @@ enum VerificationPageDataMock: String, MockData {
     case noErrors = "VerificationPageData_no_errors"
     case noErrorsNeedback = "VerificationPageData_no_errors_needback"
     case submitted = "VerificationPageData_submitted"
+    case submittedNotClosed = "VerificationPageData_submitted_not_closed"
 
     static func noErrorsWithMissings(
         with missingRequirements: Set<StripeAPI.VerificationPageFieldType>
@@ -49,7 +54,8 @@ enum VerificationPageDataMock: String, MockData {
                 missing: missingRequirements
             ),
             status: noErrorsResponse.status,
-            submitted: noErrorsResponse.submitted
+            submitted: noErrorsResponse.submitted,
+            closed: noErrorsResponse.closed
         )
     }
 }
@@ -127,8 +133,7 @@ enum VerificationPageDataUpdateMock {
                 lowResImage: "front_full_frame_id",
                 passportScore: .init(0),
                 uploadMethod: .autoCapture
-            ),
-            idDocumentType: .drivingLicense
+            )
         )
     )
 
@@ -155,8 +160,19 @@ enum VerificationPageDataUpdateMock {
                 lowResImage: "front_full_frame_id",
                 passportScore: .init(0),
                 uploadMethod: .autoCapture
-            ),
-            idDocumentType: .drivingLicense
+            )
         )
+    )
+}
+
+enum PhoneOtpPageMock {
+    static let`default` = StripeAPI.VerificationPageStaticContentPhoneOtpPage(
+        title: "Enter verification code",
+        body: "Enter the code sent to you phone {phone_number} to continue.",
+        redactedPhoneNumber: "(***)*****35",
+        errorOtpMessage: "Error confirming verification code",
+        resendButtonText: "Resend code",
+        cannotVerifyButtonText: "I cannot verify this phone number",
+        otpLength: 6
     )
 }

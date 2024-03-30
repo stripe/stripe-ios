@@ -15,7 +15,8 @@ final class IndividualElementTest: XCTestCase {
         title: "Provide personal information",
         idNumberCountries: ["US": "United States"],
         idNumberCountryNotListedTextButtonText: "id country not listed",
-        addressCountryNotListedTextButtonText: "address country not listed"
+        addressCountryNotListedTextButtonText: "address country not listed",
+        phoneNumberCountries: ["US": "United States"]
     )
 
     func testMissingIdNumberOnly() {
@@ -31,6 +32,7 @@ final class IndividualElementTest: XCTestCase {
         XCTAssertNil(element.addressCountryNotListedButtonElement)
         XCTAssertNotNil(element.idNumberElement)
         XCTAssertNotNil(element.idCountryNotListedButtonElement)
+        XCTAssertNil(element.phoneNumberSectionElement)
 
     }
 
@@ -47,6 +49,7 @@ final class IndividualElementTest: XCTestCase {
         XCTAssertNotNil(element.addressCountryNotListedButtonElement)
         XCTAssertNil(element.idNumberElement)
         XCTAssertNil(element.idCountryNotListedButtonElement)
+        XCTAssertNil(element.phoneNumberSectionElement)
     }
 
     func testMissingDobNameIdNumber() {
@@ -62,6 +65,7 @@ final class IndividualElementTest: XCTestCase {
         XCTAssertNil(element.addressCountryNotListedButtonElement)
         XCTAssertNotNil(element.idNumberElement)
         XCTAssertNotNil(element.idCountryNotListedButtonElement)
+        XCTAssertNil(element.phoneNumberSectionElement)
 
     }
 
@@ -76,6 +80,23 @@ final class IndividualElementTest: XCTestCase {
         XCTAssertNotNil(element.dobElement)
         XCTAssertNotNil(element.addressElement)
         XCTAssertNotNil(element.addressCountryNotListedButtonElement)
+        XCTAssertNil(element.idNumberElement)
+        XCTAssertNil(element.idCountryNotListedButtonElement)
+        XCTAssertNil(element.phoneNumberSectionElement)
+
+    }
+
+    func testMissingDobNamePhone() {
+        let element = IndividualFormElement(
+            individualContent: content,
+            missing: [.dob, .name, .phoneNumber],
+            countryNotListedButtonClicked: { _ in }
+        )
+
+        XCTAssertNotNil(element.nameElement)
+        XCTAssertNotNil(element.dobElement)
+        XCTAssertNotNil(element.phoneNumberSectionElement)
+        XCTAssertNil(element.addressCountryNotListedButtonElement)
         XCTAssertNil(element.idNumberElement)
         XCTAssertNil(element.idCountryNotListedButtonElement)
 

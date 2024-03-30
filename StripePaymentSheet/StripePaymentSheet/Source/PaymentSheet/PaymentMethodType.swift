@@ -13,93 +13,30 @@ import Foundation
 import UIKit
 
 extension PaymentSheet {
-    public enum PaymentMethodType: Equatable, Hashable {
-
-        func supportsAddingRequirements() -> [PaymentMethodTypeRequirement] {
-            switch self {
-            case .dynamic("revolut_pay"):
-                return [.returnURL]
-            case .dynamic("mobilepay"):
-                return [.returnURL]
-            case .dynamic("zip"):
-                return [.returnURL]
-            default:
-                return [.unavailable]
-            }
-        }
-
-        func supportsSaveAndReuseRequirements() -> [PaymentMethodTypeRequirement] {
-            switch self {
-            default:
-                return [.unavailable]
-            }
-        }
-
-        case card
-        case USBankAccount
-        case linkInstantDebit
-        case link
-        case dynamic(String)
-        case UPI
-        case cashApp
+    enum PaymentMethodType: Equatable, Hashable {
+        case stripe(STPPaymentMethodType)
+        case external(ExternalPaymentMethod)
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
-        public init(from str: String) {
-            switch str {
-            case STPPaymentMethod.string(from: .card):
-                self = .card
-            case STPPaymentMethod.string(from: .USBankAccount):
-                self = .USBankAccount
-            case STPPaymentMethod.string(from: .link):
-                self = .link
-            case STPPaymentMethod.string(from: .UPI):
-                self = .UPI
-            case STPPaymentMethod.string(from: .cashApp):
-                self = .cashApp
-            default:
-                self = .dynamic(str)
-            }
-        }
-
-        static func string(from type: PaymentMethodType) -> String? {
-            switch type {
-            case .card:
-                return STPPaymentMethod.string(from: .card)
-            case .USBankAccount:
-                return STPPaymentMethod.string(from: .USBankAccount)
-            case .link:
-                return STPPaymentMethod.string(from: .link)
-            case .linkInstantDebit:
-                return nil
-            case .UPI:
-                return STPPaymentMethod.string(from: .UPI)
-            case .cashApp:
-                return STPPaymentMethod.string(from: .cashApp)
-            case .dynamic(let str):
-                return str
-            }
-        }
         var displayName: String {
-            if let stpPaymentMethodType = stpPaymentMethodType {
-                return stpPaymentMethodType.displayName
-            } else if case .dynamic("revolut_pay") = self {
-                return "Revolut Pay"
-            } else if case .dynamic("mobilepay") = self {
-                return "MobilePay"
-            } else if case .dynamic("zip") = self {
-                return "Zip"
-            } else if case .dynamic(let name) = self {
-                // TODO: We should introduce a display name in our model rather than presenting the payment method type
-                return name
+            switch self {
+            case .stripe(let paymentMethodType):
+                return paymentMethodType.displayName
+            case .external(let externalPaymentMethod):
+                return externalPaymentMethod.label
             }
-            assertionFailure()
-            return ""
         }
 
-        var paymentSheetLabel: String {
-            assertionFailure()
-            return "Unknown"
+        /// Returns the Stripe API value for the payment method type e.g. as it is represented on an Intent
+        /// - Note: `STPPaymentMethodType.unknown` returns "unknown".
+        var identifier: String {
+            switch self {
+            case .stripe(let paymentMethodType):
+                return paymentMethodType.identifier
+            case .external(let externalPaymentMethod):
+                return externalPaymentMethod.type
+            }
         }
 
         static func shouldLogAnalytic(paymentMethod: PaymentSheet.PaymentMethodType) -> Bool {
@@ -115,107 +52,80 @@ extension PaymentSheet {
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
         func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
-            if case .dynamic(let name) = self,
-                let spec = FormSpecProvider.shared.formSpec(for: name),
-                let selectorIcon = spec.selectorIcon,
-                var imageUrl = URL(string: selectorIcon.lightThemePng)
-            {
-                if forDarkBackground,
-                    let darkImageString = selectorIcon.darkThemePng,
-                    let darkImageUrl = URL(string: darkImageString)
+            // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
+            switch self {
+            case .external(let paymentMethod):
+                let url = forDarkBackground ? paymentMethod.darkImageUrl : paymentMethod.lightImageUrl
+                return DownloadManager.sharedManager.downloadImage(
+                    url: url ?? paymentMethod.lightImageUrl,
+                    placeholder: nil,
+                    updateHandler: updateHandler
+                )
+            case .stripe(let paymentMethodType):
+                // Get the client-side asset first
+                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground)
+                // Next, try to download the image from the spec if possible
+                if
+                    FormSpecProvider.shared.isLoaded,
+                    let spec = FormSpecProvider.shared.formSpec(for: identifier),
+                    let selectorIcon = spec.selectorIcon,
+                    var imageUrl = URL(string: selectorIcon.lightThemePng)
                 {
-                    imageUrl = darkImageUrl
+                    if forDarkBackground,
+                       let darkImageString = selectorIcon.darkThemePng,
+                       let darkImageUrl = URL(string: darkImageString)
+                    {
+                        imageUrl = darkImageUrl
+                    }
+                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
+                        STPAnalyticsClient.sharedClient.logImageSelectorIconDownloadedIfNeeded(paymentMethod: self)
+                    }
+                    // If there's a form spec, download the spec's image, using the local image as a placeholder until it loads
+                    return DownloadManager.sharedManager.downloadImage(url: imageUrl, placeholder: localImage, updateHandler: updateHandler)
+                } else if let localImage {
+                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
+                        STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
+                    }
+                    // If there's no form spec, return the local image if it exists
+                    return localImage
+                } else {
+                    // If the local image doesn't exist and there's no form spec, fire an analytic and return an empty image
+                    assertionFailure()
+                    if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
+                        STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
+                    }
+                    return DownloadManager.sharedManager.imagePlaceHolder()
                 }
-                if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                    STPAnalyticsClient.sharedClient.logImageSelectorIconDownloadedIfNeeded(paymentMethod: self)
-                }
-                return DownloadManager.sharedManager.downloadImage(url: imageUrl, updateHandler: updateHandler)
             }
-            if let stpPaymentMethodType = stpPaymentMethodType {
-                if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                    STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
-                }
-                return stpPaymentMethodType.makeImage(forDarkBackground: forDarkBackground)
-            }
-            if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
-                STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
-            }
-            return DownloadManager.sharedManager.imagePlaceHolder()
         }
 
         var iconRequiresTinting: Bool {
-            if let stpPaymentMethodType = stpPaymentMethodType {
+            switch self {
+            case .stripe(let stpPaymentMethodType):
                 return stpPaymentMethodType.iconRequiresTinting
-            }
-            return false
-        }
-
-        var stpPaymentMethodType: STPPaymentMethodType? {
-            guard self != .linkInstantDebit else {
-                return .linkInstantDebit
-            }
-            guard let stringForm = PaymentMethodType.string(from: self) else {
-                return nil
-            }
-            let paymentMethodType = STPPaymentMethod.type(from: stringForm)
-            guard paymentMethodType != .unknown else {
-                return nil
-            }
-            return paymentMethodType
-        }
-
-        /// Extracts all the recommended `PaymentMethodType`s from the given `intent`.
-        /// - Parameter intent: The `intent` to extract `PaymentMethodType`s from.
-        /// - Returns: An ordered list of all the `PaymentMethodType`s for this `intent`.
-        static func recommendedPaymentMethodTypes(from intent: Intent) -> [PaymentMethodType] {
-            // We look at the raw `allResponseFields` because some strings may have been parsed into STPPaymentMethodType.unknown
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                guard
-                    let paymentMethodTypeStrings = paymentIntent.allResponseFields["payment_method_types"] as? [String]
-                else {
-                    return []
-                }
-                let paymentTypesString =
-                    paymentIntent.allResponseFields["ordered_payment_method_types"] as? [String]
-                    ?? paymentMethodTypeStrings
-                return paymentTypesString.map { PaymentMethodType(from: $0) }
-            case .setupIntent(let setupIntent):
-                guard let paymentMethodTypeStrings = setupIntent.allResponseFields["payment_method_types"] as? [String]
-                else {
-                    return []
-                }
-                let paymentTypesString =
-                    setupIntent.allResponseFields["ordered_payment_method_types"] as? [String]
-                    ?? paymentMethodTypeStrings
-                return paymentTypesString.map { PaymentMethodType(from: $0) }
-            case .deferredIntent(let elementsSession, _):
-                let paymentMethodPrefs = elementsSession.allResponseFields["payment_method_preference"] as? [AnyHashable: Any]
-                let paymentTypesString =
-                paymentMethodPrefs?["ordered_payment_method_types"] as? [String]
-                    ?? []
-                return paymentTypesString.map { PaymentMethodType(from: $0) }
+            case .external:
+                return false
             }
         }
 
-        /// Extracts the recommended `PaymentMethodType`s from the given `intent` and filters out the ones that aren't supported by the given `configuration`.
+        /// Returns an ordered list of `PaymentMethodType`s to display to the customer in PaymentSheet.
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
-        /// - Returns: An ordered list of `PaymentMethodType`s, including only the ones supported by this configuration.
-        static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
-            var recommendedPaymentMethodTypes = Self.recommendedPaymentMethodTypes(from: intent)
+            var recommendedStripePaymentMethodTypes = intent.recommendedPaymentMethodTypes
+
             if configuration.linkPaymentMethodsOnly {
                 // If we're in the Link modal, manually add Link payment methods
                 // and let the support calls decide if they're allowed
-                let allLinkPaymentMethods: [PaymentMethodType] = [.card, .linkInstantDebit]
-                for method in allLinkPaymentMethods where !recommendedPaymentMethodTypes.contains(method) {
-                    recommendedPaymentMethodTypes.append(method)
+                let allLinkPaymentMethods: [STPPaymentMethodType] = [.card, .linkInstantDebit]
+                for method in allLinkPaymentMethods where !recommendedStripePaymentMethodTypes.contains(method) {
+                    recommendedStripePaymentMethodTypes.append(method)
                 }
             }
 
-            return recommendedPaymentMethodTypes.filter { paymentMethodType in
+            recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethodType,
                     configuration: configuration,
@@ -224,14 +134,54 @@ extension PaymentSheet {
                         ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
 
-                if availabilityStatus != .supported {
+                if logAvailability && availabilityStatus != .supported {
                     // This payment method is being filtered out, log the reason/s why
                     #if DEBUG
-                    print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met or this payment method is not supported by PaymentSheet. \(availabilityStatus.description)\n")
+                    print("[Stripe SDK]: PaymentSheet could not offer \(paymentMethodType.displayName):\n\t* \(availabilityStatus.debugDescription)")
                     #endif
                 }
 
                 return availabilityStatus == .supported
+            }
+
+            // Log a warning if elements session doesn't contain all the merchant's desired external payment methods
+            let missingExternalPaymentMethods = Set(configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.map { $0.lowercased() } ?? [])
+                .subtracting(Set(intent.elementsSession.externalPaymentMethods.map { $0.type }))
+            if logAvailability && !missingExternalPaymentMethods.isEmpty {
+                print("[Stripe SDK]: PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
+            }
+
+            // The full ordered list of recommended payment method types:
+            var recommendedPaymentMethodTypes: [PaymentMethodType] =
+                // Stripe PaymentMethod types
+                recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
+                // External Payment Methods
+                + intent.elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
+
+            if let merchantPaymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
+                // Order the payment methods according to the merchant's `paymentMethodOrder` configuration:
+                var reorderedPaymentMethodTypes = [PaymentMethodType]()
+
+                // 1. Add each PM in paymentMethodOrder first
+                for pmIdentifier in merchantPaymentMethodOrder {
+                    guard
+                        // Ignore the PM if it's not in allPaymentMethodTypes
+                        let index = recommendedPaymentMethodTypes.firstIndex(where: { $0.identifier == pmIdentifier }),
+                        let paymentMethod = recommendedPaymentMethodTypes.stp_boundSafeObject(at: index),
+                        // Ignore duplicate PMs
+                        !reorderedPaymentMethodTypes.contains(paymentMethod)
+                    else {
+                        continue
+                    }
+                    // 2. Remove each PM we add from recommendedPaymentMethodTypes
+                    recommendedPaymentMethodTypes.remove(at: index)
+                    reorderedPaymentMethodTypes.append(paymentMethod)
+                }
+                // 3. Append the remaining PMs in recommendedPaymentMethodTypes
+                reorderedPaymentMethodTypes.append(contentsOf: recommendedPaymentMethodTypes)
+                return reorderedPaymentMethodTypes
+            } else {
+                return recommendedPaymentMethodTypes
             }
         }
 
@@ -244,137 +194,88 @@ extension PaymentSheet {
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func supportsAdding(
-            paymentMethod: PaymentMethodType,
+            paymentMethod: STPPaymentMethodType,
             configuration: PaymentSheet.Configuration,
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> PaymentMethodAvailabilityStatus {
-
-            guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
-                // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
-                // as a dynamic payment method
-                if case .dynamic = paymentMethod {
-                    let requirements =
-                        intent.isSettingUp
-                        ? paymentMethod.supportsSaveAndReuseRequirements() : paymentMethod.supportsAddingRequirements()
-                    return configurationSatisfiesRequirements(
-                        requirements: requirements,
-                        configuration: configuration,
-                        intent: intent
-                    )
-                }
-
-                return .notSupported
-            }
-
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
             if intent.isSettingUp {
                 requirements = {
-                    switch stpPaymentMethodType {
+                    switch paymentMethod {
                     case .card:
                         return []
-                    case .alipay, .payPal:
+                    case .payPal, .cashApp, .revolutPay, .amazonPay, .klarna:
                         return [.returnURL]
-                    case .USBankAccount:
+                    case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
-                    case .iDEAL, .bancontact, .sofort:
-                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                        // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
-                        return [.returnURL, .userSupportsDelayedPaymentMethods, .unavailable]
-                    case .SEPADebit:
-                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                        return [.userSupportsDelayedPaymentMethods, .unavailable]
+                    case .sofort, .iDEAL, .bancontact:
+                        // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                        return [.returnURL, .userSupportsDelayedPaymentMethods]
+                    case .SEPADebit, .AUBECSDebit:
+                        return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
-                        .affirm, .cashApp, .unknown:
-                        return [.unavailable]
+                    case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .linkInstantDebit,
+                        .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint:
+                        return [.unsupportedForSetup]
                     @unknown default:
-                        return [.unavailable]
+                        return [.unsupportedForSetup]
                     }
                 }()
             } else {
                 requirements = {
-                    switch stpPaymentMethodType {
-                    case .blik, .card, .cardPresent, .UPI, .weChatPay:
+                    switch paymentMethod {
+                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                        .linkInstantDebit, .bancontact, .iDEAL, .cashApp:
+                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .swish, .twint:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,
                         ]
-                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit:
+                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit, .sofort:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .afterpayClearpay, .affirm:
+                    case .afterpayClearpay:
                         return [.returnURL, .shippingAddress]
                     case .link, .unknown:
-                        return [.unavailable]
+                        return [.unsupported]
                     @unknown default:
-                        return [.unavailable]
+                        return [.unsupported]
                     }
                 }()
             }
 
             return configurationSupports(
-                paymentMethod: stpPaymentMethodType,
+                paymentMethod: paymentMethod,
                 requirements: requirements,
                 configuration: configuration,
                 intent: intent,
                 supportedPaymentMethods: supportedPaymentMethods
             )
-            // TODO: We need a way to model this information in our common model
         }
 
         /// Returns whether or not we can show a "☑️ Save for future use" checkbox to the customer
         func supportsSaveForFutureUseCheckbox() -> Bool {
-            guard let stpPaymentMethodType = stpPaymentMethodType else {
+            guard case let .stripe(paymentMethodType) = self else {
                 // At the time of writing, we only support cards and us bank accounts.
                 // These should both have an `stpPaymentMethodType`, so I'm avoiding handling this guard condition
                 return false
             }
             // This payment method and its requirements are hardcoded on the client
-            switch stpPaymentMethodType {
+            switch paymentMethodType {
             case .card, .USBankAccount:
                 return true
             default:
                 return false
             }
-        }
-
-        /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
-        /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
-        /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
-        func supportsSavedPaymentMethod(configuration: Configuration, intent: Intent) -> Bool {
-            guard let stpPaymentMethodType = stpPaymentMethodType else {
-                // At the time of writing, we only support cards and us bank accounts.
-                // These should both have an `stpPaymentMethodType`, so I'm avoiding handling this guard condition
-                return false
-            }
-            let requirements: [PaymentMethodTypeRequirement] = {
-                switch stpPaymentMethodType {
-                case .card:
-                    return []
-                case .USBankAccount:
-                    return [.userSupportsDelayedPaymentMethods]
-                default:
-                    return [.unavailable]
-                }
-            }()
-            return Self.configurationSupports(
-                paymentMethod: stpPaymentMethodType,
-                requirements: requirements,
-                configuration: configuration,
-                intent: intent,
-                supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
-            ) == .supported
         }
 
         /// Returns true if the passed configuration satsifies the passed in `requirements`
@@ -455,60 +356,40 @@ extension PaymentSheet {
     }
 }
 extension STPPaymentMethod {
-    func paymentSheetPaymentMethodType() -> PaymentSheet.PaymentMethodType {
-        switch self.type {
-        case .card:
-            return .card
-        case .USBankAccount:
-            return .USBankAccount
-        case .link:
-            return .link
-        case .linkInstantDebit:
-            return .linkInstantDebit
-        default:
-            if let str = STPPaymentMethod.string(from: self.type) {
-                return .dynamic(str)
-            } else {
-                let dict = allResponseFields.stp_dictionaryByRemovingNulls()
-                let paymentMethodType = dict.stp_string(forKey: "type") ?? ""
-                return .dynamic(paymentMethodType)
+    /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
+    /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
+    /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
+    func supportsSavedPaymentMethod(configuration: PaymentSheet.Configuration, intent: Intent) -> Bool {
+        let requirements: [PaymentMethodTypeRequirement] = {
+            switch type {
+            case .card:
+                return []
+            case .USBankAccount, .SEPADebit:
+                return [.userSupportsDelayedPaymentMethods]
+            default:
+                return [.unsupportedForReuse]
             }
-        }
+        }()
+        return PaymentSheet.PaymentMethodType.configurationSupports(
+            paymentMethod: type,
+            requirements: requirements,
+            configuration: configuration,
+            intent: intent,
+            supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
+        ) == .supported
     }
 }
+
 extension STPPaymentMethodParams {
-    func paymentSheetPaymentMethodType() -> PaymentSheet.PaymentMethodType {
-        switch self.type {
-        case .card:
-            return .card
-        case .USBankAccount:
-            return .USBankAccount
-        case .link:
-            return .link
-        case .linkInstantDebit:
-            return .linkInstantDebit
-        default:
-            if let str = STPPaymentMethod.string(from: self.type) {
-                return .dynamic(str)
-            } else if let rawTypeString = rawTypeString {
-                return .dynamic(rawTypeString)
-            } else {
-                assert(false, "Decoding error for STPPaymentMethodParams")
-                return .dynamic("unknown")
-            }
-        }
-    }
     var paymentSheetLabel: String {
         switch type {
+        case .unknown:
+            assertionFailure()
+            return rawTypeString ?? ""
         case .card:
             return "••••\(card?.last4 ?? "")"
         default:
-            if self.type == .unknown, let rawTypeString = rawTypeString {
-                let paymentMethodType = PaymentSheet.PaymentMethodType(from: rawTypeString)
-                return paymentMethodType.paymentSheetLabel
-            } else {
-                return label
-            }
+            return label
         }
     }
 }

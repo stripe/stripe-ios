@@ -34,6 +34,7 @@ class CircularButton: UIControl {
         case back
         case close
         case remove
+        case edit
     }
 
     required init(style: Style, iconColor: UIColor = .secondaryLabel, dangerColor: UIColor = .systemRed) {
@@ -60,6 +61,26 @@ class CircularButton: UIControl {
         layer.shadowPath = path.cgPath
 
         addSubview(imageView)
+        set(style: style, with: dangerColor)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(
+                equalTo: centerXAnchor, constant: style == .back ? -0.5 : 0),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+
+        updateShadow()
+        updateColor()
+    }
+
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let newArea = bounds.insetBy(
+            dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
+            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
+        return newArea.contains(point)
+    }
+
+    public func set(style: CircularButton.Style, with dangerColor: UIColor) {
         switch style {
         case .back:
             imageView.image = Image.icon_chevron_left.makeImage(template: true)
@@ -80,23 +101,11 @@ class CircularButton: UIControl {
             imageView.tintColor = dangerColor
             accessibilityLabel = String.Localized.remove
             accessibilityIdentifier = "CircularButton.Remove"
+        case .edit:
+            imageView.image = Image.icon_edit.makeImage(template: true)
+            accessibilityLabel = String.Localized.update_card
+            accessibilityIdentifier = "CircularButton.Edit"
         }
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(
-                equalTo: centerXAnchor, constant: style == .back ? -0.5 : 0),
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-        ])
-
-        updateShadow()
-        updateColor()
-    }
-
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let newArea = bounds.insetBy(
-            dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
-            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
-        return newArea.contains(point)
     }
 
     func handleEvent(_ event: STPEvent) {
@@ -105,6 +114,8 @@ class CircularButton: UIControl {
             backgroundColor = .systemGray2
         case .shouldDisableUserInteraction:
             backgroundColor = .systemIndigo
+        default:
+            break
         }
     }
 
@@ -121,6 +132,7 @@ class CircularButton: UIControl {
         imageView.tintColor = isEnabled ? iconColor : .tertiaryLabel
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateShadow()
@@ -134,6 +146,7 @@ class CircularButton: UIControl {
             }
         }
     }
+#endif
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

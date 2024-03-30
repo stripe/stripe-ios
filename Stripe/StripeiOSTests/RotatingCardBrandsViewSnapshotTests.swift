@@ -14,13 +14,7 @@ import XCTest
 @testable import Stripe
 @testable @_spi(STP) import StripePaymentSheet
 
-class RotatingCardBrandsViewSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
-
+class RotatingCardBrandsViewSnapshotTests: STPSnapshotTestCase {
     func testAllCardBrands() {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         rotatingCardBrandsView.cardBrands = RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases)

@@ -34,12 +34,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-#ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        self.view.backgroundColor = [UIColor systemBackgroundColor];
-    }
-#endif
+    self.view.backgroundColor = [UIColor systemBackgroundColor];
     self.title = @"Apple Pay";
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
@@ -50,12 +45,7 @@
     self.payButton = button;
     [self.view addSubview:button];
 
-    PKPaymentButton *setupButton;
-    if (@available(iOS 12.0, *)) {
-      setupButton = [PKPaymentButton buttonWithType:PKPaymentButtonTypeSubscribe style:PKPaymentButtonStyleBlack];
-    } else {
-      setupButton = [PKPaymentButton buttonWithType:PKPaymentButtonTypePlain style:PKPaymentButtonStyleBlack];
-    }
+    PKPaymentButton *setupButton = [PKPaymentButton buttonWithType:PKPaymentButtonTypeSubscribe style:PKPaymentButtonStyleBlack];
     [setupButton addTarget:self action:@selector(setup) forControlEvents:UIControlEventTouchUpInside];
     self.setupButton = setupButton;
     [self.view addSubview:setupButton];

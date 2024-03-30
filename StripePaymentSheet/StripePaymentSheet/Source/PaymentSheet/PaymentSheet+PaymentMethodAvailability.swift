@@ -26,6 +26,15 @@ extension PaymentSheet {
         .AUBECSDebit,
         .UPI,
         .cashApp,
+        .blik,
+        .grabPay,
+        .FPX,
+        .bacsDebit,
+        .alipay,
+        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
+        .boleto,
+        .swish,
+        .twint,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
@@ -60,7 +69,7 @@ extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
 extension Intent: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
-        case let .paymentIntent(paymentIntent):
+        case let .paymentIntent(_, paymentIntent):
             var reqs = [PaymentMethodTypeRequirement]()
             // Shipping address
             if let shippingInfo = paymentIntent.shipping {
@@ -81,7 +90,7 @@ extension Intent: PaymentMethodRequirementProvider {
             }
 
             return reqs
-        case let .setupIntent(setupIntent):
+        case let .setupIntent(_, setupIntent):
             var reqs = [PaymentMethodTypeRequirement]()
 
             // valid us bank verification method
@@ -92,8 +101,8 @@ extension Intent: PaymentMethodRequirementProvider {
             }
             return reqs
         case .deferredIntent:
-            // TODO(DeferredIntent): Allow ACHv2
-            return []
+            // Verification method is always 'automatic'
+            return [.validUSBankVerificationMethod]
         }
     }
 }
@@ -114,8 +123,14 @@ typealias PaymentMethodTypeRequirement = PaymentSheet.PaymentMethodTypeRequireme
 extension PaymentSheet {
     enum PaymentMethodTypeRequirement: Comparable {
 
-        /// A special case that indicates the payment method is unavailable
-        case unavailable
+        /// A special case that indicates the payment method is always unsupported by PaymentSheet
+        case unsupported
+
+        /// A special case that indicates the payment method is unsupported by PaymentSheet when using SetupIntents or SFU
+        case unsupportedForSetup
+
+        /// A special case that indicates the payment method is unsupported by PaymentSheet for later reuse
+        case unsupportedForReuse
 
         /// Indicates that a payment method requires a return URL
         case returnURL
@@ -135,18 +150,22 @@ extension PaymentSheet {
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
             switch self {
-            case .unavailable:
-                return "unavailable: This payment method is not available."
+            case .unsupported:
+                return "This payment method is not currently supported by PaymentSheet."
+            case .unsupportedForSetup:
+                return "This payment method is not currently supported by PaymentSheet when using a PaymentIntent with the `setupFutureUsage` parameter, or when using a SetupIntent."
+            case .unsupportedForReuse:
+                return "PaymentSheet does not currently support reusing this saved payment method."
             case .returnURL:
-                return "returnURL: A return URL must be set, see https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url"
+                return "A return URL must be set, see https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url"
             case .shippingAddress:
-                return "shippingAddress: A shipping address must be present on the Intent or collected through the Address Element and populated on PaymentSheet.Configuration.shippingDetails. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping and https://stripe.com/docs/elements/address-element/collect-addresses?platform=ios#ios-pre-fill-billing"
+                return "A shipping address must be present on the Intent or collected through the Address Element and populated on PaymentSheet.Configuration.shippingDetails. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping and https://stripe.com/docs/elements/address-element/collect-addresses?platform=ios#ios-pre-fill-billing"
             case .userSupportsDelayedPaymentMethods:
-                return "userSupportsDelayedPaymentMethods: PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
+                return "PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
             case .financialConnectionsSDK:
-                return "financialConnectionsSDK: The FinancialConnections SDK must be linked."
+                return "financialConnectionsSDK: The FinancialConnections SDK must be linked. See https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-ach"
             case .validUSBankVerificationMethod:
-                return "validUSBankVerificationMethod: Requires a valid US bank verification method."
+                return "Requires a valid US bank verification method."
             }
         }
 
@@ -162,16 +181,16 @@ extension PaymentSheet {
         /// This payment method has requirements not met by the configuration or intent
         case missingRequirements(Set<PaymentMethodTypeRequirement>)
 
-        var description: String {
+        var debugDescription: String {
             switch self {
             case .supported:
                 return "Supported by PaymentSheet."
             case .notSupported:
-                return "Not currently supported by PaymentSheet."
+                return "This payment method is not currently supported by PaymentSheet."
             case .unactivated:
-                return "Activated for test mode but not activated for live mode:. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
+                return "This payment method is enabled for test mode, but is not activated for live mode. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
             case .missingRequirements(let missingRequirements):
-                return "\(missingRequirements.reduce("") { $0 + $1.debugDescription }) "
+                return missingRequirements.map { $0.debugDescription }.joined(separator: "\n\t* ")
             }
         }
 

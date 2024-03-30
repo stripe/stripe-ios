@@ -1,4 +1,4 @@
-"%1$@ account ending in %2$@" = "%1$@ compte bancari que acaba en %2$@";
+"%1$@ account ending in %2$@" = "Compte bancari de %1$@ que acaba en %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
 
@@ -21,6 +21,8 @@
 "Card information" = "Informació de targeta";
 
 "Card number" = "Número de targeta";
+
+"Confirm your %@" = "Confirmeu el vostre %@";
 
 "Invalid data." = "Dades no vàlides.";
 

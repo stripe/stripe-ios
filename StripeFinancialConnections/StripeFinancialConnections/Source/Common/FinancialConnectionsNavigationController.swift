@@ -9,21 +9,17 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 class FinancialConnectionsNavigationController: UINavigationController {
 
     // Swift 5.8 requires us to manually mark inits as unavailable as well:
-    @available(iOSApplicationExtension, unavailable)
     override public init(navigationBarClass: AnyClass?, toolbarClass: AnyClass?) {
         super.init(navigationBarClass: navigationBarClass, toolbarClass: toolbarClass)
     }
 
-    @available(iOSApplicationExtension, unavailable)
     override public init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
     }
 
-    @available(iOSApplicationExtension, unavailable)
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -42,6 +38,7 @@ class FinancialConnectionsNavigationController: UINavigationController {
         // before a user can fully dismiss
         isModalInPresentation = true
         listenToInteractivePopGestureRecognizer()
+        navigationBar.accessibilityIdentifier = "fc_navigation_bar"
     }
 
     private func logNavigationBackEvent(fromViewController: UIViewController, source: String) {
@@ -55,16 +52,15 @@ class FinancialConnectionsNavigationController: UINavigationController {
                 // simplify analytics logging (same event, different parameters)
                 eventName: "click.nav_bar.back",
                 parameters: [
-                    "pane": FinancialConnectionsAnalyticsClient.paneFromViewController(fromViewController).rawValue,
                     "source": source,
-                ]
+                ],
+                pane: FinancialConnectionsAnalyticsClient.paneFromViewController(fromViewController)
             )
     }
 }
 
 // MARK: - Track Swipe Back Analytics Events
 
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController: UINavigationControllerDelegate {
 
     private func listenToInteractivePopGestureRecognizer() {
@@ -105,7 +101,6 @@ extension FinancialConnectionsNavigationController: UINavigationControllerDelega
 
 // MARK: - Track Back Button Press Analytics Events
 
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 
     // `UINavigationBarDelegate` methods "just work" on `UINavigationController`
@@ -129,7 +124,6 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 
 // The purpose of this extension is to consolidate in one place
 // all the common changes to `UINavigationController`
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController {
 
     func configureAppearanceForNative() {
@@ -146,7 +140,7 @@ extension FinancialConnectionsNavigationController {
         navigationBar.compactAppearance = appearance
 
         // change the back button color
-        navigationBar.tintColor = UIColor.textDisabled
+        navigationBar.tintColor = UIColor.iconDefault
         navigationBar.isTranslucent = false
     }
 
@@ -172,14 +166,14 @@ extension FinancialConnectionsNavigationController {
                         }
                     }()
                 )
-                stripeLogoImageView.tintColor = UIColor.textBrand
+                stripeLogoImageView.tintColor = UIColor.textActionPrimary
                 stripeLogoImageView.contentMode = .scaleAspectFit
                 stripeLogoImageView.sizeToFit()
                 stripeLogoImageView.frame = CGRect(
                     x: 0,
                     y: 0,
-                    width: stripeLogoImageView.bounds.width * (16 / stripeLogoImageView.bounds.height),
-                    height: 16
+                    width: stripeLogoImageView.bounds.width * (20 / max(1, stripeLogoImageView.bounds.height)),
+                    height: 20
                 )
                 // If `titleView` is directly set to the `UIImageView`
                 // we can't control the sizing...so we create a `containerView`

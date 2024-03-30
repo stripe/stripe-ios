@@ -34,6 +34,8 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
     @objc public private(set) var fingerprint: String?
     /// Contains information about card networks that can be used to process the payment.
     @objc public private(set) var networks: STPPaymentMethodCardNetworks?
+    /// Contains information about the card's display brand
+    @objc @_spi(STP) public private(set) var displayBrand: String?
     /// Contains details on how this Card maybe be used for 3D Secure authentication.
     @objc public private(set) var threeDSecureUsage: STPPaymentMethodThreeDSecureUsage?
     /// If this Card is part of a Card Wallet, this contains the details of the Card Wallet.
@@ -62,6 +64,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
             "last4 = \(last4 ?? "")",
             "fingerprint = \(fingerprint ?? "")",
             "networks = \(networks?.description ?? "")",
+            "displayBrand = \(displayBrand?.description ?? "")",
             "threeDSecureUsage = \(threeDSecureUsage?.description ?? "")",
             "wallet = \(wallet?.description ?? "")",
         ]
@@ -78,7 +81,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
 
         let card = self.init()
         card.allResponseFields = response
-        card.brand = self.brand(from: dict.stp_string(forKey: "brand") ?? "")
+        card.brand = STPCard.brand(from: dict.stp_string(forKey: "brand") ?? "")
         card.checks = STPPaymentMethodCardChecks.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "checks"))
         card.country = dict.stp_string(forKey: "country")
@@ -90,35 +93,11 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
         card.networks = STPPaymentMethodCardNetworks.decodedObject(
             fromAPIResponse: dict["networks"] as? [AnyHashable: Any]
         )
+        card.displayBrand = dict.stp_string(forKey: "display_brand")
         card.threeDSecureUsage = STPPaymentMethodThreeDSecureUsage.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "three_d_secure_usage"))
         card.wallet = STPPaymentMethodCardWallet.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "wallet"))
         return card
-    }
-
-    // MARK: - STPCardBrand
-
-    @objc(brandFromString:) @_spi(STP) public class func brand(from string: String) -> STPCardBrand
-    {
-        // Documentation: https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-brand
-        let brand = string.lowercased()
-        if brand == "visa" {
-            return .visa
-        } else if brand == "amex" || brand == "american_express" {
-            return .amex
-        } else if brand == "mastercard" {
-            return .mastercard
-        } else if brand == "discover" {
-            return .discover
-        } else if brand == "jcb" {
-            return .JCB
-        } else if brand == "diners" || brand == "diners_club" {
-            return .dinersClub
-        } else if brand == "unionpay" {
-            return .unionPay
-        } else {
-            return .unknown
-        }
     }
 }

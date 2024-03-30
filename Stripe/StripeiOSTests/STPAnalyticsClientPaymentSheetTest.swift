@@ -11,7 +11,9 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@_spi(STP)@testable import StripePaymentsTestUtils
 
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -94,9 +96,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
 
         _ = PaymentSheet.FlowController(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), paymentIntent: STPFixtures.paymentIntent()),
             savedPaymentMethods: [],
             isLinkEnabled: false,
+            isApplePayEnabled: false,
             configuration: PaymentSheet.Configuration()
         )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet.FlowController"))
@@ -111,7 +114,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .newPM,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            currency: "USD",
+            apiClient: .init()
         )
 
         let event2 = XCTestExpectation(description: "mc_complete_sheet_savedpm_show")
@@ -121,7 +125,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .savedPM,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            currency: "USD",
+            apiClient: .init()
         )
 
         let event3 = XCTestExpectation(description: "mc_complete_payment_savedpm_success")
@@ -132,7 +137,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .completed,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            linkSessionType: .ephemeral,
+            currency: "USD",
+            deferredIntentConfirmationType: nil,
+            apiClient: .init()
         )
 
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
@@ -143,16 +151,19 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .failed(error: PaymentSheetError.unknown(debugDescription: "Error")),
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            linkSessionType: .ephemeral,
+            currency: "USD",
+            deferredIntentConfirmationType: nil,
+            apiClient: .init()
         )
 
         let event5 = XCTestExpectation(description: "mc_custom_paymentoption_applepay_select")
         client.registerExpectation(event5)
-        client.logPaymentSheetPaymentOptionSelect(isCustom: true, paymentMethod: .applePay)
+        client.logPaymentSheetPaymentOptionSelect(isCustom: true, paymentMethod: .applePay, apiClient: .init())
 
         let event6 = XCTestExpectation(description: "mc_complete_paymentoption_newpm_select")
         client.registerExpectation(event6)
-        client.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: .newPM)
+        client.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: .newPM, apiClient: .init())
 
         wait(
             for: [event1, event2, event3, event4, event5, event6],
@@ -164,7 +175,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         // setup
         let analytic = PaymentSheetAnalytic(
             event: STPAnalyticEvent.mcInitCompleteApplePay,
-            productUsage: Set<String>([STPPaymentContext.stp_analyticsIdentifier]),
             additionalParams: ["testKey": "testVal"]
         )
 
@@ -177,8 +187,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
-        XCTAssertEqual(15, payload.count)
+        XCTAssertEqual(16, payload.count)
         XCTAssertNotNil(payload["device_type"] as? String)
+        XCTAssertEqual("Wi-Fi", payload["network_type"] as? String)
         // In xctest, this is the version of Xcode
         XCTAssertNotNil(payload["app_version"] as? String)
         XCTAssertEqual("none", payload["ocr_type"] as? String)
@@ -193,6 +204,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertNil(payload["ui_usage_level"])
         XCTAssertTrue(payload["apple_pay_enabled"] as? Bool ?? false)
         XCTAssertEqual("legacy", payload["pay_var"] as? String)
+        XCTAssertNil(payload["link_session_type"] as? String)
         XCTAssertEqual(STPAPIClient.STPSDKVersion, payload["bindings_version"] as? String)
         XCTAssertEqual("testVal", payload["testKey"] as? String)
         XCTAssertEqual("X", payload["install"] as? String)
@@ -214,7 +226,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .newPM,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            currency: "USD",
+            apiClient: .init()
         )
 
         client.logPaymentSheetPayment(
@@ -223,7 +236,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .completed,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            linkSessionType: .ephemeral,
+            currency: "USD",
+            deferredIntentConfirmationType: nil,
+            apiClient: .init()
         )
 
         let duration = client.lastPayload?["duration"] as? TimeInterval
@@ -256,7 +272,8 @@ private class STPTestingAnalyticsClient: STPAnalyticsClient {
         expectedEvents[expectation.description] = expectation
     }
 
-    override func logPayload(_ payload: [String: Any]) {
+    override func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
+        let payload = payload(from: analytic, apiClient: apiClient)
         if let event = payload["event"] as? String,
             let expectedEvent = expectedEvents[event]
         {

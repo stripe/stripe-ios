@@ -7,12 +7,15 @@
 //
 
 import Stripe
+@_spi(STP) import StripePaymentsUI
 import UIKit
 
 class CardFieldViewController: UIViewController {
 
     let cardField = STPPaymentCardTextField()
+
     var theme = STPTheme.defaultTheme
+    var alwaysEnableCBC = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +31,9 @@ class CardFieldViewController: UIViewController {
         cardField.borderWidth = 1.0
         cardField.textErrorColor = theme.errorColor
         cardField.postalCodeEntryEnabled = true
+        if alwaysEnableCBC {
+            cardField.cbcEnabledOverride = true
+        }
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .done, target: self, action: #selector(done))
         navigationController?.navigationBar.stp_theme = theme

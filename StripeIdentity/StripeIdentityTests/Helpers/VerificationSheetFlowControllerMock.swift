@@ -14,9 +14,13 @@ import XCTest
 
 /// Mock to help us test behavior that relies on  VerificationSheetFlowController
 final class VerificationSheetFlowControllerMock: VerificationSheetFlowControllerProtocol {
+    var documentUploader: StripeIdentity.DocumentUploaderProtocol?
+
     var uncollectedFields: Set<StripeAPI.VerificationPageFieldType>
     var isFinishedCollecting = false
     var analyticsLastScreen: IdentityFlowViewController?
+
+    var visitedIndividualWelcomePage = false
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
@@ -39,11 +43,13 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     }
 
     func transitionToNextScreen(
+        skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping () -> Void
     ) {
+        // do something to skipTestMode
         transitionedWithStaticContentResult = staticContentResult
         transitionedWithUpdateDataResult = updateDataResult
         didTransitionToNextScreenExp.fulfill()
@@ -61,6 +67,28 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     func transitionToIndividualScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
         sheetController: StripeIdentity.VerificationSheetControllerProtocol
+    ) {
+        // no-op
+    }
+
+    func transitionToSelfieCaptureScreen(
+        staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol
+    ) {
+        // no-op
+    }
+
+    func transitionToDocumentCaptureScreen(
+        staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol
+    ) {
+        // no-op
+    }
+
+    func transitionToErrorScreen(
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol,
+        error: Error,
+        completion: @escaping () -> Void
     ) {
         // no-op
     }

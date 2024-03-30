@@ -32,12 +32,18 @@ extension XCUIElement {
     }
 
     @discardableResult
-    func waitForExistenceAndTap() -> Bool {
-        guard waitForExistence(timeout: 4) else {
+    func waitForExistenceAndTap(timeout: TimeInterval = 4.0) -> Bool {
+        guard waitForExistence(timeout: timeout) else {
             return false
         }
         forceTapElement()
         return true
+    }
+
+    func firstDescendant(withLabel label: String) -> XCUIElement {
+        return descendants(matching: .any).matching(
+            NSPredicate(format: "label == %@", label)
+        ).firstMatch
     }
 }
 
@@ -58,6 +64,26 @@ extension XCUIApplication {
 
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
 func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) -> XCUIElement? {
+    return scroll(collectionView: collectionView) { collectionView in
+        let cell = collectionView.cells[identifier]
+        if cell.exists {
+            return cell
+        }
+        return nil
+    }
+}
+
+func scroll(collectionView: XCUIElement, toFindButtonWithId identifier: String) -> XCUIElement? {
+    return scroll(collectionView: collectionView) { collectionView in
+        let button = collectionView.buttons[identifier].firstMatch
+        if button.exists {
+            return button
+        }
+        return nil
+    }
+}
+
+func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElementInCollectionView: (XCUIElement) -> XCUIElement?) -> XCUIElement? {
     guard collectionView.elementType == .collectionView else {
         fatalError("XCUIElement is not a collectionView.")
     }
@@ -66,11 +92,9 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) ->
     var allVisibleElements = [String]()
 
     while !reachedTheEnd {
-        let cell = collectionView.cells[identifier]
-
-        // Did we find our cell ?
-        if cell.exists {
-            return cell
+        // Did we find our element ?
+        if let element = getElementInCollectionView(collectionView) {
+           return element
         }
 
         // If not: we store the list of all the elements we've got in the CollectionView
@@ -91,7 +115,8 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) ->
 extension XCTestCase {
     func fillCardData(_ app: XCUIApplication,
                       container: XCUIElement? = nil,
-                      cardNumber: String? = nil) throws {
+                      cardNumber: String? = nil,
+                      postalEnabled: Bool = true) throws {
         let context = container ?? app
 
         let numberField = context.textFields["Card number"]
@@ -99,8 +124,77 @@ extension XCTestCase {
         app.typeText(cardNumber ?? "4242424242424242")
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
-        app.typeText("12345") // Postal
+        if postalEnabled {
+            app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+            app.typeText("12345") // Postal
+        }
+    }
+
+    func fillUSBankData(_ app: XCUIApplication,
+                        container: XCUIElement? = nil) throws {
+        let context = container ?? app
+        let nameField = context.textFields["Full name"]
+        nameField.forceTapWhenHittableInTestCase(self)
+        app.typeText("John Doe")
+
+        let emailField = context.textFields["Email"]
+        emailField.forceTapWhenHittableInTestCase(self)
+        app.typeText("test-\(UUID().uuidString)@example.com")
+    }
+    func fillUSBankData_microdeposits(_ app: XCUIApplication,
+                                      container: XCUIElement? = nil) throws {
+        let context = container ?? app
+        let routingField = context.textFields["manual_entry_routing_number_text_field"]
+        routingField.forceTapWhenHittableInTestCase(self)
+        app.typeText("110000000")
+
+        let acctField = context.textFields["manual_entry_account_number_text_field"]
+        acctField.forceTapWhenHittableInTestCase(self)
+        app.typeText("000123456789")
+
+        // Dismiss keyboard, otherwise we can not see the next field
+        // This is only an artifact in the (test) native version of the flow
+        app.scrollViews.firstMatch.swipeUp()
+
+        let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"]
+        acctConfirmField.forceTapWhenHittableInTestCase(self)
+        app.typeText("000123456789")
+
+        // Dismiss keyboard again otherwise we can not see the continue button
+        // This is only an artifact in the (test) native version of the flow
+        app.scrollViews.firstMatch.swipeUp()
+    }
+    func fillSepaData(_ app: XCUIApplication,
+                      container: XCUIElement? = nil) throws {
+        let context = container ?? app
+        let nameField = context.textFields["Full name"]
+        nameField.forceTapWhenHittableInTestCase(self)
+        app.typeText("John Doe")
+
+        let emailField = context.textFields["Email"]
+        emailField.forceTapWhenHittableInTestCase(self)
+        app.typeText("test@example.com")
+
+        let ibanField = context.textFields["IBAN"]
+        ibanField.forceTapWhenHittableInTestCase(self)
+        app.typeText("DE89370400440532013000")
+
+        let addressLine1 = context.textFields["Address line 1"]
+        addressLine1.forceTapWhenHittableInTestCase(self)
+        app.typeText("123 Main")
+        context.buttons["Return"].tap()
+
+        // Skip address 2
+        context.buttons["Return"].tap()
+
+        app.typeText("San Francisco")
+        context.buttons["Return"].tap()
+
+        context.pickerWheels.element.adjust(toPickerWheelValue: "California")
+        context.buttons["Done"].tap()
+
+        app.typeText("94016")
+        context.buttons["Done"].tap()
     }
 
     func waitToDisappear(_ target: Any?) {
@@ -109,31 +203,68 @@ extension XCTestCase {
         waitForExpectations(timeout: 60.0, handler: nil)
     }
 
-    func reload(_ app: XCUIApplication) {
-        app.buttons["Reload PaymentSheet"].tap()
+    func waitForNItemsExistence(_ target: Any?, count: Int) {
+        let elementExistsPredicate = NSPredicate(format: "count == %d", count)
+        expectation(for: elementExistsPredicate, evaluatedWith: target, handler: nil)
+        waitForExpectations(timeout: 10.0, handler: nil)
+    }
 
-        let checkout = app.buttons["Checkout (Complete)"]
+    func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
+        app.buttons["Reload"].tap()
+        waitForReload(app, settings: settings)
+    }
+
+    func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
+        if settings.uiStyle == .paymentSheet {
+            let presentButton = app.buttons["Present PaymentSheet"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: presentButton,
+                handler: nil
+            )
+            waitForExpectations(timeout: 10, handler: nil)
+        } else {
+            let confirm = app.buttons["Confirm"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: confirm,
+                handler: nil
+            )
+            waitForExpectations(timeout: 10, handler: nil)
+        }
+    }
+    func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
+        if #available(iOS 15.0, *) {
+            // Doesn't work on 16.4. Seems like a bug, can't see any confirmation that this works online.
+            //   var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
+            //   urlComponents.query = settings.base64Data
+            //   app.open(urlComponents.url!)
+            // This should work, but we get an "Open in 'PaymentSheet Example'" consent dialog the first time we run it.
+            // And while the dialog is appearing, `open()` doesn't return, so we can't install an interruption handler or anything to handle it.
+            //   XCUIDevice.shared.system.open(urlComponents.url!)
+            app.launchEnvironment = app.launchEnvironment.merging(["STP_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launch()
+        } else {
+            XCTFail("This test is only supported on iOS 15.0 or later.")
+        }
+        waitForReload(app, settings: settings)
+    }
+    func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
+        let paymentMethodButton = app.buttons["Payment method"]
         expectation(
             for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: checkout,
+            evaluatedWith: paymentMethodButton,
             handler: nil
         )
         waitForExpectations(timeout: 10, handler: nil)
     }
-
-    func loadPlayground(_ app: XCUIApplication, settings: [String: String]) {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-
-        // Wait for the screen to load
-        XCTAssert(app.navigationBars["Test Playground"].waitForExistence(timeout: 10))
-
-        // Reset existing configuration.
-        app.buttons["(Reset)"].tap()
-
-        for (setting, value) in settings {
-            app.segmentedControls["\(setting)_selector"].buttons[value].tap()
+    func loadPlayground(_ app: XCUIApplication, _ settings: CustomerSheetTestPlaygroundSettings) {
+        if #available(iOS 15.0, *) {
+            app.launchEnvironment = app.launchEnvironment.merging(["STP_CUSTOMERSHEET_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launch()
+        } else {
+            XCTFail("This test is only supported on iOS 15.0 or later.")
         }
-
-        reload(app)
+        waitForReload(app, settings: settings)
     }
 }

@@ -12,8 +12,9 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-API_TOKEN=$(fetch-password mobile/lokalise/token -q)
-PROJECT_ID=$(fetch-password mobile/lokalise/ios-3ds2 -q)
+API_TOKEN=$(fetch-password lokalise-api-token-manual -q)
+# iOS 3DS2 SDK
+PROJECT_ID=614720955e51bbfda93be1.46626639
 
 lokalise2 --token $API_TOKEN \
           --project-id $PROJECT_ID \

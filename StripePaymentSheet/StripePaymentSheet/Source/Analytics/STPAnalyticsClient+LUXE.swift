@@ -11,22 +11,23 @@ extension STPAnalyticsClient {
     func logLUXESerializeFailure() {
         self.logPaymentSheetEvent(event: .luxeSerializeFailure)
     }
-    func logImageSelectorIconDownloadedIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
-        guard case .dynamic(let name) = paymentMethod else {
-            return
-        }
-        self.logPaymentSheetEvent(event: .luxeImageSelectorIconDownloaded, params: ["payment_method": name])
+
+    func logLUXEUnknownActionsFailure() {
+        self.logPaymentSheetEvent(event: .luxeUnknownActionsFailure)
     }
+
+    func logLUXESpecSerilizeFailure(error: Error?) {
+        self.logPaymentSheetEvent(event: .luxeSpecSerializeFailure, error: error)
+    }
+
+    func logImageSelectorIconDownloadedIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
+        self.logPaymentSheetEvent(event: .luxeImageSelectorIconDownloaded, params: ["payment_method": paymentMethod.identifier])
+    }
+
     func logImageSelectorIconFromBundleIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
-        guard case .dynamic(let name) = paymentMethod else {
-            return
-        }
-        self.logPaymentSheetEvent(event: .luxeImageSelectorIconFromBundle, params: ["payment_method": name])
+        self.logPaymentSheetEvent(event: .luxeImageSelectorIconFromBundle, params: ["payment_method": paymentMethod.identifier])
     }
     func logImageSelectorIconNotFoundIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
-        guard case .dynamic(let name) = paymentMethod else {
-            return
-        }
-        self.logPaymentSheetEvent(event: .luxeImageSelectorIconNotFound, params: ["payment_method": name])
+        self.logPaymentSheetEvent(event: .luxeImageSelectorIconNotFound, params: ["payment_method": paymentMethod.identifier])
     }
 }

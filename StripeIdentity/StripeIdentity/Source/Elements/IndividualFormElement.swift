@@ -30,6 +30,7 @@ final class IndividualFormElement: ContainerElement {
         var collectedDob: StripeAPI.VerificationPageDataDob?
         var collectedName: StripeAPI.VerificationPageDataName?
         var collectedAddress: StripeAPI.RequiredInternationalAddress?
+        var collectedPhoneNumber: StripeAPI.VerificationPageDataPhone?
 
         if let idNumberElement = idNumberElement {
             collectedIdNumber = idNumberElement.collectedIdNumber()
@@ -66,11 +67,16 @@ final class IndividualFormElement: ContainerElement {
             )
         }
 
+        if let phoneNumberSectionElement = phoneNumberSectionElement, let phoneNumberElement = phoneNumberSectionElement.elements[0] as? PhoneNumberElement {
+            collectedPhoneNumber = StripeAPI.VerificationPageDataPhone(country: phoneNumberElement.selectedCountryCode, phoneNumber: phoneNumberElement.phoneNumber?.string(as: .e164))
+        }
+
         return StripeAPI.VerificationPageCollectedData(
             idNumber: collectedIdNumber,
             dob: collectedDob,
             name: collectedName,
-            address: collectedAddress
+            address: collectedAddress,
+            phone: collectedPhoneNumber
         )
 
     }
@@ -80,6 +86,7 @@ final class IndividualFormElement: ContainerElement {
     let addressElement: AddressSectionElement?
     let addressCountryNotListedButtonElement: IdentityTextButtonElement?
     let idNumberElement: IdNumberElement?
+    let phoneNumberSectionElement: SectionElement?
     let idCountryNotListedButtonElement: IdentityTextButtonElement?
     let countryNotListedButtonClicked: CountryNotListedButtonClicked
     let dateFormatter: DateFormatter
@@ -99,6 +106,12 @@ final class IndividualFormElement: ContainerElement {
 
         elements = [Element]()
 
+        if missing.contains(.phoneNumber) {
+            phoneNumberSectionElement = elementsFactory.makePhoneSection(countries: Array(individualContent.phoneNumberCountries.keys))
+            elements.append(phoneNumberSectionElement!)
+        } else {
+            phoneNumberSectionElement = nil
+        }
         if missing.contains(.name) {
             nameElement = elementsFactory.makeNameSection()
             elements.append(nameElement!)

@@ -14,13 +14,14 @@ final class ManualEntryFooterView: UIView {
     private let didSelectContinue: () -> Void
 
     private(set) lazy var continueButton: Button = {
-        let continueButton = Button(configuration: .financialConnectionsPrimary)
-        continueButton.title = "Continue"  // TODO: replace with String.Localized.continue when we localize
+        let continueButton = Button.primary()
+        continueButton.title = "Submit"  // TODO(kgaidis): localize
         continueButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             continueButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        continueButton.accessibilityIdentifier = "manual_entry_continue_button"
         return continueButton
     }()
 
@@ -28,13 +29,20 @@ final class ManualEntryFooterView: UIView {
         self.didSelectContinue = didSelectContinue
         super.init(frame: .zero)
 
-        let verticalStackView = UIStackView(
+        let paddingStackView = UIStackView(
             arrangedSubviews: [
                 continueButton
             ]
         )
-        verticalStackView.axis = .vertical
-        addAndPinSubview(verticalStackView)
+        paddingStackView.isLayoutMarginsRelativeArrangement = true
+        paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 16,
+            leading: 24,
+            bottom: 16,
+            trailing: 24
+        )
+        paddingStackView.axis = .vertical
+        addAndPinSubview(paddingStackView)
     }
 
     required init?(coder: NSCoder) {

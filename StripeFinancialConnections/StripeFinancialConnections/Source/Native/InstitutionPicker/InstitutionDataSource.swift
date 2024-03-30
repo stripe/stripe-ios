@@ -12,9 +12,11 @@ protocol InstitutionDataSource: AnyObject {
 
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var featuredInstitutions: [FinancialConnectionsInstitution] { get }
 
-    func fetchInstitutions(searchQuery: String) -> Future<[FinancialConnectionsInstitution]>
+    func fetchInstitutions(searchQuery: String) -> Future<FinancialConnectionsInstitutionSearchResultResource>
     func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]>
+    func createAuthSession(institutionId: String) -> Future<FinancialConnectionsAuthSession>
 }
 
 class InstitutionAPIDataSource: InstitutionDataSource {
@@ -25,6 +27,7 @@ class InstitutionAPIDataSource: InstitutionDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    var featuredInstitutions: [FinancialConnectionsInstitution] = []
 
     // MARK: - Init
 
@@ -42,20 +45,26 @@ class InstitutionAPIDataSource: InstitutionDataSource {
 
     // MARK: - InstitutionDataSource
 
-    func fetchInstitutions(searchQuery: String) -> Future<[FinancialConnectionsInstitution]> {
+    func fetchInstitutions(searchQuery: String) -> Future<FinancialConnectionsInstitutionSearchResultResource> {
         return apiClient.fetchInstitutions(
             clientSecret: clientSecret,
             query: searchQuery
         )
-        .chained { list in
-            return Promise(value: list.data)
-        }
     }
 
     func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]> {
         return apiClient.fetchFeaturedInstitutions(clientSecret: clientSecret)
-            .chained { list in
-                return Promise(value: list.data)
+            .chained { [weak self] list in
+                let featuredInstitutions = list.data
+                self?.featuredInstitutions = featuredInstitutions
+                return Promise(value: featuredInstitutions)
             }
+    }
+
+    func createAuthSession(institutionId: String) -> Future<FinancialConnectionsAuthSession> {
+        return apiClient.createAuthSession(
+            clientSecret: clientSecret,
+            institutionId: institutionId
+        )
     }
 }

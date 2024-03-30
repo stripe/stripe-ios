@@ -31,7 +31,8 @@ req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
 params = {
   project: 'RUN_MOBILESDK',
   summary: "Job failed: #{ENV['BITRISE_TRIGGERED_WORKFLOW_TITLE']}",
-  description: "Please investigate the failure: #{ENV['BITRISE_BUILD_URL']}"
+  description: "Please investigate the failure: #{ENV['BITRISE_BUILD_URL']}",
+  components: %w[iOS]
 }
 
 req.body = params.to_json

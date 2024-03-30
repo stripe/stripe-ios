@@ -28,6 +28,13 @@ import UIKit
         return .dynamic(light: .systemBackground, dark: .secondarySystemBackground)
     }()
 
+    public static let disabledBackgroundColor: UIColor = {
+        return .dynamic(
+            light: UIColor(red: 248.0 / 255.0, green: 248.0 / 255.0, blue: 248.0 / 255.0, alpha: 1),
+            dark: UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
+        )
+    }()
+
     public static func makeErrorLabel(theme: ElementsUITheme = .default) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.footnote
@@ -95,6 +102,7 @@ import UIKit
         public var primary = UIColor.systemBlue
         public var parentBackground = UIColor.systemBackground
         public var background = ElementsUI.backgroundColor
+        public var disabledBackground = ElementsUI.disabledBackgroundColor
         public var border = ElementsUI.fieldBorderColor
         public var divider = ElementsUI.fieldBorderColor
         public var textFieldText = UIColor.label

@@ -19,6 +19,7 @@ final class SelfieCaptureView: UIView {
 
     enum ViewModel {
         case scan(SelfieScanningView.ViewModel)
+        case saving(SelfieScanningView.ViewModel)
         case error(ErrorView.ViewModel)
     }
 
@@ -53,6 +54,13 @@ final class SelfieCaptureView: UIView {
     func configure(with viewModel: ViewModel, analyticsClient: IdentityAnalyticsClient?) {
         switch viewModel {
         case .scan(let scanningViewModel):
+            scanningView.configure(
+                with: scanningViewModel,
+                analyticsClient: analyticsClient
+            )
+            scanningView.isHidden = false
+            errorView.isHidden = true
+        case .saving(let scanningViewModel):
             scanningView.configure(
                 with: scanningViewModel,
                 analyticsClient: analyticsClient

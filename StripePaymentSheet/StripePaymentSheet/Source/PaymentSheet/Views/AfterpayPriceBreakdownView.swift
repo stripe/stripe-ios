@@ -7,6 +7,7 @@
 //
 import Foundation
 import SafariServices
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
@@ -29,12 +30,12 @@ class AfterpayPriceBreakdownView: UIView {
         return PaymentSheetImageLibrary.afterpayLogo(locale: locale)
     }()
     private lazy var infoImage: UIImage = {
-        return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info@3x")
+        return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info")
     }()
 
     private lazy var infoURL: URL? = {
-        let language = locale.languageCode?.lowercased() ?? "en"
-        let region = locale.regionCode?.uppercased() ?? "US"
+        let language = locale.stp_languageCode?.lowercased() ?? "en"
+        let region = locale.stp_regionCode?.uppercased() ?? "US"
         let localeCode = "\(language)_\(region)"
         return URL(string: "https://static.afterpay.com/modal/\(localeCode).html")
     }()
@@ -163,10 +164,12 @@ class AfterpayPriceBreakdownView: UIView {
         }
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         afterpayMarkImageView.tintColor = theme.colors.parentBackground.contrastingColor
     }
+#endif
 }
 
 private extension UIResponder {

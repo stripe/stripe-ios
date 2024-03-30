@@ -35,6 +35,36 @@ final class PlaygroundUserDefaults {
     static var enableTestMode: Bool
 
     @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_EMAIL",
+        defaultValue: ""
+    )
+    static var email: String
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_OWNERSHIP_PERMISSION",
+        defaultValue: false
+    )
+    static var enableOwnershipPermission: Bool
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_BALANCES_PERMISSION",
+        defaultValue: false
+    )
+    static var enableBalancesPermission: Bool
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_TRANSACTIONS_PERMISSION",
+        defaultValue: false
+    )
+    static var enableTransactionsPermission: Bool
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_SCENARIO",
+        defaultValue: PlaygroundMainViewModel.CustomScenario.none.rawValue
+    )
+    static var customScenario: String
+
+    @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_PUBLIC_KEY",
         defaultValue: ""
     )
@@ -45,6 +75,12 @@ final class PlaygroundUserDefaults {
         defaultValue: ""
     )
     static var customSecretKey: String
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_SHOW_LIVE_EVENTS",
+        defaultValue: false
+    )
+    static var showLiveEvents: Bool
 }
 
 @propertyWrapper

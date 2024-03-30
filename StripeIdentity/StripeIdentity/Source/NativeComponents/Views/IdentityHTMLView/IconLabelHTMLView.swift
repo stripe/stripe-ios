@@ -18,17 +18,34 @@ final class IconLabelHTMLView: UIView {
     struct ViewModel {
         let image: UIImage
         let text: String
-        let isTextHTML: Bool
+        let style: HTMLTextView.ViewModel.Style
         let didOpenURL: (URL) -> Void
 
-        var htmlTextViewModel: HTMLTextView.ViewModel {
-            let style: HTMLTextView.ViewModel.Style
-            if isTextHTML {
-                style = .html(makeStyle: Styling.iconLabelHTMLStyle)
-            } else {
-                style = .plainText(font: Styling.iconLabelFont, textColor: IdentityUI.textColor)
-            }
+        init(
+            image: UIImage,
+            text: String,
+            style: HTMLTextView.ViewModel.Style,
+            didOpenURL: @escaping (URL) -> Void
+        ) {
+            self.image = image
+            self.text = text
+            self.style = style
+            self.didOpenURL = didOpenURL
+        }
 
+        init(
+            image: UIImage,
+            text: String,
+            isTextHTML: Bool,
+            didOpenURL: @escaping (URL) -> Void
+        ) {
+            self.image = image
+            self.text = text
+            self.didOpenURL = didOpenURL
+            self.style = isTextHTML ? .html(makeStyle: Styling.iconLabelHTMLStyle) : .plainText(font: Styling.iconLabelFont, textColor: IdentityUI.textColor)
+        }
+
+        var htmlTextViewModel: HTMLTextView.ViewModel {
             return .init(
                 text: text,
                 style: style,
@@ -111,6 +128,8 @@ extension IconLabelHTMLView {
                 equalTo: textView.leadingAnchor,
                 constant: -Styling.iconTextSpacing
             ),
+            iconView.heightAnchor.constraint(equalToConstant: Styling.baseIconLenght),
+            iconView.widthAnchor.constraint(equalToConstant: Styling.baseIconLenght),
             textView.topAnchor.constraint(equalTo: topAnchor),
             textView.trailingAnchor.constraint(equalTo: trailingAnchor),
             textView.bottomAnchor.constraint(equalTo: bottomAnchor),

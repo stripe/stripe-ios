@@ -11,37 +11,41 @@ import Foundation
 protocol SuccessDataSource: AnyObject {
 
     var manifest: FinancialConnectionsSessionManifest { get }
-    var linkedAccounts: [FinancialConnectionsPartnerAccount] { get }
-    var institution: FinancialConnectionsInstitution { get }
+    var linkedAccountsCount: Int { get }
+    var saveToLinkWithStripeSucceeded: Bool? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var showLinkMoreAccountsButton: Bool { get }
+    var customSuccessPaneMessage: String? { get }
 }
 
 final class SuccessDataSourceImplementation: SuccessDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
-    let linkedAccounts: [FinancialConnectionsPartnerAccount]
-    let institution: FinancialConnectionsInstitution
+    let linkedAccountsCount: Int
+    let saveToLinkWithStripeSucceeded: Bool?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    var customSuccessPaneMessage: String?
     var showLinkMoreAccountsButton: Bool {
         !manifest.singleAccount && !manifest.disableLinkMoreAccounts && !(manifest.isNetworkingUserFlow ?? false)
     }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        linkedAccounts: [FinancialConnectionsPartnerAccount],
-        institution: FinancialConnectionsInstitution,
+        linkedAccountsCount: Int,
+        saveToLinkWithStripeSucceeded: Bool?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        customSuccessPaneMessage: String?
     ) {
         self.manifest = manifest
-        self.linkedAccounts = linkedAccounts
-        self.institution = institution
+        self.linkedAccountsCount = linkedAccountsCount
+        self.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.customSuccessPaneMessage = customSuccessPaneMessage
     }
 }

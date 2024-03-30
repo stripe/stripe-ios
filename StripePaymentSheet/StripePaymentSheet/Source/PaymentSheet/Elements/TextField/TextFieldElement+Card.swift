@@ -20,23 +20,30 @@ extension TextFieldElement {
         var binController = STPBINController.shared
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let rotatingCardBrandsView = RotatingCardBrandsView()
+        let defaultValue: String?
+        let cardBrandDropDown: DropdownFieldElement?
+
+        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil) {
+            self.defaultValue = defaultValue
+            self.cardBrandDropDown = cardBrandDropDown
+        }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            let cardBrand = STPCardValidator.brand(forNumber: text)
+            // If CBC is enabled and the PAN is not empty...
+            if let cardBrandDropDown = cardBrandDropDown, !text.isEmpty {
+                // Show unknown card brand if we have under 9 pan digits and no card brands
+                if 9 > text.count && cardBrandDropDown.nonPlacerholderItems.isEmpty {
+                    return DynamicImageView.makeUnknownCardImageView(theme: theme)
+                } else if text.count >= 8 && cardBrandDropDown.nonPlacerholderItems.count > 1 {
+                    // Show the dropdown if we have 8 or more digits and at least 2 brands, otherwise fall through and show brand as normal
+                    return cardBrandDropDown.view
+                }
+            }
 
+            let cardBrand = STPCardValidator.brand(forNumber: text)
             if cardBrand == .unknown {
                 if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
-                    return DynamicImageView(
-                        lightImage: STPImageLibrary.safeImageNamed(
-                            "card_unknown_updated_icon",
-                            darkMode: true
-                        ),
-                        darkImage: STPImageLibrary.safeImageNamed(
-                            "card_unknown_updated_icon",
-                            darkMode: false
-                        ),
-                        pairedColor: theme.colors.textFieldText
-                    )
+                    return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
@@ -153,6 +160,12 @@ extension TextFieldElement {
 // MARK: - CVC Configuration
 extension TextFieldElement {
     struct CVCConfiguration: TextFieldElementConfiguration {
+        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand)) {
+            self.defaultValue = defaultValue
+            self.cardBrandProvider = cardBrandProvider
+        }
+
+        let defaultValue: String?
         let cardBrandProvider: () -> (STPCardBrand)
         var label: String {
             if cardBrandProvider() == .amex {
@@ -162,6 +175,7 @@ extension TextFieldElement {
             }
         }
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -180,19 +194,9 @@ extension TextFieldElement {
             return .valid
         }
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            let logoName = cardBrandProvider() == .amex
-                ? "card_cvc_amex_updated_icon"
-                : "card_cvc_updated_icon"
             return DynamicImageView(
-                lightImage: STPImageLibrary.safeImageNamed(
-                    logoName,
-                    darkMode: true
-                ),
-                darkImage: STPImageLibrary.safeImageNamed(
-                    logoName,
-                    darkMode: false
-                ),
-                pairedColor: theme.colors.textFieldText
+                dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
+                pairedColor: theme.colors.background
             )
         }
     }
@@ -201,9 +205,14 @@ extension TextFieldElement {
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
+        init(defaultValue: String? = nil) {
+            self.defaultValue = defaultValue
+        }
+
         let label: String = String.Localized.mm_yy
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+        let defaultValue: String?
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -276,6 +285,35 @@ extension TextFieldElement {
                 text.insert("/", at: text.index(text.startIndex, offsetBy: 2))
             }
             return NSAttributedString(string: text)
+        }
+    }
+}
+
+// MARK: Last four configuration
+extension TextFieldElement {
+    struct LastFourConfiguration: TextFieldElementConfiguration {
+        let label = String.Localized.card_brand
+        let lastFour: String
+        let isEditable = false
+        let cardBrandDropDown: DropdownFieldElement
+
+        private var lastFourFormatted: String {
+            "•••• •••• •••• \(lastFour)"
+        }
+
+        init(lastFour: String, cardBrandDropDown: DropdownFieldElement) {
+            self.lastFour = lastFour
+            self.cardBrandDropDown = cardBrandDropDown
+        }
+
+        func makeDisplayText(for text: String) -> NSAttributedString {
+            return NSAttributedString(string: lastFourFormatted)
+        }
+
+        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+            // Re-use same logic from PANConfiguration for accessory view
+            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown)
+                                            .accessoryView(for: lastFourFormatted, theme: theme)
         }
     }
 }

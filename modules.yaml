@@ -146,7 +146,7 @@ modules:
   supports_catalyst: false
   size_report:
     max_compressed_size: 1500
-    max_uncompressed_size: 3000
+    max_uncompressed_size: 3500
     max_incremental_uncompressed_size: 100
   docs:
     output: docs/stripeidentity
@@ -161,7 +161,7 @@ modules:
     readme: StripeApplePay/README.md
   size_report:
     max_compressed_size: 500
-    max_uncompressed_size: 1100
+    max_uncompressed_size: 1200
     max_incremental_uncompressed_size: 100
 
 - podspec: StripeCardScan.podspec
@@ -182,8 +182,8 @@ modules:
     include:
       - StripeCore
   size_report:
-    max_compressed_size: 1500
-    max_uncompressed_size: 3000
+    max_compressed_size: 3000
+    max_uncompressed_size: 5000
     max_incremental_uncompressed_size: 100
 
 - podspec: StripeUICore.podspec
@@ -191,11 +191,6 @@ modules:
   framework_name: StripeUICore
   localization_dir: StripeUICore/StripeUICore
   custom_string_convertible_dir: StripeUICore/StripeUICore/Source/Categories
-  supports_catalyst: true
-
-- podspec: StripeLinkCore.podspec
-  scheme: StripeLinkCore
-  framework_name: StripeLinkCore
   supports_catalyst: true
 
 # All podspecs that get pushed to Cocoapods in the order of dependencies such
@@ -206,7 +201,6 @@ pod_push_order:
 - StripeUICore.podspec
 - StripeCameraCore.podspec
 - StripeApplePay.podspec
-- StripeLinkCore.podspec
 - StripePayments.podspec
 - StripePaymentsUI.podspec
 - StripePaymentSheet.podspec

@@ -16,32 +16,35 @@ extension StripeAPI {
         private(set) var face: VerificationPageDataFace?
         private(set) var idDocumentBack: VerificationPageDataDocumentFileData?
         private(set) var idDocumentFront: VerificationPageDataDocumentFileData?
-        private(set) var idDocumentType: DocumentType?
         private(set) var idNumber: VerificationPageDataIdNumber?
         private(set) var dob: VerificationPageDataDob?
         private(set) var name: VerificationPageDataName?
         private(set) var address: RequiredInternationalAddress?
+        private(set) var phone: VerificationPageDataPhone?
+        private(set) var phoneOtp: String?
 
         init(
             biometricConsent: Bool? = nil,
             face: VerificationPageDataFace? = nil,
             idDocumentBack: VerificationPageDataDocumentFileData? = nil,
             idDocumentFront: VerificationPageDataDocumentFileData? = nil,
-            idDocumentType: DocumentType? = nil,
             idNumber: VerificationPageDataIdNumber? = nil,
             dob: VerificationPageDataDob? = nil,
             name: VerificationPageDataName? = nil,
-            address: RequiredInternationalAddress? = nil
+            address: RequiredInternationalAddress? = nil,
+            phone: VerificationPageDataPhone? = nil,
+            phoneOtp: String? = nil
         ) {
             self.biometricConsent = biometricConsent
             self.face = face
             self.idDocumentBack = idDocumentBack
             self.idDocumentFront = idDocumentFront
-            self.idDocumentType = idDocumentType
             self.idNumber = idNumber
             self.dob = dob
             self.name = name
             self.address = address
+            self.phone = phone
+            self.phoneOtp = phoneOtp
         }
     }
 }
@@ -58,11 +61,12 @@ extension StripeAPI.VerificationPageCollectedData {
             face: otherData.face ?? self.face,
             idDocumentBack: otherData.idDocumentBack ?? self.idDocumentBack,
             idDocumentFront: otherData.idDocumentFront ?? self.idDocumentFront,
-            idDocumentType: otherData.idDocumentType ?? self.idDocumentType,
             idNumber: otherData.idNumber ?? self.idNumber,
             dob: otherData.dob ?? self.dob,
             name: otherData.name ?? self.name,
-            address: otherData.address ?? self.address
+            address: otherData.address ?? self.address,
+            phone: otherData.phone ?? self.phone,
+            phoneOtp: otherData.phoneOtp ?? self.phoneOtp
         )
     }
 
@@ -81,8 +85,6 @@ extension StripeAPI.VerificationPageCollectedData {
             self.idDocumentBack = nil
         case .idDocumentFront:
             self.idDocumentFront = nil
-        case .idDocumentType:
-            self.idDocumentType = nil
         case .idNumber:
             self.idNumber = nil
         case .dob:
@@ -91,19 +93,24 @@ extension StripeAPI.VerificationPageCollectedData {
             self.name = nil
         case .address:
             self.address = nil
+        case .phoneNumber:
+            self.phone = nil
+        case .phoneOtp:
+            self.phoneOtp = nil
         }
     }
 
     /// Helper to determine the front document score for analytics purposes
     var frontDocumentScore: TwoDecimalFloat? {
-        switch idDocumentType {
-        case .drivingLicense,
-            .idCard:
-            return idDocumentFront?.frontCardScore
-        case .passport:
-            return idDocumentFront?.passportScore
-        case .none:
+        // return the larger of the two
+        guard let frontCardScore = idDocumentFront?.frontCardScore?.value, let passportScore = idDocumentFront?.passportScore?.value else
+        {
             return nil
+        }
+        if frontCardScore > passportScore {
+            return idDocumentFront?.frontCardScore
+        } else {
+            return idDocumentFront?.passportScore
         }
     }
 
@@ -121,9 +128,6 @@ extension StripeAPI.VerificationPageCollectedData {
         if self.idDocumentFront != nil {
             ret.insert(.idDocumentFront)
         }
-        if self.idDocumentType != nil {
-            ret.insert(.idDocumentType)
-        }
         if self.idNumber != nil {
             ret.insert(.idNumber)
         }
@@ -135,6 +139,12 @@ extension StripeAPI.VerificationPageCollectedData {
         }
         if self.address != nil {
             ret.insert(.address)
+        }
+        if self.phone != nil {
+            ret.insert(.phoneNumber)
+        }
+        if self.phoneOtp != nil {
+            ret.insert(.phoneOtp)
         }
         return ret
     }

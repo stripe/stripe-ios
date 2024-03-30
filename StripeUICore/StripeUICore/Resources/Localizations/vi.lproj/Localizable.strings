@@ -10,11 +10,15 @@
 
 "Area" = "Khu vực";
 
+"BLIK code" = "Mã BLIK";
+
 "BSB number" = "Số BSB";
 
 "Billing address is same as shipping" = "Địa chỉ xuất hóa đơn giống địa chỉ chuyển hàng";
 
 "Cancel" = "Hủy";
+
+"Card brand" = "Thương hiệu thẻ";
 
 "City" = "Thành phố";
 
@@ -30,11 +34,15 @@
 
 "County" = "Quận";
 
+"Date is empty." = "Ngày trống.";
+
 "Department" = "Sở ngành";
 
 "District" = "Quận/Huyện";
 
 "Do Si" = "Tỉnh/Thành phố";
+
+"Do you want to close this form?" = "Bạn có muốn đóng biểu mẫu này không?";
 
 "Done" = "Xong";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "Điện thoại";
 
+"Phone number" = "Số điện thoại";
+
 "Postal code" = "Mã bưu điện";
 
 "Prefecture" = "Tỉnh";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "Bỏ tài khoản ngân hàng có các số cuối là %@";
 
+"Remove card" = "Xóa thẻ";
+
 "Search" = "Tìm kiếm";
+
+"Select card brand (optional)" = "Chọn thương hiệu thẻ (tùy chọn)";
+
+"Sort code" = "Mã sắp xếp";
 
 "State" = "Tiểu bang";
 
@@ -102,6 +118,8 @@
 
 "The account number you entered is incomplete." = "Số tài khoản quý vị đã nhập không đầy đủ.";
 
+"The sort code you entered is invalid." = "Mã sắp xếp bạn đã nhập không hợp lệ.";
+
 "Town or city" = "Thị trấn hoặc thành phố";
 
 "UPI ID" = "Số ID UPI";
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "Sử dụng rô-to để truy cập liên kết";
 
+"Your BLIK code is incomplete." = "Mã BLIK của quý vị chưa đầy đủ.";
+
+"Your BLIK code is invalid." = "Mã BLIK của quý vị không hợp lệ.";
+
 "Your ZIP is incomplete." = "Mã ZIP chưa đầy đủ.";
 
 "Your email is invalid." = "Email của quý vị không hợp lệ.";
+
+"Your payment information will not be saved." = "Thông tin thanh toán của bạn sẽ không lưu lại.";
 
 "Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
 

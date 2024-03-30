@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 
 /// This class makes it easier to implement "Push Provisioning", the process by which an end-user can add a card to their Apple Pay wallet without having to type their number. This process is mediated by an Apple class called `PKAddPaymentPassViewController`; this class will help you implement that class' delegate methods. Note that this flow requires a special entitlement from Apple; for more information please see https://stripe.com/docs/issuing/cards/digital-wallets .
 public class STPPushProvisioningContext: NSObject {

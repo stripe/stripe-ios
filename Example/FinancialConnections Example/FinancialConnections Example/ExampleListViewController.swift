@@ -28,6 +28,7 @@ class ExampleListViewController: UITableViewController {
         if #available(iOS 14.0, *) {
             // iOS 13 example/playground crashes due to SwiftUI
             examples.append(Example(title: "Playground", viewControllerIdentifier: "PlaygroundViewController"))
+            examples.append(Example(title: "WebView (not recommended)", viewControllerIdentifier: "WebViewViewController"))
         }
         return examples
     }()

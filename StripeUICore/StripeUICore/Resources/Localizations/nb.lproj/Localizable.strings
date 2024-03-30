@@ -10,11 +10,15 @@
 
 "Area" = "Område";
 
+"BLIK code" = "BLIK-kode";
+
 "BSB number" = "BSB-nummer";
 
 "Billing address is same as shipping" = "Fakturaaddresse er samme som levering";
 
 "Cancel" = "Avbryt";
+
+"Card brand" = "Kortmerke";
 
 "City" = "By";
 
@@ -30,11 +34,15 @@
 
 "County" = "Fylke";
 
+"Date is empty." = "Dato er tom.";
+
 "Department" = "Avdeling";
 
 "District" = "Distrikt";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Vil du lukke dette skjemaet?";
 
 "Done" = "Ferdig";
 
@@ -76,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Telefonnummer";
+
 "Postal code" = "Postnummer";
 
 "Prefecture" = "Prefektur";
@@ -88,7 +98,13 @@
 
 "Remove bank account ending in %@" = "Fjern bankkontoen som slutter på %@";
 
+"Remove card" = "Fjern kort";
+
 "Search" = "Søk";
+
+"Select card brand (optional)" = "Velg merkevare for kort (valgfritt)";
+
+"Sort code" = "Sorteringskode";
 
 "State" = "Stat";
 
@@ -102,6 +118,8 @@
 
 "The account number you entered is incomplete." = "Kontonummeret du la inn, er ufullstendig.";
 
+"The sort code you entered is invalid." = "Sorteringskoden du skrev inn, er ugyldig.";
+
 "Town or city" = "Stad eller by";
 
 "UPI ID" = "UPI-ID";
@@ -110,9 +128,15 @@
 
 "Use rotor to access links" = "Bruk rotor for tilgang til lenker";
 
+"Your BLIK code is incomplete." = "BLIK-koden er ufullstendig.";
+
+"Your BLIK code is invalid." = "BLIK-koden er ugyldig.";
+
 "Your ZIP is incomplete." = "ZIP er ufullstendig.";
 
 "Your email is invalid." = "E-posten din er ugyldig.";
+
+"Your payment information will not be saved." = "Betalingsinformasjonen din lagres ikke.";
 
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";
 

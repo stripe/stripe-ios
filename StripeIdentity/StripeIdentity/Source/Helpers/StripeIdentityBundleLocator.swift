@@ -9,11 +9,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-final class StripeIdentityBundleLocator: BundleLocatorProtocol {
-    static let internalClass: AnyClass = StripeIdentityBundleLocator.self
-    static let bundleName = "StripeIdentity"
+@_spi(STP) public final class StripeIdentityBundleLocator: BundleLocatorProtocol {
+    @_spi(STP) public static let internalClass: AnyClass = StripeIdentityBundleLocator.self
+    @_spi(STP) public static let bundleName = "StripeIdentityBundle"
     #if SWIFT_PACKAGE
-        static let spmResourcesBundle = Bundle.module
+    @_spi(STP) public static let spmResourcesBundle = Bundle.module
     #endif
-    static let resourcesBundle = StripeIdentityBundleLocator.computeResourcesBundle()
+    @_spi(STP) public static let resourcesBundle = StripeIdentityBundleLocator.computeResourcesBundle()
 }

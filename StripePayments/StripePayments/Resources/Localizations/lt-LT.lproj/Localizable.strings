@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "AU BECS tiesioginis debetas";
+"AU Direct Debit" = "AU tiesioginis debetas";
 
 "Affirm" = "Affirm";
 
@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "„Bacs“ tiesioginis debetas";
+
 "Bancontact" = "„Bancontact“";
 
 "Bank" = "Bankas";
@@ -15,6 +17,8 @@
 "Boleto" = "Boleto";
 
 "Card" = "Kortelė";
+
+"Cash App Pay" = "Cash App Pay";
 
 "Clearpay" = "Clearpay";
 
@@ -25,6 +29,8 @@
 "GrabPay" = "GrabPay";
 
 "Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
 
 "Link" = "\"Link\"";
 
@@ -39,6 +45,8 @@
 "SEPA Debit" = "SEPA debetas";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Baigėsi mokėjimo būdui autentifikuoti skirtas laikas, bandykite dar kartą";
 
