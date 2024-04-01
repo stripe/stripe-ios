@@ -98,7 +98,10 @@ workflows:
         - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2:
         inputs:
-        - pipeline_intermediate_files: $BITRISE_SOURCE_DIR/stpbuild/products:CACHED_PRODUCTS_DIR
+        - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_PATH:BITRISE_TEST_BUNDLE_PATH
+    - share-pipeline-variable@1:
+        inputs:
+        - variables: BITRISE_XCTESTRUN_FILE_PATH
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
@@ -625,6 +628,7 @@ workflows:
         inputs:
         - artifact_sources: stage-main-begin.build-for-testing
     - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
