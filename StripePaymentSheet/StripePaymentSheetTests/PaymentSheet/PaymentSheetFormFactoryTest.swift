@@ -1353,7 +1353,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         _ = factory.make()
         XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "Failed to get form spec for card_present!")
         let errorAnalytic = analyticsClient._testLogHistory.first!
-        XCTAssertEqual(errorAnalytic["event"] as? String, STPAnalyticEvent.paymentSheetFormFactoryError.rawValue)
+        XCTAssertEqual(errorAnalytic["event"] as? String, STPAnalyticEvent.unexpectedPaymentSheetFormFactoryError.rawValue)
         XCTAssertEqual(errorAnalytic["payment_method"] as? String, "card_present")
         XCTAssertEqual(errorAnalytic["error_code"] as? String, "missingFormSpec")
     }
