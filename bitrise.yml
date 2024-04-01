@@ -98,7 +98,7 @@ workflows:
         - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2:
         inputs:
-        - pipeline_intermediate_files: $BITRISE_SOURCE_DIR/stpbuild/products
+        - pipeline_intermediate_files: $BITRISE_SOURCE_DIR/stpbuild/products:CACHED_PRODUCTS_DIR
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
