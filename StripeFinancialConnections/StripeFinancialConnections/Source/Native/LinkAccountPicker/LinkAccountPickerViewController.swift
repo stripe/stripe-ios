@@ -401,111 +401,111 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                 dataSource.updateSelectedAccounts(
                     dataSource.selectedAccounts + [selectedAccountTuple]
                 )
+            }
 
-                // some values for nextPane require immediate action (ie. popping up a sheet for repair)
-                // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
-                if
-                    // repair flow
-                    selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair
-                        // supportability -- account requires re-sharing with additonal permissions
-                        || selectedPartnerAccount.nextPaneOnSelection == .partnerAuth
-                {
-                    if selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair {
-                        dataSource
-                            .analyticsClient
-                            .log(
-                                eventName: "click.repair_accounts",
-                                pane: .linkAccountPicker
-                            )
-                    } else {
-                        dataSource
-                            .analyticsClient
-                            .log(
-                                eventName: "click.supportability_account",
-                                pane: .linkAccountPicker
-                            )
-                    }
-
-                    let deselectPreviouslySelectedAccount = { [weak self] in
-                        guard let self = self else { return }
-                        self.dataSource.updateSelectedAccounts(
-                            self.dataSource.selectedAccounts.filter(
-                                { $0.partnerAccount.id != selectedPartnerAccount.id }
-                            )
+            // some values for nextPane require immediate action (ie. popping up a sheet for repair)
+            // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
+            if
+                // repair flow
+                selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair
+                    // supportability -- account requires re-sharing with additonal permissions
+                    || selectedPartnerAccount.nextPaneOnSelection == .partnerAuth
+            {
+                if selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair {
+                    dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "click.repair_accounts",
+                            pane: .linkAccountPicker
                         )
-                    }
+                } else {
+                    dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "click.supportability_account",
+                            pane: .linkAccountPicker
+                        )
+                }
 
-                    var delayDeselectingAccounts = false
-                    let willDismissSheet = {
-                        if delayDeselectingAccounts {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                deselectPreviouslySelectedAccount()
-                            }
-                        } else {
+                let deselectPreviouslySelectedAccount = { [weak self] in
+                    guard let self = self else { return }
+                    self.dataSource.updateSelectedAccounts(
+                        self.dataSource.selectedAccounts.filter(
+                            { $0.partnerAccount.id != selectedPartnerAccount.id }
+                        )
+                    )
+                }
+
+                var delayDeselectingAccounts = false
+                let willDismissSheet = {
+                    if delayDeselectingAccounts {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             deselectPreviouslySelectedAccount()
                         }
+                    } else {
+                        deselectPreviouslySelectedAccount()
                     }
+                }
 
-                    let didSelectContinue: () -> Void = { [weak self] in
-                        guard let self else { return }
-                        if selectedPartnerAccount.nextPaneOnSelection == .partnerAuth {
-                            if let institution = selectedPartnerAccount.institution {
-                                self.delegate?.linkAccountPickerViewController(
-                                    self,
-                                    requestedPartnerAuthWithInstitution: institution
-                                )
-                            } else {
-                                self.delegate?.linkAccountPickerViewController(
-                                    self,
-                                    didRequestNextPane: .institutionPicker
-                                )
-                            }
-                        }
-                        // nextPaneOnSelection == bankAuthRepair
-                        else {
-                            dataSource
-                                .analyticsClient
-                                .logUnexpectedError(
-                                    FinancialConnectionsSheetError
-                                        .unknown(
-                                            debugDescription: "Updating a repair account, but repairs are not supported in Mobile."
-                                        ),
-                                    errorName: "UpdateRepairAccountError",
-                                    pane: .linkAccountPicker
-                                )
-                            delegate?.linkAccountPickerViewController(
+                let didSelectContinue: () -> Void = { [weak self] in
+                    guard let self else { return }
+                    if selectedPartnerAccount.nextPaneOnSelection == .partnerAuth {
+                        if let institution = selectedPartnerAccount.institution {
+                            self.delegate?.linkAccountPickerViewController(
+                                self,
+                                requestedPartnerAuthWithInstitution: institution
+                            )
+                        } else {
+                            self.delegate?.linkAccountPickerViewController(
                                 self,
                                 didRequestNextPane: .institutionPicker
                             )
                         }
                     }
-
-                    let accountUpdateRequiredViewController = AccountUpdateRequiredViewController(
-                        institution: selectedPartnerAccount.institution,
-                        didSelectContinue: { [weak self] in
-                            guard let self else { return }
-                            // delay deselecting accounts while we animate to the
-                            // next screen to reduce "animation jank" of
-                            // the account getting deselected
-                            delayDeselectingAccounts = true
-                            self.lastAccountUpdateRequiredViewController?.dismiss(
-                                animated: true,
-                                completion: {
-                                    didSelectContinue()
-                                }
+                    // nextPaneOnSelection == bankAuthRepair
+                    else {
+                        dataSource
+                            .analyticsClient
+                            .logUnexpectedError(
+                                FinancialConnectionsSheetError
+                                    .unknown(
+                                        debugDescription: "Updating a repair account, but repairs are not supported in Mobile."
+                                    ),
+                                errorName: "UpdateRepairAccountError",
+                                pane: .linkAccountPicker
                             )
-                        },
-                        didSelectCancel: { [weak self] in
-                            delayDeselectingAccounts = false
-                            self?.lastAccountUpdateRequiredViewController?.dismiss(
-                                animated: true
-                            )
-                        },
-                        willDismissSheet: willDismissSheet
-                    )
-                    lastAccountUpdateRequiredViewController = accountUpdateRequiredViewController
-                    accountUpdateRequiredViewController.present(on: self)
+                        delegate?.linkAccountPickerViewController(
+                            self,
+                            didRequestNextPane: .institutionPicker
+                        )
+                    }
                 }
+
+                let accountUpdateRequiredViewController = AccountUpdateRequiredViewController(
+                    institution: selectedPartnerAccount.institution,
+                    didSelectContinue: { [weak self] in
+                        guard let self else { return }
+                        // delay deselecting accounts while we animate to the
+                        // next screen to reduce "animation jank" of
+                        // the account getting deselected
+                        delayDeselectingAccounts = true
+                        self.lastAccountUpdateRequiredViewController?.dismiss(
+                            animated: true,
+                            completion: {
+                                didSelectContinue()
+                            }
+                        )
+                    },
+                    didSelectCancel: { [weak self] in
+                        delayDeselectingAccounts = false
+                        self?.lastAccountUpdateRequiredViewController?.dismiss(
+                            animated: true
+                        )
+                    },
+                    willDismissSheet: willDismissSheet
+                )
+                lastAccountUpdateRequiredViewController = accountUpdateRequiredViewController
+                accountUpdateRequiredViewController.present(on: self)
             }
         }
     }
