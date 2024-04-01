@@ -39,6 +39,12 @@ pipelines:
     stages:
     - stage-releases-run-all: {}
 stages:
+  stage-main-begin:
+    workflows:
+    - build-for-testing: {}
+  stage-main-tests:
+    workflows:
+    - ui-tests-1: {}
   stage-nightly-all:
     workflows:
     - basic-integration-tests: {}
@@ -66,12 +72,6 @@ stages:
     - carthage-install-test: {}
     - pod-lint-tests: {}
     - integration-all: {}
-  stage-main-tests:
-    workflows:
-    - ui-tests-1: {}
-  stage-main-begin:
-    workflows:
-    - build-for-testing: {}
 workflows:
   basic-integration-tests:
     before_run:
@@ -90,7 +90,7 @@ workflows:
     - deploy-to-bitrise-io@2: {}
   build-for-testing:
     before_run:
-    - prep_all
+    - prep_build_only
     steps:
     - xcode-build-for-test@3:
         inputs:
@@ -98,7 +98,7 @@ workflows:
         - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2:
         inputs:
-        - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_PATH
+        - pipeline_intermediate_files: $BITRISE_SOURCE_DIR/stpbuild/products
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
@@ -489,23 +489,18 @@ workflows:
     - git-clone@8.2:
         inputs:
         - clone_depth: "1"
-    - restore-cache@1:
+    - restore-cache@2.4:
         inputs:
-        - key: |-
-            bundle-cache-{{ checksum "Gemfile.lock" }}
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
     - bundler@0: {}
     - save-cache@1:
         inputs:
-        - key: |-
-            bundle-cache-{{ checksum "Gemfile.lock" }}
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
         - paths: |
             vendor
     - restore-spm-cache@2.1: {}
-  prep_build:
+  prep_build_only:
     steps:
-    - xcode-start-simulator@0:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
     - set-env-var@0:
         title: Set CONFIGURATION_BUILD_DIR
         inputs:
@@ -524,15 +519,17 @@ workflows:
     - git-clone@8.2:
         inputs:
         - clone_depth: "1"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-    - restore-spm-cache@2.1: {}    
-  prep_light:
+    - restore-spm-cache@2.1: {}
+  prep_run_only:
     steps:
     - xcode-start-simulator@0:
         inputs:
@@ -551,7 +548,7 @@ workflows:
         inputs:
         - clone_depth: "1"
     - cache-pull@2: {}
-    - restore-spm-cache@2.1: {}    
+    - restore-spm-cache@2.1: {}
   size-report:
     steps:
     - script@1:
@@ -622,12 +619,12 @@ workflows:
         stack: osx-xcode-15.0.x
   ui-tests-1:
     before_run:
-    - prep_light
+    - prep_run_only
     steps:
     - pull-intermediate-files@1:
         inputs:
         - artifact_sources: stage-main-begin.build-for-testing
-    - xcode-test@5.1:
+    - xcode-test-without-building@0:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
