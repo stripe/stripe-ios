@@ -311,7 +311,7 @@ extension OneTimeCodeTextFieldTests {
             configuration: OneTimeCodeTextField.Configuration(
                 numberOfDigits: numberOfDigits
             ),
-            theme: LinkUI.appearance.asElementsTheme
+            theme: .default
         )
         sut.frame = CGRect(x: 0, y: 0, width: 320, height: 60)
         sut.layoutIfNeeded()

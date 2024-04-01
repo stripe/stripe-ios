@@ -25,6 +25,7 @@ import Foundation
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
     @_spi(STP) public let passthroughModeEnabled: Bool?
     @_spi(STP) public let disableSignup: Bool?
+    @_spi(STP) public let useRebrand: Bool?
     @_spi(STP) public let linkFlags: [String: Bool]?
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
@@ -35,6 +36,7 @@ import Foundation
         passthroughModeEnabled: Bool?,
         disableSignup: Bool?,
         linkFlags: [String: Bool]?,
+        useRebrand: Bool?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.fundingSources = fundingSources
@@ -42,6 +44,7 @@ import Foundation
         self.passthroughModeEnabled = passthroughModeEnabled
         self.disableSignup = disableSignup
         self.linkFlags = linkFlags
+        self.useRebrand = useRebrand
         self.allResponseFields = allResponseFields
     }
 
@@ -61,6 +64,7 @@ import Foundation
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
         let disableSignup = response["link_mobile_disable_signup"] as? Bool ?? false
+        let useRebrand = response["link_2024_rebrand_m1"] as? Bool
 
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
@@ -75,6 +79,7 @@ import Foundation
             passthroughModeEnabled: passthroughModeEnabled,
             disableSignup: disableSignup,
             linkFlags: linkFlags,
+            useRebrand: useRebrand,
             allResponseFields: response
         ) as? Self
     }

@@ -84,6 +84,10 @@ final class PaymentSheetLoader {
                     && configuration.applePay != nil
                     && intent.isApplePayEnabled
 
+                // If Link is enabled, set the `useNewBrand`
+                // Should default to true in case we remove the server-side flag someday
+                LinkUI.useNewBrand = intent.elementsSession.linkSettings?.useRebrand ?? true
+
                 // Send load finished analytic
                 // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
                 let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(

@@ -24,7 +24,7 @@ class OneTimeCodeTextFieldSnapshotTests: STPSnapshotTestCase {
             configuration: OneTimeCodeTextField.Configuration(
                 numberOfDigits: 6
             ),
-            theme: LinkUI.appearance.asElementsTheme
+            theme: .default
         )
         verify(field)
     }
@@ -34,7 +34,7 @@ class OneTimeCodeTextFieldSnapshotTests: STPSnapshotTestCase {
             configuration: OneTimeCodeTextField.Configuration(
                 numberOfDigits: 6
             ),
-            theme: LinkUI.appearance.asElementsTheme
+            theme: .default
         )
         field.value = "123456"
         verify(field)
@@ -45,7 +45,7 @@ class OneTimeCodeTextFieldSnapshotTests: STPSnapshotTestCase {
             configuration: OneTimeCodeTextField.Configuration(
                 numberOfDigits: 6
             ),
-            theme: LinkUI.appearance.asElementsTheme
+            theme: .default
         )
         field.value = "123456"
         field.isEnabled = false
