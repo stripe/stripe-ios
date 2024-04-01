@@ -30,7 +30,8 @@ trigger_map:
 pipelines:
   main-trigger-pipeline:
     stages:
-    - stage-trigger-run-all: {}
+    - stage-main-begin: {}
+    - stage-main-tests: {}
   nightly-pipeline:
     stages:
     - stage-nightly-all: {}
@@ -65,20 +66,12 @@ stages:
     - carthage-install-test: {}
     - pod-lint-tests: {}
     - integration-all: {}
-  stage-trigger-run-all:
+  stage-main-tests:
     workflows:
-    - framework-tests: {}
-    - test-builds-xcode-15: {}
-    - test-builds-xcode-15-release: {}
-    - test-builds-vision: {}
-    - install-tests-non-carthage: {}
-    - lint-tests: {}
-    - size-report: {}
     - ui-tests-1: {}
-    - ui-tests-2: {}
-    - integration-all: {}
-    - deploy-dry-run: {}
-    - lokalise-upload: {}
+  stage-main-begin:
+    workflows:
+    - build-for-testing: {}
 workflows:
   basic-integration-tests:
     before_run:
