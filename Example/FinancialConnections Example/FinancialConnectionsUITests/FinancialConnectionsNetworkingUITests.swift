@@ -20,10 +20,15 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
+//    func testy() {
+//        executeNativeNetworkingTestModeAddBankAccount(emailAddress: "apr1@test.com")
+//    }
+    
     func testNativeNetworkingTestMode() throws {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
+        executeNativeNetworkingTestModeAddBankAccount(emailAddress: emailAddresss)
     }
 
     private func executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: String) {
@@ -69,7 +74,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(successInstitution.waitForExistence(timeout: 60.0))
         successInstitution.tap()
 
-        app.fc_nativeAccountPickerLinkAccountsButton.tap()
+        app.fc_nativeConnectAccountsButton.tap()
 
         let emailTextField = app.textFields["email_text_field"]
         XCTAssertTrue(emailTextField.waitForExistence(timeout: 120.0))  // wait for synchronize to complete
@@ -163,6 +168,73 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
         XCTAssert(
             app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
+    
+    private func executeNativeNetworkingTestModeAddBankAccount(emailAddress: String) {
+        let app = XCUIApplication.fc_launch()
+
+        app.fc_playgroundCell.tap()
+
+        let dataSegmentPickerButton = app.segmentedControls.buttons["Networking"]
+        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
+        dataSegmentPickerButton.tap()
+
+        app.fc_playgroundNativeButton.tap()
+
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        enableTestModeSwitch.turnSwitch(on: true)
+
+        let playgroundEmailTextField = app.textFields["playground-email"]
+        XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
+        playgroundEmailTextField.tap()
+        clear(textField: playgroundEmailTextField)
+        playgroundEmailTextField.typeText(emailAddress)
+        app.dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
+        
+        let multiSelectSwitch = app.switches["networking-multi-select"]
+        XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
+        multiSelectSwitch.turnSwitch(on: false)
+        
+        app.swipeUp(velocity: .slow) // swipe to see permissions
+        app.switches["playground-ownership-permission"].turnSwitch(on: false)
+        app.switches["playground-balances-permission"].turnSwitch(on: false)
+        app.switches["playground-transactions-permission"].turnSwitch(on: false)
+        
+        app.fc_playgroundShowAuthFlowButton.tap()
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let linkContinueButton = app.buttons["link_continue_button"]
+        XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
+        linkContinueButton.tap()
+
+        let verificationOTPTextView = app.scrollViews.otherElements.textViews["Code field"]
+        XCTAssertTrue(verificationOTPTextView.waitForExistence(timeout: 60.0))
+        verificationOTPTextView.tap()
+        verificationOTPTextView.typeText("111111")
+        
+        let addBankAccountButton = app.scrollViews.otherElements["add_bank_account"]
+        XCTAssertTrue(addBankAccountButton.waitForExistence(timeout: 120.0)) // need to wait for various API calls to appear
+        addBankAccountButton.tap()
+        
+        // wait for search bar to appear
+        _ = app.fc_searchBarTextField
+        
+        app.swipeUp(velocity: .slow) // swipe to see all institutions
+        
+        app.fc_nativeFeaturedInstitution(name: "Data cannot be shared through Link").tap()
+        
+        let bankAccountName = "Insufficient Funds"
+        app.fc_nativeBankAccount(name: bankAccountName).tap()
+        
+        app.fc_nativeConnectAccountsButton.tap()
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS '\(bankAccountName)'")).firstMatch
                 .exists
         )
     }

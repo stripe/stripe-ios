@@ -104,9 +104,10 @@ extension XCUIApplication {
         return prepaneCancelButton
     }
 
-    var fc_nativeAccountPickerLinkAccountsButton: XCUIElement {
-        let accountPickerLinkAccountsButton = buttons["account_picker_link_accounts_button"]
+    var fc_nativeConnectAccountsButton: XCUIElement {
+        let accountPickerLinkAccountsButton = buttons["connect_accounts_button"]
         XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
+        XCTAssert(accountPickerLinkAccountsButton.isEnabled, "no account selected")
         return accountPickerLinkAccountsButton
     }
 
@@ -121,7 +122,27 @@ extension XCUIApplication {
         XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 5.0), "Failed to close secure browser - \(#function) waiting failed")  // wait for accounts to link
         return secureWebViewCancelButton
     }
-
+    
+    var fc_searchBarTextField: XCUIElement {
+        let searchBarTextField = tables
+            .otherElements
+            .textFields["search_bar_text_field"]
+        XCTAssertTrue(searchBarTextField.waitForExistence(timeout: 120.0))
+        return searchBarTextField
+    }
+    
+    func fc_nativeFeaturedInstitution(name: String) -> XCUIElement {
+        let featuredTestInstitution = tables.cells.staticTexts[name]
+        XCTAssertTrue(featuredTestInstitution.waitForExistence(timeout: 60.0))
+        return featuredTestInstitution
+    }
+    
+    func fc_nativeBankAccount(name: String) -> XCUIElement {
+        let bankAccount = scrollViews.staticTexts[name]
+        XCTAssertTrue(bankAccount.waitForExistence(timeout: 120.0))
+        return bankAccount
+    }
+    
     func dismissKeyboard() {
         let returnKey = keyboards.buttons["return"]
         if returnKey.exists && returnKey.isHittable {

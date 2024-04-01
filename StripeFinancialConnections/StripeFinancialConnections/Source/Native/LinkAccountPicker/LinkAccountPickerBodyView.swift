@@ -75,6 +75,7 @@ final class LinkAccountPickerBodyView: UIView {
                 self.delegate?.linkAccountPickerBodyViewSelectedNewBankAccount(self)
             }
         )
+        newAccountRowView.accessibilityIdentifier = "add_bank_account"
         verticalStackView.addArrangedSubview(newAccountRowView)
 
         addAndPinSubview(verticalStackView)
