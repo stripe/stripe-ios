@@ -126,7 +126,7 @@ extension DocumentScanner: ImageScanner {
             if self.hasSeenMBRunnerError { // If MBMBCCAnalyzerRunnerError occurs before, don't try use MB again, directly fallback to legacy
                 return scanImageLegacy(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
             } else { // MB is available, and never throws any MBCCAnalyzerRunnerError, attempt to use MB
-                if let mbDetector = mbDetector { // MBDetector available, use modern
+                if let mbDetector { // MBDetector available, use modern
                     return mbDetector.analyze(sampleBuffer: sampleBuffer).chained { mbResult in
                         if case .error(let mbError) = mbResult {
                             self.analyticsClient.logMbError(error: mbError, sheetController: self.sheetController)

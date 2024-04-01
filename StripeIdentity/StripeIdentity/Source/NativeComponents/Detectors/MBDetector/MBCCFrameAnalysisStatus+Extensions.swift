@@ -14,18 +14,21 @@ extension MBCCFrameAnalysisStatus {
             return .wrongSide
         }
 
-        if framingStatus == .noDocument {
+        switch framingStatus {
+        case .noDocument:
             return .documentFramingNoDocument
-        } else if framingStatus == .cameraTooFar {
+        case .cameraTooFar:
             return .documentFramingCameraTooFar
-        } else if framingStatus == .cameraTooClose {
+        case .cameraTooClose:
             return .documentFramingCameraTooClose
-        } else if framingStatus == .cameraOrientationUnsuitable {
+        case .cameraOrientationUnsuitable:
             return .documentFramingCameraOrientationUnsuitable
-        } else if framingStatus == .cameraAngleTooSteep {
+        case .cameraAngleTooSteep:
             return .documentFramingCameraAngleTooSteep
-        } else if framingStatus == .documentTooCloseToFrameEdge {
+        case .documentTooCloseToFrameEdge:
             return .documentTooCloseToFrameEdge
+        default:
+            break
         }
 
         if lightingStatus == .tooBright {

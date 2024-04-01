@@ -14,7 +14,7 @@ final class MBDetector: NSObject {
     public init(mbSettings: StripeAPI.VerificationPageStaticContentDocumentCaptureMBSettings) throws {
         super.init()
         try setupLicense(licenseKey: mbSettings.licenseKey)
-        configureMicroblink(mbSettings: mbSettings)
+        MBCCAnalyzerRunner.shared().settings = mbSettings.toMBCCAnalyzerSettings()
         MBCCAnalyzerRunner.shared().delegate = MBDelegate.shared
     }
 
@@ -28,7 +28,7 @@ final class MBDetector: NSObject {
 
         _ = initializationSemaphore.wait(timeout: .now().advanced(by: .milliseconds(1_000)))
 
-        if let initializationError = initializationError {
+        if let initializationError {
             switch initializationError {
             case .networkRequired:
                 throw MBDetectorError.incorrectLicense("network required")
@@ -52,28 +52,6 @@ final class MBDetector: NSObject {
                 throw MBDetectorError.incorrectLicense("unkonwn error")
             }
         }
-    }
-
-    fileprivate func configureMicroblink(mbSettings: StripeAPI.VerificationPageStaticContentDocumentCaptureMBSettings) {
-        let settings = MBCCAnalyzerSettings()
-        // Always jsut capture single side
-        settings.captureSingleSide = true
-        settings.returnTransformedDocumentImage = mbSettings.returnTransformedDocumentImage
-        settings.keepMarginOnTransformedDocumentImage = mbSettings.keepMarginOnTransformedDocumentImage
-        settings.documentFramingMargin = mbSettings.documentFramingMargin
-        settings.handOcclusionThreshold = mbSettings.handOcclusionThreshold
-        settings.captureStrategy = mbSettings.captureStrategy.toMBCCCaptureStrategy()
-        settings.lightingThresholds = .init(
-            tooDarkTreshold: mbSettings.tooBrightThreshold,
-            tooBrightThreshold: mbSettings.tooBrightThreshold
-        )
-        settings.minimumDocumentDpi = mbSettings.minimumDocumentDpi
-        settings.adjustMinimumDocumentDpi = mbSettings.adjustMinimumDocumentDpi
-        settings.tiltPolicy = mbSettings.tiltPolicy.toMBCCTiltPolicy()
-        settings.blurPolicy = mbSettings.blurPolicy.toMBCCBlurPolicy()
-        settings.glarePolicy = mbSettings.glarePolicy.toMBCCGlarePolicy()
-
-        MBCCAnalyzerRunner.shared().settings = settings
     }
 
     func analyze(sampleBuffer: CMSampleBuffer) -> Future<MBDetector.DetectorResult> {
@@ -307,5 +285,28 @@ extension MBDetector.MBDetectorError: AnalyticLoggableErrorV2 {
             ]
         }
         return payload
+    }
+}
+
+extension StripeAPI.VerificationPageStaticContentDocumentCaptureMBSettings {
+    func toMBCCAnalyzerSettings() -> MBCCAnalyzerSettings {
+        let settings = MBCCAnalyzerSettings()
+        // Always capture single side
+        settings.captureSingleSide = true
+        settings.returnTransformedDocumentImage = self.returnTransformedDocumentImage
+        settings.keepMarginOnTransformedDocumentImage = self.keepMarginOnTransformedDocumentImage
+        settings.documentFramingMargin = self.documentFramingMargin
+        settings.handOcclusionThreshold = self.handOcclusionThreshold
+        settings.captureStrategy = self.captureStrategy.toMBCCCaptureStrategy()
+        settings.lightingThresholds = .init(
+            tooDarkTreshold: self.tooBrightThreshold,
+            tooBrightThreshold: self.tooBrightThreshold
+        )
+        settings.minimumDocumentDpi = self.minimumDocumentDpi
+        settings.adjustMinimumDocumentDpi = self.adjustMinimumDocumentDpi
+        settings.tiltPolicy = self.tiltPolicy.toMBCCTiltPolicy()
+        settings.blurPolicy = self.blurPolicy.toMBCCBlurPolicy()
+        settings.glarePolicy = self.glarePolicy.toMBCCGlarePolicy()
+        return settings
     }
 }

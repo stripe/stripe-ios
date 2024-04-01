@@ -77,12 +77,13 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .scanning(let documentSide, let documentScannerOutput):
             let newScanningInstructionText: String
             let now = Date()
-            if  now.timeIntervalSince(lastScanningInstructionTextUpdate) > 1 {
+            // update instruction text, at most once a second
+            if now.timeIntervalSince(lastScanningInstructionTextUpdate) > 1 {
                 newScanningInstructionText = scanningInstructionText(for: documentSide, documentScannerOutput: documentScannerOutput)
                 lastScanningInstructionText = newScanningInstructionText
                 lastScanningInstructionTextUpdate = now
             } else {
-                if let lastScanningInstructionText = lastScanningInstructionText {
+                if let lastScanningInstructionText {
                     newScanningInstructionText = lastScanningInstructionText
                 } else {
                     newScanningInstructionText = documentSide == .front ? String.Localized.position_in_center : String.Localized.flip_to_other_side
@@ -472,7 +473,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         _ scanningSession: DocumentImageScanningSession,
         didTimeoutForClassification documentSide: DocumentSide
     ) {
-        if let sheetController = sheetController {
+        if let sheetController {
             sheetController.analyticsClient.logDocumentCaptureTimeout(
                 documentSide: documentSide,
                 sheetController: sheetController
@@ -499,7 +500,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) {
             [weak sheetController] averageFPS, numFramesScanned in
             guard let averageFPS = averageFPS else { return }
-            if let sheetController = sheetController {
+            if let sheetController {
                 sheetController.analyticsClient.logAverageFramesPerSecond(
                     averageFPS: averageFPS,
                     numFrames: numFramesScanned,
@@ -508,7 +509,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
                 )
             }
         }
-        if let sheetController = sheetController {
+        if let sheetController {
             sheetController.analyticsClient.logModelPerformance(
                 mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers,
                 sheetController: sheetController
