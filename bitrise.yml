@@ -95,6 +95,7 @@ workflows:
     - xcode-build-for-test@3:
         inputs:
         - scheme: PaymentSheet Example
+        - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2:
         inputs:
         - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_PATH
@@ -488,6 +489,41 @@ workflows:
     - git-clone@8.2:
         inputs:
         - clone_depth: "1"
+    - restore-cache@1:
+        inputs:
+        - key: |-
+            bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: |-
+            bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
+            vendor
+    - restore-spm-cache@2.1: {}
+  prep_build:
+    steps:
+    - xcode-start-simulator@0:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+    - set-env-var@0:
+        title: Set CONFIGURATION_BUILD_DIR
+        inputs:
+        - destination_keys: CONFIGURATION_BUILD_DIR
+        - value: $BITRISE_SOURCE_DIR/stpbuild/products
+    - set-env-var@0:
+        title: Set CONFIGURATION_TEMP_DIR
+        inputs:
+        - destination_keys: CONFIGURATION_TEMP_DIR
+        - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
+    - script@1:
+        title: Set Bundler to use local vendor directory
+        is_always_run: true
+        inputs:
+        - content: bundle config set path 'vendor/bundle'
+    - git-clone@8.2:
+        inputs:
+        - clone_depth: "1"
     - cache-pull@2: {}
     - bundler@0: {}
     - cache-push@2:
@@ -495,7 +531,7 @@ workflows:
         - compress_archive: "true"
         - cache_paths: |
             vendor
-    - restore-spm-cache@2.1: {}
+    - restore-spm-cache@2.1: {}    
   prep_light:
     steps:
     - xcode-start-simulator@0:
