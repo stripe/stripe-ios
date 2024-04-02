@@ -50,6 +50,12 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_PaymentSheetViewController)
 class PaymentSheetViewController: UIViewController {
+    enum PaymentSheetViewControllerError: Error {
+        case addingNewNoPaymentOptionOnBuyButtonTap
+        case selectingSavedNoPaymentOptionOnBuyButtonTap
+        case sheetNavigationBarDidBack
+    }
+
     // MARK: - Read-only Properties
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
@@ -462,7 +468,10 @@ class PaymentSheetViewController: UIViewController {
                 return
             } else {
                 guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
-                    assertionFailure()
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError,
+                                                      error: PaymentSheetViewControllerError.addingNewNoPaymentOptionOnBuyButtonTap,
+                                                      additionalNonPIIParams: [:])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                     return
                 }
                 paymentOption = newPaymentOption
@@ -471,7 +480,10 @@ class PaymentSheetViewController: UIViewController {
             guard
                 let selectedPaymentOption = savedPaymentOptionsViewController.selectedPaymentOption
             else {
-                assertionFailure()
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError,
+                                                  error: PaymentSheetViewControllerError.selectingSavedNoPaymentOptionOnBuyButtonTap,
+                                                  additionalNonPIIParams: [:])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
             paymentOption = selectedPaymentOption
@@ -747,7 +759,10 @@ extension PaymentSheetViewController: SheetNavigationBarDelegate {
             mode = .selectingSaved
             updateUI()
         default:
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError,
+                                              error: PaymentSheetViewControllerError.sheetNavigationBarDidBack,
+                                              additionalNonPIIParams: [:])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
         }
     }
 }
