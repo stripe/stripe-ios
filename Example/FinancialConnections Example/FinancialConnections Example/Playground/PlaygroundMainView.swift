@@ -100,7 +100,7 @@ struct PlaygroundMainView: View {
 
                     // extra space so keyboard doesn't cover the "CUSTOM KEYS" section
                     // (SwiftUI, depending on iOS version, doesn't handle keyboard)
-                    Spacer(minLength: 100)
+                    Spacer(minLength: 60)
                 }
                 VStack {
                     Button(action: viewModel.didSelectShow) {

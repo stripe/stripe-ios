@@ -39,6 +39,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
+        app.swipeUp(velocity: .slow) // swipe to see email
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
@@ -49,11 +50,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
         multiSelectSwitch.turnSwitch(on: false)
 
-        app.swipeUp(velocity: .slow)
-
-        let playgroundTransactionsPermissionsSwitch = app.switches["playground-transactions-permission"]
-        XCTAssertTrue(playgroundTransactionsPermissionsSwitch.waitForExistence(timeout: 60.0))
-        playgroundTransactionsPermissionsSwitch.turnSwitch(on: true)
+        app.swipeUp(velocity: .slow) // swipe to see permissions
+        app.switches["playground-transactions-permission"].turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
@@ -116,6 +114,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
+        app.swipeUp(velocity: .slow) // swipe to see email
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
@@ -123,9 +122,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         playgroundEmailTextField.typeText(emailAddress)
         app.dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
 
-        let playgroundTransactionsPermissionsSwitch = app.switches["playground-transactions-permission"]
-        XCTAssertTrue(playgroundTransactionsPermissionsSwitch.waitForExistence(timeout: 60.0))
-        playgroundTransactionsPermissionsSwitch.turnSwitch(on: true)
+        app.swipeUp(velocity: .slow) // swipe to see permissions
+        app.switches["playground-transactions-permission"].turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
@@ -183,6 +181,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
+        app.swipeUp(velocity: .slow) // swipe to see email
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
@@ -252,6 +251,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
+        app.swipeUp(velocity: .slow) // swipe to see email
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
