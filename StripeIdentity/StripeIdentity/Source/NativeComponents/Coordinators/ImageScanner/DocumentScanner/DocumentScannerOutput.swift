@@ -17,13 +17,13 @@ enum DocumentScannerOutput: Equatable {
     // Result with legacy detectors
     case legacy(IDDetectorOutput, BarcodeDetectorOutput?, MotionBlurDetector.Output, CameraSession.DeviceProperties?, LaplacianBlurDetector.Output)
     // Result with MBDetector and IDDetector
-    case modern(IDDetectorOutput, MBDetector.DetectorResult, CameraSession.DeviceProperties?)
+    case modern(IDDetectorOutput, BarcodeDetectorOutput?, MotionBlurDetector.Output, CameraSession.DeviceProperties?, LaplacianBlurDetector.Output, MBDetector.DetectorResult)
 
     var idDetectorOutput: IDDetectorOutput {
         switch self {
         case .legacy(let detectorOutput, _, _, _, _):
             return detectorOutput
-        case .modern(let detectorOutput, _, _):
+        case .modern(let detectorOutput, _, _, _, _, _):
             return detectorOutput
         }
     }
@@ -32,7 +32,7 @@ enum DocumentScannerOutput: Equatable {
         switch self {
         case .legacy(_, _, _, let cameraProperties, _):
             return cameraProperties
-        case .modern(_, _, let cameraProperties):
+        case .modern(_, _, _, let cameraProperties, _, _):
             return cameraProperties
         }
     }
@@ -41,8 +41,8 @@ enum DocumentScannerOutput: Equatable {
         switch self {
         case .legacy(_, let barcode, _, _, _):
             return barcode
-        case .modern:
-            return nil
+        case .modern(_, let barcode, _, _, _, _):
+            return barcode
         }
     }
 
@@ -55,26 +55,38 @@ enum DocumentScannerOutput: Equatable {
     ) -> Bool {
         switch self {
         case let .legacy(idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult):
-            if barcode?.hasBarcode == true {
-                // If the barcode is clear enough to decode, then that's good enough and
-                // it doesn't matter if the MotionBlurDetector believes there's motion blur
-                // just need to make sure the zoom level is ok
-                return idDetectorOutput.computeZoomLevel() == .ok
+            return checkWithDetectorResults(side, idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult)
+        case let .modern(idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult, mbResult):
+            // Return true if either mbResult captured the correct side or the all the other detectors check passes.
+            if case let .captured(_, _, mbSide) = mbResult, mbSide == side {
+                return true
             } else {
-                return idDetectorOutput.classification.matchesDocument(side: side)
-                    && cameraProperties?.isAdjustingFocus != true
-                    && !motionBlur.hasMotionBlur
-                    && blurResult.isBlurry != true
-                    && idDetectorOutput.computeZoomLevel() == .ok
-            }
-        case let .modern(_, mbResult, _):
-            if case let .captured(_, _, mbSide) = mbResult {
-                return mbSide == side
-            } else {
-                return false
+                return checkWithDetectorResults(side, idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult)
             }
         }
 
+    }
+
+    private func checkWithDetectorResults(
+        _ side: DocumentSide,
+        _ idDetectorOutput: IDDetectorOutput,
+        _ barcode: BarcodeDetectorOutput?,
+        _ motionBlur: MotionBlurDetector.Output,
+        _ cameraProperties: CameraSession.DeviceProperties?,
+        _ blurResult: LaplacianBlurDetector.Output
+    ) -> Bool {
+        if barcode?.hasBarcode == true {
+            // If the barcode is clear enough to decode, then that's good enough and
+            // it doesn't matter if the MotionBlurDetector believes there's motion blur
+            // just need to make sure the zoom level is ok
+            return idDetectorOutput.computeZoomLevel() == .ok
+        } else {
+            return idDetectorOutput.classification.matchesDocument(side: side)
+                && cameraProperties?.isAdjustingFocus != true
+                && !motionBlur.hasMotionBlur
+                && blurResult.isBlurry != true
+                && idDetectorOutput.computeZoomLevel() == .ok
+        }
     }
 
     func matchesDocument(

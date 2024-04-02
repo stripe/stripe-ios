@@ -62,6 +62,7 @@ final class IdentityAnalyticsClient {
         // MARK: Microblink
         case mbStatus = "mb_status"
         case mbError = "mb_error"
+        case mbCaptureStatus = "mb_capture_status"
         // MARK: Experiment
         case experimentExposure = "preloaded_experiment_retrieved"
     }
@@ -575,6 +576,19 @@ final class IdentityAnalyticsClient {
                     filePath: filePath,
                     line: line
                 ),
+            ],
+            verificationPage: try? sheetController.verificationPageResponse?.get()
+        )
+    }
+
+    func logMbCaptureStatus(
+        capturedByMb: Bool,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        logAnalytic(
+            .mbCaptureStatus,
+            metadata: [
+                "captured_by_mb": capturedByMb
             ],
             verificationPage: try? sheetController.verificationPageResponse?.get()
         )

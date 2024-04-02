@@ -52,7 +52,7 @@ extension DocumentCaptureViewController {
             case (_, true, .tooFar):
                 return String.Localized.move_closer
             }
-        case .some(.modern(_, let mbResult, _)):
+        case .some(.modern(_, _, _, _, _, let mbResult)):
             guard case let .capturing(captureFeedback) = mbResult else {
                 if side == .front {
                     return String.Localized.position_in_center

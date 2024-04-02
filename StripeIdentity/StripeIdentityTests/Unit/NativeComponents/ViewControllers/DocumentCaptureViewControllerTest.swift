@@ -625,7 +625,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
     }
 
-    func testScanningUpdatesStateModern() {
+    func testScanningUpdatesStateModernFinishedWithMB() {
         let vc = makeViewController(
             state: .scanning(.front, nil)
         )
@@ -648,12 +648,45 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         // Mock that scanner found desired classification, but is blurry
         mockConcurrencyManager.respondToScan(
-            output: makeDocumentScannerOutputModern(with: .idCardFront, detectorOutput: .capturing(.blurDetected))
+            output: makeDocumentScannerOutputModern(with: .idCardFront, isBlurry: true, detectorOutput: .capturing(.blurDetected))
         )
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
 
-        // Mock that scanner found desired classification
+        // Mock that MB found desired classification
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .idCardFront, detectorOutput: .captured(UIImage(), UIImage(), .front)))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
+    }
+
+    func testScanningUpdatesStateModernFinishedWithIDDetector() {
+        let vc = makeViewController(
+            state: .scanning(.front, nil)
+        )
+        // Mock that scanner is scanning
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
+        waitForCameraSessionToStart()
+        mockCameraFrameCaptured(vc)
+
+        // Mock that scanner found a classification that was not desired and
+        // verify the state is updated accordingly
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .invalid, detectorOutput: .capturing(.blurDetected)))
+
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .idCardBack, detectorOutput: .capturing(.blurDetected)))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        mockConcurrencyManager.respondToScan(output: nil)
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
+
+        // Mock that scanner found desired classification, but is blurry
+        mockConcurrencyManager.respondToScan(
+            output: makeDocumentScannerOutputModern(with: .idCardFront, isBlurry: true, detectorOutput: .capturing(.blurDetected))
+        )
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        // Mock that MB is still capturing but IDDetector found desired classification
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .idCardFront, isBlurry: false, hasBarcode: true, detectorOutput: .capturing(.blurDetected)))
+
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
     }
 
@@ -923,15 +956,30 @@ extension DocumentCaptureViewControllerTest {
     ) -> DocumentScannerOutput {
         return .modern(
             idDetectorOutput,
-            mbDetectorResult,
             .init(
-                exposureDuration: CMTime(),
-                cameraDeviceType: .builtInDualCamera,
-                isVirtualDevice: nil,
-                lensPosition: 0,
-                exposureISO: 0,
-                isAdjustingFocus: false
-            )
+                hasBarcode: true,
+                isTimedOut: false,
+                symbology: .pdf417,
+                timeTryingToFindBarcode: 1
+            ),
+            .init(
+                hasMotionBlur: false,
+                iou: nil,
+                frameCount: 0,
+                duration: 0
+            ),
+            .init(
+                .init(
+                    exposureDuration: CMTime(),
+                    cameraDeviceType: .builtInDualCamera,
+                    isVirtualDevice: nil,
+                    lensPosition: 0,
+                    exposureISO: 0,
+                    isAdjustingFocus: false
+                )
+            ),
+            .init(isBlurry: false, variance: 0.1),
+            mbDetectorResult
         )
     }
 
@@ -976,6 +1024,8 @@ extension DocumentCaptureViewControllerTest {
 
     fileprivate func makeDocumentScannerOutputModern(
         with classification: IDDetectorOutput.Classification,
+        isBlurry: Bool = true,
+        hasBarcode: Bool = false,
         detectorOutput: MBDetector.DetectorResult
     ) -> DocumentScannerOutput {
         return .modern(
@@ -986,15 +1036,30 @@ extension DocumentCaptureViewControllerTest {
                     classification: 0.9
                 ]
             ),
-            detectorOutput,
             .init(
-                exposureDuration: CMTime(),
-                cameraDeviceType: .builtInDualCamera,
-                isVirtualDevice: nil,
-                lensPosition: 0,
-                exposureISO: 0,
-                isAdjustingFocus: false
-            )
+                hasBarcode: hasBarcode,
+                isTimedOut: false,
+                symbology: .pdf417,
+                timeTryingToFindBarcode: 1
+            ),
+            .init(
+                hasMotionBlur: !isBlurry,
+                iou: nil,
+                frameCount: 0,
+                duration: 0
+            ),
+            .init(
+                .init(
+                    exposureDuration: CMTime(),
+                    cameraDeviceType: .builtInDualCamera,
+                    isVirtualDevice: nil,
+                    lensPosition: 0,
+                    exposureISO: 0,
+                    isAdjustingFocus: !isBlurry
+                )
+            ),
+            .init(isBlurry: isBlurry, variance: 0.1),
+            detectorOutput
         )
     }
 

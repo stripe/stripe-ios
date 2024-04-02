@@ -135,7 +135,7 @@ extension DocumentScanner: ImageScanner {
                             }
                             return self.scanImageLegacy(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
                         } else {
-                            return Promise(value: .modern(idDetectorOutput, mbResult, cameraProperties))
+                            return self.scanImageModern(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties, mbResult: mbResult)
                         }
                     }
                 } else { // MBDetector not avaialbe, fallback to legacy
@@ -147,48 +147,79 @@ extension DocumentScanner: ImageScanner {
         }
     }
 
+    fileprivate func processCommonResults(
+        pixelBuffer: CVPixelBuffer,
+        idDetectorOutput: IDDetectorOutput,
+        cameraProperties: CameraSession.DeviceProperties?
+    ) throws -> (motionBlurOutput: MotionBlurDetector.Output, barcodeOutput: BarcodeDetectorOutput?, blurResult: LaplacianBlurDetector.Output)  {
+        // Check for motion blur
+        let motionBlurOutput = motionBlurDetector.determineMotionBlur(
+            documentBounds: idDetectorOutput.documentBounds
+        )
+
+        // If there's motion blur, reset the timer on the barcode detector.
+        // Otherwise, scan for a barcode if this is the back of an ID.
+        var barcodeOutput: BarcodeDetectorOutput?
+        if let barcodeDetector = self.barcodeDetector,
+           idDetectorOutput.classification == .idCardBack
+        {
+            barcodeOutput = try barcodeDetector.scanImage(
+                pixelBuffer: pixelBuffer,
+                regionOfInterest: idDetectorOutput.documentBounds
+            )
+        }
+
+        let blurResult: LaplacianBlurDetector.Output = try {
+            let originalImage = pixelBuffer.cgImage()
+            guard let croppedImage = try originalImage?.cropping(
+                toNormalizedRegion: idDetectorOutput.documentBounds,
+                withPadding: highResImageCropPadding,
+                computationMethod: .maxImageWidthOrHeight
+            )
+            else {
+                return LaplacianBlurDetector.defaultOutput
+            }
+            return blurDetector.calculateBlurOutput(inputImage: croppedImage)
+        }()
+
+        return (motionBlurOutput, barcodeOutput, blurResult)
+    }
+
     fileprivate func scanImageLegacy(
         pixelBuffer: CVPixelBuffer,
         idDetectorOutput: IDDetectorOutput,
         cameraProperties: CameraSession.DeviceProperties?
     ) -> Future<DocumentScannerOutput?> {
         do {
-           // Check for motion blur
-            let motionBlurOutput = self.motionBlurDetector.determineMotionBlur(
-               documentBounds: idDetectorOutput.documentBounds
-           )
+            let commonOutputs = try processCommonResults(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
+            return Promise(value: DocumentScannerOutput.legacy(
+                idDetectorOutput,
+                commonOutputs.barcodeOutput,
+                commonOutputs.motionBlurOutput,
+                cameraProperties,
+                commonOutputs.blurResult
+            ))
+        } catch {
+            return Promise(error: error)
+        }
+    }
 
-           // If there's motion blur, reset the timer on the barcode detector.
-           // Otherwise, scan for a barcode if this is the back of an ID.
-           var barcodeOutput: BarcodeDetectorOutput?
-           if let barcodeDetector = self.barcodeDetector,
-               idDetectorOutput.classification == .idCardBack
-           {
-               barcodeOutput = try barcodeDetector.scanImage(
-                   pixelBuffer: pixelBuffer,
-                   regionOfInterest: idDetectorOutput.documentBounds
-               )
-           }
-
-           let blurResult: LaplacianBlurDetector.Output = try {
-               let originalImage = pixelBuffer.cgImage()
-               guard let croppedImage = try originalImage?.cropping(
-                   toNormalizedRegion: idDetectorOutput.documentBounds,
-                   withPadding: highResImageCropPadding,
-                   computationMethod: .maxImageWidthOrHeight
-               )
-               else {
-                   return LaplacianBlurDetector.defaultOutput
-               }
-               return blurDetector.calculateBlurOutput(inputImage: croppedImage)
-           }()
-           return Promise(value: .legacy(
-               idDetectorOutput,
-               barcodeOutput,
-               motionBlurOutput,
-               cameraProperties,
-               blurResult
-           ))
+    fileprivate func scanImageModern(
+        pixelBuffer: CVPixelBuffer,
+        idDetectorOutput: IDDetectorOutput,
+        cameraProperties: CameraSession.DeviceProperties?,
+        mbResult: MBDetector.DetectorResult
+    ) -> Future<DocumentScannerOutput?> {
+        do {
+            let commonOutputs = try processCommonResults(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
+            return Promise(value: DocumentScannerOutput.modern(
+                idDetectorOutput,
+                commonOutputs.barcodeOutput,
+                commonOutputs.motionBlurOutput,
+                cameraProperties,
+                commonOutputs.blurResult,
+                mbResult
+            ))
         } catch {
             return Promise(error: error)
         }
