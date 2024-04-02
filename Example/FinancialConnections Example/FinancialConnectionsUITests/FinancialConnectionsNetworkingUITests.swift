@@ -39,7 +39,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
-        app.swipeUp(velocity: .slow) // swipe to see email
+        app.scrollDown() // see email
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
@@ -50,7 +50,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
         multiSelectSwitch.turnSwitch(on: false)
 
-        app.swipeUp(velocity: .slow) // swipe to see permissions
+        app.scrollDown() // see permissions
         app.switches["playground-transactions-permission"].turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
@@ -114,7 +114,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
-        app.swipeUp(velocity: .slow) // swipe to see email
+        app.scrollDown() // see email
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
@@ -122,7 +122,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         playgroundEmailTextField.typeText(emailAddress)
         app.dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
 
-        app.swipeUp(velocity: .slow) // swipe to see permissions
+        app.scrollDown() // see permissions
         app.switches["playground-transactions-permission"].turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
@@ -181,7 +181,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
-        app.swipeUp(velocity: .slow) // swipe to see email
+        app.scrollDown() // see email
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
@@ -193,7 +193,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
         multiSelectSwitch.turnSwitch(on: false)
 
-        app.swipeUp(velocity: .slow) // swipe to see permissions
+        app.scrollDown() // see permissions
         app.switches["playground-ownership-permission"].turnSwitch(on: false)
         app.switches["playground-balances-permission"].turnSwitch(on: false)
         app.switches["playground-transactions-permission"].turnSwitch(on: false)
@@ -217,7 +217,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // wait for search bar to appear
         _ = app.fc_searchBarTextField
 
-        app.swipeUp(velocity: .slow) // swipe to see all institutions
+        app.scrollDown() // see all institutions
 
         app.fc_nativeFeaturedInstitution(name: "Data cannot be shared through Link").tap()
 
@@ -251,7 +251,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
-        app.swipeUp(velocity: .slow) // swipe to see email
+        app.scrollDown() // see email
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
@@ -263,7 +263,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
         multiSelectSwitch.turnSwitch(on: true)
 
-        app.swipeUp(velocity: .slow) // swipe to see permissions
+        app.scrollDown() // see permissions
         app.switches["playground-ownership-permission"].turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()

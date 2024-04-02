@@ -143,6 +143,10 @@ extension XCUIApplication {
         return bankAccount
     }
 
+    func scrollDown() {
+        swipeUp(velocity: .verySlow)
+    }
+
     func dismissKeyboard() {
         let returnKey = keyboards.buttons["return"]
         if returnKey.exists && returnKey.isHittable {
