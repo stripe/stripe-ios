@@ -30,6 +30,13 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_SavedPaymentOptionsViewController)
 class SavedPaymentOptionsViewController: UIViewController {
+    enum Error: Swift.Error {
+        case unableToDequeueReusableCell
+        case paymentOptionCellDidSelectEditOnNonSavedItem
+        case paymentOptionCellDidSelectRemoveOnNonSavedItem
+        case removePaymentMethodOnNonSavedItem
+        case removalMessageBlank
+    }
     // MARK: - Types
     // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
     /**
@@ -468,7 +475,10 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                     .reuseIdentifier, for: indexPath)
                 as? SavedPaymentMethodCollectionView.PaymentOptionCell
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.unableToDequeueReusableCell)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return UICollectionViewCell()
         }
         cell.setViewModel(viewModel, cbcEligible: cbcEligible)
@@ -499,7 +509,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
 
         switch viewModel {
         case .add:
-            // Should have been handled in shouldSelectItemAt: before we got here!
+            // Assert loudly, should have been handled in shouldSelectItemAt: before we got here!
             assertionFailure()
         case .applePay:
             CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
@@ -525,7 +535,10 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.paymentOptionCellDidSelectEditOnNonSavedItem)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
 
@@ -546,7 +559,10 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.paymentOptionCellDidSelectRemoveOnNonSavedItem)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
 
@@ -563,7 +579,10 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.removePaymentMethodOnNonSavedItem)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
         let viewModel = viewModels[indexPath.row]
@@ -606,7 +625,7 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
               case .saved = viewModels[indexPath.row],
               let delegate = delegate
         else {
-            assertionFailure()
+            stpAssertionFailure()
             throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
         }
 
@@ -622,6 +641,9 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
 }
 
 extension STPPaymentMethod {
+    enum Error: Swift.Error {
+        case removalMessageUndefined
+    }
     var removalMessage: (title: String, message: String) {
         switch type {
         case .card:
@@ -653,7 +675,11 @@ extension STPPaymentMethod {
                 message: String(format: formattedMessage, last4)
             )
         default:
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.removalMessageUndefined,
+                                              additionalNonPIIParams: ["payment_method_type": type.identifier])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return (title: "", message: "")
         }
     }
