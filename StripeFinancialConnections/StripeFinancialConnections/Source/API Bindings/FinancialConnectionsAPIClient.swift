@@ -523,8 +523,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             !linkedAccountIds.isEmpty
         {
             return pollAccountNumbersForSelectedAccounts(
-                linkedAccountIds: linkedAccountIds,
-                clientSecret: clientSecret
+                linkedAccountIds: linkedAccountIds
             )
             .chained { _ in
                 return saveAccountsToLinkHandler()
@@ -535,8 +534,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     }
 
     private func pollAccountNumbersForSelectedAccounts(
-        linkedAccountIds: [String],
-        clientSecret: String
+        linkedAccountIds: [String]
     ) -> Future<EmptyResponse> {
         let body: [String: Any] = [
             "linked_accounts": linkedAccountIds,
