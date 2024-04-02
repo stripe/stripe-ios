@@ -122,7 +122,7 @@ extension XCUIApplication {
         XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 5.0), "Failed to close secure browser - \(#function) waiting failed")  // wait for accounts to link
         return secureWebViewCancelButton
     }
-    
+
     var fc_searchBarTextField: XCUIElement {
         let searchBarTextField = tables
             .otherElements
@@ -130,19 +130,19 @@ extension XCUIApplication {
         XCTAssertTrue(searchBarTextField.waitForExistence(timeout: 120.0))
         return searchBarTextField
     }
-    
+
     func fc_nativeFeaturedInstitution(name: String) -> XCUIElement {
         let featuredTestInstitution = tables.cells.staticTexts[name]
         XCTAssertTrue(featuredTestInstitution.waitForExistence(timeout: 60.0))
         return featuredTestInstitution
     }
-    
+
     func fc_nativeBankAccount(name: String) -> XCUIElement {
         let bankAccount = scrollViews.staticTexts[name]
         XCTAssertTrue(bankAccount.waitForExistence(timeout: 120.0))
         return bankAccount
     }
-    
+
     func dismissKeyboard() {
         let returnKey = keyboards.buttons["return"]
         if returnKey.exists && returnKey.isHittable {

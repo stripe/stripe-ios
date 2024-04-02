@@ -55,6 +55,7 @@ final class AccountUpdateRequiredViewController: SheetViewController {
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
                     title: "Continue", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
+                    accessibilityIdentifier: "account_update_required_continue_button",
                     action: didSelectContinue
                 ),
                 secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
