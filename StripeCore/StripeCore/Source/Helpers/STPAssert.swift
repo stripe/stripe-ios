@@ -7,6 +7,7 @@
 
 import Foundation
 
+#if ENABLE_STPASSERTIONFAILURE
 /// A very barebones way to test stpasserts in XCTest.
 @_spi(STP) public class STPAssertTestUtil {
     /// If set to `true` in an XCTest, the next assertion that fires populates `_testExpectAssertMessage` instead of crashing and resets this flag to `false`.
@@ -14,6 +15,7 @@ import Foundation
     /// The message of the assertion that fired when `_testExpectAssert` was `true`.
     public static var lastAssertMessage: String = ""
 }
+#endif
 
 /// A wrapper that only calls `assertionFailure` when the `ENABLE_STPASSERTIONFAILURE` compiler flag is set.
 /// Use this for assertions that should not trigger in merchant apps.
