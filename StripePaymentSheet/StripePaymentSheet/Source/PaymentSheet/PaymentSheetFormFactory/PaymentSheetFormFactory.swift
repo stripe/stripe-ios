@@ -18,6 +18,10 @@ import UIKit
  `IntentConfirmParams`.
  */
 class PaymentSheetFormFactory {
+    enum Error: Swift.Error {
+        case missingFormSpec
+    }
+
     enum SaveMode {
         /// We can't save the PaymentMethod. e.g., Payment mode without a customer
         case none
@@ -40,6 +44,7 @@ class PaymentSheetFormFactory {
     let amount: Int?
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
+    let analyticsClient: STPAnalyticsClient
 
     var canSaveToLink: Bool {
         return (supportsLinkCard &&
@@ -59,7 +64,8 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        cardBrandChoiceEligible: Bool = false
+        cardBrandChoiceEligible: Bool = false,
+        analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         func saveModeFor(merchantRequiresSave: Bool) -> SaveMode {
             let hasCustomer = configuration.hasCustomer
@@ -101,7 +107,8 @@ class PaymentSheetFormFactory {
                   currency: intent.currency,
                   amount: intent.amount,
                   countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
-                  saveMode: saveMode)
+                  saveMode: saveMode,
+                  analyticsClient: analyticsClient)
     }
 
     required init(
@@ -117,7 +124,8 @@ class PaymentSheetFormFactory {
         currency: String?,
         amount: Int?,
         countryCode: String?,
-        saveMode: SaveMode
+        saveMode: SaveMode,
+        analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -137,6 +145,7 @@ class PaymentSheetFormFactory {
         self.countryCode = countryCode
         self.saveMode = saveMode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
+        self.analyticsClient = analyticsClient
     }
 
     func make() -> PaymentMethodElement {
@@ -187,7 +196,9 @@ class PaymentSheetFormFactory {
         }
 
         guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-            assertionFailure("Failed to get form spec!")
+            stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
+            analyticsClient.log(analytic: errorAnalytic)
             return FormElement(elements: [], theme: theme)
         }
         if paymentMethod == .iDEAL {
