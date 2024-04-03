@@ -606,6 +606,10 @@ workflows:
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard1_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
+    meta:
+      bitrise.io:
+        machine_type_id: g2-m1-max.10core
+        stack: osx-xcode-15.3.x
   ui-tests-2:
     steps:
     - pull-intermediate-files@1:
@@ -621,6 +625,10 @@ workflows:
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard2_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
+    meta:
+      bitrise.io:
+        machine_type_id: g2-m1-max.10core
+        stack: osx-xcode-15.3.x
   ui-tests-3:
     steps:
     - pull-intermediate-files@1:
@@ -636,6 +644,10 @@ workflows:
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard3_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
+    meta:
+      bitrise.io:
+        machine_type_id: g2-m1-max.10core
+        stack: osx-xcode-15.3.x
   ui-tests-4:
     steps:
     - pull-intermediate-files@1:
@@ -651,6 +663,10 @@ workflows:
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard4_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
+    meta:
+      bitrise.io:
+        machine_type_id: g2-m1-max.10core
+        stack: osx-xcode-15.3.x
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
