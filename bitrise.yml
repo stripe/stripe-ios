@@ -109,6 +109,7 @@ workflows:
     - xcode-build-for-test@3:
         inputs:
         - scheme: PaymentSheet Example
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
         - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2:
         inputs:
@@ -374,7 +375,7 @@ workflows:
     - fastlane@3:
         title: fastlane installation_spm_swift
         inputs:
-        - lane: installation_spm_swift        
+        - lane: installation_spm_swift
   integration-all:
     before_run:
     - prep_all
@@ -603,7 +604,7 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard1_iphonesimulator17.0-arm64-x86_64.xctestrun
+        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard1_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
   ui-tests-2:
     steps:
@@ -618,7 +619,7 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard2_iphonesimulator17.0-arm64-x86_64.xctestrun
+        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard2_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
   ui-tests-3:
     steps:
@@ -633,7 +634,7 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard3_iphonesimulator17.0-arm64-x86_64.xctestrun
+        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard3_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
   ui-tests-4:
     steps:
@@ -648,8 +649,8 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard4_iphonesimulator17.0-arm64-x86_64.xctestrun
-    - deploy-to-bitrise-io@2: {}         
+        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard4_iphonesimulator17.4-arm64.xctestrun
+    - deploy-to-bitrise-io@2: {}
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
