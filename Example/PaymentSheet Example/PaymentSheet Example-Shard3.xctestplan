@@ -32,6 +32,7 @@
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
+        "PaymentSheetDeferredServerSideUITests",
         "PaymentSheetStandardLPMUITests",
         "PaymentSheetStandardUITests",
         "PaymentSheetUITestCase",
