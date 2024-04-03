@@ -201,11 +201,11 @@ final class NetworkingLinkSignupViewController: UIViewController {
         .observe { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success(let manifest):
+            case .success(let customSuccessPaneMessage):
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
                     saveToLinkWithStripeSucceeded: true,
-                    customSuccessPaneMessage: manifest.displayText?.successPane?.subCaption,
+                    customSuccessPaneMessage: customSuccessPaneMessage,
                     withError: nil
                 )
             case .failure(let error):

@@ -118,15 +118,22 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<EmptyResponse>()
     }
 
-    func saveAccountsToLink(
+    func saveAccountsToNetworkAndLink(
+        shouldPollAccounts: Bool,
+        selectedAccounts: [FinancialConnectionsPartnerAccount],
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
-        selectedAccountIds: [String],
         consumerSessionClientSecret: String?,
         clientSecret: String
-    ) -> Future<StripeFinancialConnections.FinancialConnectionsSessionManifest> {
-        return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    ) -> Future<(
+        manifest: FinancialConnectionsSessionManifest,
+        customSuccessPaneMessage: String?
+    )> {
+        return Promise<(
+            manifest: FinancialConnectionsSessionManifest,
+            customSuccessPaneMessage: String?
+        )>()
     }
 
     func disableNetworking(

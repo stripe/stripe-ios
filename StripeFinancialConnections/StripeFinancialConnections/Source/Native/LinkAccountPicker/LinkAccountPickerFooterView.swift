@@ -24,6 +24,7 @@ final class LinkAccountPickerFooterView: UIView {
         NSLayoutConstraint.activate([
             connectAccountButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        connectAccountButton.accessibilityIdentifier = "connect_accounts_button"
         return connectAccountButton
     }()
 

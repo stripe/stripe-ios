@@ -71,6 +71,7 @@ struct PlaygroundMainView: View {
                                     .accessibility(identifier: "playground-email")
 
                                 Toggle("Enable Multi Select", isOn: $viewModel.enableNetworkingMultiSelect)
+                                    .accessibility(identifier: "networking-multi-select")
                             }
                         } else if viewModel.customScenario == .customKeys {
                             TextField("Public Key (pk_)", text: $viewModel.customPublicKey)
@@ -99,7 +100,7 @@ struct PlaygroundMainView: View {
 
                     // extra space so keyboard doesn't cover the "CUSTOM KEYS" section
                     // (SwiftUI, depending on iOS version, doesn't handle keyboard)
-                    Spacer(minLength: 100)
+                    Spacer(minLength: 60)
                 }
                 VStack {
                     Button(action: viewModel.didSelectShow) {

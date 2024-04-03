@@ -17,14 +17,14 @@ protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
-    func saveToLink() -> Future<Void>
+    func saveToLink() -> Future<String?>
 }
 
 final class NetworkingSaveToLinkVerificationDataSourceImplementation: NetworkingSaveToLinkVerificationDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
     private(set) var consumerSession: ConsumerSessionData
-    private let selectedAccountIds: [String]
+    private let selectedAccounts: [FinancialConnectionsPartnerAccount]
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -33,14 +33,14 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
     init(
         manifest: FinancialConnectionsSessionManifest,
         consumerSession: ConsumerSessionData,
-        selectedAccountIds: [String],
+        selectedAccounts: [FinancialConnectionsPartnerAccount],
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
         self.consumerSession = consumerSession
-        self.selectedAccountIds = selectedAccountIds
+        self.selectedAccounts = selectedAccounts
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
@@ -95,17 +95,18 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
         return apiClient.markLinkVerified(clientSecret: clientSecret)
     }
 
-    func saveToLink() -> Future<Void> {
-        return apiClient.saveAccountsToLink(
+    func saveToLink() -> Future<String?> {
+        return apiClient.saveAccountsToNetworkAndLink(
+            shouldPollAccounts: !manifest.shouldAttachLinkedPaymentMethod,
+            selectedAccounts: selectedAccounts,
             emailAddress: nil,
             phoneNumber: nil,
             country: nil,
-            selectedAccountIds: selectedAccountIds,
             consumerSessionClientSecret: consumerSession.clientSecret,
             clientSecret: clientSecret
         )
-        .chained { _ in
-            return Promise(value: ())
+        .chained { (_, customSuccessPaneMessage) in
+            return Promise(value: customSuccessPaneMessage)
         }
     }
 }
