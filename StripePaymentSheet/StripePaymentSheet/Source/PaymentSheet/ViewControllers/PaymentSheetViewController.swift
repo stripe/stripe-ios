@@ -472,7 +472,7 @@ class PaymentSheetViewController: UIViewController {
                                                       error: PaymentSheetViewControllerError.addingNewNoPaymentOptionOnBuyButtonTap,
                                                       additionalNonPIIParams: [:])
                     STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                    stpAssert(false, "Tapped buy button while adding without paymentOption")
+                    stpAssertionFailure("Tapped buy button while adding without paymentOption")
                     return
                 }
                 paymentOption = newPaymentOption
@@ -485,7 +485,7 @@ class PaymentSheetViewController: UIViewController {
                                                   error: PaymentSheetViewControllerError.selectingSavedNoPaymentOptionOnBuyButtonTap,
                                                   additionalNonPIIParams: [:])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                stpAssert(false, "Tapped buy button while selecting saved without paymentOption")
+                stpAssertionFailure("Tapped buy button while selecting saved without paymentOption")
                 return
             }
             paymentOption = selectedPaymentOption
@@ -765,7 +765,7 @@ extension PaymentSheetViewController: SheetNavigationBarDelegate {
                                               error: PaymentSheetViewControllerError.sheetNavigationBarDidBack,
                                               additionalNonPIIParams: [:])
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssert(false, "Tapped back button in invalid mode")
+            stpAssertionFailure("Tapped back button in invalid mode")
         }
     }
 }
