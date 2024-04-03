@@ -522,12 +522,30 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             shouldPollAccounts,
             !linkedAccountIds.isEmpty
         {
-            return pollAccountNumbersForSelectedAccounts(
+            let promise = Promise<(
+                manifest: FinancialConnectionsSessionManifest,
+                customSuccessPaneMessage: String?
+            )>()
+            pollAccountNumbersForSelectedAccounts(
                 linkedAccountIds: linkedAccountIds
             )
-            .chained { _ in
-                return saveAccountsToLinkHandler()
+            .observe { result in
+                switch result {
+                case .success:
+                    saveAccountsToLinkHandler()
+                        .observe { result in
+                            promise.fullfill(with: result)
+                        }
+                case .failure(let error):
+                    self.disableNetworking(
+                        disabledReason: "account_numbers_not_available",
+                        clientSecret: clientSecret
+                    ).observe { _ in } // ignoring return is intentional
+
+                    promise.reject(with: error)
+                }
             }
+            return promise
         } else {
             return saveAccountsToLinkHandler()
         }
