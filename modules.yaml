@@ -59,8 +59,8 @@
 #
 #   - readme (optional):
 #     The path to a markdown README file that will be embedded in the index page
-#     of the docs for this module. Used as the `--readme` argument to Jazzy.
-#     If omitted, uses Jazzy default (the root directory's README.md file).
+#     of the docs for this module. Used as the `--readme` argument to DocC.
+#     If omitted, uses DocC default (the root directory's README.md file).
 #
 #   - include (optional):
 #     An array of modules to be combined with this module, for the purpose of documentation.

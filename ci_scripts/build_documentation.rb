@@ -137,7 +137,7 @@ end
 def build_module_docs(modules, release_version, docs_root_directory)
   github_file_prefix = "https://github.com/stripe/stripe-ios/tree/#{release_version}"
   github_raw_file_prefix = "https://github.com/stripe/stripe-ios/raw/#{release_version}"
-  jazzy_exit_code = 0
+  xcodebuild_exit_code = 0
 
   modules.each do |m|
     # Note: If we don't check for empty string/nil, we might silently
@@ -169,7 +169,7 @@ def build_module_docs(modules, release_version, docs_root_directory)
     # Verify exit code
     xcodebuild_exit_code = $?.exitstatus
 
-    die "Executing xcodebuild failed with status code: #{jazzy_exit_code}" if jazzy_exit_code != 0
+    die "Executing xcodebuild failed with status code: #{xcodebuild_exit_code}" if xcodebuild_exit_code != 0
     `mv #{$TEMP_BUILD_DIR}/Build/Products/Release-iphoneos/#{m['framework_name']}.doccarchive #{docs_root_directory}/docs/#{m['framework_name'].downcase}`
     # Clean up the bogus index.html file created by DocC
     File.delete("#{docs_root_directory}/docs/#{m['framework_name'].downcase}/index.html")

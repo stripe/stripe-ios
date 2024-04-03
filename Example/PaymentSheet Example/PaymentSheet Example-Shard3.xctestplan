@@ -28,13 +28,10 @@
       "skippedTests" : [
         "CustomerSheetSnapshotTests",
         "CustomerSheetUITest",
-        "PaymentSheetDeferredServerSideUITests",
-        "PaymentSheetDeferredUIBankAccountTests",
-        "PaymentSheetDeferredUITests",
-        "PaymentSheetLinkUITests",
-        "PaymentSheetStandardLPMUITests",
-        "PaymentSheetStandardUITests",
-        "PaymentSheetUITestCase",
+        "PaymentSheetBillingCollectionBankTests",
+        "PaymentSheetBillingCollectionLPMUITests",
+        "PaymentSheetBillingCollectionUICardTests",
+        "PaymentSheetBillingCollectionUITestCase",
         "PaymentSheet_AddressTests"
       ],
       "target" : {

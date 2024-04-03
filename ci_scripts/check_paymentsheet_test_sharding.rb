@@ -50,15 +50,17 @@ def main
   
   skipped_tests1 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard1.xctestplan")  
   skipped_tests2 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard2.xctestplan")  
+  skipped_tests3 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard3.xctestplan")  
+  skipped_tests4 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard4.xctestplan")  
   
-  # Make sure there are no duplicates across skipped_tests1 and 2
-  skipped_in_both = skipped_tests1 & skipped_tests2
-  if !skipped_in_both.empty?
-    puts "#{skipped_in_both} skipped in both test plans. Remove one from the PaymentSheet Example-Shard1.xctestplan exclusion list."
+  # Make sure there are no duplicates across skipped_tests
+  skipped_in_multiple = skipped_tests1 & skipped_tests2 & skipped_tests3 & skipped_tests4
+  if !skipped_in_multiple.empty?
+    puts "#{skipped_in_multiple} skipped in both test plans. Remove one from the PaymentSheet Example-Shard1.xctestplan exclusion list."
     exit 1
   end
 
-  all_skipped_tests = skipped_tests1 + skipped_tests2 
+  all_skipped_tests = skipped_tests1 + skipped_tests2 + skipped_tests3 + skipped_tests4
   
   exitcode = 0
   test_classes.each do |test_class|  
