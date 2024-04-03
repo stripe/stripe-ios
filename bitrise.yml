@@ -55,8 +55,6 @@ stages:
     - install-tests-spm: {}
     - lint-tests: {}
     - size-report: {}
-    - ui-tests-1: {}
-    - ui-tests-2: {}
     - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
@@ -657,8 +655,6 @@ workflows:
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard1_iphonesimulator17.0-arm64-x86_64.xctestrun
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
-            2
     - deploy-to-bitrise-io@2: {}
     meta:
       bitrise.io:
@@ -681,8 +677,6 @@ workflows:
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard2_iphonesimulator17.0-arm64-x86_64.xctestrun
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
-            2
     - deploy-to-bitrise-io@2: {}
     meta:
       bitrise.io:
@@ -705,8 +699,6 @@ workflows:
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard3_iphonesimulator17.0-arm64-x86_64.xctestrun
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
-            2
     - deploy-to-bitrise-io@2: {}
     meta:
       bitrise.io:
@@ -729,8 +721,6 @@ workflows:
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard4_iphonesimulator17.0-arm64-x86_64.xctestrun
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
-            2
     - deploy-to-bitrise-io@2: {}
     meta:
       bitrise.io:
