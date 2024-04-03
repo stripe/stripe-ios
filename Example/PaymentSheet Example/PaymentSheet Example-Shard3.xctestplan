@@ -32,6 +32,9 @@
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
+        "PaymentSheetStandardLPMUITests",
+        "PaymentSheetStandardUITests",
+        "PaymentSheetUITestCase",
         "PaymentSheet_AddressTests"
       ],
       "target" : {
