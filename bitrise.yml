@@ -120,7 +120,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   carthage-install-test:
     before_run:
     - prep_all
@@ -622,27 +622,9 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x-edge
-  test-builds-xcode-15:
-    before_run:
-    - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=17.0
-    steps:
-    - xcode-build-for-test@3.0:
-        inputs:
-        - scheme: AllStripeFrameworks
-        - destination: generic/platform=iOS Simulator
-    - deploy-to-bitrise-io@2: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   ui-tests-1:
     steps:
-    - xcode-start-simulator@0:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
     - pull-intermediate-files@1:
         inputs:
         - artifact_sources: stage-main-begin.build-for-testing
@@ -659,12 +641,9 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   ui-tests-2:
     steps:
-    - xcode-start-simulator@0:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
     - pull-intermediate-files@1:
         inputs:
         - artifact_sources: stage-main-begin.build-for-testing
@@ -681,12 +660,9 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   ui-tests-3:
     steps:
-    - xcode-start-simulator@0:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
     - pull-intermediate-files@1:
         inputs:
         - artifact_sources: stage-main-begin.build-for-testing
@@ -703,12 +679,9 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   ui-tests-4:
     steps:
-    - xcode-start-simulator@0:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
     - pull-intermediate-files@1:
         inputs:
         - artifact_sources: stage-main-begin.build-for-testing
@@ -725,7 +698,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x                
+        stack: osx-xcode-15.2.x                
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
