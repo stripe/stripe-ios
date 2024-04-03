@@ -87,9 +87,13 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
 /// It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
 /// - seealso: https://stripe.com/docs/payments/3d-secure
 public class STPPaymentHandler: NSObject {
-
     /// The error domain for errors in `STPPaymentHandler`.
     @objc public static let errorDomain = "STPPaymentHandlerErrorDomain"
+
+    /// These indicate a programming error in STPPaymentHandler. They are separate from the NSErrors vended to merchants; these errors are only reported to analytics and do not get vended to users of this class.
+    enum InternalError: Error {
+        case invalidState
+    }
 
     private var currentAction: STPPaymentHandlerActionParams?
     /// YES from when a public method is first called until its associated completion handler is called.
@@ -167,9 +171,11 @@ public class STPPaymentHandler: NSObject {
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         if Self.inProgress {
+            assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         } else if !STPPaymentIntentParams.isClientSecretValid(paymentParams.clientSecret) {
+            assertionFailure("`STPPaymentHandler.confirmPayment` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#payment_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
@@ -211,7 +217,15 @@ public class STPPaymentHandler: NSObject {
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)
                 } else {
-                    assert(false, "Calling completion with invalid state")
+                    let errorMessage = "STPPaymentHandler status is succeeded, but the PI is not in a success state or there was an error."
+                    assertionFailure(errorMessage)
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
+                        "error_message": errorMessage,
+                        "payment_intent": paymentIntent.stripeId,
+                        "payment_intent_status": STPPaymentIntentStatus.string(from: paymentIntent.status),
+                        "error_details": error?.serializeForV1Analytics() ?? [:],
+                    ])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
                     completion(
                         .failed,
                         paymentIntent,
@@ -285,6 +299,7 @@ public class STPPaymentHandler: NSObject {
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         if !STPPaymentIntentParams.isClientSecretValid(paymentIntentClientSecret) {
+            assertionFailure("`STPPaymentHandler.handleNextAction` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#payment_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
@@ -318,7 +333,7 @@ public class STPPaymentHandler: NSObject {
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         if Self.inProgress {
-            assert(false, "Should not handle multiple payments at once.")
+            assertionFailure("`STPPaymentHandler.handleNextAction` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         }
@@ -350,7 +365,15 @@ public class STPPaymentHandler: NSObject {
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)
                 } else {
-                    assert(false, "Calling completion with invalid state")
+                    let errorMessage = "STPPaymentHandler status is succeeded, but the PI is not in a success state or there was an error."
+                    assertionFailure(errorMessage)
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
+                        "error_message": errorMessage,
+                        "payment_intent": paymentIntent.stripeId,
+                        "payment_intent_status": STPPaymentIntentStatus.string(from: paymentIntent.status),
+                        "error_details": error?.serializeForV1Analytics() ?? [:],
+                    ])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
                     completion(
                         .failed,
                         paymentIntent,
@@ -400,12 +423,13 @@ public class STPPaymentHandler: NSObject {
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         if Self.inProgress {
-            assert(false, "Should not handle multiple payments at once.")
+            assertionFailure("`STPPaymentHandler.confirmSetupIntent` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         } else if !STPSetupIntentConfirmParams.isClientSecretValid(
             setupIntentConfirmParams.clientSecret
         ) {
+            assertionFailure("`STPPaymentHandler.confirmSetupIntent` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#setup_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
@@ -433,7 +457,15 @@ public class STPPaymentHandler: NSObject {
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
-                    assert(false, "Calling completion with invalid state")
+                    let errorMessage = "STPPaymentHandler status is succeeded, but the SI is not in a success state or there was an error."
+                    assertionFailure(errorMessage)
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
+                        "error_message": errorMessage,
+                        "setup_intent": setupIntent?.stripeID ?? "nil",
+                        "setup_intent_status": setupIntent?.status.rawValue ?? "nil",
+                        "error_details": error?.serializeForV1Analytics() ?? [:],
+                    ])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
                     completion(
                         .failed,
                         setupIntent,
@@ -531,7 +563,7 @@ public class STPPaymentHandler: NSObject {
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         if Self.inProgress {
-            assert(false, "Should not handle multiple payments at once.")
+            assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         }
@@ -560,7 +592,15 @@ public class STPPaymentHandler: NSObject {
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
-                    assert(false, "Calling completion with invalid state")
+                    let errorMessage = "STPPaymentHandler status is succeeded, but the SI is not in a success state or there was an error."
+                    assertionFailure(errorMessage)
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
+                        "error_message": errorMessage,
+                        "setup_intent": setupIntent?.stripeID ?? "nil",
+                        "setup_intent_status": setupIntent?.status.rawValue ?? "nil",
+                        "error_details": error?.serializeForV1Analytics() ?? [:],
+                    ])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
                     completion(
                         .failed,
                         setupIntent,
