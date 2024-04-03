@@ -48,6 +48,18 @@ stages:
     - ui-tests-2: {}
     - ui-tests-3: {}
     - ui-tests-4: {}
+    - framework-tests-1: {}
+    - framework-tests-2: {}
+    - test-builds-vision: {}
+    - install-tests-cocoapods: {}
+    - install-tests-spm: {}
+    - lint-tests: {}
+    - size-report: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
+    - integration-all: {}
+    - deploy-dry-run: {}
+    - lokalise-upload: {}
   stage-nightly-all:
     workflows:
     - basic-integration-tests: {}
@@ -60,11 +72,13 @@ stages:
     - pod-lint-tests: {}
   stage-releases-run-all:
     workflows:
-    - framework-tests: {}
+    - framework-tests-1: {}
+    - framework-tests-2: {}
     - test-builds-xcode-15: {}
     - test-builds-vision: {}
     - deploy-docs: {}
-    - install-tests-non-carthage: {}
+    - install-tests-cocoapods: {}
+    - install-tests-spm: {}
     - lint-tests: {}
     - size-report: {}
     - basic-integration-tests: {}
@@ -250,7 +264,7 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
-  framework-tests:
+  framework-tests-1:
     before_run:
     - prep_all
     steps:
@@ -280,6 +294,16 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentsUI
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
+    meta:
+      bitrise.io:
+        machine_type_id: g2-m1.8core
+        stack: osx-xcode-15.0.x
+  framework-tests-2:
+    before_run:
+    - prep_all
+    steps:
     - xcode-test@5.1:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -334,7 +358,7 @@ workflows:
       bitrise.io:
         machine_type_id: g2-m1.8core
         stack: osx-xcode-15.0.x
-  install-tests-non-carthage:
+  install-tests-cocoapods:
     before_run:
     - prep_all
     envs:
@@ -352,6 +376,12 @@ workflows:
         title: fastlane installation_cocoapods_frameworks_swift
         inputs:
         - lane: installation_cocoapods_frameworks_swift
+  install-tests-spm:
+    before_run:
+    - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    steps:
     - fastlane@3:
         title: fastlane installation_spm_objc
         inputs:
@@ -359,7 +389,7 @@ workflows:
     - fastlane@3:
         title: fastlane installation_spm_swift
         inputs:
-        - lane: installation_spm_swift
+        - lane: installation_spm_swift        
   integration-all:
     before_run:
     - prep_all
@@ -606,19 +636,6 @@ workflows:
         - scheme: AllStripeFrameworks
         - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
-  test-builds-xcode-15-release:
-    before_run:
-    - prep_all
-    steps:
-    - script@1:
-        title: Build release builds
-        inputs:
-        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks"
-            -configuration "Release" -sdk "iphonesimulator" | xcpretty
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
