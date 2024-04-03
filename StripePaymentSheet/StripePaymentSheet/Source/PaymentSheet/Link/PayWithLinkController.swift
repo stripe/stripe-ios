@@ -13,7 +13,9 @@ import UIKit
 
 /// Standalone Link controller
 final class PayWithLinkController {
-
+    enum Error: Swift.Error {
+        case noWindowWithViewController
+    }
     typealias CompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
     private let paymentHandler: STPPaymentHandler
@@ -36,7 +38,10 @@ final class PayWithLinkController {
             let keyWindow = UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow(),
             let presentedViewController = keyWindow.findTopMostPresentedViewController()
         else {
-            assertionFailure("No key window with view controller found")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.noWindowWithViewController)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure("No key window with view controller found")
             return
         }
 
