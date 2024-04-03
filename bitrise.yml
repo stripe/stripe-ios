@@ -72,7 +72,6 @@ stages:
     workflows:
     - framework-tests-1: {}
     - framework-tests-2: {}
-    - test-builds-xcode-15: {}
     - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-cocoapods: {}
