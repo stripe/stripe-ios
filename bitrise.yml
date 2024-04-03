@@ -115,7 +115,7 @@ workflows:
         - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_PATH:BITRISE_TEST_BUNDLE_PATH
     - share-pipeline-variable@1:
         inputs:
-        - variables: BITRISE_XCTESTRUN_FILE_PATHx
+        - variables: BITRISE_XCTESTRUN_FILE_PATH
   carthage-install-test:
     before_run:
     - prep_all
