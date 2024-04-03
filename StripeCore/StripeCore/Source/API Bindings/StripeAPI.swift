@@ -69,29 +69,6 @@ import PassKit
         }
     }
 
-    /// Users that have the Payment Method Cartes Bancaires set to Active
-    /// can enable Cartes Bancaires for Apple Pay by setting this to `YES`.
-    ///
-    /// The default value is NO.
-    @objc public class var cartesBancairesPaymentNetworkSupported: Bool {
-        get {
-            return self.additionalEnabledApplePayNetworks.contains(.cartesBancaires)
-        }
-        set(CartesBancairesPaymentNetworkSupported) {
-            if CartesBancairesPaymentNetworkSupported
-                && !self.additionalEnabledApplePayNetworks.contains(.cartesBancaires)
-            {
-                self.additionalEnabledApplePayNetworks = [PKPaymentNetwork.cartesBancaires] +
-                    self.additionalEnabledApplePayNetworks
-            } else if !CartesBancairesPaymentNetworkSupported {
-                var updatedNetworks = self.additionalEnabledApplePayNetworks
-                updatedNetworks.removeAll {
-                    $0 as AnyObject === PKPaymentNetwork.cartesBancaires as AnyObject
-                }
-                self.additionalEnabledApplePayNetworks = updatedNetworks
-            }
-        }
-    }
     /// The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
     ///
     /// Set this property to enable other card networks in addition to these, such as .JCB or .cartesBancaires.
@@ -140,7 +117,7 @@ import PassKit
     /// American Express, Visa, Mastercard, Discover, Maestro.
     /// Japanese users can enable JCB by setting `JCBPaymentNetworkSupported` to YES,
     /// after they have been approved by JCB.
-    /// Users that have the Payment Method Cartes Bancaires set to Active, can enable it 
+    /// Users that have the Payment Method Cartes Bancaires set to Active, can enable it
     /// by setting `CartesBancairesNetworkSupported` to YES.
     /// - Returns: YES if the device is currently able to make Apple Pay payments via one
     /// of the supported networks. NO if the user does not have a saved card of a

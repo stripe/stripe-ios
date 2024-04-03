@@ -35,22 +35,12 @@
     // Check that this at least doesn't crash
     [StripeAPI handleStripeURLCallbackWithURL:[NSURL URLWithString:@"https://example.com"]];
     
-    // JCB Support
     StripeAPI.jcbPaymentNetworkSupported = YES;
     XCTAssertTrue(StripeAPI.jcbPaymentNetworkSupported);
     StripeAPI.jcbPaymentNetworkSupported = NO;
 
     StripeAPI.additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];
     XCTAssertTrue([StripeAPI.additionalEnabledApplePayNetworks containsObject:PKPaymentNetworkJCB]);
-    StripeAPI.additionalEnabledApplePayNetworks = @[];
-
-    // Cartes Bancaires support
-    StripeAPI.cartesBancairesPaymentNetworkSupported = YES;
-    XCTAssertTrue(StripeAPI.cartesBancairesPaymentNetworkSupported);
-    StripeAPI.cartesBancairesPaymentNetworkSupported = NO;
-
-    StripeAPI.additionalEnabledApplePayNetworks = @[PKPaymentNetworkCartesBancaires];
-    XCTAssertTrue([StripeAPI.additionalEnabledApplePayNetworks containsObject:PKPaymentNetworkCartesBancaires]);
     StripeAPI.additionalEnabledApplePayNetworks = @[];
     
     PKPaymentRequest *request = [StripeAPI paymentRequestWithMerchantIdentifier:@"test" country:@"US" currency:@"USD"];
