@@ -19,7 +19,7 @@ app:
 meta:
   bitrise.io:
     machine_type_id: g2-m1.8core
-    stack: osx-xcode-15.2.x
+    stack: osx-xcode-15.3.x
 trigger_map:
 - pipeline: main-trigger-pipeline
   push_branch: master
@@ -116,11 +116,7 @@ workflows:
         - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_PATH:BITRISE_TEST_BUNDLE_PATH
     - share-pipeline-variable@1:
         inputs:
-        - variables: BITRISE_XCTESTRUN_FILE_PATH
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
+        - variables: BITRISE_XCTESTRUN_FILE_PATHx
   carthage-install-test:
     before_run:
     - prep_all
@@ -294,10 +290,6 @@ workflows:
         - scheme: StripePaymentsUI
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   framework-tests-2:
     before_run:
     - prep_all
@@ -352,10 +344,6 @@ workflows:
         - scheme: StripeUICore
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   install-tests-cocoapods:
     before_run:
     - prep_all
@@ -405,7 +393,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1-max.10core
-        stack: osx-xcode-15.2.x
+        stack: osx-xcode-15.3.x
   legacy-tests-15:
     before_run:
     - prep_all
@@ -419,10 +407,6 @@ workflows:
         title: fastlane legacy_tests_15
         inputs:
         - lane: legacy_tests_15
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   legacy-tests-16:
     before_run:
     - prep_all
@@ -436,10 +420,6 @@ workflows:
         title: fastlane legacy_tests_16
         inputs:
         - lane: legacy_tests_16
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   lint-tests:
     before_run:
     - prep_all
@@ -464,10 +444,6 @@ workflows:
         title: fastlane analyze
         inputs:
         - lane: analyze
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   lokalise-upload:
     before_run:
     - prep_all
@@ -478,10 +454,6 @@ workflows:
         title: Upload strings to lokalise
         inputs:
         - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   notify_ci:
     steps:
     - script@1:
@@ -619,10 +591,6 @@ workflows:
         - scheme: StripePaymentSheet
         - destination: generic/platform=visionOS Simulator
     - deploy-to-bitrise-io@2: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   ui-tests-1:
     steps:
     - pull-intermediate-files@1:
@@ -638,10 +606,6 @@ workflows:
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard1_iphonesimulator17.0-arm64-x86_64.xctestrun
     - deploy-to-bitrise-io@2: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   ui-tests-2:
     steps:
     - pull-intermediate-files@1:
@@ -657,10 +621,6 @@ workflows:
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard2_iphonesimulator17.0-arm64-x86_64.xctestrun
     - deploy-to-bitrise-io@2: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   ui-tests-3:
     steps:
     - pull-intermediate-files@1:
@@ -676,10 +636,6 @@ workflows:
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard3_iphonesimulator17.0-arm64-x86_64.xctestrun
     - deploy-to-bitrise-io@2: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x
   ui-tests-4:
     steps:
     - pull-intermediate-files@1:
@@ -694,11 +650,7 @@ workflows:
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
         - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard4_iphonesimulator17.0-arm64-x86_64.xctestrun
-    - deploy-to-bitrise-io@2: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.2.x                
+    - deploy-to-bitrise-io@2: {}         
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
