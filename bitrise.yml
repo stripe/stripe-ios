@@ -19,7 +19,7 @@ app:
 meta:
   bitrise.io:
     machine_type_id: g2-m1.8core
-    stack: osx-xcode-15.0.x
+    stack: osx-xcode-15.2.x
 trigger_map:
 - pipeline: main-trigger-pipeline
   push_branch: master
@@ -297,7 +297,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   framework-tests-2:
     before_run:
     - prep_all
@@ -355,7 +355,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   install-tests-cocoapods:
     before_run:
     - prep_all
@@ -405,7 +405,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1-max.10core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   legacy-tests-15:
     before_run:
     - prep_all
@@ -422,7 +422,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   legacy-tests-16:
     before_run:
     - prep_all
@@ -439,7 +439,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   lint-tests:
     before_run:
     - prep_all
@@ -467,7 +467,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   lokalise-upload:
     before_run:
     - prep_all
@@ -481,7 +481,7 @@ workflows:
     meta:
       bitrise.io:
         machine_type_id: g2-m1.8core
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-15.2.x
   notify_ci:
     steps:
     - script@1:
