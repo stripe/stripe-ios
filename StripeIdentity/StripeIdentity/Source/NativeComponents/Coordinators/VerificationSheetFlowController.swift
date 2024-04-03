@@ -631,15 +631,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         let documentUploader = DocumentUploader(
             imageUploader: IdentityImageUploader(
                 configuration: .init(from: staticContent.documentCapture),
-                apiClient: sheetController.apiClient,
-                analyticsClient: sheetController.analyticsClient
+                sheetController: sheetController
             )
         )
         self.documentUploader = documentUploader
 
         switch documentScannerResult {
         case .failure(let error):
-            sheetController.analyticsClient.logGenericError(error: error)
+            sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
 
             // Return document upload screen if we can't load models for auto-capture
             return DocumentFileUploadViewController(
@@ -683,8 +682,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 selfieUploader: SelfieUploader(
                     imageUploader: IdentityImageUploader(
                         configuration: .init(from: selfiePageConfig),
-                        apiClient: sheetController.apiClient,
-                        analyticsClient: sheetController.analyticsClient
+                        sheetController: sheetController
                     )
                 ),
                 anyFaceScanner: anyFaceScanner
