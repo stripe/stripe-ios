@@ -1,13 +1,12 @@
 {
-  "originHash" : "a6099f8b6f6e3d4e6a249794b40206685b3930858d8b410d4e86ef38217df380",
   "pins" : [
     {
       "identity" : "capture-core-sp",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlinkID/capture-core-sp",
       "state" : {
-        "revision" : "5d0ae57d265cb5d7dcf255d93dd3421b5c825e46",
-        "version" : "1.2.3"
+        "branch" : "main",
+        "revision" : "9045eab5c75384292666f4aca2e3318d17466f67"
       }
     },
     {
@@ -17,15 +16,6 @@
       "state" : {
         "revision" : "7b10770333a961be6e5a41c9ce04b8c6d3990126",
         "version" : "8.0.0"
-      }
-    },
-    {
-      "identity" : "ocmock",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/erikdoe/ocmock",
-      "state" : {
-        "branch" : "master",
-        "revision" : "05cbc9d934e84ad32530fa53fd7d29c7966d5828"
       }
     },
     {

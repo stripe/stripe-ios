@@ -80,7 +80,8 @@ class IdentityFlowViewController: UIViewController {
             return
         }
         sheetController.analyticsClient.stopTrackingTimeToScreenAndLogIfNeeded(
-            to: analyticsScreenName
+            to: analyticsScreenName,
+            sheetController: sheetController
         )
         sheetController.analyticsClient.logScreenAppeared(
             screenName: analyticsScreenName,
@@ -98,7 +99,9 @@ class IdentityFlowViewController: UIViewController {
         do {
             try flowView.configure(with: viewModel)
         } catch {
-            sheetController?.analyticsClient.logGenericError(error: error)
+            if let sheetController = sheetController {
+                sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
+            }
         }
         navBarBackgroundColor = viewModel.headerViewModel?.backgroundColor
 
@@ -163,7 +166,12 @@ extension URL {
 // MARK: - Bottomsheet helpers
 extension IdentityFlowViewController {
     fileprivate func logBottomsheetError(_ errorContent: String) {
-        self.sheetController?.analyticsClient.logGenericError(error: BottomSheetError(loggableType: errorContent))
+        if let sheetController = self.sheetController {
+            sheetController.analyticsClient.logGenericError(
+                error: BottomSheetError(loggableType: errorContent),
+                sheetController: sheetController
+            )
+        }
     }
 
     func presentBottomsheet(withUrl bottomSheetUrl: URL) {
