@@ -104,6 +104,62 @@ extension String.Localized {
         )
     }
 
+    static var rotate_document: String {
+        return STPLocalizedString(
+            "Keep ID level",
+            "Instructional text when user needs to rorate to document to align with camera"
+        )
+    }
+
+    static var keep_fully_visibile: String {
+        return STPLocalizedString(
+            "Details not visible",
+            "Instructional text when user needs remove anything blocking the document"
+        )
+    }
+
+    static var align_document: String {
+        return STPLocalizedString(
+            "Keep ID level",
+            "Instructional text when user align the edge with camera"
+        )
+    }
+
+    static var increase_lighting: String {
+        return STPLocalizedString(
+            "Move to a well-lit area",
+            "Instructional text when environement is too dark"
+        )
+    }
+
+    static var decrease_lighting: String {
+        return STPLocalizedString(
+            "Details not visible",
+            "Instructional text when environement is too bright"
+        )
+    }
+
+    static var reduce_glare: String {
+        return STPLocalizedString(
+            "Details not visible",
+            "Instructional text when the document is too glarry"
+        )
+    }
+
+    static var reduce_blur: String {
+        return STPLocalizedString(
+            "Make sure all details are visible and focus",
+            "Instructional text when the document is too blurry"
+        )
+    }
+
+    static var point_camera_to_document: String {
+        return STPLocalizedString(
+            "No document detected",
+            "Instructional text when there is no document in camera frame"
+        )
+    }
+
     // MARK: - Document Upload
 
     static var app_settings: String {

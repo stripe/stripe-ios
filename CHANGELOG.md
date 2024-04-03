@@ -2,6 +2,9 @@
 ### Payments
 * [Added] Support for Alma bindings.
 
+### All
+* [Fixed] Fixed an issue with generating App Privacy reports.
+
 ## 23.26.0 2024-03-25
 ### PaymentSheet
 * [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
