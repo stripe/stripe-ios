@@ -53,7 +53,7 @@ stages:
     - test-builds-vision: {}
     - install-tests-cocoapods: {}
     - install-tests-spm: {}
-    - lint-tests: {}
+    - extra-builds: {}
     - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
@@ -102,6 +102,14 @@ workflows:
     before_run:
     - prep_build_only
     steps:
+    - script@1:
+        title: Run swiftlint
+        inputs:
+        - content: ./ci_scripts/lint_modified_files.sh
+    - script@1:
+        title: Check PaymentSheet test sharding
+        inputs:
+        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
     - xcode-build-for-test@3:
         inputs:
         - scheme: PaymentSheet Example
@@ -402,18 +410,10 @@ workflows:
         title: fastlane legacy_tests_16
         inputs:
         - lane: legacy_tests_16
-  lint-tests:
+  extra-builds:
     before_run:
     - prep_all
     steps:
-    - script@1:
-        title: Run swiftlint
-        inputs:
-        - content: ./ci_scripts/lint_modified_files.sh
-    - script@1:
-        title: Check PaymentSheet test sharding
-        inputs:
-        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
     - script@1:
         title: Check png image format is 8-bit
         inputs:
@@ -426,6 +426,11 @@ workflows:
         title: fastlane analyze
         inputs:
         - lane: analyze
+    - xcode-build-for-test@3.0:
+        inputs:
+        - scheme: StripePaymentSheet
+        - destination: generic/platform=visionOS Simulator
+    - deploy-to-bitrise-io@2: {}        
   lokalise-upload:
     before_run:
     - prep_all
@@ -559,15 +564,6 @@ workflows:
         title: Generate size report
         inputs:
         - content: bundle exec fastlane size_report
-  test-builds-vision:
-    before_run:
-    - prep_all
-    steps:
-    - xcode-build-for-test@3.0:
-        inputs:
-        - scheme: StripePaymentSheet
-        - destination: generic/platform=visionOS Simulator
-    - deploy-to-bitrise-io@2: {}
   ui-tests-1:
     steps:
     - pull-intermediate-files@1:
