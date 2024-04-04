@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "originHash" : "90e7cfe525f07150cf06f8407b208299fa6618e564c8d50e3cd15ccc64b0211b",
-=======
-  "originHash" : "a6099f8b6f6e3d4e6a249794b40206685b3930858d8b410d4e86ef38217df380",
->>>>>>> origin/master
+  "originHash" : "20831e0c3b78ff725d4dc83e23d16cabd3996a884294852d6e9f1a87b5052b76",
   "pins" : [
     {
       "identity" : "capture-core-sp",
