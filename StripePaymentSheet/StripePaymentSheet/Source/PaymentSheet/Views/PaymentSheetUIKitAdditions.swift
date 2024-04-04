@@ -70,7 +70,8 @@ extension UIViewController {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: PaymentSheetUI.Error.switchContentIfNecessaryStateInvalid,
                                               additionalNonPIIParams: ["from_vc": from_vc_name,
-                                                                       "to_vc": to_vc_name])
+                                                                       "to_vc": to_vc_name,
+                                                                      ])
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
         }
         stpAssert(children.count <= 1)
