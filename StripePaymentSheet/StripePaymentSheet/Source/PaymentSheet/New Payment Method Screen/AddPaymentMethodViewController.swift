@@ -30,7 +30,7 @@ class AddPaymentMethodViewController: UIViewController {
     enum Error: Swift.Error {
         case paymentMethodTypesEmpty
         case usBankAccountFormElementWrongElementCreated
-        case usBankAccountCollectParams
+        case usBankAccountParamsMissing
     }
 
     // MARK: - Read-only Properties
@@ -338,7 +338,7 @@ class AddPaymentMethodViewController: UIViewController {
             let email = usBankAccountPaymentMethodElement.email
         else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.usBankAccountCollectParams)
+                                              error: Error.usBankAccountParamsMissing)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
             return
