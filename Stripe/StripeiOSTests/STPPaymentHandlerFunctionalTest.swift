@@ -288,7 +288,12 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["intent_id"] as? String, "pi_1Cl15wIl4IdHmuTbCWrpJXN6")
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "STPPaymentHandlerErrorDomain")
-            XCTAssertEqual(lastAnalytic?["error_code"] as? String, "0")
+            XCTAssertEqual(lastAnalytic?["error_code"] as? String, "unsupportedAuthenticationErrorCode")
+            XCTAssertEqual(lastAnalytic?["error_details"] as? [String: String], [
+                "NSLocalizedDescription": "There was an unexpected error -- try again in a few seconds",
+                "com.stripe.lib:ErrorMessageKey": "The SDK doesn\'t recognize the PaymentIntent action type.",
+                "STPIntentAction": "unknown",
+            ])
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -338,7 +343,12 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["intent_id"] as? String, "seti_123456789")
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "STPPaymentHandlerErrorDomain")
-            XCTAssertEqual(lastAnalytic?["error_code"] as? String, "0")
+            XCTAssertEqual(lastAnalytic?["error_code"] as? String, "unsupportedAuthenticationErrorCode")
+            XCTAssertEqual(lastAnalytic?["error_details"] as? [String: String], [
+                "NSLocalizedDescription": "There was an unexpected error -- try again in a few seconds",
+                "com.stripe.lib:ErrorMessageKey": "The SDK doesn\'t recognize the PaymentIntent action type.",
+                "STPIntentAction": "unknown",
+            ])
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
