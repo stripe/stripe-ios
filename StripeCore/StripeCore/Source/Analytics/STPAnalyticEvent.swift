@@ -237,4 +237,5 @@ import Foundation
     case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
     case unexpectedPaymentSheetViewControllerError = "unexpected_error.paymentsheet.paymentsheetviewcontroller"
     case unexpectedFlowControllerViewControllerError = "unexpected_error.paymentsheet.flowcontrollerviewcontroller"
+    case unexpectedPaymentHandlerError = "unexpected_error.paymenthandler"
 }
