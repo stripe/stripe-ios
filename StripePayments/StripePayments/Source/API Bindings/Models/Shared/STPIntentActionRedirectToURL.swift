@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Contains instructions for authenticating a payment by redirecting your customer to another page or application.
 /// You cannot directly instantiate an `STPIntentActionRedirectToURL`.
@@ -57,14 +58,14 @@ extension STPIntentActionRedirectToURL: STPAPIResponseDecodable {
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let urlString = dict["url"] as? String,
-            let url = URL(string: urlString)
+            let url = STPURL.validUrl(string: urlString)
         else {
             return nil
         }
 
         let returnURL: URL?
         if let returnURLString = dict["return_url"] as? String {
-            returnURL = URL(string: returnURLString)
+            returnURL = STPURL.validUrl(string: returnURLString)
         } else {
             returnURL = nil
         }
