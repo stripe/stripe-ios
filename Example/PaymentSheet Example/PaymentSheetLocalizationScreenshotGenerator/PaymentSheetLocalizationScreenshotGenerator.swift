@@ -288,7 +288,7 @@ extension XCUIElement {
     @discardableResult
     func waitForExistenceIfNeeded(timeout: TimeInterval = 4.0) -> Bool {
         if !exists  {
-            return waitForExistenceIfNeeded(timeout: timeout)
+            return waitForExistence(timeout: timeout)
         }
         return true
     }
