@@ -50,7 +50,6 @@ stages:
     - ui-tests-4: {}
     - framework-tests-1: {}
     - framework-tests-2: {}
-    - test-builds-vision: {}
     - install-tests-cocoapods: {}
     - install-tests-spm: {}
     - extra-builds: {}
@@ -71,7 +70,6 @@ stages:
     workflows:
     - framework-tests-1: {}
     - framework-tests-2: {}
-    - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-cocoapods: {}
     - install-tests-spm: {}
