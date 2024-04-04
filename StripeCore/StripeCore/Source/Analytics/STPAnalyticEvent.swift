@@ -234,6 +234,7 @@ import Foundation
     // MARK: - Unexpected errors
     // These errors should _never happen_ and indicate a problem with the SDK or the Stripe backend.
     case unexpectedPaymentSheetFormFactoryError = "unexpected_error.paymentsheet.formfactory"
+    case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
     case unexpectedPaymentSheetViewControllerError = "unexpected_error.paymentsheet.paymentsheetviewcontroller"
     case unexpectedFlowControllerViewControllerError = "unexpected_error.paymentsheet.flowcontrollerviewcontroller"
     case unexpectedPaymentHandlerError = "unexpected_error.paymenthandler"
