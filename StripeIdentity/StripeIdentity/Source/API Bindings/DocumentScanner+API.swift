@@ -27,7 +27,8 @@ extension DocumentScanner.Configuration {
             backIdCardBarcodeTimeout: TimeInterval(capturePageConfig.iosIdCardBackBarcodeTimeout)
                 / 1000,
             blurThreshold: (capturePageConfig.blurThreshold ?? DocumentScanner.Configuration.defaultBlurThreshold).floatValue,
-            highResImageCorpPadding: capturePageConfig.highResImageCropPadding
+            highResImageCorpPadding: capturePageConfig.highResImageCropPadding,
+            mbSettings: capturePageConfig.mbSettings
         )
     }
 }
