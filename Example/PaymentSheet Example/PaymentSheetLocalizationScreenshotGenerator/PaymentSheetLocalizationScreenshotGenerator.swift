@@ -62,7 +62,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
 
     func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
         if settings.uiStyle == .paymentSheet {
-            let presentButton = app.buttons["Present PaymentSheet"]
+            let presentButton = app.buttons["Present PaymentSheet"].firstMatch
             expectation(
                 for: NSPredicate(format: "enabled == true"),
                 evaluatedWith: presentButton,
@@ -70,7 +70,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
             )
             waitForExpectations(timeout: 10, handler: nil)
         } else {
-            let confirm = app.buttons["Confirm"]
+            let confirm = app.buttons["Confirm"].firstMatch
             expectation(
                 for: NSPredicate(format: "enabled == true"),
                 evaluatedWith: confirm,
@@ -108,7 +108,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
             settings
         )
 
-        let checkout = app.buttons["Present PaymentSheet"]
+        let checkout = app.buttons["Present PaymentSheet"].firstMatch
         expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: checkout,
@@ -118,16 +118,16 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         checkout.tap()
 
         do {
-            let cardCell = app.cells["card"]
+            let cardCell = app.cells["card"].firstMatch
             scrollToPaymentMethodCell("card")
 
             cardCell.tap()
             saveScreenshot("card_entry")
 
-            let numberField = app.textFields["Card number"]
-            let expField = app.textFields["expiration date"]
-            let cvcField = app.textFields["CVC"]
-            let postalField = app.textFields["Postal Code"]
+            let numberField = app.textFields["Card number"].firstMatch
+            let expField = app.textFields["expiration date"].firstMatch
+            let cvcField = app.textFields["CVC"].firstMatch
+            let postalField = app.textFields["Postal Code"].firstMatch
 
             numberField.tap()
             numberField.typeText("1234")
@@ -202,7 +202,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         }
 
         do {
-            let idealCell = app.cells["ideal"]
+            let idealCell = app.cells["ideal"].firstMatch
             scrollToPaymentMethodCell("ideal")
 
             idealCell.tap()
@@ -211,7 +211,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         }
 
         do {
-            let bancontactCell = app.cells["bancontact"]
+            let bancontactCell = app.cells["bancontact"].firstMatch
             scrollToPaymentMethodCell("bancontact")
 
             bancontactCell.tap()
@@ -219,8 +219,8 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
             saveScreenshot("bancontact_entry")
         }
 
-        app.buttons["UIButton.Close"].tap()
-        waitToAppear(app.buttons["Present PaymentSheet"])
+        app.buttons["UIButton.Close"].firstMatch.tap()
+        waitToAppear(app.buttons["Present PaymentSheet"].firstMatch)
 
         settings.mode = .setup
         loadPlayground(app, settings)
@@ -237,14 +237,14 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
             saveScreenshot("card_entry_setup")
         }
 
-        app.buttons["UIButton.Close"].tap()
+        app.buttons["UIButton.Close"].firstMatch.tap()
         // This section commented out for CI since it depends on global state
         // of the returning customer. Uncomment when generating screenshots
-//        waitToAppear(app.buttons["Present PaymentSheet"])
+//        waitToAppear(app.buttons["Present PaymentSheet"].firstMatch)
 //
-//        app.segmentedControls["mode_selector"].buttons["Pay"].tap() // payment intent
-//        app.segmentedControls["customer_mode_selector"].buttons["returning"].tap() // returning customer
-//        app.buttons["Reload PaymentSheet"].tap()
+//        app.segmentedControls["mode_selector"].buttons["Pay"].firstMatch.tap() // payment intent
+//        app.segmentedControls["customer_mode_selector"].buttons["returning"].firstMatch.tap() // returning customer
+//        app.buttons["Reload PaymentSheet"].firstMatch.tap()
 //
 //        expectation(
 //            for: NSPredicate(format: "enabled == true"),
@@ -255,14 +255,14 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
 //        checkout.tap()
 //
 //        do {
-//            let editButton = app.buttons["edit_saved_button"]
+//            let editButton = app.buttons["edit_saved_button"].firstMatch
 //            waitToAppear(editButton)
 //            saveScreenshot("payment_selector")
 //
 //            editButton.tap()
 //            saveScreenshot("payment_selector_editing")
 //
-//            app.cells.containing(.button, identifier: "Remove").firstMatch.buttons["Remove"].tap()
+//            app.cells.containing(.button, identifier: "Remove").firstMatch.buttons["Remove"].firstMatch.tap()
 //            saveScreenshot("removing_payment_method_confirmation")
 //        }
 
