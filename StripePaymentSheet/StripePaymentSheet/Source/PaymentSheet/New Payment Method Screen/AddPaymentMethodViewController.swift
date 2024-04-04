@@ -27,7 +27,7 @@ enum OverrideableBuyButtonBehavior {
 /// For internal SDK use only
 @objc(STP_Internal_AddPaymentMethodViewController)
 class AddPaymentMethodViewController: UIViewController {
-    enum AddPaymentMethodViewControllerError: Error {
+    enum Error: Swift.Error {
         case paymentMethodTypesEmpty
         case usBankAccountFormElementWrongElementCreated
         case usBankAccountCollectParams
@@ -42,9 +42,8 @@ class AddPaymentMethodViewController: UIViewController {
             logAvailability: false
         )
         if paymentMethodTypes.isEmpty {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedAddPaymentMethodViewControllerError,
-                                              error: AddPaymentMethodViewControllerError.paymentMethodTypesEmpty,
-                                              additionalNonPIIParams: [:])
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.paymentMethodTypesEmpty)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
         }
         // Break loudly! This will cause other parts of the code to crash if not true
@@ -128,9 +127,8 @@ class AddPaymentMethodViewController: UIViewController {
         if let usBankAccountPaymentMethodElement = paymentMethodElement as? USBankAccountPaymentMethodElement {
             usBankAccountPaymentMethodElement.presentingViewControllerDelegate = self
         } else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedAddPaymentMethodViewControllerError,
-                                              error: AddPaymentMethodViewControllerError.usBankAccountFormElementWrongElementCreated,
-                                              additionalNonPIIParams: [:])
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.usBankAccountFormElementWrongElementCreated)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure("Invalid type of paymentMethodElement")
         }
@@ -252,7 +250,7 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Internal
 
     /// Returns true iff we could map the error to one of the displayed fields
-    func setErrorIfNecessary(for error: Error?) -> Bool {
+    func setErrorIfNecessary(for error: Swift.Error?) -> Bool {
         // TODO
         return false
     }
@@ -339,11 +337,10 @@ class AddPaymentMethodViewController: UIViewController {
             let name = usBankAccountPaymentMethodElement.name,
             let email = usBankAccountPaymentMethodElement.email
         else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedAddPaymentMethodViewControllerError,
-                                              error: AddPaymentMethodViewControllerError.usBankAccountCollectParams,
-                                              additionalNonPIIParams: [:])
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.usBankAccountCollectParams)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure("usBankAccountPaymentMethodElement fields unavailable")
+            stpAssertionFailure()
             return
         }
 
