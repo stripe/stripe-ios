@@ -347,10 +347,6 @@ workflows:
     before_run:
     - prep_run_only
     steps:
-    # Need the snapshot tests
-    - git-clone@8.2:
-        inputs:
-        - clone_depth: "1"
     - xcode-test-without-building@0:
         is_always_run: true
         inputs:
@@ -377,10 +373,6 @@ workflows:
     before_run:
     - prep_run_only
     steps:
-    # Need the snapshot tests
-    - git-clone@8.2:
-        inputs:
-        - clone_depth: "1"
     - xcode-test-without-building@0:
         is_always_run: true
         inputs:
@@ -596,6 +588,10 @@ workflows:
     - restore-spm-cache@2.1: {}
   prep_run_only:
     steps:
+    # Need the snapshot tests
+    - git-clone@8.2:
+        inputs:
+        - clone_depth: "1"
     - pull-intermediate-files@1:
         inputs:
         - artifact_sources: stage-main-begin.build-for-testing
