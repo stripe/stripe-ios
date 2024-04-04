@@ -235,6 +235,35 @@ workflows:
       bitrise.io:
         machine_type_id: g2-m1.8core
         stack: osx-xcode-15.0.x
+  extra-builds:
+    before_run:
+    - prep_all
+    steps:
+    - script@1:
+        title: Check png image format is 8-bit
+        inputs:
+        - content: ./ci_scripts/check_image_format.sh
+    - fastlane@3:
+        inputs:
+        - lane: preflight
+        title: fastlane preflight
+    - fastlane@3:
+        inputs:
+        - lane: threeds2_tests
+        title: fastlane threeds2_tests
+    - fastlane@3:
+        title: fastlane build_extras
+        inputs:
+        - lane: build_extras
+    - fastlane@3:
+        title: fastlane analyze
+        inputs:
+        - lane: analyze
+    - xcode-build-for-test@3.0:
+        inputs:
+        - scheme: StripePaymentSheet
+        - destination: generic/platform=visionOS Simulator
+    - deploy-to-bitrise-io@2: {}
   financial-connections-stability-tests:
     before_run:
     - prep_all
@@ -270,10 +299,9 @@ workflows:
         - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
   framework-tests-1:
+    before_run:
+    - prep_run_only
     steps:
-    - pull-intermediate-files@1:
-        inputs:
-        - artifact_sources: stage-main-begin.build-for-testing
     - xcode-test-without-building@0:
         is_always_run: true
         inputs:
@@ -282,41 +310,10 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: StripeiOS
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
-        - xctestrun: $BITRISE_TEST_BUNDLE_ZIP_PATH/StripeiOS_StripeiOSTests_iphonesimulator17.4-arm64.xctestrun
-    - deploy-to-bitrise-io@2: {}    
-#   framework-tests-1:
-#     before_run:
-#     - prep_all
-#     steps:
-#     - fastlane@3:
-#         title: fastlane preflight
-#         inputs:
-#         - lane: preflight
-#     - fastlane@3:
-#         title: fastlane threeds2_tests
-#         inputs:
-#         - lane: threeds2_tests
-#     - xcode-test@5.1:
-#         inputs:
-#         - destination: $DEFAULT_TEST_DEVICE
-#         - test_repetition_mode: retry_on_failure
-#         - maximum_test_repetitions: "2"
-#         - scheme: StripeiOS
-#     - xcode-test@5.1:
-#         inputs:
-#         - destination: $DEFAULT_TEST_DEVICE
-#         - test_repetition_mode: retry_on_failure
-#         - maximum_test_repetitions: "2"
-#         - scheme: StripePayments
-#     - xcode-test@5.1:
-#         inputs:
-#         - destination: $DEFAULT_TEST_DEVICE
-#         - test_repetition_mode: retry_on_failure
-#         - maximum_test_repetitions: "2"
-#         - scheme: StripePaymentsUI
-#     - deploy-to-bitrise-io@2: {}
-#     - save-spm-cache@1: {}
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
+            2 -parallel-testing-worker-count 2
+        - xctestrun: testbundles/StripeiOS_StripeiOSTests_iphonesimulator17.4-arm64.xctestrun
+    - deploy-to-bitrise-io@2: {}
   framework-tests-2:
     before_run:
     - prep_all
@@ -441,27 +438,6 @@ workflows:
         title: fastlane legacy_tests_16
         inputs:
         - lane: legacy_tests_16
-  extra-builds:
-    before_run:
-    - prep_all
-    steps:
-    - script@1:
-        title: Check png image format is 8-bit
-        inputs:
-        - content: ./ci_scripts/check_image_format.sh
-    - fastlane@3:
-        title: fastlane build_extras
-        inputs:
-        - lane: build_extras
-    - fastlane@3:
-        title: fastlane analyze
-        inputs:
-        - lane: analyze
-    - xcode-build-for-test@3.0:
-        inputs:
-        - scheme: StripePaymentSheet
-        - destination: generic/platform=visionOS Simulator
-    - deploy-to-bitrise-io@2: {}        
   lokalise-upload:
     before_run:
     - prep_all
@@ -550,24 +526,13 @@ workflows:
     - restore-spm-cache@2.1: {}
   prep_run_only:
     steps:
-    - xcode-start-simulator@0:
+    - pull-intermediate-files@1:
         inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-    - set-env-var@0:
-        title: Set CONFIGURATION_BUILD_DIR
+        - artifact_sources: stage-main-begin.build-for-testing
+    - unzip@0:
         inputs:
-        - destination_keys: CONFIGURATION_BUILD_DIR
-        - value: $BITRISE_SOURCE_DIR/stpbuild/products
-    - set-env-var@0:
-        title: Set CONFIGURATION_TEMP_DIR
-        inputs:
-        - destination_keys: CONFIGURATION_TEMP_DIR
-        - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
-    - git-clone@8.2:
-        inputs:
-        - clone_depth: "1"
-    - cache-pull@2: {}
-    - restore-spm-cache@2.1: {}
+        - output_path: testbundles
+        - archive_path: $BITRISE_TEST_BUNDLE_ZIP_PATH
   size-report:
     steps:
     - script@1:
@@ -596,10 +561,9 @@ workflows:
         inputs:
         - content: bundle exec fastlane size_report
   ui-tests-1:
+    before_run:
+    - prep_run_only
     steps:
-    - pull-intermediate-files@1:
-        inputs:
-        - artifact_sources: stage-main-begin.build-for-testing
     - xcode-test-without-building@0:
         is_always_run: true
         inputs:
@@ -608,10 +572,14 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
-        - xctestrun: $BITRISE_TEST_BUNDLE_ZIP_PATH/PaymentSheet Example_PaymentSheet Example-Shard1_iphonesimulator17.4-arm64.xctestrun
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
+            2 -parallel-testing-worker-count 2
+        - xctestrun: testbundles/PaymentSheet Example_PaymentSheet
+            Example-Shard1_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
   ui-tests-2:
+    before_run:
+    - prep_run_only
     steps:
     - pull-intermediate-files@1:
         inputs:
@@ -624,10 +592,14 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
-        - xctestrun: $BITRISE_TEST_BUNDLE_ZIP_PATH/PaymentSheet Example_PaymentSheet Example-Shard2_iphonesimulator17.4-arm64.xctestrun
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
+            2 -parallel-testing-worker-count 2
+        - xctestrun: testbundles/PaymentSheet Example_PaymentSheet
+            Example-Shard2_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
   ui-tests-3:
+    before_run:
+    - prep_run_only
     steps:
     - pull-intermediate-files@1:
         inputs:
@@ -640,10 +612,14 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
-        - xctestrun: $BITRISE_TEST_BUNDLE_ZIP_PATH/PaymentSheet Example_PaymentSheet Example-Shard3_iphonesimulator17.4-arm64.xctestrun
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
+            2 -parallel-testing-worker-count 2
+        - xctestrun: testbundles/PaymentSheet Example_PaymentSheet
+            Example-Shard3_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
   ui-tests-4:
+    before_run:
+    - prep_run_only
     steps:
     - pull-intermediate-files@1:
         inputs:
@@ -656,8 +632,10 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xctestrun: $BITRISE_TEST_BUNDLE_ZIP_PATH/PaymentSheet Example_PaymentSheet Example-Shard4_iphonesimulator17.4-arm64.xctestrun
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
+        - xctestrun: testbundles/PaymentSheet Example_PaymentSheet
+            Example-Shard4_iphonesimulator17.4-arm64.xctestrun
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
+            2 -parallel-testing-worker-count 2
     - deploy-to-bitrise-io@2: {}
   upload_logs:
     steps:
