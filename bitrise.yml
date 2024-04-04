@@ -130,6 +130,46 @@ workflows:
         - scheme: StripePaymentsUI
         - xcodebuild_options: EXCLUDED_ARCHS=x86_64
         - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripePaymentSheet
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripeCameraCore
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripeCore
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripeIdentity
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripeFinancialConnections
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripeCardScan
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripeApplePay
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripeUICore
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2:
         inputs:
         - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_ZIP_PATH:BITRISE_TEST_BUNDLE_ZIP_PATH
@@ -302,72 +342,97 @@ workflows:
     before_run:
     - prep_run_only
     steps:
+    # Need the snapshot tests
+    - git-clone@8.2:
+        inputs:
+        - clone_depth: "1"
     - xcode-test-without-building@0:
         is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripeiOS
-        - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers
-            2 -parallel-testing-worker-count 2
         - xctestrun: testbundles/StripeiOS_StripeiOSTests_iphonesimulator17.4-arm64.xctestrun
+    - xcode-test-without-building@0:
+        is_always_run: true
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - xctestrun: testbundles/StripePayments_iphonesimulator17.4-arm64.xctestrun
+    - xcode-test-without-building@0:
+        is_always_run: true
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - xctestrun: testbundles/StripePaymentsUI_iphonesimulator17.4-arm64.xctestrun
     - deploy-to-bitrise-io@2: {}
   framework-tests-2:
     before_run:
-    - prep_all
+    - prep_run_only
     steps:
-    - xcode-test@5.1:
+    # Need the snapshot tests
+    - git-clone@8.2:
+        inputs:
+        - clone_depth: "1"
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripePaymentSheet
-    - xcode-test@5.1:
+        - xctestrun: testbundles/StripePaymentSheet_iphonesimulator17.4-arm64.xctestrun
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripeCameraCore
-    - xcode-test@5.1:
+        - xctestrun: testbundles/StripeCameraCore_iphonesimulator17.4-arm64.xctestrun
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripeCore
-    - xcode-test@5.1:
+        - xctestrun: testbundles/StripeCore_iphonesimulator17.4-arm64.xctestrun
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripeIdentity
-    - xcode-test@5.1:
+        - xctestrun: testbundles/StripeIdentity_iphonesimulator17.4-arm64.xctestrun
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripeFinancialConnections
-    - xcode-test@5.1:
+        - xctestrun: testbundles/StripeFinancialConnections_iphonesimulator17.4-arm64.xctestrun        
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripeCardScan
-    - xcode-test@5.1:
+        - xctestrun: testbundles/StripeCardScan_iphonesimulator17.4-arm64.xctestrun        
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripeApplePay
-    - xcode-test@5.1:
+        - xctestrun: testbundles/StripeApplePay_iphonesimulator17.4-arm64.xctestrun        
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripeUICore
+        - xctestrun: testbundles/StripeUICore_iphonesimulator17.4-arm64.xctestrun        
     - deploy-to-bitrise-io@2: {}
-    - save-spm-cache@1: {}
   install-tests-cocoapods:
     before_run:
     - prep_all
