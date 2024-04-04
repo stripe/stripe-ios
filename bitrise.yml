@@ -19,7 +19,7 @@ app:
 meta:
   bitrise.io:
     machine_type_id: g2-m1.8core
-    stack: osx-xcode-15.2.x
+    stack: osx-xcode-15.3.x
 trigger_map:
 - pipeline: main-trigger-pipeline
   push_branch: master
