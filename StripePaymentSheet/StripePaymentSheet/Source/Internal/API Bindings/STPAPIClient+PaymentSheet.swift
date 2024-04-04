@@ -17,7 +17,7 @@ extension STPAPIClient {
                                     epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
                                     customerAccessProvider: PaymentSheet.CustomerAccessProvider?) -> [String: Any] {
         var parameters: [String: Any] = [
-            "locale": Locale.current.toLanguageTag(),
+            "locale": NSLocale.current.toLanguageTag(),
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
         ]
         if case .customerSession(let clientSecret) = customerAccessProvider {
@@ -119,7 +119,7 @@ extension STPAPIClient {
     func retrieveElementsSessionForCustomerSheet(paymentMethodTypes: [String]?, customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
-        parameters["locale"] = Locale.current.toLanguageTag()
+        parameters["locale"] = NSLocale.current.toLanguageTag()
 
         if let customerSessionClientSecret {
             parameters["customer_session_client_secret"] = customerSessionClientSecret.clientSecret

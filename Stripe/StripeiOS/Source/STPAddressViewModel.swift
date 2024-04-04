@@ -24,7 +24,7 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
     private(set) var addressCells: [STPAddressFieldTableViewCell] = []
     weak var delegate: STPAddressViewModelDelegate?
 
-    var addressFieldTableViewCountryCode: String? = Locale.autoupdatingCurrent.regionCode {
+    var addressFieldTableViewCountryCode: String? = NSLocale.autoupdatingCurrent.regionCode {
         didSet {
             updatePostalCodeCellIfNecessary()
             if let addressFieldTableViewCountryCode = addressFieldTableViewCountryCode {
@@ -293,7 +293,7 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
     private var geocodeInProgress = false
 
     private func commonInit() {
-        if let countryCode = Locale.autoupdatingCurrent.regionCode {
+        if let countryCode = NSLocale.autoupdatingCurrent.regionCode {
             addressFieldTableViewCountryCode = countryCode
         }
         updatePostalCodeCellIfNecessary()

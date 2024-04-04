@@ -62,7 +62,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
                     }
                     self._threeDS2Service?.initialize(
                         withConfig: configParams,
-                        locale: Locale.autoupdatingCurrent,
+                        locale: NSLocale.autoupdatingCurrent,
                         uiSettings: self.threeDSCustomizationSettings.uiCustomization
                             .uiCustomization
                     )
@@ -137,7 +137,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
                     }
                     self._threeDS2Service?.initialize(
                         withConfig: configParams,
-                        locale: Locale.autoupdatingCurrent,
+                        locale: NSLocale.autoupdatingCurrent,
                         uiSettings: self.threeDSCustomizationSettings.uiCustomization
                             .uiCustomization
                     )

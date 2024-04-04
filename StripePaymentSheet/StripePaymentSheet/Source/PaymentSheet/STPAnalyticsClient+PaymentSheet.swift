@@ -316,7 +316,7 @@ extension STPAnalyticsClient {
         }
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
-        additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
+        additionalParams["locale"] = NSLocale.autoupdatingCurrent.identifier
         additionalParams["currency"] = currency
         additionalParams["is_decoupled"] = intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue

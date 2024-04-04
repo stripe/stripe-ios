@@ -21,7 +21,7 @@ import Foundation
             countryCodes: [String],
             theme: ElementsUITheme = .default,
             defaultCountry: String? = nil,
-            locale: Locale = Locale.current,
+            locale: Locale = NSLocale.current,
             disableDropdownWithSingleCountry: Bool = false
         ) -> DropdownFieldElement {
             let dropdownItems: [DropdownItem] = countryCodes.map {

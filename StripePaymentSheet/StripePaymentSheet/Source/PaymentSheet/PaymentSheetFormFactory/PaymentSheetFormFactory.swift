@@ -630,7 +630,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {
-        let locale = Locale.current
+        let locale = NSLocale.current
         let resolvedCountryCodes = countryCodes ?? addressSpecProvider.countries
         let country = PaymentMethodElementWrapper(
             DropdownFieldElement.Address.makeCountry(
@@ -683,7 +683,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
-        let countryCodes = Locale.current.sortedByTheirLocalizedNames(addressSpecProvider.countries)
+        let countryCodes = NSLocale.current.sortedByTheirLocalizedNames(addressSpecProvider.countries)
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
         let country = PaymentMethodElementWrapper(
             DropdownFieldElement.Address.makeCountry(
@@ -691,7 +691,7 @@ extension PaymentSheetFormFactory {
                 countryCodes: countryCodes,
                 theme: theme,
                 defaultCountry: defaultValue,
-                locale: Locale.current
+                locale: NSLocale.current
             )
         ) { dropdown, params in
             let countryCode = countryCodes[dropdown.selectedIndex]

@@ -32,7 +32,7 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
         }
     }
 
-    var countryCode: String? = Locale.autoupdatingCurrent.stp_regionCode {
+    var countryCode: String? = NSLocale.autoupdatingCurrent.stp_regionCode {
         didSet {
             updateValidationState()
         }

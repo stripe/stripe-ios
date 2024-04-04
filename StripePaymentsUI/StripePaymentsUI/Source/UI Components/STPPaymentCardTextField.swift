@@ -360,7 +360,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             if viewModel.postalCodeCountryCode == cCode {
                 return
             }
-            let countryCode = (cCode ?? Locale.autoupdatingCurrent.stp_regionCode)
+            let countryCode = (cCode ?? NSLocale.autoupdatingCurrent.stp_regionCode)
             viewModel.postalCodeCountryCode = countryCode
             updatePostalFieldPlaceholder()
 
@@ -423,7 +423,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 billingDetails = billingDetails ?? STPPaymentMethodBillingDetails()
                 let address = STPPaymentMethodAddress()
                 address.postalCode = postalCode
-                address.country = countryCode ?? Locale.autoupdatingCurrent.stp_regionCode
+                address.country = countryCode ?? NSLocale.autoupdatingCurrent.stp_regionCode
                 billingDetails!.address = address  // billingDetails will always be non-nil
             }
 
@@ -882,7 +882,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         resetSubviewEditingTransitionState()
 
         viewModel.postalCodeRequested = true
-        countryCode = Locale.autoupdatingCurrent.stp_regionCode
+        countryCode = NSLocale.autoupdatingCurrent.stp_regionCode
 
         sizingField.formDelegate = nil
 
