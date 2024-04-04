@@ -10,14 +10,14 @@ function die {
 }
 
 # Execute builds
-info "Executing build (iPhone 15, iOS 17.4)..."
+info "Executing build (iPhone 15, iOS 17.0)..."
 
 xcodebuild build \
   -quiet \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 15,OS=17.4"
+  -destination "platform=iOS Simulator,name=iPhone 15,OS=17.0"
 
 exit_code="${PIPESTATUS[0]}"
 
