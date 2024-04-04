@@ -24,7 +24,6 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "skippedTests" : [
         "CustomerSheetUITest",
         "PaymentSheetDeferredUIBankAccountTests",
