@@ -26,7 +26,7 @@ os_version = nil
 # Get the device model and OS version
 File.open("StripeCore/StripeCoreTestUtils/STPSnapshotTestCase.swift", "r").each_line do |file|
   file.each_line do |line|
-    # Get the comment after the device model ("iPhone 12 mini"), not the device model itself ("iPhone13,1")
+    # Get the comment after the device model ("iPhone 15"), not the device model itself ("iPhone15,4")
     if line =~ /let TEST_DEVICE_MODEL = "(.*)" \/\/ (.*)/
       device_model = $2
     elsif line =~ /let TEST_DEVICE_OS_VERSION = "(.*)"/

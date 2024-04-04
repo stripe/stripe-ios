@@ -4,7 +4,7 @@ project_type: ios
 app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: "120"
-  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=17.4
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - GIT_AUTHOR_NAME: Bitrise CI
   - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
@@ -19,7 +19,7 @@ app:
 meta:
   bitrise.io:
     machine_type_id: g2-m1.8core
-    stack: osx-xcode-15.3.x
+    stack: osx-xcode-15.2.x
 trigger_map:
 - pipeline: main-trigger-pipeline
   push_branch: master
@@ -92,8 +92,6 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - xcode-test@5.1:
         inputs:
@@ -122,8 +120,6 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - fastlane@3:
         title: fastlane installation_carthage
@@ -198,8 +194,6 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - script@1:
         title: Install Sourcekitten
@@ -223,8 +217,6 @@ workflows:
   financial-connections-stability-tests:
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - xcode-test@5.1:
         inputs:
@@ -248,8 +240,6 @@ workflows:
   financial-connections-stability-tests-for-edge:
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - xcode-test@5.1:
         inputs:
@@ -347,8 +337,6 @@ workflows:
   install-tests-cocoapods:
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - fastlane@3:
         title: fastlane installation_cocoapods_without_frameworks_objc
@@ -365,8 +353,6 @@ workflows:
   install-tests-spm:
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - fastlane@3:
         title: fastlane installation_spm_objc
@@ -379,8 +365,6 @@ workflows:
   integration-all:
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - xcode-test@5.1:
         inputs:
@@ -465,8 +449,6 @@ workflows:
   pod-lint-tests:
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     steps:
     - script@1:
         title: pod lib lint
