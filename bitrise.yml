@@ -73,7 +73,7 @@ stages:
     - deploy-docs: {}
     - install-tests-cocoapods: {}
     - install-tests-spm: {}
-    - lint-tests: {}
+    - extra-builds: {}
     - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
