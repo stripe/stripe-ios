@@ -170,6 +170,11 @@ workflows:
         - scheme: StripeUICore
         - xcodebuild_options: EXCLUDED_ARCHS=x86_64
         - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: IntegrationTester
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2:
         inputs:
         - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_ZIP_PATH:BITRISE_TEST_BUNDLE_ZIP_PATH
@@ -463,20 +468,20 @@ workflows:
         - lane: installation_spm_swift
   integration-all:
     before_run:
-    - prep_all
+    - prep_run_only
     steps:
-    - xcode-test@5.1:
+    # Need the snapshot tests
+    - git-clone@8.2:
+        inputs:
+        - clone_depth: "1"
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: IntegrationTester
-        - log_formatter: xcbeautify
+        - xctestrun: testbundles/IntegrationTester_iphonesimulator17.4-arm64.xctestrun  
     - deploy-to-bitrise-io@2: {}
-    meta:
-      bitrise.io:
-        machine_type_id: g2-m1-max.10core
-        stack: osx-xcode-15.3.x
   legacy-tests-15:
     before_run:
     - prep_all
