@@ -28,7 +28,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         )
 
         let shippingButton = app.buttons["Address"].firstMatch
-        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        XCTAssertTrue(shippingButton.waitForExistenceIfNeeded(timeout: 4.0))
         shippingButton.tap()
 
         // The Save Address button should be disabled
@@ -105,7 +105,7 @@ US
         )
 
         let shippingButton = app.buttons["Address"].firstMatch
-        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        XCTAssertTrue(shippingButton.waitForExistenceIfNeeded(timeout: 4.0))
         shippingButton.tap()
 
         // Autocomplete should be presentable
@@ -113,7 +113,7 @@ US
         XCTAssertTrue(app.buttons["Enter address manually"].firstMatch.waitForExistenceAndTap(timeout: 4.0))
 
         // The Save address button should be enabled
-        XCTAssertTrue(app.buttons["Save address"].firstMatch.waitForExistence(timeout: 4.0))
+        XCTAssertTrue(app.buttons["Save address"].firstMatch.waitForExistenceIfNeeded(timeout: 4.0))
         let saveAddressButton = app.buttons["Save address"].firstMatch
         XCTAssertTrue(saveAddressButton.isEnabled)
 
@@ -138,7 +138,7 @@ US
             settings
         )
         let shippingButton = app.buttons["Address"].firstMatch
-        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        XCTAssertTrue(shippingButton.waitForExistenceIfNeeded(timeout: 4.0))
         shippingButton.tap()
 
         // The Save address button should be disabled
@@ -151,11 +151,11 @@ US
         // Enter partial address and tap first result
         app.typeText("354 Oyster Point")
         let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "354 Oyster Point Blvd")).element
-        _ = searchedCell.waitForExistence(timeout: 5)
+        _ = searchedCell.waitForExistenceIfNeeded(timeout: 5)
         searchedCell.tap()
 
         // Verify text fields
-        _ = app.textFields["Address line 1"].firstMatch.waitForExistence(timeout: 5)
+        _ = app.textFields["Address line 1"].firstMatch.waitForExistenceIfNeeded(timeout: 5)
         XCTAssertEqual(app.textFields["Address line 1"].firstMatch.value as! String, "354 Oyster Point Blvd")
         XCTAssertEqual(app.textFields["Address line 2"].firstMatch.value as! String, "")
         XCTAssertEqual(app.textFields["City"].firstMatch.value as! String, "South San Francisco")
@@ -194,7 +194,7 @@ US
         )
 
         let shippingButton = app.buttons["Address"].firstMatch
-        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        XCTAssertTrue(shippingButton.waitForExistenceIfNeeded(timeout: 4.0))
         shippingButton.tap()
 
         // The Save address button should be disabled
@@ -216,7 +216,7 @@ US
         app.textFields["Address line 1"].firstMatch.tap()
 
         // ...should not go to auto complete b/c it's disabled for New Zealand
-        XCTAssertFalse(app.buttons["Enter address manually"].firstMatch.waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["Enter address manually"].firstMatch.waitForExistenceIfNeeded(timeout: 3))
 
         // Make sure we can still fill out the form
 
@@ -237,7 +237,7 @@ US
         saveAddressButton.tap()
 
         // The merchant app should get back the expected address
-        _ = shippingButton.waitForExistence(timeout: 5.0)
+        _ = shippingButton.waitForExistenceIfNeeded(timeout: 5.0)
         let expectedAddress = """
 Jane Doe
 1 South Bay Parade, Apt 152
@@ -272,7 +272,7 @@ NZ
 
         // Entering a shipping address...
         let shippingButton = app.buttons["Address"].firstMatch
-        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        XCTAssertTrue(shippingButton.waitForExistenceIfNeeded(timeout: 4.0))
         shippingButton.tap()
         app.textFields["Full name"].firstMatch.tap()
         app.textFields["Full name"].firstMatch.typeText("Jane Doe")
@@ -347,7 +347,7 @@ NZ
             )
 
         let shippingButton = app.buttons["Address"].firstMatch
-        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        XCTAssertTrue(shippingButton.waitForExistenceIfNeeded(timeout: 4.0))
         shippingButton.tap()
 
         // The Save Address button should be disabled
