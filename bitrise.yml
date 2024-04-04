@@ -115,6 +115,21 @@ workflows:
         - scheme: PaymentSheet Example
         - xcodebuild_options: EXCLUDED_ARCHS=x86_64
         - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripeiOS
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripePayments
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
+    - xcode-build-for-test@3:
+        inputs:
+        - scheme: StripePaymentsUI
+        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
+        - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2:
         inputs:
         - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_PATH:BITRISE_TEST_BUNDLE_PATH
@@ -255,37 +270,53 @@ workflows:
         - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
   framework-tests-1:
-    before_run:
-    - prep_all
     steps:
-    - fastlane@3:
-        title: fastlane preflight
+    - pull-intermediate-files@1:
         inputs:
-        - lane: preflight
-    - fastlane@3:
-        title: fastlane threeds2_tests
-        inputs:
-        - lane: threeds2_tests
-    - xcode-test@5.1:
+        - artifact_sources: stage-main-begin.build-for-testing
+    - xcode-test-without-building@0:
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeiOS
-    - xcode-test@5.1:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePayments
-    - xcode-test@5.1:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePaymentsUI
-    - deploy-to-bitrise-io@2: {}
-    - save-spm-cache@1: {}
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
+        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/StripeiOS_StripeiOS_iphonesimulator17.4-arm64.xctestrun
+    - deploy-to-bitrise-io@2: {}    
+#   framework-tests-1:
+#     before_run:
+#     - prep_all
+#     steps:
+#     - fastlane@3:
+#         title: fastlane preflight
+#         inputs:
+#         - lane: preflight
+#     - fastlane@3:
+#         title: fastlane threeds2_tests
+#         inputs:
+#         - lane: threeds2_tests
+#     - xcode-test@5.1:
+#         inputs:
+#         - destination: $DEFAULT_TEST_DEVICE
+#         - test_repetition_mode: retry_on_failure
+#         - maximum_test_repetitions: "2"
+#         - scheme: StripeiOS
+#     - xcode-test@5.1:
+#         inputs:
+#         - destination: $DEFAULT_TEST_DEVICE
+#         - test_repetition_mode: retry_on_failure
+#         - maximum_test_repetitions: "2"
+#         - scheme: StripePayments
+#     - xcode-test@5.1:
+#         inputs:
+#         - destination: $DEFAULT_TEST_DEVICE
+#         - test_repetition_mode: retry_on_failure
+#         - maximum_test_repetitions: "2"
+#         - scheme: StripePaymentsUI
+#     - deploy-to-bitrise-io@2: {}
+#     - save-spm-cache@1: {}
   framework-tests-2:
     before_run:
     - prep_all
