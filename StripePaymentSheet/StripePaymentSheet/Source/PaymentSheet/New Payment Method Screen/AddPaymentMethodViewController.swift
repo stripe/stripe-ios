@@ -28,8 +28,6 @@ enum OverrideableBuyButtonBehavior {
 @objc(STP_Internal_AddPaymentMethodViewController)
 class AddPaymentMethodViewController: UIViewController {
     enum Error: Swift.Error {
-        case paymentMethodTypesEmpty
-        case usBankAccountFormElementWrongElementCreated
         case usBankAccountParamsMissing
     }
 
@@ -41,11 +39,7 @@ class AddPaymentMethodViewController: UIViewController {
             configuration: configuration,
             logAvailability: false
         )
-        if paymentMethodTypes.isEmpty {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.paymentMethodTypesEmpty)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-        }
+
         // Break loudly! This will cause other parts of the code to crash if not true
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         return paymentMethodTypes
@@ -120,25 +114,18 @@ class AddPaymentMethodViewController: UIViewController {
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
     var previousCustomerInput: IntentConfirmParams?
-    private lazy var usBankAccountFormElement: USBankAccountPaymentMethodElement? = {
-        // We are keeping usBankAccountInfo in memory to preserve state
-        // if the user switches payment method types
-        let paymentMethodElement = makeElement(for: selectedPaymentMethodType)
-        if let usBankAccountPaymentMethodElement = paymentMethodElement as? USBankAccountPaymentMethodElement {
-            usBankAccountPaymentMethodElement.presentingViewControllerDelegate = self
-        } else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.usBankAccountFormElementWrongElementCreated)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure("Invalid type of paymentMethodElement")
-        }
-        return paymentMethodElement as? USBankAccountPaymentMethodElement
-    }()
+    private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
-        if selectedPaymentMethodType == .stripe(.USBankAccount),
-            let usBankAccountFormElement = usBankAccountFormElement
-        {
-            return usBankAccountFormElement
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
+            if let usBankAccountFormElement {
+                // Use the cached form instead of creating a new one
+                return usBankAccountFormElement
+            } else {
+                // Cache the form
+                let element = makeElement(for: .stripe(.USBankAccount))
+                usBankAccountFormElement = (element as! USBankAccountPaymentMethodElement)
+                return element
+            }
         }
         let element = makeElement(for: selectedPaymentMethodType)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
@@ -313,10 +300,15 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func updateFormElement() {
-        if selectedPaymentMethodType == .stripe(.USBankAccount),
-            let usBankAccountFormElement = usBankAccountFormElement
-        {
-            paymentMethodFormElement = usBankAccountFormElement
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
+            if let usBankAccountFormElement {
+                // Use the cached form instead of creating a new one
+                paymentMethodFormElement = usBankAccountFormElement
+            } else {
+                // Cache the form
+                paymentMethodFormElement = makeElement(for: .stripe(.USBankAccount))
+                usBankAccountFormElement = (paymentMethodFormElement as! USBankAccountPaymentMethodElement)
+            }
         } else {
             paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
         }
