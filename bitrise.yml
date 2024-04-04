@@ -77,6 +77,8 @@ stages:
     - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}

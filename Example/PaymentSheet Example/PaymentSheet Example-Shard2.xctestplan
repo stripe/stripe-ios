@@ -35,6 +35,7 @@
         "PaymentSheetDeferredUIBankAccountTests",
         "PaymentSheetDeferredUITests",
         "PaymentSheetLinkUITests",
+        "PaymentSheetMiscellaneousUITests",
         "PaymentSheetStandardLPMUITests",
         "PaymentSheetStandardUITests",
         "PaymentSheetUITestCase",
