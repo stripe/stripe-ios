@@ -532,6 +532,7 @@ public class STPPaymentHandler: NSObject {
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         if !STPSetupIntentConfirmParams.isClientSecretValid(setupIntentClientSecret) {
+            assertionFailure("`STPPaymentHandler.handleNextAction` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#setup_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
@@ -848,9 +849,6 @@ public class STPPaymentHandler: NSObject {
 
         case .canceled:
             action.complete(with: STPPaymentHandlerActionStatus.canceled, error: nil)
-
-        @unknown default:
-            fatalError()
         }
         return false
     }
