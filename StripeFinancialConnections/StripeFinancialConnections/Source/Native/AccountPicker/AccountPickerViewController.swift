@@ -16,7 +16,8 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
         _ viewController: AccountPickerViewController,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
         nextPane: FinancialConnectionsSessionManifest.NextPane,
-        customSuccessPaneMessage: String?
+        customSuccessPaneMessage: String?,
+        saveToLinkWithStripeSucceeded: Bool?
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
@@ -408,11 +409,14 @@ final class AccountPickerViewController: UIViewController {
                         .observe { [weak self] result in
                             guard let self = self else { return }
 
+                            let saveToLinkWithStripeSucceeded: Bool
                             let customSuccessPaneMessage: String?
                             switch result {
                             case .success(let _customSuccessPaneMessage):
+                                saveToLinkWithStripeSucceeded = true
                                 customSuccessPaneMessage = _customSuccessPaneMessage
                             case .failure(let error):
+                                saveToLinkWithStripeSucceeded = false
                                 customSuccessPaneMessage = nil
                                 self.dataSource
                                     .analyticsClient
@@ -426,7 +430,8 @@ final class AccountPickerViewController: UIViewController {
                                 self,
                                 didSelectAccounts: selectedAccounts,
                                 nextPane: .success,
-                                customSuccessPaneMessage: customSuccessPaneMessage
+                                customSuccessPaneMessage: customSuccessPaneMessage,
+                                saveToLinkWithStripeSucceeded: saveToLinkWithStripeSucceeded
                             )
                         }
                     }
@@ -438,7 +443,8 @@ final class AccountPickerViewController: UIViewController {
                             self,
                             didSelectAccounts: selectedAccounts,
                             nextPane: linkedAccounts.nextPane,
-                            customSuccessPaneMessage: nil
+                            customSuccessPaneMessage: nil,
+                            saveToLinkWithStripeSucceeded: nil
                         )
                     }
                 case .failure(let error):

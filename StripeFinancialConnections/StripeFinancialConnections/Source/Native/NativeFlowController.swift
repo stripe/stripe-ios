@@ -633,10 +633,14 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
         _ viewController: AccountPickerViewController,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
         nextPane: FinancialConnectionsSessionManifest.NextPane,
-        customSuccessPaneMessage: String?
+        customSuccessPaneMessage: String?,
+        saveToLinkWithStripeSucceeded: Bool?
     ) {
         dataManager.linkedAccounts = selectedAccounts
         dataManager.customSuccessPaneMessage = customSuccessPaneMessage
+        if let saveToLinkWithStripeSucceeded {
+            dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
+        }
 
         // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
         //
