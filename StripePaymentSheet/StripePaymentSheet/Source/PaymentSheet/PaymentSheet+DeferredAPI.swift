@@ -29,7 +29,13 @@ extension PaymentSheet {
                 case let .saved(savedPaymentMethod, _):
                     paymentMethod = savedPaymentMethod
                 case let .new(params, paymentOptions, newPaymentMethod, shouldSave):
-                    assert(newPaymentMethod == nil)
+                    if let newPaymentMethod {
+                        let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
+                                                          error: PaymentSheetError.unexpectedNewPaymentMethod,
+                                                          additionalNonPIIParams: ["payment_method_type": newPaymentMethod.type])
+                        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                    }
+                    stpAssert(newPaymentMethod == nil)
                     paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
                     confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave)
                 }
