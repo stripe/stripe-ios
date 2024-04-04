@@ -91,6 +91,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             XCTAssertEqual(lastAnalytic?["payment_method_type"] as? String, "card")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "STPPaymentHandlerErrorDomain")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "requiresAuthenticationContextErrorCode")
+            XCTAssertEqual(lastAnalytic?[jsonDict: "error_details"]?["com.stripe.lib:ErrorMessageKey"] as? String, "authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead.")
             XCTAssertTrue(status == .failed)
             XCTAssertNotNil(paymentIntent)
             XCTAssertNotNil(error)
