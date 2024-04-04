@@ -24,6 +24,7 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "skippedTests" : [
         "CustomerSheetSnapshotTests",
         "PaymentSheetBillingCollectionBankTests",
