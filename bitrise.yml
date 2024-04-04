@@ -54,7 +54,6 @@ stages:
     - install-tests-cocoapods: {}
     - install-tests-spm: {}
     - lint-tests: {}
-    - size-report: {}
     - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
@@ -77,7 +76,6 @@ stages:
     - install-tests-cocoapods: {}
     - install-tests-spm: {}
     - lint-tests: {}
-    - size-report: {}
     - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}

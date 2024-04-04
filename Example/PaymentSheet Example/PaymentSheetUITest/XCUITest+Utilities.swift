@@ -275,4 +275,8 @@ extension XCTestCase {
         }
         waitForReload(app, settings: settings)
     }
+    
+    func wait(timeout: TimeInterval) {
+        _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
+    }
 }

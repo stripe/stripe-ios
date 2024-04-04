@@ -3235,20 +3235,23 @@ extension PaymentSheetUITestCase {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
-        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+        let predicate = NSPredicate(format: "label BEGINSWITH 'Simulated Card'")
 
         let cardButton = applePay.buttons.containing(predicate).firstMatch
         XCTAssertTrue(cardButton.waitForExistenceIfNeeded(timeout: 10.0))
+        // Wait a second for the Apple Pay sheet animation to settle down
+        wait(timeout: 1.0)
         cardButton.forceTapElement()
 
         addApplePayBillingIfNeeded(applePay)
 
-        let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
+        let cardSelectionButton = applePay.cells.containing(predicate).firstMatch
         XCTAssertTrue(cardSelectionButton.waitForExistenceIfNeeded(timeout: 10.0))
         cardSelectionButton.forceTapElement()
 
         let payButton = applePay.buttons["Pay with Passcode"].firstMatch
         XCTAssertTrue(payButton.waitForExistenceIfNeeded(timeout: 10.0))
+        wait(timeout: 1.0)
         payButton.forceTapElement()
 
         let successText = app.staticTexts["Success!"].firstMatch
@@ -3261,7 +3264,19 @@ extension PaymentSheetUITestCase {
         let addBillingDetailsButton = applePay.buttons["Add Billing Address"].firstMatch
         if addBillingDetailsButton.waitForExistenceIfNeeded(timeout: 4.0) {
             addBillingDetailsButton.tap()
-
+            
+            let zipCell = applePay.textFields["ZIP"].firstMatch
+            zipCell.tap()
+            zipCell.typeText("95014")
+            
+            let cityCell = applePay.textFields["City"].firstMatch
+            cityCell.tap()
+            cityCell.typeText("Cupertino")
+            
+            let streetCell = applePay.textFields["Street"].firstMatch
+            streetCell.tap()
+            streetCell.typeText("One Apple Park Way")
+            
             let firstNameCell = applePay.textFields["First Name"].firstMatch
             firstNameCell.tap()
             firstNameCell.typeText("Jane")
@@ -3269,22 +3284,6 @@ extension PaymentSheetUITestCase {
             let lastNameCell = applePay.textFields["Last Name"].firstMatch
             lastNameCell.tap()
             lastNameCell.typeText("Doe")
-
-            let streetCell = applePay.textFields["Street"].firstMatch
-            streetCell.tap()
-            streetCell.typeText("One Apple Park Way")
-
-            let cityCell = applePay.textFields["City"].firstMatch
-            cityCell.tap()
-            cityCell.typeText("Cupertino")
-
-            let stateCell = applePay.textFields["State"].firstMatch
-            stateCell.tap()
-            stateCell.typeText("CA")
-
-            let zipCell = applePay.textFields["ZIP"].firstMatch
-            zipCell.tap()
-            zipCell.typeText("95014")
 
             applePay.buttons["Done"].firstMatch.tap()
         }

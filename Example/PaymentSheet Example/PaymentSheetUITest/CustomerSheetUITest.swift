@@ -428,6 +428,8 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
         XCTAssertTrue(app.alerts.buttons["Remove"].firstMatch.waitForExistenceAndTap())
 
+        // Wait for removal to complete/refresh
+        wait(timeout: 1)
         // Should be kicked out of edit mode now that we have one saved PM
         XCTAssertFalse(app.staticTexts["Done"].firstMatch.waitForExistenceIfNeeded(timeout: 1)) // "Done" button is gone - we are not in edit mode
         XCTAssertFalse(app.staticTexts["Edit"].firstMatch.waitForExistenceIfNeeded(timeout: 1)) // "Edit" button is gone - we can't edit
@@ -882,6 +884,9 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmRemoval.waitForExistenceIfNeeded(timeout: timeout))
         confirmRemoval.tap()
 
+        // Wait for removal and refresh animation
+        wait(timeout: 1.0)
+        
         // Verify card is removed
         app.buttons["Done"].firstMatch.waitForExistenceAndTap(timeout: timeout)
         app.buttons["Close"].firstMatch.waitForExistenceAndTap(timeout: timeout)
@@ -986,6 +991,9 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
         XCTAssertTrue(app.alerts.buttons["Remove"].firstMatch.waitForExistenceAndTap())
 
+        // Wait for customer page to refresh
+        wait(timeout: 1.0)
+        
         // Should be kicked out of edit mode now that we have one saved PM
         XCTAssertFalse(app.staticTexts["Done"].firstMatch.waitForExistenceIfNeeded(timeout: 1)) // "Done" button is gone - we are not in edit mode
         XCTAssertFalse(app.staticTexts["Edit"].firstMatch.waitForExistenceIfNeeded(timeout: 1)) // "Edit" button is gone - we can't edit
