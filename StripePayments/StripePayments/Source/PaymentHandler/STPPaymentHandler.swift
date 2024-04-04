@@ -785,11 +785,7 @@ public class STPPaymentHandler: NSObject {
     )
         -> Bool
     {
-        guard let setupIntent = action.setupIntent else {
-            assert(false, "Calling _handleSetupIntentStatus without a setupIntent")
-            return false
-        }
-
+        let setupIntent = action.setupIntent
         switch setupIntent.status {
         case .unknown:
             action.complete(
@@ -1564,68 +1560,65 @@ public class STPPaymentHandler: NSObject {
                 }
             )
         } else if let currentAction = self.currentAction
-            as? STPPaymentHandlerSetupIntentActionParams,
-            let setupIntent = currentAction.setupIntent
+            as? STPPaymentHandlerSetupIntentActionParams
         {
-
             currentAction.apiClient.retrieveSetupIntent(
-                withClientSecret: setupIntent.clientSecret,
+                withClientSecret: currentAction.setupIntent.clientSecret,
                 expand: ["payment_method"]
             ) { retrievedSetupIntent, error in
-                currentAction.setupIntent = retrievedSetupIntent
-                if let error = error {
+                guard let setupIntent = retrievedSetupIntent, error == nil else {
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
                         error: error as NSError?
                     )
+                    return
+                }
+                currentAction.setupIntent = setupIntent
+                if let type = setupIntent.paymentMethod?.type,
+                   !STPPaymentHandler._isProcessingIntentSuccess(for: type),
+                   setupIntent.status == .processing && retryCount > 0
+                {
+                    self._retryAfterDelay(retryCount: retryCount) {
+                        self._retrieveAndCheckIntentForCurrentAction(retryCount: retryCount - 1)
+                    }
                 } else {
-                    if let type = retrievedSetupIntent?.paymentMethod?.type,
-                        !STPPaymentHandler._isProcessingIntentSuccess(for: type),
-                        retrievedSetupIntent?.status == .processing && retryCount > 0
-                    {
-                        self._retryAfterDelay(retryCount: retryCount) {
-                            self._retrieveAndCheckIntentForCurrentAction(retryCount: retryCount - 1)
-                        }
-                    } else {
-                        let requiresAction: Bool = self._handleSetupIntentStatus(
-                            forAction: currentAction
-                        )
+                    let requiresAction: Bool = self._handleSetupIntentStatus(
+                        forAction: currentAction
+                    )
 
-                        if requiresAction {
-                            // If the status is still RequiresAction, the user exited from the redirect before the
-                            // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
-                            if self.isNextActionSuccessState(
-                                nextAction: retrievedSetupIntent?.nextAction
-                            ) {
-                                currentAction.complete(with: .succeeded, error: nil)
-                            } else {
-                                // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
-                                // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
-                                let shouldRetryForCard = retrievedSetupIntent?.paymentMethod?.type == .card && retrievedSetupIntent?.nextAction?.type == .useStripeSDK
-                                let shouldRetryForAppRedirect = retrievedSetupIntent?.paymentMethod?.type.requiresPolling ?? false
-                                if retryCount > 0
-                                    && (shouldRetryForCard || shouldRetryForAppRedirect) {
-                                    self._retryAfterDelay(retryCount: retryCount) {
-                                        self._retrieveAndCheckIntentForCurrentAction(
-                                            retryCount: retryCount - 1
-                                        )
-                                    }
-                                } else {
-                                    // If the status is still RequiresAction, the user exited from the redirect before the
-                                    // setup intent was updated. Consider it a cancel
-                                    self._markChallengeCanceled(withCompletion: { _, _ in
-                                        // We don't forward cancelation errors
-                                        currentAction.complete(
-                                            with: STPPaymentHandlerActionStatus.canceled,
-                                            error: nil
-                                        )
-                                    })
+                    if requiresAction {
+                        // If the status is still RequiresAction, the user exited from the redirect before the
+                        // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
+                        if self.isNextActionSuccessState(
+                            nextAction: setupIntent.nextAction
+                        ) {
+                            currentAction.complete(with: .succeeded, error: nil)
+                        } else {
+                            // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
+                            // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
+                            let shouldRetryForCard = setupIntent.paymentMethod?.type == .card && setupIntent.nextAction?.type == .useStripeSDK
+                            let shouldRetryForAppRedirect = setupIntent.paymentMethod?.type.requiresPolling ?? false
+                            if retryCount > 0
+                                && (shouldRetryForCard || shouldRetryForAppRedirect) {
+                                self._retryAfterDelay(retryCount: retryCount) {
+                                    self._retrieveAndCheckIntentForCurrentAction(
+                                        retryCount: retryCount - 1
+                                    )
                                 }
+                            } else {
+                                // If the status is still RequiresAction, the user exited from the redirect before the
+                                // setup intent was updated. Consider it a cancel
+                                self._markChallengeCanceled(withCompletion: { _, _ in
+                                    // We don't forward cancelation errors
+                                    currentAction.complete(
+                                        with: STPPaymentHandlerActionStatus.canceled,
+                                        error: nil
+                                    )
+                                })
                             }
                         }
                     }
                 }
-
             }
         } else {
             assert(false, "currentAction is an unknown type or nil intent.")
@@ -1947,9 +1940,9 @@ public class STPPaymentHandler: NSObject {
                 completion(retrievedPaymentIntent != nil, error)
             }
         } else if let currentAction = self.currentAction
-            as? STPPaymentHandlerSetupIntentActionParams,
-            let setupIntent = currentAction.setupIntent
+            as? STPPaymentHandlerSetupIntentActionParams
         {
+            let setupIntent = currentAction.setupIntent
             guard setupIntent.paymentMethod?.card != nil || setupIntent.paymentMethod?.link != nil
             else {
                 // Only cancel 3DS auth on payment method types that support 3DS.
@@ -1969,7 +1962,9 @@ public class STPPaymentHandler: NSObject {
                 withSource: cancelSourceID,
                 publishableKeyOverride: nextAction.useStripeSDK?.publishableKeyOverride
             ) { retrievedSetupIntent, error in
-                currentAction.setupIntent = retrievedSetupIntent
+                if let retrievedSetupIntent {
+                    currentAction.setupIntent = retrievedSetupIntent
+                }
                 completion(retrievedSetupIntent != nil, error)
             }
         } else {
@@ -2010,14 +2005,15 @@ public class STPPaymentHandler: NSObject {
                         completion(retrievedPaymentIntent != nil, retrieveError)
                     }
                 } else if let setupIntentAction = currentAction
-                    as? STPPaymentHandlerSetupIntentActionParams,
-                    let setupIntent = setupIntentAction.setupIntent
+                    as? STPPaymentHandlerSetupIntentActionParams
                 {
                     currentAction.apiClient.retrieveSetupIntent(
-                        withClientSecret: setupIntent.clientSecret,
+                        withClientSecret: setupIntentAction.setupIntent.clientSecret,
                         expand: ["payment_method"]
                     ) { retrievedSetupIntent, retrieveError in
-                        setupIntentAction.setupIntent = retrievedSetupIntent
+                        if let retrievedSetupIntent {
+                            setupIntentAction.setupIntent = retrievedSetupIntent
+                        }
                         completion(retrievedSetupIntent != nil, retrieveError)
                     }
                 } else {
