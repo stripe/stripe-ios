@@ -433,7 +433,6 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = SPMTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_GENERATE_MAP_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -453,7 +452,6 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = SPMTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_GENERATE_MAP_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
