@@ -30,7 +30,7 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
 - (void)setUp {
     [super setUp];
     
-    /// Recorded on an iPhone 15 running iOS 17.0
+    /// Recorded on an iPhone 15 running iOS 17.0.1
 //    self.recordMode = YES;
 }
 

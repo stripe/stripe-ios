@@ -10,7 +10,7 @@ import Foundation
 import iOSSnapshotTestCase
 
 let TEST_DEVICE_MODEL = "iPhone15,4" // iPhone 15
-let TEST_DEVICE_OS_VERSION = "17.0"
+let TEST_DEVICE_OS_VERSION = "17.0.1"
 
 open class STPSnapshotTestCase: FBSnapshotTestCase {
 
