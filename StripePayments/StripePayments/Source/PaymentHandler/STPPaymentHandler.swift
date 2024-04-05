@@ -1423,7 +1423,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
+   @_spi(STP) public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
 
