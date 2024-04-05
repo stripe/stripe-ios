@@ -93,15 +93,16 @@ extension DownloadManager {
         let blockingDownloadSemaphore = DispatchSemaphore(value: 0)
 
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { tempURL, response, _ in
+        let task = self.session.downloadTask(with: url) { tempURL, response, error in
             guard let tempURL = tempURL,
                 let response = response,
                 let data = self.getDataFromURL(tempURL),
                 let image = self.persistToMemory(data, forImageName: imageName)
             else {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeCoreDownloadManagerError,
-                                                  error: Error.downloadSyncFailure,
-                                                  additionalNonPIIParams: ["url": url.absoluteString])
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+                                                  error: Error.downloadAsyncFailure,
+                                                  additionalNonPIIParams: ["url": url.absoluteString,
+                                                                           "url_error_code": (error as? NSError)?.code ?? "none",])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 blockingDownloadSemaphore.signal()
                 return
@@ -125,7 +126,7 @@ extension DownloadManager {
             return image
         }
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { [weak self] tempURL, response, _ in
+        let task = self.session.downloadTask(with: url) { [weak self] tempURL, response, error in
             guard let self = self,
                   let tempURL = tempURL,
                 let response = response,
@@ -135,9 +136,11 @@ extension DownloadManager {
                 self?.pendingRequestsSemaphore.wait()
                 self?.pendingRequests.removeValue(forKey: imageName)
                 self?.pendingRequestsSemaphore.signal()
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeCoreDownloadManagerError,
+
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
                                                   error: Error.downloadAsyncFailure,
-                                                  additionalNonPIIParams: ["url": url.absoluteString])
+                                                  additionalNonPIIParams: ["url": url.absoluteString,
+                                                                           "url_error_code": (error as? NSError)?.code ?? "none",])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
