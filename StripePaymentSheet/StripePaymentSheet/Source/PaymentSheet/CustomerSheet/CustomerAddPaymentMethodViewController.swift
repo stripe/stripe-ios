@@ -11,7 +11,7 @@ import UIKit
 
 protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
-    func updateErrorLabel(for: Error?)
+    func updateErrorLabel(for: Swift.Error?)
 }
 
 @objc(STP_Internal_CustomerAddPaymentMethodViewController)
