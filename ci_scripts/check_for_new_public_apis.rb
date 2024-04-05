@@ -1,7 +1,8 @@
 def get_added_swift_code(current_dir)
-    swift_files = `git diff --name-only origin/master...`.split("\n").select do |file|
-      file.downcase.end_with?('.swift') && !file.downcase.include?("test")
-    end
+  swift_files = `git diff --name-only origin/master...`.split("\n").select do |file|
+    file.downcase.end_with?('.swift') && !file.downcase.split('/').any? { |path_part| path_part.include?("test") }
+  end
+
   
     code_diff = swift_files.flat_map do |file|
       git_diff = `git diff origin/master... -- "#{file}"`
