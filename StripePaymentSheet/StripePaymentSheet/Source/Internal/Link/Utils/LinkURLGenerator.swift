@@ -52,7 +52,7 @@ class LinkURLGenerator {
         }
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? intent.countryCode(overrideCountry: configuration.userOverrideCountry) ?? "US"
+        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? NSLocale.current.stp_regionCode ?? intent.countryCode(overrideCountry: configuration.userOverrideCountry) ?? "US"
 
         let merchantCountryCode = intent.merchantCountryCode ?? customerCountryCode
 
@@ -92,7 +92,7 @@ class LinkURLGenerator {
                              experiments: [:],
                              flags: intent.linkFlags,
                              loggerMetadata: loggerMetadata,
-                             locale: Locale.current.toLanguageTag(),
+                             locale: NSLocale.current.toLanguageTag(),
                              intentMode: intentMode,
                              setupFutureUsage: intent.isSettingUp)
     }

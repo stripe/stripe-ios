@@ -10,14 +10,14 @@ function die {
 }
 
 # Execute tests
-info "Executing tests (iPhone 12 mini @ iOS 16.4)..."
+info "Executing tests (iPhone 15 @ iOS 17.4)..."
 
 xcodebuild clean test \
   -quiet \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=16.4"
+  -destination "platform=iOS Simulator,name=iPhone 15,OS=17.4"
 
 exit_code="${PIPESTATUS[0]}"
 
