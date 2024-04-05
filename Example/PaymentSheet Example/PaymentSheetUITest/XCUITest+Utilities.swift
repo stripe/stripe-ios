@@ -33,18 +33,10 @@ extension XCUIElement {
 
     @discardableResult
     func waitForExistenceAndTap(timeout: TimeInterval = 4.0) -> Bool {
-        guard waitForExistenceIfNeeded(timeout: timeout) else {
+        guard waitForExistence(timeout: timeout) else {
             return false
         }
         forceTapElement()
-        return true
-    }
-    
-    @discardableResult
-    func waitForExistenceIfNeeded(timeout: TimeInterval = 4.0) -> Bool {
-        if !exists  {
-            return waitForExistence(timeout: timeout)
-        }
         return true
     }
 
@@ -127,13 +119,13 @@ extension XCTestCase {
                       postalEnabled: Bool = true) throws {
         let context = container ?? app
 
-        let numberField = context.textFields["Card number"].firstMatch
+        let numberField = context.textFields["Card number"]
         numberField.forceTapWhenHittableInTestCase(self)
         app.typeText(cardNumber ?? "4242424242424242")
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
         if postalEnabled {
-            app.toolbars.buttons["Done"].firstMatch.tap() // Country picker toolbar's "Done" button
+            app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
             app.typeText("12345") // Postal
         }
     }
@@ -141,22 +133,22 @@ extension XCTestCase {
     func fillUSBankData(_ app: XCUIApplication,
                         container: XCUIElement? = nil) throws {
         let context = container ?? app
-        let nameField = context.textFields["Full name"].firstMatch
+        let nameField = context.textFields["Full name"]
         nameField.forceTapWhenHittableInTestCase(self)
         app.typeText("John Doe")
 
-        let emailField = context.textFields["Email"].firstMatch
+        let emailField = context.textFields["Email"]
         emailField.forceTapWhenHittableInTestCase(self)
         app.typeText("test-\(UUID().uuidString)@example.com")
     }
     func fillUSBankData_microdeposits(_ app: XCUIApplication,
                                       container: XCUIElement? = nil) throws {
         let context = container ?? app
-        let routingField = context.textFields["manual_entry_routing_number_text_field"].firstMatch
+        let routingField = context.textFields["manual_entry_routing_number_text_field"]
         routingField.forceTapWhenHittableInTestCase(self)
         app.typeText("110000000")
 
-        let acctField = context.textFields["manual_entry_account_number_text_field"].firstMatch
+        let acctField = context.textFields["manual_entry_account_number_text_field"]
         acctField.forceTapWhenHittableInTestCase(self)
         app.typeText("000123456789")
 
@@ -164,7 +156,7 @@ extension XCTestCase {
         // This is only an artifact in the (test) native version of the flow
         app.scrollViews.firstMatch.swipeUp()
 
-        let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"].firstMatch
+        let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"]
         acctConfirmField.forceTapWhenHittableInTestCase(self)
         app.typeText("000123456789")
 
@@ -175,34 +167,34 @@ extension XCTestCase {
     func fillSepaData(_ app: XCUIApplication,
                       container: XCUIElement? = nil) throws {
         let context = container ?? app
-        let nameField = context.textFields["Full name"].firstMatch
+        let nameField = context.textFields["Full name"]
         nameField.forceTapWhenHittableInTestCase(self)
         app.typeText("John Doe")
 
-        let emailField = context.textFields["Email"].firstMatch
+        let emailField = context.textFields["Email"]
         emailField.forceTapWhenHittableInTestCase(self)
         app.typeText("test@example.com")
 
-        let ibanField = context.textFields["IBAN"].firstMatch
+        let ibanField = context.textFields["IBAN"]
         ibanField.forceTapWhenHittableInTestCase(self)
         app.typeText("DE89370400440532013000")
 
-        let addressLine1 = context.textFields["Address line 1"].firstMatch
+        let addressLine1 = context.textFields["Address line 1"]
         addressLine1.forceTapWhenHittableInTestCase(self)
         app.typeText("123 Main")
-        context.buttons["Return"].firstMatch.tap()
+        context.buttons["Return"].tap()
 
         // Skip address 2
-        context.buttons["Return"].firstMatch.tap()
+        context.buttons["Return"].tap()
 
         app.typeText("San Francisco")
-        context.buttons["Return"].firstMatch.tap()
+        context.buttons["Return"].tap()
 
         context.pickerWheels.element.adjust(toPickerWheelValue: "California")
-        context.buttons["Done"].firstMatch.tap()
+        context.buttons["Done"].tap()
 
         app.typeText("94016")
-        context.buttons["Done"].firstMatch.tap()
+        context.buttons["Done"].tap()
     }
 
     func waitToDisappear(_ target: Any?) {
@@ -218,13 +210,13 @@ extension XCTestCase {
     }
 
     func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        app.buttons["Reload"].firstMatch.waitForExistenceAndTap(timeout: 10)
+        app.buttons["Reload"].waitForExistenceAndTap(timeout: 10)
         waitForReload(app, settings: settings)
     }
 
     func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
         if settings.uiStyle == .paymentSheet {
-            let presentButton = app.buttons["Present PaymentSheet"].firstMatch
+            let presentButton = app.buttons["Present PaymentSheet"]
             expectation(
                 for: NSPredicate(format: "enabled == true"),
                 evaluatedWith: presentButton,
@@ -232,7 +224,7 @@ extension XCTestCase {
             )
             waitForExpectations(timeout: 10, handler: nil)
         } else {
-            let confirm = app.buttons["Confirm"].firstMatch
+            let confirm = app.buttons["Confirm"]
             expectation(
                 for: NSPredicate(format: "enabled == true"),
                 evaluatedWith: confirm,
@@ -258,7 +250,7 @@ extension XCTestCase {
         waitForReload(app, settings: settings)
     }
     func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
-        let paymentMethodButton = app.buttons["Payment method"].firstMatch
+        let paymentMethodButton = app.buttons["Payment method"]
         expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: paymentMethodButton,
@@ -274,9 +266,5 @@ extension XCTestCase {
             XCTFail("This test is only supported on iOS 15.0 or later.")
         }
         waitForReload(app, settings: settings)
-    }
-    
-    func wait(timeout: TimeInterval) {
-        _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
     }
 }
