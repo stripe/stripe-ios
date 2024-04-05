@@ -20,7 +20,7 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
 @objc(STP_Internal_PaymentMethodTypeCollectionView)
 class PaymentMethodTypeCollectionView: UICollectionView {
     // MARK: - Constants
-    internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
+    internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 16)
     internal static let cellHeight: CGFloat = 52
     internal static let minInteritemSpacing: CGFloat = 12
 
@@ -226,16 +226,16 @@ extension PaymentMethodTypeCollectionView {
 
             NSLayoutConstraint.activate([
                 paymentMethodLogo.topAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.topAnchor, constant: 12),
+                    equalTo: shadowRoundedRectangle.topAnchor, constant: 11),
                 paymentMethodLogo.leadingAnchor.constraint(
                     equalTo: shadowRoundedRectangle.leadingAnchor, constant: 12),
                 paymentMethodLogo.heightAnchor.constraint(
                     equalToConstant: PaymentMethodTypeCollectionView.paymentMethodLogoSize.height),
                 paymentMethodLogoWidthConstraint,
 
-                label.topAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor, constant: 4),
+                label.topAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor, constant: 1.5),
                 label.bottomAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
+                    equalTo: shadowRoundedRectangle.bottomAnchor, constant: -7.5),
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
                 label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
             ])
