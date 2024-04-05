@@ -25,7 +25,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
     }
 
     func waitToAppear(_ target: XCUIElement?) {
-        _ = target?.waitForExistenceIfNeeded(timeout: 60)
+        _ = target?.waitForExistence(timeout: 60)
     }
 
     func saveScreenshot(_ name: String) {
@@ -281,15 +281,5 @@ extension XCUIElement {
 
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: stringValue.count)
         self.typeText(deleteString)
-    }
-}
-
-extension XCUIElement {
-    @discardableResult
-    func waitForExistenceIfNeeded(timeout: TimeInterval = 4.0) -> Bool {
-        if !exists  {
-            return waitForExistence(timeout: timeout)
-        }
-        return true
     }
 }
