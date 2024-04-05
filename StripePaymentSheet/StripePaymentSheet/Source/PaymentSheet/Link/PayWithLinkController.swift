@@ -42,6 +42,7 @@ final class PayWithLinkController {
                                               error: Error.noWindowWithViewController)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure("No key window with view controller found")
+            completion(.failed(error: PaymentSheetError.unableToPresent), nil)
             return
         }
 

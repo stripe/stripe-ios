@@ -25,6 +25,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case unexpectedResponseFromStripeAPI
     case applePayNotSupportedOrMisconfigured
     case alreadyPresented
+    case unableToPresent
     case flowControllerConfirmFailed(message: String)
     case errorHandlingNextAction
     case unrecognizedHandlerStatus
