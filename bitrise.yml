@@ -30,7 +30,6 @@ trigger_map:
 pipelines:
   main-trigger-pipeline:
     stages:
-    - stage-main-begin: {}
     - stage-main-tests: {}
   nightly-pipeline:
     stages:
@@ -39,9 +38,6 @@ pipelines:
     stages:
     - stage-releases-run-all: {}
 stages:
-  stage-main-begin:
-    workflows:
-    - build-for-testing: {}
   stage-main-tests:
     workflows:
     - ui-tests-1: {}
@@ -98,29 +94,6 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: Basic Integration
     - deploy-to-bitrise-io@2: {}
-  build-for-testing:
-    before_run:
-    - prep_build_only
-    steps:
-    - script@1:
-        title: Run swiftlint
-        inputs:
-        - content: ./ci_scripts/lint_modified_files.sh
-    - script@1:
-        title: Check PaymentSheet test sharding
-        inputs:
-        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
-    - xcode-build-for-test@3:
-        inputs:
-        - scheme: PaymentSheet Example
-        - xcodebuild_options: EXCLUDED_ARCHS=x86_64
-        - destination: generic/platform=iOS Simulator
-    - deploy-to-bitrise-io@2:
-        inputs:
-        - pipeline_intermediate_files: $BITRISE_TEST_BUNDLE_PATH:BITRISE_TEST_BUNDLE_PATH
-    - share-pipeline-variable@1:
-        inputs:
-        - variables: BITRISE_XCTESTRUN_FILE_PATH
   carthage-install-test:
     before_run:
     - prep_all
@@ -415,6 +388,14 @@ workflows:
     - prep_all
     steps:
     - script@1:
+        title: Run swiftlint
+        inputs:
+        - content: ./ci_scripts/lint_modified_files.sh
+    - script@1:
+        title: Check PaymentSheet test sharding
+        inputs:
+        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
+    - script@1:
         title: Check png image format is 8-bit
         inputs:
         - content: ./ci_scripts/check_image_format.sh
@@ -566,68 +547,76 @@ workflows:
         - content: bundle exec fastlane size_report
   ui-tests-1:
     steps:
-    - pull-intermediate-files@1:
-        inputs:
-        - artifact_sources: stage-main-begin.build-for-testing
-    - xcode-test-without-building@0:
-        is_always_run: true
+    - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
-        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard1_iphonesimulator17.2-arm64.xctestrun
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
   ui-tests-2:
     steps:
-    - pull-intermediate-files@1:
-        inputs:
-        - artifact_sources: stage-main-begin.build-for-testing
-    - xcode-test-without-building@0:
-        is_always_run: true
+    - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
-        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard2_iphonesimulator17.2-arm64.xctestrun
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
   ui-tests-3:
     steps:
-    - pull-intermediate-files@1:
-        inputs:
-        - artifact_sources: stage-main-begin.build-for-testing
-    - xcode-test-without-building@0:
-        is_always_run: true
+    - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard3
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
-        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard3_iphonesimulator17.2-arm64.xctestrun
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
   ui-tests-4:
     steps:
-    - pull-intermediate-files@1:
-        inputs:
-        - artifact_sources: stage-main-begin.build-for-testing
-    - xcode-test-without-building@0:
-        is_always_run: true
+    - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard4
         - log_formatter: xcbeautify
-        - xctestrun: $BITRISE_TEST_BUNDLE_PATH/PaymentSheet Example_PaymentSheet Example-Shard4_iphonesimulator17.2-arm64.xctestrun
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2 -parallel-testing-worker-count 2
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
