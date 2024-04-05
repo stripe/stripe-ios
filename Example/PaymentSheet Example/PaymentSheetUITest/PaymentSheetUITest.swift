@@ -3207,7 +3207,7 @@ extension PaymentSheetUITestCase {
         app.buttons["Agree and continue"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["account_picker_link_accounts_button"].tap()
+        app.buttons["connect_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: 10.0) {

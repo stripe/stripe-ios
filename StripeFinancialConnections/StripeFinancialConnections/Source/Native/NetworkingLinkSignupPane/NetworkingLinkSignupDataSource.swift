@@ -18,13 +18,13 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
         emailAddress: String,
         phoneNumber: String,
         countryCode: String
-    ) -> Future<FinancialConnectionsSessionManifest>
+    ) -> Future<String?>
 }
 
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
-    private let selectedAccountIds: [String]
+    private let selectedAccounts: [FinancialConnectionsPartnerAccount]
     private let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
@@ -32,14 +32,14 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        selectedAccountIds: [String],
+        selectedAccounts: [FinancialConnectionsPartnerAccount],
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
-        self.selectedAccountIds = selectedAccountIds
+        self.selectedAccounts = selectedAccounts
         self.returnURL = returnURL
         self.apiClient = apiClient
         self.clientSecret = clientSecret
@@ -68,14 +68,17 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         emailAddress: String,
         phoneNumber: String,
         countryCode: String
-    ) -> Future<FinancialConnectionsSessionManifest> {
-        return apiClient.saveAccountsToLink(
+    ) -> Future<String?> {
+        return apiClient.saveAccountsToNetworkAndLink(
+            shouldPollAccounts: !manifest.shouldAttachLinkedPaymentMethod,
+            selectedAccounts: selectedAccounts,
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             country: countryCode, // ex. "US"
-            selectedAccountIds: selectedAccountIds,
             consumerSessionClientSecret: nil,
             clientSecret: clientSecret
-        )
+        ).chained { (_, customSuccessPaneMessage) in
+            return Promise(value: customSuccessPaneMessage)
+        }
     }
 }
