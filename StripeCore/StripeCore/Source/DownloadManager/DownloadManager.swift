@@ -12,9 +12,9 @@ import UIKit
 @_spi(STP) public class DownloadManager: NSObject, URLSessionDelegate {
     public typealias UpdateImageHandler = (UIImage) -> Void
 
-    private enum Error: Swift.Error {
-        case downloadSyncFailure
-        case downloadAsyncFailure
+    enum Error: Swift.Error {
+        case failedToMakeDataFromResponse
+        case failedToMakeImageFromData
     }
 
     public static let sharedManager = DownloadManager()
@@ -93,20 +93,28 @@ extension DownloadManager {
         let blockingDownloadSemaphore = DispatchSemaphore(value: 0)
 
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { tempURL, response, error in
-            guard let tempURL = tempURL,
-                let response = response,
-                let data = self.getDataFromURL(tempURL),
-                let image = self.persistToMemory(data, forImageName: imageName)
-            else {
-                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
-                                                  error: Error.downloadAsyncFailure,
-                                                  additionalNonPIIParams: ["url": url.absoluteString,
-                                                                           "url_error_code": (error as? NSError)?.code ?? "none", ])
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        let task = self.session.downloadTask(with: url) { tempURL, response, responseError in
+            if let responseError = responseError as? NSError {
                 blockingDownloadSemaphore.signal()
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: responseError)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
+
+            guard let tempURL = tempURL, let response = response, let data = self.getDataFromURL(tempURL) else {
+                blockingDownloadSemaphore.signal()
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: Error.failedToMakeDataFromResponse)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                return
+            }
+
+            guard let image = self.persistToMemory(data, forImageName: imageName) else {
+                blockingDownloadSemaphore.signal()
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: Error.failedToMakeImageFromData)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                return
+            }
+
             self.urlCache?.storeCachedResponse(
                 CachedURLResponse(response: response, data: data),
                 for: urlRequest
@@ -126,21 +134,29 @@ extension DownloadManager {
             return image
         }
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { [weak self] tempURL, response, error in
-            guard let self = self,
-                  let tempURL = tempURL,
-                let response = response,
-                let data = self.getDataFromURL(tempURL),
-                let image = self.persistToMemory(data, forImageName: imageName)
-            else {
-                self?.pendingRequestsSemaphore.wait()
-                self?.pendingRequests.removeValue(forKey: imageName)
-                self?.pendingRequestsSemaphore.signal()
+        let task = self.session.downloadTask(with: url) { [weak self] tempURL, response, responseError in
+            guard let self = self else {
+                self?.completeAsyncTask(for: imageName)
+                return
+            }
 
-                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
-                                                  error: Error.downloadAsyncFailure,
-                                                  additionalNonPIIParams: ["url": url.absoluteString,
-                                                                           "url_error_code": (error as? NSError)?.code ?? "none", ])
+            if let responseError = responseError as? NSError {
+                self.completeAsyncTask(for: imageName)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: responseError)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                return
+            }
+
+            guard let tempURL = tempURL, let response = response, let data = self.getDataFromURL(tempURL) else {
+                self.completeAsyncTask(for: imageName)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: Error.failedToMakeDataFromResponse)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                return
+            }
+
+            guard let image = self.persistToMemory(data, forImageName: imageName) else {
+                self.completeAsyncTask(for: imageName)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: Error.failedToMakeImageFromData)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
@@ -235,6 +251,12 @@ extension DownloadManager {
         image = imageCache[imageName]
         imageCacheSemaphore.signal()
         return image
+    }
+
+    private func completeAsyncTask(for key: String) {
+        pendingRequestsSemaphore.wait()
+        pendingRequests.removeValue(forKey: key)
+        pendingRequestsSemaphore.signal()
     }
 }
 
