@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 @_spi(STP) public class BSBNumberProvider {
-    private enum InternalError: Error {
+    private enum Error: Swift.Error {
         case bsbLoadFailure
     }
 
@@ -30,7 +30,7 @@ import Foundation
                   let decodedBSBs = try? JSONDecoder().decode([String: String].self, from: data) else {
 
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreBSBNumberProvider,
-                                                  error: InternalError.bsbLoadFailure)
+                                                  error: Error.bsbLoadFailure)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 completion?()
                 return

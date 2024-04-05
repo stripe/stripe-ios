@@ -13,7 +13,7 @@ import Foundation
 let addressDataFilename = "localized_address_data"
 
 @_spi(STP) public class AddressSpecProvider {
-    private enum InternalError: Error {
+    private enum Error: Swift.Error {
         case loadSpecsFailure
     }
 
@@ -37,7 +37,7 @@ let addressDataFilename = "localized_address_data"
                 let addressSpecs = try? JSONDecoder().decode([String: AddressSpec].self, from: data)
             else {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreAddressSpecProvider,
-                                                  error: InternalError.loadSpecsFailure)
+                                                  error: Error.loadSpecsFailure)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 completion?()
                 return

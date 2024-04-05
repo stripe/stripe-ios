@@ -12,7 +12,7 @@ import UIKit
 @_spi(STP) public class DownloadManager: NSObject, URLSessionDelegate {
     public typealias UpdateImageHandler = (UIImage) -> Void
 
-    private enum InternalError: Error {
+    private enum Error: Swift.Error {
         case downloadSyncFailure
         case downloadAsyncFailure
     }
@@ -100,7 +100,7 @@ extension DownloadManager {
                 let image = self.persistToMemory(data, forImageName: imageName)
             else {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeCoreDownloadManagerError,
-                                                  error: InternalError.downloadSyncFailure,
+                                                  error: Error.downloadSyncFailure,
                                                   additionalNonPIIParams: ["url": url.absoluteString])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 blockingDownloadSemaphore.signal()
@@ -136,7 +136,7 @@ extension DownloadManager {
                 self?.pendingRequests.removeValue(forKey: imageName)
                 self?.pendingRequestsSemaphore.signal()
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeCoreDownloadManagerError,
-                                                  error: InternalError.downloadAsyncFailure,
+                                                  error: Error.downloadAsyncFailure,
                                                   additionalNonPIIParams: ["url": url.absoluteString])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
