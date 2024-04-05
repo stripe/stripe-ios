@@ -46,22 +46,24 @@ jobs:
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body-includes: New Public APIs
+          body-includes: New public APIs
 
       - uses: peter-evans/create-or-update-comment@v4
         id: create-update-comment
         if: steps.check-api.outputs.new_apis
         with:
           body: |
-            ⚠️ New Public APIs Detected without SPI protection:
+            ⚠️ New public APIs Detected without SPI protection:
 
             ```
             ${{ env.API_CHECK_OUTPUT }}
             ```
 
-            Consider if these APIs need to be public or can be protected by `@_spi(STP)`. If they need to be public determine if API review is required.
+            Consider the following:
+            - Do these APIs need to be `public` or can they be protected with `@_spi(STP)`?
+            - If these APIs need to be `public`, assess whether they require an API review.
 
-            By adding the label `Add Public API` to this PR, I acknowledge that there are new public APIs.
+            If you confirm these APIs need to be public and have undergone necessary review (if required), add the label `Add Public API` to this PR to acknowledge and bypass this check.
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
