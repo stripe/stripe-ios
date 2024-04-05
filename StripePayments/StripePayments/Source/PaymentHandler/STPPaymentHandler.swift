@@ -779,7 +779,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
     
-    public func dontShip() {
+     @_spi(STP) func dontShip() {
         print("ship")
     }
 
