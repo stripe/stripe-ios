@@ -50,7 +50,7 @@ class FormSpecProvider {
                 self?.hasLoadedFromDisk = true
                 completion?(true)
             } catch {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormSpecProvider,
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                                   error: InternalError.failedToLoadSpecs)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 completion?(false)
