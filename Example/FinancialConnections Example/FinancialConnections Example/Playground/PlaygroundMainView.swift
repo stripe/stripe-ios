@@ -9,7 +9,7 @@
 import SwiftUI
 
 @available(iOS 14.0, *)
-struct PlaygroundMainView: View {
+struct PlaygroundMainView: View { // Rename to PlaygroundView
 
     @StateObject var viewModel = PlaygroundMainViewModel()
 
@@ -19,19 +19,51 @@ struct PlaygroundMainView: View {
                 Form {
                     Section {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Select Mobile SDK Type")
-                            Picker("Enable Native?", selection: $viewModel.nativeSelection) {
-                                ForEach(PlaygroundMainViewModel.NativeSelection.allCases) {
+                            Text("Select SDK Type")
+                            Picker("Enable Native?", selection: viewModel.sdkType) {
+                                ForEach(PlaygroundConfiguration.SDKType.allCases) {
                                     Text($0.rawValue.capitalized)
                                         .tag($0)
                                 }
                             }
                             .pickerStyle(.segmented)
-                            Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
-                                .font(.caption)
-                                .italic()
+
+                            if viewModel.sdkType.wrappedValue == .automatic {
+                                Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
+                                    .font(.caption)
+                                    .italic()
+                            }
                         }
                     }
+
+                    Section {
+                        Picker("Merchant", selection: viewModel.merchant) {
+                            ForEach(viewModel.playgroundConfiguration.merchants) {
+                                Text($0.displayName)
+                                    .tag($0)
+                            }
+                        }
+                        .pickerStyle(.menu)
+
+                        if viewModel.merchant.wrappedValue.isTestModeSupported {
+                            Toggle("Enable Test Mode", isOn: .constant(false))
+                                .toggleStyle(
+                                    SwitchToggleStyle(
+                                        tint: Color(
+                                            red: 231 / 255.0,
+                                            green: 151 / 255.0,
+                                            blue: 104 / 255.0
+                                        )
+                                    )
+                                )
+                        }
+                    }
+
+                    Section {
+                        Text("stuff below here kind of doesn't work")
+                    }
+
+//                    Toggle("Enable Test Mode", isOn: viewModel.meowBoolean)
 
                     Section {
                         Picker("Scenario", selection: $viewModel.customScenario) {
@@ -56,13 +88,13 @@ struct PlaygroundMainView: View {
                                     .italic()
                             }
 
-                            Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
-                            // test mode color
-                                .toggleStyle(
-                                    SwitchToggleStyle(
-                                        tint: Color(red: 231 / 255.0, green: 151 / 255.0, blue: 104 / 255.0)
-                                    )
-                                )
+//                            Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
+//                            // test mode color
+//                                .toggleStyle(
+//                                    SwitchToggleStyle(
+//                                        tint: Color(red: 231 / 255.0, green: 151 / 255.0, blue: 104 / 255.0)
+//                                    )
+//                                )
 
                             if viewModel.flow == .networking {
                                 TextField("Email (existing Link consumer)", text: $viewModel.email)

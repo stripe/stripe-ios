@@ -20,6 +20,7 @@
 		5B38135D1C37FC1812F4203A /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADFEE494187576194F8B46BB /* StripeUICore.framework */; };
 		5C1B372D1660E856988156DA /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = ADFEE494187576194F8B46BB /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6A6C23172BBCC6210083FF66 /* XCUIGestureVelocity+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C23162BBCC6210083FF66 /* XCUIGestureVelocity+Extensions.swift */; };
+		6A6C23192BBF4BE30083FF66 /* PlaygroundConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C23182BBF4BE30083FF66 /* PlaygroundConfiguration.swift */; };
 		6AC6B40D2B880EEA000A4B32 /* XCTestCase+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC6B40C2B880EEA000A4B32 /* XCTestCase+Extensions.swift */; };
 		6AF9C66D47F81DD9B103FB64 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03E7365D673694C8D7EDFB20 /* StripeCore.framework */; };
 		828A3C3A555F9B2ABAEF3E95 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FBE9DBF6CBB07AE2D5B1DA /* WebViewViewController.swift */; };
@@ -97,6 +98,7 @@
 		5C02DB1648E15A6591FD56E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		65FBE9DBF6CBB07AE2D5B1DA /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		6A6C23162BBCC6210083FF66 /* XCUIGestureVelocity+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIGestureVelocity+Extensions.swift"; sourceTree = "<group>"; };
+		6A6C23182BBF4BE30083FF66 /* PlaygroundConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundConfiguration.swift; sourceTree = "<group>"; };
 		6AC6B40C2B880EEA000A4B32 /* XCTestCase+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Extensions.swift"; sourceTree = "<group>"; };
 		701003016E153D5DF2B00442 /* FinancialConnections-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FinancialConnections-Example-Debug.xcconfig"; sourceTree = "<group>"; };
 		74959BBB33DB4A570E2B4FD3 /* FinancialConnectionsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsUITests.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 				7B379D3A9F9EA11716D5AEB3 /* PlaygroundMainView.swift */,
 				363C5AD7E84C53FF964C6A0D /* PlaygroundMainViewModel.swift */,
 				2B5BE234F87706DFEA92DA11 /* PlaygroundViewController.swift */,
+				6A6C23182BBF4BE30083FF66 /* PlaygroundConfiguration.swift */,
 			);
 			path = Playground;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 				24E793526FA832586DB7FC96 /* BannerHelper.swift in Sources */,
 				AF3E8262C78F3C1AB7A620D7 /* PlaygroundUserDefaults.swift in Sources */,
 				167B5D505D6E405BD68E17DC /* UIAlertController+Extensions.swift in Sources */,
+				6A6C23192BBF4BE30083FF66 /* PlaygroundConfiguration.swift in Sources */,
 				D54117F2B69A8F28EE4E7596 /* UIViewController+Extensions.swift in Sources */,
 				828A3C3A555F9B2ABAEF3E95 /* WebViewViewController.swift in Sources */,
 			);

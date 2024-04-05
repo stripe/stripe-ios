@@ -6,11 +6,15 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import Combine
 import Foundation
 import StripeFinancialConnections
+import SwiftUI
 import UIKit
 
 final class PlaygroundMainViewModel: ObservableObject {
+
+    let playgroundConfiguration = PlaygroundConfiguration.shared
 
     enum Flow: String, CaseIterable, Identifiable {
         case data
@@ -30,38 +34,63 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
-    enum NativeSelection: String, CaseIterable, Identifiable {
-        case automatic
-        case web
-        case native
+//    enum NativeSelection: String, CaseIterable, Identifiable {
+//        case automatic
+//        case web
+//        case native
+//
+//        var id: String {
+//            return rawValue
+//        }
+//    }
 
-        var id: String {
-            return rawValue
-        }
-    }
-    @Published var nativeSelection: NativeSelection {
-        didSet {
-            switch nativeSelection {
-            case .automatic:
-                PlaygroundUserDefaults.enableNative = nil
-            case .web:
-                PlaygroundUserDefaults.enableNative = false
-            case .native:
-                PlaygroundUserDefaults.enableNative = true
+    var sdkType: Binding<PlaygroundConfiguration.SDKType> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.sdkType
+            },
+            set: {
+                self.playgroundConfiguration.sdkType = $0
+                self.objectWillChange.send()
             }
-        }
+        )
     }
+
+    var merchant: Binding<PlaygroundConfiguration.Merchant> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.merchant
+            },
+            set: {
+                self.playgroundConfiguration.merchant = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+//    @Published var sdkType: PlaygroundConfiguration.SDKType {
+//        didSet {
+//            switch sdkType {
+//            case .automatic:
+//                PlaygroundUserDefaults.enableNative = nil
+//            case .web:
+//                PlaygroundUserDefaults.enableNative = false
+//            case .native:
+//                PlaygroundUserDefaults.enableNative = true
+//            }
+//        }
+//    }
     @Published var enableNative: Bool? = PlaygroundUserDefaults.enableNative {
         didSet {
             PlaygroundUserDefaults.enableNative = enableNative
         }
     }
 
-    @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
-        didSet {
-            PlaygroundUserDefaults.enableTestMode = enableTestMode
-        }
-    }
+//    @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
+//        didSet {
+//            PlaygroundUserDefaults.enableTestMode = enableTestMode
+//        }
+//    }
 
     @Published var email: String = PlaygroundUserDefaults.email {
         didSet {
@@ -151,13 +180,15 @@ final class PlaygroundMainViewModel: ObservableObject {
     @Published var isLoading: Bool = false
 
     init() {
-        self.nativeSelection = {
-            if let enableNative = PlaygroundUserDefaults.enableNative {
-                return enableNative ? .native : .web
-            } else {
-                return .automatic
-            }
-        }()
+//        self.nativeSelection = {
+//            if let enableNative = PlaygroundUserDefaults.enableNative {
+//                return enableNative ? .native : .web
+//            } else {
+//                return .automatic
+//            }
+//        }()
+        print(PlaygroundConfiguration.shared.configurationJSONString)
+
     }
 
     func didSelectShow() {
@@ -167,7 +198,7 @@ final class PlaygroundMainViewModel: ObservableObject {
     private func setup() {
         isLoading = true
         SetupPlayground(
-            enableTestMode: enableTestMode,
+            enableTestMode: false,
             flow: flow.rawValue,
             email: email,
             enableNetworkingMultiSelect: enableNetworkingMultiSelect,
