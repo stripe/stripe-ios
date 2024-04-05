@@ -117,7 +117,6 @@ def build(dir, target_name = 'SPMTest')
         'CODE_SIGN_IDENTITY="-" ' +
         'CODE_SIGNING_REQUIRED="NO" ' +
         'CODE_SIGN_ENTITLEMENTS="" ' +
-        'LD_GENERATE_MAP_FILE="YES" ' +
         "LD_MAP_FILE_PATH=\"build/#{target_name}-LinkMap.txt\" " +
         'CODE_SIGNING_ALLOWED="NO"').to_s)
 
@@ -245,7 +244,7 @@ def check_size(modules, measure_branch, base_branch)
     max_uncompressed_size = m['size_report']['max_uncompressed_size']
     max_incremental_uncompressed_size = m['size_report']['max_incremental_uncompressed_size']
 
-    begin
+    # begin
       # Setup project to include SDK
       setup_project(current_branch, @temp_dir, sdk)
 
@@ -313,10 +312,10 @@ def check_size(modules, measure_branch, base_branch)
           )
         ]
       end
-    rescue StandardError => e
-      puts "#{sdk} could not be built on one of the specified branches".red
-      puts e.message.to_s.red
-    end
+    # rescue StandardError => e
+    #   puts "#{sdk} could not be built on one of the specified branches".red
+    #   puts e.message.to_s.red
+    # end
   end
 
   # Go back to current branch
