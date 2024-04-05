@@ -778,6 +778,10 @@ public class STPPaymentHandler: NSObject {
             _handleAuthenticationForCurrentAction()
         }
     }
+    
+    public func dontShip() {
+        print("ship")
+    }
 
     /// Calls the current action's completion handler for the SetupIntent status, or returns YES if the status is ...RequiresAction.
     func _handleSetupIntentStatus(
