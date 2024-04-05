@@ -102,7 +102,7 @@ extension DownloadManager {
                 let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
                                                   error: Error.downloadAsyncFailure,
                                                   additionalNonPIIParams: ["url": url.absoluteString,
-                                                                           "url_error_code": (error as? NSError)?.code ?? "none",])
+                                                                           "url_error_code": (error as? NSError)?.code ?? "none", ])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 blockingDownloadSemaphore.signal()
                 return
@@ -140,7 +140,7 @@ extension DownloadManager {
                 let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
                                                   error: Error.downloadAsyncFailure,
                                                   additionalNonPIIParams: ["url": url.absoluteString,
-                                                                           "url_error_code": (error as? NSError)?.code ?? "none",])
+                                                                           "url_error_code": (error as? NSError)?.code ?? "none", ])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
