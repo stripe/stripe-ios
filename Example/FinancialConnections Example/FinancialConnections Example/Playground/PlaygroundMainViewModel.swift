@@ -68,6 +68,30 @@ final class PlaygroundMainViewModel: ObservableObject {
         )
     }
 
+    var testMode: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.testMode
+            },
+            set: {
+                self.playgroundConfiguration.testMode = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+    var useCase: Binding<PlaygroundConfiguration.UseCase> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.useCase
+            },
+            set: {
+                self.playgroundConfiguration.useCase = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
 //    @Published var sdkType: PlaygroundConfiguration.SDKType {
 //        didSet {
 //            switch sdkType {
@@ -198,6 +222,7 @@ final class PlaygroundMainViewModel: ObservableObject {
     private func setup() {
         isLoading = true
         SetupPlayground(
+            configurationDictionary: playgroundConfiguration.configurationJSONDictionary,
             enableTestMode: false,
             flow: flow.rawValue,
             email: email,
@@ -268,6 +293,7 @@ account_ids=\(session.accounts.data.map({ $0.id }))
 }
 
 private func SetupPlayground(
+    configurationDictionary: [String: Any],
     enableTestMode: Bool,
     flow: String,
     email: String,
@@ -302,6 +328,12 @@ private func SetupPlayground(
         requestBody["custom_scenario"] = customScenario
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey
+        requestBody["new_playground"] = true
+        requestBody.merge(
+            configurationDictionary,
+            uniquingKeysWith: { _, new in return new }
+        )
+
         return try! JSONSerialization.data(
             withJSONObject: requestBody,
             options: .prettyPrinted

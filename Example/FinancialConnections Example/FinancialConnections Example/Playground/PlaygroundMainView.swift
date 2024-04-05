@@ -17,10 +17,10 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
         ZStack {
             VStack {
                 Form {
-                    Section {
+                    Section(header: Text("Select SDK Type")) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Select SDK Type")
-                            Picker("Enable Native?", selection: viewModel.sdkType) {
+//                            Text("Select SDK Type")
+                            Picker("Select SDK Type", selection: viewModel.sdkType) {
                                 ForEach(PlaygroundConfiguration.SDKType.allCases) {
                                     Text($0.rawValue.capitalized)
                                         .tag($0)
@@ -36,7 +36,7 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                         }
                     }
 
-                    Section {
+                    Section(header: Text("Merchant")) {
                         Picker("Merchant", selection: viewModel.merchant) {
                             ForEach(viewModel.playgroundConfiguration.merchants) {
                                 Text($0.displayName)
@@ -46,7 +46,7 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                         .pickerStyle(.menu)
 
                         if viewModel.merchant.wrappedValue.isTestModeSupported {
-                            Toggle("Enable Test Mode", isOn: .constant(false))
+                            Toggle("Enable Test Mode", isOn: viewModel.testMode)
                                 .toggleStyle(
                                     SwitchToggleStyle(
                                         tint: Color(
@@ -56,61 +56,32 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                                         )
                                     )
                                 )
+                        } else if viewModel.merchant.wrappedValue.customId == "custom-keys" {
+                            TextField("Public Key (pk_)", text: .constant(""))
+                            TextField("Secret Key (sk_)", text: .constant(""))
                         }
                     }
 
-                    Section {
-                        Text("stuff below here kind of doesn't work")
-                    }
-
-//                    Toggle("Enable Test Mode", isOn: viewModel.meowBoolean)
-
-                    Section {
-                        Picker("Scenario", selection: $viewModel.customScenario) {
-                            ForEach(PlaygroundMainViewModel.CustomScenario.allCases, id: \.self) {
-                                Text($0.displayName)
-                            }
-                        }
-                        .pickerStyle(.menu)
-
-                        if viewModel.customScenario == .none {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Select Flow")
-                                Picker("Flow?", selection: $viewModel.flow) {
-                                    ForEach(PlaygroundMainViewModel.Flow.allCases) {
-                                        Text($0.rawValue.capitalized)
-                                            .tag($0)
-                                    }
+                    Section(header: Text("Select Use Case")) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Picker("Select Use Case", selection: viewModel.useCase) {
+                                ForEach(PlaygroundConfiguration.UseCase.allCases) {
+                                    Text($0.rawValue.capitalized.replacingOccurrences(of: "_", with: " "))
+                                        .tag($0)
                                 }
-                                .pickerStyle(.segmented)
-                                Text("'Payments' has manual entry enabled.")
-                                    .font(.caption)
-                                    .italic()
                             }
-
-//                            Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
-//                            // test mode color
-//                                .toggleStyle(
-//                                    SwitchToggleStyle(
-//                                        tint: Color(red: 231 / 255.0, green: 151 / 255.0, blue: 104 / 255.0)
-//                                    )
-//                                )
-
-                            if viewModel.flow == .networking {
-                                TextField("Email (existing Link consumer)", text: $viewModel.email)
-                                    .keyboardType(.emailAddress)
-                                    .autocapitalization(.none)
-                                    .accessibility(identifier: "playground-email")
-
-                                Toggle("Enable Multi Select", isOn: $viewModel.enableNetworkingMultiSelect)
-                                    .accessibility(identifier: "networking-multi-select")
-                            }
-                        } else if viewModel.customScenario == .customKeys {
-                            TextField("Public Key (pk_)", text: $viewModel.customPublicKey)
-                            TextField("Secret Key (sk_)", text: $viewModel.customSecretKey)
+                            .pickerStyle(.segmented)
                         }
                     }
 
+                    Section(header: Text("Customer")) {
+                        TextField("Email (ex. existing Link consumer)", text: $viewModel.email)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                            .accessibility(identifier: "playground-email")
+                    }
+
+                    // (enable step-up verification)
                     Section(header: Text("PERMISSIONS")) {
                         Toggle("Ownership", isOn: $viewModel.enableOwnershipPermission)
                             .accessibility(identifier: "playground-ownership-permission")
@@ -118,7 +89,10 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                         Toggle("Balances", isOn: $viewModel.enableBalancesPermission)
                             .accessibility(identifier: "playground-balances-permission")
 
-                        Toggle("Transactions \(viewModel.flow == .networking ? "(enable step-up verification)" : "")", isOn: $viewModel.enableTransactionsPermission)
+                        Toggle("Payment Method", isOn: .constant(false))
+                            .accessibility(identifier: "playground-payment-method-permission")
+
+                        Toggle("Transactions", isOn: $viewModel.enableTransactionsPermission)
                             .accessibility(identifier: "playground-transactions-permission")
                     }
 

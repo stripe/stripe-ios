@@ -7,17 +7,17 @@
 
 import Foundation
 
-fileprivate final class PlaygroundConfigurationJSON {
-    
+private final class PlaygroundConfigurationJSON {
+
     private static var configurationJSONStringDefaultValue = "{}"
-    
+
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_CONFIGURATION_JSON_STRING",
         defaultValue: configurationJSONStringDefaultValue
     )
     private static var configurationJSONString: String
-    
-    private var dictionary: [String:Any] {
+
+    fileprivate var dictionary: [String: Any] {
         get {
             print("^ dictionary:get:", Self.configurationJSONString)
             let configurationJSONString = Self.configurationJSONString
@@ -59,7 +59,7 @@ fileprivate final class PlaygroundConfigurationJSON {
             print("^ dictionary:set:", Self.configurationJSONString)
         }
     }
-    
+
     subscript(key: String) -> Any? {
         get {
             return dictionary[key]
@@ -68,11 +68,11 @@ fileprivate final class PlaygroundConfigurationJSON {
             dictionary[key] = newValue
         }
     }
-    
+
     var string: String {
         return Self.configurationJSONString
     }
-    
+
     var isEmpty: Bool {
         return dictionary.isEmpty
     }
@@ -82,26 +82,28 @@ fileprivate final class PlaygroundConfigurationJSON {
 // - initially it will be NULL...so something needs to set it up
 
 final class PlaygroundConfiguration {
-    
+
     // Singleton
-    
+
     static let shared = PlaygroundConfiguration()
-    
+
     // Rest
-    
+
     private let configurationJSON = PlaygroundConfigurationJSON()
     var configurationJSONString: String {
         return configurationJSON.string
     }
-    
+    var configurationJSONDictionary: [String: Any] {
+        return configurationJSON.dictionary
+    }
+
     private init() {
         // setup defaults if this is the first time initializing
         setupWithConfigurationJSONString(configurationJSONString)
     }
-    
-    
+
     // MARK: - SDK Type
-    
+
     enum SDKType: String, CaseIterable, Identifiable, Hashable {
         case automatic = "automatic"
         case web = "web"
@@ -114,7 +116,7 @@ final class PlaygroundConfiguration {
     private static let sdkTypeKey = "sdk_type"
     var sdkType: SDKType {
         get {
-            if 
+            if
                 let sdkTypeString = configurationJSON[Self.sdkTypeKey] as? String,
                 let sdkType = SDKType(rawValue: sdkTypeString)
             {
@@ -127,9 +129,9 @@ final class PlaygroundConfiguration {
             configurationJSON[Self.sdkTypeKey] = newValue.rawValue
         }
     }
-    
+
     // MARK: - Merchant
-    
+
     struct Merchant: Identifiable, Equatable, Hashable {
         /// what we pass to the backend and store in the configuration JSON
         let customId: String
@@ -137,12 +139,12 @@ final class PlaygroundConfiguration {
         let displayName: String
         /// whether on the 'backend' we provide test mode keys
         let isTestModeSupported: Bool
-        
+
         var id: String {
             return customId
         }
     }
-    
+
     let merchants: [Merchant] = [
         Merchant(
             customId: "default",
@@ -153,7 +155,7 @@ final class PlaygroundConfiguration {
             customId: "custom-keys",
             displayName: "Custom Keys",
             isTestModeSupported: false
-        )
+        ),
     ]
     private static let merchantCustomIdKey = "merchant"
     var merchant: Merchant {
@@ -172,18 +174,61 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Test Mode
+
+    private static let testModeKey = "test_mode"
+    var testMode: Bool {
+        get {
+            if let testMode = configurationJSON[Self.testModeKey] as? Bool {
+                return testMode
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationJSON[Self.testModeKey] = newValue
+        }
+    }
+
+    // MARK: - Use Case
+
+    enum UseCase: String, CaseIterable, Identifiable, Hashable {
+        case data = "data"
+        case paymentIntent = "payment_intent"
+
+        var id: String {
+            return rawValue
+        }
+    }
+    private static let useCaseKey = "use_case"
+    var useCase: UseCase {
+        get {
+            if
+                let useCaseString = configurationJSON[Self.useCaseKey] as? String,
+                let useCase = UseCase(rawValue: useCaseString)
+            {
+                return useCase
+            } else {
+                return .data
+            }
+        }
+        set {
+            configurationJSON[Self.useCaseKey] = newValue.rawValue
+        }
+    }
+
     // MARK: - Other
-    
+
     func setupWithConfigurationJSONString(_ configurationJSONString: String) {
         guard
             let jsonData = configurationJSONString.data(using: .utf8),
             let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: []),
-            let dictionary = jsonObject as? [String:Any]
+            let dictionary = jsonObject as? [String: Any]
         else {
             return
         }
-        
-        if 
+
+        if
             let sdkTypeString = dictionary[Self.sdkTypeKey] as? String,
             let sdkType = SDKType(rawValue: sdkTypeString)
         {
@@ -191,7 +236,7 @@ final class PlaygroundConfiguration {
         } else {
             self.sdkType = .native
         }
-        
+
         if
             let merchantCustomId = dictionary[Self.merchantCustomIdKey] as? String,
             let merchant = merchants.first(where: { $0.id == merchantCustomId })
@@ -199,6 +244,21 @@ final class PlaygroundConfiguration {
             self.merchant = merchant
         } else {
             self.merchant = merchants.first!
+        }
+
+        if let testMode = dictionary[Self.testModeKey] as? Bool {
+            self.testMode = testMode
+        } else {
+            self.testMode = false
+        }
+
+        if
+            let useCaseString = dictionary[Self.useCaseKey] as? String,
+            let useCase = UseCase(rawValue: useCaseString)
+        {
+            self.useCase = useCase
+        } else {
+            self.useCase = .data
         }
     }
 }
