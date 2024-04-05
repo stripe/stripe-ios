@@ -33,7 +33,7 @@ info "Generating new Cartfile..."
 git_repo="$(cd "${script_dir}/../../../" && pwd)"
 git_hash="$(git rev-parse HEAD)"
 
-echo "git \"${git_repo}\" \"${git_hash}\"" > "${script_dir}/Cartfile"
+echo -e "git \"${git_repo}\" \"${git_hash}\"\nbinary \"https://github.com/ccen-stripe/daggerTest/releases/download/1.0.0/CaptureCore.json\" ~> 1.2.3" > "${script_dir}/Cartfile"
 
 # Execute carthage bootstrap
 info "Executing carthage bootstrap..."
