@@ -1,0 +1,72 @@
+name: Check for new public APIs
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+    paths:
+      - '**/*.swift'
+      - '!StripeFinancialConnections/**'
+      - '!StripeIdentity/**'
+      - '!StripeConnections/**'
+
+jobs:
+  public-api-check:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+            fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+
+      - name: Check for new public APIs
+        id: check-api
+        run: |
+          # Run the Ruby script and make a list of new public APIs 
+          echo "Checking for new Public APIs..."
+          OUTPUT=$(ruby ci_scripts/check_for_new_public_apis.rb ${{ github.workspace }})
+          echo "${OUTPUT}"
+          echo "API_CHECK_OUTPUT<<EOF" >> $GITHUB_ENV
+          echo "${OUTPUT}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          # Pass whether new public APIs have been found to the next steps
+          if [[ -z "$OUTPUT" ]]; then
+            echo "::set-output name=new_apis::"
+          else
+            echo "::set-output name=new_apis:: yes"
+          fi
+
+      - uses: peter-evans/find-comment@v3.0.0
+        id: find_comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: New Public APIs
+
+      - uses: peter-evans/create-or-update-comment@v4
+        id: create-update-comment
+        if: steps.check-api.outputs.new_apis
+        with:
+          body: |
+            ⚠️ New Public APIs Detected without SPI protection:
+
+            ```
+            ${{ env.API_CHECK_OUTPUT }}
+            ```
+
+            Consider if these APIs need to be public or can be protected by `@_spi(STP)`. If they need to be public determine if API review is required.
+
+            By adding the label `Add Public API` to this PR, I acknowledge that there are new public APIs.
+          edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fail if not acknowledged
+        if: "steps.check-api.outputs.new_apis && !contains(github.event.pull_request.labels.*.name, 'Add Public API')"
+        run: exit 1
