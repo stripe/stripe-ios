@@ -524,6 +524,11 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
+    enum PaymentSheetFlowControllerViewControllerError: Error {
+        case didUpdateSelectionWithInvalidMode
+        case sheetNavigationBarDidBack
+    }
+
     func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
         // no-op
     }
@@ -550,7 +555,11 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
                                                                            intentConfig: intent.intentConfig,
                                                                            apiClient: configuration.apiClient)
         guard case Mode.selectingSaved = mode else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedFlowControllerViewControllerError,
+                                              error: PaymentSheetFlowControllerViewControllerError.didUpdateSelectionWithInvalidMode,
+                                              additionalNonPIIParams: [:])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
         switch paymentMethodSelection {
@@ -664,7 +673,11 @@ extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
             mode = .selectingSaved
             updateUI()
         default:
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedFlowControllerViewControllerError,
+                                              error: PaymentSheetFlowControllerViewControllerError.sheetNavigationBarDidBack,
+                                              additionalNonPIIParams: [:])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
         }
     }
 }

@@ -210,7 +210,7 @@ extension XCTestCase {
     }
 
     func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        app.buttons["Reload"].tap()
+        app.buttons["Reload"].waitForExistenceAndTap(timeout: 10)
         waitForReload(app, settings: settings)
     }
 
