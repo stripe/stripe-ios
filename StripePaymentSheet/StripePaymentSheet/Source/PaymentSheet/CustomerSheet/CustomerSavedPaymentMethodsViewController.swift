@@ -416,7 +416,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                             self.csCompletion?(.selected(paymentOptionSelection))
                         }
                     }
-               default:
+                default:
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                                       error: Error.didSelectSavedUnexpectedPaymentOption,
                                                       additionalNonPIIParams: ["selected_payment_option": selectedPaymentOption.paymentMethodTypeAnalyticsValue])
