@@ -580,7 +580,7 @@ workflows:
         title: Generate size report
     meta:
       bitrise.io:
-        stack: osx-xcode-15.2.x
+        stack: osx-xcode-15.3.x
         machine_type_id: g2-m1.8core        
   ui-tests-1:
     steps:
