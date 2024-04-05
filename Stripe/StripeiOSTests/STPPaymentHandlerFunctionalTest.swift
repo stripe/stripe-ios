@@ -192,14 +192,16 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         self.waitForExpectations(timeout: 10)
     }
 
+    // MARK: - Test payment handler sends analytics
+
     func test_confirm_payment_intent_sends_analytic() {
         // Confirming a hardcoded already-confirmed PI with invalid params...
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A", paymentMethodType: .card)
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
-        STPPaymentHandler.sharedHandler.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
-        STPPaymentHandler.sharedHandler.analyticsClient = analyticsClient
-        STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) { (_, _, _) in
+        paymentHandler.analyticsClient = analyticsClient
+        paymentHandler.confirmPayment(paymentIntentParams, with: self) { (_, _, _) in
             // ...should send these analytics
             paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
@@ -223,10 +225,10 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         setupIntentParams.paymentMethodParams = STPPaymentMethodParams(type: .card)
 
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
-        STPPaymentHandler.sharedHandler.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
-        STPPaymentHandler.sharedHandler.analyticsClient = analyticsClient
-        STPPaymentHandler.shared().confirmSetupIntent(setupIntentParams, with: self) { (_, _, _) in
+        paymentHandler.analyticsClient = analyticsClient
+        paymentHandler.confirmSetupIntent(setupIntentParams, with: self) { (_, _, _) in
             // ...should send these analytics
             paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
@@ -247,10 +249,10 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
     func test_handle_next_action_payment_intent_sends_analytic() {
         // Calling handleNextAction(forPayment:) with an invalid PI client secret...
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
-        STPPaymentHandler.sharedHandler.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
-        STPPaymentHandler.sharedHandler.analyticsClient = analyticsClient
-        STPPaymentHandler.shared().handleNextAction(forPayment: "pi_3P232pFY0qyl6XeW0FFRtE0A_secret_foo", with: self, returnURL: nil) { (_, _, _) in
+        paymentHandler.analyticsClient = analyticsClient
+        paymentHandler.handleNextAction(forPayment: "pi_3P232pFY0qyl6XeW0FFRtE0A_secret_foo", with: self, returnURL: nil) { (_, _, _) in
             // ...should send these analytics
             paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
@@ -273,10 +275,10 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         piJSON![jsonDict: "next_action"]!["type"] = "foo"
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: piJSON)!
 
-        STPPaymentHandler.sharedHandler.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
-        STPPaymentHandler.sharedHandler.analyticsClient = analyticsClient
-        STPPaymentHandler.shared().handleNextAction(for: paymentIntent, with: self, returnURL: nil) { (_, _, _) in
+        paymentHandler.analyticsClient = analyticsClient
+        paymentHandler.handleNextAction(for: paymentIntent, with: self, returnURL: nil) { (_, _, _) in
             // ...should send these analytics
             paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
@@ -295,10 +297,10 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
     func test_handle_next_action_setup_intent_sends_analytic() {
         // Calling handleNextAction(forSetupIntent:) with an invalid SI client secret...
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
-        STPPaymentHandler.sharedHandler.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
-        STPPaymentHandler.sharedHandler.analyticsClient = analyticsClient
-        STPPaymentHandler.shared().handleNextAction(forSetupIntent: "seti_3P232pFY0qyl6XeW0FFRtE0A_secret_foo", with: self, returnURL: nil) { (_, _, _) in
+        paymentHandler.analyticsClient = analyticsClient
+        paymentHandler.handleNextAction(forSetupIntent: "seti_3P232pFY0qyl6XeW0FFRtE0A_secret_foo", with: self, returnURL: nil) { (_, _, _) in
             // ...should send these analytics
             paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
@@ -323,10 +325,10 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         siJSON["payment_method"] = STPTestUtils.jsonNamed("CardPaymentMethod")!
         let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: siJSON)!
 
-        STPPaymentHandler.sharedHandler.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
-        STPPaymentHandler.sharedHandler.analyticsClient = analyticsClient
-        STPPaymentHandler.shared().handleNextAction(for: setupIntent, with: self, returnURL: nil) { (_, _, _) in
+        paymentHandler.analyticsClient = analyticsClient
+        paymentHandler.handleNextAction(for: setupIntent, with: self, returnURL: nil) { (_, _, _) in
             // ...should send these analytics
             paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
