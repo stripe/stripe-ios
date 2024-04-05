@@ -22,6 +22,10 @@ final class PaymentSheetLoader {
         case failure(Error)
     }
 
+    private enum InternalError: Error {
+        case lookupLinkAccountFailure
+    }
+
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         mode: PaymentSheet.InitializationMode,
@@ -162,6 +166,9 @@ final class PaymentSheetLoader {
                     case .success(let linkAccount):
                         continuation.resume(with: .success(linkAccount))
                     case .failure(let error):
+                        let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetPaymentSheetLoader,
+                                                          error: InternalError.lookupLinkAccountFailure)
+                        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                         continuation.resume(throwing: error)
                     }
                 }
