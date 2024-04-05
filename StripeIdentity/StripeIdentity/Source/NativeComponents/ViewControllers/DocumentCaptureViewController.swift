@@ -83,7 +83,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 newScanningInstructionText = scanningInstructionText(for: documentSide, documentScannerOutput: documentScannerOutput)
                 lastScanningInstructionText = newScanningInstructionText
                 lastScanningInstructionTextUpdate = now
-                
+
                 resetScanningInstructionTextTimer?.invalidate()
                 resetScanningInstructionTextTimer  = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
                     self?.updateUI()
