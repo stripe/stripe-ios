@@ -96,21 +96,27 @@ extension DownloadManager {
         let task = self.session.downloadTask(with: url) { tempURL, response, responseError in
             if let responseError = responseError as? NSError {
                 blockingDownloadSemaphore.signal()
-                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: responseError)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+                                                  error: responseError,
+                                                  additionalNonPIIParams: ["url": url.absoluteString])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
 
             guard let tempURL = tempURL, let response = response, let data = self.getDataFromURL(tempURL) else {
                 blockingDownloadSemaphore.signal()
-                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: Error.failedToMakeDataFromResponse)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+                                                  error: Error.failedToMakeDataFromResponse,
+                                                  additionalNonPIIParams: ["url": url.absoluteString])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
 
             guard let image = self.persistToMemory(data, forImageName: imageName) else {
                 blockingDownloadSemaphore.signal()
-                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: Error.failedToMakeImageFromData)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+                                                  error: Error.failedToMakeImageFromData,
+                                                  additionalNonPIIParams: ["url": url.absoluteString])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
@@ -142,21 +148,27 @@ extension DownloadManager {
 
             if let responseError = responseError as? NSError {
                 self.completeAsyncTask(for: imageName)
-                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: responseError)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+                                                  error: responseError,
+                                                  additionalNonPIIParams: ["url": url.absoluteString])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
 
             guard let tempURL = tempURL, let response = response, let data = self.getDataFromURL(tempURL) else {
                 self.completeAsyncTask(for: imageName)
-                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: Error.failedToMakeDataFromResponse)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+                                                  error: Error.failedToMakeDataFromResponse,
+                                                  additionalNonPIIParams: ["url": url.absoluteString])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
 
             guard let image = self.persistToMemory(data, forImageName: imageName) else {
                 self.completeAsyncTask(for: imageName)
-                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError, error: Error.failedToMakeImageFromData)
+                let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+                                                  error: Error.failedToMakeImageFromData,
+                                                  additionalNonPIIParams: ["url": url.absoluteString])
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
