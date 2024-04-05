@@ -81,6 +81,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "applePayNotSupportedOrMisconfigured"
         case .alreadyPresented:
             return "alreadyPresented"
+        case .unableToPresent:
+            return "unableToPresent"
         case .flowControllerConfirmFailed:
             return "flowControllerConfirmFailed"
         case .errorHandlingNextAction:
@@ -142,6 +144,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return message
             case .alreadyPresented:
                 return "presentingViewController is already presenting a view controller"
+            case .unableToPresent:
+                return "No key window with view controller found"
             case .flowControllerConfirmFailed(message: let message):
                 return message
             case .errorHandlingNextAction:
