@@ -229,7 +229,7 @@ public struct NewPublicStruct {}
 
 public protocol NewPublicProtocol {}
 
-public enum NewPublicEnum {}
+@_spi(STP) public enum NewPublicEnum {}
 
 public class NewPublicClass {
     public static let NewPublicStaticLet = 0
