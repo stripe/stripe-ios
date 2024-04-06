@@ -15,6 +15,10 @@ import SafariServices
 import Stripe3DS2
 #endif
 
+@objc public enum NewPublicEnum: Int {
+    case test
+}
+
 /// `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
 @objc public enum STPPaymentHandlerActionStatus: Int {
     /// The action succeeded.
@@ -779,7 +783,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
     
-     @_spi(STP) func dontShip() {
+     @_spi(STP) public func dontShip() {
         print("ship")
     }
 
