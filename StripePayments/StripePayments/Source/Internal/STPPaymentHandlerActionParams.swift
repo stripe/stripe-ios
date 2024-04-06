@@ -162,11 +162,11 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
     let setupIntentCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock
     let returnURLString: String?
-    var setupIntent: STPSetupIntent?
+    var setupIntent: STPSetupIntent
     var threeDS2Transaction: STDSTransaction?
 
     var intentStripeID: String? {
-        return setupIntent?.stripeID
+        return setupIntent.stripeID
     }
 
     var paymentMethodType: STPPaymentMethodType? {
@@ -183,7 +183,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
             STDSSwiftTryCatch.try(
                 {
                     let configParams = STDSConfigParameters()
-                    if !(self.setupIntent?.livemode ?? true) {
+                    if !self.setupIntent.livemode {
                         configParams.addParameterNamed(
                             "kInternalStripeTestingConfigParam",
                             withValue: "Y"
@@ -225,7 +225,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     }
 
     func nextAction() -> STPIntentAction? {
-        return setupIntent?.nextAction
+        return setupIntent.nextAction
     }
 
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {

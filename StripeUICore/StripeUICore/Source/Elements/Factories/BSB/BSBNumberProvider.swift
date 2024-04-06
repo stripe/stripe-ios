@@ -9,6 +9,10 @@ import Foundation
 @_spi(STP) import StripeCore
 
 @_spi(STP) public class BSBNumberProvider {
+    private enum Error: Swift.Error {
+        case bsbLoadFailure
+    }
+
     private let bsbDataFilename = "au_becs_bsb"
 
     @_spi(STP) public static var shared: BSBNumberProvider = BSBNumberProvider()
@@ -24,6 +28,10 @@ import Foundation
                   let url = bundle.url(forResource: self.bsbDataFilename, withExtension: ".json"),
                   let data = try? Data(contentsOf: url),
                   let decodedBSBs = try? JSONDecoder().decode([String: String].self, from: data) else {
+
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreBSBNumberProvider,
+                                                  error: Error.bsbLoadFailure)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 completion?()
                 return
             }

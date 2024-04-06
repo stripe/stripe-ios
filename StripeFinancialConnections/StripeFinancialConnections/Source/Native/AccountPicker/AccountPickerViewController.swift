@@ -15,7 +15,9 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
-        nextPane: FinancialConnectionsSessionManifest.NextPane
+        nextPane: FinancialConnectionsSessionManifest.NextPane,
+        customSuccessPaneMessage: String?,
+        saveToLinkWithStripeSucceeded: Bool?
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
@@ -387,11 +389,64 @@ final class AccountPickerViewController: UIViewController {
                         selectedAccounts = self.dataSource.selectedAccounts
                     }
 
-                    self.delegate?.accountPickerViewController(
-                        self,
-                        didSelectAccounts: selectedAccounts,
-                        nextPane: linkedAccounts.nextPane
-                    )
+                    // for data flows (external_api), where the user is already
+                    // determined to be a Link consumer, we need to take an
+                    // additional step of saving the accounts to Link
+                    if
+                        self.dataSource.manifest.isNetworkingUserFlow == true,
+                        // make sure the current user is a Link consumer
+                        self.dataSource.manifest.accountholderIsLinkConsumer == true,
+                        // make sure this is not a payment flow; in payment flows,
+                        // the AttachLinkedPaymentAccount handles saving to link
+                        !self.dataSource.manifest.shouldAttachLinkedPaymentMethod,
+                        selectedAccounts.count > 0,
+                        let consumerSessionClientSecret = self.dataSource.consumerSessionClientSecret
+                    {
+                        self.dataSource.saveToLink(
+                            accounts: selectedAccounts,
+                            consumerSessionClientSecret: consumerSessionClientSecret
+                        )
+                        .observe { [weak self] result in
+                            guard let self = self else { return }
+
+                            let saveToLinkWithStripeSucceeded: Bool
+                            let customSuccessPaneMessage: String?
+                            switch result {
+                            case .success(let _customSuccessPaneMessage):
+                                saveToLinkWithStripeSucceeded = true
+                                customSuccessPaneMessage = _customSuccessPaneMessage
+                            case .failure(let error):
+                                saveToLinkWithStripeSucceeded = false
+                                customSuccessPaneMessage = nil
+                                self.dataSource
+                                    .analyticsClient
+                                    .logUnexpectedError(
+                                        error,
+                                        errorName: "SaveToLinkError",
+                                        pane: .accountPicker
+                                    )
+                            }
+                            self.delegate?.accountPickerViewController(
+                                self,
+                                didSelectAccounts: selectedAccounts,
+                                nextPane: .success,
+                                customSuccessPaneMessage: customSuccessPaneMessage,
+                                saveToLinkWithStripeSucceeded: saveToLinkWithStripeSucceeded
+                            )
+                        }
+                    }
+                    // for networking payment flows, and networking data flows where
+                    // user will go through Link sign-up (or Link sign-in verification),
+                    // we do not need to call `saveAccountsToLink`
+                    else {
+                        self.delegate?.accountPickerViewController(
+                            self,
+                            didSelectAccounts: selectedAccounts,
+                            nextPane: linkedAccounts.nextPane,
+                            customSuccessPaneMessage: nil,
+                            saveToLinkWithStripeSucceeded: nil
+                        )
+                    }
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient

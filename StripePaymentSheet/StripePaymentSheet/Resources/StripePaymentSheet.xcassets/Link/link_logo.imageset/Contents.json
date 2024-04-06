@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "vector (1).svg",
+      "filename" : "Light.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Dark.svg",
       "idiom" : "universal"
     }
   ],

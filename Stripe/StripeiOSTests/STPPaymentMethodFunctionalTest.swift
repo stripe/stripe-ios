@@ -263,6 +263,19 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
+    func testCreateAlmaPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
+        let params = STPPaymentMethodParams(alma: STPPaymentMethodAlmaParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .alma)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
     func fetchPaymentMethods(client: STPAPIClient,
                              customerAndEphemeralKey: STPTestingAPIClient.CreateEphemeralKeyResponse) async throws -> [STPPaymentMethod] {
         try await withCheckedThrowingContinuation { continuation in
