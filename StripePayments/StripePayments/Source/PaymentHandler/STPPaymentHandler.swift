@@ -1422,6 +1422,8 @@ public class STPPaymentHandler: NSObject {
             fatalError()
         }
     }
+    
+    public let test = 123
 
    public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
         let urlRequest = URLRequest(url: url)
