@@ -66,6 +66,9 @@ public class PaymentSheet {
         }
     }
 
+    @_spi(STP)
+    public let newLineSTP = 123
+    
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
 
