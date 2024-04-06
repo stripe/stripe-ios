@@ -53,7 +53,7 @@ jobs:
         if: steps.check-api.outputs.new_apis
         with:
           body: |
-            ⚠️ New public APIs Detected without SPI protection:
+            ⚠️ New public APIs detected:
 
             ```
             ${{ env.API_CHECK_OUTPUT }}
@@ -63,7 +63,7 @@ jobs:
             - Do these APIs need to be `public` or can they be protected with `@_spi(STP)`?
             - If these APIs need to be `public`, assess whether they require an API review.
 
-            If you confirm these APIs need to be public and have undergone necessary review (if required), add the label `adds public API` to this PR to acknowledge and bypass this check.
+            If you confirm these APIs need to be public and have undergone necessary review, add the label `adds public API` to this PR to acknowledge and bypass this check.
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
