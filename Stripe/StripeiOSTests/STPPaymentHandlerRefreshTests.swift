@@ -30,9 +30,9 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
                 "type": paymentMethodType.identifier,
             ]
             let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [paymentMethodType.identifier],
-                                                   status: .requiresAction,
-                                                   paymentMethod: paymentMethodDict,
-                                                   nextAction: .useStripeSDK)
+                                                          status: .requiresAction,
+                                                          paymentMethod: paymentMethodDict,
+                                                          nextAction: .useStripeSDK)
 
             let apiClientMock = STPAPIClientMock(mockPaymentIntent: paymentIntent)
             let currentAction = STPPaymentHandlerPaymentIntentActionParams.makeTestable(apiClient: apiClientMock,
@@ -43,11 +43,9 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
             paymentHandler.currentAction = currentAction
             paymentHandler._retrieveAndCheckIntentForCurrentAction()
 
-            if shouldRefresh.contains(paymentMethodType) {
-                XCTAssertTrue(apiClientMock.refreshPaymentIntentCalled, "\(paymentMethodType.displayName) should hit the refresh endpoint when using a PaymentIntent")
-            } else {
-                XCTAssertFalse(apiClientMock.refreshPaymentIntentCalled, "\(paymentMethodType.displayName) should not hit the refresh endpoint when using a PaymentIntent")
-            }
+            let requiresRefresh = shouldRefresh.contains(paymentMethodType)
+            XCTAssertEqual(apiClientMock.refreshPaymentIntentCalled, requiresRefresh,
+                           "\(paymentMethodType.displayName) should \(requiresRefresh ? "" : "not ")hit the refresh endpoint when using a PaymentIntent")
         }
     }
 
@@ -74,11 +72,9 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
             paymentHandler.currentAction = currentAction
             paymentHandler._retrieveAndCheckIntentForCurrentAction()
 
-            if shouldRefresh.contains(paymentMethodType) {
-                XCTAssertTrue(apiClientMock.refreshSetupIntentCalled, "\(paymentMethodType.displayName) should hit the refresh endpoint when using a SetupIntent")
-            } else {
-                XCTAssertFalse(apiClientMock.refreshSetupIntentCalled, "\(paymentMethodType.displayName) should not hit the refresh endpoint when using a SetupIntent")
-            }
+            let requiresRefresh = shouldRefresh.contains(paymentMethodType)
+            XCTAssertEqual(apiClientMock.refreshSetupIntentCalled, requiresRefresh,
+                           "\(paymentMethodType.displayName) should \(requiresRefresh ? "" : "not ")hit the refresh endpoint when using a SetupIntent")
         }
     }
 }

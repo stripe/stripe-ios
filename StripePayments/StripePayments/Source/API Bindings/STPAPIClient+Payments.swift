@@ -448,7 +448,7 @@ extension STPAPIClient {
     }
 
     @_spi(STP) @objc public func refreshPaymentIntent(withClientSecret secret: String,
-                                                completion: @escaping STPPaymentIntentCompletionBlock) {
+                                                      completion: @escaping STPPaymentIntentCompletionBlock) {
         let endpoint = "\(paymentIntentEndpoint(from: secret))/refresh"
         var parameters: [String: Any] = [:]
 
@@ -745,7 +745,8 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) @objc public func refreshSetupIntent(withClientSecret secret: String, completion: @escaping STPSetupIntentCompletionBlock) {
+    @_spi(STP) @objc public func refreshSetupIntent(withClientSecret secret: String,
+                                                    completion: @escaping STPSetupIntentCompletionBlock) {
         let endpoint = "\(setupIntentEndpoint(from: secret))/refresh"
         var parameters: [String: Any] = [:]
 
