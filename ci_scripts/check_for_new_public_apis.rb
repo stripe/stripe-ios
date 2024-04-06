@@ -18,7 +18,7 @@ def get_added_swift_code(current_dir)
   
     added_lines.each do |line|
       line = line.strip.delete_prefix('+')
-      if line =~ /(public\s+)?func\s+\w+\s*\(/ and not line =~ /@_spi/
+      if line =~ /(public\s+|open\s+)[a-z]+\s+\w+/ && !line.include?('@_spi')
         public_functions << line.lstrip.chop
       end
     end
