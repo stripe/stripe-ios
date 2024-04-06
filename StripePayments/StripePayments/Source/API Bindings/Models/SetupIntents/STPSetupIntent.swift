@@ -223,3 +223,14 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         return setupIntent
     }
 }
+
+// These should all be detected
+public struct NewPublicStruct {}
+
+public protocol NewPublicProtocol {}
+
+public enum NewPublicEnum {}
+
+public class NewPublicClass {
+    public static let NewPublicStaticLet = 0
+}
