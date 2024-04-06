@@ -10,6 +10,8 @@ import XCTest
 
 public class KeyPathExpectation: XCTNSPredicateExpectation {
 
+    public let test = 1234
+    
     public convenience init<Object, Value: Equatable>(
         object: Object,
         keyPath: KeyPath<Object, Value>,
