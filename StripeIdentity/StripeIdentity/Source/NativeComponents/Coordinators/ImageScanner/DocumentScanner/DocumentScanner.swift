@@ -28,6 +28,9 @@ final class DocumentScanner {
     private let analyticsClient: IdentityAnalyticsClient
     private var hasSeenMBRunnerError: Bool = false
     private let sheetController: VerificationSheetControllerProtocol
+    private var shouldStartScan:Bool = false
+    private var scheduledAsync: Bool = false
+    static let delayStart: DispatchTimeInterval = .seconds(3)
 
     /// Initializes a DocumentScanner with detectors.
     ///
@@ -117,6 +120,15 @@ extension DocumentScanner: ImageScanner {
         sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
     ) -> Future<DocumentScannerOutput?> {
+        if(!self.shouldStartScan) {
+            if(!self.scheduledAsync) {
+                self.scheduledAsync = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + DocumentScanner.delayStart) { [weak self] in
+                    self?.shouldStartScan = true
+                }
+            }
+            return Promise(value: nil)
+        }
         do {
             // Scan for ID Document Classification
             guard let idDetectorOutput = try self.idDetector.scanImage(pixelBuffer: pixelBuffer) else {
@@ -230,6 +242,8 @@ extension DocumentScanner: ImageScanner {
         barcodeDetector?.reset()
         idDetector.metricsTracker?.reset()
         mbDetector?.reset()
+        shouldStartScan = false
+        scheduledAsync = false
     }
 }
 
