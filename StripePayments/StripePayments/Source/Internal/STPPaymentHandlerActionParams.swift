@@ -170,7 +170,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     }
 
     var paymentMethodType: STPPaymentMethodType? {
-        return setupIntent?.paymentMethod?.type
+        return setupIntent.paymentMethod?.type
     }
 
     private var _threeDS2Service: STDSThreeDS2Service?
@@ -233,18 +233,16 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     }
 
     @_spi(STP) public func refreshIntent(completion: @escaping () -> Void) {
-        switch setupIntent?.paymentMethod?.type {
+        switch setupIntent.paymentMethod?.type {
         case .alipay:
             pingMarlin(completion: {
                 completion()
             })
         case .cashApp:
-            guard let clientSecret = setupIntent?.clientSecret else {
-                completion()
-                return
-            }
-            apiClient.refreshSetupIntent(withClientSecret: clientSecret) { [weak self] si, _ in
-                self?.setupIntent = si
+            apiClient.refreshSetupIntent(withClientSecret: setupIntent.clientSecret) { [weak self] si, _ in
+                if let si = si {
+                    self?.setupIntent = si
+                }
                 completion()
             }
         default:

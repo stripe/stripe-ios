@@ -1571,7 +1571,7 @@ public class STPPaymentHandler: NSObject {
                         let requiresAction: Bool = self._handleSetupIntentStatus(
                             forAction: currentAction
                         )
-                        
+
                         if requiresAction {
                             // If the status is still RequiresAction, the user exited from the redirect before the
                             // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
