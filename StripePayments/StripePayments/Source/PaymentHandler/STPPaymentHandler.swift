@@ -15,10 +15,6 @@ import SafariServices
 import Stripe3DS2
 #endif
 
-@objc public enum NewPublicEnum: Int {
-    case test
-}
-
 /// `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
 @objc public enum STPPaymentHandlerActionStatus: Int {
     /// The action succeeded.
@@ -782,10 +778,6 @@ public class STPPaymentHandler: NSObject {
             _handleAuthenticationForCurrentAction()
         }
     }
-    
-     @_spi(STP) public func dontShip() {
-        print("ship")
-    }
 
     /// Calls the current action's completion handler for the SetupIntent status, or returns YES if the status is ...RequiresAction.
     func _handleSetupIntentStatus(
@@ -1431,7 +1423,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
+   @_spi(STP) public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
 
