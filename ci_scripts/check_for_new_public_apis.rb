@@ -18,7 +18,6 @@ def check_spi_protection(file)
 
 
   File.foreach(file) do |line|
-    previous_line_spi_annotated = false
     line = line.strip
     opening_braces = line.count('{')
     closing_braces = line.count('}')
@@ -35,7 +34,7 @@ def check_spi_protection(file)
       public_items << (File.basename(file) + ": " + line.lstrip.chomp('{').rstrip)
     end
 
-    previous_line_spi_annotated = line.include?("@_spi(")
+    previous_line_spi_annotated = line.match?(/@_spi\(\w+\)/)
     in_spi_protected_block = false if block_depth == 0
   end
 
