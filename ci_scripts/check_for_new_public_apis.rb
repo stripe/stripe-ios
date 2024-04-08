@@ -28,7 +28,7 @@ def check_spi_protection(file)
       in_spi_protected_block = true
     elsif line =~ /(public\s+)?(class|struct|enum|protocol)\s+\w+/ && opening_braces > 0
       in_spi_protected_block = false
-      if added_lines.include?(line)
+      if added_lines.include?(line) && !previous_line_spi_annotated
         public_items << (File.basename(file) + ": " + line.lstrip.chomp('{').rstrip)
       end
     elsif added_lines.include?(line) && line =~ /(public\s+|open\s+)[a-z]+\s+\w+/ && !in_spi_protected_block && !previous_line_spi_annotated
