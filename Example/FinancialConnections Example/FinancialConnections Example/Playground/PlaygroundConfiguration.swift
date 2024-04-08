@@ -190,6 +190,35 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Custom Keys
+
+    private static let customPublicKeyKey = "custom_public_key"
+    var customPublicKey: String {
+        get {
+            if let customPublicKey = configurationJSON[Self.customPublicKeyKey] as? String {
+                return customPublicKey
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationJSON[Self.customPublicKeyKey] = newValue
+        }
+    }
+    private static let customSecretKeyKey = "custom_secret_key"
+    var customSecretKey: String {
+        get {
+            if let customSecretKey = configurationJSON[Self.customSecretKeyKey] as? String {
+                return customSecretKey
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationJSON[Self.customSecretKeyKey] = newValue
+        }
+    }
+
     // MARK: - Use Case
 
     enum UseCase: String, CaseIterable, Identifiable, Hashable {
@@ -250,6 +279,19 @@ final class PlaygroundConfiguration {
             self.testMode = testMode
         } else {
             self.testMode = false
+        }
+
+        if
+            let customPublicKey = dictionary[Self.customPublicKeyKey] as? String,
+            let customSecretKey = dictionary[Self.customSecretKeyKey] as? String,
+            !customPublicKey.isEmpty,
+            !customSecretKey.isEmpty
+        {
+            self.customPublicKey = customPublicKey
+            self.customSecretKey = customSecretKey
+        } else {
+            self.customPublicKey = ""
+            self.customSecretKey = ""
         }
 
         if

@@ -57,8 +57,8 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                                     )
                                 )
                         } else if viewModel.merchant.wrappedValue.customId == "custom-keys" {
-                            TextField("Public Key (pk_)", text: .constant(""))
-                            TextField("Secret Key (sk_)", text: .constant(""))
+                            TextField("Public Key (pk_)", text: viewModel.customPublicKey)
+                            TextField("Secret Key (sk_)", text: viewModel.customSecretKey)
                         }
                     }
 

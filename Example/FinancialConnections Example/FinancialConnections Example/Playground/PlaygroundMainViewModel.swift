@@ -34,16 +34,6 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
-//    enum NativeSelection: String, CaseIterable, Identifiable {
-//        case automatic
-//        case web
-//        case native
-//
-//        var id: String {
-//            return rawValue
-//        }
-//    }
-
     var sdkType: Binding<PlaygroundConfiguration.SDKType> {
         Binding(
             get: {
@@ -80,6 +70,29 @@ final class PlaygroundMainViewModel: ObservableObject {
         )
     }
 
+    var customPublicKey: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.customPublicKey
+            },
+            set: {
+                self.playgroundConfiguration.customPublicKey = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+    var customSecretKey: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.customSecretKey
+            },
+            set: {
+                self.playgroundConfiguration.customSecretKey = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     var useCase: Binding<PlaygroundConfiguration.UseCase> {
         Binding(
             get: {
@@ -92,29 +105,11 @@ final class PlaygroundMainViewModel: ObservableObject {
         )
     }
 
-//    @Published var sdkType: PlaygroundConfiguration.SDKType {
-//        didSet {
-//            switch sdkType {
-//            case .automatic:
-//                PlaygroundUserDefaults.enableNative = nil
-//            case .web:
-//                PlaygroundUserDefaults.enableNative = false
-//            case .native:
-//                PlaygroundUserDefaults.enableNative = true
-//            }
-//        }
-//    }
     @Published var enableNative: Bool? = PlaygroundUserDefaults.enableNative {
         didSet {
             PlaygroundUserDefaults.enableNative = enableNative
         }
     }
-
-//    @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
-//        didSet {
-//            PlaygroundUserDefaults.enableTestMode = enableTestMode
-//        }
-//    }
 
     @Published var email: String = PlaygroundUserDefaults.email {
         didSet {
@@ -184,16 +179,6 @@ final class PlaygroundMainViewModel: ObservableObject {
             PlaygroundUserDefaults.customScenario = customScenario.rawValue
         }
     }
-    @Published var customPublicKey: String = PlaygroundUserDefaults.customPublicKey {
-        didSet {
-            PlaygroundUserDefaults.customPublicKey = customPublicKey
-        }
-    }
-    @Published var customSecretKey: String = PlaygroundUserDefaults.customSecretKey {
-        didSet {
-            PlaygroundUserDefaults.customSecretKey = customSecretKey
-        }
-    }
 
     @Published var showLiveEvents: Bool = PlaygroundUserDefaults.showLiveEvents {
         didSet {
@@ -231,8 +216,8 @@ final class PlaygroundMainViewModel: ObservableObject {
             enableBalancesPermission: enableBalancesPermission,
             enableTransactionsPermission: enableTransactionsPermission,
             customScenario: customScenario.rawValue,
-            customPublicKey: customPublicKey,
-            customSecretKey: customSecretKey
+            customPublicKey: "",
+            customSecretKey: ""
         ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
