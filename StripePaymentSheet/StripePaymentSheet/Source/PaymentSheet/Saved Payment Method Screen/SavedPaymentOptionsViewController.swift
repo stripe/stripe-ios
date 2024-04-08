@@ -497,20 +497,6 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
-        switch viewModel {
-        case .add:
-            // Should have been handled in shouldSelectItemAt: before we got here!
-            assertionFailure()
-        case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
-        case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
-        case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(
-                .stripeId(paymentMethod.stripeId),
-                forCustomer: configuration.customerID
-            )
-        }
         updateMandateView()
         cvcFormElement.clearTextFields()
         updateFormElement()

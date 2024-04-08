@@ -8,6 +8,7 @@
 ## 23.26.0 2024-03-25
 ### PaymentSheet
 * [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
+* [Changed] Tapping a saved PM/Apple Pay/Link no longer sets it as the default; they are only set as the default after you successfully confirm.
 
 ### CustomerSheet
 * [Fixed] Fixed an issue dismissing the sheet when Link is the default payment method.
