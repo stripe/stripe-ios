@@ -22,7 +22,7 @@ import UIKit
     let imageCacheSemaphore: DispatchSemaphore
 
     var imageCache: [String: UIImage]
-    var urlCache: URLCache?
+    var diskCache: URLCache?
 
     public init(
         urlSessionConfiguration: URLSessionConfiguration = .default
@@ -40,7 +40,7 @@ import UIKit
             )
             configuration.urlCache = cache
             configuration.requestCachePolicy = .useProtocolCachePolicy
-            self.urlCache = cache
+            self.diskCache = cache
         }
 
         session = URLSession(configuration: configuration)
@@ -55,13 +55,11 @@ import UIKit
 extension DownloadManager {
     public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
         // Early exit for cached images
-        let imageName = imageNameFromURL(url: url)
-        if let image = cachedImageNamed(imageName) {
+        if let image = cachedImageNamed(imageNameFromURL(url: url)) {
             return image
         }
 
         let placeholder = placeholder ?? imagePlaceHolder()
-
         // If no `updateHandler` is provided use a blocking method to fetch the image
         guard let updateHandler else {
             return downloadImageBlocking(placeholder: placeholder, url: url)
@@ -70,7 +68,7 @@ extension DownloadManager {
         Task {
            await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
         }
-        // Immediately return a placeholder, when the download operation completes, `updateHandler` will be called with the downloaded image
+        // Immediately return a placeholder, when the download operation completes `updateHandler` will be called with the downloaded image
         return placeholder
     }
 
@@ -81,9 +79,9 @@ extension DownloadManager {
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
 
         do {
-            let (data, response) = try await session.data(from: url)
+            let (data, response) = try await session.data(for: urlRequest)
             let image = try persistToMemory(data, forImageName: imageName) // Throws a Error.failedToMakeImageFromData
-            urlCache?.storeCachedResponse(CachedURLResponse(response: response, data: data), for: urlRequest)
+            diskCache?.storeCachedResponse(CachedURLResponse(response: response, data: data), for: urlRequest)
             return image
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
@@ -129,7 +127,7 @@ extension DownloadManager {
     }
 
     func resetDiskCache() {
-        self.urlCache?.removeAllCachedResponses()
+        self.diskCache?.removeAllCachedResponses()
     }
 
     func persistToMemory(_ imageData: Data, forImageName imageName: String) throws -> UIImage {
