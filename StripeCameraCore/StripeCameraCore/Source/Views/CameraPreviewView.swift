@@ -49,7 +49,7 @@ import UIKit
         return AVCaptureVideoPreviewLayer.self
     }
     
-    public var = 888
+    public var xyz = 888
 
     // MARK: Internal
 
