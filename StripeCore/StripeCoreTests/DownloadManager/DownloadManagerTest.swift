@@ -273,42 +273,11 @@ class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertEqual(img1, "icon1.png")
     }
 
-    func test_nil_AddUpdateHandlerWithoutLocking_unableToAddEmptyBlock() {
-        rm.addUpdateHandlerWithoutLocking(nil, forImageName: "imgName1")
-        XCTAssert(rm.updateHandlers.isEmpty)
-    }
-
-    func test_AddUpdateHandlerWithoutLocking_appends() {
-        let expect1 = expectation(description: "first")
-        let expect2 = expectation(description: "second")
-        let updateHandler1: DownloadManager.UpdateImageHandler = { _ in expect1.fulfill() }
-        let updateHandler2: DownloadManager.UpdateImageHandler = { _ in expect2.fulfill() }
-
-        rm.addUpdateHandlerWithoutLocking(updateHandler1, forImageName: "imgName1")
-        rm.addUpdateHandlerWithoutLocking(updateHandler2, forImageName: "imgName1")
-
-        guard let firstHandler = rm.updateHandlers["imgName1"]?.first,
-            let lastHandler = rm.updateHandlers["imgName1"]?.last
-        else {
-            XCTFail("Unable to get handlers")
-            return
-        }
-
-        firstHandler(UIImage())
-        lastHandler(UIImage())
-
-        wait(for: [expect1], timeout: 1.0)
-        wait(for: [expect2], timeout: 1.0)
-    }
-
-    func test_persistToMemory() {
+    func test_persistToMemory() throws {
         XCTAssertNil(rm.cachedImageNamed("imgName"))
 
         let validImageData = validImageData()
-        guard let image = rm.persistToMemory(validImageData, forImageName: "imgName") else {
-            XCTFail("Failed to persist to memory")
-            return
-        }
+        let image = try rm.persistToMemory(validImageData, forImageName: "imgName")
 
         XCTAssertEqual(image.size, validImageSize)
         XCTAssertNotNil(rm.imageCache["imgName"])
