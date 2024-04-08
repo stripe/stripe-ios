@@ -75,6 +75,7 @@ final class LinkAccountPickerBodyView: UIView {
                 self.delegate?.linkAccountPickerBodyViewSelectedNewBankAccount(self)
             }
         )
+        newAccountRowView.accessibilityIdentifier = "add_bank_account"
         verticalStackView.addArrangedSubview(newAccountRowView)
 
         addAndPinSubview(verticalStackView)
@@ -84,11 +85,12 @@ final class LinkAccountPickerBodyView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func selectAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple?) {
+    func selectAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {
+        let selectedAccountIds = Set(selectedAccounts.map({ $0.partnerAccount.id }))
         partnerAccountIdToRowView
             .forEach { (partnerAccountId: String, rowView: AccountPickerRowView) in
                 rowView.set(
-                    isSelected: selectedAccountTuple?.partnerAccount.id == partnerAccountId
+                    isSelected: selectedAccountIds.contains(partnerAccountId)
                 )
             }
     }
@@ -196,7 +198,7 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
     }
 
     func updateUIView(_ uiView: LinkAccountPickerBodyView, context: Context) {
-        uiView.selectAccount(nil)
+        uiView.selectAccounts([])
     }
 }
 

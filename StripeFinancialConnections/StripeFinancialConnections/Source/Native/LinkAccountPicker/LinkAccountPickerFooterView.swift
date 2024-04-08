@@ -24,6 +24,7 @@ final class LinkAccountPickerFooterView: UIView {
         NSLayoutConstraint.activate([
             connectAccountButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        connectAccountButton.accessibilityIdentifier = "connect_accounts_button"
         return connectAccountButton
     }()
 
@@ -76,14 +77,16 @@ final class LinkAccountPickerFooterView: UIView {
         didSelectConnectAccount()
     }
 
-    func didSelectedAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple?) {
-        if let selectionCta = selectedAccountTuple?.accountPickerAccount.selectionCta {
+    func didSelectAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {
+        if
+            singleAccount,
+            let selectionCta = selectedAccounts.first?.accountPickerAccount.selectionCta
+        {
             connectAccountButton.title = selectionCta
         } else {
             connectAccountButton.title = defaultCta
         }
-
-        connectAccountButton.isEnabled = selectedAccountTuple != nil
+        connectAccountButton.isEnabled = !selectedAccounts.isEmpty
     }
 
     func showLoadingView(_ show: Bool) {

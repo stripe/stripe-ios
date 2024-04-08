@@ -587,7 +587,7 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: timeout)
-        app.buttons["account_picker_link_accounts_button"].tap()
+        app.buttons["connect_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
@@ -631,7 +631,7 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: timeout)
-        app.buttons["account_picker_link_accounts_button"].tap()
+        app.buttons["connect_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
@@ -715,7 +715,7 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: timeout)
-        app.buttons["account_picker_link_accounts_button"].tap()
+        app.buttons["connect_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
