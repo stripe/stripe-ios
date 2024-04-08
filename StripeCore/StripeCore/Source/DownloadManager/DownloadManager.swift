@@ -38,7 +38,6 @@ import UIKit
                 diskCapacity: 30_000_000,
                 directory: diskCacheURL
             )
-
             configuration.urlCache = cache
             configuration.requestCachePolicy = .useProtocolCachePolicy
             self.urlCache = cache
