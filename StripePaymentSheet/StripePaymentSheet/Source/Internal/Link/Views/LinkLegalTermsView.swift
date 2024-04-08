@@ -6,8 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+
 import UIKit
 
 protocol LinkLegalTermsViewDelegate: AnyObject {
@@ -109,24 +111,7 @@ final class LinkLegalTermsView: UIView {
                 )
             }
         }()
-
-        let formattedString = NSMutableAttributedString()
-
-        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) { string, matches in
-            formattedString.append(NSAttributedString(string: string))
-
-            for (tag, range) in matches {
-                guard range.rangeValue.location != NSNotFound else {
-                    assertionFailure("Tag '<\(tag)>' not found")
-                    continue
-                }
-
-                if let url = links[tag] {
-                    formattedString.addAttributes([.link: url], range: range.rangeValue)
-                }
-            }
-        }
-
+        let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(
             fromRelativeHeight: Constants.lineHeight,
@@ -141,6 +126,9 @@ final class LinkLegalTermsView: UIView {
 }
 
 extension LinkLegalTermsView: UITextViewDelegate {
+    enum Error: Swift.Error {
+        case linkLegalTermsViewUITextViewDelegate
+    }
 
 #if !canImport(CompositorServices)
     func textView(
@@ -155,7 +143,11 @@ extension LinkLegalTermsView: UITextViewDelegate {
         }
 
         let handled = delegate?.legalTermsView(self, didTapOnLinkWithURL: URL) ?? false
-        assert(handled, "Link not handled by delegate")
+
+        let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                          error: Error.linkLegalTermsViewUITextViewDelegate)
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        stpAssert(handled, "Link not handled by delegate")
 
         // If not handled by the delegate, let the system handle the link.
         return !handled
