@@ -203,7 +203,6 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         paymentHandler.analyticsClient = analyticsClient
         paymentHandler.confirmPayment(paymentIntentParams, with: self) { (_, _, _) in
             // ...should send these analytics
-            paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "pi_3P20wFFY0qyl6XeW0dSOQ6W7")
@@ -215,6 +214,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["payment_method_type"] as? String, "card")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "payment_intent_unexpected_state")
+            paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }
@@ -230,7 +230,6 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         paymentHandler.analyticsClient = analyticsClient
         paymentHandler.confirmSetupIntent(setupIntentParams, with: self) { (_, _, _) in
             // ...should send these analytics
-            paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "seti_1P1xLBFY0qyl6XeWc7c2LrMK")
@@ -242,6 +241,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["payment_method_type"] as? String, "card")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "parameter_missing")
+            paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }
@@ -254,7 +254,6 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         paymentHandler.analyticsClient = analyticsClient
         paymentHandler.handleNextAction(forPayment: "pi_3P232pFY0qyl6XeW0FFRtE0A_secret_foo", with: self, returnURL: nil) { (_, _, _) in
             // ...should send these analytics
-            paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "pi_3P232pFY0qyl6XeW0FFRtE0A")
@@ -264,6 +263,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "payment_intent_invalid_parameter")
+            paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }
@@ -280,7 +280,6 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         paymentHandler.analyticsClient = analyticsClient
         paymentHandler.handleNextAction(for: paymentIntent, with: self, returnURL: nil) { (_, _, _) in
             // ...should send these analytics
-            paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "pi_1Cl15wIl4IdHmuTbCWrpJXN6")
@@ -290,6 +289,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "STPPaymentHandlerErrorDomain")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "0")
+            paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }
@@ -302,7 +302,6 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         paymentHandler.analyticsClient = analyticsClient
         paymentHandler.handleNextAction(forSetupIntent: "seti_3P232pFY0qyl6XeW0FFRtE0A_secret_foo", with: self, returnURL: nil) { (_, _, _) in
             // ...should send these analytics
-            paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "seti_3P232pFY0qyl6XeW0FFRtE0A")
@@ -312,6 +311,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "resource_missing")
+            paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }
@@ -330,7 +330,6 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         paymentHandler.analyticsClient = analyticsClient
         paymentHandler.handleNextAction(for: setupIntent, with: self, returnURL: nil) { (_, _, _) in
             // ...should send these analytics
-            paymentHandlerExpectation.fulfill()
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "seti_123456789")
@@ -340,6 +339,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "STPPaymentHandlerErrorDomain")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "0")
+            paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }

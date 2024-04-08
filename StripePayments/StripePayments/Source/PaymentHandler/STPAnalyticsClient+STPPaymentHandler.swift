@@ -51,12 +51,12 @@ extension STPPaymentHandler {
 
     // MARK: - Confirm completed
 
-    func logConfirmPaymentIntentCompleted(paymentIntentID: String?, paymentIntent: STPPaymentIntent?, status: STPPaymentHandlerActionStatus, paymentMethodType: STPPaymentMethodType?, error: Error?) {
+    func logConfirmPaymentIntentCompleted(paymentIntentID: String?, status: STPPaymentHandlerActionStatus, paymentMethodType: STPPaymentMethodType?, error: Error?) {
         let analytic = Analytic(event: .paymentHandlerConfirmFinished, intentID: paymentIntentID, status: status, paymentMethodType: paymentMethodType?.identifier, error: error)
         analyticsClient.log(analytic: analytic, apiClient: apiClient)
     }
 
-    func logConfirmSetupIntentCompleted(setupIntentID: String?, setupIntent: STPSetupIntent?, status: STPPaymentHandlerActionStatus, paymentMethodType: STPPaymentMethodType?, error: Error?) {
+    func logConfirmSetupIntentCompleted(setupIntentID: String?, status: STPPaymentHandlerActionStatus, paymentMethodType: STPPaymentMethodType?, error: Error?) {
         let analytic = Analytic(event: .paymentHandlerConfirmFinished, intentID: setupIntentID, status: status, paymentMethodType: paymentMethodType?.identifier, error: error)
         analyticsClient.log(analytic: analytic, apiClient: apiClient)
     }

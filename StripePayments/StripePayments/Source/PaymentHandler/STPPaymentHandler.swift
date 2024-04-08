@@ -175,7 +175,7 @@ public class STPPaymentHandler: NSObject {
         logConfirmPaymentIntentStarted(paymentIntentID: paymentIntentID, paymentParams: paymentParams)
         // Overwrite completion to send an analytic before calling the caller-supplied completion
         let completion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self] status, paymentIntent, error in
-            self?.logConfirmPaymentIntentCompleted(paymentIntentID: paymentIntentID, paymentIntent: paymentIntent, status: status, paymentMethodType: paymentParams.paymentMethodType, error: error)
+            self?.logConfirmPaymentIntentCompleted(paymentIntentID: paymentIntentID, status: status, paymentMethodType: paymentParams.paymentMethodType, error: error)
             completion(status, paymentIntent, error)
         }
         if Self.inProgress {
@@ -454,7 +454,7 @@ public class STPPaymentHandler: NSObject {
         logConfirmSetupIntentStarted(setupIntentID: setupIntentID, confirmParams: setupIntentConfirmParams)
         // Overwrite completion to send an analytic before calling the caller-supplied completion
         let completion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self] status, setupIntent, error in
-            self?.logConfirmSetupIntentCompleted(setupIntentID: setupIntentID, setupIntent: setupIntent, status: status, paymentMethodType: setupIntentConfirmParams.paymentMethodType, error: error)
+            self?.logConfirmSetupIntentCompleted(setupIntentID: setupIntentID, status: status, paymentMethodType: setupIntentConfirmParams.paymentMethodType, error: error)
             completion(status, setupIntent, error)
         }
 
