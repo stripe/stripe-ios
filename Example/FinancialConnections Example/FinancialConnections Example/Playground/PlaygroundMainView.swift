@@ -83,16 +83,16 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
 
                     // (enable step-up verification)
                     Section(header: Text("PERMISSIONS")) {
-                        Toggle("Balances", isOn: $viewModel.enableBalancesPermission)
+                        Toggle("Balances", isOn: viewModel.balancesPermission)
                             .accessibility(identifier: "playground-balances-permission")
 
-                        Toggle("Ownership", isOn: $viewModel.enableOwnershipPermission)
+                        Toggle("Ownership", isOn: viewModel.ownershipPermission)
                             .accessibility(identifier: "playground-ownership-permission")
 
-                        Toggle("Payment Method", isOn: .constant(false))
+                        Toggle("Payment Method", isOn: viewModel.paymentMethodPermission)
                             .accessibility(identifier: "playground-payment-method-permission")
 
-                        Toggle("Transactions", isOn: $viewModel.enableTransactionsPermission)
+                        Toggle("Transactions", isOn: viewModel.transactionsdPermission)
                             .accessibility(identifier: "playground-transactions-permission")
                     }
 

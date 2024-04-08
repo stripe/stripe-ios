@@ -267,6 +267,61 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Permissions
+
+    private static let balancesPermissionKey = "balances_permission"
+    var balancesPermission: Bool {
+        get {
+            if let balancesPermission = configurationJSON[Self.balancesPermissionKey] as? Bool {
+                return balancesPermission
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationJSON[Self.balancesPermissionKey] = newValue
+        }
+    }
+    private static let ownershipPermissionKey = "ownership_permission"
+    var ownershipPermission: Bool {
+        get {
+            if let ownershipPermission = configurationJSON[Self.ownershipPermissionKey] as? Bool {
+                return ownershipPermission
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationJSON[Self.ownershipPermissionKey] = newValue
+        }
+    }
+    private static let paymentMethodPermissionKey = "payment_method_permission"
+    var paymentMethodPermission: Bool {
+        get {
+            if let paymentMethodPermission = configurationJSON[Self.paymentMethodPermissionKey] as? Bool {
+                return paymentMethodPermission
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationJSON[Self.paymentMethodPermissionKey] = newValue
+        }
+    }
+    private static let transactionsPermissionKey = "transactions_permission"
+    var transactionsPermission: Bool {
+        get {
+            if let transactionsPermission = configurationJSON[Self.transactionsPermissionKey] as? Bool {
+                return transactionsPermission
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationJSON[Self.transactionsPermissionKey] = newValue
+        }
+    }
+
     // MARK: - Other
 
     func setupWithConfigurationJSONString(_ configurationJSONString: String) {
@@ -324,12 +379,31 @@ final class PlaygroundConfiguration {
             self.useCase = .data
         }
 
-        if
-            let email = dictionary[Self.emailKey] as? String
-        {
+        if let email = dictionary[Self.emailKey] as? String {
             self.email = email
         } else {
             self.email = ""
+        }
+
+        if let balancesPermission = dictionary[Self.balancesPermissionKey] as? Bool {
+            self.balancesPermission = balancesPermission
+        } else {
+            self.balancesPermission = false
+        }
+        if let ownershipPermission = dictionary[Self.ownershipPermissionKey] as? Bool {
+            self.ownershipPermission = ownershipPermission
+        } else {
+            self.ownershipPermission = false
+        }
+        if let paymentMethodPermission = dictionary[Self.paymentMethodPermissionKey] as? Bool {
+            self.paymentMethodPermission = paymentMethodPermission
+        } else {
+            self.paymentMethodPermission = true
+        }
+        if let transactionsPermission = dictionary[Self.transactionsPermissionKey] as? Bool {
+            self.transactionsPermission = transactionsPermission
+        } else {
+            self.transactionsPermission = false
         }
     }
 }

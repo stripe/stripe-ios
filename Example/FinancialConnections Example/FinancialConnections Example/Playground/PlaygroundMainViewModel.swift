@@ -117,73 +117,49 @@ final class PlaygroundMainViewModel: ObservableObject {
         )
     }
 
-    @Published var enableNative: Bool? = PlaygroundUserDefaults.enableNative {
-        didSet {
-            PlaygroundUserDefaults.enableNative = enableNative
-        }
-    }
-
-    @Published var enableNetworkingMultiSelect: Bool = PlaygroundUserDefaults.enableNetworkingMultiSelect {
-        didSet {
-            PlaygroundUserDefaults.enableNetworkingMultiSelect = enableNetworkingMultiSelect
-        }
-    }
-
-    @Published var enableOwnershipPermission: Bool = PlaygroundUserDefaults.enableOwnershipPermission {
-        didSet {
-            PlaygroundUserDefaults.enableOwnershipPermission = enableOwnershipPermission
-        }
-    }
-
-    @Published var enableBalancesPermission: Bool = PlaygroundUserDefaults.enableBalancesPermission {
-        didSet {
-            PlaygroundUserDefaults.enableBalancesPermission = enableBalancesPermission
-        }
-    }
-
-    @Published var enableTransactionsPermission: Bool = PlaygroundUserDefaults.enableTransactionsPermission {
-        didSet {
-            PlaygroundUserDefaults.enableTransactionsPermission = enableTransactionsPermission
-        }
-    }
-
-    enum CustomScenario: String, CaseIterable, Identifiable {
-        case none = "none"
-        case customKeys = "custom_keys"
-        case partnerD = "partner_d"
-        case partnerF = "partner_f"
-        case partnerM = "partner_m"
-        case appToApp = "app_to_app"
-        /// Used for random bug bashes and could changes any time
-        case bugBash = "bug_bash"
-
-        var id: String {
-            return rawValue
-        }
-
-        var displayName: String {
-            switch self {
-            case .none:
-                return "Default"
-            case .customKeys:
-                return "Custom Keys"
-            case .partnerD:
-                return "Partner D"
-            case .partnerF:
-                return "Partner F"
-            case .partnerM:
-                return "Partner M"
-            case .appToApp:
-                return "App to App (Chase)"
-            case .bugBash:
-                return "Bug Bash"
+    var balancesPermission: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.balancesPermission
+            },
+            set: {
+                self.playgroundConfiguration.balancesPermission = $0
+                self.objectWillChange.send()
             }
-        }
+        )
     }
-    @Published var customScenario: CustomScenario = CustomScenario(rawValue: PlaygroundUserDefaults.customScenario) ?? .none {
-        didSet {
-            PlaygroundUserDefaults.customScenario = customScenario.rawValue
-        }
+    var ownershipPermission: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.ownershipPermission
+            },
+            set: {
+                self.playgroundConfiguration.ownershipPermission = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+    var paymentMethodPermission: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.paymentMethodPermission
+            },
+            set: {
+                self.playgroundConfiguration.paymentMethodPermission = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+    var transactionsdPermission: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.transactionsPermission
+            },
+            set: {
+                self.playgroundConfiguration.transactionsPermission = $0
+                self.objectWillChange.send()
+            }
+        )
     }
 
     @Published var showLiveEvents: Bool = PlaygroundUserDefaults.showLiveEvents {
@@ -217,11 +193,11 @@ final class PlaygroundMainViewModel: ObservableObject {
             enableTestMode: false,
             flow: flow.rawValue,
             email: "",
-            enableNetworkingMultiSelect: enableNetworkingMultiSelect,
-            enableOwnershipPermission: enableOwnershipPermission,
-            enableBalancesPermission: enableBalancesPermission,
-            enableTransactionsPermission: enableTransactionsPermission,
-            customScenario: customScenario.rawValue,
+            enableNetworkingMultiSelect: false,
+            enableOwnershipPermission: false,
+            enableBalancesPermission: false,
+            enableTransactionsPermission: false,
+            customScenario: "",
             customPublicKey: "",
             customSecretKey: ""
         ) { [weak self] setupPlaygroundResponse in
@@ -339,12 +315,17 @@ private func SetupPlayground(
         ) { data, response, error in
             if error == nil,
                 let response = response as? HTTPURLResponse,
-                response.statusCode == 200,
                 let data = data,
                 let responseJson = try? JSONDecoder().decode([String: String].self, from: data)
             {
-                DispatchQueue.main.async {
-                    completionHandler(responseJson)
+                if response.statusCode == 200 {
+                    DispatchQueue.main.async {
+                        completionHandler(responseJson)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        completionHandler(responseJson)
+                    }
                 }
             } else {
                 DispatchQueue.main.async {
@@ -360,6 +341,16 @@ private func PresentFinancialConnectionsSheet(
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {
+    if let error = setupPlaygroundResponseJSON["error"] {
+        completionHandler(
+            .failed(
+                error: FinancialConnectionsSheetError.unknown(
+                    debugDescription: error
+                )
+            )
+        )
+        return
+    }
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
         completionHandler(
             .failed(
