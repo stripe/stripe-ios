@@ -48,6 +48,8 @@ import UIKit
     public override class var layerClass: AnyClass {
         return AVCaptureVideoPreviewLayer.self
     }
+    
+    public var = 888
 
     // MARK: Internal
 
