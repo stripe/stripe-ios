@@ -152,6 +152,11 @@ final class PlaygroundConfiguration {
             isTestModeSupported: true
         ),
         Merchant(
+            customId: "networking",
+            displayName: "Networking",
+            isTestModeSupported: true
+        ),
+        Merchant(
             customId: "custom-keys",
             displayName: "Custom Keys",
             isTestModeSupported: false
@@ -246,6 +251,22 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Customer
+
+    private static let emailKey = "email"
+    var email: String {
+        get {
+            if let email = configurationJSON[Self.emailKey] as? String {
+                return email
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationJSON[Self.emailKey] = newValue
+        }
+    }
+
     // MARK: - Other
 
     func setupWithConfigurationJSONString(_ configurationJSONString: String) {
@@ -301,6 +322,14 @@ final class PlaygroundConfiguration {
             self.useCase = useCase
         } else {
             self.useCase = .data
+        }
+
+        if
+            let email = dictionary[Self.emailKey] as? String
+        {
+            self.email = email
+        } else {
+            self.email = ""
         }
     }
 }

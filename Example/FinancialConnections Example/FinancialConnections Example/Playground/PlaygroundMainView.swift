@@ -75,7 +75,7 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                     }
 
                     Section(header: Text("Customer")) {
-                        TextField("Email (ex. existing Link consumer)", text: $viewModel.email)
+                        TextField("Email (ex. existing Link consumer)", text: viewModel.email)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .accessibility(identifier: "playground-email")
@@ -83,11 +83,11 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
 
                     // (enable step-up verification)
                     Section(header: Text("PERMISSIONS")) {
-                        Toggle("Ownership", isOn: $viewModel.enableOwnershipPermission)
-                            .accessibility(identifier: "playground-ownership-permission")
-
                         Toggle("Balances", isOn: $viewModel.enableBalancesPermission)
                             .accessibility(identifier: "playground-balances-permission")
+
+                        Toggle("Ownership", isOn: $viewModel.enableOwnershipPermission)
+                            .accessibility(identifier: "playground-ownership-permission")
 
                         Toggle("Payment Method", isOn: .constant(false))
                             .accessibility(identifier: "playground-payment-method-permission")

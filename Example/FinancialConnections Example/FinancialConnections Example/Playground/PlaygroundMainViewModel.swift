@@ -28,9 +28,9 @@ final class PlaygroundMainViewModel: ObservableObject {
     @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow) ?? .data {
         didSet {
             PlaygroundUserDefaults.flow = flow.rawValue
-            if flow != .networking {
-                email = ""
-            }
+//            if flow != .networking {
+//                email = ""
+//            }
         }
     }
 
@@ -105,15 +105,21 @@ final class PlaygroundMainViewModel: ObservableObject {
         )
     }
 
+    var email: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.email
+            },
+            set: {
+                self.playgroundConfiguration.email = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     @Published var enableNative: Bool? = PlaygroundUserDefaults.enableNative {
         didSet {
             PlaygroundUserDefaults.enableNative = enableNative
-        }
-    }
-
-    @Published var email: String = PlaygroundUserDefaults.email {
-        didSet {
-            PlaygroundUserDefaults.email = email
         }
     }
 
@@ -210,7 +216,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             configurationDictionary: playgroundConfiguration.configurationJSONDictionary,
             enableTestMode: false,
             flow: flow.rawValue,
-            email: email,
+            email: "",
             enableNetworkingMultiSelect: enableNetworkingMultiSelect,
             enableOwnershipPermission: enableOwnershipPermission,
             enableBalancesPermission: enableBalancesPermission,
