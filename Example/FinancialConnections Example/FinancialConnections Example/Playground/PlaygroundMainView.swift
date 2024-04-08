@@ -102,6 +102,21 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                         Button(action: viewModel.didSelectClearCaches) {
                             Text("Clear Cache (requests, images etc.)")
                         }
+
+                        Button(
+                            action: {
+                                viewModel.showConfigurationView = true
+                            }
+                        ) {
+                            Text("Manage Configuration")
+                        }
+                        .sheet(isPresented: $viewModel.showConfigurationView) {
+                            NavigationView {
+                                PlaygroundConfigurationView(
+                                    viewModel: viewModel.playgroundConfigurationViewModel
+                                )
+                            }
+                        }
                     }
 
                     // extra space so keyboard doesn't cover the "CUSTOM KEYS" section
@@ -133,12 +148,16 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                 EmptyView()
             }
         }
+        .navigationTitle("Playground")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 @available(iOS 14.0, *)
 struct PlaygroundMainView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaygroundMainView()
+        NavigationView {
+            PlaygroundMainView()
+        }
     }
 }

@@ -7,9 +7,9 @@
 
 import Foundation
 
-private final class PlaygroundConfigurationJSON {
+class PlaygroundConfigurationJSON {
 
-    private static var configurationJSONStringDefaultValue = "{}"
+    static let configurationJSONStringDefaultValue = "{}"
 
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_CONFIGURATION_JSON_STRING",
@@ -100,6 +100,7 @@ final class PlaygroundConfiguration {
     private init() {
         // setup defaults if this is the first time initializing
         setupWithConfigurationJSONString(configurationJSONString)
+
     }
 
     // MARK: - SDK Type
@@ -330,6 +331,7 @@ final class PlaygroundConfiguration {
             let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: []),
             let dictionary = jsonObject as? [String: Any]
         else {
+            // this prevents anyone from overriding the configuration with something wrong
             return
         }
 

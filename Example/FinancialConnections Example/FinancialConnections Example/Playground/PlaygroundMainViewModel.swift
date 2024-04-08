@@ -168,7 +168,19 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var showConfigurationView = false
+    private(set) lazy var playgroundConfigurationViewModel: PlaygroundConfigurationViewModel = {
+       return PlaygroundConfigurationViewModel(
+        playgroundConfiguration: playgroundConfiguration,
+        didSelectClose: { [weak self] in
+            self?.showConfigurationView = false
+        }
+       )
+    }()
+
     @Published var isLoading: Bool = false
+
+    private var cancellables: Set<AnyCancellable> = []
 
     init() {
 //        self.nativeSelection = {
@@ -179,7 +191,12 @@ final class PlaygroundMainViewModel: ObservableObject {
 //            }
 //        }()
         print(PlaygroundConfiguration.shared.configurationJSONString)
-
+        playgroundConfigurationViewModel
+            .objectWillChange
+            .sink { [weak self] in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
     }
 
     func didSelectShow() {
