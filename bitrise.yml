@@ -50,21 +50,21 @@ stages:
     - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
-    # - framework-tests: {}
-    # - test-builds-xcode-15: {}
-    # - test-builds-vision: {}
-    # - deploy-docs: {}
-    # - install-tests-non-carthage: {}
-    # - lint-tests: {}
-    # - size-report: {}
-    # - basic-integration-tests: {}
-    # - ui-tests-1: {}
-    # - ui-tests-2: {}
-    # - legacy-tests-15: {}
-    # - legacy-tests-16: {}
-    # - carthage-install-test: {}
+    - framework-tests: {}
+    - test-builds-xcode-15: {}
+    - test-builds-vision: {}
+    - deploy-docs: {}
+    - install-tests-non-carthage: {}
+    - lint-tests: {}
+    - size-report: {}
+    - basic-integration-tests: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
+    - legacy-tests-15: {}
+    - legacy-tests-16: {}
+    - carthage-install-test: {}
     - pod-lint-tests: {}
-    # - integration-all: {}
+    - integration-all: {}
   stage-nightly-all:
     workflows:
     - basic-integration-tests: {}
@@ -514,10 +514,6 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: pod repo update
-        title: Update Pod Repo
-    - script@1:
-        inputs:
         - content: pod lib lint --include-podspecs='*.podspec'
         title: pod lib lint
     before_run:
@@ -547,7 +543,7 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: "1"
-    # - cache-pull@2: {}
+    - cache-pull@2: {}
     - bundler@0: {}
     - cache-push@2:
         inputs:
