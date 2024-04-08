@@ -244,7 +244,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let sessionID = analyticsLog.first![string: "session_id"]
         XCTAssertTrue(!sessionID!.isEmpty)
         for analytic in analyticsLog {
-            if analytic[string: "event"] == "stripeios.payment_intent_confirmation" {
+            if analytic[string: "event"]!.starts(with: "stripeios.") {
                 continue
             }
             XCTAssertEqual(analytic[string: "session_id"], sessionID)
@@ -1459,8 +1459,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
         XCTAssertEqual(
-            analyticsLog.suffix(6).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.payment_intent_confirmation", "mc_complete_payment_newpm_success"]
+            analyticsLog.suffix(8).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         // Make sure they all have the same session id
