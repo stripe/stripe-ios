@@ -28,10 +28,10 @@ def check_spi_protection(file)
     elsif line =~ /(public\s+|open\s+)?(class|struct|enum|protocol)\s+\w+/ && opening_braces > 0 && !in_spi_protected_block
       in_spi_protected_block = false
       if added_lines.include?(line) && !previous_line_spi_annotated
-        public_items << (File.basename(file) + ": " + line.lstrip.chomp('{').rstrip)
+        public_items << (File.basename(file) + ": " + line.lstrip.chomp('}').chomp('{').rstrip)
       end
     elsif added_lines.include?(line) && line =~ /(public\s+|open\s+)[a-z]+\s+\w+/ && !in_spi_protected_block && !previous_line_spi_annotated
-      public_items << (File.basename(file) + ": " + line.lstrip.chomp('{').rstrip)
+      public_items << (File.basename(file) + ": " + line.lstrip.chomp('}').chomp('{').rstrip)
     end
 
     previous_line_spi_annotated = line.match?(/@_spi\(\w+\)(?!\s*\w+)/)
