@@ -632,9 +632,15 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
-        nextPane: FinancialConnectionsSessionManifest.NextPane
+        nextPane: FinancialConnectionsSessionManifest.NextPane,
+        customSuccessPaneMessage: String?,
+        saveToLinkWithStripeSucceeded: Bool?
     ) {
         dataManager.linkedAccounts = selectedAccounts
+        dataManager.customSuccessPaneMessage = customSuccessPaneMessage
+        if let saveToLinkWithStripeSucceeded {
+            dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
+        }
 
         // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
         //
@@ -893,18 +899,9 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
-        dataManager.linkedAccounts = [selectedAccount]
-    }
-
-    func linkAccountPickerViewController(
-        _ viewController: LinkAccountPickerViewController,
-        didRequestSuccessPaneWithInstitution institution: FinancialConnectionsInstitution
-    ) {
-        assert(dataManager.linkedAccounts?.count == 1, "expected a selected account to be set")
-        dataManager.institution = institution
-        pushPane(.success, animated: true)
+        dataManager.linkedAccounts = selectedAccounts
     }
 
     func linkAccountPickerViewController(
@@ -942,11 +939,13 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
-        saveToLinkWithStripeSucceeded: Bool?
+        saveToLinkWithStripeSucceeded: Bool?,
+        customSuccessPaneMessage: String?
     ) {
         if saveToLinkWithStripeSucceeded != nil {
             dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
         }
+        dataManager.customSuccessPaneMessage = customSuccessPaneMessage
         pushPane(.success, animated: true)
     }
 
@@ -1023,7 +1022,8 @@ private func CreatePaneViewController(
                 institution: institution,
                 analyticsClient: dataManager.analyticsClient,
                 reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors,
-                dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice
+                dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice,
+                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = nativeFlowController
@@ -1127,10 +1127,10 @@ private func CreatePaneViewController(
         manualEntryViewController.delegate = nativeFlowController
         viewController = manualEntryViewController
     case .networkingLinkSignupPane:
-        if let linkedAccountIds = dataManager.linkedAccounts?.map({ $0.id }) {
+        if let selectedAccounts = dataManager.linkedAccounts {
             let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
                 manifest: dataManager.manifest,
-                selectedAccountIds: linkedAccountIds,
+                selectedAccounts: selectedAccounts,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
@@ -1164,12 +1164,12 @@ private func CreatePaneViewController(
     case .networkingSaveToLinkVerification:
         if
             let consumerSession = dataManager.consumerSession,
-            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+            let selectedAccounts = dataManager.linkedAccounts
         {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
                 manifest: dataManager.manifest,
                 consumerSession: consumerSession,
-                selectedAccountId: selectedAccountId,
+                selectedAccounts: selectedAccounts,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient
@@ -1186,11 +1186,11 @@ private func CreatePaneViewController(
     case .networkingLinkStepUpVerification:
         if
             let consumerSession = dataManager.consumerSession,
-            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+            let selectedAccountIds = dataManager.linkedAccounts?.map({ $0.id })
         {
             let networkingLinkStepUpVerificationDataSource = NetworkingLinkStepUpVerificationDataSourceImplementation(
                 consumerSession: consumerSession,
-                selectedAccountId: selectedAccountId,
+                selectedAccountIds: selectedAccountIds,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,

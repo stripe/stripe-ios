@@ -53,6 +53,9 @@ public enum PaymentSheetError: Error, LocalizedError {
     case failedToCreateLinkSession
     case linkNotAuthorized
 
+    // MARK: - Confirmation errors
+    case unexpectedNewPaymentMethod
+
     public var errorDescription: String? {
         return NSError.stp_unexpectedErrorMessage()
     }
@@ -120,6 +123,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "failedToCreateLinkSession"
         case .linkNotAuthorized:
             return "linkNotAuthorized"
+        case .unexpectedNewPaymentMethod:
+            return "unexpectedNewPaymentMethod"
         }
     }
 
@@ -182,6 +187,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "confirm called without authorizing Link"
             case .setupIntentClientSecretProviderNil:
                 return "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil"
+            case .unexpectedNewPaymentMethod:
+                return "New payment method should not have been created yet"
             }
         }()
 

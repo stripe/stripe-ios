@@ -60,6 +60,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         lastScanningInstructionText = nil
         lastScanningInstructionTextUpdate = Date.distantPast
     }
+    private var resetScanningInstructionTextTimer: Timer?
 
     var viewModel: DocumentCaptureView.ViewModel {
         switch imageScanningSession.state {
@@ -82,6 +83,11 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 newScanningInstructionText = scanningInstructionText(for: documentSide, documentScannerOutput: documentScannerOutput)
                 lastScanningInstructionText = newScanningInstructionText
                 lastScanningInstructionTextUpdate = now
+
+                resetScanningInstructionTextTimer?.invalidate()
+                resetScanningInstructionTextTimer  = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
+                    self?.updateUI()
+                }
             } else {
                 if let lastScanningInstructionText {
                     newScanningInstructionText = lastScanningInstructionText

@@ -38,7 +38,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         featuredLegacyTestInstitution.tap()
 
         app.fc_nativePrepaneContinueButton.tap()
-        app.fc_nativeAccountPickerLinkAccountsButton.tap()
+        app.fc_nativeConnectAccountsButton.tap()
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -69,7 +69,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(successAccountRow.waitForExistence(timeout: 60.0))
         successAccountRow.tap()
 
-        app.fc_nativeAccountPickerLinkAccountsButton.tap()
+        app.fc_nativeConnectAccountsButton.tap()
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -332,11 +332,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
 
-        let searchBarTextField = app
-            .tables
-            .otherElements
-            .textFields["search_bar_text_field"]
-        XCTAssertTrue(searchBarTextField.waitForExistence(timeout: 120.0))
+        let searchBarTextField = app.fc_searchBarTextField
         searchBarTextField.tap()
         searchBarTextField.typeText("Bank of America")
 
