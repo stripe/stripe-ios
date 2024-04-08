@@ -99,10 +99,6 @@ extension DownloadManager {
                 let data = self.getDataFromURL(tempURL),
                 let image = self.persistToMemory(data, forImageName: imageName)
             else {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeCoreDownloadManagerError,
-                                                  error: Error.downloadSyncFailure,
-                                                  additionalNonPIIParams: ["url": url.absoluteString])
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 blockingDownloadSemaphore.signal()
                 return
             }
@@ -135,10 +131,6 @@ extension DownloadManager {
                 self?.pendingRequestsSemaphore.wait()
                 self?.pendingRequests.removeValue(forKey: imageName)
                 self?.pendingRequestsSemaphore.signal()
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeCoreDownloadManagerError,
-                                                  error: Error.downloadAsyncFailure,
-                                                  additionalNonPIIParams: ["url": url.absoluteString])
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return
             }
             self.urlCache?.storeCachedResponse(
