@@ -21,16 +21,16 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testDataTestModeOAuthNativeAuthFlow() throws {
-        let app = XCUIApplication.fc_launch()
+        let app = XCUIApplication.fc_launch(
+            configurationJSONString:
+"""
+{"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
 
         app.fc_playgroundCell.tap()
-        app.fc_playgroundDataFlowButton.tap()
-        app.fc_playgroundNativeButton.tap()
-
-        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        enableTestModeSwitch.turnSwitch(on: true)
-
         app.fc_playgroundShowAuthFlowButton.tap()
+
         app.fc_nativeConsentAgreeButton.tap()
 
         let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
@@ -49,16 +49,16 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testPaymentTestModeLegacyNativeAuthFlow() throws {
-        let app = XCUIApplication.fc_launch()
+        let app = XCUIApplication.fc_launch(
+            configurationJSONString:
+"""
+{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
 
         app.fc_playgroundCell.tap()
-        app.fc_playgroundPaymentFlowButton.tap()
-        app.fc_playgroundNativeButton.tap()
-
-        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        enableTestModeSwitch.turnSwitch(on: true)
-
         app.fc_playgroundShowAuthFlowButton.tap()
+
         app.fc_nativeConsentAgreeButton.tap()
 
         let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test Institution"]
@@ -80,15 +80,14 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testPaymentTestModeManualEntryNativeAuthFlow() throws {
-        let app = XCUIApplication.fc_launch()
+        let app = XCUIApplication.fc_launch(
+            configurationJSONString:
+"""
+{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
 
         app.fc_playgroundCell.tap()
-        app.fc_playgroundPaymentFlowButton.tap()
-        app.fc_playgroundNativeButton.tap()
-
-        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        enableTestModeSwitch.turnSwitch(on: true)
-
         app.fc_playgroundShowAuthFlowButton.tap()
 
         let manuallyVerifyLabel = app
@@ -131,16 +130,16 @@ final class FinancialConnectionsUITests: XCTestCase {
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthNativeAuthFlow() throws {
-        let app = XCUIApplication.fc_launch()
+        let app = XCUIApplication.fc_launch(
+            configurationJSONString:
+"""
+{"use_case":"data","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
+"""
+        )
 
         app.fc_playgroundCell.tap()
-        app.fc_playgroundDataFlowButton.tap()
-        app.fc_playgroundNativeButton.tap()
-
-        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        enableTestModeSwitch.turnSwitch(on: false)
-
         app.fc_playgroundShowAuthFlowButton.tap()
+
         app.fc_nativeConsentAgreeButton.tap()
 
         // find + tap an institution; we add extra institutions in case
@@ -225,18 +224,14 @@ final class FinancialConnectionsUITests: XCTestCase {
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthWebAuthFlow() throws {
-        let app = XCUIApplication.fc_launch()
+        let app = XCUIApplication.fc_launch(
+            configurationJSONString:
+"""
+{"use_case":"data","sdk_type":"web","test_mode":false,"merchant":"default","payment_method_permission":true}
+"""
+        )
 
         app.fc_playgroundCell.tap()
-        app.fc_playgroundDataFlowButton.tap()
-
-        let webSegmentPickerButton = app.segmentedControls.buttons["Web"]
-        XCTAssertTrue(webSegmentPickerButton.waitForExistence(timeout: 60.0))
-        webSegmentPickerButton.tap()
-
-        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        enableTestModeSwitch.turnSwitch(on: false)
-
         app.fc_playgroundShowAuthFlowButton.tap()
 
         let consentAgreeButton = app.webViews
@@ -319,17 +314,17 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 60.0))
     }
 
-    func testSearchInLiveModeNativeAuthFlow() throws {
-        let app = XCUIApplication.fc_launch()
+    func testPaymentSearchInLiveModeNativeAuthFlow() throws {
+        let app = XCUIApplication.fc_launch(
+            configurationJSONString:
+"""
+{"use_case":"payment_intent","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
+"""
+        )
 
         app.fc_playgroundCell.tap()
-        app.fc_playgroundPaymentFlowButton.tap()
-        app.fc_playgroundNativeButton.tap()
-
-        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        enableTestModeSwitch.turnSwitch(on: false)
-
         app.fc_playgroundShowAuthFlowButton.tap()
+
         app.fc_nativeConsentAgreeButton.tap()
 
         let searchBarTextField = app.fc_searchBarTextField

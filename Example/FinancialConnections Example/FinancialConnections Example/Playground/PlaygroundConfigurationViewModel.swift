@@ -8,12 +8,12 @@
 import Foundation
 
 final class PlaygroundConfigurationViewModel: ObservableObject {
-    
+
     let playgroundConfiguration: PlaygroundConfiguration
     let didSelectClose: () -> Void
-    
+
     @Published var configurationJSONString: String
-    
+
     init(
         playgroundConfiguration: PlaygroundConfiguration,
         didSelectClose: @escaping () -> Void
@@ -27,12 +27,12 @@ final class PlaygroundConfigurationViewModel: ObservableObject {
         // reset the configuration
         configurationJSONString = playgroundConfiguration.configurationJSONString
     }
-    
+
     func didSelectSaveConfiguration() {
         playgroundConfiguration.setupWithConfigurationJSONString(configurationJSONString)
         loadCurrentConfiguration()
     }
-    
+
     func didSelectResetToDefaults() {
         playgroundConfiguration
             .setupWithConfigurationJSONString(
@@ -40,7 +40,7 @@ final class PlaygroundConfigurationViewModel: ObservableObject {
             )
         loadCurrentConfiguration()
     }
-    
+
     private func loadCurrentConfiguration() {
         configurationJSONString = playgroundConfiguration.configurationJSONString
     }

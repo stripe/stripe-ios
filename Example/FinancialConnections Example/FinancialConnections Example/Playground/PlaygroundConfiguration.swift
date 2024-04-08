@@ -101,6 +101,9 @@ final class PlaygroundConfiguration {
         // setup defaults if this is the first time initializing
         setupWithConfigurationJSONString(configurationJSONString)
 
+        if let configurationJSONString = ProcessInfo.processInfo.environment["configuration_json_string"] {
+            setupWithConfigurationJSONString(configurationJSONString)
+        }
     }
 
     // MARK: - SDK Type
@@ -128,6 +131,15 @@ final class PlaygroundConfiguration {
         }
         set {
             configurationJSON[Self.sdkTypeKey] = newValue.rawValue
+
+            switch newValue {
+            case .automatic:
+                PlaygroundUserDefaults.enableNative = nil
+            case .web:
+                PlaygroundUserDefaults.enableNative = false
+            case .native:
+                PlaygroundUserDefaults.enableNative = true
+            }
         }
     }
 

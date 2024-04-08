@@ -9,12 +9,12 @@ import SwiftUI
 
 @available(iOS 14.0, *)
 struct PlaygroundConfigurationView: View {
-    
+
     @ObservedObject var viewModel: PlaygroundConfigurationViewModel
-    
+
     var body: some View {
         Form {
-            
+
             Section {
                 ZStack {
                     TextEditor(text: $viewModel.configurationJSONString)
@@ -25,7 +25,7 @@ struct PlaygroundConfigurationView: View {
                     Text("Save Configuration")
                 }
             }
-            
+
             Section {
                 Button(action: viewModel.didSelectResetToDefaults) {
                     Text("Reset To Defaults")
