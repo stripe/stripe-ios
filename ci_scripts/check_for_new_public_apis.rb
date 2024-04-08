@@ -23,9 +23,9 @@ def check_spi_protection(file)
     closing_braces = line.count('}')
     
     block_depth += opening_braces - closing_braces
-    if line =~ /@_spi\(\w+\)\s+(public\s+)?(class|struct|enum|protocol)\s+\w+/ && opening_braces > 0
+    if line =~ /@_spi\(\w+\)\s+(public\s+|open\s+)?(class|struct|enum|protocol)\s+\w+/ && opening_braces > 0
       in_spi_protected_block = true
-    elsif line =~ /(public\s+)?(class|struct|enum|protocol)\s+\w+/ && opening_braces > 0
+    elsif line =~ /(public\s+|open\s+)?(class|struct|enum|protocol)\s+\w+/ && opening_braces > 0 && !in_spi_protected_block
       in_spi_protected_block = false
       if added_lines.include?(line) && !previous_line_spi_annotated
         public_items << (File.basename(file) + ": " + line.lstrip.chomp('{').rstrip)
