@@ -90,7 +90,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         super.init()
     }
 
-    private var language = Locale.autoupdatingCurrent.identifier
+    private var language = NSLocale.autoupdatingCurrent.identifier
     private lazy var fraudDetectionData = {
         return FraudDetectionData.shared
     }()

@@ -46,7 +46,7 @@ class AfterpayPriceBreakdownView: UIView {
 
     let locale: Locale
 
-    init(amount: Int, currency: String, locale: Locale = Locale.autoupdatingCurrent, theme: ElementsUITheme = .default) {
+    init(amount: Int, currency: String, locale: Locale = NSLocale.autoupdatingCurrent, theme: ElementsUITheme = .default) {
         self.locale = locale
         self.theme = theme
         super.init(frame: .zero)

@@ -27,12 +27,18 @@
       "parallelizable" : true,
       "skippedTests" : [
         "CustomerSheetSnapshotTests",
-        "CustomerSheetUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
+        "PaymentSheetDeferredServerSideUITests",
+        "PaymentSheetDeferredUIBankAccountTests",
+        "PaymentSheetDeferredUITests",
         "PaymentSheetLinkUITests",
+        "PaymentSheetMiscellaneousUITests",
+        "PaymentSheetStandardLPMUITests",
+        "PaymentSheetStandardUITests",
+        "PaymentSheetUITestCase",
         "PaymentSheet_AddressTests"
       ],
       "target" : {

@@ -124,7 +124,11 @@ extension Dictionary where Key == AnyHashable, Value: Any {
     func stp_url(forKey key: String) -> URL? {
         let value = self[key]
         if value != nil && (value is NSString) && ((value as? String)?.count ?? 0) > 0 {
-            return URL(string: value as? String ?? "")
+            if #available(iOS 17.0, *) {
+                return URL(string: value as? String ?? "", encodingInvalidCharacters: false)
+            } else {
+                return URL(string: value as? String ?? "")
+            }
         }
         return nil
     }

@@ -159,6 +159,8 @@
 		2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Debug.xcconfig"; sourceTree = "<group>"; };
 		2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLinkPaymentCheckoutViewController.swift; sourceTree = "<group>"; };
 		31A510FDEA3F1AAED0507251 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
+		31BFFE0B2BBDE61600BFF85A /* PaymentSheet Example-Shard4.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard4.xctestplan"; sourceTree = "<group>"; };
+		31BFFE0C2BBDE61600BFF85A /* PaymentSheet Example-Shard3.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard3.xctestplan"; sourceTree = "<group>"; };
 		31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		34CCC286E48ADD9F586832D9 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Main.strings"; sourceTree = "<group>"; };
 		36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+Utilities.swift"; sourceTree = "<group>"; };
@@ -388,6 +390,8 @@
 				C326AC7AEE88B92E72DDD6AF /* PaymentSheetUITest */,
 				B96951DD278BA611BBCBB10A /* PaymentSheet Example-Shard1.xctestplan */,
 				C9BC6E49FF08F3B2DB837734 /* PaymentSheet Example-Shard2.xctestplan */,
+				31BFFE0C2BBDE61600BFF85A /* PaymentSheet Example-Shard3.xctestplan */,
+				31BFFE0B2BBDE61600BFF85A /* PaymentSheet Example-Shard4.xctestplan */,
 				81BB8CD3461287DDB397717E /* PaymentSheet Example.xctestplan */,
 			);
 			name = Project;

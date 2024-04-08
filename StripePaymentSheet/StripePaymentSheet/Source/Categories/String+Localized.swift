@@ -95,7 +95,7 @@ extension String.Localized {
     }
 
     static func does_not_support_shipping_to(countryCode: String) -> String {
-        let countryDisplayName = Locale.autoupdatingCurrent.localizedString(forRegionCode: countryCode) ?? countryCode
+        let countryDisplayName = NSLocale.autoupdatingCurrent.localizedString(forRegionCode: countryCode) ?? countryCode
         return String(
             format: STPLocalizedString(
                 "Shipping to %@ is not supported.",

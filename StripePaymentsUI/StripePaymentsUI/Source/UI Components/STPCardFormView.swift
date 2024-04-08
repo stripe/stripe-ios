@@ -729,7 +729,7 @@ extension STPCardFormView {
             case .required:
                 stateField = STPGenericInputTextField(
                     placeholder: StripeSharedStrings.localizedStateString(
-                        for: Locale.autoupdatingCurrent.stp_regionCode
+                        for: NSLocale.autoupdatingCurrent.stp_regionCode
                     ),
                     textContentType: .addressState
                 )

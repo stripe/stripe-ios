@@ -39,6 +39,12 @@
          <TestPlanReference
             reference = "container:PaymentSheet Example-Shard2.xctestplan">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:PaymentSheet Example-Shard3.xctestplan">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:PaymentSheet Example-Shard4.xctestplan">
+         </TestPlanReference>
       </TestPlans>
    </TestAction>
    <LaunchAction

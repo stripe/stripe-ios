@@ -93,18 +93,13 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         applePayButton.tap()
 
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
+        
         _ = applePay.wait(for: .runningForeground, timeout: 10)
-
-        var cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"]
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
-
-        cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
 
         let payButton = applePay.buttons["Pay with Passcode"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+        // Wait 1s for Pay With Passcode button animation to end
+        _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: 1.0)
         payButton.forceTapElement()
 
         let statusView = app.staticTexts["Payment status view"]
