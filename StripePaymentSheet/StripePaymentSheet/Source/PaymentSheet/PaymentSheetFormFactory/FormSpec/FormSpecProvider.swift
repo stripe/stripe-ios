@@ -16,7 +16,7 @@ private let formSpecsURL = StripePaymentSheetBundleLocator.resourcesBundle.url(f
 /// - Note: You must `load(completion:)` to load the specs json file into memory before calling `formSpec(for:)`
 /// - To overwrite any of these specs use load(from:)
 class FormSpecProvider {
-    private enum Error: Swift.Error {
+    enum Error: Swift.Error {
         case failedToLoadSpecs
         case formSpecsNotReady
     }

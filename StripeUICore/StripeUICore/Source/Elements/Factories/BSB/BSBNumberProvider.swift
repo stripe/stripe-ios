@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 @_spi(STP) public class BSBNumberProvider {
-    private enum Error: Swift.Error {
+    enum Error: Swift.Error {
         case bsbLoadFailure
     }
 
