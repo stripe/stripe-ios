@@ -514,7 +514,11 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: pod repo update && pod lib lint --include-podspecs='*.podspec'
+        - content: pod repo update MBCaptureCore
+        title: Update MBCaptureCore Pod Repo
+    - script@1:
+        inputs:
+        - content: pod lib lint --include-podspecs='*.podspec'
         title: pod lib lint
     before_run:
     - prep_all
