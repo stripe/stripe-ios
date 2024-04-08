@@ -549,11 +549,11 @@ workflows:
         - clone_depth: "1"
     # - cache-pull@2: {}
     - bundler@0: {}
-    # - cache-push@2:
-    #     inputs:
-    #     - compress_archive: "true"
-    #     - cache_paths: |
-    #         vendor
+    - cache-push@2:
+        inputs:
+        - compress_archive: "true"
+        - cache_paths: |
+            vendor
     - restore-spm-cache@1: {}
   size-report:
     steps:
