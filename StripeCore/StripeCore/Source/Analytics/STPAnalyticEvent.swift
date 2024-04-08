@@ -242,5 +242,5 @@ import Foundation
     case unexpectedPaymentHandlerError = "unexpected_error.paymenthandler"
 
     // MARK: - Misc. errors
-    case stripeCoreDownloadManagerError = "stripecore.downloadmanager"
+    case stripeCoreDownloadManagerError = "stripecore.downloadmanager.error"
 }

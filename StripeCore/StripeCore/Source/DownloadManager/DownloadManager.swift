@@ -94,7 +94,7 @@ extension DownloadManager {
 
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
         let task = self.session.downloadTask(with: url) { tempURL, response, responseError in
-            if let responseError = responseError as? NSError {
+            if let responseError = responseError {
                 blockingDownloadSemaphore.signal()
                 let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
                                                   error: responseError,
@@ -146,7 +146,7 @@ extension DownloadManager {
                 return
             }
 
-            if let responseError = responseError as? NSError {
+            if let responseError = responseError {
                 self.completeAsyncTask(for: imageName)
                 let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
                                                   error: responseError,
