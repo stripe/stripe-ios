@@ -13,7 +13,7 @@ import Foundation
 let addressDataFilename = "localized_address_data"
 
 @_spi(STP) public class AddressSpecProvider {
-    private enum Error: Swift.Error {
+    enum Error: Swift.Error {
         case loadSpecsFailure
     }
 
