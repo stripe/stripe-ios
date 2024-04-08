@@ -34,7 +34,7 @@ def check_spi_protection(file)
       public_items << (File.basename(file) + ": " + line.lstrip.chomp('{').rstrip)
     end
 
-    previous_line_spi_annotated = line.match?(/@_spi\(\w+\)/)
+    previous_line_spi_annotated = line.match?(/@_spi\(\w+\)(?!\s*\w+)/)
     in_spi_protected_block = false if block_depth == 0
   end
 
