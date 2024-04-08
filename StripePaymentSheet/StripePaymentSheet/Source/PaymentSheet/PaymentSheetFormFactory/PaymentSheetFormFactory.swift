@@ -20,6 +20,7 @@ import UIKit
 class PaymentSheetFormFactory {
     enum Error: Swift.Error {
         case missingFormSpec
+        case missingV1FromSelectorSpec
     }
 
     enum SaveMode {
