@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Data urodzenia wygląda na nieprawidłową";
 
+"Details not visible" = "Szczegóły nie są widoczne";
+
 "Flip your identity card over to the other side" = "Obróć dowód tożsamości na drugą stronę";
 
 "Front identity card photo successfully uploaded" = "Przesłano zdjęcie przedniej strony dowodu tożsamości";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "CPF osoby fizycznej";
 
+"Keep ID level" = "Utrzymaj dokument tożsamości w poziomie";
+
 "Last 4 of Social Security number" = "Ostatnie 4 cyfry numeru ubezpieczenia społecznego";
 
 "Loading" = "Wczytywanie";
+
+"Make sure all details are visible and focus" = "Upewnij się, że wszystkie szczegóły są widoczne i ostre";
 
 "Make sure you're in a well lit space." = "Upewnij się, że znajdujesz się w dobrze oświetlonym miejscu.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Oddal";
 
+"Move to a well-lit area" = "Przenieś się do dobrze oświetlonego miejsca";
+
 "NRIC or FIN" = "NRIC lub FIN";
+
+"No document detected" = "Nie wykryto żadnego dokumentu";
 
 "Personal ID number" = "Numer dowodu tożsamości";
 

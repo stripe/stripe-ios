@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Das Geburtsdatum scheint ungültig zu sein";
 
+"Details not visible" = "Details sind nicht erkennbar";
+
 "Flip your identity card over to the other side" = "Drehen Sie Ihr Ausweisdokument um";
 
 "Front identity card photo successfully uploaded" = "Das Foto der Vorderseite des Ausweisdokuments wurde erfolgreich hochgeladen.";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "Individuelle CPF";
 
+"Keep ID level" = "Ausweisdokument gerade halten";
+
 "Last 4 of Social Security number" = "Letzte vier Ziffern der Sozialversicherungsnummer";
 
 "Loading" = "Wird geladen";
+
+"Make sure all details are visible and focus" = "Vergewissern Sie sich, dass alle Details sichtbar und scharf sind";
 
 "Make sure you're in a well lit space." = "Sorgen Sie für ausreichende Beleuchtung.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Mehr Abstand halten";
 
+"Move to a well-lit area" = "Begeben Sie sich in eine gut beleuchtete Umgebung";
+
 "NRIC or FIN" = "NRIC oder FIN";
+
+"No document detected" = "Kein Dokument erkannt";
 
 "Personal ID number" = "Personalausweisnummer";
 

@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "A születési idő megadása kötelező";
 
+"Details not visible" = "A részletek nem láthatók";
+
 "Flip your identity card over to the other side" = "Fordítsa személyazonosító igazolványát a másik oldalára";
 
 "Front identity card photo successfully uploaded" = "Személyazonosító igazolvány előlapfotója sikeresen feltöltve";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "Személyes CPF";
 
+"Keep ID level" = "Tartsa egyenesen az igazolványt";
+
 "Last 4 of Social Security number" = "A társadalombiztosítási szám utolsó 4 számjegye";
 
 "Loading" = "Betöltés folyamatban";
+
+"Make sure all details are visible and focus" = "Győződjön meg arról, hogy minden részlet látható és fókuszban van.";
 
 "Make sure you're in a well lit space." = "Válasszon jól megvilágított helyet.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Helyezze távolabb";
 
+"Move to a well-lit area" = "Menjen egy jól megvilágított helyre";
+
 "NRIC or FIN" = "NRIC vagy FIN";
+
+"No document detected" = "Nem észlelhető a dokumentum";
 
 "Personal ID number" = "Személyazonosító szám";
 

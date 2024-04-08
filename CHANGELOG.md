@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.27.0 2024-04-08
 ### Payments
 * [Added] Support for Alma bindings.
 

@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Id-data tat-twelid ma tidhirx li hija tajba";
 
+"Details not visible" = "Id-dettalji ma jidhrux";
+
 "Flip your identity card over to the other side" = "Aqleb il-kard tal-identità tiegħek għan-naħa l-oħra";
 
 "Front identity card photo successfully uploaded" = "Ir-ritratt tan-naħa ta' quddiem tal-kard tal-identità ttella' b'suċċes";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "CPF personali";
 
+"Keep ID level" = "Żomm id-dokument tal-identità ċatt";
+
 "Last 4 of Social Security number" = "L-aħħar 4 ċifri tan-numru tas-Sigurtà Soċjali";
 
 "Loading" = "Tielgħa";
+
+"Make sure all details are visible and focus" = "Ara li d-dettalji kollha jidhru sewwa u huma ffukati";
 
 "Make sure you're in a well lit space." = "Ara li tinsab f'post imdawwal sew.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Ersaq lura";
 
+"Move to a well-lit area" = "Mur f'post imdawwal sew";
+
 "NRIC or FIN" = "NRIC jew FIN";
+
+"No document detected" = "Ma nstab l-ebda dokument";
 
 "Personal ID number" = "In-numru tal-ID personali";
 
