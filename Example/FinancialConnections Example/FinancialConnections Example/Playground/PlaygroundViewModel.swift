@@ -181,7 +181,7 @@ final class PlaygroundViewModel: ObservableObject {
     private func setup() {
         isLoading = true
         SetupPlayground(
-            configurationDictionary: playgroundConfiguration.configurationJSONDictionary
+            configurationDictionary: playgroundConfiguration.configurationDictionary
         ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(

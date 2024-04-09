@@ -17,7 +17,7 @@ final class PlaygroundConfiguration {
     var configurationString: String {
         return configurationStore.configurationString
     }
-    var configurationJSONDictionary: [String: Any] {
+    var configurationDictionary: [String: Any] {
         return configurationStore.configurationDictionary
     }
 
@@ -364,9 +364,9 @@ final class PlaygroundConfigurationStore {
             if configurationString.isEmpty {
                 return [:]
             } else {
-                if let jsonData = configurationString.data(using: .utf8) {
+                if let configurationData = configurationString.data(using: .utf8) {
                     do {
-                        if let dictionary = (try JSONSerialization.jsonObject(with: jsonData, options: [])) as? [String: Any] {
+                        if let dictionary = (try JSONSerialization.jsonObject(with: configurationData, options: [])) as? [String: Any] {
                             return dictionary
                         } else {
                             Self.configurationString = Self.configurationStringDefaultValue
@@ -387,11 +387,11 @@ final class PlaygroundConfigurationStore {
         }
         set {
             do {
-                let configurationJSONData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                if let configurationString = String(data: configurationJSONData, encoding: .utf8) {
+                let configurationData = try JSONSerialization.data(withJSONObject: newValue, options: [])
+                if let configurationString = String(data: configurationData, encoding: .utf8) {
                     Self.configurationString = configurationString
                 } else {
-                    assertionFailure("unable to convert `configurationJSONData` to a `configurationString`")
+                    assertionFailure("unable to convert `configurationData` to a `configurationString`")
                 }
             } catch {
                 assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
