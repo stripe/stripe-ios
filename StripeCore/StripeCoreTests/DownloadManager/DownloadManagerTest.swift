@@ -27,9 +27,19 @@ class DownloadManagerTest: APIStubbedTestCase {
         self.urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
         self.analyticsClient = STPAnalyticsClient()
         self.rm = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: analyticsClient)
+        clearCaches()
+    }
 
+    private func clearCaches() {
         self.rm.resetDiskCache()
-        self.rm.resetMemoryCache()
+
+        let clearCacheExpectation = self.expectation(description: "Clear cache")
+        Task {
+            await self.rm.imageCache.clearCache()
+            clearCacheExpectation.fulfill()
+        }
+
+        wait(for: [clearCacheExpectation], timeout: 10)
     }
 
     func testSynchronous_validImage() {
@@ -84,8 +94,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertEqual(image.size, validImageSize)
         wait(for: [expectedRequest1], timeout: 1.0)
 
-        rm.resetDiskCache()
-        rm.resetMemoryCache()
+        clearCaches()
 
         let cachedImageWithoutNetworkCall = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
         XCTAssertEqual(cachedImageWithoutNetworkCall.size, validImageSize)
@@ -152,17 +161,17 @@ class DownloadManagerTest: APIStubbedTestCase {
         wait(for: [expected1], timeout: 1.0)
 
         let expected2 = expectation(
-            description: "updateHandler will not be called when image is cached"
+            description: "updateHandler will be called when image is cached"
         )
-        expected2.isInverted = true
-        let imageCached = rm.downloadImage(
+
+        _ = rm.downloadImage(
             url: validURL, placeholder: nil,
-            updateHandler: { _ in
+            updateHandler: { image in
+                XCTAssertEqual(image.size, self.validImageSize)
                 expected2.fulfill()
             }
         )
 
-        XCTAssertEqual(imageCached.size, validImageSize)
         waitForExpectations(timeout: 0.5)
     }
     func testAsync_validImageCacheIsCleared() {
@@ -190,8 +199,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertEqual(image.size, placeholderImageSize)
         wait(for: [expected1], timeout: 1.0)
 
-        rm.resetMemoryCache()
-        rm.resetDiskCache()
+        clearCaches()
 
         let expected2 = expectation(description: "updateHandler us called a second time")
         let image2 = rm.downloadImage(
@@ -275,14 +283,16 @@ class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertEqual(img1, "icon1.png")
     }
 
-    func test_persistToMemory() throws {
-        XCTAssertNil(rm.cachedImageNamed("imgName"))
+    func test_persistToMemory() async throws {
+        var cachedImage = await rm.imageCache.cachedImageNamed("imgName")
+        XCTAssertNil(cachedImage)
 
         let validImageData = validImageData()
         let image = try rm.persistToMemory(validImageData, forImageName: "imgName")
 
         XCTAssertEqual(image.size, validImageSize)
-        XCTAssertNotNil(rm.imageCache["imgName"])
+        cachedImage = await rm.imageCache.cachedImageNamed("imgName")
+        XCTAssertNotNil(cachedImage)
     }
 
     func testBadNetworkResponse() throws {

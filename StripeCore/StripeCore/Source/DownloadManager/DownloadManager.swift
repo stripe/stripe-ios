@@ -21,8 +21,9 @@ import UIKit
     let session: URLSession
     let analyticsClient: STPAnalyticsClient
     let imageCacheSemaphore = DispatchSemaphore(value: 1)
+    let downloadQueue = DispatchQueue(label: "Stripe Download Cache")
 
-    var imageCache: [String: UIImage] = [:]
+    var imageCache = ImageCache()
     var diskCache: URLCache?
 
     public init(
@@ -54,15 +55,10 @@ import UIKit
 // MARK: - Download management
 extension DownloadManager {
     public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
-        // Early exit for cached images
-        if let image = cachedImageNamed(imageNameFromURL(url: url)) {
-            return image
-        }
-
         let placeholder = placeholder ?? imagePlaceHolder()
         // If no `updateHandler` is provided use a blocking method to fetch the image
         guard let updateHandler else {
-            return downloadImageBlocking(placeholder: placeholder, url: url)
+            return downloadImageBlocking(url: url, placeholder: placeholder)
         }
 
         Task {
@@ -76,8 +72,12 @@ extension DownloadManager {
     @discardableResult
     func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
         let imageName = imageNameFromURL(url: url)
-        let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
+        // Early exit for cached images
+        if let image = await imageCache.cachedImageNamed(imageName) {
+            return image
+        }
 
+        let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
         do {
             let (data, response) = try await session.data(for: urlRequest)
             let image = try persistToMemory(data, forImageName: imageName) // Throws a Error.failedToMakeImageFromData
@@ -92,17 +92,12 @@ extension DownloadManager {
         }
     }
 
-    func downloadImageBlocking(placeholder: UIImage, url: URL) -> UIImage {
-        let semaphore = DispatchSemaphore(value: 0)
-
-        Task {
-            _ = await downloadImage(url: url, placeholder: placeholder)
-            semaphore.signal()
-        }
-
-        semaphore.wait()
-        // Read from the cache as a workaround for making an async operation sync
-        return cachedImageNamed(imageNameFromURL(url: url)) ?? placeholder
+    func downloadImageBlocking(url: URL, placeholder: UIImage) -> UIImage {
+        let image = _unsafeWait({
+            let image = await self.downloadImage(url: url, placeholder: placeholder)
+            return image
+        })
+        return image ?? imagePlaceHolder()
     }
 
     func downloadImageAsync(url: URL, placeholder: UIImage, updateHandler: UpdateImageHandler) async {
@@ -120,12 +115,6 @@ extension DownloadManager {
 
 // MARK: Image Cache
 extension DownloadManager {
-    func resetMemoryCache() {
-        imageCacheSemaphore.wait()
-        self.imageCache = [:]
-        imageCacheSemaphore.signal()
-    }
-
     func resetDiskCache() {
         self.diskCache?.removeAllCachedResponses()
     }
@@ -139,18 +128,27 @@ extension DownloadManager {
         guard let image = UIImage(data: imageData, scale: scale) else {
             throw Error.failedToMakeImageFromData
         }
-        imageCacheSemaphore.wait()
-        self.imageCache[imageName] = image
-        imageCacheSemaphore.signal()
+
+        Task {
+            await imageCache.storeImage(image, name: imageName)
+        }
         return image
     }
+}
 
-    func cachedImageNamed(_ imageName: String) -> UIImage? {
-        var image: UIImage?
-        imageCacheSemaphore.wait()
-        image = imageCache[imageName]
-        imageCacheSemaphore.signal()
-        return image
+actor ImageCache {
+    private var images: [String: UIImage] = [:]
+
+    func cachedImageNamed(_ name: String) -> UIImage? {
+        return images[name]
+    }
+
+    func storeImage(_ image: UIImage, name: String) {
+        images[name] = image
+    }
+
+    func clearCache() {
+        images.removeAll()
     }
 }
 
@@ -178,4 +176,29 @@ extension UIImage {
         return self.pngData() == image.pngData()
     }
 
+}
+
+// MARK: Workarounds for using Swift async from a sync context
+// https://forums.swift.org/t/using-async-functions-from-synchronous-functions-and-breaking-all-the-rules/59782/4
+private class Box<ResultType> {
+    var result: Result<ResultType, Error>?
+}
+
+extension DownloadManager {
+    /// Unsafely awaits an async function from a synchronous context.
+    func _unsafeWait<ResultType>(_ f: @escaping () async -> ResultType) -> ResultType? {
+        let box = Box<ResultType>()
+        let sema = DispatchSemaphore(value: 0)
+        Task {
+            let val = await f()
+            box.result = .success(val)
+            sema.signal()
+        }
+        sema.wait()
+        do {
+            return try box.result!.get()
+        } catch {
+            return nil
+        }
+    }
 }
