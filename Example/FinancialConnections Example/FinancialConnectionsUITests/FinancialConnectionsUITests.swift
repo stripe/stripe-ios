@@ -17,7 +17,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
     func testDataTestModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
-            configurationString:
+            playgroundConfigurationString:
 """
 {"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
@@ -45,7 +45,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
     func testPaymentTestModeLegacyNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
-            configurationString:
+            playgroundConfigurationString:
 """
 {"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
@@ -76,7 +76,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
     func testPaymentTestModeManualEntryNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
-            configurationString:
+            playgroundConfigurationString:
 """
 {"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
@@ -126,7 +126,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     // whether live mode is ~working
     func testDataLiveModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
-            configurationString:
+            playgroundConfigurationString:
 """
 {"use_case":"data","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
@@ -220,7 +220,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     // whether live mode is ~working
     func testDataLiveModeOAuthWebAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
-            configurationString:
+            playgroundConfigurationString:
 """
 {"use_case":"data","sdk_type":"web","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
@@ -311,7 +311,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
     func testPaymentSearchInLiveModeNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
-            configurationString:
+            playgroundConfigurationString:
 """
 {"use_case":"payment_intent","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
 """

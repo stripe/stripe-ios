@@ -26,7 +26,7 @@ final class PlaygroundConfiguration {
         updateConfigurationString(configurationString)
 
         // load configuration for UI tests if present
-        if let configurationString = ProcessInfo.processInfo.environment["UITesting_configuration_string"] {
+        if let configurationString = ProcessInfo.processInfo.environment["UITesting_playground_configuration_string"] {
             updateConfigurationString(configurationString)
         }
     }
