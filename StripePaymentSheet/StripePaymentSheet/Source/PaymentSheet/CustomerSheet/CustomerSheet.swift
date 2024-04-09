@@ -91,6 +91,7 @@ public class CustomerSheet {
     public func present(from presentingViewController: UIViewController,
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
+        let loadingStartDate = Date()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadStarted)
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
@@ -124,7 +125,8 @@ public class CustomerSheet {
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
+                                                                     duration: Date().timeIntervalSince(loadingStartDate))
             case .failure(let error):
                 STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .customerSheetLoadFailed, error: error))
                 csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
