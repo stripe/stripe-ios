@@ -12,7 +12,7 @@ final class PlaygroundManageConfigurationViewModel: ObservableObject {
     let playgroundConfiguration: PlaygroundConfiguration
     let didSelectClose: () -> Void
 
-    @Published var configurationJSONString: String
+    @Published var configurationString: String
 
     init(
         playgroundConfiguration: PlaygroundConfiguration,
@@ -20,28 +20,28 @@ final class PlaygroundManageConfigurationViewModel: ObservableObject {
     ) {
         self.playgroundConfiguration = playgroundConfiguration
         self.didSelectClose = didSelectClose
-        self.configurationJSONString = playgroundConfiguration.configurationJSONString
+        self.configurationString = playgroundConfiguration.configurationString
     }
 
     func onAppear() {
         // reset the configuration
-        configurationJSONString = playgroundConfiguration.configurationJSONString
+        configurationString = playgroundConfiguration.configurationString
     }
 
     func didSelectSaveConfiguration() {
-        playgroundConfiguration.updateConfigurationJSONString(configurationJSONString)
+        playgroundConfiguration.updateConfigurationString(configurationString)
         loadCurrentConfiguration()
     }
 
     func didSelectResetToDefaults() {
         playgroundConfiguration
-            .updateConfigurationJSONString(
-                PlaygroundConfigurationStore.configurationJSONStringDefaultValue
+            .updateConfigurationString(
+                PlaygroundConfigurationStore.configurationStringDefaultValue
             )
         loadCurrentConfiguration()
     }
 
     private func loadCurrentConfiguration() {
-        configurationJSONString = playgroundConfiguration.configurationJSONString
+        configurationString = playgroundConfiguration.configurationString
     }
 }

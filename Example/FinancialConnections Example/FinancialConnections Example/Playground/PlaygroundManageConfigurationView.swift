@@ -16,9 +16,9 @@ struct PlaygroundManageConfigurationView: View {
         Form {
             Section {
                 ZStack {
-                    TextEditor(text: $viewModel.configurationJSONString)
+                    TextEditor(text: $viewModel.configurationString)
                     // ZStack + Text is a hack to auto-scale the `TextEditor`
-                    Text(viewModel.configurationJSONString).opacity(0)
+                    Text(viewModel.configurationString).opacity(0)
                 }
                 Button(action: viewModel.didSelectSaveConfiguration) {
                     Text("Save Configuration")

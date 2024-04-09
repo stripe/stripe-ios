@@ -165,7 +165,7 @@ final class PlaygroundViewModel: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
-        print(PlaygroundConfiguration.shared.configurationJSONString)
+        print(PlaygroundConfiguration.shared.configurationString)
         playgroundConfigurationViewModel
             .objectWillChange
             .sink { [weak self] in

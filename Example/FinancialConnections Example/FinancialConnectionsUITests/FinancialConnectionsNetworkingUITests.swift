@@ -27,7 +27,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
     private func executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: String) {
         let app = XCUIApplication.fc_launch(
-            configurationJSONString:
+            configurationString:
 """
 {"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":""}
 """
@@ -86,7 +86,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
     private func executeNativeNetworkingTestModeSignInFlowTest(emailAddress: String) {
         let app = XCUIApplication.fc_launch(
-            configurationJSONString:
+            configurationString:
 """
 {"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
 """
@@ -141,7 +141,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
     ) {
         // ensure that permissions like "ownership" / "transcations" / "balances" is off
         let app = XCUIApplication.fc_launch(
-            configurationJSONString:
+            configurationString:
 """
 {"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)"}
 """
@@ -191,7 +191,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
     ) {
         // turn on all permissions so we get an "Update Required" account
         let app = XCUIApplication.fc_launch(
-            configurationJSONString:
+            configurationString:
 """
 {"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
 """
@@ -248,7 +248,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let emailAddress = "\(UUID().uuidString)@UITestForIOS.com"
 
         let app = XCUIApplication.fc_launch(
-            configurationJSONString:
+            configurationString:
 """
 {"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
 """

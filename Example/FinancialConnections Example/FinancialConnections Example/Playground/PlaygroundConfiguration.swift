@@ -14,20 +14,20 @@ final class PlaygroundConfiguration {
     static let shared = PlaygroundConfiguration()
 
     private let configurationStore = PlaygroundConfigurationStore()
-    var configurationJSONString: String {
-        return configurationStore.configurationJSONString
+    var configurationString: String {
+        return configurationStore.configurationString
     }
     var configurationJSONDictionary: [String: Any] {
-        return configurationStore.configurationJSONDictionary
+        return configurationStore.configurationDictionary
     }
 
     private init() {
         // setup defaults if this is the first time initializing
-        updateConfigurationJSONString(configurationJSONString)
+        updateConfigurationString(configurationString)
 
         // load configuration for UI tests if present
-        if let configurationJSONString = ProcessInfo.processInfo.environment["UITesting_configuration_json_string"] {
-            updateConfigurationJSONString(configurationJSONString)
+        if let configurationString = ProcessInfo.processInfo.environment["UITesting_configuration_string"] {
+            updateConfigurationString(configurationString)
         }
     }
 
@@ -262,9 +262,9 @@ final class PlaygroundConfiguration {
 
     // MARK: - Other
 
-    func updateConfigurationJSONString(_ configurationJSONString: String) {
+    func updateConfigurationString(_ configurationString: String) {
         guard
-            let jsonData = configurationJSONString.data(using: .utf8),
+            let jsonData = configurationString.data(using: .utf8),
             let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: []),
             let dictionary = jsonObject as? [String: Any]
         else {
@@ -350,37 +350,37 @@ final class PlaygroundConfiguration {
 /// A simple wrapper around playground configuration NSUserDefaults JSON string.
 final class PlaygroundConfigurationStore {
 
-    static let configurationJSONStringDefaultValue = "{}"
+    static let configurationStringDefaultValue = "{}"
 
     @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_CONFIGURATION_JSON_STRING",
-        defaultValue: configurationJSONStringDefaultValue
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_CONFIGURATION_STRING",
+        defaultValue: configurationStringDefaultValue
     )
-    private static var configurationJSONString: String
+    private static var configurationString: String
 
-    fileprivate var configurationJSONDictionary: [String: Any] {
+    fileprivate var configurationDictionary: [String: Any] {
         get {
-            let configurationJSONString = Self.configurationJSONString
-            if configurationJSONString.isEmpty {
+            let configurationString = Self.configurationString
+            if configurationString.isEmpty {
                 return [:]
             } else {
-                if let jsonData = configurationJSONString.data(using: .utf8) {
+                if let jsonData = configurationString.data(using: .utf8) {
                     do {
                         if let dictionary = (try JSONSerialization.jsonObject(with: jsonData, options: [])) as? [String: Any] {
                             return dictionary
                         } else {
-                            Self.configurationJSONString = Self.configurationJSONStringDefaultValue
-                            assertionFailure("unable to convert `configurationJSONString` to a dictionary `[String:Any]`")
+                            Self.configurationString = Self.configurationStringDefaultValue
+                            assertionFailure("unable to convert `configurationString` to a dictionary `[String:Any]`")
                             return [:]
                         }
                     } catch {
-                        Self.configurationJSONString = Self.configurationJSONStringDefaultValue
+                        Self.configurationString = Self.configurationStringDefaultValue
                         assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
                         return [:]
                     }
                 } else {
-                    Self.configurationJSONString = Self.configurationJSONStringDefaultValue
-                    assertionFailure("unable to convert `configurationJSONString` to data using `configurationJSONString.data(using: .utf8)`")
+                    Self.configurationString = Self.configurationStringDefaultValue
+                    assertionFailure("unable to convert `configurationString` to data using `configurationString.data(using: .utf8)`")
                     return [:]
                 }
             }
@@ -388,10 +388,10 @@ final class PlaygroundConfigurationStore {
         set {
             do {
                 let configurationJSONData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                if let configurationJSONString = String(data: configurationJSONData, encoding: .utf8) {
-                    Self.configurationJSONString = configurationJSONString
+                if let configurationString = String(data: configurationJSONData, encoding: .utf8) {
+                    Self.configurationString = configurationString
                 } else {
-                    assertionFailure("unable to convert `configurationJSONData` to a `configurationJSONString`")
+                    assertionFailure("unable to convert `configurationJSONData` to a `configurationString`")
                 }
             } catch {
                 assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
@@ -401,18 +401,18 @@ final class PlaygroundConfigurationStore {
 
     fileprivate subscript(key: String) -> Any? {
         get {
-            return configurationJSONDictionary[key]
+            return configurationDictionary[key]
         }
         set(newValue) {
-            configurationJSONDictionary[key] = newValue
+            configurationDictionary[key] = newValue
         }
     }
 
-    var configurationJSONString: String {
-        return Self.configurationJSONString
+    var configurationString: String {
+        return Self.configurationString
     }
 
     var isEmpty: Bool {
-        return configurationJSONDictionary.isEmpty
+        return configurationDictionary.isEmpty
     }
 }
