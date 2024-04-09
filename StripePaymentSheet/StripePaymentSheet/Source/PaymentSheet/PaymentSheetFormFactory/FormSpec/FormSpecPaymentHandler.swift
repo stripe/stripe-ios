@@ -98,20 +98,14 @@ extension STPPaymentHandler {
         paymentIntentStatusSpec: FormSpec.NextActionSpec.ConfirmResponseStatusSpecs,
         urlSession: URLSession
     ) {
-
-        guard let paymentIntent = action.paymentIntent else {
-            assert(false, "Calling _handleNextActionStateSpec without a paymentIntent")
-            return
-        }
-
         switch paymentIntentStatusSpec.type {
         case .redirect_to_url(let redirectToUrl):
-            if let urlString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.urlPath) as? String,
+            if let urlString = action.paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.urlPath) as? String,
                 let url = URL(string: urlString)
             {
 
                 var returnUrl: URL?
-                if let returnString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.returnUrlPath)
+                if let returnString = action.paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.returnUrlPath)
                     as? String
                 {
                     returnUrl = URL(string: returnString)

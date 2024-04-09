@@ -20,7 +20,7 @@ import Foundation
     var apiClient: STPAPIClient { get }
     var threeDSCustomizationSettings: STPThreeDSCustomizationSettings { get }
     var returnURLString: String? { get }
-    var intentStripeID: String? { get }
+    var intentStripeID: String { get }
     /// Returns the payment or setup intent's next action
     func nextAction() -> STPIntentAction?
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
@@ -37,11 +37,11 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(STP) public let paymentIntentCompletion:
         STPPaymentHandlerActionPaymentIntentCompletionBlock
     @_spi(STP) public let returnURLString: String?
-    @_spi(STP) public var paymentIntent: STPPaymentIntent?
+    @_spi(STP) public var paymentIntent: STPPaymentIntent
     @_spi(STP) public var threeDS2Transaction: STDSTransaction?
 
-    @_spi(STP) public var intentStripeID: String? {
-        return paymentIntent?.stripeId
+    @_spi(STP) public var intentStripeID: String {
+        return paymentIntent.stripeId
     }
 
     private var _threeDS2Service: STDSThreeDS2Service?
@@ -54,7 +54,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
             STDSSwiftTryCatch.try(
                 {
                     let configParams = STDSConfigParameters()
-                    if !(self.paymentIntent?.livemode ?? true) {
+                    if !self.paymentIntent.livemode {
                         configParams.addParameterNamed(
                             "kInternalStripeTestingConfigParam",
                             withValue: "Y"
@@ -96,7 +96,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     }
 
     @_spi(STP) public func nextAction() -> STPIntentAction? {
-        return paymentIntent?.nextAction
+        return paymentIntent.nextAction
     }
 
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
@@ -115,7 +115,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     var setupIntent: STPSetupIntent
     var threeDS2Transaction: STDSTransaction?
 
-    var intentStripeID: String? {
+    var intentStripeID: String {
         return setupIntent.stripeID
     }
 
