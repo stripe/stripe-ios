@@ -18,14 +18,16 @@ import UIKit
 
     public static let sharedManager = DownloadManager()
 
-    let session: URLSession!
-    let imageCacheSemaphore: DispatchSemaphore
+    let session: URLSession
+    let analyticsClient: STPAnalyticsClient
+    let imageCacheSemaphore = DispatchSemaphore(value: 1)
 
-    var imageCache: [String: UIImage]
+    var imageCache: [String: UIImage] = [:]
     var diskCache: URLCache?
 
     public init(
-        urlSessionConfiguration: URLSessionConfiguration = .default
+        urlSessionConfiguration: URLSessionConfiguration = .default,
+        analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         let configuration = urlSessionConfiguration
         if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
@@ -44,9 +46,7 @@ import UIKit
         }
 
         session = URLSession(configuration: configuration)
-        imageCache = [:]
-        imageCacheSemaphore = DispatchSemaphore(value: 1)
-
+        self.analyticsClient = analyticsClient
         super.init()
     }
 }
@@ -87,7 +87,7 @@ extension DownloadManager {
             let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
                                               error: error,
                                               additionalNonPIIParams: ["url": url.absoluteString])
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            analyticsClient.log(analytic: errorAnalytic)
             return placeholder
         }
     }

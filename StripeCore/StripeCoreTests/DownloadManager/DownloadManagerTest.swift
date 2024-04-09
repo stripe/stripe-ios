@@ -20,11 +20,13 @@ class DownloadManagerTest: APIStubbedTestCase {
 
     var urlSessionConfig: URLSessionConfiguration!
     var rm: DownloadManager!
+    var analyticsClient: STPAnalyticsClient!
 
     override func setUp() {
         super.setUp()
         self.urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
-        self.rm = DownloadManager(urlSessionConfiguration: urlSessionConfig)
+        self.analyticsClient = STPAnalyticsClient()
+        self.rm = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: analyticsClient)
 
         self.rm.resetDiskCache()
         self.rm.resetMemoryCache()
@@ -281,6 +283,46 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         XCTAssertEqual(image.size, validImageSize)
         XCTAssertNotNil(rm.imageCache["imgName"])
+    }
+
+    func testBadNetworkResponse() throws {
+        stub(condition: { request in
+            return request.url == self.validURL
+        }) { _ in
+            return HTTPStubsResponse(error: NSError(domain: NSURLErrorDomain, code: NSURLErrorFileDoesNotExist))
+        }
+
+        let placeholder = rm.imagePlaceHolder()
+        let image = rm.downloadImage(url: validURL, placeholder: placeholder, updateHandler: nil)
+
+        XCTAssertEqual(image, placeholder)
+
+        // Validate analytic
+        let firstAnalytic = try XCTUnwrap(analyticsClient._testLogHistory.first)
+        XCTAssertEqual("stripecore.downloadmanager.error", firstAnalytic["event"] as? String)
+        XCTAssertEqual("-1100", firstAnalytic["error_code"] as? String)
+        XCTAssertEqual(NSURLErrorDomain, firstAnalytic["error_type"] as? String)
+        XCTAssertEqual(self.validURL.absoluteString, firstAnalytic["url"] as? String)
+    }
+
+    func testInvalidImageData() throws {
+        stub(condition: { request in
+            return request.url == self.validURL
+        }) { _ in
+            return HTTPStubsResponse(data: "invalid image data".data(using: .utf8)!, statusCode: 200, headers: nil)
+        }
+
+        let placeholder = rm.imagePlaceHolder()
+        let image = rm.downloadImage(url: validURL, placeholder: placeholder, updateHandler: nil)
+
+        XCTAssertEqual(image, placeholder)
+
+        // Validate analytic
+        let firstAnalytic = try XCTUnwrap(analyticsClient._testLogHistory.first)
+        XCTAssertEqual("stripecore.downloadmanager.error", firstAnalytic["event"] as? String)
+        XCTAssertEqual("failedToMakeImageFromData", firstAnalytic["error_code"] as? String)
+        XCTAssertEqual("StripeCore.DownloadManager.Error", firstAnalytic["error_type"] as? String)
+        XCTAssertEqual(self.validURL.absoluteString, firstAnalytic["url"] as? String)
     }
 
     // MARK: - Helper functions
