@@ -1269,6 +1269,10 @@ public class STPPaymentHandler: NSObject {
         case .BLIKAuthorize:
             // The customer must authorize the transaction in their banking app within 1 minute
             if let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
+                guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
+                    currentAction.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling BLIKAuthorize next action with SetupIntent is not supported"))
+                    return
+                }
                 // If we are using PaymentSheet, PollingViewController will poll Stripe to determine success and complete the currentAction
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .blik, safariViewController: nil)
             } else {
@@ -1282,6 +1286,10 @@ public class STPPaymentHandler: NSObject {
         case .upiAwaitNotification:
             // The customer must authorize the transaction in their banking app within 5 minutes
             if let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
+                guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
+                    currentAction.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling upiAwaitNotification next action with SetupIntent is not supported"))
+                    return
+                }
                 // If we are using PaymentSheet, PollingViewController will poll Stripe to determine success and complete the currentAction
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI, safariViewController: nil)
             } else {
@@ -1315,7 +1323,10 @@ public class STPPaymentHandler: NSObject {
                 currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "PayNow is not supported outside of PaymentSheet."))
                 return
             }
-
+            guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
+                currentAction.complete(with: .failed, error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling payNowDisplayQrCode next action with SetupIntent is not supported"))
+                return
+            }
             _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) { safariViewController in
                 // Present the polling view controller behind the web view so we can start polling right away
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow, safariViewController: safariViewController)
@@ -1339,6 +1350,10 @@ public class STPPaymentHandler: NSObject {
             guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
                 assertionFailure("PromptPay is not supported outside of PaymentSheet.")
                 currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "PromptPay is not supported outside of PaymentSheet."))
+                return
+            }
+            guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
+                currentAction.complete(with: .failed, error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling promptpayDisplayQrCode next action with SetupIntent is not supported"))
                 return
             }
 
@@ -2384,7 +2399,7 @@ extension STPPaymentHandler {
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
+    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
 }
 
 @_spi(STP) public protocol FormSpecPaymentHandler {
