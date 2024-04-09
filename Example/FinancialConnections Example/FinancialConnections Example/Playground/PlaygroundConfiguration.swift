@@ -72,48 +72,83 @@ final class PlaygroundConfiguration {
 
     struct Merchant: Identifiable, Equatable, Hashable {
         /// what we pass to the backend and store in the configuration JSON
-        let customId: String
+        let customId: CustomId
         /// what the playground app displays
         let displayName: String
         /// whether on the 'backend' we provide test mode keys
         let isTestModeSupported: Bool
 
         var id: String {
-            return customId
+            return customId.rawValue
+        }
+
+        // The id's should use underscore as "-" is not supported in Glitch
+        enum CustomId: String {
+            case `default` = "default"
+            case networking = "networking"
+            case customKeys = "custom_keys"
+            case partnerD = "partner_d"
+            case partnerF = "partner_f"
+            case partnerC = "partner_c"
+            case bugBash = "bug_bash"
         }
     }
 
     let merchants: [Merchant] = [
         Merchant(
-            customId: "default",
+            customId: .default,
             displayName: "Default (non-networking)",
             isTestModeSupported: true
         ),
         Merchant(
-            customId: "networking",
+            customId: .networking,
             displayName: "Networking",
             isTestModeSupported: true
         ),
         Merchant(
-            customId: "custom-keys",
+            customId: .customKeys,
             displayName: "Custom Keys",
             isTestModeSupported: false
         ),
+        Merchant(
+            customId: .partnerD,
+            displayName: "Partner D",
+            isTestModeSupported: false
+        ),
+        Merchant(
+            customId: .partnerF,
+            displayName: "Partner F",
+            isTestModeSupported: false
+        ),
+        Merchant(
+            customId: .bugBash,
+            displayName: "Bug Bash",
+            isTestModeSupported: true
+        ),
+
     ]
     private static let merchantCustomIdKey = "merchant"
     var merchant: Merchant {
         get {
             if
                 let merchantCustomId = configurationStore[Self.merchantCustomIdKey] as? String,
-                let merchant = merchants.first(where: { $0.customId == merchantCustomId })
+                let merchant = merchants.first(where: { $0.customId.rawValue == merchantCustomId })
             {
+                // make sure test mode is off for merchants where test mode is turned off
+                if !merchant.isTestModeSupported, testMode {
+                    testMode = false
+                }
                 return merchant
             } else {
                 return merchants.first!
             }
         }
         set {
-            configurationStore[Self.merchantCustomIdKey] = newValue.customId
+            // make sure test mode is off for merchants where test mode is turned off
+            if !merchant.isTestModeSupported, testMode {
+                testMode = false
+            }
+            configurationStore[Self.merchantCustomIdKey] = newValue.customId.rawValue
         }
     }
 
