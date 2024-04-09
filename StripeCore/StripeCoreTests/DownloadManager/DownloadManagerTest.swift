@@ -272,7 +272,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         wait(for: [expected_imageUpdater2], timeout: 1.0)
 
     }
-    
+
     func testConcurrentDownloadsForSameURL() {
         let downloadExpectation = expectation(description: "Download image concurrently")
         downloadExpectation.expectedFulfillmentCount = 3 // Assuming 3 concurrent requests
@@ -283,7 +283,7 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         // Start 3 concurrent download tasks for the same URL
         DispatchQueue.concurrentPerform(iterations: 3) { _ in
-            let _  = self.rm.downloadImage(url: self.validURL, placeholder: nil) { image in
+            _  = self.rm.downloadImage(url: self.validURL, placeholder: nil) { image in
                 XCTAssertEqual(image.size, self.validImageSize, "Downloaded image size should match the expected size")
                 downloadExpectation.fulfill()
             }
@@ -291,7 +291,6 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         waitForExpectations(timeout: 5)
     }
-
 
     func testImageNamefromURL() {
         let img0 = URL(string: "http://js.stripe.com/icon0.png")!.lastPathComponent
@@ -307,7 +306,8 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         let validImageData = validImageData()
         let image = try rm.persistToMemory(validImageData, forImageName: "imgName")
-
+        sleep(1) // `persistToMemory` uses a `Task` to async finish the storing of images, wait for it.
+        
         XCTAssertEqual(image.size, validImageSize)
         cachedImage = await rm.imageCache.cachedImageNamed("imgName")
         XCTAssertNotNil(cachedImage)
