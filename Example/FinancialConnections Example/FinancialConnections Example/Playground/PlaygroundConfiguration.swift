@@ -7,87 +7,12 @@
 
 import Foundation
 
-class PlaygroundConfigurationJSON {
-
-    static let configurationJSONStringDefaultValue = "{}"
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_CONFIGURATION_JSON_STRING",
-        defaultValue: configurationJSONStringDefaultValue
-    )
-    private static var configurationJSONString: String
-
-    fileprivate var dictionary: [String: Any] {
-        get {
-            print("^ dictionary:get:", Self.configurationJSONString)
-            let configurationJSONString = Self.configurationJSONString
-            if configurationJSONString.isEmpty {
-                return [:]
-            } else {
-                if let jsonData = configurationJSONString.data(using: .utf8) {
-                    do {
-                        if let dictionary = (try JSONSerialization.jsonObject(with: jsonData, options: [])) as? [String: Any] {
-                            return dictionary
-                        } else {
-                            Self.configurationJSONString = Self.configurationJSONStringDefaultValue
-                            assertionFailure("unable to convert `configurationJSONString` to a dictionary `[String:Any]`")
-                            return [:]
-                        }
-                    } catch {
-                        Self.configurationJSONString = Self.configurationJSONStringDefaultValue
-                        assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
-                        return [:]
-                    }
-                } else {
-                    Self.configurationJSONString = Self.configurationJSONStringDefaultValue
-                    assertionFailure("unable to convert `configurationJSONString` to data using `configurationJSONString.data(using: .utf8)`")
-                    return [:]
-                }
-            }
-        }
-        set {
-            do {
-                let configurationJSONData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                if let configurationJSONString = String(data: configurationJSONData, encoding: .utf8) {
-                    Self.configurationJSONString = configurationJSONString
-                } else {
-                    assertionFailure("unable to convert `configurationJSONData` to a `configurationJSONString`")
-                }
-            } catch {
-                assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
-            }
-            print("^ dictionary:set:", Self.configurationJSONString)
-        }
-    }
-
-    subscript(key: String) -> Any? {
-        get {
-            return dictionary[key]
-        }
-        set(newValue) {
-            dictionary[key] = newValue
-        }
-    }
-
-    var string: String {
-        return Self.configurationJSONString
-    }
-
-    var isEmpty: Bool {
-        return dictionary.isEmpty
-    }
-}
-
 // we want the JSON to represent the source of truth
 // - initially it will be NULL...so something needs to set it up
 
 final class PlaygroundConfiguration {
 
-    // Singleton
-
     static let shared = PlaygroundConfiguration()
-
-    // Rest
 
     private let configurationJSON = PlaygroundConfigurationJSON()
     var configurationJSONString: String {
@@ -101,7 +26,8 @@ final class PlaygroundConfiguration {
         // setup defaults if this is the first time initializing
         setupWithConfigurationJSONString(configurationJSONString)
 
-        if let configurationJSONString = ProcessInfo.processInfo.environment["configuration_json_string"] {
+        // load configuration for UI tests if present
+        if let configurationJSONString = ProcessInfo.processInfo.environment["UITesting_configuration_json_string"] {
             setupWithConfigurationJSONString(configurationJSONString)
         }
     }
@@ -419,5 +345,74 @@ final class PlaygroundConfiguration {
         } else {
             self.transactionsPermission = false
         }
+    }
+}
+
+final class PlaygroundConfigurationJSON {
+
+    static let configurationJSONStringDefaultValue = "{}"
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_CONFIGURATION_JSON_STRING",
+        defaultValue: configurationJSONStringDefaultValue
+    )
+    private static var configurationJSONString: String
+
+    fileprivate var dictionary: [String: Any] {
+        get {
+            let configurationJSONString = Self.configurationJSONString
+            if configurationJSONString.isEmpty {
+                return [:]
+            } else {
+                if let jsonData = configurationJSONString.data(using: .utf8) {
+                    do {
+                        if let dictionary = (try JSONSerialization.jsonObject(with: jsonData, options: [])) as? [String: Any] {
+                            return dictionary
+                        } else {
+                            Self.configurationJSONString = Self.configurationJSONStringDefaultValue
+                            assertionFailure("unable to convert `configurationJSONString` to a dictionary `[String:Any]`")
+                            return [:]
+                        }
+                    } catch {
+                        Self.configurationJSONString = Self.configurationJSONStringDefaultValue
+                        assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
+                        return [:]
+                    }
+                } else {
+                    Self.configurationJSONString = Self.configurationJSONStringDefaultValue
+                    assertionFailure("unable to convert `configurationJSONString` to data using `configurationJSONString.data(using: .utf8)`")
+                    return [:]
+                }
+            }
+        }
+        set {
+            do {
+                let configurationJSONData = try JSONSerialization.data(withJSONObject: newValue, options: [])
+                if let configurationJSONString = String(data: configurationJSONData, encoding: .utf8) {
+                    Self.configurationJSONString = configurationJSONString
+                } else {
+                    assertionFailure("unable to convert `configurationJSONData` to a `configurationJSONString`")
+                }
+            } catch {
+                assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    fileprivate subscript(key: String) -> Any? {
+        get {
+            return dictionary[key]
+        }
+        set(newValue) {
+            dictionary[key] = newValue
+        }
+    }
+
+    var string: String {
+        return Self.configurationJSONString
+    }
+
+    var isEmpty: Bool {
+        return dictionary.isEmpty
     }
 }

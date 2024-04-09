@@ -95,7 +95,7 @@ struct PlaygroundView: View { // Rename to PlaygroundView
                             .accessibility(identifier: "playground-transactions-permission")
                     }
 
-                    Section {
+                    Section(header: Text("Other")) {
                         Toggle("Show Live Events", isOn: $viewModel.showLiveEvents)
 
                         Button(action: viewModel.didSelectClearCaches) {
@@ -117,10 +117,6 @@ struct PlaygroundView: View { // Rename to PlaygroundView
                             }
                         }
                     }
-
-                    // extra space so keyboard doesn't cover the "CUSTOM KEYS" section
-                    // (SwiftUI, depending on iOS version, doesn't handle keyboard)
-                    Spacer(minLength: 60)
                 }
                 VStack {
                     Button(action: viewModel.didSelectShow) {

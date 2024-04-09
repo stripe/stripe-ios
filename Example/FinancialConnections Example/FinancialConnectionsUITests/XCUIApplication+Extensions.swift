@@ -12,7 +12,7 @@ extension XCUIApplication {
 
     static func fc_launch(configurationJSONString: String? = nil) -> XCUIApplication {
         var launchEnvironment: [String: String] = ["UITesting": "true"]
-        launchEnvironment["configuration_json_string"] = configurationJSONString
+        launchEnvironment["UITesting_configuration_json_string"] = configurationJSONString
 
         let app = XCUIApplication()
         app.launchEnvironment = launchEnvironment
