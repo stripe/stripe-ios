@@ -9,7 +9,7 @@
 import SwiftUI
 
 @available(iOS 14.0, *)
-struct PlaygroundView: View { // Rename to PlaygroundView
+struct PlaygroundView: View {
 
     @StateObject var viewModel = PlaygroundViewModel()
 
@@ -80,7 +80,6 @@ struct PlaygroundView: View { // Rename to PlaygroundView
                             .accessibility(identifier: "playground-email")
                     }
 
-                    // (enable step-up verification)
                     Section(header: Text("PERMISSIONS")) {
                         Toggle("Balances", isOn: viewModel.balancesPermission)
                             .accessibility(identifier: "playground-balances-permission")

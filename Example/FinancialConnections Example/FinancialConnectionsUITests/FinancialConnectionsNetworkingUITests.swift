@@ -36,29 +36,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
 
-//        let dataSegmentPickerButton = app.segmentedControls.buttons["Networking"]
-//        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-//        dataSegmentPickerButton.tap()
-//
-//        app.fc_playgroundNativeButton.tap()
-//
-//        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-//        enableTestModeSwitch.turnSwitch(on: true)
-//
-//        app.fc_scrollDown() // see email
-//        let playgroundEmailTextField = app.textFields["playground-email"]
-//        XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
-//        playgroundEmailTextField.tap()
-//        clear(textField: playgroundEmailTextField)
-//        app.fc_dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
-//
-//        let multiSelectSwitch = app.switches["networking-multi-select"]
-//        XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
-//        multiSelectSwitch.turnSwitch(on: false)
-//
-//        app.fc_scrollDown() // see permissions
-//        app.switches["playground-transactions-permission"].turnSwitch(on: true)
-
         app.fc_nativeConsentAgreeButton.tap()
 
         let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
@@ -118,29 +95,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
 
-//        app.fc_playgroundCell.tap()
-//
-//        let dataSegmentPickerButton = app.segmentedControls.buttons["Networking"]
-//        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-//        dataSegmentPickerButton.tap()
-//
-//        app.fc_playgroundNativeButton.tap()
-//
-//        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-//        enableTestModeSwitch.turnSwitch(on: true)
-//
-//        app.fc_scrollDown() // see email
-//        let playgroundEmailTextField = app.textFields["playground-email"]
-//        XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
-//        playgroundEmailTextField.tap()
-//        clear(textField: playgroundEmailTextField)
-//        playgroundEmailTextField.typeText(emailAddress)
-//        app.fc_dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
-//
-//        app.fc_scrollDown() // see permissions
-//        app.switches["playground-transactions-permission"].turnSwitch(on: true)
-//        app.fc_playgroundShowAuthFlowButton.tap()
-
         app.fc_nativeConsentAgreeButton.tap()
 
         let linkContinueButton = app.buttons["link_continue_button"]
@@ -195,33 +149,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
-//
-//        let dataSegmentPickerButton = app.segmentedControls.buttons["Networking"]
-//        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-//        dataSegmentPickerButton.tap()
-//
-//        app.fc_playgroundNativeButton.tap()
-//
-//        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-//        enableTestModeSwitch.turnSwitch(on: true)
-//
-//        app.fc_scrollDown() // see email
-//        let playgroundEmailTextField = app.textFields["playground-email"]
-//        XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
-//        playgroundEmailTextField.tap()
-//        clear(textField: playgroundEmailTextField)
-//        playgroundEmailTextField.typeText(emailAddress)
-//        app.fc_dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
-//
-//        let multiSelectSwitch = app.switches["networking-multi-select"]
-//        XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
-//        multiSelectSwitch.turnSwitch(on: false)
-//
-//        app.fc_scrollDown() // see permissions
-//        app.switches["playground-ownership-permission"].turnSwitch(on: false)
-//        app.switches["playground-balances-permission"].turnSwitch(on: false)
-//        app.switches["playground-transactions-permission"].turnSwitch(on: false)
-//
 
         app.fc_nativeConsentAgreeButton.tap()
 
@@ -272,34 +199,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
-
-//        app.fc_playgroundCell.tap()
-//
-//        let dataSegmentPickerButton = app.segmentedControls.buttons["Networking"]
-//        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-//        dataSegmentPickerButton.tap()
-//
-//        app.fc_playgroundNativeButton.tap()
-//
-//        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-//        enableTestModeSwitch.turnSwitch(on: true)
-//
-//        app.fc_scrollDown() // see email
-//        let playgroundEmailTextField = app.textFields["playground-email"]
-//        XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
-//        playgroundEmailTextField.tap()
-//        clear(textField: playgroundEmailTextField)
-//        playgroundEmailTextField.typeText(emailAddress)
-//        app.fc_dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
-//
-//        let multiSelectSwitch = app.switches["networking-multi-select"]
-//        XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
-//        multiSelectSwitch.turnSwitch(on: true)
-//
-//        app.fc_scrollDown() // see permissions
-//        app.switches["playground-ownership-permission"].turnSwitch(on: true)
-//
-//        app.fc_playgroundShowAuthFlowButton.tap()
 
         app.fc_nativeConsentAgreeButton.tap()
 
@@ -358,35 +257,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
 
-//        let app = XCUIApplication.fc_launch()
-//
-//        app.fc_playgroundCell.tap()
-//
-//        let dataSegmentPickerButton = app.segmentedControls.buttons["Networking"]
-//        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-//        dataSegmentPickerButton.tap()
-//
-//        app.fc_playgroundNativeButton.tap()
-//
-//        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-//        enableTestModeSwitch.turnSwitch(on: true)
-//
-//        app.fc_scrollDown() // see email
-//        let playgroundEmailTextField = app.textFields["playground-email"]
-//        XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
-//        playgroundEmailTextField.tap()
-//        clear(textField: playgroundEmailTextField)
-//        playgroundEmailTextField.typeText(emailAddress)
-//        app.fc_dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
-//
-//        let multiSelectSwitch = app.switches["networking-multi-select"]
-//        XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
-//        multiSelectSwitch.turnSwitch(on: true)
-//
-//        app.fc_scrollDown() // see permissions
-//        app.switches["playground-transactions-permission"].turnSwitch(on: true)
-//
-//        app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
 
         let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
