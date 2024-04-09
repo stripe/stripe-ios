@@ -90,7 +90,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["payment_method_type"] as? String, "card")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "STPPaymentHandlerErrorDomain")
-            XCTAssertEqual(lastAnalytic?["error_code"] as? String, "8")
+            XCTAssertEqual(lastAnalytic?["error_code"] as? String, "requiresAuthenticationContextErrorCode")
             XCTAssertTrue(status == .failed)
             XCTAssertNotNil(paymentIntent)
             XCTAssertNotNil(error)
