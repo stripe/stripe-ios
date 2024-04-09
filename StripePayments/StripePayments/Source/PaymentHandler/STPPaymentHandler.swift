@@ -430,10 +430,7 @@ public class STPPaymentHandler: NSObject {
                 paymentIntent,
                 _error(
                     for: .intentStatusErrorCode,
-                    loggingSafeUserInfo: [
-                        STPError.errorMessageKey:
-                            "Confirm the PaymentIntent on the backend before calling handleNextActionForPayment:withAuthenticationContext:completion.",
-                    ]
+                    loggingSafeErrorMessage: "Confirm the PaymentIntent on the backend before calling handleNextActionForPayment:withAuthenticationContext:completion."
                 )
             )
         } else {
@@ -683,16 +680,7 @@ public class STPPaymentHandler: NSObject {
 
         if setupIntent.status == .requiresConfirmation {
             // The caller forgot to confirm the setupIntent on the backend before calling this method
-            wrappedCompletion(
-                .failed,
-                setupIntent,
-                _error(
-                    for: .intentStatusErrorCode,
-                    loggingSafeUserInfo: [
-                        STPError.errorMessageKey:
-                            "Confirm the SetupIntent on the backend before calling handleNextActionForSetupIntent:withAuthenticationContext:completion.",
-                    ]
-                )
+            wrappedCompletion(.failed, setupIntent, _error(for: .intentStatusErrorCode, loggingSafeErrorMessage: "Confirm the SetupIntent on the backend before calling handleNextActionForSetupIntent:withAuthenticationContext:completion.")
             )
         } else {
             _handleNextAction(
@@ -860,9 +848,7 @@ public class STPPaymentHandler: NSObject {
                 with: STPPaymentHandlerActionStatus.failed,
                 error: _error(
                     for: .unexpectedErrorCode,
-                    loggingSafeUserInfo: [
-                        "error_message": "Unknown SetupIntent status",
-                    ]
+                    loggingSafeErrorMessage: "Unknown SetupIntent status"
                 )
             )
 
@@ -881,9 +867,7 @@ public class STPPaymentHandler: NSObject {
                         error: _error(
                             for: .paymentErrorCode,
                             apiErrorCode: lastSetupError.code,
-                            loggingSafeUserInfo: [
-                                NSLocalizedDescriptionKey: lastSetupError.message ?? "",
-                            ]
+                            localizedDescription: lastSetupError.message
                         )
                     )
                 } else {
@@ -938,9 +922,7 @@ public class STPPaymentHandler: NSObject {
                 with: STPPaymentHandlerActionStatus.failed,
                 error: _error(
                     for: .unexpectedErrorCode,
-                    loggingSafeUserInfo: [
-                        "error_message": "Unknown PaymentIntent status",
-                    ]
+                    loggingSafeErrorMessage: "Unknown PaymentIntent status"
                 )
             )
 
@@ -962,9 +944,7 @@ public class STPPaymentHandler: NSObject {
                         error: _error(
                             for: .paymentErrorCode,
                             apiErrorCode: lastPaymentError.code,
-                            loggingSafeUserInfo: [
-                                NSLocalizedDescriptionKey: lastPaymentError.message ?? "",
-                            ]
+                            localizedDescription: lastPaymentError.message
                         )
                     )
                 } else {
@@ -1008,9 +988,9 @@ public class STPPaymentHandler: NSObject {
             action.complete(with: STPPaymentHandlerActionStatus.canceled, error: nil)
 
         case .requiresSource:
-            action.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "PaymentIntent status is requiresSource"]))
+            action.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "PaymentIntent status is requiresSource"))
         case .requiresSourceAction:
-            action.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "PaymentIntent status is requiresSourceAction"]))
+            action.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "PaymentIntent status is requiresSourceAction"))
         }
         return false
     }
@@ -1026,7 +1006,7 @@ public class STPPaymentHandler: NSObject {
             stpAssertionFailure("Calling _handleAuthenticationForCurrentAction without a next action!")
             currentAction.complete(
                 with: .failed,
-                error: _error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "Calling _handleAuthenticationForCurrentAction without a next action!"])
+                error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Calling _handleAuthenticationForCurrentAction without a next action!")
             )
             return
         }
@@ -1036,9 +1016,7 @@ public class STPPaymentHandler: NSObject {
                 with: STPPaymentHandlerActionStatus.failed,
                 error: self._error(
                     for: .unexpectedErrorCode,
-                    loggingSafeUserInfo: [
-                        "error_message": "Authentication action \(authenticationAction.type) is missing expected details.",
-                    ]
+                    loggingSafeErrorMessage: "Authentication action \(authenticationAction.type) is missing expected details."
                 )
             )
         }
@@ -1049,9 +1027,7 @@ public class STPPaymentHandler: NSObject {
                 with: STPPaymentHandlerActionStatus.failed,
                 error: self._error(
                     for: .unsupportedAuthenticationErrorCode,
-                    loggingSafeUserInfo: [
-                        STPError.errorMessageKey: "Unknown authentication action type",
-                    ]
+                    loggingSafeErrorMessage: "Unknown authentication action type"
                 )
             )
         case .redirectToURL:
@@ -1101,9 +1077,7 @@ public class STPPaymentHandler: NSObject {
             if let useStripeSDK = authenticationAction.useStripeSDK {
                 switch useStripeSDK.type {
                 case .unknown:
-                    currentAction.complete(with: STPPaymentHandlerActionStatus.failed, error: _error(for: .unexpectedErrorCode, loggingSafeUserInfo: [
-                        "error_message": "Unexpected useStripeSDK type",
-                    ]))
+                    currentAction.complete(with: STPPaymentHandlerActionStatus.failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Unexpected useStripeSDK type"))
 
                 case .threeDS2Fingerprint:
                     guard let threeDSService = currentAction.threeDS2Service else {
@@ -1111,9 +1085,7 @@ public class STPPaymentHandler: NSObject {
                             with: STPPaymentHandlerActionStatus.failed,
                             error: _error(
                                 for: .stripe3DS2ErrorCode,
-                                loggingSafeUserInfo: [
-                                    "description": "Failed to initialize STDSThreeDS2Service.",
-                                ]
+                                loggingSafeErrorMessage: "Failed to initialize STDSThreeDS2Service."
                             )
                         )
                         return
@@ -1140,9 +1112,7 @@ public class STPPaymentHandler: NSObject {
                                     intentID: currentAction.intentStripeID ?? "",
                                     error: self._error(
                                         for: .stripe3DS2ErrorCode,
-                                        loggingSafeUserInfo: [
-                                            "exception": exception.description,
-                                        ]
+                                        loggingSafeErrorMessage: exception.description
                                     )
                                 )
 
@@ -1150,9 +1120,7 @@ public class STPPaymentHandler: NSObject {
                                 with: STPPaymentHandlerActionStatus.failed,
                                 error: self._error(
                                     for: .stripe3DS2ErrorCode,
-                                    loggingSafeUserInfo: [
-                                        "exception": exception.description,
-                                    ]
+                                    loggingSafeErrorMessage: exception.description
                                 )
                             )
                         },
@@ -1170,9 +1138,7 @@ public class STPPaymentHandler: NSObject {
                             with: STPPaymentHandlerActionStatus.failed,
                             error: self._error(
                                 for: .stripe3DS2ErrorCode,
-                                loggingSafeUserInfo: [
-                                    "error_message": transaction == nil ? "Missing transaction." : "Missing auth request params.",
-                                ]
+                                loggingSafeErrorMessage: transaction == nil ? "Missing transaction." : "Missing auth request params."
                             )
                         )
                         return
@@ -1187,7 +1153,7 @@ public class STPPaymentHandler: NSObject {
                         publishableKeyOverride: useStripeSDK.publishableKeyOverride
                     ) { (authenticateResponse, error) in
                         guard let authenticateResponse, error == nil else {
-                            let error = error ?? self._error(for: .stripe3DS2ErrorCode, loggingSafeUserInfo: ["error_message": "Missing authenticate response"])
+                            let error = error ?? self._error(for: .stripe3DS2ErrorCode, loggingSafeErrorMessage: "Missing authenticate response")
                             currentAction.complete(with: .failed, error: error as NSError)
                             return
                         }
@@ -1238,9 +1204,7 @@ public class STPPaymentHandler: NSObject {
                                             with: .failed,
                                             error: self._error(
                                                 for: .stripe3DS2ErrorCode,
-                                                loggingSafeUserInfo: [
-                                                    "exception": exception.description,
-                                                ]
+                                                loggingSafeErrorMessage: exception.description
                                             )
                                         )
                                     }, finallyBlock: {}
@@ -1280,9 +1244,7 @@ public class STPPaymentHandler: NSObject {
                                 with: .failed,
                                 error: self._error(
                                     for: .unexpectedErrorCode,
-                                    loggingSafeUserInfo: [
-                                        "error_message": "3DS2 authenticate response missing both response and fallback URL.",
-                                    ]
+                                    loggingSafeErrorMessage: "3DS2 authenticate response missing both response and fallback URL."
                                 )
                             )
                         }
@@ -1290,9 +1252,7 @@ public class STPPaymentHandler: NSObject {
 
                 case .threeDS2Redirect:
                     guard let redirectURL = useStripeSDK.redirectURL else {
-                        currentAction.complete(with: .failed, error: self._error(for: .unexpectedErrorCode, loggingSafeUserInfo: [
-                            "error_message": "Next action type is threeDS2Redirect but missing redirect URL.",
-                        ]))
+                        currentAction.complete(with: .failed, error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Next action type is threeDS2Redirect but missing redirect URL."))
                         return
                     }
                     let returnURL: URL?
@@ -1353,7 +1313,7 @@ public class STPPaymentHandler: NSObject {
             }
             guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
                 assertionFailure("PayNow is not supported outside of PaymentSheet.")
-                currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeUserInfo: [STPError.errorMessageKey: "PayNow is not supported outside of PaymentSheet."]))
+                currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "PayNow is not supported outside of PaymentSheet."))
                 return
             }
 
@@ -1379,7 +1339,7 @@ public class STPPaymentHandler: NSObject {
             }
             guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
                 assertionFailure("PromptPay is not supported outside of PaymentSheet.")
-                currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeUserInfo: [STPError.errorMessageKey: "PromptPay is not supported outside of PaymentSheet."]))
+                currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "PromptPay is not supported outside of PaymentSheet."))
                 return
             }
 
@@ -1478,7 +1438,7 @@ public class STPPaymentHandler: NSObject {
                     ) { paymentIntent, error in
                         currentAction.paymentIntent = paymentIntent
                         guard let paymentIntent, let paymentMethod = paymentIntent.paymentMethod, error == nil else {
-                            let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "Missing PaymentIntent or paymentIntent.paymentMethod."])
+                            let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent or paymentIntent.paymentMethod.")
                             currentAction.complete(
                                 with: STPPaymentHandlerActionStatus.failed,
                                 error: error as NSError
@@ -1547,7 +1507,7 @@ public class STPPaymentHandler: NSObject {
                 expand: ["payment_method"]
             ) { retrievedSetupIntent, error in
                 guard let setupIntent = retrievedSetupIntent, let paymentMethod = setupIntent.paymentMethod, error == nil else {
-                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "Missing SetupIntent or setupIntent.paymentMethod."])
+                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent or setupIntent.paymentMethod.")
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
                         error: error as NSError
@@ -1603,7 +1563,7 @@ public class STPPaymentHandler: NSObject {
             stpAssert(false, "currentAction is an unknown type or nil intent.")
             currentAction.complete(
                 with: .failed,
-                error: _error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "currentAction is an unknown type or nil intent."])
+                error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "currentAction is an unknown type or nil intent.")
             )
         }
     }
@@ -1808,29 +1768,26 @@ public class STPPaymentHandler: NSObject {
         let presentingViewController =
             authenticationContext.authenticationPresentingViewController()
         var canPresent = true
-        var errorMessage: String?
+        var loggingSafeErrorMessage: String?
 
         // Is it in the window hierarchy?
         if presentingViewController.viewIfLoaded?.window == nil {
             canPresent = false
-            errorMessage =
+            loggingSafeErrorMessage =
                 "authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead."
         }
 
         // Is it already presenting something?
         if presentingViewController.presentedViewController != nil {
             canPresent = false
-            errorMessage =
+            loggingSafeErrorMessage =
                 "authenticationPresentingViewController is already presenting. You should probably dismiss the presented view controller in `prepareAuthenticationContextForPresentation`."
         }
 
         if !canPresent {
             error = _error(
                 for: .requiresAuthenticationContextErrorCode,
-                loggingSafeUserInfo: errorMessage != nil
-                    ? [
-                        STPError.errorMessageKey: errorMessage ?? "",
-                    ] : [:]
+                loggingSafeErrorMessage: loggingSafeErrorMessage
             )
         }
         return canPresent
@@ -1949,7 +1906,7 @@ public class STPPaymentHandler: NSObject {
             stpAssert(false, "currentAction is an unknown type or nil intent.")
             currentAction.complete(
                 with: .failed,
-                error: _error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "currentAction is an unknown type or nil intent."])
+                error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "currentAction is an unknown type or nil intent.")
             )
         }
     }
@@ -2003,7 +1960,7 @@ public class STPPaymentHandler: NSObject {
                     stpAssert(false, "currentAction is an unknown type or nil intent.")
                     currentAction.complete(
                         with: .failed,
-                        error: self._error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "currentAction is an unknown type or nil intent."])
+                        error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "currentAction is an unknown type or nil intent.")
                     )
                 }
             } else {
@@ -2029,13 +1986,16 @@ public class STPPaymentHandler: NSObject {
     }
 
     // MARK: - Errors
-    /// - Parameter loggingSafeUserInfo: Error details that are safe to log i.e. don't contain PII/PDE or secrets.
+    /// - Parameter loggingSafeErrorMessage: Error details that are safe to log i.e. don't contain PII/PDE or secrets.
     @_spi(STP) public func _error(
         for errorCode: STPPaymentHandlerErrorCode,
         apiErrorCode: String? = nil,
-        loggingSafeUserInfo: [String: String] = [:]
+        loggingSafeErrorMessage: String? = nil,
+        localizedDescription: String? = nil
     ) -> NSError {
-        var userInfo = loggingSafeUserInfo
+        var userInfo = [String: String]()
+        userInfo[STPError.errorMessageKey] = loggingSafeErrorMessage
+        userInfo[NSLocalizedDescriptionKey] = localizedDescription
         switch errorCode {
         // 3DS(2) flow expected user errors
         case .notAuthenticatedErrorCode:
@@ -2217,7 +2177,7 @@ extension STPPaymentHandler {
                         stpAssertionFailure("3DS2 challenge completed, but the PaymentIntent is still requiresAction")
                         currentAction.complete(
                             with: .failed,
-                            error: self._error(for: .unexpectedErrorCode, loggingSafeUserInfo: [STPError.errorMessageKey: "3DS2 challenge completed, but the PaymentIntent is still requiresAction"])
+                            error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "3DS2 challenge completed, but the PaymentIntent is still requiresAction")
                         )
                     }
                 } else if let currentAction = self.currentAction
@@ -2228,7 +2188,7 @@ extension STPPaymentHandler {
                         stpAssertionFailure("3DS2 challenge completed, but the SetupIntent is still requiresAction")
                         currentAction.complete(
                             with: STPPaymentHandlerActionStatus.failed,
-                            error: self._error(for: .unexpectedErrorCode, loggingSafeUserInfo: [STPError.errorMessageKey: "3DS2 challenge completed, but the SetupIntent is still requiresAction"])
+                            error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "3DS2 challenge completed, but the SetupIntent is still requiresAction")
                         )
                     }
                 }
@@ -2240,9 +2200,7 @@ extension STPPaymentHandler {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: self._error(
                         for: .notAuthenticatedErrorCode,
-                        loggingSafeUserInfo: [
-                            "transaction_status": transactionStatus,
-                        ]
+                        loggingSafeErrorMessage: "Failed with transaction_status: \(transactionStatus)"
                     )
                 )
             })
@@ -2417,7 +2375,7 @@ extension STPPaymentHandler {
             stpAssertionFailure("Calling cancel3DS2ChallengeFlow without a threeDS2Transaction.")
             currentAction.complete(
                 with: .failed,
-                error: _error(for: .unexpectedErrorCode, loggingSafeUserInfo: [STPError.errorMessageKey: "Calling cancel3DS2ChallengeFlow without a threeDS2Transaction."])
+                error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Calling cancel3DS2ChallengeFlow without a threeDS2Transaction.")
             )
             return
         }

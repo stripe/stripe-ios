@@ -129,10 +129,8 @@ extension STPPaymentHandler {
                 action.complete(
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
-                        for: .unsupportedAuthenticationErrorCode,
-                        loggingSafeUserInfo: [
-                            "STPIntentAction": action.nextAction()?.description ?? "",
-                        ]
+                        for: .unexpectedErrorCode,
+                        loggingSafeErrorMessage: "paymentIntentStatusSpec is redirect_to_url but missing redirect URL"
                     )
                 )
             }
@@ -142,10 +140,9 @@ extension STPPaymentHandler {
             action.complete(
                 with: .failed,
                 error: _error(
-                    for: .intentStatusErrorCode,
-                    loggingSafeUserInfo: [
-                        "STPIntentAction": action.nextAction()?.description ?? "",
-                    ]
+                    for: .unexpectedErrorCode,
+                    loggingSafeErrorMessage: "Failed with unknown status spec type \(paymentIntentStatusSpec.type)"
+
                 )
             )
         }
