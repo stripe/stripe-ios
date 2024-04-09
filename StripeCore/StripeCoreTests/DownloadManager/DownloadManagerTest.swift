@@ -272,14 +272,32 @@ class DownloadManagerTest: APIStubbedTestCase {
         wait(for: [expected_imageUpdater2], timeout: 1.0)
 
     }
+    
+    func testConcurrentDownloadsForSameURL() {
+        let downloadExpectation = expectation(description: "Download image concurrently")
+        downloadExpectation.expectedFulfillmentCount = 3 // Assuming 3 concurrent requests
+
+        stub(condition: isHost("js.stripe.com") && isPath("/validImage.png")) { _ in
+            return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil).responseTime(0.5) // Simulate network delay
+        }
+
+        // Start 3 concurrent download tasks for the same URL
+        DispatchQueue.concurrentPerform(iterations: 3) { _ in
+            let _  = self.rm.downloadImage(url: self.validURL, placeholder: nil) { image in
+                XCTAssertEqual(image.size, self.validImageSize, "Downloaded image size should match the expected size")
+                downloadExpectation.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: 5)
+    }
+
 
     func testImageNamefromURL() {
-        let img0 = rm.imageNameFromURL(url: URL(string: "http://js.stripe.com/icon0.png")!)
+        let img0 = URL(string: "http://js.stripe.com/icon0.png")!.lastPathComponent
         XCTAssertEqual(img0, "icon0.png")
 
-        let img1 = rm.imageNameFromURL(
-            url: URL(string: "http://js.stripe.com/icon1.png?key1=value1")!
-        )
+        let img1 = URL(string: "http://js.stripe.com/icon1.png?key1=value1")!.lastPathComponent
         XCTAssertEqual(img1, "icon1.png")
     }
 
