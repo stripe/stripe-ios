@@ -307,7 +307,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         let validImageData = validImageData()
         let image = try rm.persistToMemory(validImageData, forImageName: "imgName")
         sleep(1) // `persistToMemory` uses a `Task` to async finish the storing of images, wait for it.
-        
+
         XCTAssertEqual(image.size, validImageSize)
         cachedImage = await rm.imageCache.cachedImageNamed("imgName")
         XCTAssertNotNil(cachedImage)
