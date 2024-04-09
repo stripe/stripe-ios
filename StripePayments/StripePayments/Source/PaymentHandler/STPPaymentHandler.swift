@@ -236,7 +236,7 @@ public class STPPaymentHandler: NSObject {
                     completion(.succeeded, paymentIntent, nil)
                 } else {
                     let errorMessage = "STPPaymentHandler status is succeeded, but the PI is not in a success state or there was an error."
-                    assertionFailure(errorMessage)
+                    stpAssertionFailure(errorMessage)
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
                         "error_message": errorMessage,
                         "payment_intent": paymentIntent.stripeId,
@@ -404,7 +404,7 @@ public class STPPaymentHandler: NSObject {
                     completion(.succeeded, paymentIntent, nil)
                 } else {
                     let errorMessage = "STPPaymentHandler status is succeeded, but the PI is not in a success state or there was an error."
-                    assertionFailure(errorMessage)
+                    stpAssertionFailure(errorMessage)
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
                         "error_message": errorMessage,
                         "payment_intent": paymentIntent.stripeId,
@@ -501,7 +501,7 @@ public class STPPaymentHandler: NSObject {
                     completion(.succeeded, setupIntent, nil)
                 } else {
                     let errorMessage = "STPPaymentHandler status is succeeded, but the SI is not in a success state or there was an error."
-                    assertionFailure(errorMessage)
+                    stpAssertionFailure(errorMessage)
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
                         "error_message": errorMessage,
                         "setup_intent": setupIntent?.stripeID ?? "nil",
@@ -658,7 +658,7 @@ public class STPPaymentHandler: NSObject {
                     completion(.succeeded, setupIntent, nil)
                 } else {
                     let errorMessage = "STPPaymentHandler status is succeeded, but the SI is not in a success state or there was an error."
-                    assertionFailure(errorMessage)
+                    stpAssertionFailure(errorMessage)
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
                         "error_message": errorMessage,
                         "setup_intent": setupIntent?.stripeID ?? "nil",
@@ -1152,9 +1152,13 @@ public class STPPaymentHandler: NSObject {
                             .authenticationTimeout,
                         publishableKeyOverride: useStripeSDK.publishableKeyOverride
                     ) { (authenticateResponse, error) in
-                        guard let authenticateResponse, error == nil else {
+                        guard let authenticateResponse else {
                             let error = error ?? self._error(for: .stripe3DS2ErrorCode, loggingSafeErrorMessage: "Missing authenticate response")
                             currentAction.complete(with: .failed, error: error as NSError)
+                            return
+                        }
+                        guard error == nil else {
+                            currentAction.complete(with: .failed, error: error! as NSError)
                             return
                         }
                         if let aRes = authenticateResponse.authenticationResponse {
