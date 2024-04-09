@@ -132,7 +132,7 @@ final class PlaygroundViewModel: ObservableObject {
             }
         )
     }
-    var transactionsdPermission: Binding<Bool> {
+    var transactionsPermission: Binding<Bool> {
         Binding(
             get: {
                 self.playgroundConfiguration.transactionsPermission
@@ -144,10 +144,16 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
-    @Published var showLiveEvents: Bool = PlaygroundUserDefaults.showLiveEvents {
-        didSet {
-            PlaygroundUserDefaults.showLiveEvents = showLiveEvents
-        }
+    var liveEvents: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.liveEvents
+            },
+            set: {
+                self.playgroundConfiguration.liveEvents = $0
+                self.objectWillChange.send()
+            }
+        )
     }
 
     @Published var showConfigurationView = false
@@ -187,7 +193,7 @@ final class PlaygroundViewModel: ObservableObject {
                 PresentFinancialConnectionsSheet(
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
                     onEvent: { event in
-                        if self?.showLiveEvents == true {
+                        if self?.liveEvents.wrappedValue == true {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
                             BannerHelper.shared.showBanner(with: message, for: 3.0)
                         }

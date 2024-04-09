@@ -260,7 +260,23 @@ final class PlaygroundConfiguration {
         }
     }
 
-    // MARK: - Other
+    // MARK: - Other Settings
+
+    private static let liveEventsKey = "live_events"
+    var liveEvents: Bool {
+        get {
+            if let liveEvents = configurationStore[Self.liveEventsKey] as? Bool {
+                return liveEvents
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationStore[Self.liveEventsKey] = newValue
+        }
+    }
+
+    // MARK: - Update
 
     func updateConfigurationString(_ configurationString: String) {
         guard
@@ -343,6 +359,12 @@ final class PlaygroundConfiguration {
             self.transactionsPermission = transactionsPermission
         } else {
             self.transactionsPermission = false
+        }
+
+        if let liveEvents = dictionary[Self.liveEventsKey] as? Bool {
+            self.liveEvents = liveEvents
+        } else {
+            self.liveEvents = false
         }
     }
 }

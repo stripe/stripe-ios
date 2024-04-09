@@ -90,12 +90,12 @@ struct PlaygroundView: View {
                         Toggle("Payment Method", isOn: viewModel.paymentMethodPermission)
                             .accessibility(identifier: "playground-payment-method-permission")
 
-                        Toggle("Transactions", isOn: viewModel.transactionsdPermission)
+                        Toggle("Transactions", isOn: viewModel.transactionsPermission)
                             .accessibility(identifier: "playground-transactions-permission")
                     }
 
                     Section(header: Text("Other")) {
-                        Toggle("Show Live Events", isOn: $viewModel.showLiveEvents)
+                        Toggle("Show Live Events", isOn: viewModel.liveEvents)
 
                         Button(action: viewModel.didSelectClearCaches) {
                             Text("Clear Cache (requests, images etc.)")

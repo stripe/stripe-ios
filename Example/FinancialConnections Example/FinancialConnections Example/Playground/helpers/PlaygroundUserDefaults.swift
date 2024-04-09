@@ -15,10 +15,4 @@ final class PlaygroundUserDefaults {
         defaultValue: nil
     )
     static var enableNative: Bool?
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_SHOW_LIVE_EVENTS",
-        defaultValue: false
-    )
-    static var showLiveEvents: Bool
 }
