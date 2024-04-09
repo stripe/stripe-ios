@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Sünnikuupäev ei näi olevat õige";
 
+"Details not visible" = "Üksikasjad pole nähtaval";
+
 "Flip your identity card over to the other side" = "Pöörake ID-kaart ümber";
 
 "Front identity card photo successfully uploaded" = "ID-kaardi esikülje foto üleslaadimine õnnestus";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "Eraisiku CPF";
 
+"Keep ID level" = "Hoidke isikut tõendavat dokumenti rõhtsalt";
+
 "Last 4 of Social Security number" = "Sotsiaalkindlustuse numbri viimased 4 numbrit";
 
 "Loading" = "Laadimine";
+
+"Make sure all details are visible and focus" = "Veenduge, et kõik üksikasjad oleksid nähtavad ja teravad";
 
 "Make sure you're in a well lit space." = "Veenduge, et olete hästi valgustatud kohas.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Asetage kaugemale";
 
+"Move to a well-lit area" = "Liikuge hästi valgustatud kohta";
+
 "NRIC or FIN" = "NRIC või FIN";
+
+"No document detected" = "Dokumenti ei tuvastatud";
 
 "Personal ID number" = "Isikukood";
 

@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "La data de naixement no és vàlida";
 
+"Details not visible" = "Els detalls no es veuen bé";
+
 "Flip your identity card over to the other side" = "Gireu el document d'identitat perquè se'n vegi l'altra cara";
 
 "Front identity card photo successfully uploaded" = "La foto de l'anvers del document d'identitat s'ha carregat correctament";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "CPF particular";
 
+"Keep ID level" = "Col·loca bé el document d'identitat";
+
 "Last 4 of Social Security number" = "Últims 4 números de la Seguretat Social";
 
 "Loading" = "S'està carregant";
+
+"Make sure all details are visible and focus" = "Assegureu-vos que tots els detalls siguin visibles";
 
 "Make sure you're in a well lit space." = "Assegureu-vos que esteu en un espai ben il·luminat.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Allunya'l";
 
+"Move to a well-lit area" = "Mou-te a un espai ben il·luminat";
+
 "NRIC or FIN" = "NRIC o FIN";
+
+"No document detected" = "No s'ha detectat cap document";
 
 "Personal ID number" = "Número d'identificació personal";
 
