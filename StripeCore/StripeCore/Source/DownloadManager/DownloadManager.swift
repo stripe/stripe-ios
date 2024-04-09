@@ -194,10 +194,6 @@ extension DownloadManager {
             sema.signal()
         }
         sema.wait()
-        do {
-            return try box.result!.get()
-        } catch {
-            return nil
-        }
+        return try? box.result?.get()
     }
 }
