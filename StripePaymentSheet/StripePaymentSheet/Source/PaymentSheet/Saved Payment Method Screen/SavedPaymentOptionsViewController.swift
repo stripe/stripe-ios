@@ -35,7 +35,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         case paymentOptionCellDidSelectEditOnNonSavedItem
         case paymentOptionCellDidSelectRemoveOnNonSavedItem
         case removePaymentMethodOnNonSavedItem
-        case removalMessageBlank
     }
     // MARK: - Types
     // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
