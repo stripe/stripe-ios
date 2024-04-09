@@ -20,7 +20,6 @@ import UIKit
 
     let session: URLSession
     let analyticsClient: STPAnalyticsClient
-    let imageCacheSemaphore = DispatchSemaphore(value: 1)
     let downloadQueue = DispatchQueue(label: "Stripe Download Cache")
 
     var imageCache = ImageCache()
