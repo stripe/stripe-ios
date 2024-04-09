@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Η ημερομηνία γέννησης δεν φαίνεται έγκυρη";
 
+"Details not visible" = "Οι λεπτομέρειες δεν είναι ορατές";
+
 "Flip your identity card over to the other side" = "Γυρίστε την ταυτότητά σας από την άλλη πλευρά";
 
 "Front identity card photo successfully uploaded" = "Η φωτογραφία της μπροστινής πλευράς της ταυτότητας στάλθηκε με επιτυχία";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "Ατομικό CPF";
 
+"Keep ID level" = "Κρατήστε οριζόντια την ταυτότητα";
+
 "Last 4 of Social Security number" = "Τελευταία 4 ψηφία του Αριθμού κοινωνικής ασφάλισης";
 
 "Loading" = "Φόρτωση";
+
+"Make sure all details are visible and focus" = "Βεβαιωθείτε ότι όλες οι λεπτομέρειες είναι ορατές και εστιασμένες";
 
 "Make sure you're in a well lit space." = "Βεβαιωθείτε ότι βρίσκεστε σε έναν καλά φωτισμένο χώρο.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Μετακινήστε πιο μακριά";
 
+"Move to a well-lit area" = "Μεταβείτε σε έναν χώρο με καλό φωτισμό";
+
 "NRIC or FIN" = "NRIC ή FIN";
+
+"No document detected" = "Δεν ανιχνεύτηκε κανένα έγγραφο";
 
 "Personal ID number" = "Αριθμός ταυτότητας";
 
