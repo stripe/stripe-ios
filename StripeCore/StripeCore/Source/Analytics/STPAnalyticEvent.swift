@@ -144,6 +144,11 @@ import Foundation
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
+    // MARK: - CustomerSheet initialization
+    case customerSheetLoadStarted = "cs_load_started"
+    case customerSheetLoadSucceeded = "cs_load_succeeded"
+    case customerSheetLoadFailed = "cs_load_failed"
+    
     // MARK: - Customer Sheet
     case cs_add_payment_method_screen_presented = "cs_add_payment_method_screen_presented"
     case cs_select_payment_method_screen_presented = "cs_select_payment_method_screen_presented"
