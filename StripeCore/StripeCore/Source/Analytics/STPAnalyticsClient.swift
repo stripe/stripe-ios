@@ -66,18 +66,6 @@ import UIKit
         additionalInfoSet.removeAll()
     }
 
-    public static var isSimulatorOrTest: Bool {
-        #if targetEnvironment(simulator)
-            return true
-        #else
-            return NSClassFromString("XCTest") != nil
-        #endif
-    }
-
-    @objc public class func shouldCollectAnalytics() -> Bool {
-        return !isSimulatorOrTest
-    }
-
     public func additionalInfo() -> [String] {
         return additionalInfoSet.sorted()
     }
@@ -115,11 +103,9 @@ import UIKit
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
-        guard type(of: self).shouldCollectAnalytics() else {
-            // Don't send the analytic, but add it to `_testLogHistory` if we're in a test.
-            if NSClassFromString("XCTest") != nil {
-                _testLogHistory.append(payload)
-            }
+        // Don't send the analytic, but add it to `_testLogHistory` if we're in a test.
+        guard NSClassFromString("XCTest") == nil else {
+            _testLogHistory.append(payload)
             return
         }
 
