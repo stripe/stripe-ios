@@ -16,24 +16,6 @@ final class PlaygroundMainViewModel: ObservableObject {
 
     let playgroundConfiguration = PlaygroundConfiguration.shared
 
-    enum Flow: String, CaseIterable, Identifiable {
-        case data
-        case payments
-        case networking
-
-        var id: String {
-            return rawValue
-        }
-    }
-    @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow) ?? .data {
-        didSet {
-            PlaygroundUserDefaults.flow = flow.rawValue
-//            if flow != .networking {
-//                email = ""
-//            }
-        }
-    }
-
     var sdkType: Binding<PlaygroundConfiguration.SDKType> {
         Binding(
             get: {
@@ -183,13 +165,6 @@ final class PlaygroundMainViewModel: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
-//        self.nativeSelection = {
-//            if let enableNative = PlaygroundUserDefaults.enableNative {
-//                return enableNative ? .native : .web
-//            } else {
-//                return .automatic
-//            }
-//        }()
         print(PlaygroundConfiguration.shared.configurationJSONString)
         playgroundConfigurationViewModel
             .objectWillChange
@@ -206,17 +181,7 @@ final class PlaygroundMainViewModel: ObservableObject {
     private func setup() {
         isLoading = true
         SetupPlayground(
-            configurationDictionary: playgroundConfiguration.configurationJSONDictionary,
-            enableTestMode: false,
-            flow: flow.rawValue,
-            email: "",
-            enableNetworkingMultiSelect: false,
-            enableOwnershipPermission: false,
-            enableBalancesPermission: false,
-            enableTransactionsPermission: false,
-            customScenario: "",
-            customPublicKey: "",
-            customSecretKey: ""
+            configurationDictionary: playgroundConfiguration.configurationJSONDictionary
         ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
@@ -278,20 +243,13 @@ account_ids=\(session.accounts.data.map({ $0.id }))
 
 private func SetupPlayground(
     configurationDictionary: [String: Any],
-    enableTestMode: Bool,
-    flow: String,
-    email: String,
-    enableNetworkingMultiSelect: Bool,
-    enableOwnershipPermission: Bool,
-    enableBalancesPermission: Bool,
-    enableTransactionsPermission: Bool,
-    customScenario: String,
-    customPublicKey: String,
-    customSecretKey: String,
     completionHandler: @escaping ([String: String]?) -> Void
 ) {
-    if !enableTestMode && email == "test@test.com" {
-        assertionFailure("\(email) will not work with livemode, it will return rate limit exceeded")
+    if
+        (configurationDictionary["test_mode"] as? Bool) == true,
+        (configurationDictionary["email"] as? String) == "test@test.com"
+    {
+        assertionFailure("test@test.com will not work with livemode, it will return rate limit exceeded")
     }
 
     let baseURL = "https://financial-connections-playground-ios.glitch.me"
@@ -302,16 +260,6 @@ private func SetupPlayground(
     urlRequest.httpMethod = "POST"
     urlRequest.httpBody = {
         var requestBody: [String: Any] = [:]
-        requestBody["enable_test_mode"] = enableTestMode
-        requestBody["flow"] = flow
-        requestBody["email"] = email
-        requestBody["enable_networking_multi_select"] = enableNetworkingMultiSelect
-        requestBody["enable_ownership_permission"] = enableOwnershipPermission
-        requestBody["enable_balances_permission"] = enableBalancesPermission
-        requestBody["enable_transactions_permission"] = enableTransactionsPermission
-        requestBody["custom_scenario"] = customScenario
-        requestBody["custom_public_key"] = customPublicKey
-        requestBody["custom_secret_key"] = customSecretKey
         requestBody["new_playground"] = true
         requestBody.merge(
             configurationDictionary,

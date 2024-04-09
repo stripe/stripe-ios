@@ -11,76 +11,10 @@ import Foundation
 final class PlaygroundUserDefaults {
 
     @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_FLOW",
-        defaultValue: PlaygroundMainViewModel.Flow.data.rawValue
-    )
-    static var flow: String
-
-    @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE",
         defaultValue: nil
     )
     static var enableNative: Bool?
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_APP_TO_APP",
-        defaultValue: false
-    )
-    static var enableAppToApp: Bool
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_TEST_MODE",
-        defaultValue: false
-    )
-    static var enableTestMode: Bool
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_EMAIL",
-        defaultValue: ""
-    )
-    static var email: String
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_NETWORKING_MULTI_SELECT",
-        defaultValue: false
-    )
-    static var enableNetworkingMultiSelect: Bool
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_OWNERSHIP_PERMISSION",
-        defaultValue: false
-    )
-    static var enableOwnershipPermission: Bool
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_BALANCES_PERMISSION",
-        defaultValue: false
-    )
-    static var enableBalancesPermission: Bool
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_TRANSACTIONS_PERMISSION",
-        defaultValue: false
-    )
-    static var enableTransactionsPermission: Bool
-
-//    @UserDefault(
-//        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_SCENARIO",
-//        defaultValue: PlaygroundMainViewModel.CustomScenario.none.rawValue
-//    )
-//    static var customScenario: String
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_PUBLIC_KEY",
-        defaultValue: ""
-    )
-    static var customPublicKey: String
-
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_SECRET_KEY",
-        defaultValue: ""
-    )
-    static var customSecretKey: String
 
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_SHOW_LIVE_EVENTS",

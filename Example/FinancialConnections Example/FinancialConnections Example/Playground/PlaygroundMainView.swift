@@ -19,7 +19,6 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                 Form {
                     Section(header: Text("Select SDK Type")) {
                         VStack(alignment: .leading, spacing: 4) {
-//                            Text("Select SDK Type")
                             Picker("Select SDK Type", selection: viewModel.sdkType) {
                                 ForEach(PlaygroundConfiguration.SDKType.allCases) {
                                     Text($0.rawValue.capitalized)

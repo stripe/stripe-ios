@@ -14,7 +14,6 @@ struct PlaygroundConfigurationView: View {
 
     var body: some View {
         Form {
-
             Section {
                 ZStack {
                     TextEditor(text: $viewModel.configurationJSONString)
