@@ -66,15 +66,6 @@ public class PaymentSheet {
         }
     }
 
-    @_spi(STP)
-    public let newLineSTP = 123
-    
-    @_spi(STP)
-    public func test(one: Int,
-                     two: Int) {
-        print("x")
-    }
-    
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
 

@@ -156,6 +156,7 @@ public class STPPaymentHandler: NSObject {
     private var formSpecPaymentHandler: FormSpecPaymentHandler?
 
     internal var _redirectShim: ((URL, URL?, Bool) -> Void)?
+    internal var analyticsClient: STPAnalyticsClient = .sharedClient
 
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
@@ -170,6 +171,13 @@ public class STPPaymentHandler: NSObject {
         with authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
+        let paymentIntentID = paymentParams.stripeId
+        logConfirmPaymentIntentStarted(paymentIntentID: paymentIntentID, paymentParams: paymentParams)
+        // Overwrite completion to send an analytic before calling the caller-supplied completion
+        let completion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self] status, paymentIntent, error in
+            self?.logConfirmPaymentIntentCompleted(paymentIntentID: paymentIntentID, status: status, paymentMethodType: paymentParams.paymentMethodType, error: error)
+            completion(status, paymentIntent, error)
+        }
         if Self.inProgress {
             assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
@@ -217,6 +225,7 @@ public class STPPaymentHandler: NSObject {
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)
                 } else {
+                    // TODO: Just make this an unexpectedErrorCode
                     let errorMessage = "STPPaymentHandler status is succeeded, but the PI is not in a success state or there was an error."
                     assertionFailure(errorMessage)
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: [
@@ -225,7 +234,7 @@ public class STPPaymentHandler: NSObject {
                         "payment_intent_status": STPPaymentIntentStatus.string(from: paymentIntent.status),
                         "error_details": error?.serializeForV1Analytics() ?? [:],
                     ])
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
+                    strongSelf.analyticsClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
                     completion(
                         .failed,
                         paymentIntent,
@@ -298,6 +307,13 @@ public class STPPaymentHandler: NSObject {
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
+        let paymentIntentID = STPPaymentIntent.id(fromClientSecret: paymentIntentClientSecret)
+        // Overwrite completion to send an analytic before calling the caller-supplied completion
+        let completion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self] status, paymentIntent, error in
+            self?.logHandleNextActionFinished(intentID: paymentIntentID, status: status, paymentMethodType: paymentIntent?.paymentMethod?.type, error: error)
+            completion(status, paymentIntent, error)
+        }
+        logHandleNextActionStarted(intentID: paymentIntentID, paymentMethodType: nil)
         if !STPPaymentIntentParams.isClientSecretValid(paymentIntentClientSecret) {
             assertionFailure("`STPPaymentHandler.handleNextAction` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#payment_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
@@ -311,7 +327,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             if let paymentIntent = paymentIntent, error == nil {
-                self.handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL, completion: completion)
+                self.handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, completion: completion)
             } else {
                 completion(.failed, paymentIntent, error as NSError?)
             }
@@ -324,14 +340,27 @@ public class STPPaymentHandler: NSObject {
     ///   - paymentIntent: The PaymentIntent to handle next actions for.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during PaymentIntent confirmation.
+    ///   - shouldSendStartAnalytic: Tracks whether STPPaymentHandler has already sent a start analytic for `handleNextAction` because this method was called from the other `handleNextAction`
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
     /// - Note: The PaymentIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
     @_spi(STP) public func handleNextAction(
         for paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
+        shouldSendAnalytic: Bool = true,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
+        let paymentIntentID = paymentIntent.stripeId
+        if shouldSendAnalytic {
+            logHandleNextActionStarted(intentID: paymentIntentID, paymentMethodType: paymentIntent.paymentMethod?.type)
+        }
+        // Overwrite completion to send an analytic before calling the caller-supplied completion
+        let completion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self] status, paymentIntent, error in
+            if shouldSendAnalytic {
+                self?.logHandleNextActionFinished(intentID: paymentIntentID, status: status, paymentMethodType: paymentIntent?.paymentMethod?.type, error: error)
+            }
+            completion(status, paymentIntent, error)
+        }
         if Self.inProgress {
             assertionFailure("`STPPaymentHandler.handleNextAction` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
@@ -373,7 +402,7 @@ public class STPPaymentHandler: NSObject {
                         "payment_intent_status": STPPaymentIntentStatus.string(from: paymentIntent.status),
                         "error_details": error?.serializeForV1Analytics() ?? [:],
                     ])
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
+                    strongSelf.analyticsClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
                     completion(
                         .failed,
                         paymentIntent,
@@ -392,7 +421,7 @@ public class STPPaymentHandler: NSObject {
                 paymentIntent,
                 _error(
                     for: .intentStatusErrorCode,
-                    userInfo: [
+                    loggingSafeUserInfo: [
                         STPError.errorMessageKey:
                             "Confirm the PaymentIntent on the backend before calling handleNextActionForPayment:withAuthenticationContext:completion.",
                     ]
@@ -422,6 +451,14 @@ public class STPPaymentHandler: NSObject {
         with authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
+        let setupIntentID = STPSetupIntent.id(fromClientSecret: setupIntentConfirmParams.clientSecret)
+        logConfirmSetupIntentStarted(setupIntentID: setupIntentID, confirmParams: setupIntentConfirmParams)
+        // Overwrite completion to send an analytic before calling the caller-supplied completion
+        let completion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self] status, setupIntent, error in
+            self?.logConfirmSetupIntentCompleted(setupIntentID: setupIntentID, status: status, paymentMethodType: setupIntentConfirmParams.paymentMethodType, error: error)
+            completion(status, setupIntent, error)
+        }
+
         if Self.inProgress {
             assertionFailure("`STPPaymentHandler.confirmSetupIntent` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
@@ -448,7 +485,7 @@ public class STPPaymentHandler: NSObject {
             Self.inProgress = false
 
             if status == .succeeded {
-                // Ensure the .succeeded case returns a PaymentIntent in the expected state.
+                // Ensure the .succeeded case returns a SetupIntent in the expected state.
                 if let setupIntent = setupIntent,
                     error == nil,
                     setupIntent.status == .succeeded
@@ -465,7 +502,7 @@ public class STPPaymentHandler: NSObject {
                         "setup_intent_status": setupIntent?.status.rawValue ?? "nil",
                         "error_details": error?.serializeForV1Analytics() ?? [:],
                     ])
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
+                    strongSelf.analyticsClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
                     completion(
                         .failed,
                         setupIntent,
@@ -531,7 +568,16 @@ public class STPPaymentHandler: NSObject {
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
+        let setupIntentID = STPSetupIntent.id(fromClientSecret: setupIntentClientSecret)
+        // Overwrite completion to send an analytic before calling the caller-supplied completion
+        let completion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self] status, setupIntent, error in
+            self?.logHandleNextActionFinished(intentID: setupIntentID, status: status, paymentMethodType: setupIntent?.paymentMethod?.type, error: error)
+            completion(status, setupIntent, error)
+        }
+        logHandleNextActionStarted(intentID: setupIntentID, paymentMethodType: nil)
+
         if !STPSetupIntentConfirmParams.isClientSecretValid(setupIntentClientSecret) {
+            assertionFailure("`STPPaymentHandler.handleNextAction` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#setup_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
@@ -554,14 +600,27 @@ public class STPPaymentHandler: NSObject {
     ///   - setupIntent: The SetupIntent to handle next actions for.
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
+    ///   - shouldSendStartAnalytic: Tracks whether STPPaymentHandler has already sent a start analytic for `handleNextAction` because this method was called from the other `handleNextAction`
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
     @_spi(STP) public func handleNextAction(
         for setupIntent: STPSetupIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
+        shouldSendAnalytic: Bool = true,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
+        let setupIntentID = setupIntent.stripeID
+        if shouldSendAnalytic {
+            logHandleNextActionStarted(intentID: setupIntentID, paymentMethodType: nil)
+        }
+        // Overwrite completion to send an analytic before calling the caller-supplied completion
+        let completion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self] status, setupIntent, error in
+            if shouldSendAnalytic {
+                self?.logHandleNextActionFinished(intentID: setupIntentID, status: status, paymentMethodType: setupIntent?.paymentMethod?.type, error: error)
+            }
+            completion(status, setupIntent, error)
+        }
         if Self.inProgress {
             assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
@@ -600,7 +659,7 @@ public class STPPaymentHandler: NSObject {
                         "setup_intent_status": setupIntent?.status.rawValue ?? "nil",
                         "error_details": error?.serializeForV1Analytics() ?? [:],
                     ])
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
+                    strongSelf.analyticsClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
                     completion(
                         .failed,
                         setupIntent,
@@ -620,7 +679,7 @@ public class STPPaymentHandler: NSObject {
                 setupIntent,
                 _error(
                     for: .intentStatusErrorCode,
-                    userInfo: [
+                    loggingSafeUserInfo: [
                         STPError.errorMessageKey:
                             "Confirm the SetupIntent on the backend before calling handleNextActionForSetupIntent:withAuthenticationContext:completion.",
                     ]
@@ -792,8 +851,8 @@ public class STPPaymentHandler: NSObject {
                 with: STPPaymentHandlerActionStatus.failed,
                 error: _error(
                     for: .intentStatusErrorCode,
-                    userInfo: [
-                        "STPSetupIntent": setupIntent.description,
+                    loggingSafeUserInfo: [
+                        "error_message": "Unknown SetupIntent status",
                     ]
                 )
             )
@@ -813,7 +872,7 @@ public class STPPaymentHandler: NSObject {
                         error: _error(
                             for: .paymentErrorCode,
                             apiErrorCode: lastSetupError.code,
-                            userInfo: [
+                            loggingSafeUserInfo: [
                                 NSLocalizedDescriptionKey: lastSetupError.message ?? "",
                             ]
                         )
@@ -848,9 +907,6 @@ public class STPPaymentHandler: NSObject {
 
         case .canceled:
             action.complete(with: STPPaymentHandlerActionStatus.canceled, error: nil)
-
-        @unknown default:
-            fatalError()
         }
         return false
     }
@@ -872,8 +928,8 @@ public class STPPaymentHandler: NSObject {
                 with: STPPaymentHandlerActionStatus.failed,
                 error: _error(
                     for: .intentStatusErrorCode,
-                    userInfo: [
-                        "STPPaymentIntent": paymentIntent.description,
+                    loggingSafeUserInfo: [
+                        "error_message": "Unknown PaymentIntent status",
                     ]
                 )
             )
@@ -896,7 +952,7 @@ public class STPPaymentHandler: NSObject {
                         error: _error(
                             for: .paymentErrorCode,
                             apiErrorCode: lastPaymentError.code,
-                            userInfo: [
+                            loggingSafeUserInfo: [
                                 NSLocalizedDescriptionKey: lastPaymentError.message ?? "",
                             ]
                         )
@@ -962,8 +1018,8 @@ public class STPPaymentHandler: NSObject {
                 with: STPPaymentHandlerActionStatus.failed,
                 error: _error(
                     for: .unsupportedAuthenticationErrorCode,
-                    userInfo: [
-                        "STPIntentAction": authenticationAction.description,
+                    loggingSafeUserInfo: [
+                        "STPIntentAction": authenticationAction.type.stringValue,
                     ]
                 )
             )
@@ -976,8 +1032,8 @@ public class STPPaymentHandler: NSObject {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": authenticationAction.type.stringValue,
                         ]
                     )
                 )
@@ -995,8 +1051,8 @@ public class STPPaymentHandler: NSObject {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": authenticationAction.type.stringValue,
                         ]
                     )
                 )
@@ -1014,8 +1070,8 @@ public class STPPaymentHandler: NSObject {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": authenticationAction.type.stringValue,
                         ]
                     )
                 )
@@ -1029,8 +1085,8 @@ public class STPPaymentHandler: NSObject {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": authenticationAction.type.stringValue,
                         ]
                     )
                 )
@@ -1044,8 +1100,8 @@ public class STPPaymentHandler: NSObject {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": authenticationAction.type.stringValue,
                         ]
                     )
                 )
@@ -1059,8 +1115,8 @@ public class STPPaymentHandler: NSObject {
                         with: STPPaymentHandlerActionStatus.failed,
                         error: _error(
                             for: .unsupportedAuthenticationErrorCode,
-                            userInfo: [
-                                "STPIntentAction": authenticationAction.description,
+                            loggingSafeUserInfo: [
+                                "STPIntentAction": authenticationAction.type.stringValue,
                             ]
                         )
                     )
@@ -1071,7 +1127,7 @@ public class STPPaymentHandler: NSObject {
                             with: STPPaymentHandlerActionStatus.failed,
                             error: _error(
                                 for: .stripe3DS2ErrorCode,
-                                userInfo: [
+                                loggingSafeUserInfo: [
                                     "description": "Failed to initialize STDSThreeDS2Service.",
                                 ]
                             )
@@ -1096,13 +1152,13 @@ public class STPPaymentHandler: NSObject {
                         },
                         catch: { exception in
 
-                            STPAnalyticsClient.sharedClient
+                            self.analyticsClient
                                 .log3DS2AuthenticationRequestParamsFailed(
                                     with: currentAction.apiClient._stored_configuration,
                                     intentID: currentAction.intentStripeID ?? "",
                                     error: self._error(
                                         for: .stripe3DS2ErrorCode,
-                                        userInfo: [
+                                        loggingSafeUserInfo: [
                                             "exception": exception.description,
                                         ]
                                     )
@@ -1112,7 +1168,7 @@ public class STPPaymentHandler: NSObject {
                                 with: STPPaymentHandlerActionStatus.failed,
                                 error: self._error(
                                     for: .stripe3DS2ErrorCode,
-                                    userInfo: [
+                                    loggingSafeUserInfo: [
                                         "exception": exception.description,
                                     ]
                                 )
@@ -1122,7 +1178,7 @@ public class STPPaymentHandler: NSObject {
                         }
                     )
 
-                    STPAnalyticsClient.sharedClient.log3DS2AuthenticateAttempt(
+                    analyticsClient.log3DS2AuthenticateAttempt(
                         with: currentAction.apiClient._stored_configuration,
                         intentID: currentAction.intentStripeID ?? ""
                     )
@@ -1213,8 +1269,8 @@ public class STPPaymentHandler: NSObject {
                                                                 .failed,
                                                             error: self._error(
                                                                 for: .stripe3DS2ErrorCode,
-                                                                userInfo: [
-                                                                    "exception": exception,
+                                                                loggingSafeUserInfo: [
+                                                                    "exception": exception.description,
                                                                 ]
                                                             )
                                                         )
@@ -1240,7 +1296,7 @@ public class STPPaymentHandler: NSObject {
                                         // Challenge not required, finish the flow.
                                         transaction.close()
                                         currentAction.threeDS2Transaction = nil
-                                        STPAnalyticsClient.sharedClient.log3DS2FrictionlessFlow(
+                                        self.analyticsClient.log3DS2FrictionlessFlow(
                                             with: currentAction.apiClient._stored_configuration,
                                             intentID: currentAction.intentStripeID ?? ""
                                         )
@@ -1258,8 +1314,8 @@ public class STPPaymentHandler: NSObject {
                                         with: STPPaymentHandlerActionStatus.failed,
                                         error: self._error(
                                             for: .unsupportedAuthenticationErrorCode,
-                                            userInfo: [
-                                                "STPIntentAction": authenticationAction.description,
+                                            loggingSafeUserInfo: [
+                                                "STPIntentAction": authenticationAction.type.stringValue,
                                             ]
                                         )
                                     )
@@ -1278,8 +1334,8 @@ public class STPPaymentHandler: NSObject {
                             with: STPPaymentHandlerActionStatus.failed,
                             error: self._error(
                                 for: .unsupportedAuthenticationErrorCode,
-                                userInfo: [
-                                    "STPIntentAction": authenticationAction.description,
+                                loggingSafeUserInfo: [
+                                    "STPIntentAction": authenticationAction.type.stringValue,
                                 ]
                             )
                         )
@@ -1297,17 +1353,14 @@ public class STPPaymentHandler: NSObject {
                     } else {
                         // TOOD : Error
                     }
-
-                @unknown default:
-                    fatalError()
                 }
             } else {
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": authenticationAction.type.stringValue,
                         ]
                     )
                 )
@@ -1359,8 +1412,8 @@ public class STPPaymentHandler: NSObject {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": authenticationAction.type.stringValue,
                         ]
                     )
                 )
@@ -1388,8 +1441,8 @@ public class STPPaymentHandler: NSObject {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": authenticationAction.type.stringValue,
                         ]
                     )
                 )
@@ -1422,10 +1475,8 @@ public class STPPaymentHandler: NSObject {
             fatalError()
         }
     }
-    
-    public let test = 123
 
-   public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
+   @_spi(STP) public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
 
@@ -1652,7 +1703,7 @@ public class STPPaymentHandler: NSObject {
         if let returnURL = returnURL {
             STPURLCallbackHandler.shared().register(self, for: returnURL)
         }
-        STPAnalyticsClient.sharedClient.logURLRedirectNextAction(
+        analyticsClient.logURLRedirectNextAction(
             with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID ?? ""
         )
@@ -1709,7 +1760,7 @@ public class STPPaymentHandler: NSObject {
             STPURLCallbackHandler.shared().register(self, for: returnURL)
         }
 
-        STPAnalyticsClient.sharedClient.logURLRedirectNextAction(
+        analyticsClient.logURLRedirectNextAction(
             with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID ?? ""
         )
@@ -1753,7 +1804,7 @@ public class STPPaymentHandler: NSObject {
                         with: STPPaymentHandlerActionStatus.failed,
                         error: self._error(
                             for: .requiredAppNotAvailable,
-                            userInfo: [
+                            loggingSafeUserInfo: [
                                 "STPIntentAction": currentAction.description,
                             ]
                         )
@@ -1848,10 +1899,10 @@ public class STPPaymentHandler: NSObject {
         if !canPresent {
             error = _error(
                 for: .requiresAuthenticationContextErrorCode,
-                userInfo: errorMessage != nil
+                loggingSafeUserInfo: errorMessage != nil
                     ? [
                         STPError.errorMessageKey: errorMessage ?? "",
-                    ] : nil
+                    ] : [:]
             )
         }
         return canPresent
@@ -1926,7 +1977,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
 
-            STPAnalyticsClient.sharedClient.log3DS2RedirectUserCanceled(
+            analyticsClient.log3DS2RedirectUserCanceled(
                 with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID ?? ""
             )
@@ -1952,7 +2003,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
 
-            STPAnalyticsClient.sharedClient.log3DS2RedirectUserCanceled(
+            analyticsClient.log3DS2RedirectUserCanceled(
                 with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID ?? ""
             )
@@ -2044,12 +2095,13 @@ public class STPPaymentHandler: NSObject {
     }
 
     // MARK: - Errors
+    /// - Parameter loggingSafeUserInfo: Error details that are safe to log i.e. don't contain PII/PDE or secrets.
     @_spi(STP) public func _error(
         for errorCode: STPPaymentHandlerErrorCode,
         apiErrorCode: String? = nil,
-        userInfo additionalUserInfo: [AnyHashable: Any]? = nil
+        loggingSafeUserInfo: [String: String] = [:]
     ) -> NSError {
-        var userInfo: [AnyHashable: Any] = additionalUserInfo ?? [:]
+        var userInfo = loggingSafeUserInfo
         switch errorCode {
         // 3DS(2) flow expected user errors
         case .notAuthenticatedErrorCode:
@@ -2124,11 +2176,29 @@ public class STPPaymentHandler: NSObject {
             userInfo[NSLocalizedDescriptionKey] =
                 userInfo[NSLocalizedDescriptionKey] ?? NSError.stp_unexpectedErrorMessage()
         }
-        return NSError(
-            domain: STPPaymentHandler.errorDomain,
-            code: errorCode.rawValue,
-            userInfo: userInfo as? [String: Any]
-        )
+        return STPPaymentHandlerError(code: errorCode, loggingSafeUserInfo: userInfo) as NSError
+    }
+}
+
+/// STPPaymentHandler errors (i.e. errors that are created by the STPPaymentHandler class and have a corresponding STPPaymentHandlerErrorCode) used to be NSErrors.
+/// This struct exists so that these errors can be Swift errors to conform to AnalyticLoggableError, while still looking like the old NSErrors to users (i.e. same domain and code).
+struct STPPaymentHandlerError: Error, CustomNSError, AnalyticLoggableError {
+    // AnalyticLoggableError properties
+    let analyticsErrorType: String = errorDomain
+    let analyticsErrorCode: String
+    let additionalNonPIIErrorDetails: [String: Any]
+
+    // CustomNSError properties, to not break old behavior when this was an NSError
+    static let errorDomain: String = STPPaymentHandler.errorDomain
+    let errorUserInfo: [String: Any]
+    let errorCode: Int
+
+    init(code: STPPaymentHandlerErrorCode, loggingSafeUserInfo: [String: String]) {
+        errorCode = code.rawValue
+        // Set analytics error code to the description (e.g. "invalidClientSecret")
+        analyticsErrorCode = code.description
+        errorUserInfo = loggingSafeUserInfo
+        additionalNonPIIErrorDetails = loggingSafeUserInfo
     }
 }
 
@@ -2192,7 +2262,7 @@ extension STPPaymentHandler {
             return
         }
         let transactionStatus = completionEvent.transactionStatus
-        STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowCompleted(
+        analyticsClient.log3DS2ChallengeFlowCompleted(
             with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID ?? "",
             uiType: transaction.presentedChallengeUIType
@@ -2236,7 +2306,7 @@ extension STPPaymentHandler {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: self._error(
                         for: .notAuthenticatedErrorCode,
-                        userInfo: [
+                        loggingSafeUserInfo: [
                             "transaction_status": transactionStatus,
                         ]
                     )
@@ -2253,7 +2323,7 @@ extension STPPaymentHandler {
             return
         }
 
-        STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowUserCanceled(
+        analyticsClient.log3DS2ChallengeFlowUserCanceled(
             with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID ?? "",
             uiType: transaction.presentedChallengeUIType
@@ -2272,7 +2342,7 @@ extension STPPaymentHandler {
             return
         }
 
-        STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowTimedOut(
+        analyticsClient.log3DS2ChallengeFlowTimedOut(
             with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID ?? "",
             uiType: transaction.presentedChallengeUIType
@@ -2298,7 +2368,7 @@ extension STPPaymentHandler {
             return
         }
 
-        _markChallengeCompleted(withCompletion: { _, _ in
+        _markChallengeCompleted(withCompletion: { [weak self] _, _ in
             // Add localizedError to the 3DS2 SDK error
             let threeDSError = protocolErrorEvent.errorMessage.nsErrorValue() as NSError
             var userInfo = threeDSError.userInfo
@@ -2309,7 +2379,7 @@ extension STPPaymentHandler {
                 code: threeDSError.code,
                 userInfo: userInfo
             )
-            STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowErrored(
+            self?.analyticsClient.log3DS2ChallengeFlowErrored(
                 with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID ?? "",
                 error: localizedError
@@ -2333,7 +2403,7 @@ extension STPPaymentHandler {
             return
         }
 
-        _markChallengeCompleted(withCompletion: { _, _ in
+        _markChallengeCompleted(withCompletion: { [weak self] _, _ in
             // Add localizedError to the 3DS2 SDK error
             let threeDSError = runtimeErrorEvent.nsErrorValue() as NSError
             var userInfo = threeDSError.userInfo
@@ -2345,7 +2415,7 @@ extension STPPaymentHandler {
                 userInfo: userInfo
             )
 
-            STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowErrored(
+            self?.analyticsClient.log3DS2ChallengeFlowErrored(
                 with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID ?? "",
                 error: localizedError
@@ -2366,7 +2436,7 @@ extension STPPaymentHandler {
             return
         }
 
-        STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowPresented(
+        analyticsClient.log3DS2ChallengeFlowPresented(
             with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID ?? "",
             uiType: transaction.presentedChallengeUIType
