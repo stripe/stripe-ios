@@ -70,7 +70,7 @@ extension DownloadManager {
     // Common download function
     @discardableResult
     func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
-        let imageName = imageNameFromURL(url: url)
+        let imageName = url.lastPathComponent
         // Early exit for cached images
         if let image = await imageCache.cachedImageNamed(imageName) {
             return image
@@ -91,14 +91,6 @@ extension DownloadManager {
         }
     }
 
-    func downloadImageBlocking(url: URL, placeholder: UIImage) -> UIImage {
-        let image = _unsafeWait({
-            let image = await self.downloadImage(url: url, placeholder: placeholder)
-            return image
-        })
-        return image ?? imagePlaceHolder()
-    }
-
     func downloadImageAsync(url: URL, placeholder: UIImage, updateHandler: UpdateImageHandler) async {
         let image = await downloadImage(url: url, placeholder: placeholder)
         // Only invoke the `updateHandler` if the fetched image differs from the placeholder we already vended
@@ -107,8 +99,10 @@ extension DownloadManager {
         }
     }
 
-    func imageNameFromURL(url: URL) -> String {
-        return url.lastPathComponent
+    func downloadImageBlocking(url: URL, placeholder: UIImage) -> UIImage {
+        return _unsafeWait({
+            return await self.downloadImage(url: url, placeholder: placeholder)
+        }) ?? imagePlaceHolder()
     }
 }
 
@@ -170,11 +164,9 @@ extension DownloadManager {
 
 // MARK: UIImage helper
 extension UIImage {
-
     func isEqualToImage(image: UIImage) -> Bool {
         return self.pngData() == image.pngData()
     }
-
 }
 
 // MARK: Workarounds for using Swift async from a sync context
