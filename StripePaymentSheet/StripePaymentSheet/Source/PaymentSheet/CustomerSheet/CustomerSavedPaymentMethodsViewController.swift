@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?,
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent,
                                                         with paymentOption: PaymentOption,
                                                         completion: @escaping(InternalCustomerSheetResult) -> Void)
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
@@ -19,6 +19,13 @@ protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
 
 @objc(STP_Internal_CustomerSavedPaymentMethodsViewController)
 class CustomerSavedPaymentMethodsViewController: UIViewController {
+    enum Error: Swift.Error {
+        case sheetNavigationBarDidBack
+        case didSelectSavedUnexpectedPaymentOption
+        case noPaymentOptionAddingNewWithSetupIntent
+        case noPaymentOptionAddingNewWithAttach
+        case removeOnNonSavedPaymentMethod
+    }
 
     // MARK: - Read-only Properties
     let selectedPaymentMethodOption: CustomerPaymentOption?
@@ -40,7 +47,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private var mode: Mode
-    private(set) var error: Error?
+    private(set) var error: Swift.Error?
     private var processingInFlight: Bool = false
     private(set) var intent: Intent?
     private lazy var addPaymentMethodViewController: CustomerAddPaymentMethodViewController = {
@@ -235,13 +242,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             )
         }
 
-        guard let contentViewController = contentViewControllerFor(mode: mode) else {
-            // TODO: if we return nil here, it means we didn't create a
-            // view controller, and if this happens, it is most likely because didn't
-            // properly create setupIntent -- how do we want to handlet his situation?
-            return
-        }
-
+        let contentViewController = contentViewControllerFor(mode: mode)
         switchContentIfNecessary(to: contentViewController, containerView: paymentContainerView)
 
         // Error
@@ -298,7 +299,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         // Notice
         updateBottomNotice()
     }
-    private func contentViewControllerFor(mode: Mode) -> UIViewController? {
+    private func contentViewControllerFor(mode: Mode) -> UIViewController {
         if mode == .addingNewWithSetupIntent || mode == .addingNewPaymentMethodAttachToCustomer {
             return addPaymentMethodViewController
         }
@@ -326,7 +327,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     return shouldShowPaymentMethodCarousel ? .back : .close(showAdditionalButton: false)
                 }
             }())
-
     }
 
     private func defaultCallToAction() -> ConfirmButton.CallToActionType {
@@ -370,12 +370,20 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 handleOverrideAction(behavior: behavior)
             } else {
                 guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                                      error: Error.noPaymentOptionAddingNewWithSetupIntent)
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                    stpAssertionFailure()
                     return
                 }
                 addPaymentOption(paymentOption: newPaymentOption)
             }
         case .addingNewPaymentMethodAttachToCustomer:
             guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                                  error: Error.noPaymentOptionAddingNewWithAttach)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                stpAssertionFailure()
                 return
             }
             addPaymentOptionToCustomer(paymentOption: newPaymentOption)
@@ -409,9 +417,12 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                         }
                     }
                 default:
-                    assertionFailure("Selected payment method was something other than a saved payment method or apple pay")
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                                      error: Error.didSelectSavedUnexpectedPaymentOption,
+                                                      additionalNonPIIParams: ["selected_payment_option": selectedPaymentOption.paymentMethodTypeAnalyticsValue])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                    stpAssertionFailure("Selected payment method was something other than a saved payment method or apple pay")
                 }
-
             }
         }
     }
@@ -523,7 +534,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    func confirm(intent: Intent?, paymentOption: PaymentOption) async -> STPSetupIntent? {
+    func confirm(intent: Intent, paymentOption: PaymentOption) async -> STPSetupIntent? {
         var setupIntent: STPSetupIntent?
         do {
             setupIntent = try await withCheckedThrowingContinuation { continuation in
@@ -541,7 +552,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                             // Not ideal (but also very rare): If this fails, customers will need to know there is an error
                             // so that they can back out and try again
                             self.error = CustomerSheetError.unknown(debugDescription: "Unexpected error occured")
-                            assertionFailure("addPaymentOption confirmation completed, but PaymentMethod is missing")
+                            stpAssertionFailure("addPaymentOption confirmation completed, but PaymentMethod is missing")
                             continuation.resume(throwing: CustomerSheetError.unknown(debugDescription: "Unexpected error occured"))
                             return
                         }
@@ -642,7 +653,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         )
     }
 
-    private func set(error: Error?) {
+    private func set(error: Swift.Error?) {
         self.error = error
         self.errorLabel.text = error?.nonGenericDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -673,7 +684,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func setSelectablePaymentMethodAnimateButton(paymentOptionSelection: CustomerSheet.PaymentOptionSelection,
-                                                         onError: @escaping (Error) -> Void,
+                                                         onError: @escaping (Swift.Error) -> Void,
                                                          onSuccess: @escaping () -> Void) {
         self.processingInFlight = true
         updateUI()
@@ -689,7 +700,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func setSelectablePaymentMethod(paymentOptionSelection: CustomerSheet.PaymentOptionSelection,
-                                            onError: @escaping (Error) -> Void,
+                                            onError: @escaping (Swift.Error) -> Void,
                                             onSuccess: @escaping () -> Void) {
         Task {
             let customerPaymentMethodOption = paymentOptionSelection.customerPaymentMethodOption()
@@ -815,7 +826,10 @@ extension CustomerSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
             mode = .selectingSaved
             updateUI()
         default:
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.sheetNavigationBarDidBack)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
         }
     }
 }
@@ -824,7 +838,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodVie
         error = nil
         updateUI()
     }
-    func updateErrorLabel(for error: Error?) {
+    func updateErrorLabel(for error: Swift.Error?) {
         set(error: error)
     }
 }
@@ -855,6 +869,9 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         originalPaymentMethodSelection: CustomerPaymentOption?) async -> Bool {
             guard case .saved(let paymentMethod) = paymentMethodSelection else {
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                                  error: Error.removeOnNonSavedPaymentMethod)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return false
             }
             do {

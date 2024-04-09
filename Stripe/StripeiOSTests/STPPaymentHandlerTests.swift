@@ -76,8 +76,21 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
 
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
         STPPaymentHandler.shared().checkCanPresentInTest = true
+        let analyticsClient = STPAnalyticsClient()
+        STPPaymentHandler.sharedHandler.analyticsClient = analyticsClient
         STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) {
             (status, paymentIntent, error) in
+            let firstAnalytic = analyticsClient._testLogHistory.first
+            XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
+            XCTAssertEqual(firstAnalytic?["intent_id"] as? String, paymentIntentParams.stripeId)
+            XCTAssertEqual(firstAnalytic?["payment_method_type"] as? String, "card")
+            let lastAnalytic = analyticsClient._testLogHistory.last
+            XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmFinished.rawValue)
+            XCTAssertEqual(lastAnalytic?["intent_id"] as? String, paymentIntentParams.stripeId)
+            XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
+            XCTAssertEqual(lastAnalytic?["payment_method_type"] as? String, "card")
+            XCTAssertEqual(lastAnalytic?["error_type"] as? String, "STPPaymentHandlerErrorDomain")
+            XCTAssertEqual(lastAnalytic?["error_code"] as? String, "requiresAuthenticationContextErrorCode")
             XCTAssertTrue(status == .failed)
             XCTAssertNotNil(paymentIntent)
             XCTAssertNotNil(error)

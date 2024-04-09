@@ -130,8 +130,8 @@ extension STPPaymentHandler {
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": action.nextAction()?.description ?? ""
+                        loggingSafeUserInfo: [
+                            "STPIntentAction": action.nextAction()?.description ?? "",
                         ]
                     )
                 )
@@ -143,8 +143,8 @@ extension STPPaymentHandler {
                 with: .failed,
                 error: _error(
                     for: .intentStatusErrorCode,
-                    userInfo: [
-                        "STPIntentAction": action.nextAction()?.description ?? ""
+                    loggingSafeUserInfo: [
+                        "STPIntentAction": action.nextAction()?.description ?? "",
                     ]
                 )
             )

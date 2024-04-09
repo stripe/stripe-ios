@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Mukhang hindi balido ang petsa ng kapanganakan";
 
+"Details not visible" = "Hindi nakikita ang mga detalye";
+
 "Flip your identity card over to the other side" = "Baliktarin ang iyong kard ng pagkakakilanlan";
 
 "Front identity card photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng harap ng kard ng pagkakakilanlan";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "Indibidwal na CPF";
 
+"Keep ID level" = "Panatilihin ang lebel ng ID";
+
 "Last 4 of Social Security number" = "Huling 4 ng numero ng Social Security";
 
 "Loading" = "Niloload";
+
+"Make sure all details are visible and focus" = "Siguraduhing nakikita at nakapokus ang lahat ng mga detalye";
 
 "Make sure you're in a well lit space." = "Siguraduhing ikaw ay nasa maliwanag na lugar.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Ilayo pa";
 
+"Move to a well-lit area" = "Lumipat sa maliwanag na lugar";
+
 "NRIC or FIN" = "NRIC o FIN";
+
+"No document detected" = "Walang nakitang dokumento";
 
 "Personal ID number" = "Numero ng Personal na ID";
 

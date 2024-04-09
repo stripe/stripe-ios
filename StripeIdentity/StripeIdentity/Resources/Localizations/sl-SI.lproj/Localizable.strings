@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Videti je, da datum rojstva ni veljaven";
 
+"Details not visible" = "Podrobnosti niso vidne";
+
 "Flip your identity card over to the other side" = "Obrnite osebno izkaznico na drugo stran";
 
 "Front identity card photo successfully uploaded" = "Fotografija sprednje strani osebne izkaznice je bila uspešno naložena";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "CPF posameznika";
 
+"Keep ID level" = "Osebni dokument naj ostane raven";
+
 "Last 4 of Social Security number" = "Zadnje 4 števke številke socialnega zavarovanja";
 
 "Loading" = "Nalaganje";
+
+"Make sure all details are visible and focus" = "Prepričajte se, da so vse podrobnosti vidne in izostrene";
 
 "Make sure you're in a well lit space." = "Poskrbite, da ste v dobro osvetljenem prostoru.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Oddaljite";
 
+"Move to a well-lit area" = "Pojdite v dobro osvetljen prostor";
+
 "NRIC or FIN" = "NRIC ali FIN";
+
+"No document detected" = "Zaznan ni bil noben dokument";
 
 "Personal ID number" = "Številka osebne izkaznice";
 

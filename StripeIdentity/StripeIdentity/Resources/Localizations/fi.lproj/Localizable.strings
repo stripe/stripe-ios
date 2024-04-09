@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Syntymäaika ei näytä kelvolliselta";
 
+"Details not visible" = "Tiedot eivät ole näkyvillä";
+
 "Flip your identity card over to the other side" = "Käännä henkilökortti toisinpäin";
 
 "Front identity card photo successfully uploaded" = "Henkilökortin etupuolen kuva ladattu onnistuneesti";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "Yksityishenkilön CPF";
 
+"Keep ID level" = "Pidä henkilöllisyystodistus tasaisena";
+
 "Last 4 of Social Security number" = "Sosiaaliturvatunnuksen 4 viimeistä merkkiä";
 
 "Loading" = "Ladataan";
+
+"Make sure all details are visible and focus" = "Varmista, että kaikki tiedot ovat näkyvissä ja tarkennettuja";
 
 "Make sure you're in a well lit space." = "Varmista, että olet hyvin valaistussa tilassa.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Siirrä kauemmas";
 
+"Move to a well-lit area" = "Siirry hyvin valaistuun tilaan";
+
 "NRIC or FIN" = "NRIC tai FIN";
+
+"No document detected" = "Ei havaittuja asiakirjoja";
 
 "Personal ID number" = "Henkilötunnus";
 

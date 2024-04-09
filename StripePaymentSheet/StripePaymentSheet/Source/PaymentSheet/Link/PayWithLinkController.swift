@@ -31,18 +31,6 @@ final class PayWithLinkController {
         self.paymentHandler = .init(apiClient: configuration.apiClient)
     }
 
-    func present(completion: @escaping CompletionBlock) {
-        guard
-            let keyWindow = UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow(),
-            let presentedViewController = keyWindow.findTopMostPresentedViewController()
-        else {
-            assertionFailure("No key window with view controller found")
-            return
-        }
-
-        present(from: presentedViewController, completion: completion)
-    }
-
     func present(
         from presentingController: UIViewController,
         completion: @escaping CompletionBlock

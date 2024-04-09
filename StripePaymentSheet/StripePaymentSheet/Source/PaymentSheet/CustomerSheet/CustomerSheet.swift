@@ -21,6 +21,10 @@ internal enum InternalCustomerSheetResult {
 }
 
 public class CustomerSheet {
+    internal enum InternalError: Error {
+        case expectedSetupIntent
+        case invalidStateOnConfirmation
+    }
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
@@ -196,10 +200,12 @@ extension CustomerSheet {
 }
 
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
-        guard let intent = intent,
-              case .setupIntent = intent else {
-            assertionFailure("Setup intent not available")
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
+        guard case .setupIntent = intent else {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: InternalError.expectedSetupIntent)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure("Setup intent not available")
             completion(.failed(error: CustomerSheetError.unknown(debugDescription: "No setup intent available")))
             return
         }
