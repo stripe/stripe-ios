@@ -77,7 +77,6 @@ extension DownloadManager {
     }
 
     // Common download function
-    @discardableResult
     func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
         let imageName = url.lastPathComponent
         // Early exit for cached images
