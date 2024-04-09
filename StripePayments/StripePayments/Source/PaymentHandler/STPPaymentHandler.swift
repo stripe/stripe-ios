@@ -1016,12 +1016,18 @@ public class STPPaymentHandler: NSObject {
     }
 
     func _handleAuthenticationForCurrentAction() {
-        guard let currentAction,
-            let authenticationAction = currentAction.nextAction()
-        else {
-            stpAssertionFailure("Missing current action or next action!")
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Missing current action or next action!"])
+        guard let currentAction else {
+            stpAssertionFailure("Calling _handleAuthenticationForCurrentAction without a currentAction")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _handleAuthenticationForCurrentAction without a currentAction"])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            return
+        }
+        guard let authenticationAction = currentAction.nextAction() else {
+            stpAssertionFailure("Calling _handleAuthenticationForCurrentAction without a next action!")
+            currentAction.complete(
+                with: .failed,
+                error: _error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "Calling _handleAuthenticationForCurrentAction without a next action!"])
+            )
             return
         }
 
@@ -1454,7 +1460,7 @@ public class STPPaymentHandler: NSObject {
             }
         }
         guard let currentAction else {
-            stpAssertionFailure("Current action shouldn't be nil")
+            stpAssertionFailure("Calling _retrieveAndCheckIntentForCurrentAction without a currentAction")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _retrieveAndCheckIntentForCurrentAction without a currentAction"])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
             return
@@ -1469,9 +1475,9 @@ public class STPPaymentHandler: NSObject {
                     currentAction.apiClient.retrievePaymentIntent(
                         withClientSecret: paymentIntent.clientSecret,
                         expand: ["payment_method"]
-                    ) { retrievedPaymentIntent, error in
-                        currentAction.paymentIntent = retrievedPaymentIntent
-                        guard let paymentIntent = retrievedPaymentIntent, let paymentMethod = paymentIntent.paymentMethod, error == nil else {
+                    ) { paymentIntent, error in
+                        currentAction.paymentIntent = paymentIntent
+                        guard let paymentIntent, let paymentMethod = paymentIntent.paymentMethod, error == nil else {
                             let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeUserInfo: ["error_message": "Missing PaymentIntent or paymentIntent.paymentMethod."])
                             currentAction.complete(
                                 with: STPPaymentHandlerActionStatus.failed,
@@ -1483,7 +1489,7 @@ public class STPPaymentHandler: NSObject {
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
                             !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type),
-                            retrievedPaymentIntent?.status == .processing && retryCount > 0
+                            paymentIntent.status == .processing && retryCount > 0
                         {
                             self._retryAfterDelay(retryCount: retryCount) {
                                 self._retrieveAndCheckIntentForCurrentAction(
@@ -1505,13 +1511,13 @@ public class STPPaymentHandler: NSObject {
                                 // If the status is still RequiresAction, the user exited from the redirect before the
                                 // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
                                 if self.isNextActionSuccessState(
-                                    nextAction: retrievedPaymentIntent?.nextAction
+                                    nextAction: paymentIntent.nextAction
                                 ) {
                                     currentAction.complete(with: .succeeded, error: nil)
                                 } else {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
-                                    let shouldRetryForCard = paymentMethod.type == .card && retrievedPaymentIntent?.nextAction?.type == .useStripeSDK
+                                    let shouldRetryForCard = paymentMethod.type == .card && paymentIntent.nextAction?.type == .useStripeSDK
                                     let shouldRetryForAppRedirect = paymentMethod.type.requiresPolling
                                     if retryCount > 0
                                         && (shouldRetryForCard || shouldRetryForAppRedirect)
@@ -2044,7 +2050,7 @@ public class STPPaymentHandler: NSObject {
                 "Error when 3DS2 authentication timed out."
             )
 
-        // PaymentIntent has an unexpected/unknown status
+        // PaymentIntent has an unexpected status
         case .intentStatusErrorCode:
             // The PI's status is processing or unknown
             userInfo[STPError.errorMessageKey] =
@@ -2052,9 +2058,6 @@ public class STPPaymentHandler: NSObject {
             userInfo[NSLocalizedDescriptionKey] = NSError.stp_unexpectedErrorMessage()
 
         case .unsupportedAuthenticationErrorCode:
-            userInfo[STPError.errorMessageKey] =
-                userInfo[STPError.errorMessageKey]
-                ?? "The SDK doesn't recognize the PaymentIntent action type."
             userInfo[NSLocalizedDescriptionKey] = NSError.stp_unexpectedErrorMessage()
 
         case .requiredAppNotAvailable:
@@ -2406,7 +2409,7 @@ extension STPPaymentHandler {
     @_spi(STP) public func cancel3DS2ChallengeFlow() {
         guard let currentAction else {
             stpAssertionFailure("Calling cancel3DS2ChallengeFlow without currentAction.")
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling cancel3DS2ChallengeFlowwithout currentAction."])
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling cancel3DS2ChallengeFlow without currentAction."])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
             return
         }
