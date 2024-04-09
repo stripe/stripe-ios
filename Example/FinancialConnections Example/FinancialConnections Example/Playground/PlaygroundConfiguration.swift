@@ -7,28 +7,27 @@
 
 import Foundation
 
-// we want the JSON to represent the source of truth
-// - initially it will be NULL...so something needs to set it up
-
+/// Provides an interface to customize the playground configuration
+/// (which is stored as a JSON in NSUserDefaults).
 final class PlaygroundConfiguration {
 
     static let shared = PlaygroundConfiguration()
 
-    private let configurationJSON = PlaygroundConfigurationJSON()
+    private let configurationStore = PlaygroundConfigurationStore()
     var configurationJSONString: String {
-        return configurationJSON.string
+        return configurationStore.configurationJSONString
     }
     var configurationJSONDictionary: [String: Any] {
-        return configurationJSON.dictionary
+        return configurationStore.configurationJSONDictionary
     }
 
     private init() {
         // setup defaults if this is the first time initializing
-        setupWithConfigurationJSONString(configurationJSONString)
+        updateConfigurationJSONString(configurationJSONString)
 
         // load configuration for UI tests if present
         if let configurationJSONString = ProcessInfo.processInfo.environment["UITesting_configuration_json_string"] {
-            setupWithConfigurationJSONString(configurationJSONString)
+            updateConfigurationJSONString(configurationJSONString)
         }
     }
 
@@ -47,7 +46,7 @@ final class PlaygroundConfiguration {
     var sdkType: SDKType {
         get {
             if
-                let sdkTypeString = configurationJSON[Self.sdkTypeKey] as? String,
+                let sdkTypeString = configurationStore[Self.sdkTypeKey] as? String,
                 let sdkType = SDKType(rawValue: sdkTypeString)
             {
                 return sdkType
@@ -56,7 +55,7 @@ final class PlaygroundConfiguration {
             }
         }
         set {
-            configurationJSON[Self.sdkTypeKey] = newValue.rawValue
+            configurationStore[Self.sdkTypeKey] = newValue.rawValue
 
             switch newValue {
             case .automatic:
@@ -105,7 +104,7 @@ final class PlaygroundConfiguration {
     var merchant: Merchant {
         get {
             if
-                let merchantCustomId = configurationJSON[Self.merchantCustomIdKey] as? String,
+                let merchantCustomId = configurationStore[Self.merchantCustomIdKey] as? String,
                 let merchant = merchants.first(where: { $0.customId == merchantCustomId })
             {
                 return merchant
@@ -114,7 +113,7 @@ final class PlaygroundConfiguration {
             }
         }
         set {
-            configurationJSON[Self.merchantCustomIdKey] = newValue.customId
+            configurationStore[Self.merchantCustomIdKey] = newValue.customId
         }
     }
 
@@ -123,14 +122,14 @@ final class PlaygroundConfiguration {
     private static let testModeKey = "test_mode"
     var testMode: Bool {
         get {
-            if let testMode = configurationJSON[Self.testModeKey] as? Bool {
+            if let testMode = configurationStore[Self.testModeKey] as? Bool {
                 return testMode
             } else {
                 return false
             }
         }
         set {
-            configurationJSON[Self.testModeKey] = newValue
+            configurationStore[Self.testModeKey] = newValue
         }
     }
 
@@ -139,27 +138,27 @@ final class PlaygroundConfiguration {
     private static let customPublicKeyKey = "custom_public_key"
     var customPublicKey: String {
         get {
-            if let customPublicKey = configurationJSON[Self.customPublicKeyKey] as? String {
+            if let customPublicKey = configurationStore[Self.customPublicKeyKey] as? String {
                 return customPublicKey
             } else {
                 return ""
             }
         }
         set {
-            configurationJSON[Self.customPublicKeyKey] = newValue
+            configurationStore[Self.customPublicKeyKey] = newValue
         }
     }
     private static let customSecretKeyKey = "custom_secret_key"
     var customSecretKey: String {
         get {
-            if let customSecretKey = configurationJSON[Self.customSecretKeyKey] as? String {
+            if let customSecretKey = configurationStore[Self.customSecretKeyKey] as? String {
                 return customSecretKey
             } else {
                 return ""
             }
         }
         set {
-            configurationJSON[Self.customSecretKeyKey] = newValue
+            configurationStore[Self.customSecretKeyKey] = newValue
         }
     }
 
@@ -177,7 +176,7 @@ final class PlaygroundConfiguration {
     var useCase: UseCase {
         get {
             if
-                let useCaseString = configurationJSON[Self.useCaseKey] as? String,
+                let useCaseString = configurationStore[Self.useCaseKey] as? String,
                 let useCase = UseCase(rawValue: useCaseString)
             {
                 return useCase
@@ -186,7 +185,7 @@ final class PlaygroundConfiguration {
             }
         }
         set {
-            configurationJSON[Self.useCaseKey] = newValue.rawValue
+            configurationStore[Self.useCaseKey] = newValue.rawValue
         }
     }
 
@@ -195,14 +194,14 @@ final class PlaygroundConfiguration {
     private static let emailKey = "email"
     var email: String {
         get {
-            if let email = configurationJSON[Self.emailKey] as? String {
+            if let email = configurationStore[Self.emailKey] as? String {
                 return email
             } else {
                 return ""
             }
         }
         set {
-            configurationJSON[Self.emailKey] = newValue
+            configurationStore[Self.emailKey] = newValue
         }
     }
 
@@ -211,59 +210,59 @@ final class PlaygroundConfiguration {
     private static let balancesPermissionKey = "balances_permission"
     var balancesPermission: Bool {
         get {
-            if let balancesPermission = configurationJSON[Self.balancesPermissionKey] as? Bool {
+            if let balancesPermission = configurationStore[Self.balancesPermissionKey] as? Bool {
                 return balancesPermission
             } else {
                 return false
             }
         }
         set {
-            configurationJSON[Self.balancesPermissionKey] = newValue
+            configurationStore[Self.balancesPermissionKey] = newValue
         }
     }
     private static let ownershipPermissionKey = "ownership_permission"
     var ownershipPermission: Bool {
         get {
-            if let ownershipPermission = configurationJSON[Self.ownershipPermissionKey] as? Bool {
+            if let ownershipPermission = configurationStore[Self.ownershipPermissionKey] as? Bool {
                 return ownershipPermission
             } else {
                 return false
             }
         }
         set {
-            configurationJSON[Self.ownershipPermissionKey] = newValue
+            configurationStore[Self.ownershipPermissionKey] = newValue
         }
     }
     private static let paymentMethodPermissionKey = "payment_method_permission"
     var paymentMethodPermission: Bool {
         get {
-            if let paymentMethodPermission = configurationJSON[Self.paymentMethodPermissionKey] as? Bool {
+            if let paymentMethodPermission = configurationStore[Self.paymentMethodPermissionKey] as? Bool {
                 return paymentMethodPermission
             } else {
                 return false
             }
         }
         set {
-            configurationJSON[Self.paymentMethodPermissionKey] = newValue
+            configurationStore[Self.paymentMethodPermissionKey] = newValue
         }
     }
     private static let transactionsPermissionKey = "transactions_permission"
     var transactionsPermission: Bool {
         get {
-            if let transactionsPermission = configurationJSON[Self.transactionsPermissionKey] as? Bool {
+            if let transactionsPermission = configurationStore[Self.transactionsPermissionKey] as? Bool {
                 return transactionsPermission
             } else {
                 return false
             }
         }
         set {
-            configurationJSON[Self.transactionsPermissionKey] = newValue
+            configurationStore[Self.transactionsPermissionKey] = newValue
         }
     }
 
     // MARK: - Other
 
-    func setupWithConfigurationJSONString(_ configurationJSONString: String) {
+    func updateConfigurationJSONString(_ configurationJSONString: String) {
         guard
             let jsonData = configurationJSONString.data(using: .utf8),
             let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: []),
@@ -348,7 +347,8 @@ final class PlaygroundConfiguration {
     }
 }
 
-final class PlaygroundConfigurationJSON {
+/// A simple wrapper around playground configuration NSUserDefaults JSON string.
+final class PlaygroundConfigurationStore {
 
     static let configurationJSONStringDefaultValue = "{}"
 
@@ -358,7 +358,7 @@ final class PlaygroundConfigurationJSON {
     )
     private static var configurationJSONString: String
 
-    fileprivate var dictionary: [String: Any] {
+    fileprivate var configurationJSONDictionary: [String: Any] {
         get {
             let configurationJSONString = Self.configurationJSONString
             if configurationJSONString.isEmpty {
@@ -401,18 +401,18 @@ final class PlaygroundConfigurationJSON {
 
     fileprivate subscript(key: String) -> Any? {
         get {
-            return dictionary[key]
+            return configurationJSONDictionary[key]
         }
         set(newValue) {
-            dictionary[key] = newValue
+            configurationJSONDictionary[key] = newValue
         }
     }
 
-    var string: String {
+    var configurationJSONString: String {
         return Self.configurationJSONString
     }
 
     var isEmpty: Bool {
-        return dictionary.isEmpty
+        return configurationJSONDictionary.isEmpty
     }
 }

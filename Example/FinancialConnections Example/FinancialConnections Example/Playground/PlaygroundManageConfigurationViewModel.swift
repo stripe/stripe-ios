@@ -29,14 +29,14 @@ final class PlaygroundManageConfigurationViewModel: ObservableObject {
     }
 
     func didSelectSaveConfiguration() {
-        playgroundConfiguration.setupWithConfigurationJSONString(configurationJSONString)
+        playgroundConfiguration.updateConfigurationJSONString(configurationJSONString)
         loadCurrentConfiguration()
     }
 
     func didSelectResetToDefaults() {
         playgroundConfiguration
-            .setupWithConfigurationJSONString(
-                PlaygroundConfigurationJSON.configurationJSONStringDefaultValue
+            .updateConfigurationJSONString(
+                PlaygroundConfigurationStore.configurationJSONStringDefaultValue
             )
         loadCurrentConfiguration()
     }
