@@ -252,7 +252,6 @@ extension PaymentSheet {
         public let paymentSummaryItems: [PKPaymentSummaryItem]?
 
         /// Optional handler blocks for Apple Pay
-        public let customHandlers: Handlers?
 
         /// Custom handler blocks for Apple Pay
         public struct Handlers {
