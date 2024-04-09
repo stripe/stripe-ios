@@ -53,6 +53,15 @@ import UIKit
 
 // MARK: - Download management
 extension DownloadManager {
+
+    /// Downloads an image from a provided URL, using either a synchronous method or an asynchronous method.
+    /// If no `updateHandler` is provided, this function will block the current thread until the image is downloaded. If an `updateHandler` is provided, the function does not wait for the download to finish and returns a placeholder image immediately instead. When the image finishes downloading, the `updateHandler` will be called with the downloaded image.
+    /// - Parameters:
+    ///   - url: The URL from which to download the image.
+    ///   - placeholder: An optional parameter indicating a placeholder image to display while the download is in progress. If not provided, a default placeholder image will be used instead.
+    ///   - updateHandler: An optional closure that's called when the image finishes downloading. The downloaded image is passed as a parameter to this closure.
+    ///
+    /// - Returns: An `UIImage` instance. If `updateHandler` is `nil`, this would be the downloaded image, otherwise, this would be the placeholder image.
     public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
         let placeholder = placeholder ?? imagePlaceHolder()
         // If no `updateHandler` is provided use a blocking method to fetch the image
