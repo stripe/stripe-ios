@@ -70,12 +70,12 @@ import UIKit
         #if targetEnvironment(simulator)
             return true
         #else
-            return NSClassFromString("XCTest") != nil
+            return isUnitOrUITest
         #endif
     }
 
-    @objc public class func shouldCollectAnalytics() -> Bool {
-        return NSClassFromString("XCTest") == nil
+    static var isUnitOrUITest: Bool {
+        return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
     }
 
     public func additionalInfo() -> [String] {
@@ -115,8 +115,8 @@ import UIKit
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
-        // Don't send the analytic, but add it to `_testLogHistory` if we're in a test.
-        guard type(of: self).shouldCollectAnalytics() else {
+        // If in testing, don't log analytic, instead append payload to log history
+        guard !STPAnalyticsClient.isUnitOrUITest else {
             _testLogHistory.append(payload)
             return
         }
@@ -148,6 +148,9 @@ extension STPAnalyticsClient {
         payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
+        if STPAnalyticsClient.isSimulatorOrTest {
+            payload["is_development"] = true
+        }
 
         return payload
     }

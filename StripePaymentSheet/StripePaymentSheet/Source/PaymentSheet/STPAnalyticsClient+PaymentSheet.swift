@@ -304,10 +304,6 @@ extension STPAnalyticsClient {
         apiClient: STPAPIClient = .shared
     ) {
         var additionalParams = [:] as [String: Any]
-        if Self.isSimulatorOrTest {
-            additionalParams["is_development"] = true
-        }
-
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession

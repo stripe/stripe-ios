@@ -13,8 +13,8 @@ import XCTest
 
 class STPAnalyticsClientTest: XCTestCase {
 
-    func testShouldCollectAnalytics_alwaysFalseInTest() {
-        XCTAssertFalse(STPAnalyticsClient.shouldCollectAnalytics())
+    func testIsUnitOrUITest_alwaysTrueInTest() {
+        XCTAssertTrue(STPAnalyticsClient.isUnitOrUITest)
     }
 
     func testShouldRedactLiveKeyFromLog() {

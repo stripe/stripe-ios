@@ -100,9 +100,6 @@ extension STPPaymentContext {
             }
 
             var params: [String: Any] = ["selected_lpm": paymentMethodType]
-            if STPAnalyticsClient.isSimulatorOrTest {
-                params["is_development"] = true
-            }
             if let error {
                 params["error_message"] = error.makeSafeLoggingString()
             }
