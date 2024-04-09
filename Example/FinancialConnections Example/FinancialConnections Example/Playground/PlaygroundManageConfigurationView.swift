@@ -1,5 +1,5 @@
 //
-//  PlaygroundConfigurationView.swift
+//  PlaygroundManageConfigurationView.swift
 //  FinancialConnections Example
 //
 //  Created by Krisjanis Gaidis on 4/8/24.
@@ -8,9 +8,9 @@
 import SwiftUI
 
 @available(iOS 14.0, *)
-struct PlaygroundConfigurationView: View {
+struct PlaygroundManageConfigurationView: View {
 
-    @ObservedObject var viewModel: PlaygroundConfigurationViewModel
+    @ObservedObject var viewModel: PlaygroundManageConfigurationViewModel
 
     var body: some View {
         Form {
@@ -47,11 +47,11 @@ struct PlaygroundConfigurationView: View {
 }
 
 @available(iOS 14.0, *)
-struct PlaygroundConfigurationView_Previews: PreviewProvider {
+struct PlaygroundManageConfigurationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PlaygroundConfigurationView(
-                viewModel: PlaygroundConfigurationViewModel(
+            PlaygroundManageConfigurationView(
+                viewModel: PlaygroundManageConfigurationViewModel(
                     playgroundConfiguration: PlaygroundConfiguration.shared,
                     didSelectClose: {}
                 )

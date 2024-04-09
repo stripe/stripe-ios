@@ -1,5 +1,5 @@
 //
-//  PlaygroundMainView.swift
+//  PlaygroundView.swift
 //  FinancialConnections Example
 //
 //  Created by Krisjanis Gaidis on 11/1/22.
@@ -9,9 +9,9 @@
 import SwiftUI
 
 @available(iOS 14.0, *)
-struct PlaygroundMainView: View { // Rename to PlaygroundView
+struct PlaygroundView: View { // Rename to PlaygroundView
 
-    @StateObject var viewModel = PlaygroundMainViewModel()
+    @StateObject var viewModel = PlaygroundViewModel()
 
     var body: some View {
         ZStack {
@@ -111,7 +111,7 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
                         }
                         .sheet(isPresented: $viewModel.showConfigurationView) {
                             NavigationView {
-                                PlaygroundConfigurationView(
+                                PlaygroundManageConfigurationView(
                                     viewModel: viewModel.playgroundConfigurationViewModel
                                 )
                             }
@@ -153,10 +153,10 @@ struct PlaygroundMainView: View { // Rename to PlaygroundView
 }
 
 @available(iOS 14.0, *)
-struct PlaygroundMainView_Previews: PreviewProvider {
+struct PlaygroundView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PlaygroundMainView()
+            PlaygroundView()
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  PlaygroundMainViewModel.swift
+//  PlaygroundViewModel.swift
 //  FinancialConnections Example
 //
 //  Created by Krisjanis Gaidis on 11/5/22.
@@ -12,7 +12,7 @@ import StripeFinancialConnections
 import SwiftUI
 import UIKit
 
-final class PlaygroundMainViewModel: ObservableObject {
+final class PlaygroundViewModel: ObservableObject {
 
     let playgroundConfiguration = PlaygroundConfiguration.shared
 
@@ -151,8 +151,8 @@ final class PlaygroundMainViewModel: ObservableObject {
     }
 
     @Published var showConfigurationView = false
-    private(set) lazy var playgroundConfigurationViewModel: PlaygroundConfigurationViewModel = {
-       return PlaygroundConfigurationViewModel(
+    private(set) lazy var playgroundConfigurationViewModel: PlaygroundManageConfigurationViewModel = {
+       return PlaygroundManageConfigurationViewModel(
         playgroundConfiguration: playgroundConfiguration,
         didSelectClose: { [weak self] in
             self?.showConfigurationView = false

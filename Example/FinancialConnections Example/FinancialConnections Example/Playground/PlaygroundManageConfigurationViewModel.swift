@@ -1,5 +1,5 @@
 //
-//  PlaygroundConfigurationViewModel.swift
+//  PlaygroundManageConfigurationViewModel.swift
 //  FinancialConnections Example
 //
 //  Created by Krisjanis Gaidis on 4/8/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PlaygroundConfigurationViewModel: ObservableObject {
+final class PlaygroundManageConfigurationViewModel: ObservableObject {
 
     let playgroundConfiguration: PlaygroundConfiguration
     let didSelectClose: () -> Void
