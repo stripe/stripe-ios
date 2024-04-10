@@ -48,8 +48,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         isPaymentSheet: Bool = false,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
-        // Break loudly! This will cause other parts of the code to crash if not true
-        assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
+        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
 
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
