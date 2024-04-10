@@ -18,10 +18,11 @@ import UIKit
 
     public static let sharedManager = DownloadManager()
 
-    let session: URLSession
-    let analyticsClient: STPAnalyticsClient
-    var imageCache = ImageCache()
-    var diskCache: URLCache?
+    let imageCache = ImageCache()
+
+    private let session: URLSession
+    private let analyticsClient: STPAnalyticsClient
+    private var diskCache: URLCache?
 
     public init(
         urlSessionConfiguration: URLSessionConfiguration = .default,
@@ -75,7 +76,7 @@ extension DownloadManager {
     }
 
     // Common download function
-    func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
+    private func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
         let imageName = url.lastPathComponent
         // Early exit for cached images
         if let image = await imageCache.cachedImageNamed(imageName) {
@@ -97,7 +98,7 @@ extension DownloadManager {
         }
     }
 
-    func downloadImageAsync(url: URL, placeholder: UIImage, updateHandler: UpdateImageHandler) async {
+    private func downloadImageAsync(url: URL, placeholder: UIImage, updateHandler: UpdateImageHandler) async {
         let image = await downloadImage(url: url, placeholder: placeholder)
         // Only invoke the `updateHandler` if the fetched image differs from the placeholder we already vended
         if !image.isEqualToImage(image: placeholder) {
@@ -105,7 +106,7 @@ extension DownloadManager {
         }
     }
 
-    func downloadImageBlocking(url: URL, placeholder: UIImage) -> UIImage {
+    private func downloadImageBlocking(url: URL, placeholder: UIImage) -> UIImage {
         return _unsafeWait({
             return await self.downloadImage(url: url, placeholder: placeholder)
         }) ?? imagePlaceHolder()
@@ -157,7 +158,7 @@ extension DownloadManager {
         return imageWithSize(size: CGSize(width: 1.0, height: 1.0))
     }
 
-    func imageWithSize(size: CGSize) -> UIImage {
+    private func imageWithSize(size: CGSize) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
         UIColor.clear.set()
@@ -169,7 +170,7 @@ extension DownloadManager {
 }
 
 // MARK: UIImage helper
-extension UIImage {
+private extension UIImage {
     func isEqualToImage(image: UIImage) -> Bool {
         return self.pngData() == image.pngData()
     }
@@ -181,7 +182,7 @@ private class Box<ResultType> {
     var result: Result<ResultType, Error>?
 }
 
-extension DownloadManager {
+private extension DownloadManager {
     /// Unsafely awaits an async function from a synchronous context.
     func _unsafeWait<ResultType>(_ f: @escaping () async -> ResultType) -> ResultType? {
         let box = Box<ResultType>()
