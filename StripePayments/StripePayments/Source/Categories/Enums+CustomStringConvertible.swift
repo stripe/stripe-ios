@@ -283,6 +283,10 @@ extension STPPaymentHandlerErrorCode: CustomStringConvertible {
             return "timedOutErrorCode"
         case .unsupportedAuthenticationErrorCode:
             return "unsupportedAuthenticationErrorCode"
+        case .unexpectedErrorCode:
+            return "unexpectedErrorCode"
+        case .missingReturnURL:
+            return "missingReturnURL"
         }
     }
 }

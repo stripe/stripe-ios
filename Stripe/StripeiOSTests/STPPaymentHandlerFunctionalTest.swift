@@ -291,8 +291,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "unsupportedAuthenticationErrorCode")
             XCTAssertEqual(lastAnalytic?["error_details"] as? [String: String], [
                 "NSLocalizedDescription": "There was an unexpected error -- try again in a few seconds",
-                "com.stripe.lib:ErrorMessageKey": "The SDK doesn\'t recognize the PaymentIntent action type.",
-                "STPIntentAction": "unknown",
+                "com.stripe.lib:ErrorMessageKey": "Unknown authentication action type",
             ])
             paymentHandlerExpectation.fulfill()
         }
@@ -346,8 +345,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "unsupportedAuthenticationErrorCode")
             XCTAssertEqual(lastAnalytic?["error_details"] as? [String: String], [
                 "NSLocalizedDescription": "There was an unexpected error -- try again in a few seconds",
-                "com.stripe.lib:ErrorMessageKey": "The SDK doesn\'t recognize the PaymentIntent action type.",
-                "STPIntentAction": "unknown",
+                "com.stripe.lib:ErrorMessageKey": "Unknown authentication action type",
             ])
             paymentHandlerExpectation.fulfill()
         }
