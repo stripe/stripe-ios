@@ -28,6 +28,7 @@ enum OverrideableBuyButtonBehavior {
 @objc(STP_Internal_AddPaymentMethodViewController)
 class AddPaymentMethodViewController: UIViewController {
     enum Error: Swift.Error {
+        case paymentMethodTypesEmpty
         case usBankAccountParamsMissing
     }
 
@@ -39,9 +40,12 @@ class AddPaymentMethodViewController: UIViewController {
             configuration: configuration,
             logAvailability: false
         )
-
-        // Break loudly! This will cause other parts of the code to crash if not true
-        assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
+        if paymentMethodTypes.isEmpty {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.paymentMethodTypesEmpty)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        }
+        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         return paymentMethodTypes
     }()
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
