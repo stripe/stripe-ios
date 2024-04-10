@@ -87,6 +87,8 @@ extension AnalyticLoggableError where Self: Error {}
             "error_type": errorType,
             "error_code": errorCode,
         ]
+        params["request_id"] = Self.extractStripeAPIRequestID(from: self)
+
         if let analyticLoggableError = self as? AnalyticLoggableError {
             params["error_details"] = analyticLoggableError.additionalNonPIIErrorDetails
         }
@@ -137,6 +139,15 @@ extension AnalyticLoggableError where Self: Error {}
         } else {
             // Default: Cast to Error and use the code.
             return String((error as NSError).code)
+        }
+    }
+
+    static func extractStripeAPIRequestID(from error: Error) -> String? {
+        let error = error as NSError
+        if error.domain == STPError.stripeDomain {
+            return error.userInfo[STPError.stripeRequestIDKey] as? String
+        } else {
+            return nil
         }
     }
 }
