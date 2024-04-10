@@ -187,7 +187,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
-        XCTAssertEqual(16, payload.count)
+        XCTAssertEqual(17, payload.count)
         XCTAssertNotNil(payload["device_type"] as? String)
         XCTAssertEqual("Wi-Fi", payload["network_type"] as? String)
         // In xctest, this is the version of Xcode
@@ -208,6 +208,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertEqual(STPAPIClient.STPSDKVersion, payload["bindings_version"] as? String)
         XCTAssertEqual("testVal", payload["testKey"] as? String)
         XCTAssertEqual("X", payload["install"] as? String)
+        XCTAssertTrue(payload["is_development"] as? Bool ?? false)
 
         let additionalInfo = try XCTUnwrap(payload["additional_info"] as? [String])
         XCTAssertEqual(1, additionalInfo.count)
