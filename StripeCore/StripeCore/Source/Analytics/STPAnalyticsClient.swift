@@ -148,6 +148,7 @@ extension STPAnalyticsClient {
         payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
+        payload["session_id"] = AnalyticsHelper.shared.sessionID ?? ""
         if STPAnalyticsClient.isSimulatorOrTest {
             payload["is_development"] = true
         }
