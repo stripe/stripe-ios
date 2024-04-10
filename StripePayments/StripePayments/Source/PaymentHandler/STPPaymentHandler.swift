@@ -910,12 +910,7 @@ public class STPPaymentHandler: NSObject {
     )
         -> Bool
     {
-        // TODO: Refactor paymentIntent to not be nullable
-        guard let paymentIntent = action.paymentIntent else {
-            assert(false, "Calling _handlePaymentIntentStatus without a paymentIntent")
-            return false
-        }
-
+        let paymentIntent = action.paymentIntent
         switch paymentIntent.status {
         case .unknown:
             action.complete(
@@ -1109,7 +1104,7 @@ public class STPPaymentHandler: NSObject {
                             self.analyticsClient
                                 .log3DS2AuthenticationRequestParamsFailed(
                                     with: currentAction.apiClient._stored_configuration,
-                                    intentID: currentAction.intentStripeID ?? "",
+                                    intentID: currentAction.intentStripeID,
                                     error: self._error(
                                         for: .stripe3DS2ErrorCode,
                                         loggingSafeErrorMessage: exception.description
@@ -1130,7 +1125,7 @@ public class STPPaymentHandler: NSObject {
 
                     analyticsClient.log3DS2AuthenticateAttempt(
                         with: currentAction.apiClient._stored_configuration,
-                        intentID: currentAction.intentStripeID ?? ""
+                        intentID: currentAction.intentStripeID
                     )
 
                     guard let authParams = authRequestParams, let transaction else {
@@ -1232,7 +1227,7 @@ public class STPPaymentHandler: NSObject {
                                 currentAction.threeDS2Transaction = nil
                                 self.analyticsClient.log3DS2FrictionlessFlow(
                                     with: currentAction.apiClient._stored_configuration,
-                                    intentID: currentAction.intentStripeID ?? ""
+                                    intentID: currentAction.intentStripeID
                                 )
 
                                 self._retrieveAndCheckIntentForCurrentAction()
@@ -1404,7 +1399,7 @@ public class STPPaymentHandler: NSObject {
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
             currentAction,
             completionBlock in
-            if let paymentMethod = currentAction.paymentIntent?.paymentMethod,
+            if let paymentMethod = currentAction.paymentIntent.paymentMethod,
                 paymentMethod.type == .alipay,
                 let alipayHandleRedirect = currentAction.nextAction()?.alipayHandleRedirect,
                 let alipayReturnURL = alipayHandleRedirect.marlinReturnURL
@@ -1430,17 +1425,14 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        if let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
-            let paymentIntent = currentAction.paymentIntent
-        {
+        if let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
             pingMarlinIfNecessary(
                 currentAction,
                 {
                     currentAction.apiClient.retrievePaymentIntent(
-                        withClientSecret: paymentIntent.clientSecret,
+                        withClientSecret: currentAction.paymentIntent.clientSecret,
                         expand: ["payment_method"]
                     ) { paymentIntent, error in
-                        currentAction.paymentIntent = paymentIntent
                         guard let paymentIntent, let paymentMethod = paymentIntent.paymentMethod, error == nil else {
                             let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent or paymentIntent.paymentMethod.")
                             currentAction.complete(
@@ -1449,6 +1441,7 @@ public class STPPaymentHandler: NSObject {
                             )
                             return
                         }
+                        currentAction.paymentIntent = paymentIntent
                         // If the transaction is still unexpectedly processing, refresh the PaymentIntent
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
@@ -1509,8 +1502,8 @@ public class STPPaymentHandler: NSObject {
             currentAction.apiClient.retrieveSetupIntent(
                 withClientSecret: currentAction.setupIntent.clientSecret,
                 expand: ["payment_method"]
-            ) { retrievedSetupIntent, error in
-                guard let setupIntent = retrievedSetupIntent, let paymentMethod = setupIntent.paymentMethod, error == nil else {
+            ) { setupIntent, error in
+                guard let setupIntent, let paymentMethod = setupIntent.paymentMethod, error == nil else {
                     let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent or setupIntent.paymentMethod.")
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
@@ -1601,7 +1594,7 @@ public class STPPaymentHandler: NSObject {
         }
         analyticsClient.logURLRedirectNextAction(
             with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID ?? ""
+            intentID: currentAction.intentStripeID
         )
 
         // Setting universalLinksOnly to false will allow iOS to open https:// urls in an external browser, hopefully Safari.
@@ -1659,7 +1652,7 @@ public class STPPaymentHandler: NSObject {
 
         analyticsClient.logURLRedirectNextAction(
             with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID ?? ""
+            intentID: currentAction.intentStripeID
         )
 
         // Open the link in SafariVC
@@ -1853,11 +1846,9 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        if let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
-            let paymentIntent = currentAction.paymentIntent
-        {
+        if let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
             guard
-                paymentIntent.paymentMethod?.card != nil || paymentIntent.paymentMethod?.link != nil
+                currentAction.paymentIntent.paymentMethod?.card != nil || currentAction.paymentIntent.paymentMethod?.link != nil
             else {
                 // Only cancel 3DS auth on payment method types that support 3DS.
                 completion(true, nil)
@@ -1866,18 +1857,20 @@ public class STPPaymentHandler: NSObject {
 
             analyticsClient.log3DS2RedirectUserCanceled(
                 with: currentAction.apiClient._stored_configuration,
-                intentID: currentAction.intentStripeID ?? ""
+                intentID: currentAction.intentStripeID
             )
 
-            let intentID = nextAction.useStripeSDK?.threeDS2IntentOverride ?? paymentIntent.stripeId
+            let intentID = nextAction.useStripeSDK?.threeDS2IntentOverride ?? currentAction.paymentIntent.stripeId
 
             currentAction.apiClient.cancel3DSAuthentication(
                 forPaymentIntent: intentID,
                 withSource: cancelSourceID,
                 publishableKeyOverride: nextAction.useStripeSDK?.publishableKeyOverride
-            ) { retrievedPaymentIntent, error in
-                currentAction.paymentIntent = retrievedPaymentIntent
-                completion(retrievedPaymentIntent != nil, error)
+            ) { paymentIntent, error in
+                if let paymentIntent {
+                    currentAction.paymentIntent = paymentIntent
+                }
+                completion(paymentIntent != nil, error)
             }
         } else if let currentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
             let setupIntent = currentAction.setupIntent
@@ -1890,7 +1883,7 @@ public class STPPaymentHandler: NSObject {
 
             analyticsClient.log3DS2RedirectUserCanceled(
                 with: currentAction.apiClient._stored_configuration,
-                intentID: currentAction.intentStripeID ?? ""
+                intentID: currentAction.intentStripeID
             )
 
             let intentID = nextAction.useStripeSDK?.threeDS2IntentOverride ?? setupIntent.stripeID
@@ -1936,16 +1929,16 @@ public class STPPaymentHandler: NSObject {
             error in
             if success {
                 if let paymentIntentAction = currentAction
-                    as? STPPaymentHandlerPaymentIntentActionParams,
-                    let paymentIntent = paymentIntentAction.paymentIntent
+                    as? STPPaymentHandlerPaymentIntentActionParams
                 {
-
                     currentAction.apiClient.retrievePaymentIntent(
-                        withClientSecret: paymentIntent.clientSecret,
+                        withClientSecret: paymentIntentAction.paymentIntent.clientSecret,
                         expand: ["payment_method"]
-                    ) { retrievedPaymentIntent, retrieveError in
-                        paymentIntentAction.paymentIntent = retrievedPaymentIntent
-                        completion(retrievedPaymentIntent != nil, retrieveError)
+                    ) { paymentIntent, retrieveError in
+                        if let paymentIntent {
+                            paymentIntentAction.paymentIntent = paymentIntent
+                        }
+                        completion(paymentIntent != nil, retrieveError)
                     }
                 } else if let setupIntentAction = currentAction
                     as? STPPaymentHandlerSetupIntentActionParams
@@ -2168,7 +2161,7 @@ extension STPPaymentHandler {
         let transactionStatus = completionEvent.transactionStatus
         analyticsClient.log3DS2ChallengeFlowCompleted(
             with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID ?? "",
+            intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
         if transactionStatus == "Y" {
@@ -2223,7 +2216,7 @@ extension STPPaymentHandler {
 
         analyticsClient.log3DS2ChallengeFlowUserCanceled(
             with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID ?? "",
+            intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
         _markChallengeCompleted(withCompletion: { _, _ in
@@ -2244,7 +2237,7 @@ extension STPPaymentHandler {
 
         analyticsClient.log3DS2ChallengeFlowTimedOut(
             with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID ?? "",
+            intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
         _markChallengeCompleted(withCompletion: { _, _ in
@@ -2282,7 +2275,7 @@ extension STPPaymentHandler {
             )
             self?.analyticsClient.log3DS2ChallengeFlowErrored(
                 with: currentAction.apiClient._stored_configuration,
-                intentID: currentAction.intentStripeID ?? "",
+                intentID: currentAction.intentStripeID,
                 error: localizedError
             )
             currentAction.complete(
@@ -2319,7 +2312,7 @@ extension STPPaymentHandler {
 
             self?.analyticsClient.log3DS2ChallengeFlowErrored(
                 with: currentAction.apiClient._stored_configuration,
-                intentID: currentAction.intentStripeID ?? "",
+                intentID: currentAction.intentStripeID,
                 error: localizedError
             )
             currentAction.complete(
@@ -2341,7 +2334,7 @@ extension STPPaymentHandler {
 
         analyticsClient.log3DS2ChallengeFlowPresented(
             with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID ?? "",
+            intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
     }

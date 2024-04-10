@@ -31,12 +31,11 @@ class PollingViewController: UIViewController {
     private let safariViewController: SFSafariViewController?
 
     private lazy var intentPoller: IntentStatusPoller = {
-        guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
-              let clientSecret = currentAction.paymentIntent?.clientSecret else { fatalError() }
+        guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else { fatalError() }
 
         let intentPoller = IntentStatusPoller(retryInterval: viewModel.retryInterval,
                                               intentRetriever: currentAction.apiClient,
-                                              clientSecret: clientSecret)
+                                              clientSecret: currentAction.paymentIntent.clientSecret)
         intentPoller.delegate = self
         return intentPoller
     }()
