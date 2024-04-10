@@ -40,8 +40,9 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
     // MARK: - Writable Properties
     private let configuration: CustomerSheet.Configuration
-    private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
 
+    // We are keeping usBankAccountInfo in memory to preserve state if the user switches payment method types
+    private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
     var overrideActionButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let paymentOption = paymentOption,
