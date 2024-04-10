@@ -17,9 +17,6 @@ import UIKit
     }
 
     public static let sharedManager = DownloadManager()
-
-    let imageCache = ImageCache()
-
     private let session: URLSession
     private let analyticsClient: STPAnalyticsClient
     private var diskCache: URLCache?
@@ -77,17 +74,11 @@ extension DownloadManager {
 
     // Common download function
     private func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
-        let imageName = url.lastPathComponent
-        // Early exit for cached images
-        if let image = await imageCache.cachedImageNamed(imageName) {
-            return image
-        }
-
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
+        
         do {
-            let (data, response) = try await session.data(for: urlRequest)
-            let image = try persistToMemory(data, forImageName: imageName) // Throws a Error.failedToMakeImageFromData
-            diskCache?.storeCachedResponse(CachedURLResponse(response: response, data: data), for: urlRequest)
+            let (data, _) = try await session.data(for: urlRequest)
+            let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             return image
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
@@ -111,44 +102,9 @@ extension DownloadManager {
             return await self.downloadImage(url: url, placeholder: placeholder)
         }) ?? imagePlaceHolder()
     }
-}
-
-// MARK: Image Cache
-extension DownloadManager {
+    
     func resetDiskCache() {
         self.diskCache?.removeAllCachedResponses()
-    }
-
-    func persistToMemory(_ imageData: Data, forImageName imageName: String) throws -> UIImage {
-        #if canImport(CompositorServices)
-        let scale = 1.0
-        #else
-        let scale = UIScreen.main.scale
-        #endif
-        guard let image = UIImage(data: imageData, scale: scale) else {
-            throw Error.failedToMakeImageFromData
-        }
-
-        Task {
-            await imageCache.storeImage(image, name: imageName)
-        }
-        return image
-    }
-}
-
-actor ImageCache {
-    private var images: [String: UIImage] = [:]
-
-    func cachedImageNamed(_ name: String) -> UIImage? {
-        return images[name]
-    }
-
-    func storeImage(_ image: UIImage, name: String) {
-        images[name] = image
-    }
-
-    func clearCache() {
-        images.removeAll()
     }
 }
 
@@ -169,10 +125,23 @@ extension DownloadManager {
     }
 }
 
-// MARK: UIImage helper
+// MARK: UIImage helpers
 private extension UIImage {
     func isEqualToImage(image: UIImage) -> Bool {
         return self.pngData() == image.pngData()
+    }
+    
+    static func from(imageData: Data) throws -> UIImage {
+        #if canImport(CompositorServices)
+        let scale = 1.0
+        #else
+        let scale = UIScreen.main.scale
+        #endif
+        guard let image = UIImage(data: imageData, scale: scale) else {
+            throw DownloadManager.Error.failedToMakeImageFromData
+        }
+
+        return image
     }
 }
 

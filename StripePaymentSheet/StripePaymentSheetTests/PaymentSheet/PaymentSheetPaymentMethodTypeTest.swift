@@ -30,7 +30,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         FormSpecProvider.shared.load { _ in
             e.fulfill()
         }
-        resetDownloadManager()
+        DownloadManager.sharedManager.resetDiskCache()
         waitForExpectations(timeout: 10)
         // A Payment methods with a client-side asset and a form spec image URL...
         let loadExpectation = expectation(description: "Load form spec image")
@@ -61,7 +61,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testMakeImage_without_client_asset() {
-        resetDownloadManager()
+        DownloadManager.sharedManager.resetDiskCache()
         let e = expectation(description: "Load specs")
         FormSpecProvider.shared.load { _ in
             e.fulfill()
@@ -480,17 +480,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"], externalPMTypes: ["external_paypal"]).map { $0.identifier },
             ["ideal", "card", "bancontact", "external_paypal"]
         )
-    }
-
-    private func resetDownloadManager() {
-        DownloadManager.sharedManager.resetDiskCache()
-        let clearCacheExpectation = self.expectation(description: "Clear cache")
-        Task {
-            await DownloadManager.sharedManager.imageCache.clearCache()
-            clearCacheExpectation.fulfill()
-        }
-
-        wait(for: [clearCacheExpectation], timeout: 10)
     }
 }
 
