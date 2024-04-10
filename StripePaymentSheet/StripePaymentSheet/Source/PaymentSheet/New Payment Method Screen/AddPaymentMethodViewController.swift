@@ -114,6 +114,8 @@ class AddPaymentMethodViewController: UIViewController {
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
     var previousCustomerInput: IntentConfirmParams?
+
+    // We are keeping usBankAccountInfo in memory to preserve state if the user switches payment method types
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
         if selectedPaymentMethodType == .stripe(.USBankAccount) {
@@ -123,7 +125,7 @@ class AddPaymentMethodViewController: UIViewController {
             } else {
                 // Cache the form
                 let element = makeElement(for: .stripe(.USBankAccount))
-                usBankAccountFormElement = (element as! USBankAccountPaymentMethodElement)
+                usBankAccountFormElement = element as? USBankAccountPaymentMethodElement
                 return element
             }
         }
@@ -307,7 +309,7 @@ class AddPaymentMethodViewController: UIViewController {
             } else {
                 // Cache the form
                 paymentMethodFormElement = makeElement(for: .stripe(.USBankAccount))
-                usBankAccountFormElement = (paymentMethodFormElement as! USBankAccountPaymentMethodElement)
+                usBankAccountFormElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement
             }
         } else {
             paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
