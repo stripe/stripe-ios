@@ -17,6 +17,7 @@ protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
 @objc(STP_Internal_CustomerAddPaymentMethodViewController)
 class CustomerAddPaymentMethodViewController: UIViewController {
     enum Error: Swift.Error {
+        case paymentMethodTypesEmpty
         case usBankAccountParamsMissing
     }
 
@@ -121,6 +122,12 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     ) {
         self.configuration = configuration
         self.delegate = delegate
+        if paymentMethodTypes.isEmpty {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.paymentMethodTypesEmpty)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        }
+        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.paymentMethodTypes = paymentMethodTypes
         self.cbcEligible = cbcEligible
         super.init(nibName: nil, bundle: nil)
