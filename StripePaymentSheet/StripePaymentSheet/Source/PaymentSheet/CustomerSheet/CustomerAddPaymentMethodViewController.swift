@@ -85,7 +85,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             } else {
                 // Cache the form
                 let element = self.makeElement(for: .stripe(.USBankAccount))
-                usBankAccountFormElement = (element as! USBankAccountPaymentMethodElement)
+                usBankAccountFormElement = element as? USBankAccountPaymentMethodElement
                 return element
             }
         }
@@ -204,7 +204,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
                 paymentMethodFormElement = usBankAccountFormElement
             } else {
                 paymentMethodFormElement = makeElement(for: .stripe(.USBankAccount))
-                usBankAccountFormElement = (paymentMethodFormElement as! USBankAccountPaymentMethodElement)
+                usBankAccountFormElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement
             }
         } else {
             paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
