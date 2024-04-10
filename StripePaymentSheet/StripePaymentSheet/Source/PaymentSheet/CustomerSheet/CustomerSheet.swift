@@ -128,7 +128,9 @@ public class CustomerSheet {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
                                                                      duration: Date().timeIntervalSince(loadingStartDate))
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .customerSheetLoadFailed, error: error))
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadFailed,
+                                                                     duration: Date().timeIntervalSince(loadingStartDate),
+                                                                     error: error)
                 csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
                 DispatchQueue.main.async {
                     self.bottomSheetViewController.dismiss(animated: true)
