@@ -145,7 +145,7 @@ extension String.Localized {
             "Instructional text when environement is too bright"
         )
     }
-    
+
     static var reduce_glare: String {
         return STPLocalizedString(
             "Details not visible",
