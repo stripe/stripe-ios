@@ -97,6 +97,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         theme: STPTheme
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPPaymentContext.self)
+        AnalyticsHelper.shared.generateSessionID()
         self.configuration = configuration
         self.apiAdapter = apiAdapter
         self.theme = theme

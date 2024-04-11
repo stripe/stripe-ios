@@ -39,12 +39,14 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     }
 
     func testPayloadFromAnalytic() throws {
+        AnalyticsHelper.shared.generateSessionID()
+
         client.addAdditionalInfo("test_additional_info")
 
         let mockAnalytic = MockAnalytic()
         let payload = client.payload(from: mockAnalytic)
 
-        XCTAssertEqual(payload.count, 14)
+        XCTAssertEqual(payload.count, 16)
 
         // Verify event name is included
         XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
@@ -61,6 +63,9 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
 
         // Verify install method is Xcode
         XCTAssertEqual(payload["install"] as? String, "X")
+
+        // Verify is_development
+        XCTAssertTrue(payload["is_development"] as? Bool ?? false)
     }
 
     // MARK: - Error tests

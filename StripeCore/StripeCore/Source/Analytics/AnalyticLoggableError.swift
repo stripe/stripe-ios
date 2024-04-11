@@ -11,14 +11,14 @@ import Foundation
 /// Conform your Error to this protocol to override the parameters that get logged when you either:
 /// 1. Use `ErrorAnalytic` to send error analytics.
 /// 2. Build your own `Analytic` and use `serializeForV1Analytics`.
-protocol AnalyticLoggableError: Error {
+@_spi(STP) public protocol AnalyticLoggableError: Error {
     /// The value used for `"error_type"` in the analytics payload.
     /// The default implementation uses `Error.extractErrorType`
-    var errorType: String { get }
+    var analyticsErrorType: String { get }
 
     /// The value used for `"error_code"` in the analytics payload.
     /// The default implementation uses `Error.errorCode`
-    var errorCode: String { get }
+    var analyticsErrorCode: String { get }
 
     /// Additional, non-PII/PDE details about the error.
     /// If non-empty, this is sent as the value for `"error_details"` in the analytics payload.
@@ -26,12 +26,12 @@ protocol AnalyticLoggableError: Error {
 }
 
 // MARK: Default implementation
-extension AnalyticLoggableError {
-    var errorType: String {
+@_spi(STP) extension AnalyticLoggableError {
+    var analyticsErrorType: String {
         Self.extractErrorType(from: self)
     }
 
-    var errorCode: String {
+    var analyticsErrorCode: String {
         Self.extractErrorCode(from: self)
     }
 
@@ -71,14 +71,14 @@ extension AnalyticLoggableError where Self: Error {}
     public func serializeForV1Analytics() -> [String: Any] {
         let errorType: String = {
             if let analyticLoggableError = self as? AnalyticLoggableError {
-                analyticLoggableError.errorType
+                analyticLoggableError.analyticsErrorType
             } else {
                 Self.extractErrorType(from: self)
             }
         }()
         let errorCode: String = {
             if let analyticLoggableError = self as? AnalyticLoggableError {
-                analyticLoggableError.errorCode
+                analyticLoggableError.analyticsErrorCode
             } else {
                 Self.extractErrorCode(from: self)
             }
@@ -87,6 +87,8 @@ extension AnalyticLoggableError where Self: Error {}
             "error_type": errorType,
             "error_code": errorCode,
         ]
+        params["request_id"] = Self.extractStripeAPIRequestID(from: self)
+
         if let analyticLoggableError = self as? AnalyticLoggableError {
             params["error_details"] = analyticLoggableError.additionalNonPIIErrorDetails
         }
@@ -137,6 +139,15 @@ extension AnalyticLoggableError where Self: Error {}
         } else {
             // Default: Cast to Error and use the code.
             return String((error as NSError).code)
+        }
+    }
+
+    static func extractStripeAPIRequestID(from error: Error) -> String? {
+        let error = error as NSError
+        if error.domain == STPError.stripeDomain {
+            return error.userInfo[STPError.stripeRequestIDKey] as? String
+        } else {
+            return nil
         }
     }
 }

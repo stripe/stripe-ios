@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Doğum tarihi geçerli görünmüyor";
 
+"Details not visible" = "Ayrıntılar görünmüyor";
+
 "Flip your identity card over to the other side" = "Kimliğinizin diğer yüzünü çevirin";
 
 "Front identity card photo successfully uploaded" = "Kimliğin ön yüz fotoğrafı başarıyla yüklendi";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "Bireysel CPF";
 
+"Keep ID level" = "Kimlik seviyesini koruyun";
+
 "Last 4 of Social Security number" = "Sosyal Güvenlik numarasının son 4 hanesi";
 
 "Loading" = "Yükleniyor";
+
+"Make sure all details are visible and focus" = "Tüm detayların görünür ve odak dahilinde olduğundan emin olun";
 
 "Make sure you're in a well lit space." = "İyi ışık alan bir alanda olduğunuzdan emin olun.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Uzaklaştırın";
 
+"Move to a well-lit area" = "İyi aydınlatılmış bir yere geçin";
+
 "NRIC or FIN" = "NRIC veya FIN";
+
+"No document detected" = "Belge tespit edilmedi";
 
 "Personal ID number" = "Kişisel kimlik numarası";
 

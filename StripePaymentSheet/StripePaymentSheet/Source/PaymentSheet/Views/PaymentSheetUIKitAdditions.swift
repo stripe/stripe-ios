@@ -13,6 +13,9 @@ import PassKit
 import UIKit
 
 enum PaymentSheetUI {
+    enum Error: Swift.Error {
+        case switchContentIfNecessaryStateInvalid
+    }
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button
     static let defaultPadding: CGFloat = 20
 
@@ -60,7 +63,18 @@ extension UIViewController {
     func switchContentIfNecessary(
         to toVC: UIViewController, containerView: DynamicHeightContainerView
     ) {
-        assert(children.count <= 1)
+        if children.count > 1 {
+            let from_vc_name = NSStringFromClass(children.first!.classForCoder)
+            let to_vc_name = NSStringFromClass(toVC.classForCoder)
+
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: PaymentSheetUI.Error.switchContentIfNecessaryStateInvalid,
+                                              additionalNonPIIParams: ["from_vc": from_vc_name,
+                                                                       "to_vc": to_vc_name,
+                                                                      ])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        }
+        stpAssert(children.count <= 1)
         // Swap out child view controllers if necessary
         if let fromVC = children.first {
             guard fromVC != toVC else {

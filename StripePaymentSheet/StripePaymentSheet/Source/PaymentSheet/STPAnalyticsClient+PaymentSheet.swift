@@ -304,17 +304,12 @@ extension STPAnalyticsClient {
         apiClient: STPAPIClient = .shared
     ) {
         var additionalParams = [:] as [String: Any]
-        if Self.isSimulatorOrTest {
-            additionalParams["is_development"] = true
-        }
-
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession
         if let linkSessionType = linkSessionType {
             additionalParams["link_session_type"] = linkSessionType.rawValue
         }
-        additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
         additionalParams["currency"] = currency

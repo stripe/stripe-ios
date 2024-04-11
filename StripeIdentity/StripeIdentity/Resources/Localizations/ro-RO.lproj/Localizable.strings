@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Data nașterii pare a nu fi validă";
 
+"Details not visible" = "Datele nu sunt vizibile";
+
 "Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
 
 "Front identity card photo successfully uploaded" = "Fotografia părții frontale a cărții de identitate a fost încărcată cu succes";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "CPF persoană fizică";
 
+"Keep ID level" = "Țineți documentul de identitate drept";
+
 "Last 4 of Social Security number" = "Ultimele 4 cifre ale numărului de securitate socială";
 
 "Loading" = "Se încarcă";
+
+"Make sure all details are visible and focus" = "Asigurați-vă că toate detaliile sunt vizibile și focalizați";
 
 "Make sure you're in a well lit space." = "Asigurați-vă că vă aflați într-un spațiu bine luminat.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Depărtați";
 
+"Move to a well-lit area" = "Mutați-vă într-o zonă bine luminată";
+
 "NRIC or FIN" = "NRIC sau FIN";
+
+"No document detected" = "Nu s-a detectat niciun document";
 
 "Personal ID number" = "Număr de identificare personal";
 

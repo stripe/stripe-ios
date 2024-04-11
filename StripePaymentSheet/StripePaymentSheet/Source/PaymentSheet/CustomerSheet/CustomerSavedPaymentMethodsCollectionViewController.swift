@@ -39,6 +39,12 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
 /// For internal SDK use only
 @objc(STP_Internal_SavedPaymentMethodsCollectionViewController)
 class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
+    enum Error: Swift.Error {
+        case didSelectRemoveOnInvalidItem
+        case didSelectEditOnInvalidItem
+        case removedInvalidItemWithUpdateCardFlow
+        case unableToDequeueReusableCell
+    }
     // MARK: - Types
     // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
     /**
@@ -371,7 +377,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
                     .reuseIdentifier, for: indexPath)
                 as? SavedPaymentMethodCollectionView.PaymentOptionCell
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.unableToDequeueReusableCell)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return UICollectionViewCell()
         }
 
@@ -414,7 +423,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.didSelectEditOnInvalidItem)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
 
@@ -435,7 +447,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
-            assertionFailure("Please file an issue with reproduction steps at https://github.com/stripe/stripe-ios")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.didSelectRemoveOnInvalidItem)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
         let alert = UIAlertAction(
@@ -510,7 +525,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewCon
               case .saved = viewModels[indexPath.row],
               let delegate = delegate
         else {
-            assertionFailure()
+            stpAssertionFailure()
             throw CustomerSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
         }
 
@@ -528,7 +543,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewCon
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
-            assertionFailure("Please file an issue with reproduction steps at https://github.com/stripe/stripe-ios")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.removedInvalidItemWithUpdateCardFlow)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
 

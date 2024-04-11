@@ -10,9 +10,12 @@ import XCTest
 
 extension XCUIApplication {
 
-    static func fc_launch() -> XCUIApplication {
+    static func fc_launch(playgroundConfigurationString: String? = nil) -> XCUIApplication {
+        var launchEnvironment: [String: String] = ["UITesting": "true"]
+        launchEnvironment["UITesting_playground_configuration_string"] = playgroundConfigurationString
+
         let app = XCUIApplication()
-        app.launchEnvironment = ["UITesting": "true"]
+        app.launchEnvironment = launchEnvironment
         app.launch()
         return app
     }
