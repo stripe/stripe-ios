@@ -97,7 +97,7 @@ extension DownloadManager {
     private func downloadImageBlocking(url: URL, placeholder: UIImage) -> UIImage {
         return _unsafeWait({
             return await self.downloadImage(url: url, placeholder: placeholder)
-        }) ?? imagePlaceHolder()
+        })
     }
 
     func resetDiskCache() {
@@ -144,21 +144,20 @@ private extension UIImage {
 
 // MARK: Workarounds for using Swift async from a sync context
 // https://forums.swift.org/t/using-async-functions-from-synchronous-functions-and-breaking-all-the-rules/59782/4
-private class Box<ResultType> {
-    var result: Result<ResultType, Error>?
+private class ImageBox {
+    var image: UIImage = DownloadManager.sharedManager.imagePlaceHolder()
 }
 
 private extension DownloadManager {
     /// Unsafely awaits an async function from a synchronous context.
-    func _unsafeWait<ResultType>(_ f: @escaping () async -> ResultType) -> ResultType? {
-        let box = Box<ResultType>()
+    func _unsafeWait(_ downloadImage: @escaping () async -> UIImage) -> UIImage {
+        let imageBox = ImageBox()
         let sema = DispatchSemaphore(value: 0)
         Task {
-            let val = await f()
-            box.result = .success(val)
+            imageBox.image = await downloadImage()
             sema.signal()
         }
         sema.wait()
-        return try? box.result?.get()
+        return imageBox.image
     }
 }

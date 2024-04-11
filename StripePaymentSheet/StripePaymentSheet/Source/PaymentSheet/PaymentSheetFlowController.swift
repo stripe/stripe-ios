@@ -127,11 +127,6 @@ extension PaymentSheet {
             /// The status of the last update API call
             var status: Status = .inProgress
 
-            init(id: UUID, status: Status = .inProgress) {
-                self.id = id
-                self.status = status
-            }
-
             enum Status {
                 case completed
                 case inProgress
