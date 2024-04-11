@@ -620,7 +620,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             } else if strongSelf.requestPaymentShouldPresentShippingViewController() {
                 strongSelf.presentShippingViewController(withNewState: .requestingPayment)
             } else if let selectedPaymentOption = strongSelf.selectedPaymentOption,
-                        selectedPaymentOption is STPPaymentMethod || selectedPaymentOption is STPPaymentMethodParams
+                        (selectedPaymentOption is STPPaymentMethod || selectedPaymentOption is STPPaymentMethodParams)
             {
                 strongSelf.state = .requestingPayment
                 let result = STPPaymentResult(paymentOption: strongSelf.selectedPaymentOption!)
