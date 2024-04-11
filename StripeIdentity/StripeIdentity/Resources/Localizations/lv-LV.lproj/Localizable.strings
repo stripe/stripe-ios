@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Dzimšanas datums neizskatās derīgs";
 
+"Details not visible" = "Detaļas nav redzamas";
+
 "Flip your identity card over to the other side" = "Apgrieziet identifikācijas karti uz otru pusi";
 
 "Front identity card photo successfully uploaded" = "Identifikācijas kartes priekšpuse ir veiksmīgi augšupielādēta";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "Fiziskas personas CPF";
 
+"Keep ID level" = "Paturēt ID līmeni";
+
 "Last 4 of Social Security number" = "Pēdējie 4 cipari no sociālās apdrošināšanas numura";
 
 "Loading" = "Ielādē";
 
+"Make sure all details are visible and focus" = "Pārliecinieties, vai visas detaļas ir redzamas un fokusētas.";
+
 "Make sure you're in a well lit space." = "Pārliecinieties, ka atrodaties labi apgaismotā vietā.";
 
+"Move closer" = "Novietojiet tuvāk";
+
+"Move farther" = "Novietojiet tālāk";
+
+"Move to a well-lit area" = "Pārvietojieties uz labi apgaismotu vietu";
+
 "NRIC or FIN" = "NRIC vai FIN";
+
+"No document detected" = "Nav atpazīts dokuments";
 
 "Personal ID number" = "Personas ID numurs";
 

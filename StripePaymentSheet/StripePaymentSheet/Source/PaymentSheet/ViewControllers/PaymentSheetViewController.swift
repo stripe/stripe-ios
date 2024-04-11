@@ -50,6 +50,12 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_PaymentSheetViewController)
 class PaymentSheetViewController: UIViewController {
+    enum PaymentSheetViewControllerError: Error {
+        case addingNewNoPaymentOptionOnBuyButtonTap
+        case selectingSavedNoPaymentOptionOnBuyButtonTap
+        case sheetNavigationBarDidBack
+    }
+
     // MARK: - Read-only Properties
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
@@ -346,7 +352,7 @@ class PaymentSheetViewController: UIViewController {
         switch mode {
         case .addingNew:
             headerLabel.isHidden = isWalletEnabled
-            headerLabel.text = STPLocalizedString(
+            headerLabel.text = configuration.addCardHeaderText ?? STPLocalizedString(
                 "Add your payment information",
                 "Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc."
             )
@@ -462,7 +468,11 @@ class PaymentSheetViewController: UIViewController {
                 return
             } else {
                 guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
-                    assertionFailure()
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError,
+                                                      error: PaymentSheetViewControllerError.addingNewNoPaymentOptionOnBuyButtonTap,
+                                                      additionalNonPIIParams: [:])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                    stpAssertionFailure("Tapped buy button while adding without paymentOption")
                     return
                 }
                 paymentOption = newPaymentOption
@@ -471,7 +481,11 @@ class PaymentSheetViewController: UIViewController {
             guard
                 let selectedPaymentOption = savedPaymentOptionsViewController.selectedPaymentOption
             else {
-                assertionFailure()
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError,
+                                                  error: PaymentSheetViewControllerError.selectingSavedNoPaymentOptionOnBuyButtonTap,
+                                                  additionalNonPIIParams: [:])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                stpAssertionFailure("Tapped buy button while selecting saved without paymentOption")
                 return
             }
             paymentOption = selectedPaymentOption
@@ -606,7 +620,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
         }
@@ -638,15 +652,29 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         else {
             return
         }
-        configuration.apiClient.detachPaymentMethod(
-            paymentMethod.stripeId,
-            fromCustomerUsing: ephemeralKey
-        ) { (_) in
-            // no-op
+
+        if let customerAccessProvider = configuration.customer?.customerAccessProvider,
+           case .customerSession = customerAccessProvider,
+           paymentMethod.type == .card,
+           let customerId = configuration.customer?.id {
+            configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                paymentMethod.stripeId,
+                customerId: customerId,
+                fromCustomerUsing: ephemeralKey
+            ) { (_) in
+                // no-op
+            }
+        } else {
+            configuration.apiClient.detachPaymentMethod(
+                paymentMethod.stripeId,
+                fromCustomerUsing: ephemeralKey
+            ) { (_) in
+                // no-op
+            }
         }
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {
@@ -733,7 +761,11 @@ extension PaymentSheetViewController: SheetNavigationBarDelegate {
             mode = .selectingSaved
             updateUI()
         default:
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError,
+                                              error: PaymentSheetViewControllerError.sheetNavigationBarDidBack,
+                                              additionalNonPIIParams: [:])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure("Tapped back button in invalid mode")
         }
     }
 }

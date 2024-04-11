@@ -1,3 +1,53 @@
+## 23.27.0 2024-04-08
+### Payments
+* [Added] Support for Alma bindings.
+
+### All
+* [Fixed] Fixed an issue with generating App Privacy reports.
+
+## 23.26.0 2024-03-25
+### PaymentSheet
+* [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
+
+### CustomerSheet
+* [Fixed] Fixed an issue dismissing the sheet when Link is the default payment method.
+
+### Financial Connections
+* [Fixed] Improved the UX of an edge case in Financial Connections authentication flow.
+
+### All
+* Added a [Privacy Manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files).
+
+## 23.25.1 2024-03-18
+### All
+* Xcode 14 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 15 or later.
+
+### PaymentSheet
+* [Fixed] A bug where `PaymentSheet.FlowController` was not respecting `PaymentSheet.Configuration.primaryButtonLabel`.
+* [Added] Support for Klarna with SetupIntents and PaymentIntents with `setup_future_usage`.
+
+### Financial Connections
+* [Changed] Updated the design of Financial Connections authentication flow.
+
+## 23.25.0 2024-03-11
+### CustomerSheet
+* [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
+
+### PaymentSheet
+* [Fixed] The rotating [card brand view](https://docs.stripe.com/co-badged-cards-compliance) is now shown when card brand choice is enabled if the card number is empty.
+
+## 23.24.1 2024-03-05
+### PaymentSheet
+* [Fixed] Fixed an assertionFailure that happens when using FlowController and switching between saved payment methods
+
+## 23.24.0 2024-03-04
+### PaymentSheet
+* [Added] Added support for [Link](https://docs.stripe.com/payments/link/mobile-payment-element-link) in PaymentSheet. Enabling Link in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods) will enable Link in PaymentSheet. To choose different Link availability settings on web and mobile, use a custom [payment method configuration](https://docs.stripe.com/payments/multiple-payment-method-configs).
+* [Fixed] Fixed an issue where some 3DS2 payments may fail to complete successfully.
+
+### Payments
+* [Added] Support for Amazon Pay bindings.
+
 ## 23.23.0 2024-02-26
 ### PaymentSheet
 * [Added] Added support for [payment method configurations](https://docs.stripe.com/payments/multiple-payment-method-configs) when using the deferred intent integration path.

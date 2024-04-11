@@ -621,7 +621,7 @@
                         "api_value": "noble_pay"
                     },
                     {
-                        "display_text": "PBac z iPKO (PKO+BP)",
+                        "display_text": "Płać z iPKO (PKO BP)",
                         "api_value": "pbac_z_ipko"
                     },
                     {
@@ -768,23 +768,7 @@
             "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-9e42e4498e0bee515c423ef66010852f.png",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-d3ef2eeefed43cea1f969c3a2a4118d8.svg"
             },
-        "fields": [
-        ],
-        "next_action_spec": {
-            "confirm_response_status_specs": {
-                "requires_action": {
-                    "type": "redirect_to_url"
-                }
-            },
-          "post_confirm_handling_pi_status_specs": {
-                "succeeded": {
-                    "type": "finished"
-                },
-                "requires_action": {
-                    "type": "canceled"
-                }
-            }
-        }
+        "fields": []
     },
     {
         "type": "alma",

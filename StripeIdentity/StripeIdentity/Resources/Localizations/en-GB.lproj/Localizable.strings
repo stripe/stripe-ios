@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Date of birth does not look valid";
 
+"Details not visible" = "Details not visible";
+
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
 "Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "Individual CPF";
 
+"Keep ID level" = "Keep ID level";
+
 "Last 4 of Social Security number" = "Last 4 of Social Security number";
 
 "Loading" = "Loading";
 
+"Make sure all details are visible and focus" = "Make sure all details are visible and focus";
+
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
 
+"Move closer" = "Move closer";
+
+"Move farther" = "Move further away";
+
+"Move to a well-lit area" = "Move to a well-lit area";
+
 "NRIC or FIN" = "NRIC or FIN";
+
+"No document detected" = "No document detected";
 
 "Personal ID number" = "Personal ID number";
 

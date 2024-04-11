@@ -97,6 +97,8 @@ final class USBankAccountPaymentMethodElement: Element {
             && configuration.defaultBillingDetails.name != nil
         let hasDefaultEmail = configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
             && configuration.defaultBillingDetails.email != nil
+
+        // Fail loudly: This is an integration error
         assert(
             (collectingName || hasDefaultName) && (collectingEmail || hasDefaultEmail),
             "If name or email are not collected, they must be provided through defaults"
@@ -168,34 +170,15 @@ final class USBankAccountPaymentMethodElement: Element {
         } else if case .paymentSheet = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
-        let formattedString = applyLinksToString(template: mandateText, links: links)
+        let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, theme: theme)
         return formattedString
     }
 
     class func attributedMandateTextSavedPaymentMethod(theme: ElementsUITheme = .default) -> NSMutableAttributedString {
         let mandateText = Self.ContinueMandateText
-        let formattedString = applyLinksToString(template: mandateText, links: links)
+        let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, theme: theme)
-        return formattedString
-    }
-
-    // TODO(wooj): Refactor this code to be common across multiple classes
-    private class func applyLinksToString(template: String, links: [String: URL]) -> NSMutableAttributedString {
-        let formattedString = NSMutableAttributedString()
-        STPStringUtils.parseRanges(from: template, withTags: Set<String>(links.keys)) { string, matches in
-            formattedString.append(NSAttributedString(string: string))
-            for (tag, range) in matches {
-                guard range.rangeValue.location != NSNotFound else {
-                    assertionFailure("Tag '<\(tag)>' not found")
-                    continue
-                }
-
-                if let url = links[tag] {
-                    formattedString.addAttributes([.link: url], range: range.rangeValue)
-                }
-            }
-        }
         return formattedString
     }
 

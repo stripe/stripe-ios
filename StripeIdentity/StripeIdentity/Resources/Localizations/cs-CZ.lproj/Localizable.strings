@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Datum narození nevypadá jako platný údaj";
 
+"Details not visible" = "Detaily nejsou viditelné";
+
 "Flip your identity card over to the other side" = "Převraťte průkaz totožnosti na druhou stranu";
 
 "Front identity card photo successfully uploaded" = "Fotografie z přední strany průkazu totožnosti byla úspěšně nahrána";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "Individuální CPF";
 
+"Keep ID level" = "Zachovat úroveň dokladu";
+
 "Last 4 of Social Security number" = "Poslední 4 pozice čísla sociálního pojištění";
 
 "Loading" = "Načítání";
 
+"Make sure all details are visible and focus" = "Ujistěte se, že jsou všechny detaily viditelné a zaostřené";
+
 "Make sure you're in a well lit space." = "Ujistěte se, že jste v řádně  osvětleném prostoru.";
 
+"Move closer" = "Posuňte blíže";
+
+"Move farther" = "Posuňte dále";
+
+"Move to a well-lit area" = "Přesuňte se na dobře osvětlené místo";
+
 "NRIC or FIN" = "NRIC nebo FIN";
+
+"No document detected" = "Nebyl zjištěn žádný dokument";
 
 "Personal ID number" = "Osobní identifikační číslo";
 

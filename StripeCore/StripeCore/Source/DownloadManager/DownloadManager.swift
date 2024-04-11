@@ -12,6 +12,11 @@ import UIKit
 @_spi(STP) public class DownloadManager: NSObject, URLSessionDelegate {
     public typealias UpdateImageHandler = (UIImage) -> Void
 
+    private enum Error: Swift.Error {
+        case downloadSyncFailure
+        case downloadAsyncFailure
+    }
+
     public static let sharedManager = DownloadManager()
 
     let downloadQueue: DispatchQueue

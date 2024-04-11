@@ -19,6 +19,10 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_PaymentMethodTypeCollectionView)
 class PaymentMethodTypeCollectionView: UICollectionView {
+    enum Error: Swift.Error {
+        case unableToDequeueReusableCell
+    }
+
     // MARK: - Constants
     internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
     internal static let cellHeight: CGFloat = 52
@@ -44,7 +48,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         isPaymentSheet: Bool = false,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
-        assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
+        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
 
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
@@ -106,7 +110,10 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
                 as? PaymentMethodTypeCollectionView.PaymentTypeCell,
             let appearance = (collectionView as? PaymentMethodTypeCollectionView)?.appearance
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.unableToDequeueReusableCell)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return UICollectionViewCell()
         }
         cell.paymentMethodType = paymentMethodTypes[indexPath.item]

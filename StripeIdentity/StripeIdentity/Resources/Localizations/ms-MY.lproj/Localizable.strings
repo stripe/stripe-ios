@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Tarikh lahir tampaknya tidak sah";
 
+"Details not visible" = "Butiran tidak kelihatan";
+
 "Flip your identity card over to the other side" = "Terbalikkan kad pengenalan anda ke sebelah satu lagi";
 
 "Front identity card photo successfully uploaded" = "Foto bahagian hadapan kad pengenalan berjaya dimuat naik";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "CPF Individu";
 
+"Keep ID level" = "Pastikan ID mendatar";
+
 "Last 4 of Social Security number" = "Empat digit terakhir nombor Keselamatan Sosial";
 
 "Loading" = "Sedang dimuatkan";
 
+"Make sure all details are visible and focus" = "Pastikan semua butiran dapat dilihat dan berada dalam fokus";
+
 "Make sure you're in a well lit space." = "Pastikan anda berada di ruang yang cukup terang.";
 
+"Move closer" = "Beralih lebih dekat";
+
+"Move farther" = "Beralih lebih jauh";
+
+"Move to a well-lit area" = "Beralih ke kawasan yang cukup terang";
+
 "NRIC or FIN" = "NRIC atau FIN";
+
+"No document detected" = "Tiada dokumen dikesan";
 
 "Personal ID number" = "Nombor ID peribadi";
 

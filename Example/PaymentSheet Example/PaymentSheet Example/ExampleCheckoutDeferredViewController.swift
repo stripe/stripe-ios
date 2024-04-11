@@ -56,7 +56,9 @@ class ExampleDeferredCheckoutViewController: UIViewController {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = .init(
-            merchantId: "com.foo.example", merchantCountryCode: "US")
+            merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
+            merchantCountryCode: "US"
+        )
         configuration.returnURL = "payments-example://stripe-redirect"
         // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
         configuration.allowsDelayedPaymentMethods = true

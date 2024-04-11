@@ -29,8 +29,8 @@ extension TextFieldElement {
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            // If CBC is enabled...
-            if let cardBrandDropDown = cardBrandDropDown {
+            // If CBC is enabled and the PAN is not empty...
+            if let cardBrandDropDown = cardBrandDropDown, !text.isEmpty {
                 // Show unknown card brand if we have under 9 pan digits and no card brands
                 if 9 > text.count && cardBrandDropDown.nonPlacerholderItems.isEmpty {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)

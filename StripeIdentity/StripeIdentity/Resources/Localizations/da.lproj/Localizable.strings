@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Fødselsdatoen ser ikke ud til at være gyldig.";
 
+"Details not visible" = "Detaljer ikke synlige";
+
 "Flip your identity card over to the other side" = "Vend dit identitetskort om på bagsiden";
 
 "Front identity card photo successfully uploaded" = "Foto af forside af identitetskort blev uploadet";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "Individuel CPF";
 
+"Keep ID level" = "Hold id'et vandret";
+
 "Last 4 of Social Security number" = "Sidste 4 cifre af personnummer";
 
 "Loading" = "Indlæser";
 
+"Make sure all details are visible and focus" = "Kontrollér, at alle detaljer er synlige og i fokus";
+
 "Make sure you're in a well lit space." = "Sørg for, at du er et sted, der er ordentligt oplyst.";
 
+"Move closer" = "Flyt tættere på";
+
+"Move farther" = "Flyt længere væk";
+
+"Move to a well-lit area" = "Gå til et område med god belysning";
+
 "NRIC or FIN" = "NRIC eller FIN";
+
+"No document detected" = "Intet dokument registreret";
 
 "Personal ID number" = "Personligt id-nummer";
 

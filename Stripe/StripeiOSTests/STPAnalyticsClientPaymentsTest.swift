@@ -39,12 +39,14 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     }
 
     func testPayloadFromAnalytic() throws {
+        AnalyticsHelper.shared.generateSessionID()
+
         client.addAdditionalInfo("test_additional_info")
 
         let mockAnalytic = MockAnalytic()
         let payload = client.payload(from: mockAnalytic)
 
-        XCTAssertEqual(payload.count, 14)
+        XCTAssertEqual(payload.count, 16)
 
         // Verify event name is included
         XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
@@ -61,35 +63,37 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
 
         // Verify install method is Xcode
         XCTAssertEqual(payload["install"] as? String, "X")
+
+        // Verify is_development
+        XCTAssertTrue(payload["is_development"] as? Bool ?? false)
     }
 
-    func testPayloadFromErrorAnalytic() throws {
-        client.addAdditionalInfo("test_additional_info")
+    // MARK: - Error tests
 
-        let mockAnalytic = MockErrorAnalytic()
-        let payload = client.payload(from: mockAnalytic)
-
-        // Verify event name is included
-        XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
-
-        // Verify additionalInfo is included
-        XCTAssertEqual(payload["additional_info"] as? [String], ["test_additional_info"])
-
-        // Verify all the analytic params are in the payload
-        XCTAssertEqual(payload["test_param1"] as? Int, 1)
-        XCTAssertEqual(payload["test_param2"] as? String, "two")
-
-        // Verify productUsage is included
-        XCTAssertNotNil(payload["product_usage"])
-
-        // Verify error_dictionary is included
-        let errorDict = try XCTUnwrap(payload["error_dictionary"] as? [String: Any])
-        XCTAssertTrue(
-            NSDictionary(dictionary: errorDict).isEqual(
-                to: mockAnalytic.error.serializeForLogging()
-            )
-        )
+    enum MockError: Error {
+        case someErrorCase
     }
+
+    func testLogErrorAnalytic() {
+        let error = MockError.someErrorCase
+        let errorAnalytic = ErrorAnalytic(event: .luxeSerializeFailure, error: error)
+        let payload = client.payload(from: errorAnalytic)
+
+        // Verify payload event name is correct
+        XCTAssertEqual(payload["event"] as? String, STPAnalyticEvent.luxeSerializeFailure.rawValue)
+
+        // Verify error details are included
+        XCTAssertEqual(payload["error_type"] as? String, "StripeiOS_Tests.STPAnalyticsClientPaymentsTest.MockError")
+        XCTAssertEqual(payload["error_code"] as? String, "someErrorCase")
+
+        let errorAnalyticWithAdditionalParams = ErrorAnalytic(event: .luxeSerializeFailure, error: error, additionalNonPIIParams: ["additional_param": "value"])
+        let payloadWithAdditionalParams = client.payload(from: errorAnalyticWithAdditionalParams)
+
+        // Verify additional params in ErrorAnalytic are included
+        XCTAssertEqual(payloadWithAdditionalParams["additional_param"] as? String, "value")
+    }
+
+    // MARK: - Other tests
 
     func testTokenTypeFromParameters() {
         let card = STPFixtures.cardParams()
@@ -218,17 +222,6 @@ private struct MockAnalytic: Analytic {
         "test_param1": 1,
         "test_param2": "two",
     ]
-}
-
-private struct MockErrorAnalytic: ErrorAnalytic {
-    let event = STPAnalyticEvent.sourceCreation
-
-    let params: [String: Any] = [
-        "test_param1": 1,
-        "test_param2": "two",
-    ]
-
-    let error: Error = NSError(domain: "domain", code: 100, userInfo: nil)
 }
 
 private struct MockAnalyticsClass1: STPAnalyticsProtocol {

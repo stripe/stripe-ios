@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Ngày sinh có vẻ không hợp lệ";
 
+"Details not visible" = "Không thấy rõ thông tin chi tiết";
+
 "Flip your identity card over to the other side" = "Lật thẻ căn cước của bạn sang mặt khác";
 
 "Front identity card photo successfully uploaded" = "Đã thành công tải lên ảnh mặt trước thẻ căn cước";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "CPF cá nhân";
 
+"Keep ID level" = "Giữ ID cân bằng";
+
 "Last 4 of Social Security number" = "4 số cuối của số An Sinh Xã Hội";
 
 "Loading" = "Đang tải";
 
+"Make sure all details are visible and focus" = "Đảm bảo tất cả các thông tin nhìn rõ và được lấy nét";
+
 "Make sure you're in a well lit space." = "Hãy đảm bảo bạn đang ở trong không gian đủ ánh sáng.";
 
+"Move closer" = "Đến gần hơn";
+
+"Move farther" = "Lùi xa hơn";
+
+"Move to a well-lit area" = "Di chuyển đến không gian đủ ánh sáng";
+
 "NRIC or FIN" = "NRIC hoặc FIN";
+
+"No document detected" = "Không phát hiện tài liệu";
 
 "Personal ID number" = "Số ID Cá nhân";
 

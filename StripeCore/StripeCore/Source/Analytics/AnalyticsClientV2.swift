@@ -72,7 +72,7 @@ import UIKit
         line: UInt?
     ) -> [String: Any] {
 
-        var payload = error.serializeForLogging()
+        var payload = error.serializeForV2Logging()
 
         if let filePath = filePath {
             // The full file path can contain the device name, so only include the file name

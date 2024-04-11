@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Датата на раждане не изглежда валидна";
 
+"Details not visible" = "Подробностите не се виждат";
+
 "Flip your identity card over to the other side" = "Обърнете личната си карта от другата страна.";
 
 "Front identity card photo successfully uploaded" = "Успешно качена снимка на предната страна на лична карта";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "CPF на физическо лице";
 
+"Keep ID level" = "Подравнете документа за самоличност";
+
 "Last 4 of Social Security number" = "Последните 4 цифри от социалноосигурителния номер";
 
 "Loading" = "Зареждане";
 
+"Make sure all details are visible and focus" = "Уверете се, че всички данни са видими и на фокус.";
+
 "Make sure you're in a well lit space." = "Уверете се, че сте на добре осветено място.";
 
+"Move closer" = "Приближете";
+
+"Move farther" = "Отдалечете";
+
+"Move to a well-lit area" = "Преместете се на добре осветено място";
+
 "NRIC or FIN" = "NRIC или FIN";
+
+"No document detected" = "Не е открит документ";
 
 "Personal ID number" = "Личен идентификационен номер";
 

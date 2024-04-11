@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import Vision
 
-enum IdentityMLModelLoaderError: Error, AnalyticLoggableError {
+enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
     /// Attempted to open a URL that could not be constructed from the given string
     case malformedURL(String)
     /// The ML model never started loading on the client
@@ -26,7 +26,7 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableError {
             ]
         case .mlModelNeverLoaded:
             return [
-                "type": "ml_model_never_loaded"
+                "type": "ml_model_never_loaded",
             ]
         }
     }
@@ -37,7 +37,8 @@ protocol IdentityMLModelLoaderProtocol {
     var faceModelsFuture: Future<AnyFaceScanner> { get }
 
     func startLoadingDocumentModels(
-        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
+        with sheetController: VerificationSheetControllerProtocol
     )
 
     func startLoadingFaceModels(
@@ -120,7 +121,8 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     /// - Parameters:
     ///   - documentModelURLs: The URLs of all the ML models required to scan documents
     func startLoadingDocumentModels(
-        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
+        with sheetController: VerificationSheetControllerProtocol
     ) {
         guard let idDetectorURL = URL(string: capturePageConfig.models.idDetectorUrl) else {
             documentMLModelsPromise.reject(
@@ -138,7 +140,8 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
                 value: .init(
                     DocumentScanner(
                         idDetectorModel: idDetectorModel,
-                        configuration: .init(from: capturePageConfig)
+                        configuration: .init(from: capturePageConfig),
+                        sheetController: sheetController
                     )
                 )
             )

@@ -10,57 +10,35 @@ import XCTest
 
 final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testNativeNetworkingTestMode() throws {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
+        let bankAccountName = "Insufficient Funds"
+        executeNativeNetworkingTestModeAddBankAccount(
+            emailAddress: emailAddresss,
+            bankAccountName: bankAccountName
+        )
+        executeNativeNetworkingTestModeUpdateRequired(
+            emailAddress: emailAddresss,
+            bankAccountName: bankAccountName
+        )
     }
 
     private func executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: String) {
-        let app = XCUIApplication.fc_launch()
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":""}
+"""
+        )
 
         app.fc_playgroundCell.tap()
-
-        let dataSegmentPickerButton = app.segmentedControls.buttons["Networking"]
-        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-        dataSegmentPickerButton.tap()
-
-        app.fc_playgroundNativeButton.tap()
-
-        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        enableTestModeSwitch.turnSwitch(on: true)
-
-        app.swipeUp() // scroll to see email field
-
-        let playgroundEmailTextField = app.textFields["playground-email"]
-        XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
-        playgroundEmailTextField.tap()
-        clear(textField: playgroundEmailTextField)
-        app.dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
-
-        let playgroundTransactionsPermissionsSwitch = app.switches["playground-transactions-permission"]
-        XCTAssertTrue(playgroundTransactionsPermissionsSwitch.waitForExistence(timeout: 60.0))
-        playgroundTransactionsPermissionsSwitch.turnSwitch(on: true)
-
         app.fc_playgroundShowAuthFlowButton.tap()
+
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.collectionViews.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -70,14 +48,14 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(successInstitution.waitForExistence(timeout: 60.0))
         successInstitution.tap()
 
-        app.fc_nativeAccountPickerLinkAccountsButton.tap()
+        app.fc_nativeConnectAccountsButton.tap()
 
-        let emailTextField = app.textFields["Email"]
+        let emailTextField = app.textFields["email_text_field"]
         XCTAssertTrue(emailTextField.waitForExistence(timeout: 120.0))  // wait for synchronize to complete
         emailTextField.tap()
         emailTextField.typeText(emailAddress)
 
-        let phoneTextField = app.textFields["Phone number"]
+        let phoneTextField = app.textFields["phone_text_field"]
         XCTAssertTrue(phoneTextField.waitForExistence(timeout: 120.0))  // wait for lookup to complete
         phoneTextField.tap()
         phoneTextField.typeText("4015006000")
@@ -91,10 +69,12 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         saveToLinkButon.tap()
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
-        // this ensures that save to Link was successful...
-        // ...we want to check AFTER success screen has rendered with the "Done" button
-        XCTAssert(!app.staticTexts.containing(NSPredicate(format: "label CONTAINS 'could not be saved to Link'")).firstMatch
-            .exists)
+
+        // ensure that there wasn't a Link failure
+        //
+        // unexpected text: "Your account was connected, but couldn't be saved to Link"
+        XCTAssert(!app.textViews.containing(NSPredicate(format: "label CONTAINS 'but'")).firstMatch.exists)
+
         successPaneDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -105,38 +85,21 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
     }
 
     private func executeNativeNetworkingTestModeSignInFlowTest(emailAddress: String) {
-        let app = XCUIApplication.fc_launch()
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+"""
+        )
 
         app.fc_playgroundCell.tap()
-
-        let dataSegmentPickerButton = app.segmentedControls.buttons["Networking"]
-        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-        dataSegmentPickerButton.tap()
-
-        app.fc_playgroundNativeButton.tap()
-
-        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        enableTestModeSwitch.turnSwitch(on: true)
-
-        app.swipeUp() // scroll to see email field
-
-        let playgroundEmailTextField = app.textFields["playground-email"]
-        XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
-        playgroundEmailTextField.tap()
-        clear(textField: playgroundEmailTextField)
-        playgroundEmailTextField.typeText(emailAddress)
-        app.dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
-
-        let playgroundTransactionsPermissionsSwitch = app.switches["playground-transactions-permission"]
-        XCTAssertTrue(playgroundTransactionsPermissionsSwitch.waitForExistence(timeout: 60.0))
-        playgroundTransactionsPermissionsSwitch.turnSwitch(on: true)
-
         app.fc_playgroundShowAuthFlowButton.tap()
+
         app.fc_nativeConsentAgreeButton.tap()
 
-        let continueWithEmailButton = app.scrollViews.otherElements.staticTexts[emailAddress]
-        XCTAssertTrue(continueWithEmailButton.waitForExistence(timeout: 60.0))
-        continueWithEmailButton.tap()
+        let linkContinueButton = app.buttons["link_continue_button"]
+        XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
+        linkContinueButton.tap()
 
         let verificationOTPTextView = app.scrollViews.otherElements.textViews["Code field"]
         XCTAssertTrue(verificationOTPTextView.waitForExistence(timeout: 60.0))
@@ -157,10 +120,12 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         stepUpVerificationOTPTextView.typeText("111111")
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
-        // this ensures that save to Link was successful...
-        // ...we want to check AFTER success screen has rendered with the "Done" button
-        XCTAssert(!app.staticTexts.containing(NSPredicate(format: "label CONTAINS 'could not be saved to Link'")).firstMatch
-            .exists)
+
+        // ensure that there wasn't a Link failure
+        //
+        // unexpected text: "Your account was connected, but couldn't be saved to Link"
+        XCTAssert(!app.textViews.containing(NSPredicate(format: "label CONTAINS 'but'")).firstMatch.exists)
+
         successPaneDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -169,21 +134,178 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
                 .exists
         )
     }
-}
 
-extension XCTestCase {
+    private func executeNativeNetworkingTestModeAddBankAccount(
+        emailAddress: String,
+        bankAccountName: String
+    ) {
+        // ensure that permissions like "ownership" / "transcations" / "balances" is off
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)"}
+"""
+        )
 
-    fileprivate func clear(textField: XCUIElement) {
-        wait(timeout: 1.5) // wait for keyboard to appear, otherwise `textField.coordinate` may select the wrong spot
-        while
-            let text = textField.value as? String,
-            !text.isEmpty,
-            text != textField.placeholderValue
-        {
-            let middleCoordinate = textField.coordinate(withNormalizedOffset: CGVector(dx: 0.50, dy: 0.50))
-            middleCoordinate.tap()
-            let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: text.count)
-            textField.typeText(deleteString)
-        }
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let linkContinueButton = app.buttons["link_continue_button"]
+        XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
+        linkContinueButton.tap()
+
+        let verificationOTPTextView = app.scrollViews.otherElements.textViews["Code field"]
+        XCTAssertTrue(verificationOTPTextView.waitForExistence(timeout: 60.0))
+        verificationOTPTextView.tap()
+        verificationOTPTextView.typeText("111111")
+
+        let addBankAccountButton = app.scrollViews.otherElements["add_bank_account"]
+        XCTAssertTrue(addBankAccountButton.waitForExistence(timeout: 120.0)) // need to wait for various API calls to appear
+        addBankAccountButton.tap()
+
+        // wait for search bar to appear
+        _ = app.fc_searchBarTextField
+
+        app.fc_scrollDown() // see all institutions
+
+        app.fc_nativeFeaturedInstitution(name: "Data cannot be shared through Link").tap()
+
+        app.fc_nativeBankAccount(name: bankAccountName).tap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS '\(bankAccountName)'")).firstMatch
+                .exists
+        )
+    }
+
+    private func executeNativeNetworkingTestModeUpdateRequired(
+        emailAddress: String,
+        bankAccountName: String
+    ) {
+        // turn on all permissions so we get an "Update Required" account
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let linkContinueButton = app.buttons["link_continue_button"]
+        XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
+        linkContinueButton.tap()
+
+        let verificationOTPTextView = app.scrollViews.otherElements.textViews["Code field"]
+        XCTAssertTrue(verificationOTPTextView.waitForExistence(timeout: 60.0))
+        verificationOTPTextView.tap()
+        verificationOTPTextView.typeText("111111")
+
+        app.fc_nativeBankAccount(name: bankAccountName).tap()
+
+        let accountUpdateRequiredContinueButton = app.buttons["account_update_required_continue_button"]
+        XCTAssertTrue(accountUpdateRequiredContinueButton.waitForExistence(timeout: 1))
+        accountUpdateRequiredContinueButton.tap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+
+        let successDoneButton = app.fc_nativeSuccessDoneButton
+
+        // ensures that save to Link was successful
+        //
+        // expected text: "Your account was connected, and saved with Link."
+        XCTAssert(app.textViews.containing(NSPredicate(format: "label CONTAINS 'Link'")).firstMatch.exists)
+
+        // ensure that the Link text wasn't a failure
+        //
+        // unexpected text: "Your account was connected, but couldn't be saved to Link"
+        XCTAssert(!app.textViews.containing(NSPredicate(format: "label CONTAINS 'but'")).firstMatch.exists)
+
+        successDoneButton.tap()
+
+        // multiple banks should be checked
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'Success'")).firstMatch
+                .exists
+        )
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS '\(bankAccountName)'")).firstMatch
+                .exists
+        )
+    }
+
+    func testNativeNetworkingTestModeSignUpWithMultiSelectAndPrefilledEmail() {
+        let emailAddress = "\(UUID().uuidString)@UITestForIOS.com"
+
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
+        featuredLegacyTestInstitution.tap()
+
+        app.fc_nativePrepaneContinueButton.tap()
+
+        // all accounts will be selected by default
+
+        app.fc_nativeConnectAccountsButton.tap()
+
+        // email will already be pre-filled
+
+        let phoneTextField = app.textFields["phone_text_field"]
+        XCTAssertTrue(phoneTextField.waitForExistence(timeout: 120.0))  // wait for lookup to complete
+        phoneTextField.tap()
+        phoneTextField.typeText("4015006000")
+
+        let phoneTextFieldToolbarDoneButton = app.toolbars["Toolbar"].buttons["Done"]
+        XCTAssertTrue(phoneTextFieldToolbarDoneButton.waitForExistence(timeout: 60.0))
+        phoneTextFieldToolbarDoneButton.tap()
+
+        let saveToLinkButon = app.buttons["Save to Link"]
+        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
+        saveToLinkButon.tap()
+
+        let successPaneDoneButton = app.fc_nativeSuccessDoneButton
+
+        // ensures that save to Link was successful
+        //
+        // expected text: "Your account was connected, and saved with Link."
+        XCTAssert(app.textViews.containing(NSPredicate(format: "label CONTAINS 'Link'")).firstMatch.exists)
+
+        // ensure that the Link text wasn't a failure
+        //
+        // unexpected text: "Your account was connected, but couldn't be saved to Link"
+        XCTAssert(!app.textViews.containing(NSPredicate(format: "label CONTAINS 'but'")).firstMatch.exists)
+
+        successPaneDoneButton.tap()
+
+        // multiple banks should be checked
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'Success'")).firstMatch
+                .exists
+        )
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'Insufficient Funds'")).firstMatch
+                .exists
+        )
     }
 }

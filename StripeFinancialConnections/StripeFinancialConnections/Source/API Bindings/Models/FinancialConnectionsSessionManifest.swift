@@ -55,6 +55,14 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case unparsable
     }
 
+    struct DisplayText: Decodable {
+        let successPane: SuccessPane?
+
+        struct SuccessPane: Decodable {
+            let subCaption: String?
+        }
+    }
+
     // MARK: - Properties
 
     let accountholderIsLinkConsumer: Bool?
@@ -92,4 +100,9 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let accountholderCustomerEmailAddress: String?
     let accountholderPhoneNumber: String?
     let stepUpAuthenticationRequired: Bool?
+    let displayText: DisplayText?
+
+    var shouldAttachLinkedPaymentMethod: Bool {
+        return (paymentMethodType != nil)
+    }
 }

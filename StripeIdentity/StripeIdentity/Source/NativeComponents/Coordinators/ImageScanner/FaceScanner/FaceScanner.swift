@@ -52,15 +52,23 @@ extension FaceScanner: ImageScanner {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
-    ) throws -> FaceScannerOutput {
-        return .init(
-            faceDetectorOutput: try faceDetector.scanImage(
-                pixelBuffer: pixelBuffer
-            ),
-            cameraProperties: cameraProperties,
-            configuration: configuration
-        )
+    ) -> StripeCore.Future<FaceScannerOutput> {
+        do {
+            return Promise(
+                value: .init(
+                    faceDetectorOutput: try faceDetector.scanImage(
+                        pixelBuffer: pixelBuffer
+                    ),
+                    cameraProperties: cameraProperties,
+                    configuration: configuration
+                )
+            )
+        } catch {
+            return Promise(error: error)
+        }
+
     }
 
     func reset() {

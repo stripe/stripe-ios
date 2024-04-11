@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ 添加";
 
 "Add a card" = "添加卡";
@@ -22,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "确认您的 PayPal 付款即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "继续前往 Amazon Pay 即表示您允许 %@ 按照他们的条款从您的 Amazon Pay 账户扣取未来款项。";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "继续前往 Klarna 即表示您允许 %1$@ 按照他们的条款和 Klarna 的条款从您的 Klarna 账户扣取未来款项。您可以在您的 Klarna 应用程序中随时对其进行修改，也可以联系 %2$@。";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "继续前往 PayPal 即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "继续前往 Revolut Pay 即表示您允许 %@ 按照他们的条款从您的 Revolut Pay 扣取未来款项。";
@@ -32,7 +38,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>条款</terms>和<privacy>隐私政策</privacy>。";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的电子邮件地址，即表示您同意按照 Link <terms>条款</terms>和<privacy>隐私政策</privacy>创建 Link 账户并将您的支付信息保存到 Link。";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式并确认该付款即表示您授权 (A) %@ 与我们的支付服务商 Stripe 向您的银行发送对您的账户进行扣款的指令以及 (B) 您的银行按照这些指令对您的账户进行扣款。根据您与您的银行协议的条款和条件，您有权从您的银行得到退款。退款必须在 8 周内申请，从您的账户被扣款之日起算。您的权利在对账单上有解释，可从您的银行获取。您同意提前 2 天接收后续扣款的通知。";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的手机号码，即表示您同意按照 Link <terms>条款</terms>和<privacy>隐私政策</privacy>创建 Link 账户并将您的支付信息保存到 Link。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 银行账户即表示您同意按照<terms>这些条款</terms>授权付款。";
 
@@ -62,6 +72,8 @@
 
 "FPX Bank" = "FPX 银行";
 
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 将代表 %@ 收取直接借记，且确认我是该账户持有人，且是唯一一个需要授权该账户扣款的人。";
+
 "IBAN" = "IBAN";
 
 "Manage your payment methods" = "管理您的支付方式";
@@ -88,8 +100,6 @@
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "用 <img/> 分 <num_installments/> 支付，无利息，每期 <installment_price/>";
 
-"Pay later with Klarna." = "用 Klarna 延后支付。";
-
 "Pay over time with %@" = "用 %@ 慢慢支付";
 
 "Pay with Link" = "用 Link 支付";
@@ -106,6 +116,8 @@
 
 "Przelewy24 Bank" = "Przelewy24 银行";
 
+"Remove card?" = "移除卡？";
+
 "Save" = "保存";
 
 "Save a new payment method" = "保存新的支付方式";
@@ -119,6 +131,8 @@
 "Save this card for future %@ payments" = "保存该卡，用于未来在 %@ 付款";
 
 "Save your bank account in just a few steps." = "几步保存您的银行账户。";
+
+"Save your info for secure 1-click checkout with Link" = "保存您的信息，用 Link 安全地一键结账";
 
 "Select your payment method" = "选择您的支付方式";
 

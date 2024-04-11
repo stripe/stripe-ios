@@ -35,6 +35,7 @@ import UIKit
     private(set) var urlSession: URLSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
+    let url = URL(string: "https://q.stripe.com")!
 
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
@@ -69,14 +70,12 @@ import UIKit
         #if targetEnvironment(simulator)
             return true
         #else
-            return NSClassFromString("XCTest") != nil
+            return isUnitOrUITest
         #endif
     }
 
-    // MARK: - Card Scanning
-
-    @objc public class func shouldCollectAnalytics() -> Bool {
-        return !isSimulatorOrTest
+    static var isUnitOrUITest: Bool {
+        return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
     }
 
     public func additionalInfo() -> [String] {
@@ -97,12 +96,7 @@ import UIKit
         payload["additional_info"] = additionalInfo()
         payload["product_usage"] = productUsage.sorted()
 
-        // Attach error information if this is an error analytic
-        if let errorAnalytic = analytic as? ErrorAnalytic {
-            payload["error_dictionary"] = errorAnalytic.error.serializeForLogging()
-        }
-
-        payload.merge(analytic.params) { (_, new) in new }
+        payload.mergeAssertingOnOverwrites(analytic.params)
         return payload
     }
 
@@ -121,13 +115,9 @@ import UIKit
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
-        guard type(of: self).shouldCollectAnalytics(),
-              let url = URL(string: "https://q.stripe.com")
-        else {
-            // Don't send the analytic, but add it to `_testLogHistory` if we're in a test.
-            if NSClassFromString("XCTest") != nil {
-                _testLogHistory.append(payload)
-            }
+        // If in testing, don't log analytic, instead append payload to log history
+        guard !STPAnalyticsClient.isUnitOrUITest else {
+            _testLogHistory.append(payload)
             return
         }
 
@@ -158,6 +148,10 @@ extension STPAnalyticsClient {
         payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
+        payload["session_id"] = AnalyticsHelper.shared.sessionID
+        if STPAnalyticsClient.isSimulatorOrTest {
+            payload["is_development"] = true
+        }
 
         return payload
     }

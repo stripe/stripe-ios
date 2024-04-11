@@ -139,7 +139,7 @@ extension XCTestCase {
 
         let emailField = context.textFields["Email"]
         emailField.forceTapWhenHittableInTestCase(self)
-        app.typeText("test@example.com")
+        app.typeText("test-\(UUID().uuidString)@example.com")
     }
     func fillUSBankData_microdeposits(_ app: XCUIApplication,
                                       container: XCUIElement? = nil) throws {
@@ -154,8 +154,7 @@ extension XCTestCase {
 
         // Dismiss keyboard, otherwise we can not see the next field
         // This is only an artifact in the (test) native version of the flow
-        let hackDismissKeyboardText = context.textViews["Your bank information will be verified with micro-deposits to your account"].firstMatch
-        hackDismissKeyboardText.tap()
+        app.scrollViews.firstMatch.swipeUp()
 
         let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"]
         acctConfirmField.forceTapWhenHittableInTestCase(self)
@@ -163,7 +162,7 @@ extension XCTestCase {
 
         // Dismiss keyboard again otherwise we can not see the continue button
         // This is only an artifact in the (test) native version of the flow
-        hackDismissKeyboardText.tap()
+        app.scrollViews.firstMatch.swipeUp()
     }
     func fillSepaData(_ app: XCUIApplication,
                       container: XCUIElement? = nil) throws {
@@ -211,7 +210,7 @@ extension XCTestCase {
     }
 
     func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        app.buttons["Reload"].tap()
+        app.buttons["Reload"].waitForExistenceAndTap(timeout: 10)
         waitForReload(app, settings: settings)
     }
 
@@ -251,10 +250,10 @@ extension XCTestCase {
         waitForReload(app, settings: settings)
     }
     func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
-        let customerId = app.textFields["CustomerId"]
+        let paymentMethodButton = app.buttons["Payment method"]
         expectation(
-            for: NSPredicate(format: "self BEGINSWITH 'cus_'"),
-            evaluatedWith: customerId.value,
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton,
             handler: nil
         )
         waitForExpectations(timeout: 10, handler: nil)

@@ -443,17 +443,15 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
     func present(
         _ authenticationViewController: UIViewController, completion: @escaping () -> Void
     ) {
-        // Remove a blur effect, if any
-        self.removeBlurEffect(animated: true, completion: completion)
-
         let threeDS2ViewController = BottomSheet3DS2ViewController(
             challengeViewController: authenticationViewController, appearance: appearance, isTestMode: isTestMode)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
-        completion()
+        // Remove a blur effect, if any
+        self.removeBlurEffect(animated: true, completion: completion)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                                       appearance: self.appearance, safariViewController: safariViewController)
         pushContentViewController(pollingVC)

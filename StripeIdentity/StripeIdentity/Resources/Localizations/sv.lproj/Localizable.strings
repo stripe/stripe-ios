@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Födelsedatumet verkar inte vara giltig";
 
+"Details not visible" = "Detaljer syns inte";
+
 "Flip your identity card over to the other side" = "Vänd på id-handlingen";
 
 "Front identity card photo successfully uploaded" = "Bilden på id-kortets framsida har laddats upp";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "Personligt CPF";
 
+"Keep ID level" = "Se till att id-handlingen ligger rakt";
+
 "Last 4 of Social Security number" = "Fyra sista siffrorna i socialförsäkringsnumret";
 
 "Loading" = "Laddar";
 
+"Make sure all details are visible and focus" = "Se till att alla uppgifter är synliga och i fokus";
+
 "Make sure you're in a well lit space." = "Se till att du befinner dig på en plats med bra belysning.";
 
+"Move closer" = "Flytta närmare";
+
+"Move farther" = "Flytta längre bort";
+
+"Move to a well-lit area" = "Flytta till en plats med bra belysning";
+
 "NRIC or FIN" = "NRIC eller FIN";
+
+"No document detected" = "Inget dokument identifierades";
 
 "Personal ID number" = "Personligt ID-nummer";
 

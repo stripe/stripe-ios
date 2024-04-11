@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Geboortedatum lijkt ongeldig te zijn";
 
+"Details not visible" = "Details niet zichtbaar";
+
 "Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
 
 "Front identity card photo successfully uploaded" = "Foto van voorkant van identiteitskaart is geüpload";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "CPF natuurlijk persoon";
 
+"Keep ID level" = "Houd het identiteitsbewijs recht";
+
 "Last 4 of Social Security number" = "Laatste vier cijfers van socialezekerheidsnummer";
 
 "Loading" = "Bezig met laden";
 
+"Make sure all details are visible and focus" = "Zorg dat alle details goed zichtbaar en in focus zijn";
+
 "Make sure you're in a well lit space." = "Zorg dat er voldoende belichting is.";
 
+"Move closer" = "Dichterbij houden";
+
+"Move farther" = "Verder weg houden";
+
+"Move to a well-lit area" = "Zorg dat er voldoende belichting is";
+
 "NRIC or FIN" = "NRIC of FIN";
+
+"No document detected" = "Geen document gedetecteerd";
 
 "Personal ID number" = "Persoonlijk identificatienummer";
 

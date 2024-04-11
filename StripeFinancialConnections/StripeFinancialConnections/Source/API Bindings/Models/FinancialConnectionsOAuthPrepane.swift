@@ -12,6 +12,7 @@ struct FinancialConnectionsOAuthPrepane: Decodable {
 
     let institutionIcon: FinancialConnectionsImage?
     let title: String
+    let subtitle: String?
     let body: OauthPrepaneBody
     let partnerNotice: OauthPrepanePartnerNotice?
     let cta: OauthPrepaneCTA

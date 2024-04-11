@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Thêm";
 
 "Add a card" = "Thêm một thẻ";
@@ -22,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Bằng việc tiếp tục với Klarna, bạn cho phép %1$@ tính phí vào tài khoản Klarna của bạn cho các khoản thanh toán trong tương lai căn cứ theo các điều khoản của khoản thanh toán và của Klarna. Bạn có thể thay đổi tùy chọn này bất kỳ lúc nào trong ứng dụng Klarna của mình hoặc bằng cách liên hệ với %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách tiếp tục với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Revolut Pay, bạn cho phép %@ tính phí tài khoản Revolut Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
@@ -32,7 +38,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp email, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp số điện thoại, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
@@ -62,6 +72,8 @@
 
 "FPX Bank" = "Ngân hàng FPX";
 
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
+
 "IBAN" = "IBAN";
 
 "Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
@@ -88,8 +100,6 @@
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Trả bằng <num_installments/> khoản thanh toán không lãi suất là <installment_price/> bằng <img/>";
 
-"Pay later with Klarna." = "Thanh toán sau bằng Klarna.";
-
 "Pay over time with %@" = "Trả dần bằng %@";
 
 "Pay with Link" = "Thanh toán bằng Link";
@@ -106,6 +116,8 @@
 
 "Przelewy24 Bank" = "Ngân hàng Przelewy24";
 
+"Remove card?" = "Xóa thẻ?";
+
 "Save" = "Lưu";
 
 "Save a new payment method" = "Lưu một phương thức thanh toán mới";
@@ -119,6 +131,8 @@
 "Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
 
 "Save your bank account in just a few steps." = "Lưu tài khoản ngân hàng chỉ trong vài bước.";
+
+"Save your info for secure 1-click checkout with Link" = "Lưu thông tin của bạn để thanh toán an toàn bằng 1 cú nhấp chuột với Link";
 
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
 

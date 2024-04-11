@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "出生日期看似无效";
 
+"Details not visible" = "细节不可见";
+
 "Flip your identity card over to the other side" = "将身份证翻到另一面";
 
 "Front identity card photo successfully uploaded" = "身份证正面照片已成功上传";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "个人 CPF";
 
+"Keep ID level" = "保持证件水平";
+
 "Last 4 of Social Security number" = "社会保障号码后 4 位";
 
 "Loading" = "正在加载";
 
+"Make sure all details are visible and focus" = "确保所有细节清晰可见且对焦";
+
 "Make sure you're in a well lit space." = "确保光线充足。";
 
+"Move closer" = "请靠近一点";
+
+"Move farther" = "请放远一点";
+
+"Move to a well-lit area" = "移到光线良好处";
+
 "NRIC or FIN" = "NRIC 或 FIN";
+
+"No document detected" = "未检测到证件";
 
 "Personal ID number" = "个人身份证件号码";
 

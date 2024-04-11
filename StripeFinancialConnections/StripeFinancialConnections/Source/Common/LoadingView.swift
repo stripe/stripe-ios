@@ -22,7 +22,7 @@ class LoadingView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = Styling.errorLabelFont
-        label.textColor = .textPrimary
+        label.textColor = .textDefault
         return label
     }()
 
@@ -44,11 +44,7 @@ class LoadingView: UIView {
         return stackView
     }()
 
-    internal let activityIndicatorView: UIActivityIndicatorView = {
-        let activityIndicatorView = UIActivityIndicatorView()
-        activityIndicatorView.style = .large
-        return activityIndicatorView
-    }()
+    private let spinnerView = SpinnerView(shouldStartAnimating: false)
 
     // MARK: - Init
 
@@ -58,11 +54,9 @@ class LoadingView: UIView {
         errorView.addArrangedSubview(errorLabel)
         errorView.addArrangedSubview(tryAgainButton)
         addSubview(errorView)
-        addSubview(activityIndicatorView)
 
         // Add constraints
         errorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
 
         tryAgainButton.setContentHuggingPriority(.required, for: .vertical)
         tryAgainButton.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -70,14 +64,22 @@ class LoadingView: UIView {
         errorLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         NSLayoutConstraint.activate([
-            // Center activity indicator
-            activityIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor),
-
             // Pin error view to top
             errorView.centerYAnchor.constraint(equalTo: centerYAnchor),
             errorView.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
+
+        addAndPinSubview(spinnerView)
+        showLoading(false)
+    }
+
+    func showLoading(_ showLoading: Bool) {
+        spinnerView.isHidden = !showLoading
+        if showLoading {
+            spinnerView.startAnimating()
+        } else {
+            spinnerView.stopAnimating()
+        }
     }
 
     required init?(coder: NSCoder) {

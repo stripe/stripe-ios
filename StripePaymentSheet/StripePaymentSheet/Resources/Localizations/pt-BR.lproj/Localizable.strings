@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Adicionar";
 
 "Add a card" = "Adicione um cartão";
@@ -22,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao confirmar seu pagamento com o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos pela empresa.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ao continuar para o Amazon Pay, você permite que %@ cobre sua conta do Amazon Pay por pagamentos futuros em conformidade com os termos da empresa.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Ao continuar para a Klarna, você permite que %1$@ cobre sua conta Klarna por pagamentos futuros em conformidade com os termos da empresa e da Klarna. É possível alterar essa opção a qualquer momento no aplicativo Klarna ou entrando em contato com %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao continuar para o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos com a empresa.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ao continuar para o Revolut Pay, você permite que %@ cobre sua conta do Revolut Pay por pagamentos futuros em conformidade com os termos da empresa.";
@@ -32,7 +38,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao entrar no Link, você concorda com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao informar seu e-mail, você concorda em criar uma conta do Link e salvar seus dados de pagamento no Link, segundo os <terms>Termos</terms> e a <privacy>Política de Privacidade</privacy> do Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ao fornecer seus dados de pagamento e confirmar este pagamento, você autoriza (A) %@ e a Stripe, o nosso provedor de serviços de pagamento, a enviar instruções ao seu banco para debitar sua conta e (B) seu banco a debitar sua conta, de acordo com as referidas instruções. Os seus direitos incluem a possibilidade de exigir do banco o reembolso do valor debitado, nos termos e condições acordados com a instituição. O reembolso deve ser solicitado dentro de um prazo de 8 semanas a partir da data do débito na conta. Você concorda em receber notificações de débitos futuros em até 2 dias antes do débito.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao informar seu número de telefone, você concorda em criar uma conta do Link e salvar seus dados de pagamento no Link, segundo os <terms>Termos</terms> e a <privacy>Política de Privacidade</privacy> do Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao salvar sua conta bancária para %@, você autoriza pagamentos de acordo com <terms>estes termos</terms>.";
 
@@ -62,6 +72,8 @@
 
 "FPX Bank" = "Banco do FPX";
 
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entendo que a Stripe fará débitos automáticos em nome de %@ e confirmo que sou titular da conta e a única pessoa necessária para autorizar débitos nesta conta.";
+
 "IBAN" = "IBAN";
 
 "Manage your payment methods" = "Gerencie suas formas de pagamento";
@@ -88,8 +100,6 @@
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pague em <num_installments/> vezes sem juros de <installment_price/> com <img/>";
 
-"Pay later with Klarna." = "Pagar depois com Klarna.";
-
 "Pay over time with %@" = "Pagar depois com %@";
 
 "Pay with Link" = "Pagar com Link";
@@ -106,6 +116,8 @@
 
 "Przelewy24 Bank" = "Banco Przelewy24";
 
+"Remove card?" = "Remover cartão?";
+
 "Save" = "Salvar";
 
 "Save a new payment method" = "Salvar nova forma de pagamento";
@@ -119,6 +131,8 @@
 "Save this card for future %@ payments" = "Salvar este cartão para pagamentos futuros a %@";
 
 "Save your bank account in just a few steps." = "Salve sua conta bancária em poucos passos.";
+
+"Save your info for secure 1-click checkout with Link" = "Salve seus dados para fazer checkout seguro em 1 clique com o Link";
 
 "Select your payment method" = "Selecione sua forma de pagamento";
 

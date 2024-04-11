@@ -350,6 +350,23 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             }
         }
     }
+
+    func testKlarnaConfirmFlows() async throws {
+        for intentKind in IntentKind.allCases {
+            try await _testConfirm(intentKinds: [intentKind],
+                                   currency: "USD",
+                                   paymentMethodType: .stripe(.klarna),
+                                   merchantCountry: .US) { form in
+                form.getTextFieldElement("Email")?.setText("foo@bar.com")
+                switch intentKind {
+                case .paymentIntent:
+                    XCTAssertNil(form.getMandateElement())
+                case .paymentIntentWithSetupFutureUsage, .setupIntent:
+                    XCTAssertNotNil(form.getMandateElement())
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Helper methods
@@ -593,7 +610,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
         completion?()
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         guard let currentAction = action as? STPPaymentHandlerPaymentIntentActionParams else { return }
         // Simulate that the intent transitioned to succeeded
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state

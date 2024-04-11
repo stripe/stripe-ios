@@ -325,57 +325,6 @@ class STPSourceFunctionalTest: XCTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
-    func testCreateSource_threeDSecure() {
-        let card = STPCardParams()
-        card.number = "4000000000003063"
-        card.expMonth = 6
-        card.expYear = 2024
-        card.currency = "usd"
-        card.address.line1 = "123 Fake Street"
-        card.address.line2 = "Apartment 4"
-        card.address.city = "New York"
-        card.address.state = "NY"
-        card.address.country = "USA"
-        card.address.postalCode = "10002"
-        let cardParams = STPSourceParams.cardParams(withCard: card)
-
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let cardExp = expectation(description: "Card Source creation")
-        let threeDSExp = expectation(description: "3DS Source creation")
-        client.createSource(with: cardParams) { source, error1 in
-            XCTAssertNil(error1)
-            guard let source else { XCTFail(); return }
-            XCTAssertEqual(source.cardDetails?.threeDSecure, STPSourceCard3DSecureStatus.required)
-            cardExp.fulfill()
-
-            let params = STPSourceParams.threeDSecureParams(
-                withAmount: 1099,
-                currency: "eur",
-                returnURL: "https://shop.example.com/crtABC",
-                card: source.stripeID)
-            params.metadata = [
-                "foo": "bar",
-            ]
-            client.createSource(with: params) { source2, error2 in
-                XCTAssertNil(error2)
-                XCTAssertNotNil(source2)
-                XCTAssertEqual(source2?.type, STPSourceType.threeDSecure)
-                XCTAssertEqual(source2?.amount, params.amount)
-                XCTAssertEqual(source2?.currency, params.currency)
-                XCTAssertEqual(source2?.redirect?.status, STPSourceRedirectStatus.pending)
-                XCTAssertEqual(source2?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
-                XCTAssertNotNil(source2?.redirect?.url)
-                // #pragma clang diagnostic push
-                // #pragma clang diagnostic ignored "-Wdeprecated"
-                XCTAssertNil(source2?.metadata, "Metadata is not returned.")
-                // #pragma clang diagnostic pop
-                threeDSExp.fulfill()
-            }
-        }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-    }
-
     func skip_testCreateSourceVisaCheckout() {
         // The SDK does not have a means of generating Visa Checkout params for testing. Supply your own
         // callId, and the correct publishable key, and you can run this test case

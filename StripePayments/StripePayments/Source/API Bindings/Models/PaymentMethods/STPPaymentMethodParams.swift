@@ -94,6 +94,10 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var swish: STPPaymentMethodSwishParams?
     /// If this is a MobilePay PaymentMethod, this contains additional details.
     @objc public var mobilePay: STPPaymentMethodMobilePayParams?
+    /// If this is a AmazonPay PaymentMethod, this contains additional details.
+    @objc public var amazonPay: STPPaymentMethodAmazonPayParams?
+    /// If this is a Alma PaymentMethod, this contains additional details.
+    @objc public var alma: STPPaymentMethodAlmaParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -594,6 +598,42 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a AmazonPay PaymentMethod.
+    /// - Parameters:
+    ///   - amazonPay:           An object containing additional AmazonPay details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        amazonPay: STPPaymentMethodAmazonPayParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .amazonPay
+        self.amazonPay = amazonPay
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
+    /// Creates params for a Alma PaymentMethod.
+    /// - Parameters:
+    ///   - alma:           An object containing additional Alma details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        alma: STPPaymentMethodAlmaParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .alma
+        self.alma = alma
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
@@ -712,6 +752,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: revolutPay)): "revolut_pay",
             NSStringFromSelector(#selector(getter: swish)): "swish",
             NSStringFromSelector(#selector(getter: mobilePay)): "mobilepay",
+            NSStringFromSelector(#selector(getter: amazonPay)): "amazon_pay",
+            NSStringFromSelector(#selector(getter: alma)): "alma",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
         ]
@@ -1173,7 +1215,11 @@ extension STPPaymentMethodParams {
             swish = STPPaymentMethodSwishParams()
         case .mobilePay:
             mobilePay = STPPaymentMethodMobilePayParams()
-        case .cardPresent, .linkInstantDebit, .paynow, .zip, .amazonPay, .alma, .konbini, .promptPay, .twint:
+        case .amazonPay:
+            amazonPay = STPPaymentMethodAmazonPayParams()
+        case .alma:
+            alma = STPPaymentMethodAlmaParams()
+        case .cardPresent, .linkInstantDebit, .paynow, .zip, .konbini, .promptPay, .twint:
             // These payment methods don't have any params
             break
         case .unknown:

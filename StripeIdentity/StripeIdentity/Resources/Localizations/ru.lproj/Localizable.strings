@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Похоже, дата рождения недействительна";
 
+"Details not visible" = "Детали не видны";
+
 "Flip your identity card over to the other side" = "Переверните удостоверение личности другой стороной";
 
 "Front identity card photo successfully uploaded" = "Фотография лицевой стороны удостоверения личности успешно отправлена";
@@ -46,13 +48,25 @@
 
 "Individual CPF" = "Личный номер CPF";
 
+"Keep ID level" = "Держите документ ровно";
+
 "Last 4 of Social Security number" = "Последние 4 цифры номера социального страхования";
 
 "Loading" = "Идет загрузка";
 
+"Make sure all details are visible and focus" = "Проследите, чтобы все детали были видны и в фокусе";
+
 "Make sure you're in a well lit space." = "Позаботьтесь о хорошем освещении.";
 
+"Move closer" = "Придвиньтесь поближе";
+
+"Move farther" = "Отодвиньтесь подальше";
+
+"Move to a well-lit area" = "Переместитесь в хорошо освещенное место";
+
 "NRIC or FIN" = "Номер NRIC или FIN";
+
+"No document detected" = "Документ не найден";
 
 "Personal ID number" = "Номер документа, удостоверяющего личность";
 

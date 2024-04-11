@@ -7,11 +7,15 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 
 typealias STPTaggedSubstringCompletionBlock = (String?, NSRange) -> Void
 typealias STPTaggedSubstringsCompletionBlock = (String, [String: NSValue]) -> Void
 extension STPStringUtils {
+    enum Error: Swift.Error {
+        case tagMissing
+    }
     /// Takes a string with the named html-style tags, removes the tags,
     /// and then calls the completion block with the modified string and the range
     /// in it that the tag would have enclosed.
@@ -135,5 +139,29 @@ extension STPStringUtils {
         }
 
         completion(modifiedString, tagsToRange)
+    }
+
+    class func applyLinksToString(template: String, links: [String: URL]) -> NSMutableAttributedString {
+        let formattedString = NSMutableAttributedString()
+        STPStringUtils.parseRanges(from: template, withTags: Set<String>(links.keys)) { string, matches in
+            formattedString.append(NSAttributedString(string: string))
+            for (tag, range) in matches {
+                guard range.rangeValue.location != NSNotFound else {
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                                      error: Error.tagMissing,
+                                                      additionalNonPIIParams: ["template": template,
+                                                                               "tag_missing": tag,
+                                                                              ])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                    stpAssertionFailure("Tag '<\(tag)>' not found")
+                    continue
+                }
+
+                if let url = links[tag] {
+                    formattedString.addAttributes([.link: url], range: range.rangeValue)
+                }
+            }
+        }
+        return formattedString
     }
 }

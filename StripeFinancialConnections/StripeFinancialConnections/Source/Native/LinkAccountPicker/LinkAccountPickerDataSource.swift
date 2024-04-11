@@ -11,7 +11,7 @@ import Foundation
 protocol LinkAccountPickerDataSourceDelegate: AnyObject {
     func linkAccountPickerDataSource(
         _ dataSource: LinkAccountPickerDataSource,
-        didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple?
+        didSelectAccounts selectedAccounts: [FinancialConnectionsAccountTuple]
     )
 }
 
@@ -19,13 +19,16 @@ protocol LinkAccountPickerDataSource: AnyObject {
 
     var delegate: LinkAccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
-    var selectedAccountTuple: FinancialConnectionsAccountTuple? { get }
+    var selectedAccounts: [FinancialConnectionsAccountTuple] { get }
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane? { get set }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var dataAccessNotice: FinancialConnectionsDataAccessNotice? { get }
 
+    func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple])
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
-    func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList>
-    func updateSelectedAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple)
+    func selectNetworkedAccounts(
+        _ selectedAccounts: [FinancialConnectionsPartnerAccount]
+    ) -> Future<FinancialConnectionsInstitutionList>
 }
 
 final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSource {
@@ -36,10 +39,11 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let consumerSession: ConsumerSessionData
+    let dataAccessNotice: FinancialConnectionsDataAccessNotice?
 
-    private(set) var selectedAccountTuple: FinancialConnectionsAccountTuple? {
+    private(set) var selectedAccounts: [FinancialConnectionsAccountTuple] = [] {
         didSet {
-            delegate?.linkAccountPickerDataSource(self, didSelectAccount: selectedAccountTuple)
+            delegate?.linkAccountPickerDataSource(self, didSelectAccounts: selectedAccounts)
         }
     }
     weak var delegate: LinkAccountPickerDataSourceDelegate?
@@ -49,13 +53,15 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         apiClient: FinancialConnectionsAPIClient,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
-        consumerSession: ConsumerSessionData
+        consumerSession: ConsumerSessionData,
+        dataAccessNotice: FinancialConnectionsDataAccessNotice?
     ) {
         self.manifest = manifest
         self.apiClient = apiClient
         self.analyticsClient = analyticsClient
         self.clientSecret = clientSecret
         self.consumerSession = consumerSession
+        self.dataAccessNotice = dataAccessNotice
     }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
@@ -69,13 +75,15 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         }
     }
 
-    func updateSelectedAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple) {
-        self.selectedAccountTuple = selectedAccountTuple
+    func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {
+        self.selectedAccounts = selectedAccounts
     }
 
-    func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList> {
+    func selectNetworkedAccounts(
+        _ selectedAccounts: [FinancialConnectionsPartnerAccount]
+    ) -> Future<FinancialConnectionsInstitutionList> {
         return apiClient.selectNetworkedAccounts(
-            selectedAccountIds: [selectedAccount.id],
+            selectedAccountIds: selectedAccounts.map({ $0.id }),
             clientSecret: clientSecret,
             consumerSessionClientSecret: consumerSession.clientSecret
         )

@@ -114,7 +114,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }()
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
-            callToAction: .add(paymentMethodType: selectedPaymentMethodType),
+            callToAction: callToAction,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapAddButton()
@@ -122,6 +122,24 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         )
         return button
     }()
+
+    private var callToAction: ConfirmButton.CallToActionType {
+        if let customCtaLabel = configuration.primaryButtonLabel {
+            switch mode {
+            case .selectingSaved:
+                return .customWithLock(title: customCtaLabel)
+            case .addingNew:
+                return .custom(title: customCtaLabel)
+            }
+        }
+
+        switch mode {
+        case .selectingSaved:
+            return .customWithLock(title: String.Localized.continue)
+        case .addingNew:
+            return .add(paymentMethodType: selectedPaymentMethodType)
+        }
+    }
 
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
@@ -388,7 +406,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                     }
                 }
                 confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled,
-                                     callToAction: .customWithLock(title: String.Localized.continue), animated: true)
+                                     callToAction: callToAction, animated: true)
             } else {
                 if !confirmButton.isHidden {
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -422,7 +440,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 }
             }()
 
-            var callToAction: ConfirmButton.CallToActionType = .add(paymentMethodType: selectedPaymentMethodType)
+            var callToAction: ConfirmButton.CallToActionType = callToAction
             if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
                 callToAction = overrideCallToAction
                 confirmButtonState = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
@@ -506,16 +524,19 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
+    enum PaymentSheetFlowControllerViewControllerError: Error {
+        case didUpdateSelectionWithInvalidMode
+        case sheetNavigationBarDidBack
+    }
+
     func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
         // no-op
-        assertionFailure("Used to bubble up CVC Input. This should never happen for FlowController")
-
     }
     func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
         }
@@ -534,7 +555,11 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
                                                                            intentConfig: intent.intentConfig,
                                                                            apiClient: configuration.apiClient)
         guard case Mode.selectingSaved = mode else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedFlowControllerViewControllerError,
+                                              error: PaymentSheetFlowControllerViewControllerError.didUpdateSelectionWithInvalidMode,
+                                              additionalNonPIIParams: [:])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
         switch paymentMethodSelection {
@@ -556,14 +581,27 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         else {
             return
         }
-        configuration.apiClient.detachPaymentMethod(
-            paymentMethod.stripeId, fromCustomerUsing: ephemeralKey
-        ) { (_) in
-            // no-op
+        if let customerAccessProvider = configuration.customer?.customerAccessProvider,
+           case .customerSession = customerAccessProvider,
+           paymentMethod.type == .card,
+           let customerId = configuration.customer?.id {
+            configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                paymentMethod.stripeId,
+                customerId: customerId,
+                fromCustomerUsing: ephemeralKey
+            ) { (_) in
+                // no-op
+            }
+        } else {
+            configuration.apiClient.detachPaymentMethod(
+                paymentMethod.stripeId, fromCustomerUsing: ephemeralKey
+            ) { (_) in
+                // no-op
+            }
         }
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {
@@ -635,7 +673,11 @@ extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
             mode = .selectingSaved
             updateUI()
         default:
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedFlowControllerViewControllerError,
+                                              error: PaymentSheetFlowControllerViewControllerError.sheetNavigationBarDidBack,
+                                              additionalNonPIIParams: [:])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
         }
     }
 }

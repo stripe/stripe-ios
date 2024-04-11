@@ -11,11 +11,15 @@ import UIKit
 
 protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
-    func updateErrorLabel(for: Error?)
+    func updateErrorLabel(for: Swift.Error?)
 }
 
 @objc(STP_Internal_CustomerAddPaymentMethodViewController)
 class CustomerAddPaymentMethodViewController: UIViewController {
+    enum Error: Swift.Error {
+        case paymentMethodTypesEmpty
+        case usBankAccountParamsMissing
+    }
 
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let cbcEligible: Bool
@@ -36,18 +40,9 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
     // MARK: - Writable Properties
     private let configuration: CustomerSheet.Configuration
-    private lazy var usBankAccountFormElement: USBankAccountPaymentMethodElement? = {
-        // We are keeping usBankAccountInfo in memory to preserve state
-        // if the user switches payment method types
-        let paymentMethodElement = makeElement(for: selectedPaymentMethodType)
-        if let usBankAccountPaymentMethodElement = paymentMethodElement as? USBankAccountPaymentMethodElement {
-            usBankAccountPaymentMethodElement.presentingViewControllerDelegate = self
-        } else {
-            assertionFailure("Wrong type for usBankAccountFormElement")
-        }
-        return paymentMethodElement as? USBankAccountPaymentMethodElement
-    }()
 
+    // We are keeping usBankAccountInfo in memory to preserve state if the user switches payment method types
+    private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
     var overrideActionButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let paymentOption = paymentOption,
@@ -85,9 +80,16 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
-        if selectedPaymentMethodType == .stripe(.USBankAccount),
-           let usBankAccountFormElement = usBankAccountFormElement {
-            return usBankAccountFormElement
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
+            if let usBankAccountFormElement {
+                // Use the cached form instead of creating a new one
+                return usBankAccountFormElement
+            } else {
+                // Cache the form
+                let element = self.makeElement(for: .stripe(.USBankAccount))
+                usBankAccountFormElement = element as? USBankAccountPaymentMethodElement
+                return element
+            }
         }
         return makeElement(for: selectedPaymentMethodType)
     }()
@@ -121,6 +123,12 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     ) {
         self.configuration = configuration
         self.delegate = delegate
+        if paymentMethodTypes.isEmpty {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.paymentMethodTypesEmpty)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        }
+        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.paymentMethodTypes = paymentMethodTypes
         self.cbcEligible = cbcEligible
         super.init(nibName: nil, bundle: nil)
@@ -199,9 +207,13 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         }
     }
     private func updateFormElement() {
-        if selectedPaymentMethodType == .stripe(.USBankAccount),
-           let usBankAccountFormElement = usBankAccountFormElement {
-            paymentMethodFormElement = usBankAccountFormElement
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
+            if let usBankAccountFormElement {
+                paymentMethodFormElement = usBankAccountFormElement
+            } else {
+                paymentMethodFormElement = makeElement(for: .stripe(.USBankAccount))
+                usBankAccountFormElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement
+            }
         } else {
             paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
         }
@@ -244,7 +256,10 @@ extension CustomerAddPaymentMethodViewController {
             let name = usBankAccountPaymentMethodElement.name,
             let email = usBankAccountPaymentMethodElement.email
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.usBankAccountParamsMissing)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return
         }
 
