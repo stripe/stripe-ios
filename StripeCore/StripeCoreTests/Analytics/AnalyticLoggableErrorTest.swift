@@ -38,12 +38,13 @@ class AnalyticLoggableErrorTest: XCTestCase {
                 "message": "Your card number is incorrect.",
                 "code": "incorrect_number",
             ],
-        ])!
+        ], httpResponse: HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 402, httpVersion: nil, headerFields: ["request-id": "req_123"]))!
         XCTAssertEqual(
             stripeAPIError.serializeForV1Analytics() as? [String: String],
             [
                 "error_type": "card_error",
                 "error_code": "incorrect_number",
+                "request_id": "req_123",
             ]
         )
 
