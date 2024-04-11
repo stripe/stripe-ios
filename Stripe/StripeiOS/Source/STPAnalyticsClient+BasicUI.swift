@@ -12,12 +12,10 @@ import Foundation
 extension STPPaymentContext {
     final class AnalyticsLogger {
         let analyticsClient = STPAnalyticsClient.sharedClient
-        let sessionID: String = UUID().uuidString.lowercased()
         var apiClient: STPAPIClient = .shared
         var product: String
         lazy var commonParameters: [String: Any] = {
             [
-                "session_id": sessionID,
                 "product": product,
             ]
         }()
