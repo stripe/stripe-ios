@@ -47,11 +47,11 @@ public class STPBankAccountCollector: NSObject {
     public typealias STPCollectBankAccountForPaymentCompletionBlock = (STPPaymentIntent?, NSError?)
         -> Void
 
-    func error(
+    private func error(
         for errorCode: STPCollectBankAccountError,
-        userInfo additionalUserInfo: [AnyHashable: Any]? = nil
+        loggingSafeErrorMessage: String? = nil
     ) -> NSError {
-        var userInfo: [AnyHashable: Any] = additionalUserInfo ?? [:]
+        var userInfo: [String: Any] = [:]
         switch errorCode {
         case .financialConnectionsSDKNotLinked:
             userInfo[STPError.errorMessageKey] =
@@ -64,7 +64,7 @@ public class STPBankAccountCollector: NSObject {
         return NSError(
             domain: STPPaymentHandler.errorDomain,
             code: errorCode.rawValue,
-            userInfo: userInfo as? [String: Any]
+            userInfo: userInfo
         )
     }
 
@@ -149,17 +149,16 @@ public class STPBankAccountCollector: NSObject {
                 result,
                 linkAccountSession,
                 error in
-                if let error = error {
-                    completion(
-                        nil,
-                        self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error])
-                    )
+                if let error {
+                    completion(nil, error)
                     return
                 }
-                guard let linkAccountSession = linkAccountSession,
-                    let result = result
-                else {
-                    completion(nil, NSError.stp_genericFailedToParseResponseError())
+                guard let result else {
+                    completion(nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "collectBankAccountForPayment() completed without a result"))
+                    return
+                }
+                guard let linkAccountSession else {
+                    completion(nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "collectBankAccountForPayment() completed without a link account session"))
                     return
                 }
 
@@ -177,23 +176,14 @@ public class STPBankAccountCollector: NSObject {
                         error in
                         if let intent = intent {
                             completion(intent, nil)
-                        } else if let error = error {
-                            completion(
-                                nil,
-                                self.error(
-                                    for: .unexpectedError,
-                                    userInfo: [NSUnderlyingErrorKey: error]
-                                )
-                            )
+                        } else if let error {
+                            completion(nil, error as NSError)
                         } else {
-                            completion(nil, self.error(for: .unexpectedError))
+                            completion(nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "Canceled and retrieved PI without an error or intent"))
                         }
                     }
                 case .failed(let error):
-                    completion(
-                        nil,
-                        self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error])
-                    )
+                    completion(nil, error as NSError)
                 }
             }
         collectBankAccountForPayment(
@@ -230,19 +220,15 @@ public class STPBankAccountCollector: NSObject {
         }
 
         let linkAccountSessionCallback: STPLinkAccountSessionBlock = { linkAccountSession, error in
-            if let error = error {
-                financialConnectionsCompletion(
-                    nil,
-                    nil,
-                    self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error])
-                )
+            if let error {
+                financialConnectionsCompletion(nil, nil, error as NSError)
                 return
             }
-            guard let linkAccountSession = linkAccountSession else {
+            guard let linkAccountSession else {
                 financialConnectionsCompletion(
                     nil,
                     nil,
-                    NSError.stp_genericFailedToParseResponseError()
+                    self.error(for: .unexpectedError, loggingSafeErrorMessage: "createLinkAccountSession w/ PI called without an error or link account session")
                 )
                 return
             }
@@ -279,15 +265,15 @@ public class STPBankAccountCollector: NSObject {
             linkAccountSessionID: linkAccountSession.stripeID,
             clientSecret: clientSecret
         ) { paymentIntent, error in
-            if let error = error {
+            if let error {
                 completion(
                     nil,
-                    self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error])
+                    error as NSError
                 )
                 return
             }
             guard let paymentIntent = paymentIntent else {
-                completion(nil, NSError.stp_genericFailedToParseResponseError())
+                completion(nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "attachLinkAccountSession() returned neither error nor PaymentIntent"))
                 return
             }
             completion(paymentIntent, nil)
@@ -379,17 +365,16 @@ public class STPBankAccountCollector: NSObject {
                 result,
                 linkAccountSession,
                 error in
-                if let error = error {
-                    completion(
-                        nil,
-                        self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error])
-                    )
+                if let error {
+                    completion(nil, error as NSError)
                     return
                 }
-                guard let linkAccountSession = linkAccountSession,
-                    let result = result
-                else {
-                    completion(nil, NSError.stp_genericFailedToParseResponseError())
+                guard let result else {
+                    completion(nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "Completed without a result"))
+                    return
+                }
+                guard let linkAccountSession else {
+                    completion(nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "collectBankAccountForSetup() completed without a link account session"))
                     return
                 }
                 switch result {
@@ -406,23 +391,14 @@ public class STPBankAccountCollector: NSObject {
                         error in
                         if let intent = intent {
                             completion(intent, nil)
-                        } else if let error = error {
-                            completion(
-                                nil,
-                                self.error(
-                                    for: .unexpectedError,
-                                    userInfo: [NSUnderlyingErrorKey: error]
-                                )
-                            )
+                        } else if let error {
+                            completion(nil, error as NSError)
                         } else {
-                            completion(nil, self.error(for: .unexpectedError))
+                            completion(nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "Canceled and retrieved SI without an error or intent"))
                         }
                     }
                 case .failed(let error):
-                    completion(
-                        nil,
-                        self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error])
-                    )
+                    completion(nil, error as NSError)
                 }
             }
         collectBankAccountForSetup(
@@ -457,22 +433,19 @@ public class STPBankAccountCollector: NSObject {
             return
         }
         let linkAccountSessionCallback: STPLinkAccountSessionBlock = { linkAccountSession, error in
-            if let error = error {
+            if let error {
+                financialConnectionsCompletion(nil, nil, error as NSError)
+                return
+            }
+            guard let linkAccountSession else {
                 financialConnectionsCompletion(
                     nil,
                     nil,
-                    self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error])
+                    self.error(for: .unexpectedError, loggingSafeErrorMessage: "createLinkAccountSession w/ SI called without an error or link account session")
                 )
                 return
             }
-            guard let linkAccountSession = linkAccountSession else {
-                financialConnectionsCompletion(
-                    nil,
-                    nil,
-                    NSError.stp_genericFailedToParseResponseError()
-                )
-                return
-            }
+
             financialConnectionsAPI.presentFinancialConnectionsSheet(
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
@@ -505,15 +478,12 @@ public class STPBankAccountCollector: NSObject {
             linkAccountSessionID: linkAccountSession.stripeID,
             clientSecret: clientSecret
         ) { setupIntent, error in
-            if let error = error {
-                completion(
-                    nil,
-                    self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error])
-                )
+            if let error {
+                completion(nil, error as NSError)
                 return
             }
-            guard let setupIntent = setupIntent else {
-                completion(nil, NSError.stp_genericFailedToParseResponseError())
+            guard let setupIntent else {
+                completion(nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "attachLinkAccountSession() returned neither error nor SetupIntent"))
                 return
             }
             completion(setupIntent, nil)
@@ -547,12 +517,12 @@ public class STPBankAccountCollector: NSObject {
             currency: currency,
             onBehalfOf: onBehalfOf
         ) { linkAccountSession, error in
-            if let error = error {
-                financialConnectionsCompletion(nil, nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
+            if let error {
+                financialConnectionsCompletion(nil, nil, error as NSError)
                 return
             }
-            guard let linkAccountSession = linkAccountSession else {
-                financialConnectionsCompletion(nil, nil, NSError.stp_genericFailedToParseResponseError())
+            guard let linkAccountSession else {
+                financialConnectionsCompletion(nil, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "createLinkAccountSessionForDeferredIntent called without an error or link account session"))
                 return
             }
             financialConnectionsAPI.presentFinancialConnectionsSheet(
