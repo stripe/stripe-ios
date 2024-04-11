@@ -29,11 +29,11 @@ class DownloadManagerTest: APIStubbedTestCase {
         self.rm = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: analyticsClient)
         self.rm.resetDiskCache()
     }
-    
+
     func testURLCacheConfiguration() {
         let configurationUrlCache = urlSessionConfig.urlCache
 
-        XCTAssertNotNil(configurationUrlCache)      
+        XCTAssertNotNil(configurationUrlCache)
         XCTAssertEqual(configurationUrlCache?.memoryCapacity, 5_000_000)
         XCTAssertEqual(configurationUrlCache?.diskCapacity, 30_000_000)
     }
@@ -167,7 +167,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         let img1 = URL(string: "http://js.stripe.com/icon1.png?key1=value1")!.lastPathComponent
         XCTAssertEqual(img1, "icon1.png")
     }
-    
+
     func testBadNetworkResponse() throws {
         stub(condition: { request in
             return request.url == self.validURL

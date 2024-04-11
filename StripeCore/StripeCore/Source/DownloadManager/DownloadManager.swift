@@ -17,9 +17,9 @@ import UIKit
     }
 
     public static let sharedManager = DownloadManager()
+
     private let session: URLSession
     private let analyticsClient: STPAnalyticsClient
-    private var diskCache: URLCache?
 
     public init(
         urlSessionConfiguration: URLSessionConfiguration = .default,
@@ -38,7 +38,6 @@ import UIKit
             )
             configuration.urlCache = cache
             configuration.requestCachePolicy = .useProtocolCachePolicy
-            self.diskCache = cache
         }
 
         session = URLSession(configuration: configuration)
@@ -74,10 +73,8 @@ extension DownloadManager {
 
     // Common download function
     private func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
-        let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        
         do {
-            let (data, _) = try await session.data(for: urlRequest)
+            let (data, _) = try await session.data(from: url)
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             return image
         } catch {
@@ -102,9 +99,9 @@ extension DownloadManager {
             return await self.downloadImage(url: url, placeholder: placeholder)
         }) ?? imagePlaceHolder()
     }
-    
+
     func resetDiskCache() {
-        self.diskCache?.removeAllCachedResponses()
+        session.configuration.urlCache?.removeAllCachedResponses()
     }
 }
 
@@ -130,7 +127,7 @@ private extension UIImage {
     func isEqualToImage(image: UIImage) -> Bool {
         return self.pngData() == image.pngData()
     }
-    
+
     static func from(imageData: Data) throws -> UIImage {
         #if canImport(CompositorServices)
         let scale = 1.0
