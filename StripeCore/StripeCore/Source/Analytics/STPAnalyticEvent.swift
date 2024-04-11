@@ -235,6 +235,10 @@ import Foundation
     case biCardNumberCompleted = "bi_card_number_completed"
     case biDoneButtonTapped = "bi_done_button_tapped"
 
+    // MARK: - STPBankAccountCollector
+    case bankAccountCollectorStarted = "stripeios.bankaccountcollector.started"
+    case bankAccountCollectorFinished = "stripeios.bankaccountcollector.finished"
+
     // MARK: - Unexpected errors
     // These errors should _never happen_ and indicate a problem with the SDK or the Stripe backend.
     case unexpectedPaymentSheetFormFactoryError = "unexpected_error.paymentsheet.formfactory"
