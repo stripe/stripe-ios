@@ -244,9 +244,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let sessionID = analyticsLog.first![string: "session_id"]
         XCTAssertTrue(!sessionID!.isEmpty)
         for analytic in analyticsLog {
-            if analytic[string: "event"]!.starts(with: "stripeios.") {
-                continue
-            }
             XCTAssertEqual(analytic[string: "session_id"], sessionID)
         }
         // Make sure the appropriate events have "selected_lpm" = "card"
@@ -1467,9 +1464,6 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         let sessionID = analyticsLog.first![string: "session_id"]
         XCTAssertTrue(!sessionID!.isEmpty)
         for analytic in analyticsLog {
-            if (analytic["event"] as! String).starts(with: "stripeios") {
-                continue
-            }
             XCTAssertEqual(analytic[string: "session_id"], sessionID)
         }
 
