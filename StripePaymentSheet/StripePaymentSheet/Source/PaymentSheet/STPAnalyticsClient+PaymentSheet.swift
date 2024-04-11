@@ -310,7 +310,6 @@ extension STPAnalyticsClient {
         if let linkSessionType = linkSessionType {
             additionalParams["link_session_type"] = linkSessionType.rawValue
         }
-        additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
         additionalParams["currency"] = currency

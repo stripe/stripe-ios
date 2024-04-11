@@ -172,6 +172,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     }
 
     func testPaymentSheetAnalyticPayload() throws {
+        // Ensure there is a sessionID
+        AnalyticsHelper.shared.generateSessionID()
+
         // setup
         let analytic = PaymentSheetAnalytic(
             event: STPAnalyticEvent.mcInitCompleteApplePay,
@@ -187,7 +190,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
-        XCTAssertEqual(17, payload.count)
+        XCTAssertEqual(18, payload.count)
         XCTAssertNotNil(payload["device_type"] as? String)
         XCTAssertEqual("Wi-Fi", payload["network_type"] as? String)
         // In xctest, this is the version of Xcode
@@ -209,6 +212,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertEqual("testVal", payload["testKey"] as? String)
         XCTAssertEqual("X", payload["install"] as? String)
         XCTAssertTrue(payload["is_development"] as? Bool ?? false)
+        XCTAssertEqual(36, (payload["session_id"] as? String)?.count ?? 0)
 
         let additionalInfo = try XCTUnwrap(payload["additional_info"] as? [String])
         XCTAssertEqual(1, additionalInfo.count)
