@@ -214,7 +214,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["payment_method_type"] as? String, "card")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "payment_intent_unexpected_state")
-            XCTAssertEqual(lastAnalytic?["request_id"] as? String, "resource_missing")
+            XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -242,7 +242,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["payment_method_type"] as? String, "card")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "parameter_missing")
-            XCTAssertEqual(lastAnalytic?["request_id"] as? String, "resource_missing")
+            XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -265,7 +265,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "payment_intent_invalid_parameter")
-            XCTAssertEqual(lastAnalytic?["request_id"] as? String, "resource_missing")
+            XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -318,7 +318,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
             XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "resource_missing")
-            XCTAssertEqual(lastAnalytic?["request_id"] as? String, "resource_missing")
+            XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
