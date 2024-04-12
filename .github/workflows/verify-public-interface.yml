@@ -28,7 +28,7 @@ jobs:
           echo "BUILD_DIR=${{ github.workspace }}/build" >> $GITHUB_ENV
 
           # Checkout old version, build and generate API JSON
-          echo "Building and generating old version..."
+          echo "Building and generating public interface from master..."
           git checkout ${{ github.base_ref }}
           
           xcodebuild clean archive \
@@ -51,7 +51,7 @@ jobs:
           -I "#{build_dir}/StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks"
 
           # Checkout new version, build and generate API JSON
-          echo "Building and generating new version..."
+          echo "Building and generating public interface from current branch..."
           git checkout ${{ github.head_ref }}
 
           xcodebuild clean archive \
@@ -72,6 +72,12 @@ jobs:
           -module StripePaymentSheet \
           -o new-StripePaymentSheet.json \
           -I "#{build_dir}/StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks"
+
+          xcrun swift-api-digester \
+          -diagnose-sdk \
+          --input-paths old-StripePaymentSheet.json \
+          -input-paths new-StripePaymentSheet.json
+
 
       - name: Check for new APIs
         id: check-api
