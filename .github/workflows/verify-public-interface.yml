@@ -68,11 +68,12 @@ jobs:
           -output "./StripePaymentSheet-new.xcframework"
 
           echo "Generating public interface diff..."
-          xcrun swift-api-digester \
-          -diagnose-sdk \
-          -input-paths StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json \
-          -input-paths StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json
-
+          
+          export API_DIFF=$(ruby ci_scripts/diff_pubilc_interface.rb \
+          StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json \
+          StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json)
+          
+          echo "API_DIFF=$API_DIFF" >> $GITHUB_ENV
 
       - name: Check for modified or added APIs
         id: check-api
@@ -96,7 +97,7 @@ jobs:
           body: |
             ⚠️ Change in public APIs detected:
 
-            ```
+            ```diff
             ${{ env.API_DIFF }}
             ```
 
