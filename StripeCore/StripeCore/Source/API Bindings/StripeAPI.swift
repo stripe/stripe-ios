@@ -118,7 +118,7 @@ import PassKit
     /// Japanese users can enable JCB by setting `JCBPaymentNetworkSupported` to YES,
     /// after they have been approved by JCB.
     /// Users that have the Payment Method Cartes Bancaires set to Active, can enable it
-    /// by setting `CartesBancairesNetworkSupported` to YES.
+    /// by adding `.cartesBancaires` to the `additionalEnabledApplePayNetworks` list.
     /// - Returns: YES if the device is currently able to make Apple Pay payments via one
     /// of the supported networks. NO if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
