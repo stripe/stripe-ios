@@ -24,8 +24,42 @@ jobs:
         id: api-differences
         run: |
           modules=("StripeUICore" "StripeCameraCore" "StripeApplePay" "StripePayments" "StripePaymentsUI" "StripePaymentSheet" "StripeCardScan")
+          mkdir -p ${{ github.workspace }}/build
+          echo "BUILD_DIR=${{ github.workspace }}/build" >> $GITHUB_ENV
           
-          ruby ci_scripts/export_builds.rb
+          # Checkout old version, build and generate API JSON
+          echo "Building and generating old version..."
+          git checkout ${{ github.base_ref }}
+          
+          xcodebuild clean archive \
+          -quiet \
+          -workspace "Stripe.xcworkspace" \
+          -scheme "AllStripeFrameworks" \
+          -destination 'generic/platform=iOS Simulator' \
+          -configuration "Release" \
+          -archivePath "#{build_dir}/StripeFrameworks-sim-master.xcarchive" \
+          -sdk iphonesimulator \
+          SUPPORTS_MACCATALYST=NO \
+          BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
+          SKIP_INSTALL=NO
+
+          # Checkout new version, build and generate API JSON
+          echo "Building and generating new version..."
+          git checkout ${{ github.head_ref }}
+
+          xcodebuild clean archive \
+          -quiet \
+          -workspace "Stripe.xcworkspace" \
+          -scheme "AllStripeFrameworks" \
+          -destination 'generic/platform=iOS Simulator' \
+          -configuration "Release" \
+          -archivePath "#{build_dir}/StripeFrameworks-sim-new.xcarchive" \
+          -sdk iphonesimulator \
+          SUPPORTS_MACCATALYST=NO \
+          BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
+          SKIP_INSTALL=NO
 
       - name: Check for new APIs
         id: check-api
