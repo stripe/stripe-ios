@@ -48,7 +48,6 @@ jobs:
           -dump-sdk \
           -module StripePaymentSheet \
           -o old-StripePaymentSheet.json \
-          -sdk iphonesimulator \
           -I "#{build_dir}/StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks"
 
           # Checkout new version, build and generate API JSON
@@ -72,7 +71,6 @@ jobs:
           -dump-sdk \
           -module StripePaymentSheet \
           -o new-StripePaymentSheet.json \
-          -sdk iphonesimulator \
           -I "#{build_dir}/StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks"
 
       - name: Check for new APIs
