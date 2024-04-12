@@ -139,9 +139,23 @@ extension String.Localized {
         )
     }
 
+    static var decrease_lighting_2: String {
+        return STPLocalizedString(
+            "Move to a darker area",
+            "Instructional text when environement is too bright"
+        )
+    }
+
     static var reduce_glare: String {
         return STPLocalizedString(
             "Details not visible",
+            "Instructional text when the document is too glarry"
+        )
+    }
+
+    static var reduce_glare_2: String {
+        return STPLocalizedString(
+            "Try reduce glare and make ID visible",
             "Instructional text when the document is too glarry"
         )
     }
