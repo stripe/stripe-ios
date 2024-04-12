@@ -391,7 +391,7 @@ public class STPBankAccountCollector: NSObject {
                     return
                 }
                 guard let result else {
-                    completion(result, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "Completed without a result"))
+                    completion(result, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "collectBankAccountForSetup() completed without a result"))
                     return
                 }
                 guard let linkAccountSession else {
