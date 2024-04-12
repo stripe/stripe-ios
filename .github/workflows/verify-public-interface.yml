@@ -20,13 +20,13 @@ jobs:
         with:
             fetch-depth: 0
 
-      - name: Detect API changes
-        id: api-differences
+      - name: Build frameworks
+        id: build-frameworks
         run: |
           modules=("StripeUICore" "StripeCameraCore" "StripeApplePay" "StripePayments" "StripePaymentsUI" "StripePaymentSheet" "StripeCardScan")
           mkdir -p ${{ github.workspace }}/build
           echo "BUILD_DIR=${{ github.workspace }}/build" >> $GITHUB_ENV
-          
+
           # Checkout old version, build and generate API JSON
           echo "Building and generating old version..."
           git checkout ${{ github.base_ref }}
@@ -44,6 +44,8 @@ jobs:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
           SKIP_INSTALL=NO
 
+          xcrun swift-api-digester -dump-sdk -module StripePaymentSheet -o old-StripePaymentSheet.json -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk -I .build/debug
+
           # Checkout new version, build and generate API JSON
           echo "Building and generating new version..."
           git checkout ${{ github.head_ref }}
@@ -60,6 +62,8 @@ jobs:
           BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
           SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
           SKIP_INSTALL=NO
+
+          xcrun swift-api-digester -dump-sdk -module StripePaymentSheet -o new-StripePaymentSheet.json -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk -I .build/debug
 
       - name: Check for new APIs
         id: check-api
