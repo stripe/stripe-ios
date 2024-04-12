@@ -44,11 +44,9 @@ jobs:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
           SKIP_INSTALL=NO
 
-          xcrun swift-api-digester \
-          -dump-sdk \
-          -module StripePaymentSheet \
-          -o old-StripePaymentSheet.json \
-          -I "#{build_dir}/StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks"
+          xcodebuild -create-xcframework \
+          -framework "#{build_dir}/StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks/StripePaymentSheet-master.framework" \
+          -output "./StripePaymentSheet-master.xcframework"
 
           # Checkout new version, build and generate API JSON
           echo "Building and generating public interface from current branch..."
@@ -67,19 +65,18 @@ jobs:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
           SKIP_INSTALL=NO
 
-          xcrun swift-api-digester \
-          -dump-sdk \
-          -module StripePaymentSheet \
-          -o new-StripePaymentSheet.json \
-          -I "#{build_dir}/StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks"
+          xcodebuild -create-xcframework \
+          -framework "#{build_dir}/StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks/StripePaymentSheet-new.framework" \
+          -output "./StripePaymentSheet-new.xcframework"
 
+          echo "Generating public interface diff..."
           xcrun swift-api-digester \
           -diagnose-sdk \
-          --input-paths old-StripePaymentSheet.json \
-          -input-paths new-StripePaymentSheet.json
+          -input-paths StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json \
+          -input-paths StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json
 
 
-      - name: Check for new APIs
+      - name: Check for modified or added APIs
         id: check-api
         run: |
           if [[ -n "${{ env.API_DIFF }}" ]]; then
@@ -99,7 +96,7 @@ jobs:
         if: steps.check-api.outputs.new_apis_detected == 'yes'
         with:
           body: |
-            ⚠️ New public APIs detected:
+            ⚠️ Change in public APIs detected:
 
             ```
             ${{ env.API_DIFF }}
@@ -108,6 +105,7 @@ jobs:
             Consider the following:
             - Do these APIs need to be `public` or can they be protected with `@_spi(STP)`?
             - If these APIs need to be `public`, assess whether they require an API review.
+            - If you are removing or modifying an existing public API does this require a breaking change?
 
             If you confirm these APIs need to be public and have undergone necessary review, add the label `adds public API` to this PR to acknowledge and bypass this check.
           edit-mode: replace
