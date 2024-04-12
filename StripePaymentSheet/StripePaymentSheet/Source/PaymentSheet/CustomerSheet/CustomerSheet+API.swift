@@ -45,6 +45,10 @@ extension CustomerSheet {
                 with: self.bottomSheetViewController,
                 completion: paymentHandlerCompletion)
         } else {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: InternalError.invalidStateOnConfirmation)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             completion(.failed(error: CustomerSheetError.unknown(debugDescription: "Invalid state in confirmIntent")))
         }
     }

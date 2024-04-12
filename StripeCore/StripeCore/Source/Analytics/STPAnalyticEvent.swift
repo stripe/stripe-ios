@@ -34,6 +34,10 @@ import Foundation
     case _3DS2ChallengeFlowCompleted = "stripeios.3ds2_challenge_flow_completed"
     case _3DS2ChallengeFlowErrored = "stripeios.3ds2_challenge_flow_errored"
     case _3DS2RedirectUserCanceled = "stripeios.3ds2_redirect_canceled"
+    case paymentHandlerConfirmStarted = "stripeios.paymenthandler.confirm.started"
+    case paymentHandlerConfirmFinished = "stripeios.paymenthandler.confirm.finished"
+    case paymentHandlerHandleNextActionStarted = "stripeios.paymenthandler.handle_next_action.started"
+    case paymentHandlerHandleNextActionFinished = "stripeios.paymenthandler.handle_next_action.finished"
 
     // MARK: - Card Metadata
     case cardMetadataLoadedTooSlow = "stripeios.card_metadata_loaded_too_slow"
@@ -230,4 +234,19 @@ import Foundation
     case biFormInteracted = "bi_form_interacted"
     case biCardNumberCompleted = "bi_card_number_completed"
     case biDoneButtonTapped = "bi_done_button_tapped"
+
+    // MARK: - Unexpected errors
+    // These errors should _never happen_ and indicate a problem with the SDK or the Stripe backend.
+    case unexpectedPaymentSheetFormFactoryError = "unexpected_error.paymentsheet.formfactory"
+    case unexpectedStripeUICoreAddressSpecProvider = "unexpected_error.stripeuicore.addressspecprovider"
+    case unexpectedStripeUICoreBSBNumberProvider = "unexpected_error.stripeuicore.bsbnumberprovider"
+    case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
+    case unexpectedCustomerSheetError = "unexpected_error.customersheet"
+    case unexpectedPaymentSheetConfirmationError = "unexpected_error.paymentsheet.confirmation"
+    case unexpectedPaymentSheetViewControllerError = "unexpected_error.paymentsheet.paymentsheetviewcontroller"
+    case unexpectedFlowControllerViewControllerError = "unexpected_error.paymentsheet.flowcontrollerviewcontroller"
+    case unexpectedPaymentHandlerError = "unexpected_error.paymenthandler"
+
+    // MARK: - Misc. errors
+    case stripeCoreDownloadManagerError = "stripecore.downloadmanager.error"
 }

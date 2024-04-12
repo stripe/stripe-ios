@@ -276,7 +276,7 @@ final class ImageScanningSession<
                     focusPointOfInterest: CGPoint(x: 0.5, y: 0.5),
                     outputSettings: [
                         (kCVPixelBufferPixelFormatTypeKey as String): Int(
-                            IDDetectorConstants.requiredPixelFormat
+                            IDDetectorConstants.mbRequiredPixelFormat
                         ),
                     ],
                     autoFocusRangeRestriction: .near
@@ -325,6 +325,7 @@ final class ImageScanningSession<
         concurrencyManager.scanImage(
             with: scanner,
             pixelBuffer: pixelBuffer,
+            sampleBuffer: sampleBuffer,
             cameraSession: cameraSession,
             completeOn: .main
         ) { [weak self] scannerOutput in

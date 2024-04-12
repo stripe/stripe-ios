@@ -56,7 +56,7 @@ final class CountryNotListedViewController: IdentityFlowViewController {
                 )
             )
         } catch {
-            sheetController.analyticsClient.logGenericError(error: error)
+            sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
         }
 
         configure(

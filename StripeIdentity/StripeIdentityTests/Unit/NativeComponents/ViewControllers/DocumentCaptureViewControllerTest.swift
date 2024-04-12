@@ -89,11 +89,40 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
     }
 
-    func testTransitionFromScanningCardFront() {
+    func testTransitionFromScanningCardFrontLegacy() {
         let vc = makeViewController(
             state: .scanning(.front, nil)
         )
-        let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .idCardFront)
+        let mockDocumentScannerOutput = makeDocumentScannerOutputLegacy(with: .idCardFront)
+        // Mock timer so we can verify it was invalidated
+        mockTimeoutTimer(vc)
+        mockCameraFrameCaptured(vc)
+        // Mock that scanner found desired classification
+        mockConcurrencyManager.respondToScan(output: mockDocumentScannerOutput)
+        verify(
+            vc,
+            expectedState: .scanned(.front, UIImage()),
+            expectedButtonState: .enabled
+        )
+        // Verify timeout timer was invalidated
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
+        waitForCameraSessionToStop()
+        XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
+        // Verify image started uploading
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        XCTAssertEqual(
+            mockDocumentUploader.uploadedDocumentScannerOutput,
+            mockDocumentScannerOutput
+        )
+    }
+
+    func testTransitionFromScanningCardFrontModern() {
+        let vc = makeViewController(
+            state: .scanning(.front, nil)
+        )
+        let mockDocumentScannerOutput = makeDocumentScannerOutputModern(with: .idCardFront, detectorOutput: .captured(UIImage(), UIImage(), .front))
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
@@ -149,7 +178,36 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         let vc = makeViewController(
             state: .scanning(.back, nil)
         )
-        let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .idCardBack)
+        let mockDocumentScannerOutput = makeDocumentScannerOutputLegacy(with: .idCardBack)
+        // Mock timer so we can verify it was invalidated
+        mockTimeoutTimer(vc)
+        mockCameraFrameCaptured(vc)
+        // Mock that scanner found desired classification
+        mockConcurrencyManager.respondToScan(output: mockDocumentScannerOutput)
+        verify(
+            vc,
+            expectedState: .scanned(.back, UIImage()),
+            expectedButtonState: .enabled
+        )
+        // Verify timeout timer was invalidated
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
+        waitForCameraSessionToStop()
+        XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
+        // Verify image started uploading
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .back)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        XCTAssertEqual(
+            mockDocumentUploader.uploadedDocumentScannerOutput,
+            mockDocumentScannerOutput
+        )
+    }
+
+    func testTransitionFromScanningCardBackModern() {
+        let vc = makeViewController(
+            state: .scanning(.back, nil)
+        )
+        let mockDocumentScannerOutput = makeDocumentScannerOutputModern(with: .idCardFront, detectorOutput: .captured(UIImage(), UIImage(), .back))
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
@@ -222,7 +280,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         let vc = makeViewController(
             state: .scanning(.front, nil)
         )
-        let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .passport)
+        let mockDocumentScannerOutput = makeDocumentScannerOutputLegacy(with: .passport)
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
@@ -275,7 +333,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testResetTimeoutDuringScanning() {
         // Mock that existing sacnningState already found a desired classification
         let vc = makeViewController(
-            state: .scanning(.front, .init(classification: .passport, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))
+            state: .scanning(
+                .front,
+                makeDocumentScannerOutputLegacyWithIddetectorOutput(
+                    .init(classification: .passport, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])
+                )
+            )
         )
 
         // Mock that scanner found non-desired classification
@@ -530,7 +593,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(mockSheetController.analyticsClient.numDocumentBackScanAttempts, 2)
     }
 
-    func testScanningUpdatesState() {
+    func testScanningUpdatesStateLegacy() {
         let vc = makeViewController(
             state: .scanning(.front, nil)
         )
@@ -541,24 +604,89 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         // Mock that scanner found a classification that was not desired and
         // verify the state is updated accordingly
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .invalid))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .invalid))
 
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
 
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardBack))
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardBack))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
 
         mockConcurrencyManager.respondToScan(output: nil)
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
 
         // Mock that scanner found desired classification, but is blurry
         mockConcurrencyManager.respondToScan(
-            output: makeDocumentScannerOutput(with: .idCardFront, isBlurry: false)
+            output: makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false)
         )
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
 
         // Mock that scanner found desired classification
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
+    }
+
+    func testScanningUpdatesStateModernFinishedWithMB() {
+        let vc = makeViewController(
+            state: .scanning(.front, nil)
+        )
+        // Mock that scanner is scanning
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
+        waitForCameraSessionToStart()
+        mockCameraFrameCaptured(vc)
+
+        // Mock that scanner found a classification that was not desired and
+        // verify the state is updated accordingly
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .invalid, detectorOutput: .capturing(.blurDetected)))
+
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .idCardBack, detectorOutput: .capturing(.blurDetected)))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        mockConcurrencyManager.respondToScan(output: nil)
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
+
+        // Mock that scanner found desired classification, but is blurry
+        mockConcurrencyManager.respondToScan(
+            output: makeDocumentScannerOutputModern(with: .idCardFront, isBlurry: true, detectorOutput: .capturing(.blurDetected))
+        )
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        // Mock that MB found desired classification
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .idCardFront, detectorOutput: .captured(UIImage(), UIImage(), .front)))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
+    }
+
+    func testScanningUpdatesStateModernFinishedWithIDDetector() {
+        let vc = makeViewController(
+            state: .scanning(.front, nil)
+        )
+        // Mock that scanner is scanning
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
+        waitForCameraSessionToStart()
+        mockCameraFrameCaptured(vc)
+
+        // Mock that scanner found a classification that was not desired and
+        // verify the state is updated accordingly
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .invalid, detectorOutput: .capturing(.blurDetected)))
+
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .idCardBack, detectorOutput: .capturing(.blurDetected)))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        mockConcurrencyManager.respondToScan(output: nil)
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
+
+        // Mock that scanner found desired classification, but is blurry
+        mockConcurrencyManager.respondToScan(
+            output: makeDocumentScannerOutputModern(with: .idCardFront, isBlurry: true, detectorOutput: .capturing(.blurDetected))
+        )
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputModernWithDetectorOutput(.init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]), .capturing(.blurDetected))))
+
+        // Mock that MB is still capturing but IDDetector found desired classification
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputModern(with: .idCardFront, isBlurry: false, hasBarcode: true, detectorOutput: .capturing(.blurDetected)))
+
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
     }
 
@@ -573,22 +701,22 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         // Mock that scanner found a classification that was not desired and
         // verify the state is updated accordingly
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .invalid))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .invalid))
 
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
 
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardBack))
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardBack))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
 
         mockConcurrencyManager.respondToScan(output: nil)
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
 
         // Mock that scanner found desired classification, and has barcode
         mockConcurrencyManager.respondToScan(
-            output: makeDocumentScannerOutput(with: .idCardFront, hasBarcode: true)
+            output: makeDocumentScannerOutputLegacy(with: .idCardFront, hasBarcode: true)
         )
         // Mock that scanner found desired classification
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
     }
 
@@ -677,7 +805,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockCameraFrameCaptured(vc)
 
         // Mock that scanner found desired classification
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
 
         // Verify average_fps analytic sent
         let averageFPSAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(
@@ -791,42 +919,147 @@ extension DocumentCaptureViewControllerTest {
         )
     }
 
-    fileprivate func makeDocumentScannerOutput(
+    fileprivate func makeDocumentScannerOutputLegacyWithIddetectorOutput(
+        _ output: IDDetectorOutput
+    ) -> DocumentScannerOutput {
+        return .legacy(
+            output,
+            .init(
+                hasBarcode: true,
+                isTimedOut: false,
+                symbology: .pdf417,
+                timeTryingToFindBarcode: 1
+            ),
+            .init(
+                hasMotionBlur: false,
+                iou: nil,
+                frameCount: 0,
+                duration: 0
+            ),
+            .init(
+                .init(
+                    exposureDuration: CMTime(),
+                    cameraDeviceType: .builtInDualCamera,
+                    isVirtualDevice: nil,
+                    lensPosition: 0,
+                    exposureISO: 0,
+                    isAdjustingFocus: false
+                )
+            ),
+            .init(isBlurry: false, variance: 0.1)
+        )
+    }
+
+    fileprivate func makeDocumentScannerOutputModernWithDetectorOutput(
+        _ idDetectorOutput: IDDetectorOutput,
+        _ mbDetectorResult: MBDetector.DetectorResult
+    ) -> DocumentScannerOutput {
+        return .modern(
+            idDetectorOutput,
+            .init(
+                hasBarcode: true,
+                isTimedOut: false,
+                symbology: .pdf417,
+                timeTryingToFindBarcode: 1
+            ),
+            .init(
+                hasMotionBlur: false,
+                iou: nil,
+                frameCount: 0,
+                duration: 0
+            ),
+            .init(
+                .init(
+                    exposureDuration: CMTime(),
+                    cameraDeviceType: .builtInDualCamera,
+                    isVirtualDevice: nil,
+                    lensPosition: 0,
+                    exposureISO: 0,
+                    isAdjustingFocus: false
+                )
+            ),
+            .init(isBlurry: false, variance: 0.1),
+            mbDetectorResult
+        )
+    }
+
+    fileprivate func makeDocumentScannerOutputLegacy(
         with classification: IDDetectorOutput.Classification,
         isBlurry: Bool = true,
         hasBarcode: Bool = false
     ) -> DocumentScannerOutput {
-        return .init(
-            idDetectorOutput: .init(
+        return .legacy(
+            .init(
                 classification: classification,
                 documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
                 allClassificationScores: [
                     classification: 0.9
                 ]
             ),
-            barcode: .init(
+            .init(
                 hasBarcode: hasBarcode,
                 isTimedOut: false,
                 symbology: .pdf417,
                 timeTryingToFindBarcode: 1
             ),
-            motionBlur: .init(
+            .init(
                 hasMotionBlur: !isBlurry,
                 iou: nil,
                 frameCount: 0,
                 duration: 0
             ),
-            cameraProperties: .init(
+            .init(
                 .init(
-                exposureDuration: CMTime(),
-                cameraDeviceType: .builtInDualCamera,
-                isVirtualDevice: nil,
-                lensPosition: 0,
-                exposureISO: 0,
-                isAdjustingFocus: !isBlurry
+                    exposureDuration: CMTime(),
+                    cameraDeviceType: .builtInDualCamera,
+                    isVirtualDevice: nil,
+                    lensPosition: 0,
+                    exposureISO: 0,
+                    isAdjustingFocus: !isBlurry
                 )
             ),
-            blurResult: .init(isBlurry: false, variance: 0.1)
+            .init(isBlurry: false, variance: 0.1)
+        )
+    }
+
+    fileprivate func makeDocumentScannerOutputModern(
+        with classification: IDDetectorOutput.Classification,
+        isBlurry: Bool = true,
+        hasBarcode: Bool = false,
+        detectorOutput: MBDetector.DetectorResult
+    ) -> DocumentScannerOutput {
+        return .modern(
+            .init(
+                classification: classification,
+                documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
+                allClassificationScores: [
+                    classification: 0.9
+                ]
+            ),
+            .init(
+                hasBarcode: hasBarcode,
+                isTimedOut: false,
+                symbology: .pdf417,
+                timeTryingToFindBarcode: 1
+            ),
+            .init(
+                hasMotionBlur: !isBlurry,
+                iou: nil,
+                frameCount: 0,
+                duration: 0
+            ),
+            .init(
+                .init(
+                    exposureDuration: CMTime(),
+                    cameraDeviceType: .builtInDualCamera,
+                    isVirtualDevice: nil,
+                    lensPosition: 0,
+                    exposureISO: 0,
+                    isAdjustingFocus: !isBlurry
+                )
+            ),
+            .init(isBlurry: isBlurry, variance: 0.1),
+            detectorOutput
         )
     }
 
@@ -841,7 +1074,7 @@ extension DocumentCaptureViewControllerTest {
         let isEqual: Bool
         switch (lhs, rhs) {
         case (.scanning(let lSide, let lOutput), .scanning(let rSide, let rOutput)):
-            isEqual = (lSide == rSide) && (lOutput?.classification == rOutput?.classification)
+            isEqual = (lSide == rSide) && (lOutput?.idDetectorOutput.classification == rOutput?.idDetectorOutput.classification)
         case (.scanned(let left, _), .scanned(let right, _)),
             (.timeout(let left), .timeout(let right)):
             isEqual = (left == right)

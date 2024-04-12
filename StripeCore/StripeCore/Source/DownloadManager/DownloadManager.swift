@@ -9,32 +9,22 @@ import UIKit
 
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
-@_spi(STP) public class DownloadManager: NSObject, URLSessionDelegate {
+@_spi(STP) public class DownloadManager: NSObject {
     public typealias UpdateImageHandler = (UIImage) -> Void
+
+    enum Error: Swift.Error {
+        case failedToMakeImageFromData
+    }
 
     public static let sharedManager = DownloadManager()
 
-    let downloadQueue: DispatchQueue
-    let downloadOperationQueue: OperationQueue
-    let session: URLSession!
-
-    var imageCache: [String: UIImage]
-    var pendingRequests: [String: URLSessionTask]
-    var updateHandlers: [String: [UpdateImageHandler]]
-
-    let imageCacheSemaphore: DispatchSemaphore
-    let pendingRequestsSemaphore: DispatchSemaphore
-
-    let STPCacheExpirationInterval = (60 * 60 * 24 * 7)  // 1 week
-    var urlCache: URLCache?
+    private let session: URLSession
+    private let analyticsClient: STPAnalyticsClient
 
     public init(
-        urlSessionConfiguration: URLSessionConfiguration = .default
+        urlSessionConfiguration: URLSessionConfiguration = .default,
+        analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
-        downloadQueue = DispatchQueue(label: "Stripe Download Cache", attributes: .concurrent)
-        downloadOperationQueue = OperationQueue()
-        downloadOperationQueue.underlyingQueue = downloadQueue
-
         let configuration = urlSessionConfiguration
         if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
             .first
@@ -48,177 +38,70 @@ import UIKit
             )
             configuration.urlCache = cache
             configuration.requestCachePolicy = .useProtocolCachePolicy
-            self.urlCache = cache
         }
 
         session = URLSession(configuration: configuration)
-
-        imageCache = [:]
-        pendingRequests = [:]
-        updateHandlers = [:]
-
-        imageCacheSemaphore = DispatchSemaphore(value: 1)
-        pendingRequestsSemaphore = DispatchSemaphore(value: 1)
-
+        self.analyticsClient = analyticsClient
         super.init()
     }
 }
 
 // MARK: - Download management
 extension DownloadManager {
+
+    /// Downloads an image from a provided URL, using either a synchronous method or an asynchronous method.
+    /// If no `updateHandler` is provided, this function will block the current thread until the image is downloaded. If an `updateHandler` is provided, the function does not wait for the download to finish and returns a placeholder image immediately instead. When the image finishes downloading, the `updateHandler` will be called with the downloaded image.
+    /// - Parameters:
+    ///   - url: The URL from which to download the image.
+    ///   - placeholder: An optional parameter indicating a placeholder image to display while the download is in progress. If not provided, a default placeholder image will be used instead.
+    ///   - updateHandler: An optional closure that's called when the image finishes downloading. The downloaded image is passed as a parameter to this closure.
+    ///
+    /// - Returns: A `UIImage` instance. If `updateHandler` is `nil`, this would be the downloaded image, otherwise, this would be the placeholder image.
     public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
-        if updateHandler == nil {
-            return downloadImageBlocking(placeholder: placeholder, url: url)
-        } else {
-            return downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
-        }
-    }
-
-    func downloadImageBlocking(placeholder: UIImage?, url: URL) -> UIImage {
         let placeholder = placeholder ?? imagePlaceHolder()
-        let imageName = imageNameFromURL(url: url)
-        if let image = cachedImageNamed(imageName) {
-            return image
+        // If no `updateHandler` is provided use a blocking method to fetch the image
+        guard let updateHandler else {
+            return downloadImageBlocking(url: url, placeholder: placeholder)
         }
 
-        var blockingDownloadedImage: UIImage?
-        let updateHandler: UpdateImageHandler = { image in
-            blockingDownloadedImage = image
+        Task {
+           await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
         }
-        let blockingDownloadSemaphore = DispatchSemaphore(value: 0)
-
-        let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { tempURL, response, _ in
-            guard let tempURL = tempURL,
-                let response = response,
-                let data = self.getDataFromURL(tempURL),
-                let image = self.persistToMemory(data, forImageName: imageName)
-            else {
-                blockingDownloadSemaphore.signal()
-                return
-            }
-            self.urlCache?.storeCachedResponse(
-                CachedURLResponse(response: response, data: data),
-                for: urlRequest
-            )
-            updateHandler(image)
-            blockingDownloadSemaphore.signal()
-        }
-        task.resume()
-        blockingDownloadSemaphore.wait()
-        return blockingDownloadedImage ?? placeholder
-    }
-
-    func downloadImageAsync(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
-        let placeholder = placeholder ?? imagePlaceHolder()
-        let imageName = imageNameFromURL(url: url)
-        if let image = cachedImageNamed(imageName) {
-            return image
-        }
-        let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { [weak self] tempURL, response, _ in
-            guard let self = self,
-                  let tempURL = tempURL,
-                let response = response,
-                let data = self.getDataFromURL(tempURL),
-                let image = self.persistToMemory(data, forImageName: imageName)
-            else {
-                self?.pendingRequestsSemaphore.wait()
-                self?.pendingRequests.removeValue(forKey: imageName)
-                self?.pendingRequestsSemaphore.signal()
-                return
-            }
-            self.urlCache?.storeCachedResponse(
-                CachedURLResponse(response: response, data: data),
-                for: urlRequest
-            )
-
-            self.pendingRequestsSemaphore.wait()
-            self.pendingRequests.removeValue(forKey: imageName)
-            let updates = self.updateHandlers[imageName] ?? []
-            self.updateHandlers.removeValue(forKey: imageName)
-            self.pendingRequestsSemaphore.signal()
-
-            for updateHandler in updates {
-                updateHandler(image)
-            }
-        }
-
-        self.pendingRequestsSemaphore.wait()
-        guard self.pendingRequests[imageName] == nil else {
-            addUpdateHandlerWithoutLocking(updateHandler, forImageName: imageName)
-            self.pendingRequestsSemaphore.signal()
-            return placeholder
-        }
-        self.pendingRequests[imageName] = task
-        addUpdateHandlerWithoutLocking(updateHandler, forImageName: imageName)
-        self.pendingRequestsSemaphore.signal()
-        task.resume()
-
+        // Immediately return a placeholder, when the download operation completes `updateHandler` will be called with the downloaded image
         return placeholder
     }
 
-    func imageNameFromURL(url: URL) -> String {
-        return url.lastPathComponent
-    }
-
-    func addUpdateHandlerWithoutLocking(
-        _ handler: UpdateImageHandler?,
-        forImageName imageName: String
-    ) {
-        guard let handler = handler else {
-            return
-        }
-        if let blocks = self.updateHandlers[imageName] {
-            self.updateHandlers[imageName] = blocks + [handler]
-        } else {
-            self.updateHandlers[imageName] = [handler]
-        }
-    }
-
-    func getDataFromURL(_ tempURL: URL) -> Data? {
+    // Common download function
+    private func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
         do {
-            let imageData = try Data(contentsOf: tempURL)
-            return imageData
+            let (data, _) = try await session.data(from: url)
+            let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
+            return image
         } catch {
+            let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+                                              error: error,
+                                              additionalNonPIIParams: ["url": url.absoluteString])
+            analyticsClient.log(analytic: errorAnalytic)
+            return placeholder
         }
-        return nil
     }
-}
 
-// MARK: Image Cache
-extension DownloadManager {
-    func resetMemoryCache() {
-        imageCacheSemaphore.wait()
-        self.imageCache = [:]
-        imageCacheSemaphore.signal()
+    private func downloadImageAsync(url: URL, placeholder: UIImage, updateHandler: UpdateImageHandler) async {
+        let image = await downloadImage(url: url, placeholder: placeholder)
+        // Only invoke the `updateHandler` if the fetched image differs from the placeholder we already vended
+        if !image.isEqualToImage(image: placeholder) {
+            updateHandler(image)
+        }
+    }
+
+    private func downloadImageBlocking(url: URL, placeholder: UIImage) -> UIImage {
+        return _unsafeWait({
+            return await self.downloadImage(url: url, placeholder: placeholder)
+        })
     }
 
     func resetDiskCache() {
-        self.urlCache?.removeAllCachedResponses()
-    }
-
-    func persistToMemory(_ imageData: Data, forImageName imageName: String) -> UIImage? {
-        #if canImport(CompositorServices)
-        let scale = 1.0
-        #else
-        let scale = UIScreen.main.scale
-        #endif
-        guard let image = UIImage(data: imageData, scale: scale) else {
-            return nil
-        }
-        imageCacheSemaphore.wait()
-        self.imageCache[imageName] = image
-        imageCacheSemaphore.signal()
-        return image
-    }
-
-    func cachedImageNamed(_ imageName: String) -> UIImage? {
-        var image: UIImage?
-        imageCacheSemaphore.wait()
-        image = imageCache[imageName]
-        imageCacheSemaphore.signal()
-        return image
+        session.configuration.urlCache?.removeAllCachedResponses()
     }
 }
 
@@ -228,7 +111,7 @@ extension DownloadManager {
         return imageWithSize(size: CGSize(width: 1.0, height: 1.0))
     }
 
-    func imageWithSize(size: CGSize) -> UIImage {
+    private func imageWithSize(size: CGSize) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
         UIColor.clear.set()
@@ -236,5 +119,45 @@ extension DownloadManager {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image!
+    }
+}
+
+// MARK: UIImage helpers
+private extension UIImage {
+    func isEqualToImage(image: UIImage) -> Bool {
+        return self.pngData() == image.pngData()
+    }
+
+    static func from(imageData: Data) throws -> UIImage {
+        #if canImport(CompositorServices)
+        let scale = 1.0
+        #else
+        let scale = UIScreen.main.scale
+        #endif
+        guard let image = UIImage(data: imageData, scale: scale) else {
+            throw DownloadManager.Error.failedToMakeImageFromData
+        }
+
+        return image
+    }
+}
+
+// MARK: Workarounds for using Swift async from a sync context
+// https://forums.swift.org/t/using-async-functions-from-synchronous-functions-and-breaking-all-the-rules/59782/4
+private class ImageBox {
+    var image: UIImage = DownloadManager.sharedManager.imagePlaceHolder()
+}
+
+private extension DownloadManager {
+    /// Unsafely awaits an async function from a synchronous context.
+    func _unsafeWait(_ downloadImage: @escaping () async -> UIImage) -> UIImage {
+        let imageBox = ImageBox()
+        let sema = DispatchSemaphore(value: 0)
+        Task {
+            imageBox.image = await downloadImage()
+            sema.signal()
+        }
+        sema.wait()
+        return imageBox.image
     }
 }

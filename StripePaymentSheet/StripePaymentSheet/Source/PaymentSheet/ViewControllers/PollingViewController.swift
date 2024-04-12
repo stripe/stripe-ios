@@ -25,18 +25,15 @@ class PollingViewController: UIViewController {
     // MARK: State
 
     private var oneSecondTimer: Timer?
-    private let currentAction: STPPaymentHandlerActionParams
+    private let currentAction: STPPaymentHandlerPaymentIntentActionParams
     private let appearance: PaymentSheet.Appearance
     private let viewModel: PollingViewModel
     private let safariViewController: SFSafariViewController?
 
     private lazy var intentPoller: IntentStatusPoller = {
-        guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
-              let clientSecret = currentAction.paymentIntent?.clientSecret else { fatalError() }
-
         let intentPoller = IntentStatusPoller(retryInterval: viewModel.retryInterval,
                                               intentRetriever: currentAction.apiClient,
-                                              clientSecret: clientSecret)
+                                              clientSecret: currentAction.paymentIntent.clientSecret)
         intentPoller.delegate = self
         return intentPoller
     }()
@@ -162,7 +159,7 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
+    init(currentAction: STPPaymentHandlerPaymentIntentActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
         self.currentAction = currentAction
         self.appearance = appearance
         self.viewModel = viewModel
@@ -351,8 +348,6 @@ extension PollingViewController: SheetNavigationBarDelegate {
 
 extension PollingViewController: IntentStatusPollerDelegate {
     func didUpdate(paymentIntent: STPPaymentIntent) {
-        guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else { return }
-
         if paymentIntent.status == .succeeded {
             setErrorStateWorkItem.cancel() // cancel the error work item incase it was scheduled
             currentAction.paymentIntent = paymentIntent // update the local copy of the intent with the latest from the server

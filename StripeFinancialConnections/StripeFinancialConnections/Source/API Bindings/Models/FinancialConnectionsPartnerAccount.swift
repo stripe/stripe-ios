@@ -12,7 +12,7 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let id: String
     let name: String
     let displayableAccountNumbers: String?
-    let linkedAccountId: String?  // determines whether we show a "Linked" label
+    let linkedAccountId: String?
     let balanceAmount: Int?
     let currency: String?
     let supportedPaymentMethodTypes: [FinancialConnectionsPaymentMethodType]

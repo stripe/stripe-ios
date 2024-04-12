@@ -1,157 +1,183 @@
 //
-//  PlaygroundMainViewModel.swift
+//  PlaygroundViewModel.swift
 //  FinancialConnections Example
 //
 //  Created by Krisjanis Gaidis on 11/5/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import Combine
 import Foundation
 import StripeFinancialConnections
+import SwiftUI
 import UIKit
 
-final class PlaygroundMainViewModel: ObservableObject {
+final class PlaygroundViewModel: ObservableObject {
 
-    enum Flow: String, CaseIterable, Identifiable {
-        case data
-        case payments
-        case networking
+    let playgroundConfiguration = PlaygroundConfiguration.shared
 
-        var id: String {
-            return rawValue
-        }
-    }
-    @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow) ?? .data {
-        didSet {
-            PlaygroundUserDefaults.flow = flow.rawValue
-            if flow != .networking {
-                email = ""
+    var sdkType: Binding<PlaygroundConfiguration.SDKType> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.sdkType
+            },
+            set: {
+                self.playgroundConfiguration.sdkType = $0
+                self.objectWillChange.send()
             }
-        }
+        )
     }
 
-    enum NativeSelection: String, CaseIterable, Identifiable {
-        case automatic
-        case web
-        case native
-
-        var id: String {
-            return rawValue
-        }
-    }
-    @Published var nativeSelection: NativeSelection {
-        didSet {
-            switch nativeSelection {
-            case .automatic:
-                PlaygroundUserDefaults.enableNative = nil
-            case .web:
-                PlaygroundUserDefaults.enableNative = false
-            case .native:
-                PlaygroundUserDefaults.enableNative = true
+    var merchant: Binding<PlaygroundConfiguration.Merchant> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.merchant
+            },
+            set: {
+                self.playgroundConfiguration.merchant = $0
+                self.objectWillChange.send()
             }
-        }
-    }
-    @Published var enableNative: Bool? = PlaygroundUserDefaults.enableNative {
-        didSet {
-            PlaygroundUserDefaults.enableNative = enableNative
-        }
+        )
     }
 
-    @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
-        didSet {
-            PlaygroundUserDefaults.enableTestMode = enableTestMode
-        }
-    }
-
-    @Published var email: String = PlaygroundUserDefaults.email {
-        didSet {
-            PlaygroundUserDefaults.email = email
-        }
-    }
-
-    @Published var enableOwnershipPermission: Bool = PlaygroundUserDefaults.enableOwnershipPermission {
-        didSet {
-            PlaygroundUserDefaults.enableOwnershipPermission = enableOwnershipPermission
-        }
-    }
-
-    @Published var enableBalancesPermission: Bool = PlaygroundUserDefaults.enableBalancesPermission {
-        didSet {
-            PlaygroundUserDefaults.enableBalancesPermission = enableBalancesPermission
-        }
-    }
-
-    @Published var enableTransactionsPermission: Bool = PlaygroundUserDefaults.enableTransactionsPermission {
-        didSet {
-            PlaygroundUserDefaults.enableTransactionsPermission = enableTransactionsPermission
-        }
-    }
-
-    enum CustomScenario: String, CaseIterable, Identifiable {
-        case none = "none"
-        case customKeys = "custom_keys"
-        case partnerD = "partner_d"
-        case partnerF = "partner_f"
-        case partnerM = "partner_m"
-        case appToApp = "app_to_app"
-        /// Used for random bug bashes and could changes any time
-        case bugBash = "bug_bash"
-
-        var id: String {
-            return rawValue
-        }
-
-        var displayName: String {
-            switch self {
-            case .none:
-                return "Default"
-            case .customKeys:
-                return "Custom Keys"
-            case .partnerD:
-                return "Partner D"
-            case .partnerF:
-                return "Partner F"
-            case .partnerM:
-                return "Partner M"
-            case .appToApp:
-                return "App to App (Chase)"
-            case .bugBash:
-                return "Bug Bash"
+    var testMode: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.testMode
+            },
+            set: {
+                self.playgroundConfiguration.testMode = $0
+                self.objectWillChange.send()
             }
-        }
-    }
-    @Published var customScenario: CustomScenario = CustomScenario(rawValue: PlaygroundUserDefaults.customScenario) ?? .none {
-        didSet {
-            PlaygroundUserDefaults.customScenario = customScenario.rawValue
-        }
-    }
-    @Published var customPublicKey: String = PlaygroundUserDefaults.customPublicKey {
-        didSet {
-            PlaygroundUserDefaults.customPublicKey = customPublicKey
-        }
-    }
-    @Published var customSecretKey: String = PlaygroundUserDefaults.customSecretKey {
-        didSet {
-            PlaygroundUserDefaults.customSecretKey = customSecretKey
-        }
+        )
     }
 
-    @Published var showLiveEvents: Bool = PlaygroundUserDefaults.showLiveEvents {
-        didSet {
-            PlaygroundUserDefaults.showLiveEvents = showLiveEvents
-        }
+    var customPublicKey: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.customPublicKey
+            },
+            set: {
+                self.playgroundConfiguration.customPublicKey = $0
+                self.objectWillChange.send()
+            }
+        )
     }
+    var customSecretKey: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.customSecretKey
+            },
+            set: {
+                self.playgroundConfiguration.customSecretKey = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+    var useCase: Binding<PlaygroundConfiguration.UseCase> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.useCase
+            },
+            set: {
+                self.playgroundConfiguration.useCase = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+    var email: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.email
+            },
+            set: {
+                self.playgroundConfiguration.email = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+    var balancesPermission: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.balancesPermission
+            },
+            set: {
+                self.playgroundConfiguration.balancesPermission = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+    var ownershipPermission: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.ownershipPermission
+            },
+            set: {
+                self.playgroundConfiguration.ownershipPermission = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+    var paymentMethodPermission: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.paymentMethodPermission
+            },
+            set: {
+                self.playgroundConfiguration.paymentMethodPermission = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+    var transactionsPermission: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.transactionsPermission
+            },
+            set: {
+                self.playgroundConfiguration.transactionsPermission = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+    var liveEvents: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.liveEvents
+            },
+            set: {
+                self.playgroundConfiguration.liveEvents = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+    @Published var showConfigurationView = false
+    private(set) lazy var playgroundConfigurationViewModel: PlaygroundManageConfigurationViewModel = {
+       return PlaygroundManageConfigurationViewModel(
+        playgroundConfiguration: playgroundConfiguration,
+        didSelectClose: { [weak self] in
+            self?.showConfigurationView = false
+        }
+       )
+    }()
 
     @Published var isLoading: Bool = false
 
+    private var cancellables: Set<AnyCancellable> = []
+
     init() {
-        self.nativeSelection = {
-            if let enableNative = PlaygroundUserDefaults.enableNative {
-                return enableNative ? .native : .web
-            } else {
-                return .automatic
+        print(PlaygroundConfiguration.shared.configurationString)
+        playgroundConfigurationViewModel
+            .objectWillChange
+            .sink { [weak self] in
+                self?.objectWillChange.send()
             }
-        }()
+            .store(in: &cancellables)
     }
 
     func didSelectShow() {
@@ -161,21 +187,13 @@ final class PlaygroundMainViewModel: ObservableObject {
     private func setup() {
         isLoading = true
         SetupPlayground(
-            enableTestMode: enableTestMode,
-            flow: flow.rawValue,
-            email: email,
-            enableOwnershipPermission: enableOwnershipPermission,
-            enableBalancesPermission: enableBalancesPermission,
-            enableTransactionsPermission: enableTransactionsPermission,
-            customScenario: customScenario.rawValue,
-            customPublicKey: customPublicKey,
-            customSecretKey: customSecretKey
+            configurationDictionary: playgroundConfiguration.configurationDictionary
         ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
                     onEvent: { event in
-                        if self?.showLiveEvents == true {
+                        if self?.liveEvents.wrappedValue == true {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
                             BannerHelper.shared.showBanner(with: message, for: 3.0)
                         }
@@ -230,19 +248,14 @@ account_ids=\(session.accounts.data.map({ $0.id }))
 }
 
 private func SetupPlayground(
-    enableTestMode: Bool,
-    flow: String,
-    email: String,
-    enableOwnershipPermission: Bool,
-    enableBalancesPermission: Bool,
-    enableTransactionsPermission: Bool,
-    customScenario: String,
-    customPublicKey: String,
-    customSecretKey: String,
+    configurationDictionary: [String: Any],
     completionHandler: @escaping ([String: String]?) -> Void
 ) {
-    if !enableTestMode && email == "test@test.com" {
-        assertionFailure("\(email) will not work with livemode, it will return rate limit exceeded")
+    if
+        (configurationDictionary["test_mode"] as? Bool) == true,
+        (configurationDictionary["email"] as? String) == "test@test.com"
+    {
+        assertionFailure("test@test.com will not work with livemode, it will return rate limit exceeded")
     }
 
     let baseURL = "https://financial-connections-playground-ios.glitch.me"
@@ -253,15 +266,12 @@ private func SetupPlayground(
     urlRequest.httpMethod = "POST"
     urlRequest.httpBody = {
         var requestBody: [String: Any] = [:]
-        requestBody["enable_test_mode"] = enableTestMode
-        requestBody["flow"] = flow
-        requestBody["email"] = email
-        requestBody["enable_ownership_permission"] = enableOwnershipPermission
-        requestBody["enable_balances_permission"] = enableBalancesPermission
-        requestBody["enable_transactions_permission"] = enableTransactionsPermission
-        requestBody["custom_scenario"] = customScenario
-        requestBody["custom_public_key"] = customPublicKey
-        requestBody["custom_secret_key"] = customSecretKey
+        requestBody["new_playground"] = true
+        requestBody.merge(
+            configurationDictionary,
+            uniquingKeysWith: { _, new in return new }
+        )
+
         return try! JSONSerialization.data(
             withJSONObject: requestBody,
             options: .prettyPrinted
@@ -276,12 +286,17 @@ private func SetupPlayground(
         ) { data, response, error in
             if error == nil,
                 let response = response as? HTTPURLResponse,
-                response.statusCode == 200,
                 let data = data,
                 let responseJson = try? JSONDecoder().decode([String: String].self, from: data)
             {
-                DispatchQueue.main.async {
-                    completionHandler(responseJson)
+                if response.statusCode == 200 {
+                    DispatchQueue.main.async {
+                        completionHandler(responseJson)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        completionHandler(responseJson)
+                    }
                 }
             } else {
                 DispatchQueue.main.async {
@@ -297,6 +312,16 @@ private func PresentFinancialConnectionsSheet(
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {
+    if let error = setupPlaygroundResponseJSON["error"] {
+        completionHandler(
+            .failed(
+                error: FinancialConnectionsSheetError.unknown(
+                    debugDescription: error
+                )
+            )
+        )
+        return
+    }
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
         completionHandler(
             .failed(

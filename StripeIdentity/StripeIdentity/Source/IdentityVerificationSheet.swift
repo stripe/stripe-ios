@@ -125,7 +125,9 @@ final public class IdentityVerificationSheet {
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
     ) {
-        verificationSheetController?.analyticsClient.startTrackingTimeToScreen(from: nil)
+        if let sheetController = verificationSheetController {
+            sheetController.analyticsClient.startTrackingTimeToScreen(from: nil, sheetController: sheetController)
+        }
 
         // Overwrite completion closure to retain self until called
         let completion: (VerificationFlowResult) -> Void = { result in
@@ -174,7 +176,7 @@ final public class IdentityVerificationSheet {
             navigationController = verificationSheetController.flowController.navigationController
             verificationSheetController.loadAndUpdateUI(skipTestMode: false)
 
-            verificationSheetController.analyticsClient.logSheetPresented()
+            verificationSheetController.analyticsClient.logSheetPresented(sheetController: verificationSheetController)
         } else if #available(iOS 14.3, *) {
             // Validate client secret
             guard let clientSecret = clientSecret else {

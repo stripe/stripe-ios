@@ -10,7 +10,6 @@ import Stripe
 import StripeApplePay
 import StripeCardScan
 import StripeFinancialConnections
-import StripeIdentity
 import UIKit
 
 class ViewController: UIViewController {
@@ -19,10 +18,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "test"
         StripeAPI.paymentRequest(withMerchantIdentifier: "test", country: "US", currency: "USD")
-
-        if #available(iOS 14.3, *) {
-            let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
-        }
 
         if #available(iOS 12.0, *) {
             let _ = FinancialConnectionsSheet(

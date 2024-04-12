@@ -16,6 +16,10 @@ private let formSpecsURL = StripePaymentSheetBundleLocator.resourcesBundle.url(f
 /// - Note: You must `load(completion:)` to load the specs json file into memory before calling `formSpec(for:)`
 /// - To overwrite any of these specs use load(from:)
 class FormSpecProvider {
+    enum Error: Swift.Error {
+        case failedToLoadSpecs
+        case formSpecsNotReady
+    }
     static var shared: FormSpecProvider = FormSpecProvider()
     fileprivate var formSpecs: [String: FormSpec] = [:]
 
@@ -46,6 +50,9 @@ class FormSpecProvider {
                 self?.hasLoadedFromDisk = true
                 completion?(true)
             } catch {
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                                  error: Error.failedToLoadSpecs)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 completion?(false)
                 return
             }
@@ -82,7 +89,13 @@ class FormSpecProvider {
     }
 
     func formSpec(for paymentMethodType: String) -> FormSpec? {
-        assert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
+        if formSpecs.isEmpty {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.formSpecsNotReady,
+                                              additionalNonPIIParams: ["payment_method_type": paymentMethodType])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        }
+        stpAssert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
         return formSpecs[paymentMethodType]
     }
 

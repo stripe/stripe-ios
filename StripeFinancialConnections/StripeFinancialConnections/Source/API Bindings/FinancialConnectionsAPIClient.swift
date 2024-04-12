@@ -87,14 +87,18 @@ protocol FinancialConnectionsAPIClient {
 
     // MARK: - Networking
 
-    func saveAccountsToLink(
+    func saveAccountsToNetworkAndLink(
+        shouldPollAccounts: Bool,
+        selectedAccounts: [FinancialConnectionsPartnerAccount],
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
-        selectedAccountIds: [String],
         consumerSessionClientSecret: String?,
         clientSecret: String
-    ) -> Future<FinancialConnectionsSessionManifest>
+    ) -> Future<(
+        manifest: FinancialConnectionsSessionManifest,
+        customSuccessPaneMessage: String?
+    )>
 
     func disableNetworking(
         disabledReason: String?,
@@ -480,7 +484,102 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     // MARK: - Networking
 
-    func saveAccountsToLink(
+    func saveAccountsToNetworkAndLink(
+        shouldPollAccounts: Bool,
+        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<(
+        manifest: FinancialConnectionsSessionManifest,
+        customSuccessPaneMessage: String?
+    )> {
+        let saveAccountsToLinkHandler: () -> Future<(
+            manifest: FinancialConnectionsSessionManifest,
+            customSuccessPaneMessage: String?
+        )> = {
+            return self.saveAccountsToLink(
+                emailAddress: emailAddress,
+                phoneNumber: phoneNumber,
+                country: country,
+                selectedAccountIds: selectedAccounts.map({ $0.id }),
+                consumerSessionClientSecret: consumerSessionClientSecret,
+                clientSecret: clientSecret
+            )
+            .chained { manifest in
+                return Promise(
+                    value: (
+                        manifest: manifest,
+                        customSuccessPaneMessage: manifest.displayText?.successPane?.subCaption
+                    )
+                )
+            }
+        }
+        let linkedAccountIds = selectedAccounts.compactMap({ $0.linkedAccountId })
+        if
+            shouldPollAccounts,
+            !linkedAccountIds.isEmpty
+        {
+            let promise = Promise<(
+                manifest: FinancialConnectionsSessionManifest,
+                customSuccessPaneMessage: String?
+            )>()
+            pollAccountNumbersForSelectedAccounts(
+                linkedAccountIds: linkedAccountIds
+            )
+            .observe { result in
+                switch result {
+                case .success:
+                    saveAccountsToLinkHandler()
+                        .observe { result in
+                            promise.fullfill(with: result)
+                        }
+                case .failure(let error):
+                    self.disableNetworking(
+                        disabledReason: "account_numbers_not_available",
+                        clientSecret: clientSecret
+                    ).observe { _ in } // ignoring return is intentional
+
+                    promise.reject(with: error)
+                }
+            }
+            return promise
+        } else {
+            return saveAccountsToLinkHandler()
+        }
+    }
+
+    private func pollAccountNumbersForSelectedAccounts(
+        linkedAccountIds: [String]
+    ) -> Future<EmptyResponse> {
+        let body: [String: Any] = [
+            "linked_accounts": linkedAccountIds,
+        ]
+        let pollingHelper = APIPollingHelper(
+            apiCall: { [weak self] in
+                guard let self = self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(
+                            debugDescription: "STPAPIClient deallocated."
+                        )
+                    )
+                }
+                return self.get(
+                    resource: APIEndpointPollAccountNumbers,
+                    parameters: body
+                )
+            },
+            pollTimingOptions: APIPollingHelper<EmptyResponse>.PollTimingOptions(
+                initialPollDelay: 1.0,
+                maxNumberOfRetries: 20
+            )
+        )
+        return pollingHelper.startPollingApiCall()
+    }
+
+    private func saveAccountsToLink(
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
@@ -637,3 +736,4 @@ private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_acco
 private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"
 private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
 private let APIEndpointConsumerSessions = "connections/link_account_sessions/consumer_sessions"
+private let APIEndpointPollAccountNumbers = "link_account_sessions/poll_account_numbers"

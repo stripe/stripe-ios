@@ -26,6 +26,8 @@
 
 "Date of birth does not look valid" = "Gimimo data neatrodo tinkama";
 
+"Details not visible" = "Nematyti detalių";
+
 "Flip your identity card over to the other side" = "Apverskite asmens tapatybės kortelę kita puse";
 
 "Front identity card photo successfully uploaded" = "Sėkmingai įkelta asmens tapatybės kortelės priekinės pusės nuotrauka";
@@ -46,9 +48,13 @@
 
 "Individual CPF" = "Asmens CPF";
 
+"Keep ID level" = "Sulygiuokite tapatybės dokumentą";
+
 "Last 4 of Social Security number" = "Paskutiniai 4 socialinio draudimo numerio skaitmenys";
 
 "Loading" = "Įkeliama";
+
+"Make sure all details are visible and focus" = "Įsitikinkite, kad visos detalės yra matomos ir sufokusuotos";
 
 "Make sure you're in a well lit space." = "Įsitikinkite, kad esate gerai apšviestoje erdvėje.";
 
@@ -56,7 +62,11 @@
 
 "Move farther" = "Patraukite toliau";
 
+"Move to a well-lit area" = "Padėkite gerai apšviestoje vietoje";
+
 "NRIC or FIN" = "NRIC arba FIN";
+
+"No document detected" = "Neaptiktas joks dokumentas";
 
 "Personal ID number" = "Asmens kodas";
 

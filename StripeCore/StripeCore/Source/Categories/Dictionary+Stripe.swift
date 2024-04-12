@@ -45,15 +45,19 @@ extension Dictionary {
         return newDict
     }
 
-    @inlinable public mutating func mergeAssertingOnOverwrites(_ other: [Key: Value]) {
+    public mutating func mergeAssertingOnOverwrites(_ other: [Key: Value]) {
         merge(other) { a, b in
-#if DEBUG
-assertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
-#endif
+            stpAssertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
             return a
         }
     }
 
+    public func mergingAssertingOnOverwrites<S>(_ other: S) -> [Key: Value] where S: Sequence, S.Element == (Key, Value) {
+        merging(other) { a, b in
+            stpAssertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
+            return a
+        }
+    }
 }
 
 extension Dictionary where Value == Any {

@@ -17,10 +17,6 @@ extension STPAnalyticsClient {
         apiClient: STPAPIClient
     ) {
         var additionalParams = [:] as [String: Any]
-        if Self.isSimulatorOrTest {
-            additionalParams["is_development"] = true
-        }
-
         additionalParams["address_data_blob"] = addressAnalyticData?.analyticsPayload
 
         let analytic = AddressAnalytic(event: event,
