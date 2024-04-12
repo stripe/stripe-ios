@@ -95,13 +95,13 @@ jobs:
 
       - uses: peter-evans/create-or-update-comment@v1
         id: create-update-comment
-        if: steps.check-api.outputs.new_apis_detected == 'yes'
+        if: steps.public-api-diff.outputs.diff
         with:
           body: |
             ⚠️ Change in public APIs detected:
 
             ```diff
-            ${{ env.API_DIFF }}
+            ${{ steps.public-api-diff.outputs.diff }}
             ```
 
             Consider the following:
@@ -116,5 +116,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail if not acknowledged
-        if: "steps.check-api.outputs.new_apis_detected == 'yes' && !contains(github.event.pull_request.labels.*.name, 'adds public API')"
+        if: "steps.public-api-diff.outputs.diff && !contains(github.event.pull_request.labels.*.name, 'adds public API')"
         run: exit 1
