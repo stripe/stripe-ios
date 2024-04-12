@@ -24,7 +24,7 @@ import UIKit
     @objc(STPCollectBankAccountErrorUnexpectedError)
     case unexpectedError
 }
-
+// Temp modification to get workflow to run
 /// A class responsible for collecting bank account information
 public class STPBankAccountCollector: NSObject {
 
