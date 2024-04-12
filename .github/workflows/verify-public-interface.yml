@@ -1,4 +1,4 @@
-name: Check for new public APIs
+name: Verify public interface
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]
