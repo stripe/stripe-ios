@@ -1,6 +1,7 @@
 ## 23.27.0 2024-04-08
 ### Payments
 * [Added] Support for Alma bindings.
+* [Fixed] STPBankAccountCollector errors now use "STPBankAccountCollectorErrorDomain" instead of "STPPaymentHandlerErrorDomain".
 
 ### All
 * [Fixed] Fixed an issue with generating App Privacy reports.
