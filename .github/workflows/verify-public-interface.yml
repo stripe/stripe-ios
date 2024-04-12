@@ -24,8 +24,6 @@ jobs:
         id: build-frameworks
         run: |
           modules=("StripeUICore" "StripeCameraCore" "StripeApplePay" "StripePayments" "StripePaymentsUI" "StripePaymentSheet" "StripeCardScan")
-          mkdir -p ${{ github.workspace }}/build
-          echo "BUILD_DIR=${{ github.workspace }}/build" >> $GITHUB_ENV
 
           # Checkout old version, build and generate API JSON
           echo "Building and generating public interface from master..."
@@ -37,7 +35,7 @@ jobs:
           -scheme "AllStripeFrameworks" \
           -destination 'generic/platform=iOS Simulator' \
           -configuration "Release" \
-          -archivePath "#{build_dir}/StripeFrameworks-sim-master.xcarchive" \
+          -archivePath "./StripeFrameworks-sim-master.xcarchive" \
           -sdk iphonesimulator \
           SUPPORTS_MACCATALYST=NO \
           BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
@@ -45,7 +43,7 @@ jobs:
           SKIP_INSTALL=NO
 
           xcodebuild -create-xcframework \
-          -framework "#{build_dir}/StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks/StripePaymentSheet-master.framework" \
+          -framework "./StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks/StripePaymentSheet-master.framework" \
           -output "./StripePaymentSheet-master.xcframework"
 
           # Checkout new version, build and generate API JSON
@@ -58,7 +56,7 @@ jobs:
           -scheme "AllStripeFrameworks" \
           -destination 'generic/platform=iOS Simulator' \
           -configuration "Release" \
-          -archivePath "#{build_dir}/StripeFrameworks-sim-new.xcarchive" \
+          -archivePath "./StripeFrameworks-sim-new.xcarchive" \
           -sdk iphonesimulator \
           SUPPORTS_MACCATALYST=NO \
           BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
@@ -66,7 +64,7 @@ jobs:
           SKIP_INSTALL=NO
 
           xcodebuild -create-xcframework \
-          -framework "#{build_dir}/StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks/StripePaymentSheet-new.framework" \
+          -framework "./StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks/StripePaymentSheet-new.framework" \
           -output "./StripePaymentSheet-new.xcframework"
 
           echo "Generating public interface diff..."
