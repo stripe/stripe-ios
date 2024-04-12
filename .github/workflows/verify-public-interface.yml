@@ -68,7 +68,12 @@ jobs:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
           SKIP_INSTALL=NO
 
-          xcrun swift-api-digester -dump-sdk -module StripePaymentSheet -o new-StripePaymentSheet.json -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk -I .build/debug
+          xcrun swift-api-digester \
+          -dump-sdk \
+          -module StripePaymentSheet \
+          -o new-StripePaymentSheet.json \
+          -sdk iphonesimulator \
+          -I "#{build_dir}/StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks"
 
       - name: Check for new APIs
         id: check-api
