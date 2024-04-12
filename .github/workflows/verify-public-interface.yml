@@ -69,7 +69,7 @@ jobs:
 
           echo "Generating public interface diff..."
           
-          export API_DIFF=$(ruby ci_scripts/diff_pubilc_interface.rb \
+          export API_DIFF=$(ruby ci_scripts/diff_public_interface.rb \
           StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json \
           StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json)
           
