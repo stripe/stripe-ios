@@ -43,7 +43,7 @@ jobs:
           SKIP_INSTALL=NO
 
           xcodebuild -create-xcframework \
-          -framework "./StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks/StripePaymentSheet-master.framework" \
+          -framework "./StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks/StripePaymentSheet.framework" \
           -output "./StripePaymentSheet-master.xcframework"
 
           # Checkout new version, build and generate API JSON
@@ -64,7 +64,7 @@ jobs:
           SKIP_INSTALL=NO
 
           xcodebuild -create-xcframework \
-          -framework "./StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks/StripePaymentSheet-new.framework" \
+          -framework "./StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks/StripePaymentSheet.framework" \
           -output "./StripePaymentSheet-new.xcframework"
 
           echo "Generating public interface diff..."
