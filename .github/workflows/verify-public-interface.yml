@@ -70,8 +70,8 @@ jobs:
           echo "Generating public interface diff..."
           
           ruby ci_scripts/diff_public_interface.rb \
-          StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json \
-          StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json > diff.txt
+          StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/arm64-apple-ios-simulator.swiftinterface \
+          StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/arm64-apple-ios-simulator.swiftinterface > diff.txt
           
       - name: Read public interface changes
         id: public-api-diff 
