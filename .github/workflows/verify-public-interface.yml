@@ -69,21 +69,22 @@ jobs:
 
           echo "Generating public interface diff..."
           
-          touch diff.txt
           ruby ci_scripts/diff_public_interface.rb \
           StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json \
           StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/x86_64-apple-ios-simulator.abi.json > diff.txt
           
-          echo "API_DIFF=$API_DIFF" >> $GITHUB_ENV
-
-      - name: Set API_DIFF if changes exist
+      - name: Read public interface changes
+        id: public-api-diff 
+        run: echo "::set-output name=diff::$(<diff_result.txt)"
+  
+      - name: Exit if no public API changes
+        id: check_diff
         run: |
-          if [[ -s diff.txt ]]; then
-            output=$(cat diff.txt)
-            echo "API_DIFF=$output" >> $GITHUB_ENV
-            echo "::set-output name=new_apis_detected::yes"
+          if [ -z "${{ steps.public-api-diff.outputs.diff }}" ]; then
+            echo "No public API changes detected, exiting..."
+            exit 0
           else
-            echo "::set-output name=new_apis_detected::"
+            echo "Public API changes detected, continue workflow..."
           fi
 
       - uses: peter-evans/find-comment@v1

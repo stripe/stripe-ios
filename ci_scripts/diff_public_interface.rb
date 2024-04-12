@@ -17,4 +17,8 @@ if ARGV.length < 2
   exit
 end
 
-puts diff(ARGV[0], ARGV[1])
+diff_result = diff(ARGV[0], ARGV[1])
+
+if !diff_result.empty?
+  File.open("diff_result.txt", 'w') { |f| f.write diff_result }
+end
