@@ -25,31 +25,7 @@ jobs:
         run: |
           modules=("StripeUICore" "StripeCameraCore" "StripeApplePay" "StripePayments" "StripePaymentsUI" "StripePaymentSheet" "StripeCardScan")
           
-          # Set destination
-          destination="platform=iOS Simulator,name=iPhone 12 mini,OS=16.2"
-
-          for module in "${modules[@]}"
-          do
-            echo "Checking module: $module ..."
-    
-            # Checkout old version, build and generate API JSON
-            echo "Building and generating old version..."
-            git checkout ${{ github.base_ref }}
-            xcodebuild clean build -scheme $module -destination "$destination" -sdk iphonesimulator
-            xcrun swift-api-digester -dump-sdk -module $module -o old-$module.json -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk -I .build/debug
-
-            # Checkout new version, build and generate API JSON
-            echo "Building and generating new version..."
-            git checkout ${{ github.head_ref }}
-            xcodebuild clean build -scheme $module -destination "$destination" -sdk iphonesimulator
-            xcrun swift-api-digester -dump-sdk -module $module -o new-$module.json -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk -I .build/debug
-    
-            # Compare APIs
-            echo "Comparing APIs..."
-            xcrun swift-api-digester -diagnose-sdk --input-paths old-$module.json --input-paths new-$module.json > output-$module.txt
-            echo "Done with $module."
-          done
-          echo "API_DIFF=$(cat output-*.txt)" >> $GITHUB_ENV
+          ruby ci_scripts/export_builds.rb
 
       - name: Check for new APIs
         id: check-api
