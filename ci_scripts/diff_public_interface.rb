@@ -1,4 +1,5 @@
 require 'open3'
+require 'shellwords'
 
 def diff(old_path, new_path)
   stdout, _stderr, _status = Open3.capture3("diff", "-u", old_path, new_path)
@@ -17,4 +18,4 @@ if ARGV.length < 2
   exit
 end
 
-puts diff(ARGV[0], ARGV[1])
+puts Shellwords.escape(diff(ARGV[0], ARGV[1]))
