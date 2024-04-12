@@ -89,7 +89,9 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// - seealso: ApplePayExampleViewController for an example
 @objc(STPApplePayContext)
 public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
-
+    enum Error: Swift.Error {
+        case invalidFinalState
+    }
     /// A special string that can be passed in place of a intent client secret to force showing success and return a PaymentState of `success`.
     /// - Note: ⚠️ If provided, the SDK performs no action to complete the payment or setup - it doesn't confirm a PaymentIntent or SetupIntent or handle next actions.
     ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful. 
@@ -232,7 +234,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @_spi(STP) public var confirmType: ConfirmType?
     // Internal state
     private var paymentState: PaymentState = .notStarted
-    private var error: Error?
+    private var error: Swift.Error?
     /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) calls our didComplete delegate method
     private var didCancelOrTimeoutWhilePending = false
     private var didPresentApplePay = false
@@ -450,10 +452,10 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     // MARK: - Helpers
     func _completePayment(
         with payment: PKPayment,
-        completion: @escaping (PKPaymentAuthorizationStatus, Error?) -> Void
+        completion: @escaping (PKPaymentAuthorizationStatus, Swift.Error?) -> Void
     ) {
         // Helper to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
-        let handleFinalState: ((PaymentState, Error?) -> Void) = { state, error in
+        let handleFinalState: ((PaymentState, Swift.Error?) -> Void) = { state, error in
             switch state {
             case .error:
                 self.paymentState = .error
@@ -483,7 +485,10 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 }
                 return
             case .pending, .notStarted:
-                assert(false, "Invalid final state")
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                  error: Error.invalidFinalState)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                stpAssertionFailure("Invalid final state")
                 return
             }
         }
@@ -679,7 +684,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
     }
 
-    func callDidCompleteDelegate(status: PaymentStatus, error: Error?) {
+    func callDidCompleteDelegate(status: PaymentStatus, error: Swift.Error?) {
         if let delegate = self.delegate {
             if let delegate = delegate as? ApplePayContextDelegate {
                 delegate.applePayContext(self, didCompleteWith: status, error: error)
