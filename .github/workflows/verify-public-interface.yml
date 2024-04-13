@@ -109,7 +109,7 @@ jobs:
             - If these APIs need to be `public`, assess whether they require an API review.
             
             If you are modifying or removing a public API:
-            - If you are removing or modifying an existing public API does this require a breaking change?
+            - Does this require a breaking version change?
             - Do these changes require API review?
 
             If you confirm these APIs need to be added/updated and have undergone necessary review, add the label `modifies public API` to this PR to acknowledge and bypass this check.
