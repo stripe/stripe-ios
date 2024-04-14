@@ -25,51 +25,11 @@ jobs:
         run: |
           modules=("StripeUICore" "StripeCameraCore" "StripeApplePay" "StripePayments" "StripePaymentsUI" "StripePaymentSheet" "StripeCardScan")
 
-          # Checkout old version, build and generate API JSON
-          echo "Building and generating public interface from master..."
-          git checkout ${{ github.base_ref }}
-          
-          xcodebuild clean archive \
-          -quiet \
-          -workspace "Stripe.xcworkspace" \
-          -scheme "AllStripeFrameworks" \
-          -destination 'generic/platform=iOS Simulator' \
-          -configuration "Release" \
-          -archivePath "./StripeFrameworks-sim-master.xcarchive" \
-          -sdk iphonesimulator \
-          SUPPORTS_MACCATALYST=NO \
-          BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
-          SKIP_INSTALL=NO
-
-          xcodebuild -create-xcframework \
-          -framework "./StripeFrameworks-sim-master.xcarchive/Products/Library/Frameworks/StripePaymentSheet.framework" \
-          -output "./StripePaymentSheet-master.xcframework"
-
-          # Checkout new version, build and generate API JSON
-          echo "Building and generating public interface from current branch..."
-          git checkout ${{ github.head_ref }}
-
-          xcodebuild clean archive \
-          -quiet \
-          -workspace "Stripe.xcworkspace" \
-          -scheme "AllStripeFrameworks" \
-          -destination 'generic/platform=iOS Simulator' \
-          -configuration "Release" \
-          -archivePath "./StripeFrameworks-sim-new.xcarchive" \
-          -sdk iphonesimulator \
-          SUPPORTS_MACCATALYST=NO \
-          BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
-          SKIP_INSTALL=NO
-
-          xcodebuild -create-xcframework \
-          -framework "./StripeFrameworks-sim-new.xcarchive/Products/Library/Frameworks/StripePaymentSheet.framework" \
-          -output "./StripePaymentSheet-new.xcframework"
+          ruby ci_scripts/api_diff/build_xcframeworks.rb
 
           echo "Generating public interface diff..."
           
-          ruby ci_scripts/diff_public_interface.rb \
+          ruby ci_scripts/api_diff/diff_public_interface.rb \
           StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/arm64-apple-ios-simulator.swiftinterface \
           StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/arm64-apple-ios-simulator.swiftinterface > diff.txt
           
