@@ -2172,8 +2172,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
 
-    // MARK: - External Venmo/multiple external payment methods
-    func testExternalVenmoPaymentSheet() throws {
+    // MARK: - Multiple external payment methods/external Venmo
+    func testMultipleExternalPaymentMethodsPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.externalPaymentMethods = .both // test multiple external payment methods can load
 
@@ -2202,7 +2202,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
 
-    func testExternalVenmoPaymentSheetFlowController() throws {
+    func testMultipleExternalPaymentMethodsPaymentSheetFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.externalPaymentMethods = .both // test multiple external payment methods can load
         settings.uiStyle = .flowController
