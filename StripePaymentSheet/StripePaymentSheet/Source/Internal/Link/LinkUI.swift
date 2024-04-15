@@ -52,10 +52,6 @@ enum LinkUI {
     static let smallContentSpacing: CGFloat = 8
 
     static let tinyContentSpacing: CGFloat = 4
-
-    /// Enable 2024 brand
-    /// Delete this after rollout. (~May 2024)
-    @_spi(STP) public static var useNewBrand = false
 }
 
 // MARK: Development flags
