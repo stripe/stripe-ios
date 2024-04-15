@@ -1,4 +1,3 @@
-# create a file called "get_frameworks.rb"
 require 'yaml'
 
 module GetFrameworks
