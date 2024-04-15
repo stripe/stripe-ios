@@ -91,7 +91,7 @@ extension STPPaymentMethod {
         case .SEPADebit:
             return Image.carousel_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         case .link:
-            return Image.link_logo.makeImage()
+            return Image.link_logo.makeImage().withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()

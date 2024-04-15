@@ -138,7 +138,6 @@ final class PayWithLinkButton: UIControl {
     private lazy var payWithStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             payWithLinkView,
-            nil,
         ].compactMap({ $0 }))
         stackView.spacing = 6
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -154,7 +153,6 @@ final class PayWithLinkButton: UIControl {
             logoView,
             emailSeparatorView,
             emailLabel,
-            nil,
         ].compactMap({ $0 }))
         stackView.spacing = 8
         stackView.setCustomSpacing(14, after: logoView)
@@ -185,7 +183,6 @@ final class PayWithLinkButton: UIControl {
             cardBrandSeparatorView,
             cardBrandView,
             last4Label,
-            nil,
         ].compactMap({ $0 }))
         stackView.spacing = 10
         stackView.setCustomSpacing(5, after: cardBrandView)
