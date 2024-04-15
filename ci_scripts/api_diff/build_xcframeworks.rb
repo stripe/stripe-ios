@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'open3'
-require_relative 'get_frameworks' # adjust the path if required
+require_relative 'get_frameworks'
 
 # function to checkout git branch, build and generate API JSON
 def checkout_build_generate(branch, archive_name)

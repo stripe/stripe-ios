@@ -1,4 +1,5 @@
 require 'open3'
+require_relative 'get_frameworks'
 
 def diff(old_path, new_path)
   stdout, _stderr, _status = Open3.capture3("diff", "-u", old_path, new_path)
