@@ -288,6 +288,17 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case paypal
         case all
         case off
+
+        var paymentMethods: [String]? {
+            switch self {
+            case .paypal:
+                return ["external_paypal"]
+            case .all:
+                return ExternalPaymentMethods.allExternalPaymentMethods
+            case .off:
+                return nil
+            }
+        }
     }
 
     enum PreferredNetworksEnabled: String, PickerEnum {
