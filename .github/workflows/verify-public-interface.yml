@@ -25,7 +25,7 @@ jobs:
         run: |
           ruby ci_scripts/api_diff/build_xcframeworks.rb
           ruby ci_scripts/api_diff/diff_public_interface.rb
-          echo "::set-output name=diff::$(<diff_result.txt)"
+          echo "::set-output name=diff::$(cat diff_result.txt | base64 -w 0)"
   
           - uses: peter-evans/find-comment@v1
           id: find_comment
@@ -40,9 +40,7 @@ jobs:
           body: |
               ⚠️ Public API changes detected:
       
-              ```diff
-              ${{ steps.build-frameworks-compare-interface.outputs.diff }}
-              ```
+              $(echo "${{ steps.build-frameworks-compare-interface.outputs.diff }}" | base64 --decode)
       
               If you are adding a new public API consider the following:
               - Do these APIs need to be `public` or can they be protected with `@_spi(STP)`?
