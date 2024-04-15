@@ -5,7 +5,7 @@ def diff(old_path, new_path)
   stdout, _stderr, _status = Open3.capture3("diff", "-u", old_path, new_path)
 
   diff_string = stdout.lines.map do |line|
-    case line[0..-1]
+    case line[0..1]
     when "+ " then "+ #{line[2..-1].strip}"
     when "- " then "- #{line[2..-1].strip}"
     else nil
@@ -25,12 +25,10 @@ for framework_name in GetFrameworks.framework_names("./modules.yaml")
 	# Add the framework headers and the diff to the final diff string
 	unless module_diff.empty?
 		final_diff_string += "\n### #{framework_name}\n```diff\n#{module_diff}\n```\n"
-    put final_diff_string
 	end
 end
 
 # Write the final diff string to a file
 if not final_diff_string.empty?
-  puts 'Wrote diff_result.txt'
 	File.open("diff_result.txt", 'w') { |f| f.write final_diff_string }
 end
