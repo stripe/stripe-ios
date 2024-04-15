@@ -21,7 +21,7 @@ def checkout_build_generate(branch, archive_name)
   SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
   SKIP_INSTALL=NO")
 
-  for framework_name in GetFrameworks.framework_names("../../modules.yaml")
+  for framework_name in GetFrameworks.framework_names("./modules.yaml")
     system("xcodebuild -create-xcframework \
         -framework './StripeFrameworks-sim-#{archive_name}.xcarchive/Products/Library/Frameworks/#{framework_name}.framework' \
         -output './#{framework_name}-#{archive_name}.xcframework'")
