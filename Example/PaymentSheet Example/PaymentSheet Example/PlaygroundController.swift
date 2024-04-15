@@ -107,7 +107,7 @@ class PlaygroundController: ObservableObject {
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
-        configuration.paymentMethodOrder = ["card", "external_paypal", "external_venmo"]
+        configuration.paymentMethodOrder = ["card", "external_paypal"]
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
@@ -242,8 +242,6 @@ class PlaygroundController: ObservableObject {
             switch settings.externalPaymentMethods {
             case .paypal:
                 return ["external_paypal"]
-            case .venmo:
-                return ["external_venmo"]
             case .all:
                 return PaymentSheetTestPlaygroundSettings.ExternalPaymentMethods.allExternalPaymentMethods
             case .off:

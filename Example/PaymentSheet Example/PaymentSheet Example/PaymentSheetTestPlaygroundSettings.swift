@@ -286,7 +286,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         ]
 
         case paypal
-        case venmo
         case all
         case off
     }
