@@ -29,13 +29,6 @@ jobs:
           cat diff_result.txt >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
-      - name: Exit if no public API changes
-        run: |
-          if [ -z "${{ env.diff }}" ]; then
-            echo "No public API changes detected, exiting..."
-            exit 0
-          fi
-
       - uses: peter-evans/find-comment@v1
         id: find_comment
         with:
