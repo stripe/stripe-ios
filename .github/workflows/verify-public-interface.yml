@@ -29,15 +29,12 @@ jobs:
         id: compare-interfaces
         run: |
           ruby ci_scripts/api_diff/diff_public_interface.rb
-          
-      - name: Read public interface changes
-        id: public-api-diff 
-        run: echo "::set-output name=diff::$(<diff_result.txt)"
+          echo "::set-output name=diff::$(<diff_result.txt)"
   
       - name: Exit if no public API changes
         id: check_diff
         run: |
-          if [ -z "${{ steps.public-api-diff.outputs.diff }}" ]; then
+          if [ -z "${{ steps.compare-interfaces.outputs.diff }}" ]; then
             echo "No public API changes detected, exiting..."
             exit 0
           else
@@ -52,13 +49,13 @@ jobs:
 
       - uses: peter-evans/create-or-update-comment@v1
         id: create-update-comment
-        if: steps.public-api-diff.outputs.diff
+        if: steps.compare-interfaces.outputs.diff
         with:
           body: |
             ⚠️ Public API changes detected:
 
             ```diff
-            ${{ steps.public-api-diff.outputs.diff }}
+            ${{ steps.compare-interfacesf.outputs.diff }}
             ```
 
             If you are adding a new public API consider the following:
@@ -76,5 +73,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail if not acknowledged
-        if: "steps.public-api-diff.outputs.diff && !contains(github.event.pull_request.labels.*.name, 'modifies public API')"
+        if: "steps.compare-interfaces.outputs.diff && !contains(github.event.pull_request.labels.*.name, 'modifies public API')"
         run: exit 1
