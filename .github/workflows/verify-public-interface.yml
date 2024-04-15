@@ -20,21 +20,17 @@ jobs:
         with:
             fetch-depth: 0
 
-      - name: Build frameworks
-        id: build-frameworks
+      - name: Build frameworks and compare interfaces
+        id: build-frameworks-compare-interface
         run: |
           ruby ci_scripts/api_diff/build_xcframeworks.rb
-
-      - name: Compare public interfaces
-        id: compare-interfaces
-        run: |
           ruby ci_scripts/api_diff/diff_public_interface.rb
           echo "::set-output name=diff::$(<diff_result.txt)"
   
       - name: Exit if no public API changes
         id: check_diff
         run: |
-          if [ -z "${{ steps.compare-interfaces.outputs.diff }}" ]; then
+          if [ -z "${{ steps.build-frameworks-compare-interface.outputs.diff }}" ]; then
             echo "No public API changes detected, exiting..."
             exit 0
           else
@@ -49,13 +45,13 @@ jobs:
 
       - uses: peter-evans/create-or-update-comment@v1
         id: create-update-comment
-        if: steps.compare-interfaces.outputs.diff
+        if: steps.build-frameworks-compare-interface.outputs.diff
         with:
           body: |
             ⚠️ Public API changes detected:
 
             ```diff
-            ${{ steps.compare-interfacesf.outputs.diff }}
+            ${{ steps.build-frameworks-compare-interface.outputs.diff }}
             ```
 
             If you are adding a new public API consider the following:
@@ -73,5 +69,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail if not acknowledged
-        if: "steps.compare-interfaces.outputs.diff && !contains(github.event.pull_request.labels.*.name, 'modifies public API')"
+        if: "steps.build-frameworks-compare-interface.outputs.diff && !contains(github.event.pull_request.labels.*.name, 'modifies public API')"
         run: exit 1
