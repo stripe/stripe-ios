@@ -234,11 +234,25 @@ class PlaygroundController: ObservableObject {
     }
 
     var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? {
-        guard settings.externalPayPalEnabled == .on else {
+        guard settings.externalPaymentMethods != .off else {
             return nil
         }
+
+        let externalPaymentMethods: [String] = {
+            switch settings.externalPaymentMethods {
+            case .paypal:
+                return ["external_paypal"]
+            case .venmo:
+                return ["external_venmo"]
+            case .both:
+                return ["external_paypal", "external_venmo"]
+            case .off:
+                return [] // handled above
+            }
+        }()
+
         return .init(
-            externalPaymentMethods: ["external_paypal"]
+            externalPaymentMethods: externalPaymentMethods
         ) { [weak self] externalPaymentMethodType, billingDetails, completion in
             self?.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails, completion: completion)
         }

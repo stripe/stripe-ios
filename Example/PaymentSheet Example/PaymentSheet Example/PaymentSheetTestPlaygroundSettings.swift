@@ -217,10 +217,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
-    enum ExternalPayPalEnabled: String, PickerEnum {
-        static let enumName: String = "External PayPal"
+    enum ExternalPaymentMethods: String, PickerEnum {
+        static let enumName: String = "External PMs"
 
-        case on
+        case paypal
+        case venmo
+        case both
         case off
     }
 
@@ -272,7 +274,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String?
     var autoreload: Autoreload
-    var externalPayPalEnabled: ExternalPayPalEnabled
+    var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
@@ -305,7 +307,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
-            externalPayPalEnabled: .off,
+            externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
