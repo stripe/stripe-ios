@@ -107,7 +107,7 @@ class PlaygroundController: ObservableObject {
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
-        configuration.paymentMethodOrder = ["card", "external_paypal"]
+        configuration.paymentMethodOrder = ["card", "external_paypal", "external_venmo"]
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
