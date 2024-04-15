@@ -23,15 +23,7 @@ jobs:
       - name: Build frameworks
         id: build-frameworks
         run: |
-          modules=("StripeUICore" "StripeCameraCore" "StripeApplePay" "StripePayments" "StripePaymentsUI" "StripePaymentSheet" "StripeCardScan")
-
           ruby ci_scripts/api_diff/build_xcframeworks.rb
-
-          echo "Generating public interface diff..."
-          
-          ruby ci_scripts/api_diff/diff_public_interface.rb \
-          StripePaymentSheet-master.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/arm64-apple-ios-simulator.swiftinterface \
-          StripePaymentSheet-new.xcframework/ios-arm64_x86_64-simulator/StripePaymentSheet.framework/Modules/StripePaymentSheet.swiftmodule/arm64-apple-ios-simulator.swiftinterface > diff.txt
           
       - name: Read public interface changes
         id: public-api-diff 
