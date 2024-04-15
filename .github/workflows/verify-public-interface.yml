@@ -24,6 +24,11 @@ jobs:
         id: build-frameworks
         run: |
           ruby ci_scripts/api_diff/build_xcframeworks.rb
+
+      - name: Compare public interfaces
+        id: compare-interfaces
+        run: |
+          ruby ci_scripts/api_diff/diff_public_interface.rb
           
       - name: Read public interface changes
         id: public-api-diff 
