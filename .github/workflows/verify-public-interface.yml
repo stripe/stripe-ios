@@ -25,37 +25,46 @@ jobs:
         run: |
           ruby ci_scripts/api_diff/build_xcframeworks.rb
           ruby ci_scripts/api_diff/diff_public_interface.rb
-          echo "::set-output name=diff::$(cat diff_result.txt | base64 -w 0)"
-  
-          - uses: peter-evans/find-comment@v1
-          id: find_comment
-          with:
-            issue-number: ${{ github.event.pull_request.number }}
-            body-includes: Public API changes detected
-        
+          echo "diff<<EOF" >> $GITHUB_ENV
+          cat diff_result.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+      - name: Exit if no public API changes
+        run: |
+          if [ -z "${{ env.diff }}" ]; then
+            echo "No public API changes detected, exiting..."
+            exit 0
+          fi
+
+      - uses: peter-evans/find-comment@v1
+        id: find_comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Public API changes detected
+
       - uses: peter-evans/create-or-update-comment@v1
         id: create-update-comment
-        if: steps.build-frameworks-compare-interface.outputs.diff
+        if: env.diff != ''
         with:
           body: |
-              ⚠️ Public API changes detected:
-      
-              $(echo "${{ steps.build-frameworks-compare-interface.outputs.diff }}" | base64 --decode)
-      
-              If you are adding a new public API consider the following:
-              - Do these APIs need to be `public` or can they be protected with `@_spi(STP)`?
-              - If these APIs need to be `public`, assess whether they require an API review.
-              
-              If you are modifying or removing a public API:
-              - Does this require a breaking version change?
-              - Do these changes require API review?
-      
-              If you confirm these APIs need to be added/updated and have undergone necessary review, add the label `modifies public API` to this PR to acknowledge and bypass this check.
+            ⚠️ Public API changes detected:
+
+            ${{ env.diff }}
+
+            If you are adding a new public API consider the following:
+            - Do these APIs need to be `public` or can they be protected with `@_spi(STP)`?
+            - If these APIs need to be `public`, assess whether they require an API review.
+            
+            If you are modifying or removing a public API:
+            - Does this require a breaking version change?
+            - Do these changes require API review?
+
+            If you confirm these APIs need to be added/updated and have undergone necessary review, add the label `modifies public API` to this PR to acknowledge and bypass this check.
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Fail if not acknowledged
-        if: steps.build-frameworks-compare-interface.outputs.diff  && !contains(github.event.pull_request.labels.*.name, 'modifies public API')
+        if: "env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'modifies public API')"
         run: exit 1
