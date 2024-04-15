@@ -31,4 +31,5 @@ end
 
 # Run function for master and head_ref
 checkout_build_generate("master", "master")
-checkout_build_generate(ENV['GITHUB_HEAD_REF'], "new")
+# checkout_build_generate(ENV['GITHUB_HEAD_REF'], "new")
+checkout_build_generate("porter/swift-api-digester", "new")
