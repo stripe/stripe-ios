@@ -244,8 +244,8 @@ class PlaygroundController: ObservableObject {
                 return ["external_paypal"]
             case .venmo:
                 return ["external_venmo"]
-            case .both:
-                return ["external_paypal", "external_venmo"]
+            case .all:
+                return PaymentSheetTestPlaygroundSettings.ExternalPaymentMethods.allExternalPaymentMethods
             case .off:
                 return [] // handled above
             }

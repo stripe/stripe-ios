@@ -2175,7 +2175,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     // MARK: - Multiple external payment methods/external Venmo
     func testMultipleExternalPaymentMethodsPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.externalPaymentMethods = .both // test multiple external payment methods can load
+        settings.externalPaymentMethods = .all // test multiple external payment methods can load
 
         loadPlayground(app, settings)
 
@@ -2204,7 +2204,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testMultipleExternalPaymentMethodsPaymentSheetFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.externalPaymentMethods = .both // test multiple external payment methods can load
+        settings.externalPaymentMethods = .all // test multiple external payment methods can load
         settings.uiStyle = .flowController
 
         loadPlayground(app, settings)
