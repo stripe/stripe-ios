@@ -2156,6 +2156,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayPal")?.waitForExistenceAndTap()
 
         app.buttons["Continue"].tap()
+
+        // Verify EPMs vend the correct PaymentOptionDisplayData
+        XCTAssertTrue(app.staticTexts["PayPal"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["external_paypal"].waitForExistence(timeout: 5.0))
+
         app.buttons["Confirm"].tap()
 
         XCTAssertNotNil(app.staticTexts["Confirm external_paypal?"])
