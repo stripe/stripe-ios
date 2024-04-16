@@ -2118,7 +2118,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     // MARK: - External PayPal 
     func testExternalPaypalPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.externalPaymentMethods = .paypal
+        settings.externalPayPalEnabled = .paypal
 
         loadPlayground(app, settings)
 
@@ -2145,7 +2145,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testExternalPaypalPaymentSheetFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.externalPaymentMethods = .paypal
+        settings.externalPayPalEnabled = .paypal
         settings.uiStyle = .flowController
 
         loadPlayground(app, settings)
@@ -2159,67 +2159,6 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.buttons["Confirm"].tap()
 
         XCTAssertNotNil(app.staticTexts["Confirm external_paypal?"])
-        app.buttons["Cancel"].tap()
-        XCTAssertNotNil(app.staticTexts["Payment canceled."])
-
-        let payButton = app.buttons["Confirm"]
-        payButton.tap()
-        app.buttons["Fail"].tap()
-        XCTAssertTrue(app.staticTexts["Payment failed: Error Domain= Code=0 \"Something went wrong!\" UserInfo={NSLocalizedDescription=Something went wrong!}"].waitForExistence(timeout: 5.0))
-
-        payButton.tap()
-        app.alerts.buttons["Confirm"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
-    }
-
-    // MARK: - Multiple external payment methods/external Venmo
-    func testMultipleExternalPaymentMethodsPaymentSheet() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.externalPaymentMethods = .all // test multiple external payment methods can load
-
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
-        let payButton = app.buttons["Pay $50.99"]
-        // Assert PayPal is visible when using both external payment methods
-        XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayPal")?.waitForExistence(timeout: 5.0) ?? false)
-        guard let venmo = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Venmo") else {
-            XCTFail()
-            return
-        }
-        venmo.tap()
-        payButton.tap()
-        XCTAssertNotNil(app.staticTexts["Confirm external_venmo?"])
-        app.buttons["Cancel"].tap()
-
-        payButton.tap()
-        app.buttons["Fail"].tap()
-        XCTAssertTrue(app.staticTexts["Something went wrong!"].waitForExistence(timeout: 5.0))
-
-        payButton.tap()
-        app.buttons["Confirm"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
-    }
-
-    func testMultipleExternalPaymentMethodsPaymentSheetFlowController() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.externalPaymentMethods = .all // test multiple external payment methods can load
-        settings.uiStyle = .flowController
-
-        loadPlayground(app, settings)
-
-        app.buttons["Payment method"].waitForExistenceAndTap()
-        app.buttons["+ Add"].waitForExistenceAndTap()
-
-        // Assert PayPal is visible when using both external payment methods
-        XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayPal")?.waitForExistence(timeout: 5.0) ?? false)
-        scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Venmo")?.waitForExistenceAndTap()
-
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
-
-        XCTAssertNotNil(app.staticTexts["Confirm external_venmo?"])
         app.buttons["Cancel"].tap()
         XCTAssertNotNil(app.staticTexts["Payment canceled."])
 
