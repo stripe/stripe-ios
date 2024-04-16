@@ -11,6 +11,7 @@ import SwiftUI
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
+    @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
     @State var showingQRSheet = false
 
     init(settings: PaymentSheetTestPlaygroundSettings) {
@@ -59,7 +60,7 @@ struct PaymentSheetTestPlayground: View {
                     Group {
                         HStack {
                             if ProcessInfo.processInfo.environment["UITesting"] != nil {
-                                AnalyticsLogForTesting(analyticsLog: $playgroundController.analyticsLog)
+                                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
                             }
                             Text("Backend")
                                 .font(.headline)
