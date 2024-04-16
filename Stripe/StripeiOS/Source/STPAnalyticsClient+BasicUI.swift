@@ -57,10 +57,10 @@ extension STPPaymentContext {
         func logLoadFailed(loadStartDate: Date, error: Error) {
             let event: STPAnalyticEvent = .biLoadFailed
             let duration = Date().timeIntervalSince(loadStartDate)
-            let params: [String: Any] = [
+            var params: [String: Any] = [
                 "duration": duration,
-                "error_message": error.makeSafeLoggingString(),
             ]
+            params.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
             log(event: event, params: params)
         }
 
@@ -99,7 +99,7 @@ extension STPPaymentContext {
 
             var params: [String: Any] = ["selected_lpm": paymentMethodType]
             if let error {
-                params["error_message"] = error.makeSafeLoggingString()
+                params.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
             }
             if let loadStartDate {
                 params["duration"] = Date().timeIntervalSince(loadStartDate)

@@ -44,21 +44,6 @@ extension AnalyticLoggableError where Self: Error {}
 
 // MARK: - Error extension methods that serialize errors for analytics logging
 @_spi(STP) extension Error {
-    /// This is like `serializeForV2Logging` but returns a single String instead of a dict.
-    /// TODO(MOBILESDK-1547) I don't think pattern is very good but it's here to share between PaymentSheet and STPPaymentContext. Please rethink before spreading its usage.
-    public func makeSafeLoggingString() -> String {
-        let error = self as NSError
-        if error.domain == STPError.stripeDomain, let code = STPErrorCode(rawValue: error.code) {
-            // An error from our networking layer
-            return code.description
-        } else {
-            // Default behavior for other errors.
-            // Note: For Swift Error enums, `domain` is the type name and `code` is the case index
-            // e.g. `LinkURLGeneratorError.noPublishableKey` -> "StripePaymentSheet.LinkURLGeneratorError, 1"
-            return "\(error.domain), \(error.code)"
-        }
-    }
-
     /// Serialize an Error for logging to q.stripe.com and the `sdk.analytics_events` table
     ///
     /// It sends the following fields:

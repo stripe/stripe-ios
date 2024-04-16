@@ -409,7 +409,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             // Should send a load failure analytic
             let analyticEvent = analyticsClient._testLogHistory.last
             XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetLoadFailed.rawValue)
-            XCTAssertEqual(analyticEvent?["error_message"] as? String, "NSURLErrorDomain, -1009")
+            XCTAssertEqual(analyticEvent?["error_type"] as? String, "NSURLErrorDomain")
+            XCTAssertEqual(analyticEvent?["error_code"] as? String, "-1009")
         }
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
