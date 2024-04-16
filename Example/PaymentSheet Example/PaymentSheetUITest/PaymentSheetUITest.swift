@@ -2118,7 +2118,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     // MARK: - External PayPal 
     func testExternalPaypalPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.externalPayPalEnabled = .paypal
+        settings.externalPaymentMethods = .paypal
 
         loadPlayground(app, settings)
 
@@ -2145,7 +2145,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testExternalPaypalPaymentSheetFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.externalPayPalEnabled = .paypal
+        settings.externalPaymentMethods = .paypal
         settings.uiStyle = .flowController
 
         loadPlayground(app, settings)
