@@ -106,6 +106,9 @@
 /* Instructional text when camera is too close to a document */
 "Move farther" = "Move farther";
 
+/* Instructional text when environement is too bright */
+"Move to a darker area" = "Move to a darker area";
+
 /* Instructional text when environement is too dark */
 "Move to a well-lit area" = "Move to a well-lit area";
 
@@ -187,6 +190,9 @@
 
 /* Button to attempt to re-scan identity document image */
 "Try Again" = "Try Again";
+
+/* Instructional text when the document is too glarry */
+"Try reduce glare and make ID visible" = "Try reduce glare and make ID visible";
 
 /* Error message that displays when we're unable to connect to the server. */
 "Unable to establish a connection." = "Unable to establish a connection.";

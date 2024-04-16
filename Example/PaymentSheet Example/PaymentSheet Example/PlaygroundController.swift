@@ -275,8 +275,6 @@ class PlaygroundController: ObservableObject {
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
     var currentDataTask: URLSessionDataTask?
-    /// All analytic events sent by the SDK since the playground was loaded.
-    @Published var analyticsLog: [[String: Any]] = []
 
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
@@ -471,7 +469,7 @@ extension PlaygroundController {
             }
 
             DispatchQueue.main.async {
-                self.analyticsLog.removeAll()
+                AnalyticsLogObserver.shared.analyticsLog.removeAll()
                 self.lastPaymentResult = nil
                 self.clientSecret = json["intentClientSecret"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
@@ -657,7 +655,7 @@ extension PaymentSheet.IntentConfiguration.Mode {
 extension PlaygroundController: STPAnalyticsClientDelegate {
     func analyticsClientDidLog(analyticsClient: StripeCore.STPAnalyticsClient, payload: [String: Any]) {
         DispatchQueue.main.async {
-            self.analyticsLog.append(payload)
+            AnalyticsLogObserver.shared.analyticsLog.append(payload)
         }
     }
 }
@@ -724,4 +722,12 @@ extension AddressViewController.AddressDetails {
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
     }
+}
+
+// MARK: - Analytics observer
+
+class AnalyticsLogObserver: ObservableObject {
+    static let shared: AnalyticsLogObserver = .init()
+    /// All analytic events sent by the SDK since the playground was loaded.
+    @Published var analyticsLog: [[String: Any]] = []
 }

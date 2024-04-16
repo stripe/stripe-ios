@@ -318,7 +318,7 @@ extension STPAnalyticsClient {
         additionalParams["selected_lpm"] = paymentMethodTypeAnalyticsValue
 
         if let error {
-            additionalParams["error_message"] = makeSafeLoggingString(from: error)
+            additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
         }
 
         for (param, param_value) in params {
@@ -327,16 +327,6 @@ extension STPAnalyticsClient {
         let analytic = PaymentSheetAnalytic(event: event,
                                             additionalParams: additionalParams)
         log(analytic: analytic, apiClient: apiClient)
-    }
-
-    /// Returns a string describing the provided error that doesn't contain PII and is suitable for logging.
-    func makeSafeLoggingString(from error: Error) -> String {
-        let error = error as NSError
-        if let error = error as? PaymentSheetError {
-            return error.safeLoggingString
-        } else {
-            return error.makeSafeLoggingString()
-        }
     }
 }
 

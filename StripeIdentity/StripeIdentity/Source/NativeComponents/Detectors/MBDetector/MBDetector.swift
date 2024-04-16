@@ -156,13 +156,13 @@ extension MBDetector.CaptureFeedback {
             return String.Localized.increase_lighting
 
         case .lightingTooBright:
-            return String.Localized.decrease_lighting
+            return String.Localized.decrease_lighting_2
 
         case .blurDetected:
             return String.Localized.reduce_blur
 
         case .glareDetected:
-            return String.Localized.reduce_glare
+            return String.Localized.reduce_glare_2
 
         case .occludedByHand:
             return String.Localized.keep_fully_visibile

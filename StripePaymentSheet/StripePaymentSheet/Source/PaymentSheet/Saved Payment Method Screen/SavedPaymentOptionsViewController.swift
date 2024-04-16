@@ -31,6 +31,7 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
 @objc(STP_Internal_SavedPaymentOptionsViewController)
 class SavedPaymentOptionsViewController: UIViewController {
     enum Error: Swift.Error {
+        case collectionViewDidSelectItemAtAdd
         case unableToDequeueReusableCell
         case paymentOptionCellDidSelectEditOnNonSavedItem
         case paymentOptionCellDidSelectRemoveOnNonSavedItem
@@ -508,8 +509,10 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
 
         switch viewModel {
         case .add:
-            // Assert loudly, should have been handled in shouldSelectItemAt: before we got here!
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.collectionViewDidSelectItemAtAdd)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
         case .applePay:
             CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
         case .link:
