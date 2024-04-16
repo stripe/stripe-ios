@@ -24,8 +24,6 @@ public extension PaymentSheet {
 
         /// Describes the colors in PaymentSheet
         public var colors: Colors = Colors()
-        
-        public var addNew: Int = 123
 
         /// Describes the appearance of the primary button (e.g., the "Pay" button)
         public var primaryButton: PrimaryButton = PrimaryButton()
