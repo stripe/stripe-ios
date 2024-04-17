@@ -26,7 +26,11 @@ jobs:
           ruby ci_scripts/api_diff/build_xcframeworks.rb
           ruby ci_scripts/api_diff/diff_public_interface.rb
           echo "diff<<EOF" >> $GITHUB_ENV
-          cat diff_result.txt >> $GITHUB_ENV
+          if [ -f diff_result.txt ]; then 
+            cat diff_result.txt >> $GITHUB_ENV
+          else 
+            echo "diff_result.txt not found, skipping." 
+          fi
           echo "EOF" >> $GITHUB_ENV
           
       - uses: peter-evans/find-comment@v1
