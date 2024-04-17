@@ -25,7 +25,6 @@ jobs:
         run: |
           ruby ci_scripts/api_diff/build_xcframeworks.rb
           ruby ci_scripts/api_diff/diff_public_interface.rb
-          echo "diff<<EOF" >> $GITHUB_ENV
           if [ -f diff_result.txt ]; then
             echo "diff<<EOF" >> $GITHUB_ENV
             cat diff_result.txt >> $GITHUB_ENV
