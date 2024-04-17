@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### Payments
+* [Fixed] An issue where the PrivacyInfo.xcprivacy was not bundled with StripePayments when installing with Cocoapods. 
+
 ## 23.27.0 2024-04-08
 ### Payments
 * [Added] Support for Alma bindings.
