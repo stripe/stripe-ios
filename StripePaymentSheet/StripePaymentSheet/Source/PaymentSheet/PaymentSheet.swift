@@ -347,7 +347,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
             self.bottomSheetViewController.startSpinner()
             let psvc = self.findPaymentSheetViewController()
             psvc?.clearTextFields()
-            psvc?.pay(with: paymentOption, animateBuybutton: false)
+            psvc?.pay(with: paymentOption, animateBuyButton: true)
         }
     }
 
