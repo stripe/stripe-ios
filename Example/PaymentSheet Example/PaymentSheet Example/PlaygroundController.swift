@@ -467,7 +467,7 @@ extension PlaygroundController {
                 }
                 return
             }
-
+            print(PaymentSheet.Appearance.test)
             DispatchQueue.main.async {
                 AnalyticsLogObserver.shared.analyticsLog.removeAll()
                 self.lastPaymentResult = nil
