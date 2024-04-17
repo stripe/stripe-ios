@@ -79,7 +79,8 @@ enum DocumentScannerOutput: Equatable {
             // If the barcode is clear enough to decode, then that's good enough and
             // it doesn't matter if the MotionBlurDetector believes there's motion blur
             // just need to make sure the zoom level is ok
-            return idDetectorOutput.computeZoomLevel() == .ok
+            return blurResult.isBlurry != true
+                && idDetectorOutput.computeZoomLevel() == .ok
         } else {
             return idDetectorOutput.classification.matchesDocument(side: side)
                 && cameraProperties?.isAdjustingFocus != true
