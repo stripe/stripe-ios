@@ -173,7 +173,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                                                   "payment_method_id": paymentMethod.stripeId,
                                                   "should_save_payment_method": shouldSavePaymentMethod,
                                                   "merchant_country_code": "US",
-                                                  "return_url": "payments-example://stripe-redirect",], completionHandler: { data, response, error in
+                                                  "return_url": "payments-example://stripe-redirect", ], completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,
