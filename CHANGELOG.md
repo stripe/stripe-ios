@@ -1,7 +1,3 @@
-## 22.8.5 2024-04-18
-### All
-* [Added] Privacy manifests
-
 ## 22.8.4 2022-10-12
 ### PaymentSheet
 * [Fixed] Use `.formSheet` modal presentation in Mac Catalyst. [#2023](https://github.com/stripe/stripe-ios/issues/2023) (Thanks [sergiocampama](https://github.com/sergiocampama)!)
