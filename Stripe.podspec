@@ -17,12 +17,12 @@ Pod::Spec.new do |s|
   s.swift_version		               = '5.0'
   s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'Stripe/*.swift'
-  s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*.{lproj,json,png,xcassets}' }
+  s.ios.resource_bundle            = { 'StripeBundle' => ['Stripe/StripeiOS/Resources/**/*.{lproj,png,xcassets}', 'Stripe/StripeiOS/PrivacyInfo.xcprivacy'] }
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripeUICore', "#{s.version}"
   s.dependency                       'StripeApplePay', "#{s.version}"
   s.subspec 'Stripe3DS2' do |sp|
     sp.source_files  = 'Stripe3DS2/Stripe3DS2/**/*.{h,m}'
-    sp.resource_bundles = { 'Stripe3DS2' => ['Stripe3DS2/Stripe3DS2/Resources/**/*.{lproj,png}'] }
+    sp.resource_bundles = { 'Stripe3DS2' => ['Stripe3DS2/Stripe3DS2/Resources/**/*.{lproj,png,xcassets}', 'Stripe3DS2/Stripe3DS2/PrivacyInfo.xcprivacy'] }
   end
 end

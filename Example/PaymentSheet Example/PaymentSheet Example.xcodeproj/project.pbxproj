@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,7 @@
 		36E5A2D325A79C94001668C9 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36E5A2D125A79C7E001668C9 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		611CF06C27C9858200E43BB2 /* PaymentSheetSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611CF06B27C9858200E43BB2 /* PaymentSheetSnapshotTests.swift */; };
 		611CF06F27C9DA4900E43BB2 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 611CF06D27C9DA2A00E43BB2 /* FBSnapshotTestCase.xcframework */; };
+		615D0A5C2BD182E00082B3FE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 615D0A5B2BD182E00082B3FE /* PrivacyInfo.xcprivacy */; };
 		615EF61927DA473A00F8E0EE /* AppearancePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615EF61827DA473A00F8E0EE /* AppearancePlaygroundView.swift */; };
 		61A20BC127CA767500260BC5 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61A20BC027CA767500260BC5 /* StripeCoreTestUtils.framework */; };
 		6B3F9F6A28078A0E00C81DDC /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8BD78527F555B8007463B3 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -174,6 +175,7 @@
 		36F4BCA826C1BE9E001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Main.strings; sourceTree = "<group>"; };
 		611CF06B27C9858200E43BB2 /* PaymentSheetSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetSnapshotTests.swift; sourceTree = "<group>"; };
 		611CF06D27C9DA2A00E43BB2 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
+		615D0A5B2BD182E00082B3FE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		615EF61827DA473A00F8E0EE /* AppearancePlaygroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePlaygroundView.swift; sourceTree = "<group>"; };
 		61A20BC027CA767500260BC5 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B8BD78527F555B8007463B3 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -277,6 +279,7 @@
 		B6370758251057890094499F /* PaymentSheet Example */ = {
 			isa = PBXGroup;
 			children = (
+				615D0A5B2BD182E00082B3FE /* PrivacyInfo.xcprivacy */,
 				36002B4A25803B3100E46F8B /* SceneDelegate.swift */,
 				B6370759251057890094499F /* AppDelegate.swift */,
 				B63707622510578D0094499F /* Assets.xcassets */,
@@ -476,6 +479,7 @@
 			files = (
 				B63707662510578D0094499F /* LaunchScreen.storyboard in Resources */,
 				B63707632510578D0094499F /* Assets.xcassets in Resources */,
+				615D0A5C2BD182E00082B3FE /* PrivacyInfo.xcprivacy in Resources */,
 				B6370761251057890094499F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

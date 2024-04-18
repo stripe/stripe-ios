@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -109,6 +109,7 @@
 		36F726BD22499301009AFEEA /* STDSEphemeralKeyPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F726BB22499301009AFEEA /* STDSEphemeralKeyPair.m */; };
 		36FE29832249A3730015BD0C /* STDSDeviceInformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 36FE29812249A3730015BD0C /* STDSDeviceInformation.h */; };
 		36FE29842249A3730015BD0C /* STDSDeviceInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 36FE29822249A3730015BD0C /* STDSDeviceInformation.m */; };
+		615D0A602BD183520082B3FE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 615D0A5F2BD183520082B3FE /* PrivacyInfo.xcprivacy */; };
 		7B05BA25225BB59F00071A59 /* STDSDebuggerChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B05BA23225BB59F00071A59 /* STDSDebuggerChecker.h */; };
 		7B05BA26225BB59F00071A59 /* STDSDebuggerChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05BA24225BB59F00071A59 /* STDSDebuggerChecker.m */; };
 		7B05BA29225BB87D00071A59 /* STDSOSVersionChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B05BA27225BB87D00071A59 /* STDSOSVersionChecker.h */; };
@@ -463,8 +464,7 @@
 		36F726BB22499301009AFEEA /* STDSEphemeralKeyPair.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSEphemeralKeyPair.m; sourceTree = "<group>"; };
 		36FE29812249A3730015BD0C /* STDSDeviceInformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSDeviceInformation.h; sourceTree = "<group>"; };
 		36FE29822249A3730015BD0C /* STDSDeviceInformation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDeviceInformation.m; sourceTree = "<group>"; };
-		4ECB97A9B55BAA6A0F150383 /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2DemoUITests.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		7AA36DBCF0BA0E43D222D831 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2DemoUITests.release.xcconfig"; path = "Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests.release.xcconfig"; sourceTree = "<group>"; };
+		615D0A5F2BD183520082B3FE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7B05BA23225BB59F00071A59 /* STDSDebuggerChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSDebuggerChecker.h; sourceTree = "<group>"; };
 		7B05BA24225BB59F00071A59 /* STDSDebuggerChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDebuggerChecker.m; sourceTree = "<group>"; };
 		7B05BA27225BB87D00071A59 /* STDSOSVersionChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSOSVersionChecker.h; sourceTree = "<group>"; };
@@ -549,7 +549,6 @@
 		7BF9D86E223FF3E8001EA73F /* UIButton+CustomInitialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+CustomInitialization.m"; sourceTree = "<group>"; };
 		7BF9D87722417B03001EA73F /* STDSProcessingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSProcessingView.h; sourceTree = "<group>"; };
 		7BF9D87822417B03001EA73F /* STDSProcessingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSProcessingView.m; sourceTree = "<group>"; };
-		B32A6DD76651E04EE9088B9C /* Pods-Stripe3DS2-Stripe3DS2DemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2-Stripe3DS2DemoUITests.release.xcconfig"; path = "Target Support Files/Pods-Stripe3DS2-Stripe3DS2DemoUITests/Pods-Stripe3DS2-Stripe3DS2DemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B616CE6C22430005003FC60C /* STDSRuntimeErrorEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSRuntimeErrorEvent.h; path = include/STDSRuntimeErrorEvent.h; sourceTree = "<group>"; };
 		B616CE6D22430005003FC60C /* STDSRuntimeErrorEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSRuntimeErrorEvent.m; sourceTree = "<group>"; };
 		B616CE7022430237003FC60C /* STDSChallengeStatusReceiver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeStatusReceiver.h; path = include/STDSChallengeStatusReceiver.h; sourceTree = "<group>"; };
@@ -605,10 +604,7 @@
 		B6CFBF7922695094009A007B /* STDSACSNetworkingManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSACSNetworkingManagerTest.m; sourceTree = "<group>"; };
 		B6DC6A15225D5E53008C9172 /* STDSErrorMessage+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STDSErrorMessage+Internal.h"; sourceTree = "<group>"; };
 		B6DC6A16225D5E53008C9172 /* STDSErrorMessage+Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STDSErrorMessage+Internal.m"; sourceTree = "<group>"; };
-		C6EA04AC9FC81D87DE7A0CDC /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2DemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		CF81749BFB052F9A3A5475EC /* Pods-Stripe3DS2-Stripe3DS2DemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2-Stripe3DS2DemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-Stripe3DS2-Stripe3DS2DemoUITests/Pods-Stripe3DS2-Stripe3DS2DemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED0E87C4B5B3D1D1D638D312 /* libPods-Stripe3DS2-Stripe3DS2DemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Stripe3DS2-Stripe3DS2DemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F20971A299FD01516B0AA817 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2DemoUITests.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -861,7 +857,6 @@
 				31EFEDEE258AE3300069BC5F /* Stripe3DS2Resources */,
 				36DDBEA121EFEE9700CB47C9 /* Products */,
 				7BECCAF0222D9C8F003852FF /* Frameworks */,
-				AD26A1961CEC2352E61BCAE8 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -879,6 +874,7 @@
 		36DDBEA221EFEE9700CB47C9 /* Stripe3DS2 */ = {
 			isa = PBXGroup;
 			children = (
+				615D0A5F2BD183520082B3FE /* PrivacyInfo.xcprivacy */,
 				36DDBEA421EFEE9700CB47C9 /* Info.plist */,
 				36514CD821F7D7BC00CBC619 /* Internal */,
 				36514CBC21F7CA2400CBC619 /* Public */,
@@ -1079,20 +1075,6 @@
 				7BF9D847223A9BEA001EA73F /* STDSUICustomization.m */,
 			);
 			name = "UI Customization";
-			sourceTree = "<group>";
-		};
-		AD26A1961CEC2352E61BCAE8 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				CF81749BFB052F9A3A5475EC /* Pods-Stripe3DS2-Stripe3DS2DemoUITests.debug.xcconfig */,
-				B32A6DD76651E04EE9088B9C /* Pods-Stripe3DS2-Stripe3DS2DemoUITests.release.xcconfig */,
-				C6EA04AC9FC81D87DE7A0CDC /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */,
-				7AA36DBCF0BA0E43D222D831 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */,
-				4ECB97A9B55BAA6A0F150383 /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */,
-				F20971A299FD01516B0AA817 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */,
-			);
-			name = Pods;
-			path = ../Pods;
 			sourceTree = "<group>";
 		};
 		B6790061224ECAC800DD9F18 /* JSON */ = {
@@ -1386,6 +1368,7 @@
 				36CEAE2521FFCBA600BE1190 /* ul-test.der in Resources */,
 				362FD33922D562B4003455F0 /* Localizable.strings in Resources */,
 				3135271925A55A0200DDBA74 /* visa-logo@3x.png in Resources */,
+				615D0A602BD183520082B3FE /* PrivacyInfo.xcprivacy in Resources */,
 				3135271725A55A0200DDBA74 /* discover-logo.png in Resources */,
 				36C4CBED2683E78500B43289 /* cartes-bancaires.der in Resources */,
 				362FD36622D690EF003455F0 /* discover.der in Resources */,
@@ -1960,7 +1943,6 @@
 		};
 		7B66B450224D520400E256EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C6EA04AC9FC81D87DE7A0CDC /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1980,7 +1962,6 @@
 		};
 		7B66B451224D520400E256EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AA36DBCF0BA0E43D222D831 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

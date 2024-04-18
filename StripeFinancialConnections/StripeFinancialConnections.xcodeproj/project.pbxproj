@@ -51,6 +51,7 @@
 		3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */; };
 		3CE96D3A27586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */; };
 		3CFC631A28EDCF8E00DF9D28 /* ContinueStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */; };
+		615D0A642BD183810082B3FE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 615D0A632BD183810082B3FE /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -163,6 +164,7 @@
 		3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionManifest.swift; sourceTree = "<group>"; };
 		3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
 		3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueStateView.swift; sourceTree = "<group>"; };
+		615D0A632BD183810082B3FE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +225,7 @@
 		3C4D2008273AED0800BC6444 /* StripeFinancialConnections */ = {
 			isa = PBXGroup;
 			children = (
+				615D0A632BD183810082B3FE /* PrivacyInfo.xcprivacy */,
 				3C5B2CA0273DA701005C5A05 /* Resources */,
 				3C4D2043273AF44D00BC6444 /* Source */,
 				3C4D2009273AED0800BC6444 /* StripeFinancialConnections.h */,
@@ -525,6 +528,7 @@
 			files = (
 				3CC42197274C457A00BBEDF4 /* close@3x.png in Resources */,
 				3CC42198274C457A00BBEDF4 /* back_arrow@3x.png in Resources */,
+				615D0A642BD183810082B3FE /* PrivacyInfo.xcprivacy in Resources */,
 				3C5B2CCD273DA702005C5A05 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

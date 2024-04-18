@@ -40,6 +40,7 @@ let package = Package(
                 .process("Resources/Images"),
                 .process("Resources/au_becs_bsb.json"),
                 .process("Resources/form_specs.json")
+                .process("PrivacyInfo.xcprivacy")
             ]
         ),
         .target(
@@ -49,6 +50,7 @@ let package = Package(
             resources: [
                 .process("Info.plist"),
                 .process("Resources")
+                .process("PrivacyInfo.xcprivacy")
             ]
         ),
         .target(
@@ -66,6 +68,7 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist")
+                .process("PrivacyInfo.xcprivacy")
             ]
         ),
         .target(
@@ -116,6 +119,7 @@ let package = Package(
             resources: [
                 .process("Info.plist"),
                 .process("Resources/Images"),
+                .process("PrivacyInfo.xcprivacy")
             ]
         )
     ]

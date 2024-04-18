@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -493,6 +493,7 @@
 		6151C237271F4FD600BB7032 /* STPPaymentMethodKlarna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */; };
 		6151C239271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */; };
 		61532ECA27E1507200CBB253 /* Appearance+FontScaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61532EC927E1507200CBB253 /* Appearance+FontScaling.swift */; };
+		615D0A5E2BD183310082B3FE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 615D0A5D2BD183310082B3FE /* PrivacyInfo.xcprivacy */; };
 		615EF62B27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615EF62A27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift */; };
 		6164582C27E963C800FEAB8E /* icon-pm-paypal_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6164582B27E963C800FEAB8E /* icon-pm-paypal_dark@3x.png */; };
 		6164582E27E964A800FEAB8E /* icon-pm-aubecsdebit@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6164582D27E964A800FEAB8E /* icon-pm-aubecsdebit@3x.png */; };
@@ -1534,6 +1535,7 @@
 		6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarna.swift; sourceTree = "<group>"; };
 		6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParams.swift; sourceTree = "<group>"; };
 		61532EC927E1507200CBB253 /* Appearance+FontScaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Appearance+FontScaling.swift"; sourceTree = "<group>"; };
+		615D0A5D2BD183310082B3FE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = StripeiOS/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		615EF62A27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		6164582B27E963C800FEAB8E /* icon-pm-paypal_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal_dark@3x.png"; sourceTree = "<group>"; };
 		6164582D27E964A800FEAB8E /* icon-pm-aubecsdebit@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-aubecsdebit@3x.png"; sourceTree = "<group>"; };
@@ -2002,6 +2004,7 @@
 		04CDB4D21A5F30A700B854EE /* Stripe */ = {
 			isa = PBXGroup;
 			children = (
+				615D0A5D2BD183310082B3FE /* PrivacyInfo.xcprivacy */,
 				04F39F091AEF2AFE005B926E /* BuildConfigurations */,
 				0438EF871B741C2800D506CC /* Resources */,
 				04B33F2F1BC7414C00DD8120 /* Supporting Files */,
@@ -3944,6 +3947,7 @@
 				F35E2DB3267ABA6700BE074B /* afterpay_mark_dark@3x.png in Resources */,
 				3128857825ED9B1000D54C33 /* form_error_icon_dark@3x.png in Resources */,
 				3180E0C82592B98900CE3D7E /* stp_card_unionpay_template_zh@3x.png in Resources */,
+				615D0A5E2BD183310082B3FE /* PrivacyInfo.xcprivacy in Resources */,
 				3646843627A3290000C6DE0C /* bank_icon_usaa@3x.png in Resources */,
 				3180E1112592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png in Resources */,
 				D030629026DDDCF7001A0A6B /* card_cvc_amex_icon_dark@3x.png in Resources */,
