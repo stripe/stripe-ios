@@ -28,10 +28,10 @@ class ExampleCustomCheckoutViewController: UIViewController {
         configuration.returnURL = "payments-example://stripe-redirect"
         // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
         configuration.allowsDelayedPaymentMethods = true
-        
+
         return configuration
     }
-        
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -45,12 +45,12 @@ class ExampleCustomCheckoutViewController: UIViewController {
             await loadBackend()
         }
     }
-    
+
     func loadBackend() async {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
-        
+
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             guard let json = try? JSONSerialization.jsonObject(with: data, options: [])
@@ -63,10 +63,10 @@ class ExampleCustomCheckoutViewController: UIViewController {
                 // Handle error
                 return
             }
-            
+
             // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
             STPAPIClient.shared.publishableKey = publishableKey
-            
+
             // MARK: Create your PaymentSheet configuration
             var configuration = self.configuration
             configuration.customer = .init(
@@ -80,9 +80,8 @@ class ExampleCustomCheckoutViewController: UIViewController {
         } catch {
             // Handle error
         }
-        
-    }
 
+    }
 
     // MARK: - Button handlers
 

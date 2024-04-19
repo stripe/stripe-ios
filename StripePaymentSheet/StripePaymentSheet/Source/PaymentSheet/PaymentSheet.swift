@@ -181,7 +181,7 @@ public class PaymentSheet {
         self.bottomSheetViewController.contentStack = [self.loadingViewController]
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
-    
+
     /// Presents a payment sheet for a customer to complete their payment.
     /// - Parameter presentingViewController: The view controller to present a payment sheet
     /// - Throws: An error if the payment is cancelled or encounters an error during confirmation.
