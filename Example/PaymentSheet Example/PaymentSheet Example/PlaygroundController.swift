@@ -107,7 +107,12 @@ class PlaygroundController: ObservableObject {
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
-        configuration.paymentMethodOrder = ["card", "external_paypal"]
+        switch settings.externalPaymentMethods {
+        case .paypal:
+            configuration.paymentMethodOrder = ["card", "external_paypal"]
+        case .off, .all: // When using all EPMs, alphabetize the order by not setting `paymentMethodOrder`.
+            break
+        }
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
@@ -234,11 +239,12 @@ class PlaygroundController: ObservableObject {
     }
 
     var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? {
-        guard settings.externalPayPalEnabled == .on else {
+        guard let externalPaymentMethods = settings.externalPaymentMethods.paymentMethods else {
             return nil
         }
+
         return .init(
-            externalPaymentMethods: ["external_paypal"]
+            externalPaymentMethods: externalPaymentMethods
         ) { [weak self] externalPaymentMethodType, billingDetails, completion in
             self?.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails, completion: completion)
         }
