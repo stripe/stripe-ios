@@ -180,6 +180,14 @@ extension PaymentSheet {
             )
         }
         
+        /// An asynchronous failable initializer for PaymentSheet.FlowController
+        /// This asynchronously loads the Customer's payment methods, their default payment method, and the PaymentIntent.
+        /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
+        /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
+        /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
+        /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+        /// - Throws: An error if an error is encountered while creating the PaymentSheet.FlowController instance
+        /// - Returns: An instance of PaymentSheet.FlowController
         public static func create(paymentIntentClientSecret: String,
                                   configuration: PaymentSheet.Configuration) async throws -> PaymentSheet.FlowController {
             return try await withCheckedThrowingContinuation { continuation in
@@ -211,6 +219,14 @@ extension PaymentSheet {
             )
         }
         
+        /// An asynchronous failable initializer for PaymentSheet.FlowController
+        /// This asynchronously loads the Customer's payment methods, their default payment method, and the SetuptIntent.
+        /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
+        /// - Parameter setupIntentClientSecret: The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
+        /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
+        /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+        /// - Throws: An error if an error is encountered while creating the PaymentSheet.FlowController instance
+        /// - Returns: An instance of PaymentSheet.FlowController
         public static func create(setupIntentClientSecret: String,
                                   configuration: PaymentSheet.Configuration) async throws -> PaymentSheet.FlowController {
             return try await withCheckedThrowingContinuation { continuation in
@@ -242,6 +258,13 @@ extension PaymentSheet {
             )
         }
         
+        /// An asynchronous failable initializer for PaymentSheet.FlowController
+        /// This asynchronously loads the Customer's payment methods, their default payment method.
+        /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
+        /// - Parameter intentConfiguration: Information about the payment or setup used to render the UI
+        /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+        /// - Throws: An error if an error is encountered while creating the PaymentSheet.FlowController instance
+        /// - Returns: An instance of PaymentSheet.FlowController
         public static func create(intentConfiguration: IntentConfiguration,
                                   configuration: PaymentSheet.Configuration) async throws -> PaymentSheet.FlowController {
             return try await withCheckedThrowingContinuation { continuation in
@@ -435,6 +458,9 @@ extension PaymentSheet {
             }
         }
         
+        /// Completes the payment or setup.
+        /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
+        /// - Throws: An error if an error is encountered during confirmation
         @MainActor public func confirm(from presentingViewController: UIViewController) async throws {
             return try await withCheckedThrowingContinuation { continuation in
                 confirm(from: presentingViewController) { result in
@@ -442,7 +468,7 @@ extension PaymentSheet {
                     case .completed:
                         continuation.resume()
                     case .canceled:
-                        continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "canceled"))
+                        continuation.resume(throwing: PaymentSheetError.canceled)
                     case .failed(let error):
                         continuation.resume(throwing: error)
                     }
@@ -505,6 +531,11 @@ extension PaymentSheet {
             }
         }
         
+        /// Call this method when the IntentConfiguration values you used to initialize PaymentSheet.FlowController (amount, currency, etc.) change.
+        /// This ensures the appropriate payment methods are displayed, etc. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
+        /// - Parameter intentConfiguration: An updated IntentConfiguration
+        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don’t call this method while PaymentSheet is being presented.
+        /// - Throws: An error if an error is encountered while updating the `IntentConfiguration`.
         @MainActor public func update(intentConfiguration: IntentConfiguration) async throws {
             return try await withCheckedThrowingContinuation { continuation in
                 update(intentConfiguration: intentConfiguration) { error in

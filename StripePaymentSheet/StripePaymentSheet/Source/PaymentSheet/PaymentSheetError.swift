@@ -30,6 +30,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case unrecognizedHandlerStatus
     case accountLinkFailure
     case setupIntentClientSecretProviderNil
+    case canceled
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
 
@@ -125,6 +126,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "linkNotAuthorized"
         case .unexpectedNewPaymentMethod:
             return "unexpectedNewPaymentMethod"
+        case .canceled:
+            return "canceled"
         }
     }
 
@@ -189,6 +192,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil"
             case .unexpectedNewPaymentMethod:
                 return "New payment method should not have been created yet"
+            case .canceled:
+                return "The payment was canceled"
             }
         }()
 

@@ -182,6 +182,9 @@ public class PaymentSheet {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
     
+    /// Presents a payment sheet for a customer to complete their payment.
+    /// - Parameter presentingViewController: The view controller to present a payment sheet
+    /// - Throws: An error if the payment is cancelled or encounters an error during confirmation.
     @MainActor public func present(from presentingViewController: UIViewController) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             present(from: presentingViewController) { result in
@@ -189,7 +192,7 @@ public class PaymentSheet {
                 case .completed:
                     continuation.resume()
                 case .canceled:
-                    continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "canceled"))
+                    continuation.resume(throwing: PaymentSheetError.canceled)
                 case .failed(let error):
                     continuation.resume(throwing: error)
                 }
