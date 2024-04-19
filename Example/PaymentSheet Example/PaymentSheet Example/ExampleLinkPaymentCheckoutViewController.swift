@@ -15,8 +15,8 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     @IBOutlet weak var paymentMethodImage: UIImageView!
     @IBOutlet weak var deferredSwitch: UISwitch!
     var linkPaymentController: LinkPaymentController!
-    let backendCheckoutUrl = "https://abundant-elderly-universe.glitch.me/checkout"  // An example backend endpoint
-    let confirmEndpoint = "https://abundant-elderly-universe.glitch.me/confirm_intent"
+    let backendCheckoutUrl = "https://connections-instant-debits-example.glitch.me/checkout"  // An example backend endpoint
+    let confirmEndpoint = "https://connections-instant-debits-example.glitch.me/confirm_intent"
     private var token = 0
 
     let billingDetails: PaymentSheet.BillingDetails = {
