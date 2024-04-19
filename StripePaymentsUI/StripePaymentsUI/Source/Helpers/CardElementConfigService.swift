@@ -37,9 +37,9 @@ class CardElementConfigService {
             // User has not yet initialized a PK, bail
             return false
         }
-        
+
         let cacheKey = publishableKey + (onBehalfOf ?? "")
-        
+
         if let fetchState = _configsForPK[cacheKey] {
             switch fetchState {
             case .fetching:
@@ -74,7 +74,7 @@ class CardElementConfigService {
         if let onBehalfOf {
             parameters["on_behalf_of"] = onBehalfOf
         }
-        
+
         apiClient.get(url: CardElementConfigEndpoint, parameters: parameters, ephemeralKeySecret: nil, completion: resultHandler)
 
         // No answer yet, so we don't know if the user is CBC-eligible

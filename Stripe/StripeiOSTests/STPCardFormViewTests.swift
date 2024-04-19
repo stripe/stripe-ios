@@ -160,7 +160,7 @@ class STPCardFormViewTests: XCTestCase {
         }
         waitForExpectations(timeout: 3.0)
     }
-    
+
     func testCBCOBO() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)

@@ -84,7 +84,7 @@ class STPCBCController {
     var cbcEnabledOverride: Bool?
 
     var onBehalfOf: String?
-    
+
     var cbcEnabled: Bool {
         if let cbcEnabledOverride = cbcEnabledOverride {
             return cbcEnabledOverride

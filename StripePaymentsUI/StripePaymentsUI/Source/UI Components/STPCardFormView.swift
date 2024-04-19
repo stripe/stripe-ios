@@ -607,7 +607,7 @@ public class STPCardFormView: STPFormView {
         }
         self.preferredNetworks = preferredNetworks.map { STPCardBrand(rawValue: $0.intValue) ?? .unknown }
     }
-    
+
     /// The account (if any) for which the funds of the intent are intended.
     /// The Stripe account ID (if any) which is the business of record.
     /// See [use cases](https://docs.stripe.com/connect/charges#on_behalf_of) to determine if this option is relevant for your integration.

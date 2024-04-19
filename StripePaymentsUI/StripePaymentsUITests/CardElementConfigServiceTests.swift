@@ -41,7 +41,7 @@ class CardElementConfigServiceTests: APIStubbedTestCase {
         }
         waitForExpectations(timeout: 1.0)
     }
-    
+
     func testSuccessfullyFetchesConfigForOnBehalfOf() throws {
         let exp = expectation(description: "fetched config")
         let cecs = CardElementConfigService()
