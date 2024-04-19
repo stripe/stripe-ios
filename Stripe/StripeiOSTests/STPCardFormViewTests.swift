@@ -160,6 +160,13 @@ class STPCardFormViewTests: XCTestCase {
         }
         waitForExpectations(timeout: 3.0)
     }
+    
+    func testCBCOBO() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
+        cardFormView.onBehalfOf = "acct_abc123"
+        XCTAssertEqual((cardFormView.numberField.validator as! STPCardNumberInputTextFieldValidator).cbcController.onBehalfOf, "acct_abc123")
+    }
 
     func testCBCFourDigitCVCIsInvalid() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey

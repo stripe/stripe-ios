@@ -83,11 +83,13 @@ class STPCBCController {
 
     var cbcEnabledOverride: Bool?
 
+    var onBehalfOf: String?
+    
     var cbcEnabled: Bool {
         if let cbcEnabledOverride = cbcEnabledOverride {
             return cbcEnabledOverride
         }
-        return CardElementConfigService.shared.isCBCEligible
+        return CardElementConfigService.shared.isCBCEligible(onBehalfOf: onBehalfOf)
     }
 
     enum BrandState: Equatable {
