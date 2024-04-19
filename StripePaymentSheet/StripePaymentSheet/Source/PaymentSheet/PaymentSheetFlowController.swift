@@ -179,6 +179,20 @@ extension PaymentSheet {
                    completion: completion
             )
         }
+        
+        public static func create(paymentIntentClientSecret: String,
+                                  configuration: PaymentSheet.Configuration) async throws -> PaymentSheet.FlowController {
+            return try await withCheckedThrowingContinuation { continuation in
+                create(paymentIntentClientSecret: paymentIntentClientSecret, configuration: configuration) { result in
+                    switch result {
+                    case .success(let flowController):
+                        continuation.resume(returning: flowController)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method, and the SetuptIntent.
@@ -196,6 +210,20 @@ extension PaymentSheet {
                    completion: completion
             )
         }
+        
+        public static func create(setupIntentClientSecret: String,
+                                  configuration: PaymentSheet.Configuration) async throws -> PaymentSheet.FlowController {
+            return try await withCheckedThrowingContinuation { continuation in
+                create(setupIntentClientSecret: setupIntentClientSecret, configuration: configuration) { result in
+                    switch result {
+                    case .success(let flowController):
+                        continuation.resume(returning: flowController)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method.
@@ -212,6 +240,20 @@ extension PaymentSheet {
                    configuration: configuration,
                    completion: completion
             )
+        }
+        
+        public static func create(intentConfiguration: IntentConfiguration,
+                                  configuration: PaymentSheet.Configuration) async throws -> PaymentSheet.FlowController {
+            return try await withCheckedThrowingContinuation { continuation in
+                create(mode: .deferredIntent(intentConfiguration), configuration: configuration) { result in
+                    switch result {
+                    case .success(let flowController):
+                        continuation.resume(returning: flowController)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
         }
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
@@ -294,6 +336,14 @@ extension PaymentSheet {
             }
 
             showPaymentOptions()
+        }
+        
+        @MainActor public func presentPaymentOptions(from presentingViewController: UIViewController) async -> PaymentOptionDisplayData? {
+            return await withCheckedContinuation { continuation in
+                presentPaymentOptions(from: presentingViewController) { [weak self] in
+                    continuation.resume(returning: self?.paymentOption)
+                }
+            }
         }
 
         /// Completes the payment or setup.
@@ -384,6 +434,21 @@ extension PaymentSheet {
                 }
             }
         }
+        
+        @MainActor public func confirm(from presentingViewController: UIViewController) async throws {
+            return try await withCheckedThrowingContinuation { continuation in
+                confirm(from: presentingViewController) { result in
+                    switch result {
+                    case .completed:
+                        continuation.resume()
+                    case .canceled:
+                        continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "canceled"))
+                    case .failed(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
 
         /// Call this method when the IntentConfiguration values you used to initialize PaymentSheet.FlowController (amount, currency, etc.) change.
         /// This ensures the appropriate payment methods are displayed, etc.
@@ -436,6 +501,18 @@ extension PaymentSheet {
                 case .failure(let error):
                     self.latestUpdateContext?.status = .failed
                     completion(error)
+                }
+            }
+        }
+        
+        @MainActor public func update(intentConfiguration: IntentConfiguration) async throws {
+            return try await withCheckedThrowingContinuation { continuation in
+                update(intentConfiguration: intentConfiguration) { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
                 }
             }
         }

@@ -181,6 +181,21 @@ public class PaymentSheet {
         self.bottomSheetViewController.contentStack = [self.loadingViewController]
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
+    
+    @MainActor public func present(from presentingViewController: UIViewController) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            present(from: presentingViewController) { result in
+                switch result {
+                case .completed:
+                    continuation.resume()
+                case .canceled:
+                    continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "canceled"))
+                case .failed(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
 
     /// Deletes all persisted authentication state associated with a customer.
     ///
