@@ -11,7 +11,7 @@ import Foundation
 public class STPIntentActionMultibancoDisplayDetails: NSObject, STPAPIResponseDecodable {
     /// The multibanco entity number
     @objc public let entity: String
-    
+
     /// Multibanco reference number
     @objc public let reference: String
 

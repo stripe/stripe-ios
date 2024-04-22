@@ -20,7 +20,7 @@ class STPPaymentMethodMultibancoParamsTests: XCTestCase {
         let multibancoParams = STPPaymentMethodMultibancoParams()
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.email = "tester@example.com"
-        
+
         let params = STPPaymentMethodParams(
             multibanco: multibancoParams,
             billingDetails: billingDetails,

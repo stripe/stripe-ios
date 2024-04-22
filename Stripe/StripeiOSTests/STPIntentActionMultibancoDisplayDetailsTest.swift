@@ -32,7 +32,7 @@ class STPIntentActionMultibancoDisplayDetailsTest: XCTestCase {
             XCTFail()
             return
         }
-        
+
         XCTAssertEqual(multibancoDisplayDetails.entity, "1234")
         XCTAssertEqual(multibancoDisplayDetails.expiresAt.timeIntervalSince1970, 1714405124)
         XCTAssertEqual(multibancoDisplayDetails.reference, "123456789")

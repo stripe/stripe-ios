@@ -1282,7 +1282,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             XCTAssertNotNil(paymentIntent?.paymentMethodId)
 
             XCTAssertEqual(paymentIntent?.status, .requiresAction)
-            XCTAssertEqual(paymentIntent!.nextAction?.type, .redirectToURL)
+            XCTAssertEqual(paymentIntent!.nextAction?.type, .multibancoDisplayDetails)
             expectation.fulfill()
         }
 

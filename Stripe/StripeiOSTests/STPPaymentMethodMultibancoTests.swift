@@ -11,7 +11,7 @@ import XCTest
 
 class STPPaymentMethodMultibancoTests: XCTestCase {
 
-    static let multibancoPaymentIntentClientSecret = "TODO"
+    static let multibancoPaymentIntentClientSecret = "pi_3P8Q38Lu5o3P18Zp15prHpB0_secret_hs7JHSV1iSAmGXhSCJILI3eKb"
 
     func _retrieveMultibancoJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
