@@ -22,16 +22,7 @@ class PaymentSheetFormFactory {
         case missingFormSpec
         case missingV1FromSelectorSpec
     }
-/*
-    enum SaveMode {
-        /// We can't save the PaymentMethod. e.g., Payment mode without a customer
-        case none
-        /// The customer chooses whether or not to save the PaymentMethod. e.g., Payment mode
-        case userSelectable
-        /// `setup_future_usage` is set on the PaymentIntent or Setup mode
-        case merchantRequired
-    }
-*/
+
     struct SaveMetadata {
         enum IntentType {
             case payment_intent
@@ -40,22 +31,18 @@ class PaymentSheetFormFactory {
         }
         let intentType: IntentType
         let hasCustomer: Bool
-//        let checkboxBehavior: PaymentSheet.SavePaymentMethodConsentBehavior
         let paymentMethodType: PaymentSheet.PaymentMethodType
 
         func isSaving() -> Bool {
             return intentType == .payment_intent_sfu || intentType == .setup_intent
         }
 
-        // To be removed... eventually
-        // because.. we should expose something else to show/hide a checkbox.
-        func isUserSelectable() -> Bool {
+        // TODO: Remove
+        func savingIsSelectable() -> Bool {
             intentType == .payment_intent && hasCustomer && paymentMethodType.supportsSaveForFutureUseCheckbox()
         }
-
     }
 
-//    let saveMode: SaveMode
     let saveMetadata: SaveMetadata
     let paymentMethod: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheetFormFactoryConfig
@@ -93,59 +80,25 @@ class PaymentSheetFormFactory {
         cardBrandChoiceEligible: Bool = false,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
-        /*
-        func saveModeFor(merchantRequiresSave: Bool) -> SaveMode {
-            let hasCustomer = configuration.hasCustomer
-            let supportsSaveForFutureUseCheckbox = paymentMethod.supportsSaveForFutureUseCheckbox()
-            switch (merchantRequiresSave, hasCustomer, supportsSaveForFutureUseCheckbox) {
-            case (true, _, _):
-                return .merchantRequired
-            case (false, true, true):
-                return .userSelectable
-            case (false, true, false):
-                fallthrough
-            case (false, false, _):
-                return .none
-            }
-        }
-        var saveMode: SaveMode
-        switch intent {
-        case let .paymentIntent(_, paymentIntent):
-            saveMode = saveModeFor(merchantRequiresSave: paymentIntent.setupFutureUsage != .none)
-        case .setupIntent:
-            saveMode = .merchantRequired
-        case .deferredIntent(_, let intentConfig):
-            switch intentConfig.mode {
-            case .payment(_, _, let setupFutureUsage, _):
-                saveMode = saveModeFor(merchantRequiresSave: setupFutureUsage != .none)
-            case .setup:
-                saveMode = .merchantRequired
-            }
-        }
-*/
         var saveMetadata: SaveMetadata
         switch intent {
         case let .paymentIntent(_, paymentIntent):
             saveMetadata = SaveMetadata(intentType: paymentIntent.setupFutureUsage != .none ? .payment_intent_sfu : .payment_intent,
                                         hasCustomer: configuration.hasCustomer,
-//                                        checkboxBehavior: configuration.savePaymentMethodConsentBehavior,
                                         paymentMethodType: paymentMethod)
         case .setupIntent:
             saveMetadata = SaveMetadata(intentType: .setup_intent,
                                         hasCustomer: configuration.hasCustomer,
-//                                        checkboxBehavior: configuration.savePaymentMethodConsentBehavior,
                                         paymentMethodType: paymentMethod)
         case .deferredIntent(_, let intentConfig):
             switch intentConfig.mode {
             case .payment(_, _, let setupFutureUsage, _):
                 saveMetadata = SaveMetadata(intentType: setupFutureUsage != .none ? .payment_intent_sfu : .payment_intent,
                                             hasCustomer: configuration.hasCustomer,
-//                                            checkboxBehavior: configuration.savePaymentMethodConsentBehavior,
                                             paymentMethodType: paymentMethod)
             case .setup:
                 saveMetadata = SaveMetadata(intentType: .setup_intent,
                                             hasCustomer: configuration.hasCustomer,
-//                                            checkboxBehavior: configuration.savePaymentMethodConsentBehavior,
                                             paymentMethodType: paymentMethod)
             }
         }
@@ -638,7 +591,7 @@ extension PaymentSheetFormFactory {
         ) { value in
             isSaving.value = value
         }
-        let shouldDisplaySaveCheckbox: Bool = saveMetadata.isUserSelectable() && !canSaveToLink
+        let shouldDisplaySaveCheckbox: Bool = saveMetadata.savingIsSelectable() && !canSaveToLink
         isSaving.value =
             shouldDisplaySaveCheckbox
             ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : saveMetadata.isSaving()

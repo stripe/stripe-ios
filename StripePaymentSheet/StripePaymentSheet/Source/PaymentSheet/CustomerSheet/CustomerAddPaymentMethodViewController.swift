@@ -221,13 +221,12 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         sendEventToSubviews(.viewDidAppear, from: view)
     }
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
-        // TODO: Fix later -- don't hardcode for now
+        let configuration = PaymentSheetFormFactoryConfig.customerSheet(configuration)
         let saveMetadata = PaymentSheetFormFactory.SaveMetadata(intentType: .setup_intent,
-                                                                hasCustomer: true,
-//                                                                checkboxBehavior: .hideConsentCheckbox(.unspecified),
+                                                                hasCustomer: configuration.hasCustomer,
                                                                 paymentMethodType: type)
         let formElement = PaymentSheetFormFactory(
-            configuration: .customerSheet(configuration),
+            configuration: configuration,
             paymentMethod: type,
             previousCustomerInput: nil,
             addressSpecProvider: .shared,

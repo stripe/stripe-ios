@@ -20,7 +20,7 @@ extension PaymentSheetFormFactory {
                 merchantDisplayName: configuration.merchantDisplayName
             )
         )
-        let shouldDisplaySPMSaveCheckbox: Bool = saveMetadata.isUserSelectable()
+        let shouldDisplaySPMSaveCheckbox: Bool = saveMetadata.savingIsSelectable()
 
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {
