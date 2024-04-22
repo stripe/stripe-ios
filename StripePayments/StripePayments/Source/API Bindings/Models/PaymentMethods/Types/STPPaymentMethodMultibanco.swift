@@ -1,15 +1,15 @@
 //
-//  STPPaymentMethodAffirm.swift
+//  STPPaymentMethodMultibanco.swift
 //  StripePayments
 //
-//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//  Created by Nick Porter on 4/22/24.
 //
 
 import Foundation
 
-/// The Affirm Payment Method.
-/// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-affirm
-public class STPPaymentMethodAffirm: NSObject, STPAPIResponseDecodable {
+/// The Multibanco Payment Method.
+/// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-multibanco
+public class STPPaymentMethodMultibanco: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
@@ -18,7 +18,7 @@ public class STPPaymentMethodAffirm: NSObject, STPAPIResponseDecodable {
     @objc public override var description: String {
         let props = [
             // Object
-            String(format: "%@: %p", NSStringFromClass(STPPaymentMethodAffirm.self), self)
+            String(format: "%@: %p", NSStringFromClass(STPPaymentMethodMultibanco.self), self)
         ]
 
         return "<\(props.joined(separator: "; "))>"

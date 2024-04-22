@@ -214,6 +214,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             konbiniDisplayDetails: nil,
             promptPayDisplayQrCode: nil,
             swishHandleRedirect: nil,
+            multibancoDisplayDetails: nil,
             allResponseFields: [:]
         )
         let setupIntent = STPSetupIntent(

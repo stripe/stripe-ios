@@ -1,6 +1,7 @@
 ## x.x.x x-x-x
 ### Payments
 * [Fixed] An issue where the PrivacyInfo.xcprivacy was not bundled with StripePayments when installing with Cocoapods. 
+* [Added] Support for Multibanco bindings.
 
 ## 23.27.0 2024-04-08
 ### Payments

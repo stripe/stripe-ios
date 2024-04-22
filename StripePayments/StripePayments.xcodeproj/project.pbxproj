@@ -90,6 +90,9 @@
 		6151DDBA2B0D1EE800ED4F7E /* STPPaymentMethodUpdateParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151DDB92B0D1EE800ED4F7E /* STPPaymentMethodUpdateParams.swift */; };
 		617C1C842BB4962500B10AC5 /* STPPaymentMethodAlmaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617C1C832BB4962500B10AC5 /* STPPaymentMethodAlmaParams.swift */; };
 		617C1C862BB496FC00B10AC5 /* STPPaymentMethodAlma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617C1C852BB496FC00B10AC5 /* STPPaymentMethodAlma.swift */; };
+		61E1CA1B2BD6B1AE00A421AE /* STPPaymentMethodMultibanco.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E1CA1A2BD6B1AE00A421AE /* STPPaymentMethodMultibanco.swift */; };
+		61E1CA1D2BD6B3F100A421AE /* STPPaymentMethodMultibancoParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E1CA1C2BD6B3F100A421AE /* STPPaymentMethodMultibancoParams.swift */; };
+		61E1CA252BD6BD3D00A421AE /* STPIntentActionMultibancoDisplayDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E1CA242BD6BD3D00A421AE /* STPIntentActionMultibancoDisplayDetails.swift */; };
 		63200203FD7EFE05901CB191 /* STPPaymentMethodLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99B164CDD13E8F5C9CAD349 /* STPPaymentMethodLink.swift */; };
 		63F661872BA387640F3C4978 /* STPNetworkStubbingTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4DD33E92411C5C8C69A5F /* STPNetworkStubbingTestCase.swift */; };
 		64407AEF1246EE91037E4073 /* STPSetupIntentEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = E579E736ECC6A0064D3984D1 /* STPSetupIntentEnums.swift */; };
@@ -416,6 +419,9 @@
 		6151DDB92B0D1EE800ED4F7E /* STPPaymentMethodUpdateParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUpdateParams.swift; sourceTree = "<group>"; };
 		617C1C832BB4962500B10AC5 /* STPPaymentMethodAlmaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAlmaParams.swift; sourceTree = "<group>"; };
 		617C1C852BB496FC00B10AC5 /* STPPaymentMethodAlma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAlma.swift; sourceTree = "<group>"; };
+		61E1CA1A2BD6B1AE00A421AE /* STPPaymentMethodMultibanco.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodMultibanco.swift; sourceTree = "<group>"; };
+		61E1CA1C2BD6B3F100A421AE /* STPPaymentMethodMultibancoParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodMultibancoParams.swift; sourceTree = "<group>"; };
+		61E1CA242BD6BD3D00A421AE /* STPIntentActionMultibancoDisplayDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionMultibancoDisplayDetails.swift; sourceTree = "<group>"; };
 		61ED590DF413DA9B8A415C9C /* STPCardBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardBrand.swift; sourceTree = "<group>"; };
 		626D1B1C91151401B1FE77EA /* STPAnalyticsClient+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Payments.swift"; sourceTree = "<group>"; };
 		63BFDF30EAA4381999FE1149 /* STPSourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSourceProtocol.swift; sourceTree = "<group>"; };
@@ -748,6 +754,7 @@
 				C07667F9D802EB8DD391A3C5 /* STPIntentAction.swift */,
 				DEECA909F82BFB3F8960F1EA /* STPIntentActionAlipayHandleRedirect.swift */,
 				D927FD12223821805ED77D59 /* STPIntentActionBoletoDisplayDetails.swift */,
+				61E1CA242BD6BD3D00A421AE /* STPIntentActionMultibancoDisplayDetails.swift */,
 				4811DCE60399BD00AEA55CAD /* STPIntentActionCashAppRedirectToApp.swift */,
 				3413DC6380ADC49B79FA0D71 /* STPIntentActionKonbiniDisplayDetails.swift */,
 				7F12A8453F5B31BC76C79FDD /* STPIntentActionOXXODisplayDetails.swift */,
@@ -1038,6 +1045,7 @@
 			isa = PBXGroup;
 			children = (
 				68B0890585C6D8D33AB0D888 /* STPPaymentMethodAffirm.swift */,
+				61E1CA1A2BD6B1AE00A421AE /* STPPaymentMethodMultibanco.swift */,
 				AE3CBC01F0A15D28914DB070 /* STPPaymentMethodAffirmParams.swift */,
 				C0E6839FB4FC9CA2A9EAAC4F /* STPPaymentMethodAfterpayClearpay.swift */,
 				FD1783A022B54EC14C164F7B /* STPPaymentMethodAfterpayClearpayParams.swift */,
@@ -1068,6 +1076,7 @@
 				373B2754D51299A60DE459C7 /* STPPaymentMethodCardWalletVisaCheckout.swift */,
 				0A0ACD359CBF350143D049EC /* STPPaymentMethodCashApp.swift */,
 				7E9E200FB06201CCAE7BB434 /* STPPaymentMethodCashAppParams.swift */,
+				61E1CA1C2BD6B3F100A421AE /* STPPaymentMethodMultibancoParams.swift */,
 				DABCA7D3C2103189243C48DB /* STPPaymentMethodEPS.swift */,
 				EEF1AAF60A7A0A75D009229C /* STPPaymentMethodEPSParams.swift */,
 				161E1414061B7E2B7C36AE9C /* STPPaymentMethodFPX.swift */,
@@ -1399,6 +1408,7 @@
 				42C624FBE88EAB43B14F82A9 /* StripeApplePay+Import.swift in Sources */,
 				02698991542836F0834FA013 /* StripeCore+Import.swift in Sources */,
 				14F7613FC00DEB719DCB0B90 /* LinkAccountSession.swift in Sources */,
+				61E1CA252BD6BD3D00A421AE /* STPIntentActionMultibancoDisplayDetails.swift in Sources */,
 				81273890FC0D587732E7B16E /* STPCollectBankAccountParams.swift in Sources */,
 				7C851B7E1C3B36D18BB15706 /* STPConfirmAlipayOptions.swift in Sources */,
 				0E5EF1AFCCA0D7B932D173F8 /* STPConfirmBLIKOptions.swift in Sources */,
@@ -1495,6 +1505,7 @@
 				58A5121E267FADC02B2B2DC7 /* STPAPIResponseDecodable.swift in Sources */,
 				68F9810F66FB2D6B278429D7 /* STPAddress.swift in Sources */,
 				E1FB907D22CB302F5BD46A55 /* STPCardBrand.swift in Sources */,
+				61E1CA1B2BD6B1AE00A421AE /* STPPaymentMethodMultibanco.swift in Sources */,
 				B6E825D62FBA049BF4FAF5E3 /* STPConnectAccountAddress.swift in Sources */,
 				ED3CEB51A664527751FAB6E6 /* STPConnectAccountCompanyParams.swift in Sources */,
 				DEFE4E522D5E082084A33A14 /* STPConnectAccountIndividualParams.swift in Sources */,
@@ -1547,6 +1558,7 @@
 				F5A6F7E73ECEC80D3351002A /* STPCardParams.swift in Sources */,
 				25DCA686AC5B9E9E961F7498 /* STPKlarnaLineItem.swift in Sources */,
 				ECD17E9B0D13A2200A238E1F /* STPSourceCardDetails.swift in Sources */,
+				61E1CA1D2BD6B3F100A421AE /* STPPaymentMethodMultibancoParams.swift in Sources */,
 				CF8A1ADADD2186407EBBBDCC /* STPSourceKlarnaDetails.swift in Sources */,
 				3B90B29A1B6BCE36C93E5C94 /* STPSourceSEPADebitDetails.swift in Sources */,
 				645789BA64D7822137F2B7BD /* STPSourceWeChatPayDetails.swift in Sources */,
