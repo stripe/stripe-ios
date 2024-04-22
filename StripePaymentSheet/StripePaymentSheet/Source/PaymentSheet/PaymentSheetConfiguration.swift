@@ -71,6 +71,17 @@ extension PaymentSheet {
         }
     }
 
+    public enum SavePaymentMethodOverrideValue {
+        case unspecified
+        case limited
+        case always
+    }
+
+    public enum SavePaymentMethodConsentBehavior {
+        case hideConsentCheckbox(SavePaymentMethodOverrideValue)
+        case showConsentCheckbox
+    }
+
     /// Configuration for PaymentSheet
     public struct Configuration {
         // The text that shows in the header of the payment sheet when adding a card.
@@ -145,6 +156,10 @@ extension PaymentSheet {
         /// Default value is .automatic
         /// @see SavePaymentMethodOptInBehavior
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
+
+        ///
+        ///
+        public var savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior = .hideConsentCheckbox(.unspecified)
 
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default

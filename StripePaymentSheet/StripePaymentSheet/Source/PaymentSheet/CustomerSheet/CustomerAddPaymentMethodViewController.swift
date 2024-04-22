@@ -221,6 +221,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         sendEventToSubviews(.viewDidAppear, from: view)
     }
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
+        // TODO: Fix later -- don't hardcode for now
+        let saveMetadata = PaymentSheetFormFactory.SaveMetadata(intentType: .setup_intent,
+                                                                hasCustomer: true,
+//                                                                checkboxBehavior: .hideConsentCheckbox(.unspecified),
+                                                                paymentMethodType: type)
         let formElement = PaymentSheetFormFactory(
             configuration: .customerSheet(configuration),
             paymentMethod: type,
@@ -234,7 +239,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             currency: nil,
             amount: nil,
             countryCode: nil,
-            saveMode: .merchantRequired)
+            saveMetadata: saveMetadata)
             .make()
         formElement.delegate = self
         return formElement

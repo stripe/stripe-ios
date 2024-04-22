@@ -1192,7 +1192,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.card)
         )
-        XCTAssertEqual(factory.saveMode, .userSelectable)
+//        XCTAssertEqual(factory.saveMode, .userSelectable)
+        XCTAssert(factory.saveMetadata.isUserSelectable())
     }
 
     func testEPSDoesntHideCardCheckbox() {
@@ -1204,7 +1205,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.card)
         )
-        XCTAssertEqual(factory.saveMode, .userSelectable)
+        XCTAssert(factory.saveMetadata.isUserSelectable())
+
+//        XCTAssertEqual(factory.saveMode, .userSelectable)
     }
 
     func testBillingAddressSection() {
