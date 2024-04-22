@@ -107,7 +107,12 @@ class PlaygroundController: ObservableObject {
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
-        configuration.paymentMethodOrder = ["card", "external_paypal"]
+        switch settings.externalPaymentMethods {
+        case .paypal:
+            configuration.paymentMethodOrder = ["card", "external_paypal"]
+        case .off, .all: // When using all EPMs, alphabetize the order by not setting `paymentMethodOrder`.
+            break
+        }
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
@@ -234,11 +239,12 @@ class PlaygroundController: ObservableObject {
     }
 
     var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? {
-        guard settings.externalPayPalEnabled == .on else {
+        guard let externalPaymentMethods = settings.externalPaymentMethods.paymentMethods else {
             return nil
         }
+
         return .init(
-            externalPaymentMethods: ["external_paypal"]
+            externalPaymentMethods: externalPaymentMethods
         ) { [weak self] externalPaymentMethodType, billingDetails, completion in
             self?.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails, completion: completion)
         }
@@ -275,8 +281,6 @@ class PlaygroundController: ObservableObject {
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
     var currentDataTask: URLSessionDataTask?
-    /// All analytic events sent by the SDK since the playground was loaded.
-    @Published var analyticsLog: [[String: Any]] = []
 
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
@@ -471,7 +475,7 @@ extension PlaygroundController {
             }
 
             DispatchQueue.main.async {
-                self.analyticsLog.removeAll()
+                AnalyticsLogObserver.shared.analyticsLog.removeAll()
                 self.lastPaymentResult = nil
                 self.clientSecret = json["intentClientSecret"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
@@ -657,7 +661,7 @@ extension PaymentSheet.IntentConfiguration.Mode {
 extension PlaygroundController: STPAnalyticsClientDelegate {
     func analyticsClientDidLog(analyticsClient: StripeCore.STPAnalyticsClient, payload: [String: Any]) {
         DispatchQueue.main.async {
-            self.analyticsLog.append(payload)
+            AnalyticsLogObserver.shared.analyticsLog.append(payload)
         }
     }
 }
@@ -724,4 +728,12 @@ extension AddressViewController.AddressDetails {
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
     }
+}
+
+// MARK: - Analytics observer
+
+class AnalyticsLogObserver: ObservableObject {
+    static let shared: AnalyticsLogObserver = .init()
+    /// All analytic events sent by the SDK since the playground was loaded.
+    @Published var analyticsLog: [[String: Any]] = []
 }

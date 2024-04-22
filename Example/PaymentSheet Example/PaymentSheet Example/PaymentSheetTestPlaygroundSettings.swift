@@ -217,11 +217,88 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
-    enum ExternalPayPalEnabled: String, PickerEnum {
-        static let enumName: String = "External PayPal"
+    enum ExternalPaymentMethods: String, PickerEnum {
+        static let enumName: String = "External PMs"
+        // Based on https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/55d7fd10/src/externalPaymentMethods/constants.ts#L13
+        static let allExternalPaymentMethods = [
+            "external_aplazame",
+            "external_atone",
+            "external_au_easy_payment",
+            "external_au_pay",
+            "external_azupay",
+            "external_bank_pay",
+            "external_benefit",
+            "external_billie",
+            "external_bitcash",
+            "external_bizum",
+            "external_catch",
+            "external_dapp",
+            "external_dbarai",
+            "external_divido",
+            "external_famipay",
+            "external_fawry",
+            "external_fonix",
+            "external_gcash",
+            "external_grabpay_later",
+            "external_interac",
+            "external_iwocapay",
+            "external_kbc",
+            "external_knet",
+            "external_kriya",
+            "external_laybuy",
+            "external_line_pay",
+            "external_merpay",
+            "external_momo",
+            "external_mondu",
+            "external_net_cash",
+            "external_nexi_pay",
+            "external_octopus",
+            "external_oney",
+            "external_paidy",
+            "external_pay_easy",
+            "external_payconiq",
+            "external_paypal",
+            "external_paypay",
+            "external_paypo",
+            "external_paysafecard",
+            "external_picpay",
+            "external_planpay",
+            "external_pledg",
+            "external_postepay",
+            "external_postfinance",
+            "external_rakuten_pay",
+            "external_samsung_pay",
+            "external_satispay",
+            "external_scalapay",
+            "external_sequra",
+            "external_sezzle",
+            "external_shopback_paylater",
+            "external_softbank_carrier_payment",
+            "external_tabby",
+            "external_tng_ewallet",
+            "external_toss_pay",
+            "external_truelayer",
+            "external_twint",
+            "external_venmo",
+            "external_walley",
+            "external_webmoney",
+            "external_younited_pay",
+        ]
 
-        case on
+        case paypal
+        case all
         case off
+
+        var paymentMethods: [String]? {
+            switch self {
+            case .paypal:
+                return ["external_paypal"]
+            case .all:
+                return ExternalPaymentMethods.allExternalPaymentMethods
+            case .off:
+                return nil
+            }
+        }
     }
 
     enum PreferredNetworksEnabled: String, PickerEnum {
@@ -272,7 +349,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String?
     var autoreload: Autoreload
-    var externalPayPalEnabled: ExternalPayPalEnabled
+    var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
@@ -305,7 +382,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
-            externalPayPalEnabled: .off,
+            externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,

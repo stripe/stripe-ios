@@ -62,6 +62,8 @@
 
 "Move farther" = "Ersaq lura";
 
+"Move to a darker area" = "Ersaq f'post iktar mudlam";
+
 "Move to a well-lit area" = "Mur f'post imdawwal sew";
 
 "NRIC or FIN" = "NRIC jew FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Seħħ żball meta aċċessajna l-kamera.";
 
 "Try Again" = "Erġa' Pprova";
+
+"Try reduce glare and make ID visible" = "Ipprova naqqas id-dija u ara li d-dokument  tal-identitá jidher sewwa";
 
 "Unable to establish a connection." = "Ma nistgħux nagħmlu konnessjoni.";
 

@@ -62,6 +62,8 @@
 
 "Move farther" = "Lùi xa hơn";
 
+"Move to a darker area" = "Di chuyển đến khu vực tối hơn";
+
 "Move to a well-lit area" = "Di chuyển đến không gian đủ ánh sáng";
 
 "NRIC or FIN" = "NRIC hoặc FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Đã xảy ra lỗi khi truy cập máy ảnh.";
 
 "Try Again" = "Hãy thử lại";
+
+"Try reduce glare and make ID visible" = "Hãy thử giảm độ chói và đảm bảo ID được nhìn rõ";
 
 "Unable to establish a connection." = "Không thể thiết lập kết nối.";
 

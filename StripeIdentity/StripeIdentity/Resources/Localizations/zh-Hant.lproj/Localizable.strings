@@ -62,6 +62,8 @@
 
 "Move farther" = "請離遠一點";
 
+"Move to a darker area" = "移動到較暗區域";
+
 "Move to a well-lit area" = "移到光線良好處";
 
 "NRIC or FIN" = "NRIC 或 FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "訪問相機時發生了錯誤。";
 
 "Try Again" = "重試";
+
+"Try reduce glare and make ID visible" = "嘗試減少眩光並使身分證件可見";
 
 "Unable to establish a connection." = "無法建立連接。";
 
