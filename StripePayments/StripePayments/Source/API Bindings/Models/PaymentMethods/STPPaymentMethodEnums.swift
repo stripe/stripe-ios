@@ -90,6 +90,8 @@ import Foundation
     case twint
     /// A Multibanco payment method
     case multibanco
+    /// A Instant Debits payment method
+    case instantDebits
     /// An unknown type.
     case unknown
 
@@ -178,6 +180,8 @@ import Foundation
             return "TWINT"
         case .multibanco:
             return "Multibanco"
+        case .instantDebits:
+            return "Bank Account"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -269,6 +273,8 @@ import Foundation
             return "twint"
         case .multibanco:
             return "multibanco"
+        case .instantDebits:
+            return "instant_debits"
         }
     }
 }

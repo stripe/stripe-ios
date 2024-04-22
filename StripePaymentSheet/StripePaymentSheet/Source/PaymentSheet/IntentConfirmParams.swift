@@ -33,12 +33,11 @@ class IntentConfirmParams {
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
 
-    var linkedBank: LinkedBank?
+    var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
+    var instantDebitsLinkedBank: InstantDebitsLinkedBank?
 
     var paymentSheetLabel: String {
-        if let linkedBank = linkedBank,
-            let last4 = linkedBank.last4
-        {
+        if let last4 = (financialConnectionsLinkedBank?.last4 ?? instantDebitsLinkedBank?.last4) {
             return "••••\(last4)"
         } else {
             return paymentMethodParams.paymentSheetLabel
@@ -46,9 +45,7 @@ class IntentConfirmParams {
     }
 
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
-        if let linkedBank = linkedBank,
-            let bankName = linkedBank.bankName
-        {
+        if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {
             return paymentMethodParams.makeIcon(updateHandler: updateImageHandler)

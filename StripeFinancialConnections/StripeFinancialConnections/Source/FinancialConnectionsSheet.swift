@@ -69,7 +69,7 @@ final public class FinancialConnectionsSheet {
     }
 
     /// Completion block called when the sheet is closed or fails to open
-    private var completion: ((Result) -> Void)?
+    private var completion: ((HostControllerResult) -> Void)?
 
     private var hostController: HostController?
 
@@ -136,8 +136,39 @@ final public class FinancialConnectionsSheet {
         from presentingViewController: UIViewController,
         completion: @escaping (Result) -> Void
     ) {
+        present(
+            from: presentingViewController,
+            completion: { hostControllerResult in
+                switch hostControllerResult {
+                case .completed(let completedResult):
+                    switch completedResult {
+                    case .financialConnections(let session):
+                        completion(.completed(session: session))
+                    case .instantDebits:
+                        let errorDescription = "Instant Debits is not supported via this interface."
+                        assertionFailure(errorDescription)
+                        completion(
+                            .failed(
+                                error: FinancialConnectionsSheetError
+                                    .unknown(debugDescription: errorDescription)
+                            )
+                        )
+                    }
+                case .canceled:
+                    completion(.canceled)
+                case .failed(let error):
+                    completion(.failed(error: error))
+                }
+            }
+        )
+    }
+
+    @_spi(STP) public func present(
+        from presentingViewController: UIViewController,
+        completion: @escaping (HostControllerResult) -> Void
+    ) {
         // Overwrite completion closure to retain self until called
-        let completion: (Result) -> Void = { result in
+        let completion: (HostControllerResult) -> Void = { result in
             self.analyticsClient.log(
                 analytic: FinancialConnectionsSheetCompletionAnalytic.make(
                     clientSecret: self.financialConnectionsSessionClientSecret,
@@ -216,7 +247,10 @@ final public class FinancialConnectionsSheet {
 
 /// :nodoc:
 extension FinancialConnectionsSheet: HostControllerDelegate {
-    func hostController(_ hostController: HostController, viewController: UIViewController, didFinish result: Result) {
+    func hostController(
+        _ hostController: HostController, viewController: UIViewController,
+        didFinish result: HostControllerResult
+    ) {
         viewController.dismiss(
             animated: true,
             completion: {

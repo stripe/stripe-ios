@@ -124,6 +124,7 @@
 		68F13446778AF2CAA631ACDE /* PaymentSheet+DeferredAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8F7F2824DFC78268ED6459 /* PaymentSheet+DeferredAPITest.swift */; };
 		694A3B36AC19FC1F87EF0CB1 /* CustomerSheetPaymentMethodAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42DA5892E8E4C28D434AEA7 /* CustomerSheetPaymentMethodAvailabilityTests.swift */; };
 		6A529F76ECB33C9154314C1F /* STPAnalyticsClient+LUXE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5AAA4347A6918EC267210 /* STPAnalyticsClient+LUXE.swift */; };
+		6A5997192BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */; };
 		6B31B9B82B9019730064E210 /* ElementsCustomer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B31B9B72B9019730064E210 /* ElementsCustomer.swift */; };
 		6B31B9BA2B90FCE60064E210 /* CustomerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B31B9B92B90FCE60064E210 /* CustomerSession.swift */; };
 		6B7E675071649AE3047D388C /* PaymentSheetFormFactoryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A21CC86104388EFE07CB37D /* PaymentSheetFormFactoryConfig.swift */; };
@@ -444,6 +445,7 @@
 		67A8D073B075B32BECCD905A /* form_specs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = form_specs.json; sourceTree = "<group>"; };
 		68C3318ED094D63626740234 /* InstantDebitsOnlyFinancialConnectionsAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsOnlyFinancialConnectionsAuthManager.swift; sourceTree = "<group>"; };
 		6A065CEE8A7BCE60FC9D50BF /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsPaymentMethodElement.swift; sourceTree = "<group>"; };
 		6B31B9B72B9019730064E210 /* ElementsCustomer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsCustomer.swift; sourceTree = "<group>"; };
 		6B31B9B92B90FCE60064E210 /* CustomerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSession.swift; sourceTree = "<group>"; };
 		6B680A2FF197F612D065F16C /* PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheet.swift; sourceTree = "<group>"; };
@@ -875,6 +877,13 @@
 			path = Link;
 			sourceTree = "<group>";
 		};
+		6A5997172BC88E0F002A44CB /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		6A663AB17CD17C68D7329B6B /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1118,6 +1127,7 @@
 				3C8E4153CAFF4EC9AC960182 /* AddPaymentMethodViewController.swift */,
 				6B9A346A7A4290BAA7BCA1A2 /* PaymentMethodTypeCollectionView.swift */,
 				E32B3AC4CC1C4F2DEEC5F292 /* WalletHeaderView.swift */,
+				6A5997172BC88E0F002A44CB /* New Group */,
 			);
 			path = "New Payment Method Screen";
 			sourceTree = "<group>";
@@ -1277,6 +1287,7 @@
 			children = (
 				3595F1786387A6B562FA472F /* BankAccountInfoView.swift */,
 				D3F8B6F8B253A009E6216478 /* USBankAccountPaymentMethodElement.swift */,
+				6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */,
 			);
 			path = USBankAccount;
 			sourceTree = "<group>";
@@ -1757,6 +1768,7 @@
 				6B7E675071649AE3047D388C /* PaymentSheetFormFactoryConfig.swift in Sources */,
 				A8FC75044392659E39677C01 /* PaymentSheetIntentConfiguration.swift in Sources */,
 				5E00512CDFBC1C93781E20AB /* PaymentSheetLoader.swift in Sources */,
+				6A5997192BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift in Sources */,
 				E5571A970EB9DFC4B690636F /* STPAnalyticsClient+PaymentSheet.swift in Sources */,
 				0B142FE21B861925B513143D /* STPApplePayContext+PaymentSheet.swift in Sources */,
 				6103F2BC2BE45990002D67F8 /* SavedPaymentMethodManager.swift in Sources */,

@@ -60,6 +60,17 @@ enum Intent {
         }
     }
 
+    var isDeferredIntent: Bool {
+        switch self {
+        case .paymentIntent:
+            return false
+        case .setupIntent:
+            return false
+        case .deferredIntent:
+            return true
+        }
+    }
+
     var intentConfig: PaymentSheet.IntentConfiguration? {
         switch self {
         case .deferredIntent(_, let intentConfig):

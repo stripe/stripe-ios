@@ -8,7 +8,7 @@
 import XCTest
 
 @_spi(STP) import StripeCore
-@testable import StripeFinancialConnections
+@testable @_spi(STP) import StripeFinancialConnections
 
 final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
 
@@ -39,7 +39,7 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
         )
         let analytic = FinancialConnectionsSheetCompletionAnalytic.make(
             clientSecret: "secret",
-            result: .completed(session: session)
+            result: .completed(.financialConnections(session))
         )
         guard let closedAnalytic = analytic as? FinancialConnectionsSheetClosedAnalytic else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")
