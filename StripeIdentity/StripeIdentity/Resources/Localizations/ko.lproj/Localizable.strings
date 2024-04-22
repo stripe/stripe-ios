@@ -62,6 +62,8 @@
 
 "Move farther" = "더 멀리 이동하십시오";
 
+"Move to a darker area" = "조명이 어두운 곳으로 이동해 주십시오";
+
 "Move to a well-lit area" = "조명이 밝은 곳으로 이동";
 
 "NRIC or FIN" = "NRIC 또는 FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "카메라에 액세스하는 도중 오류가 발생했습니다.";
 
 "Try Again" = "다시 시도";
+
+"Try reduce glare and make ID visible" = "반사광을 줄이고 신분증이 보이도록 해 주십시오";
 
 "Unable to establish a connection." = "연결을 설정할 수 없습니다.";
 

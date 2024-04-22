@@ -62,6 +62,8 @@
 
 "Move farther" = "Novietojiet tālāk";
 
+"Move to a darker area" = "Pārvietojiet uz tumšāku vietu";
+
 "Move to a well-lit area" = "Pārvietojieties uz labi apgaismotu vietu";
 
 "NRIC or FIN" = "NRIC vai FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Radās kļūda, piekļūstot kamerai.";
 
 "Try Again" = "Mēģināt vēlreiz";
+
+"Try reduce glare and make ID visible" = "Mēģiniet mazināt atspīdumu un pārliecinieties, ka ID ir redzams";
 
 "Unable to establish a connection." = "Nevar izveidot savienojumu.";
 

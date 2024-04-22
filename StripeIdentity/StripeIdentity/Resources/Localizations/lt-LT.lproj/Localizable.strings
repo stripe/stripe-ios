@@ -62,6 +62,8 @@
 
 "Move farther" = "Patraukite toliau";
 
+"Move to a darker area" = "Pereikite į tamsesnę vietą";
+
 "Move to a well-lit area" = "Padėkite gerai apšviestoje vietoje";
 
 "NRIC or FIN" = "NRIC arba FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Bandant pasiekti fotoaparatą įvyko klaida.";
 
 "Try Again" = "Bandyti dar kartą";
+
+"Try reduce glare and make ID visible" = "Pabandykite sumažinti atsispindėjimą ir padarykite tapatybės dokumentą matomą";
 
 "Unable to establish a connection." = "Nepavyko prisijungti.";
 

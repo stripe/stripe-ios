@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.27.1 2024-04-22
 ### Payments
 * [Fixed] An issue where the PrivacyInfo.xcprivacy was not bundled with StripePayments when installing with Cocoapods. 
 

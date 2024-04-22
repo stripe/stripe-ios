@@ -62,6 +62,8 @@
 
 "Move farther" = "Uzaklaştırın";
 
+"Move to a darker area" = "Daha karanlık bir yere geçin";
+
 "Move to a well-lit area" = "İyi aydınlatılmış bir yere geçin";
 
 "NRIC or FIN" = "NRIC veya FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Kameraya erişilirken bir hata oluştu.";
 
 "Try Again" = "Tekrar Dene";
+
+"Try reduce glare and make ID visible" = "Parlamayı azaltmaya ve kimlik kartını görünür hale getirmeye çalışın";
 
 "Unable to establish a connection." = "Bağlantı kurulamıyor.";
 
