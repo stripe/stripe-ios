@@ -62,6 +62,8 @@
 
 "Move farther" = "Allunya'l";
 
+"Move to a darker area" = "Mou-lo a un espai més fosc";
+
 "Move to a well-lit area" = "Mou-te a un espai ben il·luminat";
 
 "NRIC or FIN" = "NRIC o FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Hi ha hagut un error en accedir a la càmera.";
 
 "Try Again" = "Torna-ho a intentar";
+
+"Try reduce glare and make ID visible" = "Intenteu reduir l'enlluernament i feu que l'ID sigui visible.";
 
 "Unable to establish a connection." = "No s'ha pogut establir la connexió.";
 

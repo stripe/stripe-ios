@@ -62,6 +62,8 @@
 
 "Move farther" = "Depărtați";
 
+"Move to a darker area" = "Mutați-vă într-o zonă mai întunecată";
+
 "Move to a well-lit area" = "Mutați-vă într-o zonă bine luminată";
 
 "NRIC or FIN" = "NRIC sau FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "A apărut o eroare la accesarea camerei.";
 
 "Try Again" = "Încercați din nou";
+
+"Try reduce glare and make ID visible" = "Încercați să reduceți strălucirea și să faceți vizibil documentul de identitate";
 
 "Unable to establish a connection." = "Nu s-a putut stabili o conexiune.";
 

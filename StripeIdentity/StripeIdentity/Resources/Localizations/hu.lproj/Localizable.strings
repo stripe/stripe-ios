@@ -62,6 +62,8 @@
 
 "Move farther" = "Helyezze távolabb";
 
+"Move to a darker area" = "Menjen sötétebb helyre";
+
 "Move to a well-lit area" = "Menjen egy jól megvilágított helyre";
 
 "NRIC or FIN" = "NRIC vagy FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Hiba történt a kamerához való hozzáférés során";
 
 "Try Again" = "Újrapróbálkozás";
+
+"Try reduce glare and make ID visible" = "Próbálja csökkenteni a csillogást, hogy jól látható legyen az igazolvány";
 
 "Unable to establish a connection." = "Nem létesíthető kapcsolat.";
 
