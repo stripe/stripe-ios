@@ -1,4 +1,7 @@
 ## x.x.x x-x-x
+### PaymentSheet
+* [Added] Support for Multibanco with PaymentIntents.
+
 ### Payments
 * [Fixed] An issue where the PrivacyInfo.xcprivacy was not bundled with StripePayments when installing with Cocoapods. 
 * [Added] Support for Multibanco bindings.
