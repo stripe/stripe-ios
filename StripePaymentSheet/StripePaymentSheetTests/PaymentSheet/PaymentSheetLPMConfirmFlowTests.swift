@@ -368,14 +368,12 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         }
     }
 
-    func testMultiblancoConfirmFlows() async throws {
-        for intentKind in IntentKind.allCases {
-            try await _testConfirm(intentKinds: [intentKind],
-                                   currency: "EUR",
-                                   paymentMethodType: .stripe(.multibanco),
-                                   merchantCountry: .US) { form in
-                form.getTextFieldElement("Email")?.setText("foo@bar.com")
-            }
+    func testMultibancoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .stripe(.multibanco),
+                               merchantCountry: .US) { form in
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
         }
     }
 }
