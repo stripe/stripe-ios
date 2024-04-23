@@ -62,6 +62,8 @@
 
 "Move farther" = "Jauhkan";
 
+"Move to a darker area" = "Pindah ke tempat yang lebih gelap";
+
 "Move to a well-lit area" = "Pindahkan ke tempat yang cukup terang";
 
 "NRIC or FIN" = "NRIC atau FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Ada kesalahan saat mengakses kamera.";
 
 "Try Again" = "Coba Lagi";
+
+"Try reduce glare and make ID visible" = "Coba kurangi silau cahaya dan pastikan identitas terlihat";
 
 "Unable to establish a connection." = "Tidak dapat membuat koneksi.";
 

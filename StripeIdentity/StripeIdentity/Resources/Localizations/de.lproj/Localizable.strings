@@ -62,6 +62,8 @@
 
 "Move farther" = "Mehr Abstand halten";
 
+"Move to a darker area" = "Begeben Sie sich in eine dunklere Umgebung";
+
 "Move to a well-lit area" = "Begeben Sie sich in eine gut beleuchtete Umgebung";
 
 "NRIC or FIN" = "NRIC oder FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Beim Zugriff auf die Kamera ist ein Fehler aufgetreten.";
 
 "Try Again" = "Erneut versuchen";
+
+"Try reduce glare and make ID visible" = "Verringern Sie Blendeffekte und achten Sie auf die Sichtbarkeit des Ausweisdokuments";
 
 "Unable to establish a connection." = "Es kann keine Verbindung hergestellt werden.";
 

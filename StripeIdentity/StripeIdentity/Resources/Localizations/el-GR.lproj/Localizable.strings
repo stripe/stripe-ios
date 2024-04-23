@@ -62,6 +62,8 @@
 
 "Move farther" = "Μετακινήστε πιο μακριά";
 
+"Move to a darker area" = "Μεταβείτε σε έναν σκοτεινότερο χώρο";
+
 "Move to a well-lit area" = "Μεταβείτε σε έναν χώρο με καλό φωτισμό";
 
 "NRIC or FIN" = "NRIC ή FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Προέκυψε σφάλμα κατά την πρόσβαση στην κάμερα.";
 
 "Try Again" = "Δοκιμάστε ξανά";
+
+"Try reduce glare and make ID visible" = "Δοκιμάστε να μειώσετε την αντανάκλαση για να είναι ορατή η ταυτότητα";
 
 "Unable to establish a connection." = "Δεν είναι δυνατή η σύνδεση.";
 

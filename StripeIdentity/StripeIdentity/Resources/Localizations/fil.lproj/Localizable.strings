@@ -62,6 +62,8 @@
 
 "Move farther" = "Ilayo pa";
 
+"Move to a darker area" = "Lumipat sa mas madilim na lugar";
+
 "Move to a well-lit area" = "Lumipat sa maliwanag na lugar";
 
 "NRIC or FIN" = "NRIC o FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Nagkaroon ng error sa pag-access sa kamera";
 
 "Try Again" = "Subukan Muli";
+
+"Try reduce glare and make ID visible" = "Subukang bawasan ang pagkasilaw at gawing nakikita ang ID";
 
 "Unable to establish a connection." = "Hindi mapagtibay ang koneksiyon.";
 
