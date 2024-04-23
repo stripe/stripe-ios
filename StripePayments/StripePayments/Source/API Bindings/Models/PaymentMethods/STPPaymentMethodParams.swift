@@ -638,7 +638,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
 
     /// Creates params for an Multibanco PaymentMethod.
     /// - Parameters:
-    ///   - multibanco:   An object containing additional Multibanco details.
+    ///   - multibanco:          An object containing additional Multibanco details.
     ///   - billingDetails:      An object containing the user's billing details.
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc

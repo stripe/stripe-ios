@@ -86,7 +86,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var amazonPay: STPPaymentMethodAmazonPay?
     /// If this is a Alma PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAlma`), this contains additional details.
     @objc private(set) public var alma: STPPaymentMethodAlma?
-    /// If this is a Alma PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMultibanco`), this contains additional details.
+    /// If this is a Multibanco PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMultibanco`), this contains additional details.
     @objc private(set) public var multibanco: STPPaymentMethodMultibanco?
 
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
