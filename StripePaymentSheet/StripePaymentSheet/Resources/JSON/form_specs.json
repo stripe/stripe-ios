@@ -1044,5 +1044,23 @@
           }
         }
       }
+    },
+    {
+      "type": "multibanco",
+      "async": true,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco@3x-ac6cc40479db7fa84dbb390ab85789cd.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco-5823a780cf3b97484956dbb93b9ce30e.svg",
+        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark@3x-787e2e370aeae073b45e0e02ad1a9e5c.png",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark-2679e8b2bc32d66da57e66cac769d628.svg"
+      },
+      "fields": [
+        {
+          "type": "email",
+          "api_path": {
+            "v1": "billing_details[email]"
+          }
+        }
+      ]
     }
 ]

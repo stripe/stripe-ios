@@ -247,6 +247,29 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         }
     }
 
+    func testCanAddMultibanco() {
+        var config = makeConfiguration(hasReturnURL: true)
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .multibanco,
+                configuration: config,
+                intent: ._testValue(),
+                supportedPaymentMethods: [.multibanco]
+            ),
+            .missingRequirements([.userSupportsDelayedPaymentMethods])
+        )
+        config.allowsDelayedPaymentMethods = true
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .multibanco,
+                configuration: config,
+                intent: ._testValue(),
+                supportedPaymentMethods: [.multibanco]
+            ),
+            .supported
+        )
+    }
+
     // US Bank Account
     func testCanAddUSBankAccountBasedOnVerificationMethod() {
         var configuration = PaymentSheet.Configuration()

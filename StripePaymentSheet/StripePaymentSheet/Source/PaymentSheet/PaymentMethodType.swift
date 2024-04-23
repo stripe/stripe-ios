@@ -239,13 +239,13 @@ extension PaymentSheet {
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,
                         ]
-                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini:
+                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini, .multibanco:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit, .sofort:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .afterpayClearpay:
                         return [.returnURL, .shippingAddress]
-                    case .link, .multibanco, .unknown:
+                    case .link, .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]

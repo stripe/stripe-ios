@@ -1424,6 +1424,42 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
+
+    func testMultibancoPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.currency = .eur
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        guard let multibanco = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Multibanco") else {
+            XCTFail()
+            return
+        }
+        multibanco.tap()
+
+        let email = app.textFields["Email"]
+        email.tap()
+        app.typeText("foo@bar.com")
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let payButton = app.buttons["Pay €50.99"]
+        XCTAssertTrue(payButton.isEnabled)
+        payButton.tap()
+
+        // Just check that a web view exists after tapping buy.
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
