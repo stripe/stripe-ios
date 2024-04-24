@@ -552,9 +552,9 @@ extension PaymentSheetFormFactory {
         ) { value in
             isSaving.value = value
         }
-        let shouldDisplaySaveCheckbox: Bool = shouldShowCheckbox
+
         isSaving.value =
-            shouldDisplaySaveCheckbox
+            shouldShowCheckbox
             ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : isSettingUp
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
@@ -573,7 +573,7 @@ extension PaymentSheetFormFactory {
             emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
             phoneElement: phoneElement,
             addressElement: addressElement,
-            checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            checkboxElement: shouldShowCheckbox ? saveCheckbox : nil,
             savingAccount: isSaving,
             merchantName: merchantName,
             theme: theme
