@@ -34,7 +34,7 @@ public class STPIntentActionMultibancoDisplayDetails: NSObject, STPAPIResponseDe
                 self
             ),
             // MultibancoDisplayDetails
-            "number = \(String(describing: entity))",
+            "entity = \(String(describing: entity))",
             "reference = \(String(describing: reference))",
             "expiresAt = \(String(describing: expiresAt))",
             "hostedVoucherURL = \(String(describing: hostedVoucherURL))",

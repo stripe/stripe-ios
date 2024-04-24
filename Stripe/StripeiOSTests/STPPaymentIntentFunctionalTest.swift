@@ -1235,7 +1235,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
     // MARK: - Multibanco
 
-    func testConfirmPaymentIntentWithMultibanco() {
+    func testConfirmPaymentIntentWithMultibanco() throws {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
@@ -1248,8 +1248,8 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
         ) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
-            createExpectation.fulfill()
             clientSecret = createdClientSecret
+            createExpectation.fulfill()
         }
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
         XCTAssertNotNil(clientSecret)
@@ -1257,7 +1257,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let expectation = self.expectation(description: "Payment Intent confirm")
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret!)
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: try XCTUnwrap(clientSecret))
 
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.email = "tester@example.com"
@@ -1274,15 +1274,17 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = options
         paymentIntentParams.returnURL = "example-app-scheme://unused"
         client.confirmPaymentIntent(with: paymentIntentParams) { paymentIntent, error in
+            guard let paymentIntent = paymentIntent else {
+                XCTFail()
+                return
+            }
             XCTAssertNil(error, "With valid key + secret, should be able to confirm the intent")
+            XCTAssertEqual(paymentIntent.stripeId, paymentIntentParams.stripeId)
+            XCTAssertFalse(paymentIntent.livemode)
+            XCTAssertNotNil(paymentIntent.paymentMethodId)
 
-            XCTAssertNotNil(paymentIntent)
-            XCTAssertEqual(paymentIntent?.stripeId, paymentIntentParams.stripeId)
-            XCTAssertFalse(paymentIntent!.livemode)
-            XCTAssertNotNil(paymentIntent?.paymentMethodId)
-
-            XCTAssertEqual(paymentIntent?.status, .requiresAction)
-            XCTAssertEqual(paymentIntent!.nextAction?.type, .multibancoDisplayDetails)
+            XCTAssertEqual(paymentIntent.status, .requiresAction)
+            XCTAssertEqual(paymentIntent.nextAction?.type, .multibancoDisplayDetails)
             expectation.fulfill()
         }
 

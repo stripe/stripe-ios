@@ -275,7 +275,7 @@ public class STPIntentAction: NSObject {
                 props.append("swishHandleRedirect = \(swishHandleRedirect)")
             }
         case .multibancoDisplayDetails:
-            if let multibancoDisplayDetails = multibancoDisplayDetails {
+            if let multibancoDisplayDetails {
                 props.append("multibancoDisplayDetails = \(multibancoDisplayDetails)")
             }
         case .unknown:

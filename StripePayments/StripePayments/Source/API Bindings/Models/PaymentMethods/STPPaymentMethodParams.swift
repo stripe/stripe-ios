@@ -720,7 +720,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.alma = STPPaymentMethodAlmaParams()
         case .multibanco:
             self.multibanco = STPPaymentMethodMultibancoParams()
-            self.billingDetails = paymentMethod.billingDetails
         case .paynow, .zip, .mobilePay, .konbini, .promptPay, .twint:
             // No parameters
             break
