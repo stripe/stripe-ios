@@ -222,9 +222,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
         let configuration = PaymentSheetFormFactoryConfig.customerSheet(configuration)
-        let saveMetadata = PaymentSheetFormFactory.SaveMetadata(intentType: .setup_intent,
-                                                                hasCustomer: configuration.hasCustomer,
-                                                                paymentMethodType: type)
         let formElement = PaymentSheetFormFactory(
             configuration: configuration,
             paymentMethod: type,
@@ -235,10 +232,10 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             cardBrandChoiceEligible: cbcEligible,
             supportsLinkCard: false,
             isPaymentIntent: false,
+            isSettingUp: true,
             currency: nil,
             amount: nil,
-            countryCode: nil,
-            saveMetadata: saveMetadata)
+            countryCode: nil)
             .make()
         formElement.delegate = self
         return formElement

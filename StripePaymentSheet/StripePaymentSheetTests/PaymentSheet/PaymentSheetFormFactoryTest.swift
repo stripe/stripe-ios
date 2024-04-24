@@ -1193,20 +1193,133 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .stripe(.card)
         )
 
-        XCTAssert(factory.saveMetadata.savingIsSelectable())
+        XCTAssert(factory.shouldShowCheckbox)
     }
 
     func testEPSDoesntHideCardCheckbox() {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
-        _ = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card, .EPS])
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .EPS]),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.card)
         )
 
-        XCTAssert(factory.saveMetadata.savingIsSelectable())
+        XCTAssert(factory.shouldShowCheckbox)
+    }
+
+    func testOffSession_intentRequiresSave() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldShowCheckbox)
+    }
+
+    func testOnSession_intentRequiresSave() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .onSession),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldShowCheckbox)
+    }
+
+    func testPaymentIntent_isNotSettingUpWithCustomer_card() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssert(factory.shouldShowCheckbox)
+    }
+
+    func testPaymentIntent_isNotSettingUpWithoutCustomer_card() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldShowCheckbox)
+    }
+
+    func testPaymentIntent_isNotSettingUpWithCustomer_usBankAccount() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .USBankAccount]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.USBankAccount)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssert(factory.shouldShowCheckbox)
+    }
+
+    func testPaymentIntent_isNotSettingUpWithoutCustomer_usBankAccount() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .USBankAccount]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.USBankAccount)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldShowCheckbox)
+    }
+
+    func testPaymentIntent_isNotSettingUpWithCustomer_sepa() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.SEPADebit)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldShowCheckbox)
+    }
+
+    func testPaymentIntent_isNotSettingUpWithoutCustomer_sepa() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.SEPADebit)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldShowCheckbox)
+    }
+
+    func testSetupIntent_intentRequiresSave() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testSetupIntent(paymentMethodTypes: [.card]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldShowCheckbox)
     }
 
     func testBillingAddressSection() {
