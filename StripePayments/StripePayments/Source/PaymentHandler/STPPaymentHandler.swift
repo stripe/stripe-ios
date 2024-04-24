@@ -742,7 +742,8 @@ public class STPPaymentHandler: NSObject {
             .konbini,
             .promptPay,
             .swish,
-            .twint:
+            .twint,
+            .multibanco:
             return false
 
         case .unknown:
@@ -1063,6 +1064,13 @@ public class STPPaymentHandler: NSObject {
 
         case .boletoDisplayDetails:
             if let hostedVoucherURL = authenticationAction.boletoDisplayDetails?.hostedVoucherURL {
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+            } else {
+                failCurrentActionWithMissingNextActionDetails()
+            }
+
+        case .multibancoDisplayDetails:
+            if let hostedVoucherURL = authenticationAction.multibancoDisplayDetails?.hostedVoucherURL {
                 self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1825,7 +1833,8 @@ public class STPPaymentHandler: NSObject {
                 .konbiniDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
-                .upiAwaitNotification:
+                .upiAwaitNotification,
+                .multibancoDisplayDetails:
                 return true
             }
         }
@@ -1851,7 +1860,7 @@ public class STPPaymentHandler: NSObject {
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
             .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
-            .promptpayDisplayQrCode, .swishHandleRedirect:
+            .promptpayDisplayQrCode, .swishHandleRedirect, .multibancoDisplayDetails:
             break
         }
 

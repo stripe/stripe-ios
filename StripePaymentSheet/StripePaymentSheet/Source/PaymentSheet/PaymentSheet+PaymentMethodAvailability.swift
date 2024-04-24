@@ -35,6 +35,7 @@ extension PaymentSheet {
         .boleto,
         .swish,
         .twint,
+        .multibanco,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
