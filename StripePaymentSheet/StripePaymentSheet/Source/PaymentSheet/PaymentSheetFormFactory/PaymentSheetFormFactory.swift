@@ -45,7 +45,7 @@ class PaymentSheetFormFactory {
                 !configuration.isUsingBillingAddressCollection)
     }
 
-    var shouldShowCheckbox: Bool {
+    var shouldDisplaySaveCheckbox: Bool {
         return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
     }
 
@@ -554,7 +554,7 @@ extension PaymentSheetFormFactory {
         }
 
         isSaving.value =
-            shouldShowCheckbox
+            shouldDisplaySaveCheckbox
             ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : isSettingUp
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
@@ -573,7 +573,7 @@ extension PaymentSheetFormFactory {
             emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
             phoneElement: phoneElement,
             addressElement: addressElement,
-            checkboxElement: shouldShowCheckbox ? saveCheckbox : nil,
+            checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             savingAccount: isSaving,
             merchantName: merchantName,
             theme: theme
