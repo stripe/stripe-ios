@@ -1,6 +1,7 @@
 ## x.x.x x-x-x
 ### PaymentSheet
 * [Added] Support for Multibanco with PaymentIntents.
+* [Fixed] Fixed an issue where STPPaymentHandler sometimes reported errors using `unexpectedErrorCode` instead of a more specific error when customers fail a PaymentIntent next action.
 
 ### Payments
 * [Added] Support for Multibanco bindings.
