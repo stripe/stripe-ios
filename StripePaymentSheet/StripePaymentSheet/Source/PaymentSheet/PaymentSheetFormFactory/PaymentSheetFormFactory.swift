@@ -23,15 +23,6 @@ class PaymentSheetFormFactory {
         case missingV1FromSelectorSpec
     }
 
-    enum SaveMode {
-        /// We can't save the PaymentMethod. e.g., Payment mode without a customer
-        case none
-        /// The customer chooses whether or not to save the PaymentMethod. e.g., Payment mode
-        case userSelectable
-        /// `setup_future_usage` is set on the PaymentIntent or Setup mode
-        case merchantRequired
-    }
-    let saveMode: SaveMode
     let paymentMethod: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheetFormFactoryConfig
     let addressSpecProvider: AddressSpecProvider
@@ -41,6 +32,7 @@ class PaymentSheetFormFactory {
 
     let supportsLinkCard: Bool
     let isPaymentIntent: Bool
+    let isSettingUp: Bool
     let currency: String?
     let amount: Int?
     let countryCode: String?
@@ -51,6 +43,10 @@ class PaymentSheetFormFactory {
         return (supportsLinkCard &&
                 paymentMethod == .stripe(.card) &&
                 !configuration.isUsingBillingAddressCollection)
+    }
+
+    var shouldDisplaySaveCheckbox: Bool {
+        return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
     }
 
     var theme: ElementsUITheme {
@@ -68,34 +64,6 @@ class PaymentSheetFormFactory {
         cardBrandChoiceEligible: Bool = false,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
-        func saveModeFor(merchantRequiresSave: Bool) -> SaveMode {
-            let hasCustomer = configuration.hasCustomer
-            let supportsSaveForFutureUseCheckbox = paymentMethod.supportsSaveForFutureUseCheckbox()
-            switch (merchantRequiresSave, hasCustomer, supportsSaveForFutureUseCheckbox) {
-            case (true, _, _):
-                return .merchantRequired
-            case (false, true, true):
-                return .userSelectable
-            case (false, true, false):
-                fallthrough
-            case (false, false, _):
-                return .none
-            }
-        }
-        var saveMode: SaveMode
-        switch intent {
-        case let .paymentIntent(_, paymentIntent):
-            saveMode = saveModeFor(merchantRequiresSave: paymentIntent.setupFutureUsage != .none)
-        case .setupIntent:
-            saveMode = .merchantRequired
-        case .deferredIntent(_, let intentConfig):
-            switch intentConfig.mode {
-            case .payment(_, _, let setupFutureUsage, _):
-                saveMode = saveModeFor(merchantRequiresSave: setupFutureUsage != .none)
-            case .setup:
-                saveMode = .merchantRequired
-            }
-        }
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
@@ -105,10 +73,10 @@ class PaymentSheetFormFactory {
                   cardBrandChoiceEligible: cardBrandChoiceEligible,
                   supportsLinkCard: intent.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
+                  isSettingUp: intent.isSettingUp,
                   currency: intent.currency,
                   amount: intent.amount,
                   countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
-                  saveMode: saveMode,
                   analyticsClient: analyticsClient)
     }
 
@@ -122,10 +90,10 @@ class PaymentSheetFormFactory {
         cardBrandChoiceEligible: Bool = false,
         supportsLinkCard: Bool,
         isPaymentIntent: Bool,
+        isSettingUp: Bool,
         currency: String?,
         amount: Int?,
         countryCode: String?,
-        saveMode: SaveMode,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.configuration = configuration
@@ -141,10 +109,10 @@ class PaymentSheetFormFactory {
         }
         self.supportsLinkCard = supportsLinkCard
         self.isPaymentIntent = isPaymentIntent
+        self.isSettingUp = isSettingUp
         self.currency = currency
         self.amount = amount
         self.countryCode = countryCode
-        self.saveMode = saveMode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.analyticsClient = analyticsClient
     }
@@ -165,19 +133,19 @@ class PaymentSheetFormFactory {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
             return makeUPI()
-        } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
+        } else if paymentMethod == .cashApp && isSettingUp {
             // special case, display mandate for Cash App when setting up or pi+sfu
             additionalElements = [makeCashAppMandate()]
-        } else if paymentMethod == .payPal && saveMode == .merchantRequired {
+        } else if paymentMethod == .payPal && isSettingUp {
             // Paypal requires mandate when setting up
             additionalElements = [makePaypalMandate()]
-        } else if paymentMethod == .revolutPay && saveMode == .merchantRequired {
+        } else if paymentMethod == .revolutPay && isSettingUp {
             // special case, display mandate for revolutPay when setting up or pi+sfu
             additionalElements = [makeRevolutPayMandate()]
-        } else if paymentMethod == .klarna && saveMode == .merchantRequired {
+        } else if paymentMethod == .klarna && isSettingUp {
             // special case, display mandate for Klarna when setting up or pi+sfu
             additionalElements = [makeKlarnaMandate()]
-        } else if paymentMethod == .amazonPay && saveMode == .merchantRequired {
+        } else if paymentMethod == .amazonPay && isSettingUp {
             // special case, display mandate for Amazon Pay when setting up or pi+sfu
             additionalElements = [makeAmazonPayMandate()]
         } else if paymentMethod == .bancontact {
@@ -483,8 +451,8 @@ extension PaymentSheetFormFactory {
 
     func makeSofort(spec: FormSpec) -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
-            nameRequiredByPaymentMethod: saveMode == .merchantRequired,
-            emailRequiredByPaymentMethod: saveMode == .merchantRequired,
+            nameRequiredByPaymentMethod: isSettingUp,
+            emailRequiredByPaymentMethod: isSettingUp,
             phoneRequiredByPaymentMethod: false
         )
         // Hack: Use the luxe spec to get the latest list of accepted countries rather than hardcoding it here
@@ -502,7 +470,7 @@ extension PaymentSheetFormFactory {
                 return makeCountry(countryCodes: countries, apiPath: "sofort[country]")
             }
         }()
-        let mandate: Element? = saveMode == .merchantRequired ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
+        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
         let elements: [Element?] = [contactSection, addressSection, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
@@ -513,11 +481,11 @@ extension PaymentSheetFormFactory {
     func makeBancontact() -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
             nameRequiredByPaymentMethod: true,
-            emailRequiredByPaymentMethod: saveMode == .merchantRequired,
+            emailRequiredByPaymentMethod: isSettingUp,
             phoneRequiredByPaymentMethod: false
         )
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        let mandate: Element? = saveMode == .merchantRequired ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
+        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
         let elements: [Element?] = [contactSection, addressSection, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
@@ -550,7 +518,7 @@ extension PaymentSheetFormFactory {
     func makeiDEAL(spec: FormSpec) -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
             nameRequiredByPaymentMethod: true,
-            emailRequiredByPaymentMethod: saveMode == .merchantRequired,
+            emailRequiredByPaymentMethod: isSettingUp,
             phoneRequiredByPaymentMethod: false
         )
         // Hack: Use the luxe spec to make the dropdown for convenience; it has the latest list of banks
@@ -563,7 +531,7 @@ extension PaymentSheetFormFactory {
         }
 
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        let mandate: Element? = saveMode == .merchantRequired ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
+        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
         let elements: [Element?] = [contactSection, bankDropdown, addressSection, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
@@ -584,10 +552,10 @@ extension PaymentSheetFormFactory {
         ) { value in
             isSaving.value = value
         }
-        let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
+
         isSaving.value =
             shouldDisplaySaveCheckbox
-            ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : saveMode == .merchantRequired
+            ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : isSettingUp
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
