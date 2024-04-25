@@ -1534,8 +1534,8 @@ public class STPPaymentHandler: NSObject {
                 withClientSecret: currentAction.setupIntent.clientSecret,
                 expand: ["payment_method"]
             ) { setupIntent, error in
-                guard let setupIntent, let paymentMethod = setupIntent.paymentMethod, error == nil else {
-                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent or setupIntent.paymentMethod.")
+                guard let setupIntent, error == nil else {
+                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
                         error: error as NSError
@@ -1556,6 +1556,13 @@ public class STPPaymentHandler: NSObject {
                     )
 
                     if requiresAction {
+                        guard let paymentMethod = setupIntent.paymentMethod else {
+                            currentAction.complete(
+                                with: STPPaymentHandlerActionStatus.failed,
+                                error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "SetupIntent requires action but missing PaymentMethod.")
+                            )
+                            return
+                        }
                         // If the status is still RequiresAction, the user exited from the redirect before the
                         // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
                         if self.isNextActionSuccessState(
