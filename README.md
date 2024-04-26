@@ -13,7 +13,7 @@ Learn about our [Stripe Identity iOS SDK](StripeIdentity/README.md) to verify th
 
 > Updating to a newer version of the SDK? See our [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and [changelog](https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md).
 
-Table of contents
+Table of Contents
 =================
 
 <!--ts-->
