@@ -1,4 +1,7 @@
 ## x.x.x x-x-x
+### CardScan
+* [Changed] ScannedCard to allow access for expiryMonth, expiryYear and name.
+
 ### PaymentSheet
 * [Added] Support for Multibanco with PaymentIntents.
 
