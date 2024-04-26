@@ -1455,9 +1455,9 @@ public class STPPaymentHandler: NSObject {
                     currentAction.apiClient.retrievePaymentIntent(
                         withClientSecret: currentAction.paymentIntent.clientSecret,
                         expand: ["payment_method"]
-                    ) { paymentIntent, error in
-                        guard let paymentIntent, let paymentMethod = paymentIntent.paymentMethod, error == nil else {
-                            let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent or paymentIntent.paymentMethod.")
+                    ) { [self] paymentIntent, error in
+                        guard let paymentIntent, error == nil else {
+                            let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
                             currentAction.complete(
                                 with: STPPaymentHandlerActionStatus.failed,
                                 error: error as NSError
@@ -1468,6 +1468,7 @@ public class STPPaymentHandler: NSObject {
                         // If the transaction is still unexpectedly processing, refresh the PaymentIntent
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
+                            let paymentMethod = paymentIntent.paymentMethod,
                             !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type),
                             paymentIntent.status == .processing && retryCount > 0
                         {
@@ -1488,6 +1489,13 @@ public class STPPaymentHandler: NSObject {
                                 forAction: currentAction
                             )
                             if requiresAction {
+                                guard let paymentMethod = paymentIntent.paymentMethod else {
+                                    currentAction.complete(
+                                        with: STPPaymentHandlerActionStatus.failed,
+                                        error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "PaymentIntent requires action but missing PaymentMethod.")
+                                    )
+                                    return
+                                }
                                 // If the status is still RequiresAction, the user exited from the redirect before the
                                 // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
                                 if self.isNextActionSuccessState(
@@ -1526,8 +1534,8 @@ public class STPPaymentHandler: NSObject {
                 withClientSecret: currentAction.setupIntent.clientSecret,
                 expand: ["payment_method"]
             ) { setupIntent, error in
-                guard let setupIntent, let paymentMethod = setupIntent.paymentMethod, error == nil else {
-                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent or setupIntent.paymentMethod.")
+                guard let setupIntent, error == nil else {
+                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
                         error: error as NSError
@@ -1548,6 +1556,13 @@ public class STPPaymentHandler: NSObject {
                     )
 
                     if requiresAction {
+                        guard let paymentMethod = setupIntent.paymentMethod else {
+                            currentAction.complete(
+                                with: STPPaymentHandlerActionStatus.failed,
+                                error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "SetupIntent requires action but missing PaymentMethod.")
+                            )
+                            return
+                        }
                         // If the status is still RequiresAction, the user exited from the redirect before the
                         // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
                         if self.isNextActionSuccessState(
