@@ -144,10 +144,12 @@ extension LinkLegalTermsView: UITextViewDelegate {
 
         let handled = delegate?.legalTermsView(self, didTapOnLinkWithURL: URL) ?? false
 
-        let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                          error: Error.linkLegalTermsViewUITextViewDelegate)
-        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-        stpAssert(handled, "Link not handled by delegate")
+        if !handled {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.linkLegalTermsViewUITextViewDelegate)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure("Link not handled by delegate")
+        }
 
         // If not handled by the delegate, let the system handle the link.
         return !handled
