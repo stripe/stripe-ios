@@ -13,6 +13,10 @@ let package = Package(
             targets: ["Stripe"]
         ),
         .library(
+            name: "StripeConnect",
+            targets: ["StripeConnect"]
+        ),
+        .library(
             name: "StripePayments",
             targets: ["StripePayments"]
         ),
@@ -77,6 +81,11 @@ let package = Package(
             resources: [
                 .process("PrivacyInfo.xcprivacy")
             ]
+        ),
+        .target(
+            name: "StripeConnect",
+            path: "StripeConnect/StripeConnect",
+            exclude: ["Info.plist"],
         ),
         .target(
             name: "StripeApplePay",

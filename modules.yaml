@@ -131,6 +131,12 @@ modules:
   framework_name: StripeCameraCore
   supports_catalyst: false
 
+- podspec: StripeConnect.podspec
+  scheme: StripeConnect
+  framework_name: StripeConnect
+  custom_string_convertible_dir: StripeConnect/StripeConnect/Source
+  supports_catalyst: false
+
 - podspec: StripeCore.podspec
   scheme: StripeCore
   framework_name: StripeCore
@@ -204,3 +210,4 @@ pod_push_order:
 - StripeIdentity.podspec
 - StripeCardScan.podspec
 - StripeFinancialConnections.podspec
+- StripeConnect.podspec

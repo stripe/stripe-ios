@@ -79,6 +79,22 @@ Generate new localized screenshots
 
 
 
+### ios legacy_tests_15
+
+```sh
+[bundle exec] fastlane ios legacy_tests_15
+```
+
+
+
+### ios legacy_tests_16
+
+```sh
+[bundle exec] fastlane ios legacy_tests_16
+```
+
+
+
 ### ios e2e_only
 
 ```sh
