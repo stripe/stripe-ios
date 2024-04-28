@@ -84,6 +84,7 @@ let package = Package(
         ),
         .target(
             name: "StripeConnect",
+            dependencies: ["StripeCore"],
             path: "StripeConnect/StripeConnect",
             exclude: ["Info.plist"],
         ),
