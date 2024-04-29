@@ -5,13 +5,15 @@
 ### PaymentSheet
 * [Added] Support for Multibanco with PaymentIntents.
 * [Fixed] Fixed an issue where STPPaymentHandler sometimes reported errors using `unexpectedErrorCode` instead of a more specific error when customers fail a next action.
+* [Fixed] Expiration dates more than 50 years in the past (e.g. `95`) are now blocked.
 
 ### Payments
 * [Added] Support for Multibanco bindings.
+* [Fixed] Expiration dates more than 50 years in the past (e.g. `95`) are now blocked.
 
 ## 23.27.1 2024-04-22
 ### Payments
-* [Fixed] An issue where the PrivacyInfo.xcprivacy was not bundled with StripePayments when installing with Cocoapods. 
+* [Fixed] An issue where the PrivacyInfo.xcprivacy was not bundled with StripePayments when installing with Cocoapods.
 
 ### Apple Pay
 * [Changed] Apple Pay additionalEnabledApplePayNetworks are now in front of the supported network list.
@@ -84,7 +86,7 @@
 
 ## 23.21.2 2024-02-05
 ### Payments
-* [Changed] We now auto append `mandate_data` when using Klarna with a SetupIntent. If you are interested in using Klarna with SetupIntents you sign up for the beta [here](https://stripe.com/docs/payments/klarna/accept-a-payment). 
+* [Changed] We now auto append `mandate_data` when using Klarna with a SetupIntent. If you are interested in using Klarna with SetupIntents you sign up for the beta [here](https://stripe.com/docs/payments/klarna/accept-a-payment).
 
 ## 23.21.1 2024-01-22
 ### Payments
@@ -93,7 +95,7 @@
 ## 23.21.0 2024-01-16
 ### PaymentSheet
 * [Fixed] Fixed a few design issues on visionOS.
-* [Added] Added billing details and type properties to [`PaymentSheet.FlowController.PaymentOptionDisplayData`](https://stripe.dev/stripe-ios/stripepaymentsheet/documentation/stripepaymentsheet/paymentsheet/flowcontroller/paymentoptiondisplaydata). 
+* [Added] Added billing details and type properties to [`PaymentSheet.FlowController.PaymentOptionDisplayData`](https://stripe.dev/stripe-ios/stripepaymentsheet/documentation/stripepaymentsheet/paymentsheet/flowcontroller/paymentoptiondisplaydata).
 
 ## 23.20.0 2023-12-18
 ### PaymentSheet
@@ -237,7 +239,7 @@
 ## 23.12.0 2023-07-31
 ### PaymentSheet
 * [Added] Enable SEPA Debit and iDEAL for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
-* [Added] Add removeSavedPaymentMethodMessage to PaymentSheet.Configuration and CustomerSheet.Configuration. 
+* [Added] Add removeSavedPaymentMethodMessage to PaymentSheet.Configuration and CustomerSheet.Configuration.
 
 ### Identity
 * [Added] Supports [phone verification](https://stripe.com/docs/identity/phone) in Identity mobile SDK.
