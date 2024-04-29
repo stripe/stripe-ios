@@ -117,7 +117,7 @@ def build(dir, target_name = 'SPMTest')
       'CODE_SIGN_IDENTITY="-" ' +
       'CODE_SIGNING_REQUIRED="NO" ' +
       'CODE_SIGN_ENTITLEMENTS="" ' +
-      "LD_MAP_FILE_PATH=\"build/#{target_name}-LinkMap.txt\" " +
+      "LD_MAP_FILE_PATH=\"#{dir}/build/#{target_name}-LinkMap.txt\" " +
       'CODE_SIGNING_ALLOWED="NO"').to_s
       command_succeeded = system(xcode_command)
       puts xcode_command
