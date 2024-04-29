@@ -52,7 +52,15 @@ struct CardExpiryDate {
         let calendar = Calendar(identifier: .gregorian)
         let currentYear = calendar.component(.year, from: now)
         let currentMonth = calendar.component(.month, from: now)
-        return currentYear > year || (currentYear == year && currentMonth > month)
+
+        // Copied from Android SDK
+        let twoDigitCurrentYear = currentYear % 100
+        let twoDigitYear = year % 100
+
+        let isExpiredYear = (twoDigitYear - twoDigitCurrentYear) < 0
+        let isYearTooLarge = (twoDigitYear - twoDigitCurrentYear) > 50
+
+        return isExpiredYear || isYearTooLarge || (currentYear == year && currentMonth > month)
     }
 
     /// Normalizes a 2-digit year to 4 digits.

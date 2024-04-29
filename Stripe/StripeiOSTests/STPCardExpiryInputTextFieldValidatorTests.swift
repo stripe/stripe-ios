@@ -76,7 +76,7 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
         } else {
             XCTFail("Invalid month+year should be invalid")
         }
-        
+
         let nineties = "01/95"
         validator.inputValue = nonsensical
         if case .invalid(let errorMessage) = validator.validationState {
