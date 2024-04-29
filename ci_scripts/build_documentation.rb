@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'cocoapods'
-require 'jazzy'
 require 'fileutils'
-require 'mustache'
 require 'optparse'
 require 'pathname'
 require 'tempfile'
@@ -42,8 +40,6 @@ end
 
 $SCRIPT_DIR = __dir__
 $ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
-$JAZZY_CONFIG_FILE = File.join_if_safe($ROOT_DIR, '.jazzy.yaml')
-$JAZZY_CONFIG = YAML.load_file($JAZZY_CONFIG_FILE)
 $TEMP_DIR = Dir.mktmpdir('stripe-docs')
 $TEMP_BUILD_DIR = Dir.mktmpdir('stripe-docs-build')
 $TEMP_PUBLISH_DIR = Dir.mktmpdir('stripe-docs-publish')
@@ -141,7 +137,7 @@ end
 def build_module_docs(modules, release_version, docs_root_directory)
   github_file_prefix = "https://github.com/stripe/stripe-ios/tree/#{release_version}"
   github_raw_file_prefix = "https://github.com/stripe/stripe-ios/raw/#{release_version}"
-  jazzy_exit_code = 0
+  docs_exit_code = 0
 
   modules.each do |m|
     # Note: If we don't check for empty string/nil, we might silently
@@ -173,7 +169,7 @@ def build_module_docs(modules, release_version, docs_root_directory)
     # Verify exit code
     xcodebuild_exit_code = $?.exitstatus
 
-    die "Executing xcodebuild failed with status code: #{jazzy_exit_code}" if jazzy_exit_code != 0
+    die "Executing xcodebuild failed with status code: #{docs_exit_code}" if docs_exit_code != 0
     `mv #{$TEMP_BUILD_DIR}/Build/Products/Release-iphoneos/#{m['framework_name']}.doccarchive #{docs_root_directory}/docs/#{m['framework_name'].downcase}`
     # Clean up the bogus index.html file created by DocC
     File.delete("#{docs_root_directory}/docs/#{m['framework_name'].downcase}/index.html")
@@ -255,7 +251,7 @@ def preview_docs(docs_root_directory)
   `cp -a "#{docs_root_directory}/docs/"* "#{tmp_publish_dir}/stripe-ios/"`
   Dir.chdir(tmp_publish_dir) do
     `python3 -m http.server 4242`
-    `open http://localhost:4242/stripe-ios/`
+    puts "Now running: http://localhost:4242/stripe-ios/documentation/stripe/"
   end
 end
 
