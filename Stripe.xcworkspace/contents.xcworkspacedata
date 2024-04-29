@@ -5,6 +5,9 @@
       location = "group:Example"
       name = "Example">
       <FileRef
+         location = "group:StripeConnect Example/StripeConnect Example.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:AppClipExample/AppClipExample.xcodeproj">
       </FileRef>
       <FileRef

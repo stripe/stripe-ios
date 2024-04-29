@@ -20,9 +20,16 @@
 		E63DA0552BDE2697005BF2A0 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E63DA04A2BDE2697005BF2A0 /* StripeiOS-Release.xcconfig */; };
 		E63DA0562BDE2697005BF2A0 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E63DA04B2BDE2697005BF2A0 /* StripeiOS-Shared.xcconfig */; };
 		E63DA0572BDE2697005BF2A0 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E63DA04C2BDE2697005BF2A0 /* Version.xcconfig */; };
-		E63DA05A2BDE2C2E005BF2A0 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0592BDE2C2E005BF2A0 /* Placeholder.swift */; };
 		E63DA05D2BDE2E21005BF2A0 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63DA05C2BDE2E21005BF2A0 /* StripeCore.framework */; };
 		E63DA0612BDE349C005BF2A0 /* StripeConnect+Exports.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0602BDE349C005BF2A0 /* StripeConnect+Exports.swift */; };
+		E63DA0642BDE382B005BF2A0 /* StripeConnectInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0632BDE382B005BF2A0 /* StripeConnectInstance.swift */; };
+		E63DA0662BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0652BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift */; };
+		E63DA0692BDE3B32005BF2A0 /* PaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0682BDE3B32005BF2A0 /* PaymentsView.swift */; };
+		E63DA06B2BDE3B5A005BF2A0 /* PaymentDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA06A2BDE3B5A005BF2A0 /* PaymentDetailsView.swift */; };
+		E63DA06D2BDE3C97005BF2A0 /* WebWrappedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA06C2BDE3C97005BF2A0 /* WebWrappedView.swift */; };
+		E63DA06F2BDE3D5B005BF2A0 /* ComponentWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA06E2BDE3D5B005BF2A0 /* ComponentWebView.swift */; };
+		E63DA0BE2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */; };
+		E63DA0C22BDE59B5005BF2A0 /* WebViewFiles in Resources */ = {isa = PBXBuildFile; fileRef = E63DA0C12BDE59B5005BF2A0 /* WebViewFiles */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,9 +57,16 @@
 		E63DA04A2BDE2697005BF2A0 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		E63DA04B2BDE2697005BF2A0 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		E63DA04C2BDE2697005BF2A0 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
-		E63DA0592BDE2C2E005BF2A0 /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		E63DA05C2BDE2E21005BF2A0 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63DA0602BDE349C005BF2A0 /* StripeConnect+Exports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeConnect+Exports.swift"; sourceTree = "<group>"; };
+		E63DA0632BDE382B005BF2A0 /* StripeConnectInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectInstance.swift; sourceTree = "<group>"; };
+		E63DA0652BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectInstanceAppearance.swift; sourceTree = "<group>"; };
+		E63DA0682BDE3B32005BF2A0 /* PaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsView.swift; sourceTree = "<group>"; };
+		E63DA06A2BDE3B5A005BF2A0 /* PaymentDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsView.swift; sourceTree = "<group>"; };
+		E63DA06C2BDE3C97005BF2A0 /* WebWrappedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebWrappedView.swift; sourceTree = "<group>"; };
+		E63DA06E2BDE3D5B005BF2A0 /* ComponentWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentWebView.swift; sourceTree = "<group>"; };
+		E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectBundleLocator.swift; sourceTree = "<group>"; };
+		E63DA0C12BDE59B5005BF2A0 /* WebViewFiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = WebViewFiles; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +112,7 @@
 		E63DA02D2BDE2623005BF2A0 /* StripeConnect */ = {
 			isa = PBXGroup;
 			children = (
+				E63DA0702BDE4863005BF2A0 /* Resources */,
 				E63DA0582BDE2C11005BF2A0 /* Source */,
 				E63DA02E2BDE2623005BF2A0 /* StripeConnect.h */,
 			);
@@ -133,8 +148,11 @@
 		E63DA0582BDE2C11005BF2A0 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				E63DA0592BDE2C2E005BF2A0 /* Placeholder.swift */,
+				E63DA0672BDE3B29005BF2A0 /* Components */,
+				E63DA0622BDE3819005BF2A0 /* Internal */,
+				E63DA0632BDE382B005BF2A0 /* StripeConnectInstance.swift */,
 				E63DA0602BDE349C005BF2A0 /* StripeConnect+Exports.swift */,
+				E63DA0652BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -145,6 +163,33 @@
 				E63DA05C2BDE2E21005BF2A0 /* StripeCore.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E63DA0622BDE3819005BF2A0 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				E63DA06E2BDE3D5B005BF2A0 /* ComponentWebView.swift */,
+				E63DA06C2BDE3C97005BF2A0 /* WebWrappedView.swift */,
+				E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		E63DA0672BDE3B29005BF2A0 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				E63DA06A2BDE3B5A005BF2A0 /* PaymentDetailsView.swift */,
+				E63DA0682BDE3B32005BF2A0 /* PaymentsView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		E63DA0702BDE4863005BF2A0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E63DA0C12BDE59B5005BF2A0 /* WebViewFiles */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E63DA04F2BDE2697005BF2A0 /* Project-Release.xcconfig in Resources */,
+				E63DA0C22BDE59B5005BF2A0 /* WebViewFiles in Resources */,
 				E63DA0552BDE2697005BF2A0 /* StripeiOS-Release.xcconfig in Resources */,
 				E63DA0562BDE2697005BF2A0 /* StripeiOS-Shared.xcconfig in Resources */,
 				E63DA0532BDE2697005BF2A0 /* StripeiOS Tests-Shared.xcconfig in Resources */,
@@ -267,8 +313,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E63DA0662BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift in Sources */,
+				E63DA06B2BDE3B5A005BF2A0 /* PaymentDetailsView.swift in Sources */,
+				E63DA0692BDE3B32005BF2A0 /* PaymentsView.swift in Sources */,
+				E63DA06D2BDE3C97005BF2A0 /* WebWrappedView.swift in Sources */,
+				E63DA0BE2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift in Sources */,
+				E63DA06F2BDE3D5B005BF2A0 /* ComponentWebView.swift in Sources */,
 				E63DA0612BDE349C005BF2A0 /* StripeConnect+Exports.swift in Sources */,
-				E63DA05A2BDE2C2E005BF2A0 /* Placeholder.swift in Sources */,
+				E63DA0642BDE382B005BF2A0 /* StripeConnectInstance.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
