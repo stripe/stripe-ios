@@ -5,8 +5,8 @@
 //  Created by Mel Ludowise on 4/28/24.
 //
 
-import UIKit
 import StripeConnect
+import UIKit
 
 class PaymentsViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
@@ -21,7 +21,7 @@ class PaymentsViewController: UIViewController {
         )
         let paymentComponent = stripeConnectInstance.createPayments()
         containerView.addSubview(paymentComponent)
-        
+
         paymentComponent.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             paymentComponent.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -40,7 +40,7 @@ class PaymentsViewController: UIViewController {
         do {
             // Fetch the AccountSession client secret
             let (data, _) = try await URLSession.shared.data(for: request)
-            let json = try JSONSerialization.jsonObject(with: data) as? [String : Any]
+            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
 
             errorView.isHidden = true
             containerView.isHidden = false

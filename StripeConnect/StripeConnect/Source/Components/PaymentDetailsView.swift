@@ -16,14 +16,14 @@ public class PaymentDetailsView: UIView {
     init(connectInstance: StripeConnectInstance) {
         super.init(frame: .zero)
 
-        connectInstance.$appearance.sink { appearance in
+        connectInstance.$appearance.sink { _ in
 
         }.store(in: &cancellables)
-        connectInstance.$locale.sink { locale in
+        connectInstance.$locale.sink { _ in
 
         }.store(in: &cancellables)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

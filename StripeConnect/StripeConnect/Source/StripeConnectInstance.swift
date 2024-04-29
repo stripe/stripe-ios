@@ -61,5 +61,5 @@ public class StripeConnectInstance {
 // MARK: - Internal
 
 extension StripeConnectInstance {
-    
+
 }

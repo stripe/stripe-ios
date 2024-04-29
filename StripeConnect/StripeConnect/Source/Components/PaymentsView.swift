@@ -30,11 +30,11 @@ public class PaymentsView: UIView {
             webView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        connectInstance.$appearance.sink { appearance in
+        connectInstance.$appearance.sink { _ in
 
         }.store(in: &cancellables)
 
-        connectInstance.$locale.sink { locale in
+        connectInstance.$locale.sink { _ in
 
         }.store(in: &cancellables)
     }

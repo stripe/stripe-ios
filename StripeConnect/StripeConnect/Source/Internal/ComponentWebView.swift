@@ -47,14 +47,14 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
 
         loadFileURL(urlComponents.url!, allowingReadAccessTo: directoryUrl)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - WKScriptMessageHandler
 
-    func userContentController(_ userContentController: WKUserContentController, 
+    func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
         if message.name == "debug" {
             print(message.body as? String as Any)
