@@ -58,6 +58,7 @@ at_exit { FileUtils.remove_entry($TEMP_DIR) }
 
 docs_root_directory = $TEMP_PUBLISH_DIR
 should_publish = false
+should_preview = false
 
 OptionParser.new do |opts|
   opts.on('--docs-root-dir DIRECTORY', "Generate docs to this directory instead of the repo's root directory.") do |dir|
@@ -65,6 +66,9 @@ OptionParser.new do |opts|
   end
   opts.on('--publish', 'Publish docs to GitHub') do |b|
     should_publish = b
+  end
+  opts.on('--preview', 'Preview docs locally') do |b|
+    should_preview = b
   end
 end.parse!
 
@@ -245,6 +249,16 @@ def publish(release_version, docs_root_directory)
   end
 end
 
+def preview_docs(docs_root_directory)
+  tmp_publish_dir = Dir.mktmpdir('stripe-docs-publish-test')
+  `mkdir -p "#{tmp_publish_dir}/stripe-ios/"`
+  `cp -a "#{docs_root_directory}/docs/"* "#{tmp_publish_dir}/stripe-ios/"`
+  Dir.chdir(tmp_publish_dir) do
+    `python3 -m http.server 4242`
+    `open http://localhost:4242/stripe-ios/`
+  end
+end
+
 # MARK: - main
 
 clean_existing_docs(docs_root_directory)
@@ -255,3 +269,4 @@ release_version = `cat "#{$ROOT_DIR}/VERSION"`.strip
 build_module_docs(modules, release_version, docs_root_directory)
 build_index_page(modules, release_version, docs_root_directory)
 publish(release_version, docs_root_directory) if should_publish
+preview_docs(docs_root_directory) if should_preview
