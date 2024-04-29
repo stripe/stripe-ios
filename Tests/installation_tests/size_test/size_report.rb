@@ -107,31 +107,34 @@ def build(dir, target_name = 'SPMTest')
       `mkdir -p build`
       # Build an archive with all code-signing disabled
       # (so we can run this in an untrusted CI environment)
-      command_succeeded = system(('xcodebuild clean archive ' +
-        '-quiet ' +
-        '-workspace "SPMTest.xcworkspace" ' +
-        '-scheme "SPMTest" ' +
-        '-sdk "iphoneos" ' +
-        '-destination "generic/platform=iOS" ' +
-        '-archivePath build/SPMTest.xcarchive ' +
-        'CODE_SIGN_IDENTITY="-" ' +
-        'CODE_SIGNING_REQUIRED="NO" ' +
-        'CODE_SIGN_ENTITLEMENTS="" ' +
-        "LD_MAP_FILE_PATH=\"build/#{target_name}-LinkMap.txt\" " +
-        'CODE_SIGNING_ALLOWED="NO"').to_s)
-
+      xcode_command = ('xcodebuild clean archive ' +
+      '-quiet ' +
+      '-workspace "SPMTest.xcworkspace" ' +
+      '-scheme "SPMTest" ' +
+      '-sdk "iphoneos" ' +
+      '-destination "generic/platform=iOS" ' +
+      '-archivePath build/SPMTest.xcarchive ' +
+      'CODE_SIGN_IDENTITY="-" ' +
+      'CODE_SIGNING_REQUIRED="NO" ' +
+      'CODE_SIGN_ENTITLEMENTS="" ' +
+      "LD_MAP_FILE_PATH=\"build/#{target_name}-LinkMap.txt\" " +
+      'CODE_SIGNING_ALLOWED="NO"').to_s
+      command_succeeded = system(xcode_command)
+      puts xcode_command
       raise StandardError, 'Build failed' unless command_succeeded
 
       # Export a thinned archive for distribution using ad-hoc signing.
       # `ExportOptions.plist` contains a signingCertificate of "-": This isn't
       # documented anywhere, but will cause Xcode to ad-hoc sign the archive.
       # This will create "App Thinning Size Report.txt".
-      command_succeeded = system(('xcodebuild -exportArchive ' +
+      xcode_archive_command = ('xcodebuild -exportArchive ' +
       '-quiet ' +
       '-archivePath build/SPMTest.xcarchive ' +
       '-exportPath build/SPMTestArchived ' +
       '-exportOptionsPlist ExportOptions.plist ' +
-      'CODE_SIGN_IDENTITY="-"').to_s)
+      'CODE_SIGN_IDENTITY="-"').to_s
+      puts xcode_archive_command
+      command_succeeded = system(xcode_archive_command)
 
       raise StandardError, 'Build failed' unless command_succeeded
     end
