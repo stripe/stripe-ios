@@ -212,17 +212,15 @@ end
 def check_size(modules, measure_branch, base_branch)
   # Try to check out the branches - this will fail if there are unstaged changes,
   # so this also helps prevent us from unintentionally messing up any uncommitted work:
-  current_branch = nil
   Dir.chdir(@project_dir) do
-    current_branch = `git rev-parse --abbrev-ref HEAD`.chomp("\n")
     `git checkout #{measure_branch}`
     `git checkout #{base_branch}` unless base_branch.nil?
 
-    `git checkout #{current_branch}`
+    `git checkout #{measure_branch}`
   end
 
   # Build without including the SDK and store the result
-  setup_project(current_branch, @temp_dir, nil)
+  setup_project(measure_branch, @temp_dir, nil)
   unincluded_compressed_size, unincluded_uncompressed_size = build(@temp_dir)
   puts "SPMTest #{'without SDK'.underline}: Compressed size: #{unincluded_compressed_size}kb, uncompressed size: #{unincluded_uncompressed_size}kb".blue
 
@@ -249,7 +247,7 @@ def check_size(modules, measure_branch, base_branch)
 
     begin
       # Setup project to include SDK
-      setup_project(current_branch, @temp_dir, sdk)
+      setup_project(measure_branch, @temp_dir, sdk)
 
       # Checkout measure branch and build with SDK
       puts "Building with #{sdk} on #{measure_branch}...".green
@@ -321,9 +319,9 @@ def check_size(modules, measure_branch, base_branch)
     end
   end
 
-  # Go back to current branch
+  # Go back to measure branch
   Dir.chdir(@project_dir) do
-    `git checkout #{current_branch}`
+    `git checkout #{measure_branch}`
   end
 
   # Print size report table
