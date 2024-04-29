@@ -2,6 +2,8 @@ var stripeConnectInstance;
 var component;
 
 window.StripeConnect = window.StripeConnect || {};
+
+// Delete me – this just allows us to debug in chrome without erroring
 window.webkit = window.webkit || {
     'messageHandlers': {
         'debug': {
@@ -13,17 +15,26 @@ window.webkit = window.webkit || {
     }
 };
 
+const debug = (message) => {
+    // Log to xcode
+    window.webkit.messageHandlers.debug.postMessage(message);
+    // Log to browser console
+    console.debug(message);
+};
+
 // This gets set to the promise resolve when `fetchClientSecret` is called.
 // Swift will send the client secret to this method when it's done retrieving it.
 var resolveFetchClientSecret = (secret) => {
-    window.webkit.messageHandlers.debug.postMessage('didFinishFetchingClientSecret');
+    debug('didFinishFetchingClientSecret');
 };
 
 const fetchClientSecret = async () => {
-    window.webkit.messageHandlers.debug.postMessage("fetchClientSecret");
+    debug("fetchClientSecret");
+    // Message Swift that we want to start fetching the secret
+    // Swift requires that the `postMessage` body be non-empty for it to work
     window.webkit.messageHandlers.fetchClientSecret.postMessage('');
 
-    // Debug - delete me
+    // Delete me – allows for debugging in chrome with hardcoded secret
     let searchParams = new URLSearchParams(window.location.search);
     let queryParamSecret = searchParams.get('clientSecret');
     if (queryParamSecret) {
@@ -36,10 +47,11 @@ const fetchClientSecret = async () => {
     });
 
     const secret = await promise;
-    window.webkit.messageHandlers.debug.postMessage(secret);
+    debug(secret);
     return secret;
 };
 
+// delete me - test method to debug Swift -> JS communication
 const test = () => {
     window.webkit.messageHandlers.debug.postMessage("test");
 };
@@ -50,7 +62,7 @@ StripeConnect.onLoad = () => {
     let publishableKey = searchParams.get('publishableKey');
     let componentType = searchParams.get('componentType');
 
-    window.webkit.messageHandlers.debug.postMessage("PK " + publishableKey);
+    debug("PK " + publishableKey);
 
     stripeConnectInstance = StripeConnect.init({
         publishableKey: publishableKey,
@@ -58,7 +70,7 @@ StripeConnect.onLoad = () => {
     });
 
     component = stripeConnectInstance.create(componentType);
+
+    debug(component.outerHTML);
     document.body.appendChild(component);
 };
-
-window.webkit.messageHandlers.debug.postMessage("poo");
