@@ -105,8 +105,8 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         componentType: String,
         appearance: StripeConnectInstance.Appearance
     ) {
-        // Load HTML file and spoof that it's coming from docs.stripe.com
-        // This is a hack.
+        // Load HTML file and spoof that it's coming from connect-js.stripe.com
+        // to avoid CORS restrictions from loading a local file.
         guard let htmlFile = BundleLocator.resourcesBundle.url(forResource: "template", withExtension: "html"),
               var htmlText = try? String(contentsOf: htmlFile, encoding: .utf8) else {
             debugPrint("Couldn't load `template.html`")
@@ -123,7 +123,7 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
             return
         }
 
-        load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: URL(string: "https://docs.stripe.com/")!)
+        load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: URL(string: "https://connect-js.stripe.com")!)
     }
 
 //    private func addDebugRefreshButton() {
