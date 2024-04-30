@@ -6,6 +6,7 @@
 import CoreGraphics
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
@@ -78,7 +79,7 @@ extension DownloadManager {
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             return image
         } catch {
-            let errorAnalytic = ErrorAnalytic(event: .stripeCoreDownloadManagerError,
+            let errorAnalytic = ErrorAnalytic(event: .stripePaymentSheetDownloadManagerError,
                                               error: error,
                                               additionalNonPIIParams: ["url": url.absoluteString])
             analyticsClient.log(analytic: errorAnalytic)
