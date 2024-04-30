@@ -46,6 +46,18 @@ const fetchClientSecret = async () => {
         resolveFetchClientSecret = resolve;
     });
 
+    const response = await fetch('https://api.stripe.com/v1/account_sessions', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer sk_test_51MZRIlLirQdaQn8EkmE2JjfeUK4gANCELL1J5pgd4aEOiMW70MRBiKSjIxkAAgGid6yUzwgd8RIrJgSCBsRigUP500oIzHmJ8g',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'account=acct_1N9FIXQ26HdRlxHg&components[payments][enabled]=true'
+    });
+    const json = await response.json();
+
+    return json.client_secret;
+
     const secret = await promise;
     debug(secret);
     return secret;
@@ -57,9 +69,8 @@ const test = () => {
 };
 
 StripeConnect.onLoad = () => {
-
     let searchParams = new URLSearchParams(window.location.search);
-    let publishableKey = searchParams.get('publishableKey');
+    let publishableKey = 'pk_test_51MZRIlLirQdaQn8EJpw9mcVeXokTGaiV1ylz5AVQtcA0zAkoM9fLFN81yQeHYBLkCiID1Bj0sL1Ngzsq9ksRmbBN00O3VsIUdQ';
     let componentType = searchParams.get('componentType');
 
     debug("PK " + publishableKey);
@@ -69,8 +80,8 @@ StripeConnect.onLoad = () => {
         fetchClientSecret: fetchClientSecret,
     });
 
-    component = stripeConnectInstance.create(componentType);
+    component = stripeConnectInstance.create('payments');
 
-    debug(component.outerHTML);
+    // debug(component.outerHTML);
     document.body.appendChild(component);
 };
