@@ -29,7 +29,6 @@
 		E63DA06D2BDE3C97005BF2A0 /* WebWrappedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA06C2BDE3C97005BF2A0 /* WebWrappedView.swift */; };
 		E63DA06F2BDE3D5B005BF2A0 /* ComponentWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA06E2BDE3D5B005BF2A0 /* ComponentWebView.swift */; };
 		E63DA0BE2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */; };
-		E63DA0C22BDE59B5005BF2A0 /* WebViewFiles in Resources */ = {isa = PBXBuildFile; fileRef = E63DA0C12BDE59B5005BF2A0 /* WebViewFiles */; };
 		E63DA0C42BE0BD99005BF2A0 /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = E63DA0C32BE0BBFA005BF2A0 /* template.html */; };
 /* End PBXBuildFile section */
 
@@ -67,7 +66,6 @@
 		E63DA06C2BDE3C97005BF2A0 /* WebWrappedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebWrappedView.swift; sourceTree = "<group>"; };
 		E63DA06E2BDE3D5B005BF2A0 /* ComponentWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentWebView.swift; sourceTree = "<group>"; };
 		E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectBundleLocator.swift; sourceTree = "<group>"; };
-		E63DA0C12BDE59B5005BF2A0 /* WebViewFiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = WebViewFiles; sourceTree = "<group>"; };
 		E63DA0C32BE0BBFA005BF2A0 /* template.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = template.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -190,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				E63DA0C32BE0BBFA005BF2A0 /* template.html */,
-				E63DA0C12BDE59B5005BF2A0 /* WebViewFiles */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -289,7 +286,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E63DA04F2BDE2697005BF2A0 /* Project-Release.xcconfig in Resources */,
-				E63DA0C22BDE59B5005BF2A0 /* WebViewFiles in Resources */,
 				E63DA0552BDE2697005BF2A0 /* StripeiOS-Release.xcconfig in Resources */,
 				E63DA0562BDE2697005BF2A0 /* StripeiOS-Shared.xcconfig in Resources */,
 				E63DA0C42BE0BD99005BF2A0 /* template.html in Resources */,

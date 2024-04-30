@@ -30,16 +30,12 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         self.componentType = componentType
 
         let contentController = WKUserContentController()
-        let preferences = WKPreferences()
-        preferences.javaScriptEnabled = true
-
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
-        config.preferences = preferences
 
         super.init(frame: .zero, configuration: config)
 
-        // Allow the web view to be inspected for debug builds
+        // Allow the web view to be inspected for debug builds on 16.4+
         #if DEBUG
         if #available(iOS 16.4, *) {
             isInspectable = true
@@ -50,39 +46,12 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
             contentController.add(self, name: handler.rawValue)
         }
 
-//        let indexURL = BundleLocator.resourcesBundle.url(forResource: "index", withExtension: "html", subdirectory: "WebViewFiles")!
-//        let directoryUrl = BundleLocator.resourcesBundle.url(forResource: "WebViewFiles", withExtension: nil)!
-//        var urlComponents = URLComponents(url: indexURL, resolvingAgainstBaseURL: true)!
-//        urlComponents.queryItems = [
-//            .init(name: "publishableKey", value: publishableKey),
-//            .init(name: "componentType", value: componentType),
-//        ]
-
-
-//        loadFileURL(urlComponents.url!, allowingReadAccessTo: directoryUrl)
-
+        addDebugRefreshButton()
         loadContents()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func reload() -> WKNavigation? {
-        loadContents()
-        return nil
-    }
-
-    func loadContents() {
-        // Load HTML file and spoof that it's coming from docs.stripe.com
-        // This is a hack.
-        let htmlFile = BundleLocator.resourcesBundle.url(forResource: "template", withExtension: "html")!
-        let htmlText = try! String(contentsOf: htmlFile, encoding: .utf8)
-            .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
-            .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: publishableKey)
-        let data = htmlText.data(using: .utf8)!
-
-        load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: URL(string: "https://docs.stripe.com/")!)
     }
 
     // MARK: - WKScriptMessageHandler
@@ -91,11 +60,10 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
                                didReceive message: WKScriptMessage) {
         switch MessageHandler(rawValue: message.name) {
         case .none:
-            // TODO: We should probably log an error for this
-            print("Unrecognized handler \(message.name)")
+            debugPrint("Unrecognized handler \(message.name)")
 
         case .debug:
-            print(message.body as? String as Any)
+            debugPrint(message.body as? String as Any)
 
         case .beginFetchClientSecret:
             Task { @MainActor in
@@ -124,5 +92,46 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
      */
     private func synchronousEvaluateJavaScript(_ script: String) {
         evaluateJavaScript(script)
+    }
+
+    @objc
+    private func loadContents() {
+        // Load HTML file and spoof that it's coming from docs.stripe.com
+        // This is a hack.
+        guard let htmlFile = BundleLocator.resourcesBundle.url(forResource: "template", withExtension: "html"),
+              var htmlText = try? String(contentsOf: htmlFile, encoding: .utf8) else {
+            debugPrint("Couldn't load `template.html`")
+            return
+        }
+
+        htmlText = htmlText
+            .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
+            .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: publishableKey)
+
+        guard let data = htmlText.data(using: .utf8) else {
+            debugPrint("Couldn't encode html data")
+            return
+        }
+
+        load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: URL(string: "https://docs.stripe.com/")!)
+    }
+
+    private func addDebugRefreshButton() {
+        #if DEBUG
+
+        let refreshButton = UIButton(type: .system)
+        refreshButton.setTitle("Refresh", for: .normal)
+
+        // Calling `reload` will just load `docs.stripe.com`, so we need to
+        // reload the contents instead.
+        refreshButton.addTarget(nil, action: #selector(loadContents), for: .touchUpInside)
+        addSubview(refreshButton)
+        refreshButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            refreshButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            refreshButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+        ])
+
+        #endif
     }
 }

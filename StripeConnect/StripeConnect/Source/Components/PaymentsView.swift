@@ -22,21 +22,12 @@ public class PaymentsView: UIView {
 
         addSubview(webView)
 
-        let refreshButton = UIButton(type: .system)
-        refreshButton.setTitle("Refresh", for: .normal)
-        refreshButton.addTarget(nil, action: #selector(didRefresh), for: .touchUpInside)
-        addSubview(refreshButton)
-
-        refreshButton.translatesAutoresizingMaskIntoConstraints = false
         webView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             webView.leadingAnchor.constraint(equalTo: leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: trailingAnchor),
             webView.topAnchor.constraint(equalTo: topAnchor),
             webView.bottomAnchor.constraint(equalTo: bottomAnchor),
-
-            refreshButton.bottomAnchor.constraint(equalTo: bottomAnchor),
-            refreshButton.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
 
         connectInstance.$appearance.sink { _ in
@@ -50,10 +41,5 @@ public class PaymentsView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    @objc
-    func didRefresh() {
-        _ = webView.reload()
     }
 }
