@@ -30,9 +30,10 @@ var resolveFetchClientSecret = (secret) => {
 
 const fetchClientSecret = async () => {
     debug("fetchClientSecret");
-    // Message Swift that we want to start fetching the secret
-    // Swift requires that the `postMessage` body be non-empty for it to work
-    window.webkit.messageHandlers.fetchClientSecret.postMessage('');
+    // Message Swift that we want to start fetching the secret. 
+    // Swift will call `resolveFetchClientSecret` when it's finished.
+    // Note: Swift requires that the `postMessage` body be non-empty for it to work
+    window.webkit.messageHandlers.beginFetchClientSecret.postMessage('');
 
     // Delete me – allows for debugging in chrome with hardcoded secret
     let searchParams = new URLSearchParams(window.location.search);

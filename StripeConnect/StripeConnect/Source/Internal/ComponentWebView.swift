@@ -11,6 +11,14 @@ import WebKit
 class ComponentWebView: WKWebView, WKScriptMessageHandler {
     private var fetchClientSecret: () async -> String?
 
+    /// Supported message handlers for JS -> Swift messaging
+    enum MessageHandler: String, CaseIterable {
+        /// Temporary handler to print debug statements to Xcode's console from JS
+        case debug
+        /// Begins fetching the client secret. After this is called, Swift will execute the `resolveFetchClientSecret` JS function.
+        case beginFetchClientSecret
+    }
+
     init(publishableKey: String,
          componentType: String,
          fetchClientSecret: @escaping () async -> String?) {
@@ -33,8 +41,9 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         }
         #endif
 
-        contentController.add(self, name: "fetchClientSecret")
-        contentController.add(self, name: "debug")
+        MessageHandler.allCases.forEach { handler in
+            contentController.add(self, name: handler.rawValue)
+        }
 
         let htmlFileUrl = BundleLocator.resourcesBundle.url(forResource: "component", withExtension: "html", subdirectory: "WebViewFiles")!
         let directoryUrl = BundleLocator.resourcesBundle.url(forResource: "WebViewFiles", withExtension: nil)!
@@ -56,28 +65,39 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
-        if message.name == "debug" {
+        switch MessageHandler(rawValue: message.name) {
+        case .none:
+            // TODO: We should probably log an error for this
+            print("Unrecognized handler \(message.name)")
+
+        case .debug:
             print(message.body as? String as Any)
-        }
-        guard message.name == "fetchClientSecret" else {
-            return
-        }
 
-        Task { @MainActor in
-            let secret = await fetchClientSecret() ?? ""
-            /*
-             Using the async version of `evaluateJavaScript` causes the fatal error:
-             `Unexpectedly found nil while implicitly unwrapping an Optional value`
-
-             Explicitly calling the non-async version triggers a compiler warning,
-             so wrapping it with `synchronousEvaluateJavaScript` makes the compiler happy.
-             */
-            self.synchronousEvaluateJavaScript("resolveFetchClientSecret('\(secret)')")
+        case .beginFetchClientSecret:
+            Task { @MainActor in
+                // TODO: Add error handling if `fetchClientSecret` is nil
+                // Alternatively, we could make `fetchClientSecret` have a `throws async -> String` signature and forward the error to the integrator
+                let secret = await fetchClientSecret() ?? ""
+                self.synchronousEvaluateJavaScript("resolveFetchClientSecret('\(secret)')")
+            }
         }
     }
 
     // MARK: - Private
 
+    /**
+     Wrapper for synchronous version of `evaluateJavaScript` so we can call it
+     from an async context without compiler warning.
+
+     - Note:
+     Using the async version of `evaluateJavaScript` causes the fatal error:
+     `Unexpectedly found nil while implicitly unwrapping an Optional value`
+
+     Explicitly calling the synchronous version from an async context triggers the compiler warning:
+     `Consider using asynchronous alternative function`
+
+     So wrapping this function is the only way to avoid a compiler warning and fata
+     */
     private func synchronousEvaluateJavaScript(_ script: String) {
         evaluateJavaScript(script)
     }
