@@ -70,4 +70,12 @@ class CardExpiryDateTests: XCTestCase {
         XCTAssertTrue(sut.expired(now: aMonthAfter))
     }
 
+    func test_90s_not_allowed() throws {
+        let sutPast = CardExpiryDate(month: 2, year: 1995)
+        let sutFuture = CardExpiryDate(month: 2, year: 2095)
+
+        XCTAssertTrue(sutPast.expired())
+        XCTAssertTrue(sutFuture.expired())
+    }
+
 }

@@ -433,39 +433,6 @@ class PaymentSheetAPITest: XCTestCase {
         )
     }
 
-    func testDeferredConfirm_new_expired_card() {
-        // Note: This fails when the PM is created
-        let invalid_exp_year_card = IntentConfirmParams(params: .init(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil), type: .stripe(.card))
-        _testDeferredConfirm(
-            inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
-            expectedShouldSavePaymentMethod: false,
-            expectedResult: .failed(error: ExpectedError(errorDescription: "Your card's expiration year is invalid.")),
-            isPaymentIntent: true, // PaymentIntent
-            isServerSideConfirm: false // Client-side confirmation
-        )
-        _testDeferredConfirm(
-            inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
-            expectedShouldSavePaymentMethod: false,
-            expectedResult: .failed(error: ExpectedError(errorDescription: "Your card's expiration year is invalid.")),
-            isPaymentIntent: true, // PaymentIntent
-            isServerSideConfirm: true // Server-side confirmation
-        )
-        _testDeferredConfirm(
-            inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
-            expectedShouldSavePaymentMethod: false,
-            expectedResult: .failed(error: ExpectedError(errorDescription: "Your card's expiration year is invalid.")),
-            isPaymentIntent: false, // SetupIntent
-            isServerSideConfirm: false // Client-side confirmation
-        )
-        _testDeferredConfirm(
-            inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
-            expectedShouldSavePaymentMethod: false,
-            expectedResult: .failed(error: ExpectedError(errorDescription: "Your card's expiration year is invalid.")),
-            isPaymentIntent: false, // SetupIntent
-            isServerSideConfirm: true // Server-side confirmation
-        )
-    }
-
     func testDeferredConfirm_new_insufficient_funds_card() {
         // Note: This fails when the intent is confirmed
         let insufficient_funds_new_PM = IntentConfirmParams(params: ._testCardValue(number: "4000000000009995"), type: .stripe(.card))
