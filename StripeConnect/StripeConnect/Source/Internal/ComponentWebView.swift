@@ -45,10 +45,10 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
             contentController.add(self, name: handler.rawValue)
         }
 
-        let htmlFileUrl = BundleLocator.resourcesBundle.url(forResource: "component", withExtension: "html", subdirectory: "WebViewFiles")!
+        let indexURL = BundleLocator.resourcesBundle.url(forResource: "index", withExtension: "html", subdirectory: "WebViewFiles")!
         let directoryUrl = BundleLocator.resourcesBundle.url(forResource: "WebViewFiles", withExtension: nil)!
 
-        var urlComponents = URLComponents(url: htmlFileUrl, resolvingAgainstBaseURL: true)!
+        var urlComponents = URLComponents(url: indexURL, resolvingAgainstBaseURL: true)!
         urlComponents.queryItems = [
             .init(name: "publishableKey", value: publishableKey),
             .init(name: "componentType", value: componentType),
