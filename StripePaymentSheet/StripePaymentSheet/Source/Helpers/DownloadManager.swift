@@ -6,6 +6,7 @@
 import CoreGraphics
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
