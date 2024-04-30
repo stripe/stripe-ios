@@ -203,7 +203,7 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         // Validate analytic
         let firstAnalytic = try XCTUnwrap(analyticsClient._testLogHistory.first)
-        XCTAssertEqual("stripecore.downloadmanager.error", firstAnalytic["event"] as? String)
+        XCTAssertEqual("stripepaymentsheet.downloadmanager.error", firstAnalytic["event"] as? String)
         XCTAssertEqual("failedToMakeImageFromData", firstAnalytic["error_code"] as? String)
         XCTAssertEqual("StripePaymentSheet.DownloadManager.Error", firstAnalytic["error_type"] as? String)
         XCTAssertEqual(self.validURL.absoluteString, firstAnalytic["url"] as? String)
