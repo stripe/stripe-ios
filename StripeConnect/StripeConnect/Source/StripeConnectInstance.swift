@@ -43,8 +43,8 @@ public class StripeConnectInstance {
         .init(connectInstance: self)
     }
 
-    public func update(appearance: Appearance?,
-                       locale: Locale?) {
+    public func update(appearance: Appearance? = nil,
+                       locale: Locale? = nil) {
         if let appearance {
             self.appearance = appearance
         }

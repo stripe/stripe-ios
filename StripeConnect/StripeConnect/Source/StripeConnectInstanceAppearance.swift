@@ -31,5 +31,57 @@ extension StripeConnectInstance {
         public var colorDanger: UIColor?
 
         public init() { }
+
+        // MARK: - Internal
+
+        private var variablesDictionary: [String: String] {
+            var dict: [String: String] = [:]
+
+            // Default font to "-apple-system" to use the system default,
+            // otherwise the webView will use Times
+            dict["fontFamily"] = fontFamily ?? "-apple-system"
+
+            dict["fontSizeBase"] = fontSizeBase?.pxString
+            dict["spacingUnit"] = spacingUnit?.pxString
+            dict["borderRadius"] = borderRadius?.pxString
+            dict["colorPrimary"] = colorPrimary?.cssValue
+            dict["colorBackground"] = colorBackground?.cssValue
+            dict["colorText"] = colorText?.cssValue
+            dict["colorDanger"] = colorDanger?.cssValue
+            return dict
+        }
+
+        var asJsonString: String {
+            guard let data = try? JSONSerialization.data(withJSONObject: variablesDictionary),
+                  let stringValue = String(data: data, encoding: .utf8) else {
+                debugPrint("Couldn't encode appearance")
+                return "{}"
+            }
+
+            return "{ variables: \(stringValue) }"
+        }
+    }
+}
+
+private extension CGFloat {
+    var pxString: String {
+        "\(Int(self))px"
+    }
+}
+
+private extension UIColor {
+    var cssValue: String {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+
+        getRed(&red, green: &green, blue: &blue, alpha: nil)
+
+        return String(
+            format: "rgb(%.0f, %.0f, %.0f)",
+            red * 255,
+            green * 255,
+            blue * 255
+        )
     }
 }

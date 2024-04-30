@@ -11,9 +11,6 @@ import WebKit
 class ComponentWebView: WKWebView, WKScriptMessageHandler {
     private var fetchClientSecret: () async -> String?
 
-    let publishableKey: String
-    let componentType: String
-
     /// Supported message handlers for JS -> Swift messaging
     enum MessageHandler: String, CaseIterable {
         /// Temporary handler to print debug statements to Xcode's console from JS
@@ -24,10 +21,9 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
 
     init(publishableKey: String,
          componentType: String,
+         appearance: StripeConnectInstance.Appearance,
          fetchClientSecret: @escaping () async -> String?) {
         self.fetchClientSecret = fetchClientSecret
-        self.publishableKey = publishableKey
-        self.componentType = componentType
 
         let contentController = WKUserContentController()
         let config = WKWebViewConfiguration()
@@ -46,8 +42,8 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
             contentController.add(self, name: handler.rawValue)
         }
 
-        addDebugRefreshButton()
-        loadContents()
+//        addDebugRefreshButton()
+        loadContents(publishableKey: publishableKey, componentType: componentType, appearance: appearance)
     }
 
     required init?(coder: NSCoder) {
@@ -75,6 +71,16 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         }
     }
 
+    // MARK: - Internal
+
+    func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
+        evaluateJavaScript("stripeConnectInstance.update({appearance: \(appearance.asJsonString)})")
+    }
+
+    func updateLocale(_ locale: Locale) {
+        evaluateJavaScript("stripeConnectInstance.update({locale: \(locale.identifier)})")
+    }
+
     // MARK: - Private
 
     /**
@@ -94,8 +100,11 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         evaluateJavaScript(script)
     }
 
-    @objc
-    private func loadContents() {
+    private func loadContents(
+        publishableKey: String,
+        componentType: String,
+        appearance: StripeConnectInstance.Appearance
+    ) {
         // Load HTML file and spoof that it's coming from docs.stripe.com
         // This is a hack.
         guard let htmlFile = BundleLocator.resourcesBundle.url(forResource: "template", withExtension: "html"),
@@ -107,6 +116,7 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         htmlText = htmlText
             .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
             .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: publishableKey)
+            .replacingOccurrences(of: "{{APPEARANCE}}", with: appearance.asJsonString)
 
         guard let data = htmlText.data(using: .utf8) else {
             debugPrint("Couldn't encode html data")
@@ -116,22 +126,22 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: URL(string: "https://docs.stripe.com/")!)
     }
 
-    private func addDebugRefreshButton() {
-        #if DEBUG
-
-        let refreshButton = UIButton(type: .system)
-        refreshButton.setTitle("Refresh", for: .normal)
-
-        // Calling `reload` will just load `docs.stripe.com`, so we need to
-        // reload the contents instead.
-        refreshButton.addTarget(nil, action: #selector(loadContents), for: .touchUpInside)
-        addSubview(refreshButton)
-        refreshButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            refreshButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            refreshButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-        ])
-
-        #endif
-    }
+//    private func addDebugRefreshButton() {
+//        #if DEBUG
+//
+//        let refreshButton = UIButton(type: .system)
+//        refreshButton.setTitle("Refresh", for: .normal)
+//
+//        // Calling `reload` will just load `docs.stripe.com`, so we need to
+//        // reload the contents instead.
+//        refreshButton.addTarget(nil, action: #selector(loadContents), for: .touchUpInside)
+//        addSubview(refreshButton)
+//        refreshButton.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            refreshButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+//            refreshButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+//        ])
+//
+//        #endif
+//    }
 }

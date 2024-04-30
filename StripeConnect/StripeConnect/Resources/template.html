@@ -38,10 +38,12 @@
 
             StripeConnect.onLoad = () => {
                 debug("PK '{{PUBLISHABLE_KEY}}'");
+                debug("Appearance: " + JSON.stringify({{APPEARANCE}}));
 
                 stripeConnectInstance = StripeConnect.init({
                     publishableKey: '{{PUBLISHABLE_KEY}}',
                     fetchClientSecret: fetchClientSecret,
+                    appearance: {{APPEARANCE}}
                 });
 
                 component = stripeConnectInstance.create('{{COMPONENT_TYPE}}');

@@ -11,6 +11,10 @@ import UIKit
 class PaymentsViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var errorView: UIView!
+    @IBOutlet weak var customAppearanceButton: UIButton!
+
+    var useCustomAppearance = false
+    var stripeConnectInstance: StripeConnectInstance?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +33,8 @@ class PaymentsViewController: UIViewController {
             paymentComponent.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             paymentComponent.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
         ])
+
+        self.stripeConnectInstance = stripeConnectInstance
     }
 
     func fetchClientSecret() async -> String? {
@@ -51,5 +57,22 @@ class PaymentsViewController: UIViewController {
             containerView.isHidden = true
             return nil
         }
+    }
+
+    @IBAction func toggleCustomAppearance(_ sender: Any) {
+        useCustomAppearance.toggle()
+        customAppearanceButton.isSelected = useCustomAppearance
+
+        var appearance = StripeConnectInstance.Appearance()
+        if useCustomAppearance {
+            appearance.fontFamily = "Chalkboard SE"
+            appearance.fontSizeBase = 20
+            appearance.spacingUnit = 20
+            appearance.borderRadius = 24
+            appearance.colorPrimary = .magenta
+            appearance.colorText = .magenta
+        }
+
+        stripeConnectInstance?.update(appearance: appearance)
     }
 }

@@ -15,9 +15,11 @@ public class PaymentsView: UIView {
     private var cancellables: Set<AnyCancellable> = []
 
     init(connectInstance: StripeConnectInstance) {
-        webView = ComponentWebView(publishableKey: connectInstance.apiClient.publishableKey ?? "",
-                                   componentType: "payments",
-                                   fetchClientSecret: connectInstance.fetchClientSecret)
+        webView = ComponentWebView(
+            publishableKey: connectInstance.apiClient.publishableKey ?? "",
+            componentType: "payments", appearance: connectInstance.appearance,
+            fetchClientSecret: connectInstance.fetchClientSecret
+        )
         super.init(frame: .zero)
 
         addSubview(webView)
@@ -30,12 +32,12 @@ public class PaymentsView: UIView {
             webView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        connectInstance.$appearance.sink { _ in
-
+        connectInstance.$appearance.sink { [weak self] appearance in
+            self?.webView.updateAppearance(appearance)
         }.store(in: &cancellables)
 
-        connectInstance.$locale.sink { _ in
-
+        connectInstance.$locale.sink { [weak self] locale in
+            self?.webView.updateLocale(locale)
         }.store(in: &cancellables)
     }
 

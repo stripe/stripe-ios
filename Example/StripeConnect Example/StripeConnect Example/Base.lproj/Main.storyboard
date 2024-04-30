@@ -26,14 +26,22 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U0q-I6-TlW">
+                                        <rect key="frame" x="0.0" y="49.666666666666671" width="393" height="34.333333333333329"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Use custom appearance"/>
+                                        <connections>
+                                            <action selector="toggleCustomAppearance:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gsm-UY-MbP"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Something went wrong" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EET-xY-Wau">
-                                        <rect key="frame" x="0.0" y="49.666666666666671" width="393" height="20.333333333333329"/>
+                                        <rect key="frame" x="0.0" y="100" width="393" height="20.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bta-Ry-c5k">
-                                        <rect key="frame" x="0.0" y="86" width="393" height="673"/>
+                                        <rect key="frame" x="0.0" y="136.33333333333331" width="393" height="622.66666666666674"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -50,6 +58,7 @@
                     </view>
                     <connections>
                         <outlet property="containerView" destination="Bta-Ry-c5k" id="kXz-ZA-Cp3"/>
+                        <outlet property="customAppearanceButton" destination="U0q-I6-TlW" id="L7h-zE-NHL"/>
                         <outlet property="errorView" destination="EET-xY-Wau" id="Gf7-qc-kGc"/>
                     </connections>
                 </viewController>
