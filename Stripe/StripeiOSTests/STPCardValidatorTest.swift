@@ -274,10 +274,14 @@ class STPCardValidatorTest: XCTestCase {
             ("8", "15", .valid),
             ("9", "15", .valid),
             ("11", "16", .valid),
-            ("11", "99", .valid),
-            ("01", "99", .valid),
-            ("1", "99", .valid),
+            ("11", "99", .invalid),
+            ("01", "99", .invalid),
+            ("11", "50", .valid),
+            ("01", "50", .valid),
+            ("1", "50", .valid),
+            ("1", "99", .invalid),
             ("00", "99", .invalid),
+            ("00", "50", .invalid),
             ("12", "14", .invalid),
             ("7", "15", .invalid),
             ("12", "00", .invalid),
@@ -294,7 +298,7 @@ class STPCardValidatorTest: XCTestCase {
                 inCurrentYear: 15,
                 currentMonth: 8
             )
-            XCTAssertEqual(state, test.2)
+            XCTAssertEqual(state, test.2, "Failed to validate \(test.0)/\(test.1)")
         }
     }
 

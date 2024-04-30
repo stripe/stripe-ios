@@ -77,6 +77,14 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
             XCTFail("Invalid month+year should be invalid")
         }
 
+        let nineties = "01/95"
+        validator.inputValue = nonsensical
+        if case .invalid(let errorMessage) = validator.validationState {
+            XCTAssertEqual(errorMessage, "Your card's expiration date is invalid.")
+        } else {
+            XCTFail("The 90s are over")
+        }
+
         validator.inputValue = "2"
         if case .incomplete(let description) = validator.validationState {
             XCTAssertEqual(description, "Your card's expiration date is incomplete.")
