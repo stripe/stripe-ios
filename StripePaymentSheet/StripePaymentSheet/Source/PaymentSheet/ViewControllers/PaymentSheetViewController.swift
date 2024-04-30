@@ -75,14 +75,8 @@ class PaymentSheetViewController: UIViewController {
         case .addingNew:
             return isWalletEnabled
         case .selectingSaved:
-            // When selecting saved we only add the wallet header for Link -- ApplePay by itself is inlined
-            return isLinkEnabled
+            return isLinkEnabled || isApplePayEnabled
         }
-    }
-
-    /// This is a hack to encapsulate this logic so that it can be reused by PaymentSheetLoader to determine whether Apple Pay will be shown as a payment option or not.
-    static func shouldShowApplePayAsSavedPaymentOption(hasSavedPaymentMethods: Bool, isLinkEnabled: Bool, isApplePayEnabled: Bool) -> Bool {
-        return hasSavedPaymentMethods && !isLinkEnabled && isApplePayEnabled
     }
 
     // MARK: - Writable Properties
@@ -206,7 +200,7 @@ class PaymentSheetViewController: UIViewController {
             savedPaymentMethods: savedPaymentMethods,
             configuration: .init(
                 customerID: configuration.customer?.id,
-                showApplePay: Self.shouldShowApplePayAsSavedPaymentOption(hasSavedPaymentMethods: !savedPaymentMethods.isEmpty, isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled),
+                showApplePay: false,
                 showLink: false,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,

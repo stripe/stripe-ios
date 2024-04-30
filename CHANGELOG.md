@@ -5,6 +5,7 @@
 ### PaymentSheet
 * [Added] Support for Multibanco with PaymentIntents.
 * [Fixed] Fixed an issue where STPPaymentHandler sometimes reported errors using `unexpectedErrorCode` instead of a more specific error when customers fail a next action.
+* [Changed] PaymentSheet displays Apple Pay as a button when there are saved payment methods and Link isn't available instead of within the list of saved payment methods.
 * [Fixed] Expiration dates more than 50 years in the past (e.g. `95`) are now blocked.
 
 ### Payments

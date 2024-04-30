@@ -89,7 +89,7 @@ final class PaymentSheetLoader {
                 let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
                     savedPaymentMethods: filteredSavedPaymentMethods,
                     customerID: configuration.customer?.id,
-                    showApplePay: isFlowController ? isApplePayEnabled : PaymentSheetViewController.shouldShowApplePayAsSavedPaymentOption(hasSavedPaymentMethods: !filteredSavedPaymentMethods.isEmpty, isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled),
+                    showApplePay: isFlowController ? isApplePayEnabled : false,
                     showLink: isFlowController ? isLinkEnabled : false
                 )
                 analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate,
