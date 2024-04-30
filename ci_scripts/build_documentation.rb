@@ -250,8 +250,8 @@ def preview_docs(docs_root_directory)
   `mkdir -p "#{tmp_publish_dir}/stripe-ios/"`
   `cp -a "#{docs_root_directory}/docs/"* "#{tmp_publish_dir}/stripe-ios/"`
   Dir.chdir(tmp_publish_dir) do
-    `python3 -m http.server 4242`
     puts "Now running: http://localhost:4242/stripe-ios/documentation/stripe/"
+    `python3 -m http.server 4242`
   end
 end
 
