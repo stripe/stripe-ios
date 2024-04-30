@@ -36,6 +36,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var rawTypeString: String?
     /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
     @objc public var billingDetails: STPPaymentMethodBillingDetails?
+    /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
+    @objc public var allowRedisplay: STPPaymentMethodAllowRedisplay = .unspecified
     /// If this is a card PaymentMethod, this contains the user’s card details.
     @objc public var card: STPPaymentMethodCardParams?
     /// If this is an Alipay PaymentMethod, this contains additional details.
@@ -108,17 +110,20 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     /// - Parameters:
     ///   - card:                An object containing the user's card details.
     ///   - billingDetails:      An object containing the user's billing details.
+    ///   - allowRedisplay:      An enum defining consent options for redisplay
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc
     public convenience init(
         card: STPPaymentMethodCardParams,
         billingDetails: STPPaymentMethodBillingDetails?,
+        allowRedisplay: STPPaymentMethodAllowRedisplay = .unspecified,
         metadata: [String: String]?
     ) {
         self.init()
         self.type = .card
         self.card = card
         self.billingDetails = billingDetails
+        self.allowRedisplay = allowRedisplay
         self.metadata = metadata
     }
 
@@ -514,17 +519,20 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     /// - Parameters:
     ///     - usBankAccount: An object containing additional US bank account details
     ///     - billingDetails: An object containing the user's billing details. Name is required for US Bank Accounts
+    ///     - allowRedisplay:      An enum defining consent options for redisplay
     ///     - metadata: Additional information to attach to the PaymentMethod
     @objc
     public convenience init(
         usBankAccount: STPPaymentMethodUSBankAccountParams,
         billingDetails: STPPaymentMethodBillingDetails,
+        allowRedisplay: STPPaymentMethodAllowRedisplay = .unspecified,
         metadata: [String: String]?
     ) {
         self.init()
         self.type = .USBankAccount
         self.usBankAccount = usBankAccount
         self.billingDetails = billingDetails
+        self.allowRedisplay = allowRedisplay
         self.metadata = metadata
     }
 
@@ -753,6 +761,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         return [
             NSStringFromSelector(#selector(getter: rawTypeString)): "type",
             NSStringFromSelector(#selector(getter: billingDetails)): "billing_details",
+            NSStringFromSelector(#selector(getter: allowRedisplayRawString)): "allow_redisplay",
             NSStringFromSelector(#selector(getter: card)): "card",
             NSStringFromSelector(#selector(getter: iDEAL)): "ideal",
             NSStringFromSelector(#selector(getter: eps)): "eps",
@@ -784,6 +793,10 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
         ]
+    }
+
+    @objc internal var allowRedisplayRawString: String? {
+        return allowRedisplay.stringValue
     }
 }
 
