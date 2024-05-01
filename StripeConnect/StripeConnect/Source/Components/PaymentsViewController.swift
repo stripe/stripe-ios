@@ -1,5 +1,5 @@
 //
-//  PaymentsView.swift
+//  PaymentsViewController.swift
 //  StripeConnect
 //
 //  Created by Mel Ludowise on 4/30/24.
@@ -9,7 +9,7 @@ import Combine
 import UIKit
 import WebKit
 
-public class PaymentsView: UIView {
+public class PaymentsViewController: UIViewController {
     let webView: ComponentWebView
 
     private var cancellables: Set<AnyCancellable> = []
@@ -20,21 +20,20 @@ public class PaymentsView: UIView {
             componentType: "payments", appearance: connectInstance.appearance,
             fetchClientSecret: connectInstance.fetchClientSecret
         )
-        super.init(frame: .zero)
+        super.init(nibName: nil, bundle: nil)
 
-        addSubview(webView)
+        view.addSubview(webView)
 
         webView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            webView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            webView.topAnchor.constraint(equalTo: topAnchor),
-            webView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            webView.topAnchor.constraint(equalTo: view.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
-        connectInstance.$appearance.sink { [weak self] appearance in
-            self?.webView.updateAppearance(appearance)
-        }.store(in: &cancellables)
+        webView.registerSubscriptions(connectInstance: connectInstance,
+                                      storeIn: &cancellables)
     }
 
     required init?(coder: NSCoder) {

@@ -5,16 +5,19 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-import Foundation
+import Combine
 import StripeCore
-import UIKit
 
 public class StripeConnectInstance {
 
     let apiClient: STPAPIClient
     let fetchClientSecret: () async -> String?
 
-    @Published var appearance: Appearance
+    /// Updated when `update(appearance:)` is called
+    @Published private(set) var appearance: Appearance
+
+    /// Sends event when `logout()` is called
+    let logoutPublisher = ObservableObjectPublisher()
 
     /**
      Initializes a StripeConnect instance.
@@ -32,11 +35,7 @@ public class StripeConnectInstance {
         self.fetchClientSecret = fetchClientSecret
     }
 
-    public func createPayments() -> PaymentsView {
-        .init(connectInstance: self)
-    }
-
-    public func createPaymentDetails() -> PaymentDetailsView {
+    public func createPayments() -> PaymentsViewController {
         .init(connectInstance: self)
     }
 
@@ -45,7 +44,7 @@ public class StripeConnectInstance {
     }
 
     public func logout() async {
-
+        logoutPublisher.send()
     }
 }
 

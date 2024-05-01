@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
+import Combine
 import UIKit
 import WebKit
 
@@ -73,8 +74,22 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
 
     // MARK: - Internal
 
+    func registerSubscriptions(connectInstance: StripeConnectInstance,
+                               storeIn cancellables: inout Set<AnyCancellable>) {
+        connectInstance.$appearance.sink { [weak self] appearance in
+            self?.updateAppearance(appearance)
+        }.store(in: &cancellables)
+        connectInstance.logoutPublisher.sink { [weak self] _ in
+            self?.logout()
+        }.store(in: &cancellables)
+    }
+
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
         evaluateJavaScript("stripeConnectInstance.update({appearance: \(appearance.asJsonString)})")
+    }
+
+    func logout() {
+        evaluateJavaScript("stripeConnectInstance.logout()")
     }
 
     // MARK: - Private
