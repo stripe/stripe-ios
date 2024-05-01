@@ -33,7 +33,7 @@ public class PaymentsViewController: UIViewController {
     deinit {
         webView.preventRetainCycles()
     }
-    
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         webView.frame = view.frame

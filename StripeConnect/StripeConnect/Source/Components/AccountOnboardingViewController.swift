@@ -19,7 +19,7 @@ public class AccountOnboardingViewController: UIViewController {
             publishableKey: connectInstance.apiClient.publishableKey ?? "",
             componentType: "account-onboarding", appearance: connectInstance.appearance,
             fetchClientSecret: connectInstance.fetchClientSecret
-        ) 
+        )
         super.init(nibName: nil, bundle: nil)
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
@@ -31,7 +31,7 @@ public class AccountOnboardingViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         webView.preventRetainCycles()
     }
