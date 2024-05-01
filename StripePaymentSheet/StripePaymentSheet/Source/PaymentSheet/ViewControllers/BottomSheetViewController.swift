@@ -254,7 +254,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     private lazy var manualHeightConstraint: NSLayoutConstraint = {
         let manualHeightConstraint: NSLayoutConstraint = self.view.heightAnchor.constraint(equalToConstant: 0)
-        manualHeightConstraint.priority = .required
+        manualHeightConstraint.priority = .defaultHigh
         return manualHeightConstraint
     }()
 
