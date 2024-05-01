@@ -62,6 +62,8 @@
 
 "Move farther" = "Pomaknite dalje";
 
+"Move to a darker area" = "Pomaknite se u manje osvijetljeni prostor";
+
 "Move to a well-lit area" = "Pomaknite se u dobro osvijetljeni prostor";
 
 "NRIC or FIN" = "NRIC ili FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Došlo je do pogreške pri pristupanju kameri.";
 
 "Try Again" = "Pokušaj ponovno";
+
+"Try reduce glare and make ID visible" = "Pokušajte smanjiti odsjaj i pobrinite se da je osobni dokument vidljiv.";
 
 "Unable to establish a connection." = "Nije moguće uspostaviti vezu.";
 

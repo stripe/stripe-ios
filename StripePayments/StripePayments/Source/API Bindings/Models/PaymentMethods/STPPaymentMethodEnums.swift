@@ -88,6 +88,8 @@ import Foundation
     case swish
     /// A TWINT payment method
     case twint
+    /// A Multibanco payment method
+    case multibanco
     /// An unknown type.
     case unknown
 
@@ -174,6 +176,8 @@ import Foundation
             return STPLocalizedString("Swish", "Payment Method type brand name")
         case .twint:
             return "TWINT"
+        case .multibanco:
+            return "Multibanco"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -263,6 +267,8 @@ import Foundation
             return "swish"
         case .twint:
             return "twint"
+        case .multibanco:
+            return "multibanco"
         }
     }
 }

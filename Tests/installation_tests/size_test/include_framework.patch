@@ -1,5 +1,5 @@
 diff --git a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
-index 25e500978..64bc46ad4 100644
+index 25e5009784..ca719eb600 100644
 --- a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 +++ b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 @@ -3,11 +3,12 @@
@@ -7,12 +7,12 @@ index 25e500978..64bc46ad4 100644
  	classes = {
  	};
 -	objectVersion = 48;
-+	objectVersion = 52;
++	objectVersion = 54;
  	objects = {
  
  /* Begin PBXBuildFile section */
  		3117ED9D26C2E9DF00C8E897 /* SPMTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3117ED9C26C2E9DF00C8E897 /* SPMTestUITests.swift */; };
-+		31DC3DB12537D02000623028 /* {{SDK}} in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* {{SDK}} */; };
++		318005902BC0AF5000BC6B82 /* {{SDK}} in Frameworks */ = {isa = PBXBuildFile; productRef = 3180058F2BC0AF5000BC6B82 /* {{SDK}} */; };
  		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
  		C176899020616C7E003DE895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C176898F20616C7E003DE895 /* Assets.xcassets */; };
  		C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176899120616C7E003DE895 /* LaunchScreen.storyboard */; };
@@ -20,7 +20,7 @@ index 25e500978..64bc46ad4 100644
  			isa = PBXFrameworksBuildPhase;
  			buildActionMask = 2147483647;
  			files = (
-+				31DC3DB12537D02000623028 /* {{SDK}} in Frameworks */,
++				318005902BC0AF5000BC6B82 /* {{SDK}} in Frameworks */,
  			);
  			runOnlyForDeploymentPostprocessing = 0;
  		};
@@ -28,19 +28,11 @@ index 25e500978..64bc46ad4 100644
  			);
  			name = SPMTest;
  			packageProductDependencies = (
-+				31DC3DB02537D02000623028 /* {{SDK}} */,
++				3180058F2BC0AF5000BC6B82 /* {{SDK}} */,
  			);
  			productName = CocoapodsTest;
  			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
-@@ -172,7 +175,6 @@
- 				TargetAttributes = {
- 					3117ED9926C2E9DF00C8E897 = {
- 						CreatedOnToolsVersion = 12.5;
--						ProvisioningStyle = Automatic;
- 						TestTargetID = C176898220616C7E003DE895;
- 					};
- 					C176898220616C7E003DE895 = {
-@@ -280,7 +282,11 @@
+@@ -280,7 +283,11 @@
  				DEVELOPMENT_TEAM = Y28TH9SHX7;
  				INFOPLIST_FILE = SPMTestUITests/Info.plist;
  				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -53,7 +45,7 @@ index 25e500978..64bc46ad4 100644
  				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
  				MTL_FAST_MATH = YES;
  				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTestUITests;
-@@ -304,11 +310,16 @@
+@@ -304,11 +311,16 @@
  				DEVELOPMENT_TEAM = Y28TH9SHX7;
  				INFOPLIST_FILE = SPMTestUITests/Info.plist;
  				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -72,45 +64,51 @@ index 25e500978..64bc46ad4 100644
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
  				TEST_TARGET_NAME = SPMTest;
-@@ -433,9 +444,12 @@
+@@ -432,10 +444,15 @@
+ 				CODE_SIGN_STYLE = Automatic;
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
++				INFOPLIST_KEY_CFBundleDisplayName = "{{SDK}}Size";
  				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 -				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 -				PRODUCT_NAME = "$(TARGET_NAME)";
++				LD_GENERATE_MAP_FILE = YES;
 +				LD_RUNPATH_SEARCH_PATHS = (
 +					"$(inherited)",
 +					"@executable_path/Frameworks",
 +				);
-+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.{{SDK}}Size;
++				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.{{SDK}}Size";
 +				PRODUCT_NAME = "{{SDK}}Size";
  				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
-@@ -452,9 +466,12 @@
+@@ -451,10 +468,15 @@
+ 				CODE_SIGN_STYLE = Automatic;
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
++				INFOPLIST_KEY_CFBundleDisplayName = "{{SDK}}Size";
  				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 -				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 -				PRODUCT_NAME = "$(TARGET_NAME)";
++				LD_GENERATE_MAP_FILE = YES;
 +				LD_RUNPATH_SEARCH_PATHS = (
 +					"$(inherited)",
 +					"@executable_path/Frameworks",
 +				);
-+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.{{SDK}}Size;
++				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.{{SDK}}Size";
 +				PRODUCT_NAME = "{{SDK}}Size";
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
  			};
-@@ -491,6 +508,13 @@
+@@ -491,6 +513,13 @@
  			defaultConfigurationName = Release;
  		};
  /* End XCConfigurationList section */
 +
 +/* Begin XCSwiftPackageProductDependency section */
-+		31DC3DB02537D02000623028 /* {{SDK}} */ = {
++		3180058F2BC0AF5000BC6B82 /* {{SDK}} */ = {
 +			isa = XCSwiftPackageProductDependency;
 +			productName = {{SDK}};
 +		};
@@ -119,7 +117,7 @@ index 25e500978..64bc46ad4 100644
  	rootObject = C176897B20616C7E003DE895 /* Project object */;
  }
 diff --git a/Tests/installation_tests/size_test/SPMTest/ViewController.swift b/Tests/installation_tests/size_test/SPMTest/ViewController.swift
-index dd31eb2d0..4f1b644e1 100644
+index dd31eb2d03..4f1b644e15 100644
 --- a/Tests/installation_tests/size_test/SPMTest/ViewController.swift
 +++ b/Tests/installation_tests/size_test/SPMTest/ViewController.swift
 @@ -7,5 +7,11 @@

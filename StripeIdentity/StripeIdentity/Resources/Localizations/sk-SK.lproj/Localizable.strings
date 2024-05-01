@@ -62,6 +62,8 @@
 
 "Move farther" = "Posuňte ďalej";
 
+"Move to a darker area" = "Presuňte sa do tmavšieho priestoru";
+
 "Move to a well-lit area" = "Presuňte sa do dobre osvetleného priestoru";
 
 "NRIC or FIN" = "NRIC alebo FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Pri prístupe k fotoaparátu sa vyskytla chyba.";
 
 "Try Again" = "Skúste to znova";
+
+"Try reduce glare and make ID visible" = "Skúste obmedziť odlesky a zviditeľnite doklad totožnosti";
 
 "Unable to establish a connection." = "Nepodarilo sa vytvoriť spojenie.";
 

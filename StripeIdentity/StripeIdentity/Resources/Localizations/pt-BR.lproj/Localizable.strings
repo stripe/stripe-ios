@@ -62,6 +62,8 @@
 
 "Move farther" = "Afaste";
 
+"Move to a darker area" = "Mova para uma área mais escura";
+
 "Move to a well-lit area" = "Mova para uma área bem iluminada";
 
 "NRIC or FIN" = "NRIC ou FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Erro ao acessar a câmera.";
 
 "Try Again" = "Tentar novamente";
+
+"Try reduce glare and make ID visible" = "Tente reduzir o brilho e tornar o documento visível";
 
 "Unable to establish a connection." = "Não foi possível estabelecer a conexão.";
 

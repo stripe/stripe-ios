@@ -86,6 +86,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var amazonPay: STPPaymentMethodAmazonPay?
     /// If this is a Alma PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAlma`), this contains additional details.
     @objc private(set) public var alma: STPPaymentMethodAlma?
+    /// If this is a Multibanco PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMultibanco`), this contains additional details.
+    @objc private(set) public var multibanco: STPPaymentMethodMultibanco?
 
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
@@ -147,6 +149,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "swish = \(String(describing: swish))",
             "amazon_pay = \(String(describing: amazonPay))",
             "alma = \(String(describing: alma))",
+            "multibanco = \(String(describing: multibanco))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -312,6 +315,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.alma = STPPaymentMethodAlma.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "alma")
+        )
+        paymentMethod.multibanco = STPPaymentMethodMultibanco.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "multibanco")
         )
 
         return paymentMethod

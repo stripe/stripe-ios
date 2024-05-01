@@ -578,6 +578,10 @@ workflows:
         inputs:
         - content: bundle exec fastlane size_report
         title: Generate size report
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.3.x
+        machine_type_id: g2-m1.8core        
   ui-tests-1:
     steps:
     - xcode-test@4:

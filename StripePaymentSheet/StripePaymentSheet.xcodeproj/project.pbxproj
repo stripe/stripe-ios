@@ -55,6 +55,8 @@
 		2EDF4115FDC40A5B0672CCFD /* Locale+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DCF73BEC0CC35D4CE30361 /* Locale+Link.swift */; };
 		311AC53D6C76953E9B70148A /* ConsumerSession+PublishableKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D61B52BFA201D25E8F6428 /* ConsumerSession+PublishableKey.swift */; };
 		313F5F832B0BE5FD00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F822B0BE5FD00BD98A9 /* Docs.docc */; };
+		31699A812BE183B30048677F /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31699A802BE183B30048677F /* DownloadManager.swift */; };
+		31699A832BE183D40048677F /* DownloadManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31699A822BE183D40048677F /* DownloadManagerTest.swift */; };
 		316B33122B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */; };
 		31AD3BE72B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */; };
 		31CDFC362BA8E66200B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */; };
@@ -361,6 +363,8 @@
 		2E42F31D392C0AED757D6239 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		313F5F822B0BE5FD00BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		3168698F2C61B0F5EC1240FE /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31699A802BE183B30048677F /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
+		31699A822BE183D40048677F /* DownloadManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerTest.swift; sourceTree = "<group>"; };
 		316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StripePaymentSheetTest.swift"; sourceTree = "<group>"; };
 		31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIApplication+StripePaymentSheet.swift"; path = "StripePaymentSheet/Source/Categories/UIApplication+StripePaymentSheet.swift"; sourceTree = "<group>"; };
 		31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -872,6 +876,7 @@
 				EB812081AFBCE283C1EB6130 /* BoolReference.swift */,
 				01962303408EBBFD6477D215 /* Images.swift */,
 				3ABC9ED6F9F77E753272B449 /* IntentStatusPoller.swift */,
+				31699A802BE183B30048677F /* DownloadManager.swift */,
 				522DD1811A1B84ABAE35ADB5 /* PaymentSheetLinkAccount.swift */,
 				D39B31D0B890A4F8E4819B15 /* STPCameraView.swift */,
 				59BA69FF6D49A3A865469ED0 /* STPCardScanner.swift */,
@@ -1276,6 +1281,7 @@
 				BE92D55DA4B4D449734B2917 /* BacsDDMandateViewSnapshotTests.swift */,
 				0C53358C028E528F0FC626A2 /* CustomerSheet */,
 				989C2E3E03E42DA64A2FAE0D /* CustomerSheetSnapshotTests.swift */,
+				31699A822BE183D40048677F /* DownloadManagerTest.swift */,
 				73FB30705EC36BD0868904A2 /* Elements+TestHelpers.swift */,
 				64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */,
 				990304EF35A0EE37DCE20D5B /* IntentStatusPollerTest.swift */,
@@ -1544,6 +1550,7 @@
 				694A3B36AC19FC1F87EF0CB1 /* CustomerSheetPaymentMethodAvailabilityTests.swift in Sources */,
 				9F750611C4E8EAABE9F0B460 /* CustomerSheetTests.swift in Sources */,
 				4FF15C6F7AF22F55B2F2BEA8 /* CustomerSheetSnapshotTests.swift in Sources */,
+				31699A832BE183D40048677F /* DownloadManagerTest.swift in Sources */,
 				9C42A106FF30A22CFBB38AE8 /* Elements+TestHelpers.swift in Sources */,
 				D442C49095DDEC2C6ADAF392 /* FlowControllerStateTests.swift in Sources */,
 				2EC9C94DD8D62E4F4EFC8AB8 /* IntentStatusPollerTest.swift in Sources */,
@@ -1654,6 +1661,7 @@
 				4D9D6DD01C7FACE61D459AFB /* BottomSheetTransitioningDelegate.swift in Sources */,
 				2BF4F64B2B73A373C643E55F /* UIViewController+BottomSheet.swift in Sources */,
 				F8411A9B28F2E2D927ABAE7C /* CustomerAdapter.swift in Sources */,
+				31699A812BE183B30048677F /* DownloadManager.swift in Sources */,
 				C113FE145760C5CE94536872 /* CustomerPaymentOption.swift in Sources */,
 				466755A0F05CB0EF281E9FAF /* UserDefaults+StripePaymentSheet.swift in Sources */,
 				FC72575C4CCAF5E317C5D299 /* CustomerAddPaymentMethodViewController.swift in Sources */,

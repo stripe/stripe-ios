@@ -350,14 +350,13 @@ public class STPCardValidator: NSObject {
         case 0, 1:
             return .incomplete
         case 2:
-            if self.validationState(forExpirationMonth: sanitizedMonth) == .invalid {
+            guard let yearInt = Int(sanitizedYear), let monthInt = Int(sanitizedMonth), self.validationState(forExpirationMonth: sanitizedMonth) != .invalid else {
                 return .invalid
+            }
+            if yearInt == moddedYear {
+                return monthInt >= currentMonth ? .valid : .invalid
             } else {
-                if Int(sanitizedYear) ?? 0 == moddedYear {
-                    return Int(sanitizedMonth) ?? 0 >= currentMonth ? .valid : .invalid
-                } else {
-                    return Int(sanitizedYear) ?? 0 > moddedYear ? .valid : .invalid
-                }
+                return ((yearInt > moddedYear) && (yearInt - moddedYear <= 50)) ? .valid : .invalid
             }
         default:
             return .invalid

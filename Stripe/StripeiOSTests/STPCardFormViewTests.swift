@@ -144,7 +144,7 @@ class STPCardFormViewTests: XCTestCase {
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
-        cardParams.expYear = 2080
+        cardParams.expYear = 2050
         cardParams.expMonth = 12
         cardParams.cvc = "123"
         cardParams.networks = .init(preferred: "cartes_bancaires")
@@ -173,7 +173,7 @@ class STPCardFormViewTests: XCTestCase {
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
-        cardParams.expYear = 2080
+        cardParams.expYear = 2050
         cardParams.expMonth = 12
         cardParams.cvc = "1234"
         let billingDetails = STPPaymentMethodBillingDetails(postalCode: "12345", countryCode: "US")

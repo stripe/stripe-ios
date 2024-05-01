@@ -367,6 +367,15 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             }
         }
     }
+
+    func testMultibancoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .stripe(.multibanco),
+                               merchantCountry: .US) { form in
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
+        }
+    }
 }
 
 // MARK: - Helper methods

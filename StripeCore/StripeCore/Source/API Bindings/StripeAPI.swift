@@ -101,13 +101,13 @@ import PassKit
     }
 
     @_spi(STP) public class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
-        return [
+        return additionalEnabledApplePayNetworks + [
             .amex,
             .masterCard,
             .maestro,
             .visa,
             .discover,
-        ] + additionalEnabledApplePayNetworks
+        ]
     }
 
     /// Whether or not this can make Apple Pay payments via a card network supported

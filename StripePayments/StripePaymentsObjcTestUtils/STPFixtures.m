@@ -82,7 +82,7 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
     STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
     cardParams.number = @"4242424242424242";
     cardParams.expMonth = @(10);
-    cardParams.expYear = @(99);
+    cardParams.expYear = @(50);
     cardParams.cvc = @"123";
     return cardParams;
 }

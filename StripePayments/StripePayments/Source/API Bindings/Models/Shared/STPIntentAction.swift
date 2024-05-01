@@ -70,6 +70,9 @@ import Foundation
     /// Contains details for redirecting to the Swish app.
     case swishHandleRedirect
 
+    /// The action type is Multibanco payment. We provide `STPPaymentHandler` to display the Multibanco voucher.
+    case multibancoDisplayDetails
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -105,6 +108,8 @@ import Foundation
             self = .promptpayDisplayQrCode
         case "swish_handle_redirect_or_display_qr_code":
             self = .swishHandleRedirect
+        case "multibanco_display_details":
+            self = .multibancoDisplayDetails
         default:
             self = .unknown
         }
@@ -137,14 +142,16 @@ import Foundation
             return "cashapp_handle_redirect_or_display_qr_code"
         case .konbiniDisplayDetails:
             return "konbini_display_details"
-        case .unknown:
-            break
         case .payNowDisplayQrCode:
             return "paynow_display_qr_code"
         case .promptpayDisplayQrCode:
             return "promptpay_display_qr_code"
         case .swishHandleRedirect:
             return "swish_handle_redirect_or_display_qr_code"
+        case .multibancoDisplayDetails:
+            return "multibanco_display_details"
+        case .unknown:
+            break
         }
 
         // catch any unknown values here
@@ -195,6 +202,9 @@ public class STPIntentAction: NSObject {
 
     /// Contains details for redirecting to the Swish app.
     @objc public let swishHandleRedirect: STPIntentActionSwishHandleRedirect?
+
+    /// The details for displaying Multibanco voucher via URL, when `type == .multibanco`
+    @objc public let multibancoDisplayDetails: STPIntentActionMultibancoDisplayDetails?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -264,6 +274,10 @@ public class STPIntentAction: NSObject {
             if let swishHandleRedirect = swishHandleRedirect {
                 props.append("swishHandleRedirect = \(swishHandleRedirect)")
             }
+        case .multibancoDisplayDetails:
+            if let multibancoDisplayDetails {
+                props.append("multibancoDisplayDetails = \(multibancoDisplayDetails)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -286,6 +300,7 @@ public class STPIntentAction: NSObject {
         konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?,
         promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?,
         swishHandleRedirect: STPIntentActionSwishHandleRedirect?,
+        multibancoDisplayDetails: STPIntentActionMultibancoDisplayDetails?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -301,6 +316,7 @@ public class STPIntentAction: NSObject {
         self.konbiniDisplayDetails = konbiniDisplayDetails
         self.promptPayDisplayQrCode = promptPayDisplayQrCode
         self.swishHandleRedirect = swishHandleRedirect
+        self.multibancoDisplayDetails = multibancoDisplayDetails
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -333,6 +349,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
         var promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
         var swishHandleRedirect: STPIntentActionSwishHandleRedirect?
+        var multibancoDisplayDetails: STPIntentActionMultibancoDisplayDetails?
 
         switch type {
         case .unknown:
@@ -425,6 +442,13 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if swishHandleRedirect == nil {
                 type = .unknown
             }
+        case .multibancoDisplayDetails:
+            multibancoDisplayDetails = STPIntentActionMultibancoDisplayDetails.decodedObject(
+                fromAPIResponse: dict["multibanco_display_details"] as? [AnyHashable: Any]
+            )
+            if multibancoDisplayDetails == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -441,6 +465,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             konbiniDisplayDetails: konbiniDisplayDetails,
             promptPayDisplayQrCode: promptPayDisplayQrCode,
             swishHandleRedirect: swishHandleRedirect,
+            multibancoDisplayDetails: multibancoDisplayDetails,
             allResponseFields: dict
         ) as? Self
     }

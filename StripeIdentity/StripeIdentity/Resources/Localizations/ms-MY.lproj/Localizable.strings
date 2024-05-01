@@ -62,6 +62,8 @@
 
 "Move farther" = "Beralih lebih jauh";
 
+"Move to a darker area" = "Beralih ke kawasan yang lebih gelap";
+
 "Move to a well-lit area" = "Beralih ke kawasan yang cukup terang";
 
 "NRIC or FIN" = "NRIC atau FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Ada ralat ketika mengakses kamera.";
 
 "Try Again" = "Cuba Lagi";
+
+"Try reduce glare and make ID visible" = "Cuba kurangkan silau dan pastikan ID dapat dilihat";
 
 "Unable to establish a connection." = "Sambungan tidak dapat diwujudkan.";
 
