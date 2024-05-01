@@ -77,10 +77,6 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         evaluateJavaScript("stripeConnectInstance.update({appearance: \(appearance.asJsonString)})")
     }
 
-    func updateLocale(_ locale: Locale) {
-        evaluateJavaScript("stripeConnectInstance.update({locale: \(locale.identifier)})")
-    }
-
     // MARK: - Private
 
     /**
@@ -94,7 +90,7 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
      Explicitly calling the synchronous version from an async context triggers the compiler warning:
      `Consider using asynchronous alternative function`
 
-     So wrapping this function is the only way to avoid a compiler warning and fata
+     Wrapping this function is the only way to avoid both the fatal error and compiler warning.
      */
     private func synchronousEvaluateJavaScript(_ script: String) {
         evaluateJavaScript(script)

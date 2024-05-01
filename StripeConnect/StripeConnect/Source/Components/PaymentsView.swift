@@ -35,10 +35,6 @@ public class PaymentsView: UIView {
         connectInstance.$appearance.sink { [weak self] appearance in
             self?.webView.updateAppearance(appearance)
         }.store(in: &cancellables)
-
-        connectInstance.$locale.sink { [weak self] locale in
-            self?.webView.updateLocale(locale)
-        }.store(in: &cancellables)
     }
 
     required init?(coder: NSCoder) {

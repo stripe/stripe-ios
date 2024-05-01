@@ -19,9 +19,6 @@ public class PaymentDetailsView: UIView {
         connectInstance.$appearance.sink { _ in
 
         }.store(in: &cancellables)
-        connectInstance.$locale.sink { _ in
-
-        }.store(in: &cancellables)
     }
 
     required init?(coder: NSCoder) {
