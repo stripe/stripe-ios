@@ -13,6 +13,7 @@ class MainViewController: UITableViewController {
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
         case payments = "Payments"
+        case accountOnboarding = "Account onboarding"
         case logout = "Log out"
 
         var label: String { rawValue }
@@ -22,6 +23,13 @@ class MainViewController: UITableViewController {
                 return .none
             }
             return .disclosureIndicator
+        }
+
+        var labelColor: UIColor {
+            if self == .logout {
+                return .red
+            }
+            return .darkText
         }
     }
 
@@ -43,6 +51,8 @@ class MainViewController: UITableViewController {
         stripeConnectInstance = StripeConnectInstance(
             fetchClientSecret: fetchClientSecret
         )
+
+        addChangeAppearanceButtonNavigationItem(to: self)
     }
 
     func fetchClientSecret() async -> String? {
@@ -73,6 +83,10 @@ class MainViewController: UITableViewController {
             viewControllerToPush = stripeConnectInstance.createPayments()
             viewControllerToPush.title = "Payments"
 
+        case .accountOnboarding:
+            viewControllerToPush = stripeConnectInstance.createAccountOnboarding()
+            viewControllerToPush.title = "Account onboarding"
+
         case .logout:
             cell.accessoryView = logoutSpinner
             logoutSpinner.startAnimating()
@@ -83,20 +97,26 @@ class MainViewController: UITableViewController {
             return
         }
 
-        // Add an "Appearance" button to change the appearance
-        viewControllerToPush.navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Appearance",
+        addChangeAppearanceButtonNavigationItem(to: viewControllerToPush)
+        navigationController?.pushViewController(viewControllerToPush, animated: true)
+    }
+
+    func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
+        // Add a button to change the appearance
+        let button = UIBarButtonItem(
+            image: UIImage(systemName: "paintpalette"),
             style: .plain,
             target: self,
             action: #selector(selectAppearance)
         )
-        navigationController?.pushViewController(viewControllerToPush, animated: true)
+        button.accessibilityLabel = "Change appearance"
+        viewController.navigationItem.rightBarButtonItem = button
     }
 
     /// Displays a menu to pick from a selection of example appearances
     @objc
     func selectAppearance() {
-        let optionMenu = UIAlertController(title: nil, message: "Choose appearance", preferredStyle: .actionSheet)
+        let optionMenu = UIAlertController(title: "Change appearance", message: "These are some example appearances configured in ExampleAppearanceOptions", preferredStyle: .actionSheet)
 
         ExampleAppearanceOptions.allCases.forEach { option in
             let action = UIAlertAction(title: option.label, style: .default) { [weak self] _ in
@@ -124,6 +144,7 @@ class MainViewController: UITableViewController {
         let row = Row.allCases[indexPath.row]
         let cell = UITableViewCell()
         cell.textLabel?.text = row.label
+        cell.textLabel?.textColor = row.labelColor
         cell.accessoryType = row.accessoryType
         return cell
     }

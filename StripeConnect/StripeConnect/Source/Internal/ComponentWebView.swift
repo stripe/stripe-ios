@@ -9,9 +9,7 @@ import Combine
 import UIKit
 import WebKit
 
-class ComponentWebView: WKWebView, WKScriptMessageHandler {
-    private var fetchClientSecret: () async -> String?
-
+class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
     /// Supported message handlers for JS -> Swift messaging
     enum MessageHandler: String, CaseIterable {
         /// Temporary handler to print debug statements to Xcode's console from JS
@@ -19,6 +17,10 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         /// Begins fetching the client secret. After this is called, Swift will execute the `resolveFetchClientSecret` JS function.
         case beginFetchClientSecret
     }
+
+    private var fetchClientSecret: () async -> String?
+    var presentPopup: ((UIViewController) -> Void)?
+    private var dismissPopup: (() -> Void)?
 
     init(publishableKey: String,
          componentType: String,
@@ -42,8 +44,9 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         MessageHandler.allCases.forEach { handler in
             contentController.add(self, name: handler.rawValue)
         }
+        uiDelegate = self
 
-//        addDebugRefreshButton()
+        addDebugReloadButton(publishableKey: publishableKey, componentType: componentType, appearance: appearance)
         loadContents(publishableKey: publishableKey, componentType: componentType, appearance: appearance)
     }
 
@@ -72,7 +75,37 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         }
     }
 
+    // MARK: - WKUIDelegate
+
+    func webView(_ webView: WKWebView, 
+                 createWebViewWith configuration: WKWebViewConfiguration,
+                 for navigationAction: WKNavigationAction,
+                 windowFeatures: WKWindowFeatures) -> WKWebView? {
+        guard navigationAction.targetFrame == nil else { return nil }
+
+        guard let presentPopup else {
+            assertionFailure("Cannot present popup")
+            return nil
+        }
+
+        let popupVC = PopupWebViewController(configuration: configuration, navigationAction: navigationAction)
+        let navController = UINavigationController(rootViewController: popupVC)
+        popupVC.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .done, target: self, action: #selector(didClosePopup))
+        dismissPopup = { [weak popupVC] in
+            popupVC?.dismiss(animated: true)
+        }
+
+        presentPopup(navController)
+        return popupVC.webView
+    }
+
     // MARK: - Internal
+
+    @objc
+    func didClosePopup() {
+        dismissPopup?()
+        dismissPopup = nil
+    }
 
     func registerSubscriptions(connectInstance: StripeConnectInstance,
                                storeIn cancellables: inout Set<AnyCancellable>) {
@@ -82,6 +115,16 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         connectInstance.logoutPublisher.sink { [weak self] _ in
             self?.logout()
         }.store(in: &cancellables)
+    }
+
+    // TODO: There's probably a better way to do this than calling in from every VC.
+    // Maybe wrapping this in a container view that calls these from deinit?
+    func preventRetainCycles() {
+        stopLoading()
+        MessageHandler.allCases.forEach { handler in
+            configuration.userContentController.removeScriptMessageHandler(forName: handler.rawValue)
+        }
+        uiDelegate = nil
     }
 
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
@@ -137,22 +180,35 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler {
         load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: URL(string: "https://connect-js.stripe.com")!)
     }
 
-//    private func addDebugRefreshButton() {
-//        #if DEBUG
-//
-//        let refreshButton = UIButton(type: .system)
-//        refreshButton.setTitle("Refresh", for: .normal)
-//
-//        // Calling `reload` will just load `docs.stripe.com`, so we need to
-//        // reload the contents instead.
-//        refreshButton.addTarget(nil, action: #selector(loadContents), for: .touchUpInside)
-//        addSubview(refreshButton)
-//        refreshButton.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            refreshButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-//            refreshButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-//        ])
-//
-//        #endif
-//    }
+    private func addDebugReloadButton(
+        publishableKey: String,
+        componentType: String,
+        appearance: StripeConnectInstance.Appearance
+    ) {
+        #if DEBUG
+        guard #available(iOS 14, *) else { return }
+
+        let reloadButton = UIButton(
+            type: .system,
+            primaryAction: .init(handler: { [weak self] _ in
+                // Calling `reload` will just load `connect-js.stripe.com`,
+                // so we need to reload the contents instead.
+                self?.loadContents(publishableKey: publishableKey,
+                             componentType: componentType,
+                             appearance: appearance)
+            })
+        )
+        reloadButton.setTitle("Reload", for: .normal)
+        reloadButton.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
+        reloadButton.layer.cornerRadius = 4
+
+        addSubview(reloadButton)
+        reloadButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            reloadButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 8),
+            reloadButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -8),
+        ])
+
+        #endif
+    }
 }

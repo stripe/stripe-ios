@@ -2,26 +2,49 @@
     <head>
         <script src="https://connect-js.stripe.com/v1.0/connect.js" async></script>
         <script>
+            // Forward console messages to the Xcode debugger
+            const originalConsole = {
+                debug: console.debug,
+                error: console.error,
+                info: console.info,
+                log: console.log,
+                warn: console.warn,
+            }
+            console.debug = (message) => {
+                window.webkit.messageHandlers.debug.postMessage("DEBUG: " + message);
+                originalConsole.debug(message);
+            };
+            console.error = (object) => {
+                window.webkit.messageHandlers.debug.postMessage("ERROR: " + JSON.stringify(object));
+                originalConsole.error(object);
+            };
+            console.info = (object) => {
+                window.webkit.messageHandlers.debug.postMessage("INFO: " + JSON.stringify(object));
+                originalConsole.info(object);
+            };
+            console.log = (object) => {
+                window.webkit.messageHandlers.debug.postMessage("LOG: " + JSON.stringify(object));
+                originalConsole.log(object);
+            };
+            console.warn = (object) => {
+                window.webkit.messageHandlers.debug.postMessage("WARN: " + JSON.stringify(object));
+                originalConsole.warn(object);
+            };
+
+            // Instances that will be accessed from Swift
             var stripeConnectInstance;
             var component;
 
             window.StripeConnect = window.StripeConnect || {};
 
-            const debug = (message) => {
-                // Log to xcode
-                window.webkit.messageHandlers.debug.postMessage(message);
-                // Log to browser console
-                console.debug(message);
-            };
-
             // This gets set to the promise resolve when `fetchClientSecret` is called.
             // Swift will send the client secret to this method when it's done retrieving it.
             var resolveFetchClientSecret = (secret) => {
-                debug('didFinishFetchingClientSecret');
+                console.debug('didFinishFetchingClientSecret');
             };
 
             const fetchClientSecret = async () => {
-                debug("fetchClientSecret");
+                console.debug("fetchClientSecret");
                 // Message Swift that we want to start fetching the secret.
                 // Swift will call `resolveFetchClientSecret` when it's finished.
                 // Note: Swift requires that the `postMessage` body be non-empty for it to work
@@ -32,13 +55,13 @@
                 });
 
                 const secret = await promise;
-                debug(secret);
+                console.debug(secret);
                 return secret;
             };
 
             StripeConnect.onLoad = () => {
-                debug("PK '{{PUBLISHABLE_KEY}}'");
-                debug("Appearance: " + JSON.stringify({{APPEARANCE}}));
+                console.debug("PK '{{PUBLISHABLE_KEY}}'");
+                console.debug("Appearance: " + JSON.stringify({{APPEARANCE}}));
 
                 stripeConnectInstance = StripeConnect.init({
                     publishableKey: '{{PUBLISHABLE_KEY}}',
@@ -48,11 +71,11 @@
 
                 component = stripeConnectInstance.create('{{COMPONENT_TYPE}}');
 
-                debug(component.outerHTML);
+                console.debug(component.outerHTML);
                 document.body.appendChild(component);
             };
 
-            debug("page loaded");
+            console.debug("page loaded");
         </script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>

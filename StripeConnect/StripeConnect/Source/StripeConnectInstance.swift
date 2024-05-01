@@ -35,16 +35,34 @@ public class StripeConnectInstance {
         self.fetchClientSecret = fetchClientSecret
     }
 
+    /**
+     Creates a payments view controller.
+     - Returns: A PaymentsViewController.
+     */
     public func createPayments() -> PaymentsViewController {
         .init(connectInstance: self)
     }
 
+    /**
+     Creates an account onboarding view controller.
+     - Returns: A AccountOnboardingViewController.
+     */
+    public func createAccountOnboarding() -> AccountOnboardingViewController {
+        .init(connectInstance: self)
+    }
+
+    /**
+     Updates the Connect instance with new parameters.
+     - Parameter appearance: Appearance options for the Connect instance.
+     */
     public func update(appearance: Appearance) {
         self.appearance = appearance
     }
 
+    /// Logs the user out of Connect sessions.
     public func logout() async {
         logoutPublisher.send()
+        // TODO: wait for completion
     }
 }
 
