@@ -39,7 +39,7 @@ public extension PaymentSheet {
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
-        
+
         // MARK: Fonts
 
         /// Describes the appearance of fonts in PaymentSheet
@@ -210,7 +210,7 @@ public extension PaymentSheet {
             /// - Note: If `nil`, `appearance.shadow` will be used as the primary button shadow
             public var shadow: Shadow?
         }
-        
+
         // MARK: - Experimental Vertical Mode
         internal enum Layout {
             case horizontal
