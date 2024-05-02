@@ -11,23 +11,23 @@
                 warn: console.warn,
             }
             console.debug = (message) => {
-                window.webkit.messageHandlers.debug.postMessage("DEBUG: " + message);
+                window.webkit.messageHandlers.debug.postMessage("[DEBUG] " + message);
                 originalConsole.debug(message);
             };
             console.error = (object) => {
-                window.webkit.messageHandlers.debug.postMessage("ERROR: " + JSON.stringify(object));
+                window.webkit.messageHandlers.debug.postMessage("[ERROR] " + JSON.stringify(object));
                 originalConsole.error(object);
             };
             console.info = (object) => {
-                window.webkit.messageHandlers.debug.postMessage("INFO: " + JSON.stringify(object));
+                window.webkit.messageHandlers.debug.postMessage("[INFO] " + JSON.stringify(object));
                 originalConsole.info(object);
             };
             console.log = (object) => {
-                window.webkit.messageHandlers.debug.postMessage("LOG: " + JSON.stringify(object));
+                window.webkit.messageHandlers.debug.postMessage("[LOG] " + JSON.stringify(object));
                 originalConsole.log(object);
             };
             console.warn = (object) => {
-                window.webkit.messageHandlers.debug.postMessage("WARN: " + JSON.stringify(object));
+                window.webkit.messageHandlers.debug.postMessage("[WARN] " + JSON.stringify(object));
                 originalConsole.warn(object);
             };
 

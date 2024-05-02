@@ -48,8 +48,8 @@ public class StripeConnectInstance {
      Creates an account onboarding view controller.
      - Returns: A AccountOnboardingViewController.
      */
-    public func createAccountOnboarding() -> AccountOnboardingViewController {
-        let vc = AccountOnboardingViewController(connectInstance: self)
+    public func createAccountOnboarding(onExit: @escaping () -> Void) -> AccountOnboardingViewController {
+        let vc = AccountOnboardingViewController(connectInstance: self, onExit: onExit)
         webViews.add(vc.webView)
         return vc
     }

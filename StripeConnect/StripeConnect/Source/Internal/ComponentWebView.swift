@@ -11,18 +11,6 @@ import WebKit
 
 class ComponentWebView: WKWebView {
 
-    /// Supported message handlers for one way JS -> Swift messaging
-    enum VoidMessageHandler: String, CaseIterable {
-        /// Prints debug statements to Xcode's console from JS
-        case debug
-    }
-
-    /// Supported async message handlers for JS to call into Swift and receive an async return value
-    enum MessageHandlerWithReply: String, CaseIterable {
-        /// Fetches the client secret
-        case fetchClientSecret
-    }
-
     private var connectInstance: StripeConnectInstance
     private var componentType: String
 
@@ -31,6 +19,9 @@ class ComponentWebView: WKWebView {
 
     /// Closure to present a popup web view controller
     var presentPopup: ((UIViewController) -> Void)?
+
+    /// Closure that executes when the view finishes loading
+    var didFinishLoading: ((ComponentWebView) -> Void)?
 
     init(connectInstance: StripeConnectInstance,
          componentType: String) {
@@ -44,13 +35,14 @@ class ComponentWebView: WKWebView {
         super.init(frame: .zero, configuration: config)
 
         // Allow the web view to be inspected for debug builds on 16.4+
-        #if DEBUG
+#if DEBUG
         if #available(iOS 16.4, *) {
             isInspectable = true
         }
-        #endif
+#endif
 
         uiDelegate = self
+        navigationDelegate = self
 
         registerMessageHandlers()
         addDebugReloadButton()
@@ -59,37 +51,6 @@ class ComponentWebView: WKWebView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-// MARK: - WKScriptMessageHandler
-
-extension ComponentWebView: WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
-        switch VoidMessageHandler(rawValue: message.name) {
-        case .none:
-            debugPrint("Unrecognized handler \(message.name)")
-
-        case .debug:
-            debugPrint(message.body as? String as Any)
-        }
-    }
-}
-
-// MARK: - WKScriptMessageHandlerWithReply
-
-extension ComponentWebView: WKScriptMessageHandlerWithReply {
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) async -> (Any?, String?) {
-        switch MessageHandlerWithReply(rawValue: message.name) {
-        case .none:
-            debugPrint("Unrecognized handler \(message.name)")
-            return (nil, nil)
-
-        case .fetchClientSecret:
-            let secret = await connectInstance.fetchClientSecret()
-            return (secret, nil)
-        }
     }
 }
 
@@ -118,6 +79,12 @@ extension ComponentWebView: WKUIDelegate {
     }
 }
 
+extension ComponentWebView: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        didFinishLoading?(self)
+    }
+}
+
 // MARK: - Internal
 
 extension ComponentWebView {
@@ -125,9 +92,9 @@ extension ComponentWebView {
     // TODO: There's probably a better way to do this than calling in from every VC.
     // Maybe wrapping this in a container view that calls these from deinit?
     func preventRetainCycles() {
-        stopLoading()
-        contentController.removeAllScriptMessageHandlers()
-        uiDelegate = nil
+        //        stopLoading()
+        //        contentController.removeAllScriptMessageHandlers()
+        //        uiDelegate = nil
     }
 
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
@@ -137,18 +104,28 @@ extension ComponentWebView {
     func logout() async {
         _ = try? await evaluateJavaScript("stripeConnectInstance.logout()")
     }
+
+    func addMessageHandler(_ messageHandler: ScriptMessageHandler,
+                           contentWorld: WKContentWorld = .page) {
+        contentController.add(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
+    }
+
+    func addMessageHandler<T>(_ messageHandler: ScriptMessageHandlerWithReply<T>,
+                              contentWorld: WKContentWorld = .page) {
+        contentController.addScriptMessageHandler(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
+    }
 }
 
 // MARK: - Private
 
 private extension ComponentWebView {
     func registerMessageHandlers() {
-        VoidMessageHandler.allCases.forEach { handler in
-            contentController.add(self, name: handler.rawValue)
-        }
-        MessageHandlerWithReply.allCases.forEach { handler in
-            contentController.addScriptMessageHandler(self, contentWorld: .page, name: handler.rawValue)
-        }
+        addMessageHandler(.init(name: "debug", didReceiveMessage: { message in
+            debugPrint(message.body)
+        }))
+        addMessageHandler(.init(name: "fetchClientSecret", didReceiveMessage: { [weak self] _ in
+            return await self?.connectInstance.fetchClientSecret()
+        }))
     }
 
     func loadContents() {

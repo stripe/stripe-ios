@@ -15,26 +15,44 @@ extension UIApplication {
 
         let toastLabel = UILabel()
         toastLabel.translatesAutoresizingMaskIntoConstraints = false
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         toastLabel.textColor = UIColor.white
         toastLabel.textAlignment = .center
+        toastLabel.numberOfLines = 0
         toastLabel.font = .preferredFont(forTextStyle: .body)
         toastLabel.text = message
-        toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 10
-        toastLabel.clipsToBounds = true
 
-        window.addSubview(toastLabel)
+        let toastView = UIView()
+        toastView.translatesAutoresizingMaskIntoConstraints = false
+        toastView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        toastView.alpha = 0.0
+        toastView.layer.cornerRadius = 10
+        toastView.clipsToBounds = true
+
+        toastView.addSubview(toastLabel)
+        window.addSubview(toastView)
 
         // Constraints
-        toastLabel.centerXAnchor.constraint(equalTo: window.centerXAnchor).isActive = true
-        toastLabel.bottomAnchor.constraint(equalTo: window.bottomAnchor, constant: -20).isActive = true
-        toastLabel.widthAnchor.constraint(lessThanOrEqualToConstant: window.frame.size.width - 40).isActive = true
+        NSLayoutConstraint.activate([
+            toastLabel.topAnchor.constraint(equalTo: toastView.topAnchor, constant: 8),
+            toastLabel.bottomAnchor.constraint(equalTo: toastView.bottomAnchor, constant: -8),
+            toastLabel.centerXAnchor.constraint(equalTo: toastView.centerXAnchor),
+            toastLabel.widthAnchor.constraint(lessThanOrEqualTo: toastView.widthAnchor, constant: -16),
 
-        UIView.animate(withDuration: 4.0, delay: 0.0, options: .curveEaseOut, animations: {
-            toastLabel.alpha = 0.0
-        }) { _ in
-            toastLabel.removeFromSuperview()
+            toastView.leadingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            toastView.trailingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+
+            toastLabel.bottomAnchor.constraint(equalTo: window.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+        ])
+
+        UIView.animateKeyframes(withDuration: 4.0, delay: 0.0, options: .calculationModeCubic) {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.125) {
+                toastView.alpha = 1.0
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                toastView.alpha = 0.0
+            }
+        } completion: { _ in
+            toastView.removeFromSuperview()
         }
     }
 }

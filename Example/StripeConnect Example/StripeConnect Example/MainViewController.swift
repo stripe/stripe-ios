@@ -84,7 +84,10 @@ class MainViewController: UITableViewController {
             viewControllerToPush.title = "Payments"
 
         case .accountOnboarding:
-            viewControllerToPush = stripeConnectInstance.createAccountOnboarding()
+            let accountOnboarding = stripeConnectInstance.createAccountOnboarding { [weak navigationController] in
+                navigationController?.popViewController(animated: true)
+            }
+            viewControllerToPush = accountOnboarding
             viewControllerToPush.title = "Account onboarding"
 
         case .logout:
