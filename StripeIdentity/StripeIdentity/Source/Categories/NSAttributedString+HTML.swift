@@ -125,7 +125,7 @@ struct HTMLStyle {
         }
 
         let colorAttributes = color.map { color -> String in
-            return "color: \(color.cssValue);"
+            return "color: \(color.cssRgbaValue);"
         }
 
         let centerAttribute = shouldCenterText ? "text-align: center;" : ""
@@ -249,25 +249,6 @@ private extension NSMutableAttributedString {
                 .characterEncoding: String.Encoding.utf8.rawValue,
             ],
             documentAttributes: nil
-        )
-    }
-}
-
-extension UIColor {
-    fileprivate var cssValue: String {
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 1
-
-        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-
-        return String(
-            format: "rgba(%.0f, %.0f, %.0f, %.0f)",
-            red * 255,
-            green * 255,
-            blue * 255,
-            alpha * 255
         )
     }
 }
