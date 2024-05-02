@@ -42,6 +42,7 @@ class PopupWebViewController: UIViewController, WKUIDelegate {
     // MARK: - WKUIDelegate
 
     func webViewDidClose(_ webView: WKWebView) {
+        // Dismiss the view controller when `window.close()` is called from JS
         dismiss(animated: true)
     }
 }

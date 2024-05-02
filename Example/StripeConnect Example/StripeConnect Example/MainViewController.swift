@@ -29,7 +29,7 @@ class MainViewController: UITableViewController {
             if self == .logout {
                 return .red
             }
-            return .darkText
+            return .label
         }
     }
 
