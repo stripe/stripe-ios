@@ -18,15 +18,16 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
         case beginFetchClientSecret
     }
 
-    private var fetchClientSecret: () async -> String?
-    var presentPopup: ((UIViewController) -> Void)?
-    private var dismissPopup: (() -> Void)?
+    private var connectInstance: StripeConnectInstance
+    private var componentType: String
 
-    init(publishableKey: String,
-         componentType: String,
-         appearance: StripeConnectInstance.Appearance,
-         fetchClientSecret: @escaping () async -> String?) {
-        self.fetchClientSecret = fetchClientSecret
+    /// Closure to present a popup web view controller
+    var presentPopup: ((UIViewController) -> Void)?
+
+    init(connectInstance: StripeConnectInstance,
+         componentType: String) {
+        self.connectInstance = connectInstance
+        self.componentType = componentType
 
         let contentController = WKUserContentController()
         let config = WKWebViewConfiguration()
@@ -46,8 +47,8 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
         }
         uiDelegate = self
 
-        addDebugReloadButton(publishableKey: publishableKey, componentType: componentType, appearance: appearance)
-        loadContents(publishableKey: publishableKey, componentType: componentType, appearance: appearance)
+        addDebugReloadButton()
+        loadContents()
     }
 
     required init?(coder: NSCoder) {
@@ -69,7 +70,7 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
             Task { @MainActor in
                 // TODO: Add error handling if `fetchClientSecret` is nil
                 // Alternatively, we could make `fetchClientSecret` have a `throws async -> String` signature and forward the error to the integrator
-                let secret = await fetchClientSecret() ?? ""
+                let secret = await connectInstance.fetchClientSecret() ?? ""
                 self.synchronousEvaluateJavaScript("resolveFetchClientSecret('\(secret)')")
             }
         }
@@ -90,32 +91,15 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
 
         let popupVC = PopupWebViewController(configuration: configuration, navigationAction: navigationAction)
         let navController = UINavigationController(rootViewController: popupVC)
-        popupVC.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .done, target: self, action: #selector(didClosePopup))
-        dismissPopup = { [weak popupVC] in
+        popupVC.navigationItem.rightBarButtonItem = .init(systemItem: .done, primaryAction: .init(handler: { [weak popupVC] _ in
             popupVC?.dismiss(animated: true)
-        }
+        }))
 
         presentPopup(navController)
         return popupVC.webView
     }
 
     // MARK: - Internal
-
-    @objc
-    func didClosePopup() {
-        dismissPopup?()
-        dismissPopup = nil
-    }
-
-    func registerSubscriptions(connectInstance: StripeConnectInstance,
-                               storeIn cancellables: inout Set<AnyCancellable>) {
-        connectInstance.$appearance.sink { [weak self] appearance in
-            self?.updateAppearance(appearance)
-        }.store(in: &cancellables)
-        connectInstance.logoutPublisher.sink { [weak self] _ in
-            self?.logout()
-        }.store(in: &cancellables)
-    }
 
     // TODO: There's probably a better way to do this than calling in from every VC.
     // Maybe wrapping this in a container view that calls these from deinit?
@@ -131,8 +115,8 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
         evaluateJavaScript("stripeConnectInstance.update({appearance: \(appearance.asJsonString)})")
     }
 
-    func logout() {
-        evaluateJavaScript("stripeConnectInstance.logout()")
+    func logout() async {
+        _ = try? await evaluateJavaScript("stripeConnectInstance.logout()")
     }
 
     // MARK: - Private
@@ -154,11 +138,7 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
         evaluateJavaScript(script)
     }
 
-    private func loadContents(
-        publishableKey: String,
-        componentType: String,
-        appearance: StripeConnectInstance.Appearance
-    ) {
+    private func loadContents() {
         // Load HTML file and spoof that it's coming from connect-js.stripe.com
         // to avoid CORS restrictions from loading a local file.
         guard let htmlFile = BundleLocator.resourcesBundle.url(forResource: "template", withExtension: "html"),
@@ -167,10 +147,11 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
             return
         }
 
+        // TODO: Error handle if PK is nil
         htmlText = htmlText
             .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
-            .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: publishableKey)
-            .replacingOccurrences(of: "{{APPEARANCE}}", with: appearance.asJsonString)
+            .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: connectInstance.apiClient.publishableKey ?? "")
+            .replacingOccurrences(of: "{{APPEARANCE}}", with: connectInstance.appearance.asJsonString)
 
         guard let data = htmlText.data(using: .utf8) else {
             debugPrint("Couldn't encode html data")
@@ -180,22 +161,14 @@ class ComponentWebView: WKWebView, WKScriptMessageHandler, WKUIDelegate {
         load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: URL(string: "https://connect-js.stripe.com")!)
     }
 
-    private func addDebugReloadButton(
-        publishableKey: String,
-        componentType: String,
-        appearance: StripeConnectInstance.Appearance
-    ) {
+    private func addDebugReloadButton() {
         #if DEBUG
-        guard #available(iOS 14, *) else { return }
-
         let reloadButton = UIButton(
             type: .system,
             primaryAction: .init(handler: { [weak self] _ in
                 // Calling `reload` will just load `connect-js.stripe.com`,
                 // so we need to reload the contents instead.
-                self?.loadContents(publishableKey: publishableKey,
-                             componentType: componentType,
-                             appearance: appearance)
+                self?.loadContents()
             })
         )
         reloadButton.setTitle("Reload", for: .normal)

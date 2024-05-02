@@ -13,11 +13,10 @@ public class StripeConnectInstance {
     let apiClient: STPAPIClient
     let fetchClientSecret: () async -> String?
 
-    /// Updated when `update(appearance:)` is called
-    @Published private(set) var appearance: Appearance
+    private(set) var appearance: Appearance
 
-    /// Sends event when `logout()` is called
-    let logoutPublisher = ObservableObjectPublisher()
+    /// A collection of weak pointers to all the web views instantiated from this instance
+    private let webViews: NSHashTable<ComponentWebView> = .weakObjects()
 
     /**
      Initializes a StripeConnect instance.
@@ -40,7 +39,9 @@ public class StripeConnectInstance {
      - Returns: A PaymentsViewController.
      */
     public func createPayments() -> PaymentsViewController {
-        .init(connectInstance: self)
+        let vc = PaymentsViewController(connectInstance: self)
+        webViews.add(vc.webView)
+        return vc
     }
 
     /**
@@ -48,7 +49,9 @@ public class StripeConnectInstance {
      - Returns: A AccountOnboardingViewController.
      */
     public func createAccountOnboarding() -> AccountOnboardingViewController {
-        .init(connectInstance: self)
+        let vc = AccountOnboardingViewController(connectInstance: self)
+        webViews.add(vc.webView)
+        return vc
     }
 
     /**
@@ -57,17 +60,21 @@ public class StripeConnectInstance {
      */
     public func update(appearance: Appearance) {
         self.appearance = appearance
+        webViews.allObjects.forEach { webView in
+            webView.updateAppearance(appearance)
+        }
     }
 
     /// Logs the user out of Connect sessions.
     public func logout() async {
-        logoutPublisher.send()
-        // TODO: wait for completion
+        // Log out of each
+        let tasks: [Task] = webViews.allObjects.map { webView in
+            Task {
+                await webView.logout()
+            }
+        }
+        for task in tasks {
+            await task.value
+        }
     }
-}
-
-// MARK: - Internal
-
-extension StripeConnectInstance {
-
 }

@@ -8,6 +8,7 @@
 import UIKit
 import WebKit
 
+/// Presented when a new target is opened from `ComponentWebView`
 class PopupWebViewController: UIViewController, WKUIDelegate {
     let webView: WKWebView
 

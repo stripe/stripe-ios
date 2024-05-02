@@ -11,21 +11,15 @@ import UIKit
 public class AccountOnboardingViewController: UIViewController {
     let webView: ComponentWebView
 
-    private var cancellables: Set<AnyCancellable> = []
-
     init(connectInstance: StripeConnectInstance) {
-        // TODO: Error handle if PK is nil
         webView = ComponentWebView(
-            publishableKey: connectInstance.apiClient.publishableKey ?? "",
-            componentType: "account-onboarding", appearance: connectInstance.appearance,
-            fetchClientSecret: connectInstance.fetchClientSecret
+            connectInstance: connectInstance,
+            componentType: "account-onboarding"
         )
         super.init(nibName: nil, bundle: nil)
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
         }
-        webView.registerSubscriptions(connectInstance: connectInstance,
-                                      storeIn: &cancellables)
     }
 
     required init?(coder: NSCoder) {

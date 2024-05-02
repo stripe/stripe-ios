@@ -11,19 +11,15 @@ import UIKit
 public class PaymentsViewController: UIViewController {
     let webView: ComponentWebView
 
-    private var cancellables: Set<AnyCancellable> = []
-
     init(connectInstance: StripeConnectInstance) {
-        // TODO: Error handle if PK is nil
         webView = ComponentWebView(
-            publishableKey: connectInstance.apiClient.publishableKey ?? "",
-            componentType: "payments", appearance: connectInstance.appearance,
-            fetchClientSecret: connectInstance.fetchClientSecret
+            connectInstance: connectInstance,
+            componentType: "payments"
         )
         super.init(nibName: nil, bundle: nil)
-
-        webView.registerSubscriptions(connectInstance: connectInstance,
-                                      storeIn: &cancellables)
+        webView.presentPopup = { [weak self] vc in
+            self?.present(vc, animated: true)
+        }
     }
 
     required init?(coder: NSCoder) {
