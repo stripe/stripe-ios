@@ -34,6 +34,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    enum Layout: String, PickerEnum {
+        static var enumName: String { "Layout" }
+        case horizontal
+        case vertical
+    }
+
     enum IntegrationType: String, PickerEnum {
         static var enumName: String { "Type" }
 
@@ -329,6 +335,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     var uiStyle: UIStyle
+    var layout: Layout
     var mode: Mode
     var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
@@ -363,6 +370,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
+            layout: .horizontal,
             mode: .payment,
             customerKeyType: .legacy,
             integrationType: .normal,
