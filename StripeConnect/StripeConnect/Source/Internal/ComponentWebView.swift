@@ -6,6 +6,7 @@
 //
 
 import Combine
+@_spi(STP) import StripeCore
 import UIKit
 import WebKit
 
@@ -59,6 +60,7 @@ class ComponentWebView: WKWebView {
         registerMessageHandlers()
         addDebugReloadButton()
         loadContents()
+        updateColors(connectInstance.appearance)
     }
 
     required init?(coder: NSCoder) {
@@ -97,6 +99,7 @@ extension ComponentWebView: WKUIDelegate {
                  initiatedBy frame: WKFrameInfo,
                  type: WKMediaCaptureType) async -> WKPermissionDecision {
         // Don't prompt the user for camera permissions from connect-js
+        // https://developer.apple.com/videos/play/wwdc2021/10032/?time=754
         origin.host == Self.baseURL.host ? .grant : .deny
     }
 }
@@ -110,12 +113,19 @@ extension ComponentWebView: WKNavigationDelegate {
     }
 }
 
+// Downloads
+// https://developer.apple.com/videos/play/wwdc2021/10032/?time=1050
+
 // MARK: - Internal
 
 extension ComponentWebView {
     /// Calls `update({appearance: ...})` on the JS StripeConnectInstance
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
-        evaluateJavaScript("stripeConnectInstance.update({appearance: \(appearance.asJsonString)})")
+        evaluateJavaScript("""
+            stripeConnectInstance.update({appearance: \(appearance.asJsonString)});
+            document.body.setAttribute("style", "background-color:\(appearance.styleBackgroundColor);");
+        """)
+        updateColors(appearance)
     }
 
     /// Calls `logout()` on the JS StripeConnectInstance
@@ -149,6 +159,13 @@ private extension ComponentWebView {
         }))
     }
 
+    /// Updates the view's background color to match appearance.
+    /// - Note: This avoids a white flash when initially loading the page when a background color is set
+    func updateColors(_ appearance: StripeConnectInstance.Appearance) {
+        isOpaque = appearance.colorBackground == nil
+        backgroundColor = appearance.colorBackground ?? .systemBackground
+    }
+
     /**
      Loads the contents of `template.html`, passing in appearance, componentType,
      and publishableKey, then spoofs it's coming from connect-js.stripe.com.
@@ -171,6 +188,7 @@ private extension ComponentWebView {
             .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
             .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: connectInstance.apiClient.publishableKey ?? "")
             .replacingOccurrences(of: "{{APPEARANCE}}", with: connectInstance.appearance.asJsonString)
+            .replacingOccurrences(of: "{{BACKGROUND_COLOR}}", with: connectInstance.appearance.styleBackgroundColor)
 
         guard let data = htmlText.data(using: .utf8) else {
             debugPrint("Couldn't encode html data")
