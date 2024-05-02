@@ -25,6 +25,7 @@ extension STPAPIClient {
     public func createRadarSession(
         completion: @escaping STPRadarSessionCompletionBlock
     ) {
+        
         STPTelemetryClient.shared.updateFraudDetectionIfNecessary { result in
             switch result {
             case .failure(let error):
