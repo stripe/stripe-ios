@@ -91,11 +91,13 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             return false
         case 1:
             // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM is editable
-            return configuration.allowsRemovalOfLastSavedPaymentMethod || viewModels.contains(where: {
+            return savedPaymentMethodsConfiguration.paymentMethodRemove && configuration.allowsRemovalOfLastSavedPaymentMethod || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         default:
-            return true
+            return savedPaymentMethodsConfiguration.paymentMethodRemove || viewModels.contains(where: {
+                $0.isCoBrandedCard && cbcEligible
+            })
         }
     }
 
@@ -385,7 +387,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         }
 
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
-                          cbcEligible: cbcEligible)
+                          cbcEligible: cbcEligible,
+                          paymentMethodRemove: savedPaymentMethodsConfiguration.paymentMethodRemove)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -435,7 +438,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                               removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .customerSheet,
-                                              canRemoveCard: savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod,
+                                              canRemoveCard: savedPaymentMethodsConfiguration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                               isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

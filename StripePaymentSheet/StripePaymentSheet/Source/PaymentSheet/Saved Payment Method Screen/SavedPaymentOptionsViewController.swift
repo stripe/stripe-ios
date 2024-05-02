@@ -92,11 +92,13 @@ class SavedPaymentOptionsViewController: UIViewController {
             return false
         case 1:
             // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM allows for the card brand choice to be updated.
-            return configuration.allowsRemovalOfLastSavedPaymentMethod || viewModels.contains(where: {
+            return paymentSheetConfiguration.paymentMethodRemove && configuration.allowsRemovalOfLastSavedPaymentMethod || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         default:
-            return true
+            return paymentSheetConfiguration.paymentMethodRemove || viewModels.contains(where: {
+                $0.isCoBrandedCard && cbcEligible
+            })
         }
     }
 
@@ -481,7 +483,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, paymentMethodRemove: self.paymentSheetConfiguration.paymentMethodRemove)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -549,7 +551,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
-                                              canRemoveCard: savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod,
+                                              canRemoveCard: paymentSheetConfiguration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                               isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

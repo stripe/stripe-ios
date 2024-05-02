@@ -1011,6 +1011,48 @@ class CustomerSheetUITest: XCTestCase {
         // ...but should not be able to remove it.
         XCTAssertFalse(app.buttons["Remove card"].exists)
     }
+    // MARK: - PaymentMethodRemove w/ CBC
+    func testPaymentMethodRemove() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.merchantCountryCode = .FR
+        settings.customerMode = .new
+        settings.applePay = .on
+        settings.paymentMethodRemove = .disabled
+        loadPlayground(
+            app,
+            settings
+        )
+
+        // Save a card
+        app.staticTexts["None"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
+
+        // Shouldn't be able to edit, only one saved PM when paymentMethodRemove = .disabled
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+
+        // Add a CBC enabled PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
+
+        // Should be able to edit because of CBC saved PMs
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Assert there are no remove buttons on each tile and the update screen
+        XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertFalse(app.buttons["Remove card"].exists)
+
+        //Dismiss Sheet.
+        app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Done"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Close"].waitForExistenceAndTap(timeout: timeout)
+    }
 
     // MARK: - Helpers
 
