@@ -151,18 +151,12 @@ public class PaymentSheet {
             isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let savedPaymentMethods, let isLinkEnabled, let isApplePayEnabled):
-                let isCVCRecollectionEnabled = intent.cvcRecollectionEnabled
-
+            case .success(let loadResult):
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let presentPaymentSheetVC = {
                     let paymentSheetVC = PaymentSheetViewController(
-                        intent: intent,
-                        savedPaymentMethods: savedPaymentMethods,
                         configuration: self.configuration,
-                        isApplePayEnabled: isApplePayEnabled,
-                        isLinkEnabled: isLinkEnabled,
-                        isCVCRecollectionEnabled: isCVCRecollectionEnabled,
+                        loadResult: loadResult,
                         delegate: self
                     )
 

@@ -96,11 +96,13 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
 
         _ = PaymentSheet.FlowController(
-            intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), paymentIntent: STPFixtures.paymentIntent()),
-            savedPaymentMethods: [],
-            isLinkEnabled: false,
-            isApplePayEnabled: false,
-            configuration: PaymentSheet.Configuration()
+            configuration: PaymentSheet.Configuration(),
+            loadResult: .init(
+                intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), paymentIntent: STPFixtures.paymentIntent()),
+                savedPaymentMethods: [],
+                isLinkEnabled: false,
+                isApplePayEnabled: false
+            )
         )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet.FlowController"))
     }

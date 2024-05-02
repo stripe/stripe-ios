@@ -81,18 +81,18 @@ class PaymentSheetAPITest: XCTestCase {
                     isFlowController: false
                 ) { result in
                     switch result {
-                    case .success(let paymentIntent, let paymentMethods, _, _):
+                    case .success(let loadResult):
                         XCTAssertEqual(
-                            Set(paymentIntent.recommendedPaymentMethodTypes),
+                            Set(loadResult.intent.recommendedPaymentMethodTypes),
                             Set(expected)
                         )
-                        XCTAssertEqual(paymentMethods, [])
+                        XCTAssertEqual(loadResult.savedPaymentMethods, [])
                         // 2. Confirm the intent with a new card
 
                         PaymentSheet.confirm(
                             configuration: self.configuration,
                             authenticationContext: self,
-                            intent: paymentIntent,
+                            intent: loadResult.intent,
                             paymentOption: self.newCardPaymentOption,
                             paymentHandler: self.paymentHandler
                         ) { result, _ in
@@ -163,14 +163,14 @@ class PaymentSheetAPITest: XCTestCase {
             isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _, _):
+            case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(intent.recommendedPaymentMethodTypes),
+                    Set(loadResult.intent.recommendedPaymentMethodTypes),
                     Set(expected)
                 )
-                XCTAssertEqual(paymentMethods, [])
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 loadExpectation.fulfill()
-                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = intent else {
+                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = loadResult.intent else {
                     XCTFail()
                     return
                 }
@@ -229,14 +229,14 @@ class PaymentSheetAPITest: XCTestCase {
             isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _, _):
+            case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(intent.recommendedPaymentMethodTypes),
+                    Set(loadResult.intent.recommendedPaymentMethodTypes),
                     Set(expected)
                 )
-                XCTAssertEqual(paymentMethods, [])
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 loadExpectation.fulfill()
-                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = intent else {
+                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = loadResult.intent else {
                     XCTFail()
                     return
                 }
@@ -285,7 +285,7 @@ class PaymentSheetAPITest: XCTestCase {
                 configuration: self.configuration,
                 isFlowController: false
             ) { result in
-                guard case .success(let paymentIntent, _, _, _) = result else {
+                guard case .success(let loadResult) = result else {
                     XCTFail()
                     return
                 }
@@ -293,7 +293,7 @@ class PaymentSheetAPITest: XCTestCase {
                 PaymentSheet.confirm(
                     configuration: self.configuration,
                     authenticationContext: self,
-                    intent: paymentIntent,
+                    intent: loadResult.intent,
                     paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", type: .card), confirmParams: nil),
                     paymentHandler: self.paymentHandler
                 ) { result, _ in

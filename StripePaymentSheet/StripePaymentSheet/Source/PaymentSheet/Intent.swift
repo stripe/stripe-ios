@@ -19,6 +19,7 @@ import UIKit
 
 /// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
 enum Intent {
+    // TODO: Extract elementsSession out of this enum - semantically, it is not part of an Intent.
     case paymentIntent(elementsSession: STPElementsSession, paymentIntent: STPPaymentIntent)
     case setupIntent(elementsSession: STPElementsSession, setupIntent: STPSetupIntent)
     case deferredIntent(elementsSession: STPElementsSession, intentConfig: PaymentSheet.IntentConfiguration)
