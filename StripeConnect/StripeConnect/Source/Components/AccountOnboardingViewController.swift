@@ -41,10 +41,6 @@ public class AccountOnboardingViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        webView.preventRetainCycles()
-    }
-
     public override func viewDidLoad() {
         super.viewDidLoad()
         webView.frame = view.frame

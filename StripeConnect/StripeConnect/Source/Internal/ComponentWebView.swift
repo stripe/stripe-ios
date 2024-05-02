@@ -88,15 +88,6 @@ extension ComponentWebView: WKNavigationDelegate {
 // MARK: - Internal
 
 extension ComponentWebView {
-
-    // TODO: There's probably a better way to do this than calling in from every VC.
-    // Maybe wrapping this in a container view that calls these from deinit?
-    func preventRetainCycles() {
-        //        stopLoading()
-        //        contentController.removeAllScriptMessageHandlers()
-        //        uiDelegate = nil
-    }
-
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
         evaluateJavaScript("stripeConnectInstance.update({appearance: \(appearance.asJsonString)})")
     }
