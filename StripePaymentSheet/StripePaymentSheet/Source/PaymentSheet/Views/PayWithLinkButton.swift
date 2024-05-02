@@ -20,7 +20,7 @@ final class PayWithLinkButton: UIControl {
 
     struct Constants {
         static let defaultSize: CGSize = .init(width: 200, height: 44)
-        static let logoSize: CGSize = .init(width: 29, height: 13)
+        static let logoSize: CGSize = .init(width: 48, height: 16)
         static let cardBrandSize: CGSize = .init(width: 28, height: 18)
         static let arrowSize: CGSize = .init(width: 17, height: 13)
         static let separatorSize: CGSize = .init(width: 1, height: 22)
@@ -103,8 +103,8 @@ final class PayWithLinkButton: UIControl {
         linkView.lineBreakMode = .byTruncatingMiddle
         linkView.adjustsFontForContentSizeCategory = true
         linkView.translatesAutoresizingMaskIntoConstraints = false
-        linkView.font = UIFont.systemFont(ofSize: 20, weight: .medium)
-            .scaled(withTextStyle: .callout, maximumPointSize: 22)
+        linkView.font = UIFont.systemFont(ofSize: 22, weight: .medium)
+            .scaled(withTextStyle: .callout, maximumPointSize: 24)
 
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
 
@@ -154,8 +154,8 @@ final class PayWithLinkButton: UIControl {
             emailSeparatorView,
             emailLabel,
         ].compactMap({ $0 }))
-        stackView.spacing = 8
-        stackView.setCustomSpacing(14, after: logoView)
+        stackView.spacing = 10
+        stackView.setCustomSpacing(12, after: logoView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fill
         stackView.alignment = .center
