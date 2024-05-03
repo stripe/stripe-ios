@@ -100,6 +100,10 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private let isLinkEnabled: Bool
     private var isHackyLinkButtonSelected: Bool = false
 
+    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+       return SavedPaymentMethodManager(configuration: configuration)
+    }()
+
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
@@ -536,9 +540,9 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
         }
 
-        return try await configuration.apiClient.updatePaymentMethod(with: paymentMethod.stripeId,
-                                                                     paymentMethodUpdateParams: updateParams,
-                                                                     ephemeralKeySecret: ephemeralKey)
+        return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
+                                                          with: updateParams,
+                                                          using: ephemeralKey)
     }
 
     func didUpdateSelection(
@@ -580,24 +584,8 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         else {
             return
         }
-        if let customerAccessProvider = configuration.customer?.customerAccessProvider,
-           case .customerSession = customerAccessProvider,
-           paymentMethod.type == .card,
-           let customerId = configuration.customer?.id {
-            configuration.apiClient.detachPaymentMethodRemoveDuplicates(
-                paymentMethod.stripeId,
-                customerId: customerId,
-                fromCustomerUsing: ephemeralKey
-            ) { (_) in
-                // no-op
-            }
-        } else {
-            configuration.apiClient.detachPaymentMethod(
-                paymentMethod.stripeId, fromCustomerUsing: ephemeralKey
-            ) { (_) in
-                // no-op
-            }
-        }
+
+        savedPaymentMethodManager.detach(paymentMethod: paymentMethod, using: ephemeralKey)
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
