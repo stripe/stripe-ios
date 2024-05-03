@@ -38,6 +38,7 @@ import Foundation
                 paymentMethods.append(paymentMethod)
             }
         }
+        // Modify Swift file to trigger CI
         paymentMethodsDeserializer.paymentMethods = paymentMethods
         return paymentMethodsDeserializer
     }
