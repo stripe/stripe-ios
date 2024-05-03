@@ -210,6 +210,12 @@ public extension PaymentSheet {
             /// - Note: If `nil`, `appearance.shadow` will be used as the primary button shadow
             public var shadow: Shadow?
         }
-    }
 
+        // MARK: - Experimental Vertical Mode
+        internal enum Layout {
+            case horizontal
+            case vertical
+        }
+        internal var layout: Layout = .horizontal
+    }
 }

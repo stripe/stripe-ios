@@ -24,6 +24,7 @@ struct PaymentSheetTestPlayground: View {
         //  (each view can hold 10 direct subviews)
         Group {
             SettingView(setting: $playgroundController.settings.uiStyle)
+            SettingView(setting: $playgroundController.settings.layout)
             SettingView(setting: $playgroundController.settings.shippingInfo)
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
