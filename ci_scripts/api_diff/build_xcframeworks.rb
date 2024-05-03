@@ -8,8 +8,8 @@ def checkout_build_generate(branch, archive_name)
   puts "Building and generating public interface from #{branch}..."
   if archive_name == "master"
     head_ref = ENV['GITHUB_HEAD_REF']
-    puts "git checkout $(git merge-base #{branch}) #{head_ref}"
-    system("git checkout $(git merge-base #{branch}) #{head_ref}")
+    commit_sha = system("git merge-base #{branch} #{head_ref}")
+    system("git checkout #{commit_sha}")
   else 
     system("git checkout #{branch}")
   end
