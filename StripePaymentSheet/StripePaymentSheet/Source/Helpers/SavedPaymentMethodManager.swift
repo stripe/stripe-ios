@@ -10,13 +10,13 @@ import Foundation
 
 /// Provides shared implementations of common operations for managing saved payment methods in PaymentSheet
 final class SavedPaymentMethodManager {
-    
+
     let configuration: PaymentSheet.Configuration
-    
+
     init(configuration: PaymentSheet.Configuration) {
         self.configuration = configuration
     }
-    
+
     func update(paymentMethod: STPPaymentMethod,
                 with updateParams: STPPaymentMethodUpdateParams,
                 using ephemeralKey: String) async throws -> STPPaymentMethod {
@@ -24,7 +24,7 @@ final class SavedPaymentMethodManager {
                                                                      paymentMethodUpdateParams: updateParams,
                                                                      ephemeralKeySecret: ephemeralKey)
     }
-    
+
     func detach(paymentMethod: STPPaymentMethod, using ephemeralKey: String) {
         if let customerAccessProvider = configuration.customer?.customerAccessProvider,
            case .customerSession = customerAccessProvider,

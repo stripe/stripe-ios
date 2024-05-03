@@ -6,86 +6,84 @@
 //
 
 import Foundation
-import XCTest
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP)@_spi(CustomerSessionBetaAccess)@testable import StripePaymentSheet
 import StripeCoreTestUtils
+@_spi(STP)@_spi(CustomerSessionBetaAccess)@testable import StripePaymentSheet
+import XCTest
 
 final class SavedPaymentMethodManagerTests: XCTestCase {
-    
+
     let ephemeralKey = "test-eph-key"
     let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
-    
+
     var configuration: PaymentSheet.Configuration {
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = apiClient
         return configuration
     }
-    
+
     // MARK: Update tests
     func testUpdatePaymentMethod() async throws {
         let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
         let expectation = stubUpdatePaymentMethod(paymentMethod: paymentMethod,
                                 ephemeralKey: ephemeralKey)
-        
+
         let sut = SavedPaymentMethodManager(configuration: configuration)
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams(),
                            using: ephemeralKey)
-        
+
         // Verify the response was valid
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
         await fulfillment(of: [expectation], timeout: 5.0)
     }
-    
+
     // MARK: Detach tests
     func testDetachPaymentMethod_noCustomer() {
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
-        
+
         let sut = SavedPaymentMethodManager(configuration: configuration)
         sut.detach(paymentMethod: paymentMethod, using: ephemeralKey)
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
-    
+
     func testDetachPaymentMethod_withLegacyCustomer() {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
-        
-        
+
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
-        
+
         let sut = SavedPaymentMethodManager(configuration: configuration)
         sut.detach(paymentMethod: paymentMethod, using: ephemeralKey)
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
-    
+
     func testDetachPaymentMethod_withCustomerSession() {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "session_123")
 
         let listPaymentMethodsExpectation = stubListPaymentMethods(customerId: configuration.customer!.id,
                                                                    ephemeralKey: ephemeralKey)
-        
+
         let detachExpectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
 
-        
         let sut = SavedPaymentMethodManager(configuration: configuration)
         sut.detach(paymentMethod: paymentMethod, using: ephemeralKey)
-        
+
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
     }
 }
 
 extension SavedPaymentMethodManagerTests {
     // MARK: HTTP Stubs
-    
+
     func stubRequest(urlContains: String,
                      ephemeralKey: String,
                      httpMethod: String,
@@ -131,7 +129,7 @@ extension SavedPaymentMethodManagerTests {
 }
 
 extension STPPaymentMethod {
-    
+
     static var paymentMethodJson: [String: Any] {
         return [
             "id": "pm_123card",
@@ -142,7 +140,7 @@ extension STPPaymentMethod {
             ],
         ]
     }
-    
+
     static var paymentMethodsJson: [String: Any] = [
         "data": [
             [
@@ -168,10 +166,10 @@ extension STPPaymentMethod {
                     "last4": "6789",
                     "brand": "amex",
                 ],
-            ]
-        ]
+            ],
+        ],
     ]
-    
+
     /// Creates a fake payment method for tests
     static func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethodJson)!
