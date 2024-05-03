@@ -12,18 +12,22 @@ import StripeCoreTestUtils
 import XCTest
 
 final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
+    func makeTestLoadResult(paymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
+        return .init(
+            intent: ._testValue(),
+            savedPaymentMethods: paymentMethods,
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+    }
 
     func testSavedScreen_card() {
         let paymentMethods = [
             STPPaymentMethod._testCard(),
         ]
         let sut = PaymentSheetViewController(
-            intent: ._testValue(),
-            savedPaymentMethods: paymentMethods,
             configuration: ._testValue_MostPermissive(),
-            isApplePayEnabled: false,
-            isLinkEnabled: false,
-            isCVCRecollectionEnabled: false,
+            loadResult: makeTestLoadResult(paymentMethods: paymentMethods),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
@@ -35,12 +39,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             STPPaymentMethod._testUSBankAccount(),
         ]
         let sut = PaymentSheetViewController(
-            intent: ._testValue(),
-            savedPaymentMethods: paymentMethods,
             configuration: ._testValue_MostPermissive(),
-            isApplePayEnabled: false,
-            isLinkEnabled: false,
-            isCVCRecollectionEnabled: false,
+            loadResult: makeTestLoadResult(paymentMethods: paymentMethods),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
@@ -52,12 +52,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             STPPaymentMethod._testSEPA(),
         ]
         let sut = PaymentSheetViewController(
-            intent: ._testValue(),
-            savedPaymentMethods: paymentMethods,
             configuration: ._testValue_MostPermissive(),
-            isApplePayEnabled: false,
-            isLinkEnabled: false,
-            isCVCRecollectionEnabled: false,
+            loadResult: makeTestLoadResult(paymentMethods: paymentMethods),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)

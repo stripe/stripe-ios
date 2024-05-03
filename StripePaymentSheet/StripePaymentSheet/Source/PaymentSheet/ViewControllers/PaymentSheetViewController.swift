@@ -182,29 +182,25 @@ class PaymentSheetViewController: UIViewController {
     }
 
     required init(
-        intent: Intent,
-        savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
-        isApplePayEnabled: Bool,
-        isLinkEnabled: Bool,
-        isCVCRecollectionEnabled: Bool,
+        loadResult: PaymentSheetLoader.LoadResult,
         delegate: PaymentSheetViewControllerDelegate
     ) {
-        self.intent = intent
+        self.intent = loadResult.intent
         self.configuration = configuration
-        self.isApplePayEnabled = isApplePayEnabled
-        self.isLinkEnabled = isLinkEnabled
-        self.isCVCRecollectionEnabled = isCVCRecollectionEnabled
+        self.isApplePayEnabled = loadResult.isApplePayEnabled
+        self.isLinkEnabled = loadResult.isLinkEnabled
+        self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
         self.delegate = delegate
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
-            savedPaymentMethods: savedPaymentMethods,
+            savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: false,
                 showLink: false,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
-                isCVCRecollectionEnabled: isCVCRecollectionEnabled,
+                isCVCRecollectionEnabled: loadResult.intent.cvcRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod
             ),
@@ -214,7 +210,7 @@ class PaymentSheetViewController: UIViewController {
             cbcEligible: intent.cardBrandChoiceEligible
         )
 
-        if savedPaymentMethods.isEmpty {
+        if loadResult.savedPaymentMethods.isEmpty {
             self.mode = .addingNew
         } else {
             self.mode = .selectingSaved

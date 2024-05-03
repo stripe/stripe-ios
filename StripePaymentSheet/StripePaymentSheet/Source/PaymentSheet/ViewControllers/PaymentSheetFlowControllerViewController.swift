@@ -170,18 +170,13 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }
 
     required init(
-        intent: Intent,
-        savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
-        previousPaymentOption: PaymentOption? = nil,
-        isApplePayEnabled: Bool,
-        isLinkEnabled: Bool,
-        isCVCRecollectionEnabled: Bool
+        loadResult: PaymentSheetLoader.LoadResult,
+        previousPaymentOption: PaymentOption? = nil
     ) {
-        self.intent = intent
-        self.isApplePayEnabled = isApplePayEnabled
-        self.isLinkEnabled = isLinkEnabled
-
+        self.intent = loadResult.intent
+        self.isApplePayEnabled = loadResult.isApplePayEnabled
+        self.isLinkEnabled = loadResult.isLinkEnabled
         self.configuration = configuration
 
         // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
@@ -207,19 +202,19 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         }()
         // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
         // and they have saved PMs or Apple Pay or Link is enabled
-        self.mode = (previousNewPaymentMethodParams == nil) && (savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled)
+        self.mode = (previousNewPaymentMethodParams == nil) && (loadResult.savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled)
                 ? .selectingSaved
                 : .addingNew
 
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
-            savedPaymentMethods: savedPaymentMethods,
+            savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
-                isCVCRecollectionEnabled: isCVCRecollectionEnabled,
+                isCVCRecollectionEnabled: loadResult.intent.cvcRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod
             ),

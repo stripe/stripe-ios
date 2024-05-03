@@ -11,15 +11,12 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 final class PaymentSheetLoader {
-    /// `PaymentSheet.load()` result.
-    enum LoadingResult {
-        case success(
-            intent: Intent,
-            savedPaymentMethods: [STPPaymentMethod],
-            isLinkEnabled: Bool,
-            isApplePayEnabled: Bool
-        )
-        case failure(Error)
+    /// All the data that PaymentSheetLoader loaded.
+    struct LoadResult {
+        let intent: Intent
+        let savedPaymentMethods: [STPPaymentMethod]
+        let isLinkEnabled: Bool
+        let isApplePayEnabled: Bool
     }
 
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
@@ -28,7 +25,7 @@ final class PaymentSheetLoader {
         configuration: PaymentSheet.Configuration,
         analyticsClient: STPAnalyticsClient = .sharedClient,
         isFlowController: Bool,
-        completion: @escaping (LoadingResult) -> Void
+        completion: @escaping (Result<LoadResult, Error>) -> Void
     ) {
         let loadingStartDate = Date()
         analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
@@ -40,7 +37,7 @@ final class PaymentSheetLoader {
                     assertionFailure("Dashboard isn't supported in non-deferred intent flows")
                 }
 
-                // Fetch PaymentIntent, SetupIntent, or ElementsSession
+                // Fetch ElementsSession
                 async let _intent = fetchIntent(mode: mode, configuration: configuration, analyticsClient: analyticsClient)
 
                 // Load misc singletons
@@ -99,14 +96,13 @@ final class PaymentSheetLoader {
                 }
 
                 // Call completion
-                completion(
-                    .success(
-                        intent: intent,
-                        savedPaymentMethods: filteredSavedPaymentMethods,
-                        isLinkEnabled: isLinkEnabled,
-                        isApplePayEnabled: isApplePayEnabled
-                    )
+                let loadResult = LoadResult(
+                    intent: intent,
+                    savedPaymentMethods: filteredSavedPaymentMethods,
+                    isLinkEnabled: isLinkEnabled,
+                    isApplePayEnabled: isApplePayEnabled
                 )
+                completion(.success(loadResult))
             } catch {
                 analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed,
                                                                      duration: Date().timeIntervalSince(loadingStartDate),

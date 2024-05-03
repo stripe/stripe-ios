@@ -34,9 +34,9 @@ final class PaymentSheetLoaderTest: XCTestCase {
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, isFlowController: false) { result in
             expectation.fulfill()
             switch result {
-            case .success(let intent, let paymentMethods, _, let isApplePayEnabled):
+            case .success(let loadResult):
                 // ...PaymentSheet should successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = intent else {
+                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
@@ -47,8 +47,8 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 )
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
-                XCTAssertEqual(paymentMethods, [])
-                XCTAssertTrue(isApplePayEnabled)
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                XCTAssertTrue(loadResult.isApplePayEnabled)
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
@@ -67,13 +67,13 @@ final class PaymentSheetLoaderTest: XCTestCase {
             isFlowController: false
         ) { result in
             switch result {
-            case .success(let setupIntent, let paymentMethods, _, let isApplePayEnabled):
+            case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(setupIntent.recommendedPaymentMethodTypes),
+                    Set(loadResult.intent.recommendedPaymentMethodTypes),
                     Set(expected)
                 )
-                XCTAssertEqual(paymentMethods, [])
-                XCTAssertTrue(isApplePayEnabled)
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                XCTAssertTrue(loadResult.isApplePayEnabled)
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail()
@@ -134,12 +134,12 @@ final class PaymentSheetLoaderTest: XCTestCase {
             PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, isFlowController: true) { result in
                 loadExpectation.fulfill()
                 switch result {
-                case .success(let intent, _, _, let isApplePayEnabled):
-                    guard case .deferredIntent = intent else {
+                case .success(let loadResult):
+                    guard case .deferredIntent = loadResult.intent else {
                         XCTFail()
                         return
                     }
-                    XCTAssertTrue(isApplePayEnabled)
+                    XCTAssertTrue(loadResult.isApplePayEnabled)
                 case .failure(let error):
                     XCTFail("Test case at index \(index) failed: \(error)")
                     print(error)
@@ -220,10 +220,10 @@ final class PaymentSheetLoaderTest: XCTestCase {
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, isFlowController: true) { result in
             loadExpectation.fulfill()
             switch result {
-            case .success(_, let savedPaymentMethods, _, _):
+            case .success(let loadResult):
                 // ...check that it only loads the one normal saved card
-                XCTAssertEqual(savedPaymentMethods.count, 1)
-                XCTAssertEqual(savedPaymentMethods.first?.stripeId, savedNonApplePayCard)
+                XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
+                XCTAssertEqual(loadResult.savedPaymentMethods.first?.stripeId, savedNonApplePayCard)
             case .failure:
                 XCTFail()
             }
@@ -245,9 +245,9 @@ final class PaymentSheetLoaderTest: XCTestCase {
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, isFlowController: false) { result in
             expectation.fulfill()
             switch result {
-            case .success(let intent, let paymentMethods, _, let isApplePayEnabled):
+            case .success(let loadResult):
                 // ...PaymentSheet should successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = intent else {
+                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
@@ -262,8 +262,8 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 )
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
-                XCTAssertEqual(paymentMethods, [])
-                XCTAssertTrue(isApplePayEnabled)
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                XCTAssertTrue(loadResult.isApplePayEnabled)
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
@@ -286,16 +286,16 @@ final class PaymentSheetLoaderTest: XCTestCase {
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, isFlowController: true) { result in
             expectation.fulfill()
             switch result {
-            case .success(let intent, let paymentMethods, _, let isApplePayEnabled):
+            case .success(let loadResult):
                 // ...PaymentSheet should *still* successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = intent else {
+                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
-                XCTAssertEqual(paymentMethods, [])
-                XCTAssertTrue(isApplePayEnabled)
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                XCTAssertTrue(loadResult.isApplePayEnabled)
 
                 // ...with an empty `externalPaymentMethods` property
                 XCTAssertTrue(elementsSession.externalPaymentMethods.isEmpty)
