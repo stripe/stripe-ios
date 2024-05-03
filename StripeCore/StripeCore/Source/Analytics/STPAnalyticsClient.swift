@@ -13,9 +13,10 @@ import UIKit
     static var stp_analyticsIdentifier: String { get }
 }
 
+@AnalyticsActor
 @_spi(STP) public protocol STPAnalyticsClientProtocol {
     func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type)
-    func log(analytic: Analytic, apiClient: STPAPIClient)
+    func log(analytic: Analytic, apiClient: STPAPIClient?)
 }
 
 /// This exists so our example/test apps can hook into when STPAnalyticsClient.sharedClient sends events.
@@ -23,14 +24,19 @@ import UIKit
     func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any])
 }
 
-@_spi(STP) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
+@globalActor @_spi(STP) public actor AnalyticsActor {
+    @_spi(STP) public static var shared = AnalyticsActor()
+}
+
+@AnalyticsActor
+@_spi(STP) public final class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol, Sendable {
     @objc public static let sharedClient = STPAnalyticsClient()
     /// When this class logs a payload in an XCTestCase, it's added to `_testLogHistory` instead of being sent over the network.
     /// This is a hack - ideally, we inject a different analytics client in our tests. This is an escape hatch until we can make that (significant) refactor
     public var _testLogHistory: [[String: Any]] = []
     public weak var delegate: STPAnalyticsClientDelegate?
 
-    @objc public var productUsage: Set<String> = Set()
+    var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
     private(set) var urlSession: URLSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
@@ -89,8 +95,12 @@ import UIKit
     ///   - analytic: The analytic to log.
     ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
     ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
-    func payload(from analytic: Analytic, apiClient: STPAPIClient = .shared) -> [String: Any] {
-        var payload = commonPayload(apiClient)
+    @AnalyticsActor
+    func payload(from analytic: Analytic, apiClient: STPAPIClient? = nil) async -> [String: Sendable] {
+        let apiClient = await MainActor.run {
+             apiClient ?? .shared
+        }
+        var payload = await commonPayload(apiClient)
 
         payload["event"] = analytic.event.rawValue
         payload["additional_info"] = additionalInfo()
@@ -107,35 +117,41 @@ import UIKit
     ///   - analytic: The analytic to log.
     ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
     ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
-    public func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
-        let payload = payload(from: analytic, apiClient: apiClient)
+    @AnalyticsActor
+    public func log(analytic: Analytic, apiClient: STPAPIClient? = nil) {
+        Task {
+            let apiClient = await MainActor.run {
+                 apiClient ?? .shared
+            }
+            let payload = await payload(from: analytic, apiClient: apiClient)
 
-        #if DEBUG
-        NSLog("LOG ANALYTICS: \(analytic.event.rawValue) - \(analytic.params.sorted { $0.0 > $1.0 })")
-        delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
-        #endif
+            #if DEBUG
+            NSLog("LOG ANALYTICS: \(analytic.event.rawValue) - \(analytic.params.sorted { $0.0 > $1.0 })")
+            delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
+            #endif
 
-        // If in testing, don't log analytic, instead append payload to log history
-        guard !STPAnalyticsClient.isUnitOrUITest else {
-            _testLogHistory.append(payload)
-            return
+            // If in testing, don't log analytic, instead append payload to log history
+            guard !STPAnalyticsClient.isUnitOrUITest else {
+                _testLogHistory.append(payload)
+                return
+            }
+
+            var request = URLRequest(url: url)
+            request.stp_addParameters(toURL: payload)
+            let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
+            task.resume()
         }
-
-        var request = URLRequest(url: url)
-        request.stp_addParameters(toURL: payload)
-        let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
-        task.resume()
     }
 }
 
 // MARK: - Helpers
 
 extension STPAnalyticsClient {
-    public func commonPayload(_ apiClient: STPAPIClient) -> [String: Any] {
-        var payload: [String: Any] = [:]
+    public func commonPayload(_ apiClient: STPAPIClient) async -> [String: Sendable] {
+        var payload: [String: Sendable] = [:]
         payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
         payload["analytics_ua"] = "analytics.stripeios-1.0"
-        let version = UIDevice.current.systemVersion
+        let version = await UIDevice.current.systemVersion
         if !version.isEmpty {
             payload["os_version"] = version
         }
@@ -147,8 +163,8 @@ extension STPAnalyticsClient {
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
         payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue
-        payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
-        payload["session_id"] = AnalyticsHelper.shared.sessionID
+        payload["publishable_key"] = await apiClient.sanitizedPublishableKey ?? "unknown"
+        payload["session_id"] = await AnalyticsHelper.shared.sessionID
         if STPAnalyticsClient.isSimulatorOrTest {
             payload["is_development"] = true
         }

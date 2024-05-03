@@ -11,14 +11,14 @@ import Foundation
 @_spi(STP) public struct ErrorAnalytic: Analytic {
     public let event: STPAnalyticEvent
     public let error: Error
-    public var params: [String: Any] {
+    public var params: [String: Sendable] {
         var params = error.serializeForV1Analytics()
         params.mergeAssertingOnOverwrites(additionalNonPIIParams)
         return params
     }
-    let additionalNonPIIParams: [String: Any]
+    let additionalNonPIIParams: [String: Sendable]
 
-    public init(event: STPAnalyticEvent, error: Error, additionalNonPIIParams: [String: Any] = [:]) {
+    public init(event: STPAnalyticEvent, error: Error, additionalNonPIIParams: [String: Sendable] = [:]) {
         self.event = event
         self.error = error
         self.additionalNonPIIParams = additionalNonPIIParams

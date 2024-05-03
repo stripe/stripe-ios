@@ -5,6 +5,7 @@
 
 import Foundation
 
+@MainActor
 @_spi(STP) public class AnalyticsHelper {
     @_spi(STP) public enum TimeMeasurement {
         case checkout

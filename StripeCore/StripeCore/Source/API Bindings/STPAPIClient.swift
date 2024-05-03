@@ -10,18 +10,16 @@ import Foundation
 import UIKit
 
 /// A client for making connections to the Stripe API.
-@objc public class STPAPIClient: NSObject {
+@MainActor
+@objc public final class STPAPIClient: NSObject, Sendable {
     /// The current version of this library.
-    @objc public static let STPSDKVersion = StripeAPIConfiguration.STPSDKVersion
+    @objc public nonisolated static let STPSDKVersion = StripeAPIConfiguration.STPSDKVersion
 
     /// A shared singleton API client.
     ///
     /// By default, the SDK uses this instance to make API requests
     /// eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
-    @objc(sharedClient) public static let shared: STPAPIClient = {
-        let client = STPAPIClient()
-        return client
-    }()
+    @objc(sharedClient) public static let shared = STPAPIClient()
 
     /// The client's publishable key.
     ///
@@ -240,7 +238,7 @@ extension STPAPIClient {
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
-        completion: @escaping (
+        completion: @Sendable @escaping (
             Result<T, Error>
         ) -> Void
     ) {
@@ -258,7 +256,7 @@ extension STPAPIClient {
         url: URL,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
-        completion: @escaping (
+        completion: @Sendable @escaping (
             Result<T, Error>
         ) -> Void
     ) {
@@ -292,7 +290,7 @@ extension STPAPIClient {
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
-        completion: @escaping (Result<T, Error>) -> Void
+        completion: @Sendable @escaping (Result<T, Error>) -> Void
     ) {
         request(
             method: .post,
@@ -308,7 +306,7 @@ extension STPAPIClient {
         url: URL,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
-        completion: @escaping (Result<T, Error>) -> Void
+        completion: @Sendable @escaping (Result<T, Error>) -> Void
     ) {
         request(
             method: .post,
@@ -342,14 +340,15 @@ extension STPAPIClient {
         resource: String
     ) -> Promise<T> {
         let promise = Promise<T>()
-        self.request(
-            method: method,
-            parameters: parameters,
-            ephemeralKeySecret: ephemeralKeySecret,
-            resource: resource
-        ) { result in
-            promise.fullfill(with: result)
-        }
+//        self.request(
+//            method: method,
+//            parameters: parameters,
+//            ephemeralKeySecret: ephemeralKeySecret,
+//            resource: resource
+//        ) { result in
+//            TODO FIX PROMISES
+//            promise.fullfill(with: result)
+//        }
         return promise
     }
 
@@ -358,7 +357,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String?,
         resource: String,
-        completion: @escaping (Result<T, Error>) -> Void
+        completion: @Sendable @escaping (Result<T, Error>) -> Void
     ) {
         let url = apiURL.appendingPathComponent(resource)
         request(
@@ -375,7 +374,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String?,
         url: URL,
-        completion: @escaping (Result<T, Error>) -> Void
+        completion: @Sendable @escaping (Result<T, Error>) -> Void
     ) {
         var request = configuredRequest(for: url)
         switch method {
@@ -411,13 +410,14 @@ extension STPAPIClient {
         ephemeralKeySecret: String? = nil
     ) -> Promise<O> {
         let promise = Promise<O>()
-        self.post(
-            resource: resource,
-            object: object,
-            ephemeralKeySecret: ephemeralKeySecret
-        ) { result in
-            promise.fullfill(with: result)
-        }
+        // TODO FIX PROMISES
+//        self.post(
+//            resource: resource,
+//            object: object,
+//            ephemeralKeySecret: ephemeralKeySecret
+//        ) { result in
+//            promise.fullfill(with: result)
+//        }
         return promise
     }
 
@@ -426,7 +426,7 @@ extension STPAPIClient {
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil,
-        completion: @escaping (Result<O, Error>) -> Void
+        completion: @Sendable @escaping (Result<O, Error>) -> Void
     ) {
         let url = apiURL.appendingPathComponent(resource)
         post(
@@ -442,7 +442,7 @@ extension STPAPIClient {
         url: URL,
         object: I,
         ephemeralKeySecret: String? = nil,
-        completion: @escaping (Result<O, Error>) -> Void
+        completion: @Sendable @escaping (Result<O, Error>) -> Void
     ) {
         do {
             let jsonDictionary = try object.encodeJSONDictionary()
@@ -474,7 +474,7 @@ extension STPAPIClient {
 
     func sendRequest<T: Decodable>(
         request: URLRequest,
-        completion: @escaping (Result<T, Error>) -> Void
+        completion: @escaping @Sendable (Result<T, Error>) -> Void
     ) {
         urlSession.stp_performDataTask(
             with: request,

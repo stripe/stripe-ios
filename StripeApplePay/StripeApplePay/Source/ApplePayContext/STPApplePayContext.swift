@@ -87,8 +87,9 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// 5. After payment completes/errors and the sheet is dismissed, this class informs you in the applePayContext:didCompleteWithStatus: delegate method
 /// - seealso: https://stripe.com/docs/apple-pay#native for a full guide
 /// - seealso: ApplePayExampleViewController for an example
+@MainActor
 @objc(STPApplePayContext)
-public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
+public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate, Sendable {
     enum Error: Swift.Error {
         case invalidFinalState
     }
@@ -108,7 +109,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         paymentRequest: PKPaymentRequest,
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
+        Task {
+            await STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
+        }
         let canMakePayments: Bool = {
             if #available(iOS 15.0, *) {
                 // On iOS 15+, Apple Pay can be displayed even though there are no cards because Apple added the ability for customers to add cards in the payment sheet (see WWDC '21 "What's new in Wallet and Apple Pay")
@@ -206,6 +209,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         message: "Use `presentApplePay(completion:)` instead.",
         renamed: "presentApplePay(completion:)"
     )
+    @MainActor
     public func presentApplePay(
         on viewController: UIViewController,
         completion: STPVoidBlock? = nil
@@ -216,7 +220,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
-    @objc public var apiClient: STPAPIClient = STPAPIClient.shared
+    @MainActor @objc public var apiClient: STPAPIClient = STPAPIClient.shared
     /// ApplePayContext passes this to the /confirm endpoint for PaymentIntents if it did not collect shipping details itself.
     /// :nodoc:
     @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
@@ -443,10 +447,12 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     /// :nodoc:
-    @objc public func presentationWindow(
+    @objc nonisolated public func presentationWindow(
         for controller: PKPaymentAuthorizationController
     ) -> UIWindow? {
-        return presentationWindow
+        MainActor.assumeIsolated {
+            return presentationWindow
+        }
     }
 
     // MARK: - Helpers
@@ -487,7 +493,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             case .pending, .notStarted:
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
                                                   error: Error.invalidFinalState)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                Task {
+                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
                 stpAssertionFailure("Invalid final state")
                 return
             }
@@ -744,7 +752,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
 /// :nodoc:
 @_spi(STP) extension STPApplePayContext: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier: String {
+    @_spi(STP) public nonisolated static var stp_analyticsIdentifier: String {
         return "STPApplePayContext"
     }
 }
@@ -756,7 +764,8 @@ class ModernApplePayContext: STPAnalyticsProtocol {
     }
 }
 
-private var kSTPApplePayContextAssociatedObjectKey = 0
+nonisolated(unsafe) private var kSTPApplePayContextAssociatedObjectKey = 0
+
 enum STPPaymentState: Int {
     case notStarted
     case pending
@@ -775,4 +784,4 @@ private class _stpinternal_STPApplePayContextLegacyHelper: NSObject {
     }
 }
 
-private var kApplePayContextAssociatedObjectKey = 0
+nonisolated(unsafe) private var kApplePayContextAssociatedObjectKey = 0

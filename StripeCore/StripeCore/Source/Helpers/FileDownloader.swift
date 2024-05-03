@@ -32,21 +32,21 @@ import Foundation
     public func downloadFileTemporarily(from remoteURL: URL) -> Future<URL> {
         let promise = Promise<URL>()
 
-        let request = URLRequest(url: remoteURL)
-
-        let downloadTask = urlSession.downloadTask(with: request) { url, _, error in
-
-            if let error = error {
-                return promise.reject(with: error)
-            }
-
-            guard let url = url else {
-                return promise.reject(with: NSError.stp_genericConnectionError())
-            }
-
-            promise.resolve(with: url)
-        }
-        downloadTask.resume()
+// TODO THIS:
+//        let request = URLRequest(url: remoteURL)
+//        let downloadTask = urlSession.downloadTask(with: request) { url, _, error in
+//
+//            if let error = error {
+//                return promise.reject(with: error)
+//            }
+//
+//            guard let url = url else {
+//                return promise.reject(with: NSError.stp_genericConnectionError())
+//            }
+//
+//            promise.resolve(with: url)
+//        }
+//        downloadTask.resume()
 
         return promise
     }

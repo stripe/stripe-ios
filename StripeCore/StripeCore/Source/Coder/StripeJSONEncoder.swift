@@ -39,7 +39,7 @@ import Foundation
     @_spi(STP) public func encodeJSONDictionary<T>(
         _ value: T,
         includingUnknownFields: Bool = true
-    ) throws -> [String: Any] where T: Encodable {
+    ) throws -> [String: Sendable] where T: Encodable {
         var outputFormatting = self.outputFormatting
         outputFormatting.insert(.fragmentsAllowed)
 
@@ -61,12 +61,12 @@ import Foundation
 
         // Convert the JSON data into a JSON dictionary
         var jsonDictionary =
-            try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
+            try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Sendable]
 
         // Merge in the additional parameters we collected in our encoder userInfo's NSMutableDictionary during encoding
         try jsonDictionary.merge(
-            dictionary as! [String: Any],
-            uniquingKeysWith: [String: Any].stp_deepMerge
+            dictionary as! [String: Sendable],
+            uniquingKeysWith: [String: Sendable].stp_deepMerge
         )
 
         return jsonDictionary

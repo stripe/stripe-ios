@@ -12,6 +12,7 @@ import Foundation
     func handleURLCallback(_ url: URL) -> Bool
 }
 
+@MainActor
 @_spi(STP) public class STPURLCallbackHandler: NSObject {
     @_spi(STP) public static var sharedHandler: STPURLCallbackHandler = STPURLCallbackHandler()
 

@@ -9,7 +9,8 @@
 import Foundation
 
 /// A class which can detect if the host app is using a known cross-platform solution.
-class PluginDetector {
+@AnalyticsActor
+final class PluginDetector {
 
     /// Shared instance of the `PluginDetector` to enable caching of the `pluginType`.
     static let shared = PluginDetector()

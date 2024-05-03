@@ -53,7 +53,7 @@ public protocol SafeEnumCodable: Encodable, SafeEnumDecodable {}
 extension UnknownFieldsDecodable {
     /// A dictionary containing all response fields from the original JSON,
     /// including unknown fields.
-    public internal(set) var allResponseFields: [String: Any] {
+    public internal(set) var allResponseFields: [String: Sendable] {
         get {
             self._allResponseFieldsStorage?.storage ?? [:]
         }
@@ -84,7 +84,7 @@ extension UnknownFieldsEncodable {
     /// cardParams.additionalParameters = ["test_field": "example_value"]
     /// PaymentsAPI.shared.createToken(withParameters: cardParams completion:...)
     /// ```
-    public var additionalParameters: [String: Any] {
+    public var additionalParameters: [String: Sendable] {
         get {
             self._additionalParametersStorage?.storage ?? [:]
         }
@@ -98,7 +98,7 @@ extension UnknownFieldsEncodable {
 }
 
 extension Encodable {
-    func encodeJSONDictionary(includingUnknownFields: Bool = true) throws -> [String: Any] {
+    func encodeJSONDictionary(includingUnknownFields: Bool = true) throws -> [String: Sendable] {
         let encoder = StripeJSONEncoder()
         return try encoder.encodeJSONDictionary(
             self,
@@ -120,8 +120,8 @@ public protocol UnknownFieldsCodable: UnknownFieldsEncodable, UnknownFieldsDecod
 /// This should not be used directly.
 /// Use the `additionalParameters` and `allResponseFields` accessors instead.
 /// :nodoc:
-public struct NonEncodableParameters {
-    @_spi(STP) public internal(set) var storage: [String: Any] = [:]
+public struct NonEncodableParameters: Sendable {
+    @_spi(STP) public internal(set) var storage: [String: Sendable] = [:]
 }
 
 extension NonEncodableParameters: Decodable {

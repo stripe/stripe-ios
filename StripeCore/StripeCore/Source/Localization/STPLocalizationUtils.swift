@@ -69,7 +69,8 @@ import Foundation
     }
 
     // MARK: - Testing
-    static var languageOverride: String?
+    // TODO FIX THIS!
+    static nonisolated(unsafe) var languageOverride: String?
     static func overrideLanguage(to string: String?) {
         STPLocalizationUtils.languageOverride = string
     }

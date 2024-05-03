@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 final class LinkAccountContext {
 
     static let shared: LinkAccountContext = .init()

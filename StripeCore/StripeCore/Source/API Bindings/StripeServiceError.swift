@@ -11,7 +11,7 @@ import Foundation
 /// An error returned from the Stripe API.
 ///
 /// https://stripe.com/docs/api/errors
-@_spi(STP) public struct StripeAPIError: UnknownFieldsDecodable {
+@_spi(STP) public struct StripeAPIError: UnknownFieldsDecodable, Sendable {
     /// The type of error returned.
     @_spi(STP) public var type: ErrorType
     /// For some errors that could be handled programmatically,
@@ -36,7 +36,7 @@ import Foundation
     // the PaymentIntent or PaymentMethod.
 
     /// Types of errors presented by the API.
-    @_spi(STP) public enum ErrorType: String, SafeEnumCodable {
+    @_spi(STP) public enum ErrorType: String, SafeEnumCodable, Sendable {
         case apiError = "api_error"
         case cardError = "card_error"
         case idempotencyError = "idempotency_error"

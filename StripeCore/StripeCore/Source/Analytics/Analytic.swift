@@ -11,7 +11,7 @@ import Foundation
 /// An analytic that can be logged to our analytics system.
 @_spi(STP) public protocol Analytic {
     var event: STPAnalyticEvent { get }
-    var params: [String: Any] { get }
+    var params: [String: Sendable] { get }
 }
 
 /// A generic analytic type.
@@ -20,11 +20,11 @@ import Foundation
 /// Any new analytic events should create a new type and conform to `Analytic`.
 @_spi(STP) public struct GenericAnalytic: Analytic {
     public let event: STPAnalyticEvent
-    public let params: [String: Any]
+    public let params: [String: Sendable]
 
     public init(
         event: STPAnalyticEvent,
-        params: [String: Any]
+        params: [String: Sendable]
     ) {
         self.event = event
         self.params = params

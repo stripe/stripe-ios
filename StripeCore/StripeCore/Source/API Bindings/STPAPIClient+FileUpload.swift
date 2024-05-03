@@ -32,7 +32,7 @@ extension STPAPIClient {
     )
 
     /// Metrics returned in callback after image is uploaded to track performance.
-    @_spi(STP) public struct ImageUploadMetrics {
+    @_spi(STP) public struct ImageUploadMetrics : Sendable{
         public let timeToUpload: TimeInterval
         public let fileSizeBytes: Int
     }
@@ -75,15 +75,17 @@ extension STPAPIClient {
     ///   match a value in `StripeFile.Purpose`, but can be specified by any string
     ///   when forwarding the value from a Stripe server response in situations
     ///   where the purpose is not yet encoded in the client SDK.
+    @MainActor
     @_spi(STP) public func uploadImage(
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
-        fileName: String = defaultImageFileName,
+        fileName: String?,
         ownedBy: String? = nil,
         ephemeralKeySecret: String? = nil,
         completion: @escaping (Result<StripeFile, Error>) -> Void
     ) {
+        let fileName = fileName ?? STPAPIClient.defaultImageFileName
         uploadImageAndGetMetrics(
             image,
             compressionQuality: compressionQuality,
@@ -100,69 +102,71 @@ extension STPAPIClient {
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
-        fileName: String = defaultImageFileName,
+        fileName: String?,
         ownedBy: String? = nil,
         ephemeralKeySecret: String? = nil,
         completion: @escaping (Result<FileAndUploadMetrics, Error>) -> Void
     ) {
-        let purposePart = STPMultipartFormDataPart()
-        purposePart.name = "purpose"
-        // `unparsable` is not a valid purpose
-        if purpose != StripeFile.Purpose.unparsable.rawValue,
-            let purposeData = purpose.data(using: .utf8)
-        {
-            purposePart.data = purposeData
-        }
-
-        let imagePart = STPMultipartFormDataPart()
-        imagePart.name = "file"
-        imagePart.filename = "\(fileName).jpg"
-        imagePart.contentType = "image/jpeg"
-        imagePart.data = self.data(
-            forUploadedImage: image,
-            compressionQuality: compressionQuality,
-            purpose: purpose
-        )
-
-        let ownedByPart: STPMultipartFormDataPart? = ownedBy?.data(using: .utf8).map { ownedByData in
-            let part = STPMultipartFormDataPart()
-            part.name = "owned_by"
-            part.data = ownedByData
-            return part
-        }
-
-        let boundary = STPMultipartFormDataEncoder.generateBoundary()
-        let parts = [purposePart, ownedByPart, imagePart].compactMap { $0 }
-        let data = STPMultipartFormDataEncoder.multipartFormData(
-            for: parts,
-            boundary: boundary
-        )
-
-        var request = configuredRequest(
-            for: URL(string: FileUploadURL)!,
-            using: ephemeralKeySecret
-        )
-        request.httpMethod = HTTPMethod.post.rawValue
-        request.stp_setMultipartForm(data, boundary: boundary)
-
-        let requestStartTime = Date()
-        sendRequest(
-            request: request,
-            completion: { (result: Result<StripeFile, Error>) in
-                let timeToUpload = Date().timeIntervalSince(requestStartTime)
-                completion(
-                    result.map {
-                        (
-                            file: $0,
-                            metrics: .init(
-                                timeToUpload: timeToUpload,
-                                fileSizeBytes: imagePart.data?.count ?? 0
-                            )
-                        )
-                    }
-                )
-            }
-        )
+        // TODO THIS
+//        let fileName = fileName ?? STPAPIClient.defaultImageFileName
+//        let purposePart = STPMultipartFormDataPart()
+//        purposePart.name = "purpose"
+//        // `unparsable` is not a valid purpose
+//        if purpose != StripeFile.Purpose.unparsable.rawValue,
+//            let purposeData = purpose.data(using: .utf8)
+//        {
+//            purposePart.data = purposeData
+//        }
+//
+//        let imagePart = STPMultipartFormDataPart()
+//        imagePart.name = "file"
+//        imagePart.filename = "\(fileName).jpg"
+//        imagePart.contentType = "image/jpeg"
+//        imagePart.data = self.data(
+//            forUploadedImage: image,
+//            compressionQuality: compressionQuality,
+//            purpose: purpose
+//        )
+//
+//        let ownedByPart: STPMultipartFormDataPart? = ownedBy?.data(using: .utf8).map { ownedByData in
+//            let part = STPMultipartFormDataPart()
+//            part.name = "owned_by"
+//            part.data = ownedByData
+//            return part
+//        }
+//
+//        let boundary = STPMultipartFormDataEncoder.generateBoundary()
+//        let parts = [purposePart, ownedByPart, imagePart].compactMap { $0 }
+//        let data = STPMultipartFormDataEncoder.multipartFormData(
+//            for: parts,
+//            boundary: boundary
+//        )
+//
+//        var request = configuredRequest(
+//            for: URL(string: FileUploadURL)!,
+//            using: ephemeralKeySecret
+//        )
+//        request.httpMethod = HTTPMethod.post.rawValue
+//        request.stp_setMultipartForm(data, boundary: boundary)
+//
+//        let requestStartTime = Date()
+//        sendRequest(
+//            request: request,
+//            completion: { (result: Result<StripeFile, Error>) in
+//                let timeToUpload = Date().timeIntervalSince(requestStartTime)
+//                completion(
+//                    result.map {
+//                        (
+//                            file: $0,
+//                            metrics: .init(
+//                                timeToUpload: timeToUpload,
+//                                fileSizeBytes: imagePart.data?.count ?? 0
+//                            )
+//                        )
+//                    }
+//                )
+//            }
+//        )
     }
 
     /// Uses the Stripe file upload API to upload a JPEG encoded image.
@@ -193,10 +197,11 @@ extension STPAPIClient {
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
-        fileName: String = defaultImageFileName,
+        fileName: String?,
         ownedBy: String? = nil,
         ephemeralKeySecret: String? = nil
     ) -> Future<StripeFile> {
+        let fileName = fileName ?? STPAPIClient.defaultImageFileName
         return uploadImageAndGetMetrics(
             image,
             compressionQuality: compressionQuality,
@@ -211,10 +216,11 @@ extension STPAPIClient {
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
-        fileName: String = defaultImageFileName,
+        fileName: String?,
         ownedBy: String? = nil,
         ephemeralKeySecret: String? = nil
     ) -> Future<FileAndUploadMetrics> {
+        let fileName = fileName ?? STPAPIClient.defaultImageFileName
         let promise = Promise<FileAndUploadMetrics>()
         uploadImageAndGetMetrics(
             image,

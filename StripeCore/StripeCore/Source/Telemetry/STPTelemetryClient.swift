@@ -11,6 +11,7 @@ import UIKit
 
 private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
+@MainActor
 @_spi(STP) public final class STPTelemetryClient: NSObject {
     @_spi(STP) public static var shared: STPTelemetryClient = STPTelemetryClient(
         sessionConfiguration: StripeAPIConfiguration.sharedUrlSessionConfiguration
@@ -19,7 +20,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     @_spi(STP) public func addTelemetryFields(toParams params: inout [String: Any]) {
         params["muid"] = fraudDetectionData.muid
         params["guid"] = fraudDetectionData.guid
-        fraudDetectionData.resetSIDIfExpired()
+        FraudDetectionData.resetSIDIfExpired()
         params["sid"] = fraudDetectionData.sid
     }
 
@@ -29,7 +30,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         var mutableParams = params
         mutableParams["muid"] = fraudDetectionData.muid
         mutableParams["guid"] = fraudDetectionData.guid
-        fraudDetectionData.resetSIDIfExpired()
+        FraudDetectionData.resetSIDIfExpired()
         mutableParams["sid"] = fraudDetectionData.sid
         return mutableParams
     }
@@ -41,7 +42,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     ///   - completion: Called with the result of the telemetry network request.
     @_spi(STP) public func sendTelemetryData(
         forceSend: Bool = false,
-        completion: ((Result<[String: Any], Error>) -> Void)? = nil
+        completion: (@Sendable (Result<[String: Sendable], Error>) -> Void)? = nil
     ) {
         guard forceSend || STPTelemetryClient.shouldSendTelemetry() else {
             completion?(.failure(NSError.stp_genericConnectionError()))
@@ -51,9 +52,9 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     }
 
     @_spi(STP) public func updateFraudDetectionIfNecessary(
-        completion: @escaping ((Result<FraudDetectionData, Error>) -> Void)
+        completion: @escaping (@Sendable (Result<FraudDetectionData, Error>) -> Void)
     ) {
-        fraudDetectionData.resetSIDIfExpired()
+        FraudDetectionData.resetSIDIfExpired()
         if fraudDetectionData.muid == nil || fraudDetectionData.sid == nil {
             sendTelemetryRequest(
                 jsonPayload: [
@@ -65,7 +66,12 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
                     case .failure(let error):
                         completion(.failure(error))
                     case .success:
-                        completion(.success(self.fraudDetectionData))
+                        Task {
+                            let fraudDetectionData = await MainActor.run {
+                                self.fraudDetectionData
+                            }
+                            completion(.success(fraudDetectionData))
+                        }
                     }
                 }
         } else {
@@ -158,7 +164,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         payload["a"] = data
 
         // Don't pass expired SIDs to m.stripe.com
-        fraudDetectionData.resetSIDIfExpired()
+        FraudDetectionData.resetSIDIfExpired()
 
         let otherData: [String: Any] = [
             "d": fraudDetectionData.muid ?? "",
@@ -178,7 +184,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
     private func sendTelemetryRequest(
         jsonPayload: [String: Any],
-        completion: ((Result<[String: Any], Error>) -> Void)? = nil
+        completion: (@Sendable (Result<[String: Sendable], Error>) -> Void)? = nil
     ) {
         var request = URLRequest(url: TelemetryURL)
         request.httpMethod = "POST"
@@ -195,26 +201,29 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
                 response.statusCode == 200,
                 let data = data,
                 let responseDict = try? JSONSerialization.jsonObject(with: data, options: [])
-                    as? [String: Any]
+                    as? [String: Sendable]
             else {
                 completion?(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
             }
 
-            // Update fraudDetectionData
-            if let muid = responseDict["muid"] as? String {
-                self.fraudDetectionData.muid = muid
+            Task { @MainActor in
+                // Update fraudDetectionData
+                let oldFraudDetectionData = FraudDetectionData.shared
+                let muid = responseDict["muid"] as? String ?? oldFraudDetectionData.muid
+                let guid = responseDict["guid"] as? String ?? oldFraudDetectionData.guid
+                let sid = responseDict["sid"] as? String ?? oldFraudDetectionData.sid
+                let sidCreationDate = ((sid != nil) ? Date() : nil) ?? oldFraudDetectionData.sidCreationDate
+                
+                FraudDetectionData.shared = FraudDetectionData(
+                    sid: sid,
+                    muid: muid, 
+                    guid: guid,
+                    sidCreationDate: sidCreationDate
+                )
+
+                completion?(.success(responseDict))
             }
-            if let guid = responseDict["guid"] as? String {
-                self.fraudDetectionData.guid = guid
-            }
-            if self.fraudDetectionData.sid == nil,
-                let sid = responseDict["sid"] as? String
-            {
-                self.fraudDetectionData.sid = sid
-                self.fraudDetectionData.sidCreationDate = Date()
-            }
-            completion?(.success(responseDict))
         }
         task.resume()
     }

@@ -14,19 +14,34 @@ private let SIDLifetime: TimeInterval = 30 * 60  // 30 minutes
 ///
 /// - Note: See `STPTelemetryClient`.
 /// - Note: See `StripeAPI.advancedFraudSignalsEnabled`.
-@_spi(STP) public final class FraudDetectionData: Codable {
-    @_spi(STP) public static let shared: FraudDetectionData =
+@_spi(STP) public final class FraudDetectionData: Codable, Sendable {
+    @MainActor
+    @_spi(STP) public static var shared: FraudDetectionData =
         // Load initial value from UserDefaults
         UserDefaults.standard.fraudDetectionData ?? FraudDetectionData()
-
-    @_spi(STP) public var muid: String?
-    @_spi(STP) public var guid: String?
-    @_spi(STP) public var sid: String?
+    @MainActor
+    func reset() {
+        Self.shared = .init()
+    }
+    @MainActor
+    static func resetSIDIfExpired() {
+        guard let sidCreationDate = Self.shared.sidCreationDate else {
+            return
+        }
+        let thirtyMinutesAgo = Date(timeIntervalSinceNow: -SIDLifetime)
+        if sidCreationDate < thirtyMinutesAgo {
+            Self.shared = .init(sid: nil, muid: shared.muid, guid: shared.guid, sidCreationDate: nil)
+        }
+    }
+    
+    @_spi(STP) public let muid: String?
+    @_spi(STP) public let guid: String?
+    @_spi(STP) public let sid: String?
 
     /// The approximate time that the sid was generated from m.stripe.com
     /// Intended to be used to expire the sid after `SIDLifetime` seconds
     /// - Note: This class is a dumb container; users must set this value appropriately.
-    var sidCreationDate: Date?
+    let sidCreationDate: Date?
 
     init(
         sid: String? = nil,
@@ -40,26 +55,9 @@ private let SIDLifetime: TimeInterval = 30 * 60  // 30 minutes
         self.sidCreationDate = sidCreationDate
     }
 
-    func resetSIDIfExpired() {
-        guard let sidCreationDate = sidCreationDate else {
-            return
-        }
-        let thirtyMinutesAgo = Date(timeIntervalSinceNow: -SIDLifetime)
-        if sidCreationDate < thirtyMinutesAgo {
-            sid = nil
-        }
-    }
-
     deinit {
         // Write latest value to disk
         UserDefaults.standard.fraudDetectionData = self
-    }
-
-    func reset() {
-        self.sid = nil
-        self.muid = nil
-        self.guid = nil
-        self.sidCreationDate = nil
     }
 }
 

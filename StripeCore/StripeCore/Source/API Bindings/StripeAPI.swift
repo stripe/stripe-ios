@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 
 /// A top-level class that imports the rest of the Stripe SDK.
+@MainActor
 @objc public class StripeAPI: NSObject {
     /// Set this to your Stripe publishable API key, obtained from https://dashboard.stripe.com/apikeys.
     ///

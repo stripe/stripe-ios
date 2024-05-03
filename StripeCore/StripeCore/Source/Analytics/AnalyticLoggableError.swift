@@ -22,7 +22,7 @@ import Foundation
 
     /// Additional, non-PII/PDE details about the error.
     /// If non-empty, this is sent as the value for `"error_details"` in the analytics payload.
-    var additionalNonPIIErrorDetails: [String: Any] { get }
+    var additionalNonPIIErrorDetails: [String: Sendable] { get }
 }
 
 // MARK: Default implementation
@@ -53,7 +53,7 @@ extension AnalyticLoggableError where Self: Error {}
     /// - error_code: For Stripe API errors, the error's code e.g. "invalid_number".
     ///            For NSErrors, the error code e.g. “-1009”.
     ///            For Swift errors, the enum case name as a string for Swift errors e.g. “noPublishableKey”.
-    public func serializeForV1Analytics() -> [String: Any] {
+    public func serializeForV1Analytics() -> [String: Sendable] {
         let errorType: String = {
             if let analyticLoggableError = self as? AnalyticLoggableError {
                 analyticLoggableError.analyticsErrorType
@@ -68,7 +68,7 @@ extension AnalyticLoggableError where Self: Error {}
                 Self.extractErrorCode(from: self)
             }
         }()
-        var params: [String: Any] = [
+        var params: [String: Sendable] = [
             "error_type": errorType,
             "error_code": errorCode,
         ]

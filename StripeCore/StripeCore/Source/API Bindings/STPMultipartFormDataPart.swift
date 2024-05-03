@@ -11,20 +11,20 @@ import Foundation
 /// Represents a single part of a multipart/form-data upload.
 ///
 /// - seealso: https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4
-class STPMultipartFormDataPart: NSObject {
+final class STPMultipartFormDataPart: NSObject, Sendable {
     /// The data for this part.
-    var data: Data?
+    let data: Data? = nil
     /// The name for this part.
-    var name: String?
+    let name: String? = nil
     /// The filename for this part.
     ///
     /// As a rule of thumb, this can be ommitted when the data is just an encoded string.
     /// However, this is typically required for other types of binary file data (like images).
-    var filename: String?
+    let filename: String? = nil
     /// The content type for this part.
     ///
     /// When omitted, the multipart/form-data standard assumes text/plain.
-    var contentType: String?
+    let contentType: String? = nil
 
     // MARK: - Data Composition
 

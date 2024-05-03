@@ -10,15 +10,16 @@ import Foundation
 import UIKit
 
 /// Dependency-injectable protocol for `AnalyticsClientV2`.
+@AnalyticsActor
 @_spi(STP) public protocol AnalyticsClientV2Protocol {
     var clientId: String { get }
-
-    func log(eventName: String, parameters: [String: Any])
+    func log(eventName: String, parameters: [String: Sendable])
 }
 
 /// Logs analytics to `r.stripe.com`.
 ///
 /// To log analytics to the legacy `q.stripe.com`, use `STPAnalyticsClient`.
+@AnalyticsActor
 @_spi(STP) public class AnalyticsClientV2: AnalyticsClientV2Protocol {
 
     static let loggerUrl = URL(string: "https://r.stripe.com/0")!
@@ -86,31 +87,34 @@ import UIKit
         return payload
     }
 
-    public func log(eventName: String, parameters: [String: Any]) {
-        let payload = payload(withEventName: eventName, parameters: parameters)
+    public func log(eventName: String, parameters: [String: Sendable]) {
+        Task {
+            let payload = await payload(withEventName: eventName, parameters: parameters)
 
-        #if DEBUG
-            NSLog("LOG ANALYTICS: \(payload)")
-        #endif
+            #if DEBUG
+                NSLog("LOG ANALYTICS: \(payload)")
+            #endif
 
-        guard AnalyticsClientV2.shouldCollectAnalytics else {
-            return
+            guard AnalyticsClientV2.shouldCollectAnalytics else {
+                return
+            }
+
+            var request = URLRequest(url: AnalyticsClientV2.loggerUrl)
+            request.httpMethod = "POST"
+            request.stp_setFormPayload(payload.jsonEncodeNestedDicts(options: .sortedKeys))
+            requestHeaders.forEach { key, value in
+                request.setValue(value, forHTTPHeaderField: key)
+            }
+            let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
+            task.resume()
         }
-
-        var request = URLRequest(url: AnalyticsClientV2.loggerUrl)
-        request.httpMethod = "POST"
-        request.stp_setFormPayload(payload.jsonEncodeNestedDicts(options: .sortedKeys))
-        requestHeaders.forEach { key, value in
-            request.setValue(value, forHTTPHeaderField: key)
-        }
-        let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
-        task.resume()
     }
 }
 
 extension AnalyticsClientV2Protocol {
-    public func makeCommonPayload() -> [String: Any] {
-        var payload: [String: Any] = [:]
+    @AnalyticsActor
+    public func makeCommonPayload() async -> [String: Sendable] {
+        var payload: [String: Sendable] = [:]
 
         // Required by Analytics Event Logger
         payload["client_id"] = self.clientId
@@ -118,7 +122,8 @@ extension AnalyticsClientV2Protocol {
         payload["created"] = Date().timeIntervalSince1970
 
         // Common payload
-        let version = UIDevice.current.systemVersion
+        // TODO: Don't await to the main thread here, maybe hold it on our thread? If that's even meaningful?
+        let version = await UIDevice.current.systemVersion
         if !version.isEmpty {
             payload["os_version"] = version
         }
@@ -138,9 +143,10 @@ extension AnalyticsClientV2Protocol {
         return payload
     }
 
-    public func payload(withEventName eventName: String, parameters: [String: Any]) -> [String: Any]
+    @AnalyticsActor
+    public func payload(withEventName eventName: String, parameters: [String: Sendable]) async -> [String: Any]
     {
-        var payload = makeCommonPayload()
+        var payload = await makeCommonPayload()
         payload["event_name"] = eventName
         payload = payload.merging(
             parameters,

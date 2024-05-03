@@ -56,13 +56,13 @@ extension UnknownFieldsDecodable {
         // Follow the encoder's codingPath down the userInfo JSON dictionary
         if let originalJSON = userInfo[UnknownFieldsDecodableSourceStorageKey] as? Data,
             var jsonDictionary = try JSONSerialization.jsonObject(with: originalJSON, options: [])
-                as? [String: Any]
+                as? [String: Sendable]
         {
             for path in codingPath {
                 let snakeValue = URLEncoder.convertToSnakeCase(camelCase: path.stringValue)
                 // This will always be a dictionary. If it isn't then something is being
                 // decoded as an object by JSONDecoder, but a dictionary by JSONSerialization.
-                jsonDictionary = jsonDictionary[snakeValue] as! [String: Any]
+                jsonDictionary = jsonDictionary[snakeValue] as! [String: Sendable]
             }
             // Set the allResponseFields dictionary, so that users can access unknown fields.
             object.allResponseFields = jsonDictionary

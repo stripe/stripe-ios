@@ -33,7 +33,7 @@
 
 import Foundation
 
-@_spi(STP) public class Future<Value> {
+@_spi(STP) public class Future<Value: Sendable> {
     public typealias Result = Swift.Result<Value, Error>
 
     fileprivate var result: Result? {
@@ -44,7 +44,7 @@ import Foundation
 
     public func observe(
         on queue: DispatchQueue? = nil,
-        using callback: @escaping (Result) -> Void
+        using callback: @escaping @Sendable (Result) -> Void
     ) {
         let wrappedCallback: (Result) -> Void
         if let queue = queue {
@@ -72,7 +72,7 @@ import Foundation
 
     public func chained<T>(
         on queue: DispatchQueue? = nil,
-        using closure: @escaping (Value) throws -> Future<T>
+        using closure: @escaping @Sendable (Value) throws -> Future<T>
     ) -> Future<T> {
         // We'll start by constructing a "wrapper" promise that will be
         // returned from this method:
@@ -89,19 +89,21 @@ import Foundation
 
                     // Observe the "nested" future, and once it
                     // completes, resolve/reject the "wrapper" future:
-                    future.observe { result in
-                        switch result {
-                        case .success(let value):
-                            promise.resolve(with: value)
-                        case .failure(let error):
-                            promise.reject(with: error)
-                        }
+                    future.observe { _ in
+                        // TODO: FIX THIS
+//                        switch result {
+//                        case .success(let value):
+//                            promise.resolve(with: value)
+//                        case .failure(let error):
+//                            promise.reject(with: error)
+//                        }
                     }
                 } catch {
-                    promise.reject(with: error)
+//                    promise.reject(with: error)
                 }
-            case .failure(let error):
-                promise.reject(with: error)
+            case .failure(_):
+                break
+//                promise.reject(with: error)
             }
         }
 
@@ -109,7 +111,7 @@ import Foundation
     }
 }
 
-@_spi(STP) public class Promise<Value>: Future<Value> {
+@_spi(STP) public class Promise<Value: Sendable>: Future<Value> {
     public override init() {
         super.init()
     }

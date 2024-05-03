@@ -9,6 +9,7 @@ import Foundation
 
 #if ENABLE_STPASSERTIONFAILURE
 /// A very barebones way to test stpasserts in XCTest.
+@MainActor
 @_spi(STP) public class STPAssertTestUtil {
     /// If set to `true` in an XCTest, the next assertion that fires populates `_testExpectAssertMessage` instead of crashing and resets this flag to `false`.
     public static var shouldSuppressNextSTPAlert: Bool = false
@@ -21,10 +22,13 @@ import Foundation
 /// Use this for assertions that should not trigger in merchant apps.
 @inlinable @_spi(STP) public func stpAssertionFailure(_ message: @autoclosure () -> String = String(), file: StaticString = #file, line: UInt = #line) {
     #if ENABLE_STPASSERTIONFAILURE
-    if NSClassFromString("XCTest") != nil && STPAssertTestUtil.shouldSuppressNextSTPAlert {
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = false
-        STPAssertTestUtil.lastAssertMessage = message()
-        return
+    // TODO: This is probably not safe!
+    MainActor.assumeIsolated {
+        if NSClassFromString("XCTest") != nil && STPAssertTestUtil.shouldSuppressNextSTPAlert {
+            STPAssertTestUtil.shouldSuppressNextSTPAlert = false
+            STPAssertTestUtil.lastAssertMessage = message()
+            return
+        }
     }
     assertionFailure(message(), file: file, line: line)
     #else
