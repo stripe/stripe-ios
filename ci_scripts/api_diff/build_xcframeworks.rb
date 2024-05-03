@@ -7,9 +7,8 @@ def checkout_build_generate(branch, archive_name)
   # Checkout old or new version, build and generate API JSON
   puts "Building and generating public interface from #{branch}..."
   if archive_name == "master"
-    base_ref = ENV["GITHUB_BASE_REF"]
     head_ref = ENV['GITHUB_HEAD_REF']
-    system("git checkout $(git merge-base #{head_ref} #{base_ref})")
+    system("git checkout $(git merge-base #{head_ref} #{branch})")
   else 
     system("git checkout #{branch}")
   end
