@@ -9,10 +9,10 @@ import Combine
 import UIKit
 
 public class PaymentsViewController: UIViewController {
-    let webView: ComponentWebView
+    let webView: ConnectComponentWebView
 
     init(connectInstance: StripeConnectInstance) {
-        webView = ComponentWebView(
+        webView = ConnectComponentWebView(
             connectInstance: connectInstance,
             componentType: "payments"
         )

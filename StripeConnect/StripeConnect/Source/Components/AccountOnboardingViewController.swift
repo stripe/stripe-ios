@@ -10,14 +10,14 @@ import UIKit
 import WebKit
 
 public class AccountOnboardingViewController: UIViewController {
-    let webView: ComponentWebView
+    let webView: ConnectComponentWebView
 
     private var onExit: () -> Void
 
     init(connectInstance: StripeConnectInstance,
          onExit: @escaping () -> Void) {
         self.onExit = onExit
-        webView = ComponentWebView(
+        webView = ConnectComponentWebView(
             connectInstance: connectInstance,
             componentType: "account-onboarding"
         )

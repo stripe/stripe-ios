@@ -25,13 +25,15 @@
 		E63DA0642BDE382B005BF2A0 /* StripeConnectInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0632BDE382B005BF2A0 /* StripeConnectInstance.swift */; };
 		E63DA0662BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0652BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift */; };
 		E63DA0692BDE3B32005BF2A0 /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0682BDE3B32005BF2A0 /* PaymentsViewController.swift */; };
-		E63DA06F2BDE3D5B005BF2A0 /* ComponentWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA06E2BDE3D5B005BF2A0 /* ComponentWebView.swift */; };
+		E63DA06F2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA06E2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift */; };
 		E63DA0BE2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */; };
 		E63DA0C42BE0BD99005BF2A0 /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = E63DA0C32BE0BBFA005BF2A0 /* template.html */; };
 		E6EC73322BE2E1C300D46678 /* AccountOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73312BE2E1C300D46678 /* AccountOnboardingViewController.swift */; };
 		E6EC73342BE2FDE300D46678 /* PopupWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73332BE2FDE300D46678 /* PopupWebViewController.swift */; };
 		E6EC73382BE341B600D46678 /* ScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73372BE341B600D46678 /* ScriptMessageHandler.swift */; };
 		E6EC733A2BE342F600D46678 /* ScriptMessageHandlerWithReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73392BE342F600D46678 /* ScriptMessageHandlerWithReply.swift */; };
+		E6EC73452BE6B5C700D46678 /* ConnectWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73442BE6B5C700D46678 /* ConnectWebView.swift */; };
+		E6EC73472BE6B63700D46678 /* StripeConnectConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,13 +66,15 @@
 		E63DA0632BDE382B005BF2A0 /* StripeConnectInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectInstance.swift; sourceTree = "<group>"; };
 		E63DA0652BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectInstanceAppearance.swift; sourceTree = "<group>"; };
 		E63DA0682BDE3B32005BF2A0 /* PaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
-		E63DA06E2BDE3D5B005BF2A0 /* ComponentWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentWebView.swift; sourceTree = "<group>"; };
+		E63DA06E2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectComponentWebView.swift; sourceTree = "<group>"; };
 		E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectBundleLocator.swift; sourceTree = "<group>"; };
 		E63DA0C32BE0BBFA005BF2A0 /* template.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = template.html; sourceTree = "<group>"; };
 		E6EC73312BE2E1C300D46678 /* AccountOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOnboardingViewController.swift; sourceTree = "<group>"; };
 		E6EC73332BE2FDE300D46678 /* PopupWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupWebViewController.swift; sourceTree = "<group>"; };
 		E6EC73372BE341B600D46678 /* ScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandler.swift; sourceTree = "<group>"; };
 		E6EC73392BE342F600D46678 /* ScriptMessageHandlerWithReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandlerWithReply.swift; sourceTree = "<group>"; };
+		E6EC73442BE6B5C700D46678 /* ConnectWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectWebView.swift; sourceTree = "<group>"; };
+		E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,11 +176,10 @@
 		E63DA0622BDE3819005BF2A0 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				E63DA06E2BDE3D5B005BF2A0 /* ComponentWebView.swift */,
-				E6EC73332BE2FDE300D46678 /* PopupWebViewController.swift */,
-				E6EC73372BE341B600D46678 /* ScriptMessageHandler.swift */,
-				E6EC73392BE342F600D46678 /* ScriptMessageHandlerWithReply.swift */,
+				E63DA06E2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift */,
 				E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */,
+				E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */,
+				E6EC73432BE6B55600D46678 /* WebViewHelpers */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -196,6 +199,17 @@
 				E63DA0C32BE0BBFA005BF2A0 /* template.html */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		E6EC73432BE6B55600D46678 /* WebViewHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				E6EC73442BE6B5C700D46678 /* ConnectWebView.swift */,
+				E6EC73332BE2FDE300D46678 /* PopupWebViewController.swift */,
+				E6EC73372BE341B600D46678 /* ScriptMessageHandler.swift */,
+				E6EC73392BE342F600D46678 /* ScriptMessageHandlerWithReply.swift */,
+			);
+			path = WebViewHelpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -320,15 +334,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6EC73342BE2FDE300D46678 /* PopupWebViewController.swift in Sources */,
+				E6EC73472BE6B63700D46678 /* StripeConnectConstants.swift in Sources */,
 				E63DA0662BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift in Sources */,
 				E63DA0692BDE3B32005BF2A0 /* PaymentsViewController.swift in Sources */,
 				E63DA0BE2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift in Sources */,
-				E63DA06F2BDE3D5B005BF2A0 /* ComponentWebView.swift in Sources */,
+				E63DA06F2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift in Sources */,
 				E6EC733A2BE342F600D46678 /* ScriptMessageHandlerWithReply.swift in Sources */,
 				E6EC73322BE2E1C300D46678 /* AccountOnboardingViewController.swift in Sources */,
 				E63DA0612BDE349C005BF2A0 /* StripeConnect+Exports.swift in Sources */,
 				E6EC73382BE341B600D46678 /* ScriptMessageHandler.swift in Sources */,
 				E63DA0642BDE382B005BF2A0 /* StripeConnectInstance.swift in Sources */,
+				E6EC73452BE6B5C700D46678 /* ConnectWebView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

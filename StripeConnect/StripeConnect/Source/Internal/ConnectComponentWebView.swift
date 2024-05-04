@@ -5,29 +5,17 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-import Combine
 @_spi(STP) import StripeCore
 import UIKit
 import WebKit
 
-class ComponentWebView: WKWebView {
-    // TODO: We can update this to the URL of our remote index page (see note on loadContents).
-    /// Any camera access requests coming from the base URL will be automatically accepted
-    static let baseURL = URL(string: "https://connect-js.stripe.com")!
-
+/// Wraps a `StripeComponentInstance`
+class ConnectComponentWebView: ConnectWebView {
     private var connectInstance: StripeConnectInstance
     private var componentType: String
 
-    /// The content controller that registers JS -> Script message handlers
+    /// The content controller that registers JS -> Swift message handlers
     private let contentController: WKUserContentController
-
-    /// Closure to present a popup web view controller.
-    /// This is required for any components that can open a popup, otherwise an assertionFailure will occur.
-    var presentPopup: ((UIViewController) -> Void)?
-
-    /// Closure that executes when the view finishes loading.
-    /// - Note: If any JS needs to be evaluated immediately after instantiation, do that here.
-    var didFinishLoading: ((ComponentWebView) -> Void)?
 
     init(connectInstance: StripeConnectInstance,
          componentType: String) {
@@ -47,16 +35,6 @@ class ComponentWebView: WKWebView {
 
         super.init(frame: .zero, configuration: config)
 
-        // Allow the web view to be inspected for debug builds on 16.4+
-        #if DEBUG
-        if #available(iOS 16.4, *) {
-            isInspectable = true
-        }
-        #endif
-
-        uiDelegate = self
-        navigationDelegate = self
-
         registerMessageHandlers()
         addDebugReloadButton()
         loadContents()
@@ -68,57 +46,9 @@ class ComponentWebView: WKWebView {
     }
 }
 
-// MARK: - WKUIDelegate
-
-extension ComponentWebView: WKUIDelegate {
-    func webView(_ webView: WKWebView,
-                 createWebViewWith configuration: WKWebViewConfiguration,
-                 for navigationAction: WKNavigationAction,
-                 windowFeatures: WKWindowFeatures) -> WKWebView? {
-        // Enables the auth popup to work for onboarding page
-
-        guard navigationAction.targetFrame == nil else { return nil }
-
-        guard let presentPopup else {
-            assertionFailure("Cannot present popup")
-            return nil
-        }
-
-        let popupVC = PopupWebViewController(configuration: configuration, navigationAction: navigationAction)
-        let navController = UINavigationController(rootViewController: popupVC)
-        popupVC.navigationItem.rightBarButtonItem = .init(systemItem: .done, primaryAction: .init(handler: { [weak popupVC] _ in
-            popupVC?.dismiss(animated: true)
-        }))
-
-        presentPopup(navController)
-        return popupVC.webView
-    }
-
-    func webView(_ webView: WKWebView,
-                 decideMediaCapturePermissionsFor origin: WKSecurityOrigin,
-                 initiatedBy frame: WKFrameInfo,
-                 type: WKMediaCaptureType) async -> WKPermissionDecision {
-        // Don't prompt the user for camera permissions from connect-js
-        // https://developer.apple.com/videos/play/wwdc2021/10032/?time=754
-        origin.host == Self.baseURL.host ? .grant : .deny
-    }
-}
-
-// MARK: - WKNavigationDelegate
-
-extension ComponentWebView: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // Call our custom handler when we know the page has finished loading
-        didFinishLoading?(self)
-    }
-}
-
-// Downloads
-// https://developer.apple.com/videos/play/wwdc2021/10032/?time=1050
-
 // MARK: - Internal
 
-extension ComponentWebView {
+extension ConnectComponentWebView {
     /// Calls `update({appearance: ...})` on the JS StripeConnectInstance
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
         evaluateJavaScript("""
@@ -148,7 +78,7 @@ extension ComponentWebView {
 
 // MARK: - Private
 
-private extension ComponentWebView {
+private extension ConnectComponentWebView {
     /// Registers JS -> Swift message handlers
     func registerMessageHandlers() {
         addMessageHandler(.init(name: "debug", didReceiveMessage: { message in
@@ -195,7 +125,7 @@ private extension ComponentWebView {
             return
         }
 
-        load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: Self.baseURL)
+        load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: StripeConnectConstants.connectWrapperURL)
     }
 
     /**

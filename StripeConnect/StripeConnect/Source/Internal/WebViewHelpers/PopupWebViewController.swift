@@ -8,9 +8,9 @@
 import UIKit
 import WebKit
 
-/// Presented when a new target is opened from `ComponentWebView`
-class PopupWebViewController: UIViewController, WKUIDelegate {
-    let webView: WKWebView
+/// Presented when a new target is opened from `StripeConnectWebView`
+class PopupWebViewController: UIViewController {
+    let webView: ConnectWebView
 
     private var titleObserver: NSKeyValueObservation?
 
@@ -20,12 +20,20 @@ class PopupWebViewController: UIViewController, WKUIDelegate {
         webView.load(navigationAction.request)
         super.init(nibName: nil, bundle: nil)
 
-        webView.uiDelegate = self
-
         // Keep navbar title in sync with web view
         titleObserver = webView.observe(\.title) { [weak self] webView, _ in
             self?.title = webView.title
         }
+
+        // Dismiss the view controller when `window.close()` is called from JS
+        webView.didClose = { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+
+        // Add "Done" button to dismiss the view
+        navigationItem.rightBarButtonItem = .init(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
+            self?.dismiss(animated: true)
+        }))
     }
 
     required init?(coder: NSCoder) {
@@ -37,12 +45,5 @@ class PopupWebViewController: UIViewController, WKUIDelegate {
         webView.frame = view.frame
         view = webView
         title = webView.title
-    }
-
-    // MARK: - WKUIDelegate
-
-    func webViewDidClose(_ webView: WKWebView) {
-        // Dismiss the view controller when `window.close()` is called from JS
-        dismiss(animated: true)
     }
 }

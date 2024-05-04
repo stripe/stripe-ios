@@ -16,7 +16,7 @@ public class StripeConnectInstance {
     private(set) var appearance: Appearance
 
     /// A collection of weak pointers to all the web views instantiated from this instance
-    private let webViews: NSHashTable<ComponentWebView> = .weakObjects()
+    private let webViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
 
     /**
      Initializes a StripeConnect instance.
