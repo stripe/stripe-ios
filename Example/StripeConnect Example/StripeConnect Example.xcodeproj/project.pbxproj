@@ -18,6 +18,8 @@
 		E6EC732A2BE2AB9C00D46678 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6EC73282BE2AB9C00D46678 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E6EC732C2BE2AE9300D46678 /* ExampleAppearanceOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC732B2BE2AE9300D46678 /* ExampleAppearanceOptions.swift */; };
 		E6EC73302BE2B89A00D46678 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC732F2BE2B89A00D46678 /* Toast.swift */; };
+		E6EC73402BE57D6500D46678 /* ServerConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC733F2BE57D6500D46678 /* ServerConfigurationView.swift */; };
+		E6EC73422BE57DD700D46678 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73412BE57DD700D46678 /* ServerConfiguration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +49,8 @@
 		E6EC73282BE2AB9C00D46678 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6EC732B2BE2AE9300D46678 /* ExampleAppearanceOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleAppearanceOptions.swift; sourceTree = "<group>"; };
 		E6EC732F2BE2B89A00D46678 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		E6EC733F2BE57D6500D46678 /* ServerConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationView.swift; sourceTree = "<group>"; };
+		E6EC73412BE57DD700D46678 /* ServerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,13 +87,15 @@
 			isa = PBXGroup;
 			children = (
 				E63DA0A12BDE4B67005BF2A0 /* AppDelegate.swift */,
-				E6EC73232BE1C57D00D46678 /* MainViewController.swift */,
 				E6EC732B2BE2AE9300D46678 /* ExampleAppearanceOptions.swift */,
-				E6EC732F2BE2B89A00D46678 /* Toast.swift */,
+				E6EC73232BE1C57D00D46678 /* MainViewController.swift */,
 				E63DA0A32BDE4B67005BF2A0 /* SceneDelegate.swift */,
+				E6EC73412BE57DD700D46678 /* ServerConfiguration.swift */,
+				E6EC733F2BE57D6500D46678 /* ServerConfigurationView.swift */,
+				E6EC732F2BE2B89A00D46678 /* Toast.swift */,
 				E63DA0AA2BDE4B68005BF2A0 /* Assets.xcassets */,
-				E63DA0AC2BDE4B68005BF2A0 /* LaunchScreen.storyboard */,
 				E63DA0AF2BDE4B68005BF2A0 /* Info.plist */,
+				E63DA0AC2BDE4B68005BF2A0 /* LaunchScreen.storyboard */,
 			);
 			path = "StripeConnect Example";
 			sourceTree = "<group>";
@@ -177,6 +183,8 @@
 				E6EC73302BE2B89A00D46678 /* Toast.swift in Sources */,
 				E6EC732C2BE2AE9300D46678 /* ExampleAppearanceOptions.swift in Sources */,
 				E63DA0A22BDE4B67005BF2A0 /* AppDelegate.swift in Sources */,
+				E6EC73402BE57D6500D46678 /* ServerConfigurationView.swift in Sources */,
+				E6EC73422BE57DD700D46678 /* ServerConfiguration.swift in Sources */,
 				E63DA0A42BDE4B67005BF2A0 /* SceneDelegate.swift in Sources */,
 				E6EC73242BE1C57D00D46678 /* MainViewController.swift in Sources */,
 			);
@@ -329,7 +337,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13;
+				IPHONEOS_DEPLOYMENT_TARGET = 15;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -357,7 +365,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13;
+				IPHONEOS_DEPLOYMENT_TARGET = 15;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

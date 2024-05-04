@@ -6,6 +6,7 @@
 //
 
 import StripeConnect
+import SwiftUI
 import UIKit
 
 class MainViewController: UITableViewController {
@@ -27,7 +28,7 @@ class MainViewController: UITableViewController {
 
         var labelColor: UIColor {
             if self == .logout {
-                return .red
+                return .systemRed
             }
             return .label
         }
@@ -46,20 +47,27 @@ class MainViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Initialize publishable key
+        STPAPIClient.shared.publishableKey = ServerConfiguration.shared.publishableKey
 
-        STPAPIClient.shared.publishableKey = "pk_test_51MZRIlLirQdaQn8EJpw9mcVeXokTGaiV1ylz5AVQtcA0zAkoM9fLFN81yQeHYBLkCiID1Bj0sL1Ngzsq9ksRmbBN00O3VsIUdQ"
+        // Initialize Stripe instance
         stripeConnectInstance = StripeConnectInstance(
             fetchClientSecret: fetchClientSecret
         )
 
-        addChangeAppearanceButtonNavigationItem(to: self)
+        configureNavbar()
     }
 
     func fetchClientSecret() async -> String? {
-        let url = URL(string: "https://stripe-connect-example.glitch.me/account_session")!
-
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: ServerConfiguration.shared.endpoint)
         request.httpMethod = "POST"
+
+        // For demo purposes, the account is configured from the client,
+        // but it's recommended that this be configured on your server
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        request.httpBody = ServerConfiguration.shared.account.map {
+            try! JSONSerialization.data(withJSONObject: ["account": $0])
+        }
 
         do {
             // Fetch the AccountSession client secret
@@ -103,6 +111,21 @@ class MainViewController: UITableViewController {
         navigationController?.pushViewController(viewControllerToPush, animated: true)
     }
 
+    func configureNavbar() {
+        title = ServerConfiguration.shared.label
+        addChangeAppearanceButtonNavigationItem(to: self)
+
+        // Add a button to select a demo account
+        let button = UIBarButtonItem(
+            image: UIImage(systemName: "gearshape.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(selectAccount)
+        )
+        button.accessibilityLabel = "Select an account"
+        navigationItem.leftBarButtonItem = button
+    }
+
     func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
         // Add a button to change the appearance
         let button = UIBarButtonItem(
@@ -134,6 +157,14 @@ class MainViewController: UITableViewController {
         optionMenu.addAction(.init(title: "Cancel", style: .cancel))
 
         self.present(optionMenu, animated: true, completion: nil)
+    }
+
+    @objc
+    func selectAccount() {
+        let view = ServerConfigurationView { [weak self] in
+            self?.title = ServerConfiguration.shared.label
+        }
+        self.present(UIHostingController(rootView: view), animated: true)
     }
 
     // MARK: - UITableViewDataSource
