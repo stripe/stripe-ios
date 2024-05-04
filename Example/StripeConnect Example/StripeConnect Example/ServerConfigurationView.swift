@@ -82,7 +82,7 @@ struct ServerConfigurationView: View {
                         }
                         .disabled(!isCustomPublishableKeyValid || !isCustomEndpointValid)
                         .buttonBorderShape(.capsule)
-                        .buttonStyle(BorderedButtonStyle())
+                        .buttonStyle(BorderedProminentButtonStyle())
                     }
                     .padding(.vertical, 8)
                 } header: {

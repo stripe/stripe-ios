@@ -41,8 +41,22 @@ class MainViewController: UITableViewController {
         return view
     }()
 
-    var currentAppearanceOption = ExampleAppearanceOptions.default
+    /// Navbar button title view
+    lazy var navbarTitleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(ServerConfiguration.shared.label, for: .normal)
+        button.setImage(UIImage(systemName: "chevron.down",
+                                withConfiguration: UIImage.SymbolConfiguration(pointSize: 10)),
+                        for: .normal)
+        button.semanticContentAttribute = .forceRightToLeft
+        button.tintColor = .label
+        button.addTarget(self, action: #selector(configureServer), for: .touchUpInside)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.accessibilityLabel = "Configure server"
+        return button
+    }()
 
+    var currentAppearanceOption = ExampleAppearanceOptions.default
     var stripeConnectInstance: StripeConnectInstance?
 
     override func viewDidLoad() {
@@ -55,7 +69,9 @@ class MainViewController: UITableViewController {
             fetchClientSecret: fetchClientSecret
         )
 
-        configureNavbar()
+        // Configure navbar
+        navigationItem.titleView = navbarTitleButton
+        addChangeAppearanceButtonNavigationItem(to: self)
     }
 
     func fetchClientSecret() async -> String? {
@@ -111,21 +127,6 @@ class MainViewController: UITableViewController {
         navigationController?.pushViewController(viewControllerToPush, animated: true)
     }
 
-    func configureNavbar() {
-        title = ServerConfiguration.shared.label
-        addChangeAppearanceButtonNavigationItem(to: self)
-
-        // Add a button to select a demo account
-        let button = UIBarButtonItem(
-            image: UIImage(systemName: "gearshape.fill"),
-            style: .plain,
-            target: self,
-            action: #selector(selectAccount)
-        )
-        button.accessibilityLabel = "Select an account"
-        navigationItem.leftBarButtonItem = button
-    }
-
     func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
         // Add a button to change the appearance
         let button = UIBarButtonItem(
@@ -160,9 +161,9 @@ class MainViewController: UITableViewController {
     }
 
     @objc
-    func selectAccount() {
-        let view = ServerConfigurationView { [weak self] in
-            self?.title = ServerConfiguration.shared.label
+    func configureServer() {
+        let view = ServerConfigurationView { [weak navbarTitleButton] in
+            navbarTitleButton?.setTitle(ServerConfiguration.shared.label, for: .normal)
         }
         self.present(UIHostingController(rootView: view), animated: true)
     }
