@@ -1,25 +1,20 @@
 //
-//  PaymentsViewController.swift
+//  DocumentsViewController.swift
 //  StripeConnect
 //
-//  Created by Mel Ludowise on 4/30/24.
+//  Created by Mel Ludowise on 5/3/24.
 //
 
 import UIKit
 
-/**
- Renders a transaction list for [direct charges](https://docs.stripe.com/connect/direct-charges),
- [destination charges](https://docs.stripe.com/connect/destination-charges), and
- [separate charges and transfers](https://docs.stripe.com/connect/separate-charges-and-transfers)
- on the connected account.
- */
-public class PaymentsViewController: UIViewController {
+/// Renders a list of documents available for download for the connected account.
+public class DocumentsViewController: UIViewController {
     let webView: ConnectComponentWebView
 
     init(connectInstance: StripeConnectInstance) {
         webView = ConnectComponentWebView(
             connectInstance: connectInstance,
-            componentType: "payments"
+            componentType: "documents"
         )
         super.init(nibName: nil, bundle: nil)
         webView.presentPopup = { [weak self] vc in

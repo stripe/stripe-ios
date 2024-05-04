@@ -35,21 +35,27 @@ public class StripeConnectInstance {
     }
 
     /**
-     Creates a payments view controller.
-     - Returns: A PaymentsViewController.
-     */
-    public func createPayments() -> PaymentsViewController {
-        let vc = PaymentsViewController(connectInstance: self)
-        webViews.add(vc.webView)
-        return vc
-    }
-
-    /**
      Creates an account onboarding view controller.
      - Returns: A AccountOnboardingViewController.
      */
     public func createAccountOnboarding(onExit: @escaping () -> Void) -> AccountOnboardingViewController {
         let vc = AccountOnboardingViewController(connectInstance: self, onExit: onExit)
+        webViews.add(vc.webView)
+        return vc
+    }
+
+    public func createDocuments() -> DocumentsViewController {
+        let vc = DocumentsViewController(connectInstance: self)
+        webViews.add(vc.webView)
+        return vc
+    }
+
+    /**
+     Creates a payments view controller.
+     - Returns: A PaymentsViewController.
+     */
+    public func createPayments() -> PaymentsViewController {
+        let vc = PaymentsViewController(connectInstance: self)
         webViews.add(vc.webView)
         return vc
     }

@@ -114,11 +114,11 @@
 		E6EC73482BE6D47E00D46678 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E6EC73492BE6D54500D46678 /* AccountOnboardingConfigurationView.swift */,
 				E6EC73232BE1C57D00D46678 /* MainViewController.swift */,
 				E6EC733F2BE57D6500D46678 /* ServerConfigurationView.swift */,
-				E6EC732F2BE2B89A00D46678 /* Toast.swift */,
-				E6EC73492BE6D54500D46678 /* AccountOnboardingConfigurationView.swift */,
 				E6EC734B2BE6DC2700D46678 /* TextInput.swift */,
+				E6EC732F2BE2B89A00D46678 /* Toast.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

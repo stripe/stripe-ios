@@ -34,6 +34,7 @@
 		E6EC733A2BE342F600D46678 /* ScriptMessageHandlerWithReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73392BE342F600D46678 /* ScriptMessageHandlerWithReply.swift */; };
 		E6EC73452BE6B5C700D46678 /* ConnectWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73442BE6B5C700D46678 /* ConnectWebView.swift */; };
 		E6EC73472BE6B63700D46678 /* StripeConnectConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */; };
+		E6EC734E2BE6E5E300D46678 /* DocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC734D2BE6E5E300D46678 /* DocumentsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		E6EC73392BE342F600D46678 /* ScriptMessageHandlerWithReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandlerWithReply.swift; sourceTree = "<group>"; };
 		E6EC73442BE6B5C700D46678 /* ConnectWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectWebView.swift; sourceTree = "<group>"; };
 		E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectConstants.swift; sourceTree = "<group>"; };
+		E6EC734D2BE6E5E300D46678 /* DocumentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,8 +189,9 @@
 		E63DA0672BDE3B29005BF2A0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				E63DA0682BDE3B32005BF2A0 /* PaymentsViewController.swift */,
 				E6EC73312BE2E1C300D46678 /* AccountOnboardingViewController.swift */,
+				E6EC734D2BE6E5E300D46678 /* DocumentsViewController.swift */,
+				E63DA0682BDE3B32005BF2A0 /* PaymentsViewController.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6EC73342BE2FDE300D46678 /* PopupWebViewController.swift in Sources */,
+				E6EC734E2BE6E5E300D46678 /* DocumentsViewController.swift in Sources */,
 				E6EC73472BE6B63700D46678 /* StripeConnectConstants.swift in Sources */,
 				E63DA0662BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift in Sources */,
 				E63DA0692BDE3B32005BF2A0 /* PaymentsViewController.swift in Sources */,

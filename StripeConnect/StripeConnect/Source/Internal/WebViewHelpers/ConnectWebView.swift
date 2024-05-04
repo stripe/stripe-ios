@@ -107,7 +107,43 @@ extension ConnectWebView: WKNavigationDelegate {
         didFinishLoading?(self)
     }
 
-    // TODO: Downloads
+    // MARK: Downloads
     // https://developer.apple.com/videos/play/wwdc2021/10032/?time=1050
 
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction
+    ) async -> WKNavigationActionPolicy {
+        // Allow JS initiated downloads
+        navigationAction.shouldPerformDownload ? .download : .allow
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationResponse: WKNavigationResponse
+    ) async -> WKNavigationResponsePolicy {
+        // Allow server initiated downloads
+        if navigationResponse.canShowMIMEType,
+           let response = navigationResponse.response as? HTTPURLResponse,
+           let contentType = response.value(forHTTPHeaderField: "Content-Type"),
+           contentType.range(of: "attachment", options: .caseInsensitive) != nil {
+            return .download
+        }
+
+        return .allow
+    }
+
+    func webView(_ webView: WKWebView,
+                 navigationAction: WKNavigationAction,
+                 didBecome download: WKDownload) {
+        // Set download delegate for JS initiated downloads
+        // TODO
+    }
+
+    func webView(_ webView: WKWebView,
+                 navigationResponse: WKNavigationResponse,
+                 didBecome download: WKDownload) {
+        // Set download for server initiated downloads
+        // TODO
+    }
 }

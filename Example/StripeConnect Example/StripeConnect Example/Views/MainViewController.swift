@@ -14,6 +14,7 @@ class MainViewController: UITableViewController {
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
         case accountOnboarding = "Account onboarding"
+        case documents = "Documents"
         case payments = "Payments"
         case logout = "Log out"
 
@@ -117,6 +118,10 @@ class MainViewController: UITableViewController {
             button.accessibilityLabel = "Configure account onboarding"
             accountOnboardingVC.navigationItem.rightBarButtonItem = button
             viewControllerToPush = accountOnboardingVC
+
+        case .documents:
+            viewControllerToPush = stripeConnectInstance.createDocuments()
+            viewControllerToPush.title = "Documents"
 
         case .payments:
             viewControllerToPush = stripeConnectInstance.createPayments()
