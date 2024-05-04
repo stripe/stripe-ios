@@ -45,7 +45,7 @@ class MainViewController: UITableViewController {
     /// Navbar button title view
     lazy var navbarTitleButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(ServerConfiguration.shared.label, for: .normal)
+        button.setTitle(title, for: .normal)
         button.setImage(UIImage(systemName: "chevron.down",
                                 withConfiguration: UIImage.SymbolConfiguration(pointSize: 10)),
                         for: .normal)
@@ -56,6 +56,12 @@ class MainViewController: UITableViewController {
         button.accessibilityLabel = "Configure server"
         return button
     }()
+
+    override var title: String? {
+        didSet {
+            navbarTitleButton.setTitle(title, for: .normal)
+        }
+    }
 
     var currentAppearanceOption = ExampleAppearanceOptions.default
     var stripeConnectInstance: StripeConnectInstance?
@@ -71,6 +77,7 @@ class MainViewController: UITableViewController {
         )
 
         // Configure navbar
+        title = ServerConfiguration.shared.label
         navigationItem.titleView = navbarTitleButton
         addChangeAppearanceButtonNavigationItem(to: self)
     }
@@ -178,8 +185,8 @@ class MainViewController: UITableViewController {
 
     @objc
     func configureServer() {
-        let view = ServerConfigurationView { [weak navbarTitleButton] in
-            navbarTitleButton?.setTitle(ServerConfiguration.shared.label, for: .normal)
+        let view = ServerConfigurationView { [weak self] in
+            self?.title = ServerConfiguration.shared.label
         }
         self.present(UIHostingController(rootView: view), animated: true)
     }
