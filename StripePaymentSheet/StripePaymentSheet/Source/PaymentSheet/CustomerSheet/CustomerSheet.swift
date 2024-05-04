@@ -60,17 +60,25 @@ public class CustomerSheet {
         )
     }()
 
-    ///
     /// Use a StripeCustomerAdapter, or build your own.
     public init(configuration: CustomerSheet.Configuration,
                 customer: CustomerAdapter) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
         self.configuration = configuration
+        self.customerSessionClientSecretProvider = nil
         self.customerAdapter = customer
     }
 
-    var customerAdapter: CustomerAdapter
+    @_spi(CustomerSessionBetaAccess)
+    public init(configuration: CustomerSheet.Configuration,
+                customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
+        self.configuration = configuration
+        self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
+    }
+
+    var customerAdapter: CustomerAdapter?
+    let customerSessionClientSecretProvider: (() async throws -> CustomerSessionClientSecret)?
 
     private var csCompletion: CustomerSheetCompletion?
 
@@ -119,7 +127,7 @@ public class CustomerSheet {
         loadPaymentMethodInfo { result in
             switch result {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
-                let merchantSupportedPaymentMethodTypes = self.customerAdapter.canCreateSetupIntents ? elementsSession.orderedPaymentMethodTypes : [.card]
+                let merchantSupportedPaymentMethodTypes = self.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 self.present(from: presentingViewController,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
@@ -139,6 +147,13 @@ public class CustomerSheet {
         }
         presentingViewController.presentAsBottomSheet(bottomSheetViewController,
                                                       appearance: configuration.appearance)
+    }
+    func merchantSupportedPaymentMethodTypes(elementsSession: STPElementsSession) -> [STPPaymentMethodType] {
+        if let customerAdapter = self.customerAdapter {
+            return customerAdapter.canCreateSetupIntents ? elementsSession.orderedPaymentMethodTypes : [.card]
+        } else {
+            return elementsSession.orderedPaymentMethodTypes
+        }
     }
 
     func present(from presentingViewController: UIViewController,
@@ -174,11 +189,19 @@ public class CustomerSheet {
 
 extension CustomerSheet {
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
+        if let customerAdapter = self.customerAdapter {
+            return loadPaymentMethodInfo(customerAdapter: customerAdapter, completion: completion)
+        } else {
+            assertionFailure("todo")
+            return completion(.failure(CustomerSheetError.unknown(debugDescription: "ha")))
+        }
+    }
+    func loadPaymentMethodInfo(customerAdapter: CustomerAdapter, completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
-                async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
-                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: self.customerAdapter.paymentMethodTypes, customerSessionClientSecret: nil)
+                async let selectedPaymentMethodResult = try customerAdapter.fetchSelectedPaymentOption()
+                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes, customerSessionClientSecret: nil)
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
