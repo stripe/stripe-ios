@@ -11,7 +11,11 @@ extension UIApplication {
     /// Helper to display an error message on top of the current window
     func showToast(message: String) {
 
-        guard let window = windows.filter({ $0.isKeyWindow }).first else { return }
+        guard let windowScene = connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+              let window = windowScene.windows.filter({ $0.isKeyWindow }).first
+        else {
+            return
+        }
 
         let toastLabel = UILabel()
         toastLabel.translatesAutoresizingMaskIntoConstraints = false
