@@ -13,8 +13,8 @@ class MainViewController: UITableViewController {
 
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
-        case payments = "Payments"
         case accountOnboarding = "Account onboarding"
+        case payments = "Payments"
         case logout = "Log out"
 
         var label: String { rawValue }
@@ -103,15 +103,24 @@ class MainViewController: UITableViewController {
         let viewControllerToPush: UIViewController
 
         switch row {
+        case .accountOnboarding:
+            let accountOnboardingVC = stripeConnectInstance.createAccountOnboarding { [weak navigationController] in
+                navigationController?.popViewController(animated: true)
+            }
+            accountOnboardingVC.title = "Account onboarding"
+            let button = UIBarButtonItem(
+                image: UIImage(systemName: "slider.horizontal.3"),
+                primaryAction: .init(handler: { [weak accountOnboardingVC] _ in
+                    let view = AccountOnboardingConfigurationView(accountOnboardingViewController: accountOnboardingVC)
+                    accountOnboardingVC?.present(UIHostingController(rootView: view), animated: true)
+                }))
+            button.accessibilityLabel = "Configure account onboarding"
+            accountOnboardingVC.navigationItem.rightBarButtonItem = button
+            viewControllerToPush = accountOnboardingVC
+
         case .payments:
             viewControllerToPush = stripeConnectInstance.createPayments()
             viewControllerToPush.title = "Payments"
-
-        case .accountOnboarding:
-            viewControllerToPush = stripeConnectInstance.createAccountOnboarding { [weak navigationController] in
-                navigationController?.popViewController(animated: true)
-            }
-            viewControllerToPush.title = "Account onboarding"
 
         case .logout:
             cell.accessoryView = logoutSpinner
@@ -136,7 +145,9 @@ class MainViewController: UITableViewController {
             action: #selector(selectAppearance)
         )
         button.accessibilityLabel = "Change appearance"
-        viewController.navigationItem.rightBarButtonItem = button
+        var buttonItems = viewController.navigationItem.rightBarButtonItems ?? []
+        buttonItems = [button] + buttonItems
+        viewController.navigationItem.rightBarButtonItems = buttonItems
     }
 
     /// Displays a menu to pick from a selection of example appearances

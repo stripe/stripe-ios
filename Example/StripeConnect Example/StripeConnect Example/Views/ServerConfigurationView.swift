@@ -65,19 +65,19 @@ struct ServerConfigurationView: View {
 
                 Section {
                     VStack(spacing: 16) {
-                        Input(label: "Client secret endpoint",
-                              placeholder: "https://{{SERVER}}/account_session",
-                              text: $customEndpoint,
-                              isValid: isCustomEndpointValid)
+                        TextInput(label: "Client secret endpoint",
+                                  placeholder: "https://{{SERVER}}/account_session",
+                                  text: $customEndpoint,
+                                  isValid: isCustomEndpointValid)
                         .keyboardType(.URL)
 
-                        Input(label: "Publishable key",
-                              placeholder: "pk_xxx",
-                              text: $customPublishableKey,
-                              isValid: isCustomPublishableKeyValid)
+                        TextInput(label: "Publishable key",
+                                  placeholder: "pk_xxx",
+                                  text: $customPublishableKey,
+                                  isValid: isCustomPublishableKeyValid)
 
                         Button(action: save) {
-                            Text("Save")
+                            Text("Apply")
                                 .frame(maxWidth: .infinity)
                         }
                         .disabled(!isCustomPublishableKeyValid || !isCustomEndpointValid)
@@ -127,31 +127,6 @@ struct ServerConfigurationView: View {
         ServerConfiguration.shared = configuration
         dismiss()
         didSave()
-    }
-
-    struct Input: View {
-        let label: String
-        let placeholder: String
-        let text: Binding<String>
-        let isValid: Bool
-
-        @FocusState private var isFocused: Bool
-
-        var body: some View {
-            VStack(alignment: .leading) {
-                Text(label)
-                    .font(.subheadline)
-                    .foregroundColor(Color(UIColor.label))
-                TextField(placeholder, text: text)
-                    .textFieldStyle(.roundedBorder)
-                    .focused($isFocused)
-                if !text.wrappedValue.isEmpty && !isFocused && !isValid {
-                    Text("Invalid value")
-                        .foregroundColor(Color(uiColor: .systemRed))
-                        .font(.caption)
-                }
-            }
-        }
     }
 
     struct Option: View {

@@ -67,15 +67,15 @@ public class AccountOnboardingViewController: UIViewController {
     }
 
     public func setFullTermsOfServiceUrl(_ url: URL) {
-        webView.evaluateJavaScript("component.setFullTermsOfServiceUrl(\(url.absoluteString)")
+        webView.evaluateJavaScript("component.setFullTermsOfServiceUrl('\(url.absoluteString)')")
     }
 
     public func setRecipientTermsOfServiceUrl(_ url: URL) {
-        webView.evaluateJavaScript("component.setRecipientTermsOfServiceUrl(\(url.absoluteString)")
+        webView.evaluateJavaScript("component.setRecipientTermsOfServiceUrl('\(url.absoluteString)')")
     }
 
     public func setPrivacyPolicyUrl(_ url: URL) {
-        webView.evaluateJavaScript("component.setPrivacyPolicyUrl(\(url.absoluteString)")
+        webView.evaluateJavaScript("component.setPrivacyPolicyUrl('\(url.absoluteString)')")
     }
 
     public func setSkipTermsOfServiceCollection(_ skip: Bool) {

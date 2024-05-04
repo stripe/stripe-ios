@@ -20,6 +20,8 @@
 		E6EC73302BE2B89A00D46678 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC732F2BE2B89A00D46678 /* Toast.swift */; };
 		E6EC73402BE57D6500D46678 /* ServerConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC733F2BE57D6500D46678 /* ServerConfigurationView.swift */; };
 		E6EC73422BE57DD700D46678 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73412BE57DD700D46678 /* ServerConfiguration.swift */; };
+		E6EC734A2BE6D54500D46678 /* AccountOnboardingConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73492BE6D54500D46678 /* AccountOnboardingConfigurationView.swift */; };
+		E6EC734C2BE6DC2700D46678 /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC734B2BE6DC2700D46678 /* TextInput.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +53,8 @@
 		E6EC732F2BE2B89A00D46678 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		E6EC733F2BE57D6500D46678 /* ServerConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationView.swift; sourceTree = "<group>"; };
 		E6EC73412BE57DD700D46678 /* ServerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfiguration.swift; sourceTree = "<group>"; };
+		E6EC73492BE6D54500D46678 /* AccountOnboardingConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOnboardingConfigurationView.swift; sourceTree = "<group>"; };
+		E6EC734B2BE6DC2700D46678 /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInput.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,13 +90,11 @@
 		E63DA0A02BDE4B67005BF2A0 /* StripeConnect Example */ = {
 			isa = PBXGroup;
 			children = (
+				E6EC73482BE6D47E00D46678 /* Views */,
 				E63DA0A12BDE4B67005BF2A0 /* AppDelegate.swift */,
 				E6EC732B2BE2AE9300D46678 /* ExampleAppearanceOptions.swift */,
-				E6EC73232BE1C57D00D46678 /* MainViewController.swift */,
 				E63DA0A32BDE4B67005BF2A0 /* SceneDelegate.swift */,
 				E6EC73412BE57DD700D46678 /* ServerConfiguration.swift */,
-				E6EC733F2BE57D6500D46678 /* ServerConfigurationView.swift */,
-				E6EC732F2BE2B89A00D46678 /* Toast.swift */,
 				E63DA0AA2BDE4B68005BF2A0 /* Assets.xcassets */,
 				E63DA0AF2BDE4B68005BF2A0 /* Info.plist */,
 				E63DA0AC2BDE4B68005BF2A0 /* LaunchScreen.storyboard */,
@@ -107,6 +109,18 @@
 				E63DA0B62BDE4F74005BF2A0 /* StripeConnect.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E6EC73482BE6D47E00D46678 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E6EC73232BE1C57D00D46678 /* MainViewController.swift */,
+				E6EC733F2BE57D6500D46678 /* ServerConfigurationView.swift */,
+				E6EC732F2BE2B89A00D46678 /* Toast.swift */,
+				E6EC73492BE6D54500D46678 /* AccountOnboardingConfigurationView.swift */,
+				E6EC734B2BE6DC2700D46678 /* TextInput.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,6 +200,8 @@
 				E6EC73402BE57D6500D46678 /* ServerConfigurationView.swift in Sources */,
 				E6EC73422BE57DD700D46678 /* ServerConfiguration.swift in Sources */,
 				E63DA0A42BDE4B67005BF2A0 /* SceneDelegate.swift in Sources */,
+				E6EC734C2BE6DC2700D46678 /* TextInput.swift in Sources */,
+				E6EC734A2BE6D54500D46678 /* AccountOnboardingConfigurationView.swift in Sources */,
 				E6EC73242BE1C57D00D46678 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
