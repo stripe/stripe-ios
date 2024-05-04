@@ -67,17 +67,22 @@ public class CustomerSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
         self.configuration = configuration
         self.customerSessionClientSecretProvider = nil
+        self.setupIntentClientSecretProvider = nil
         self.customerAdapter = customer
     }
 
     @_spi(CustomerSessionBetaAccess)
     public init(configuration: CustomerSheet.Configuration,
-                customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
+                customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret,
+                setupIntentClientSecretProvider: @escaping (() async throws -> String)) {
         self.configuration = configuration
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
+        self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
+        self.customerAdapter = nil
     }
 
     var customerAdapter: CustomerAdapter?
+    let setupIntentClientSecretProvider: (() async throws -> String)?
     let customerSessionClientSecretProvider: (() async throws -> CustomerSessionClientSecret)?
 
     private var csCompletion: CustomerSheetCompletion?
@@ -289,5 +294,30 @@ extension StripeCustomerAdapter {
         default:
             return nil
         }
+    }
+}
+extension CustomerSheet {
+    public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection? {
+        guard let customerSessionClientSecretProvider else {
+            return nil
+        }
+        let cscs = try await customerSessionClientSecretProvider()
+        let selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: cscs.customerId)
+        switch selectedPaymentOption {
+        case .applePay:
+            return .applePay()
+        case .stripeId(let paymentMethodId):
+            let paymentMethods = try await self.fetchPaymentMethods()
+            guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
+                return nil
+            }
+            return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
+        default:
+            return nil
+        }
+    }
+    // todo
+    func fetchPaymentMethods() async throws -> [STPPaymentMethod] {
+        return []
     }
 }
