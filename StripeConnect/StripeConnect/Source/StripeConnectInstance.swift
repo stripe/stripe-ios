@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-import Combine
+import JavaScriptCore
 import StripeCore
 
 public class StripeConnectInstance {
@@ -18,6 +18,10 @@ public class StripeConnectInstance {
 
     /// A collection of weak pointers to all the web views instantiated from this instance
     private let webViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
+
+    /// Keep a reference to one web view that can be used to log out if all other
+    /// component web views have been removed from the view hierarchy and deallocated
+    private lazy var logoutProxyWebView = ConnectComponentWebView(connectInstance: self, componentType: "")
 
     /**
      Initializes a StripeConnect instance.
@@ -36,6 +40,8 @@ public class StripeConnectInstance {
         self.appearance = appearance
         self.customFonts = customFonts
         self.fetchClientSecret = fetchClientSecret
+
+        webViews.add(logoutProxyWebView)
     }
 
     /**
@@ -77,7 +83,7 @@ public class StripeConnectInstance {
 
     /// Logs the user out of Connect sessions.
     public func logout() async {
-        // Log out of each
+        // Log out of each web view
         let tasks: [Task] = webViews.allObjects.map { webView in
             Task {
                 await webView.logout()

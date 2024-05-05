@@ -56,8 +56,12 @@
                     locale: '{{LOCALE}}'
                 });
 
-                component = stripeConnectInstance.create('{{COMPONENT_TYPE}}');
-                document.body.appendChild(component);
+                // Component type will be empty string if this web view isn't
+                // in the view hierarchy and only used as a logout proxy
+                if ('{{COMPONENT_TYPE}}' !== '') {
+                    component = stripeConnectInstance.create('{{COMPONENT_TYPE}}');
+                    document.body.appendChild(component);
+                }
             };
         </script>
         <!-- Make the page mobile-responsive and pinch-to-zoom as well as auto-zoom when selecting text fields -->

@@ -148,6 +148,11 @@ class MainViewController: UITableViewController {
                 }))
             button.accessibilityLabel = "Configure account onboarding"
             accountOnboardingVC.navigationItem.rightBarButtonItem = button
+//            accountOnboardingVC.navigationItem.leftBarButtonItem = .init(title: "Log out", primaryAction: .init(handler: { [weak stripeConnectInstance] _ in
+//                Task {
+//                    await stripeConnectInstance?.logout()
+//                }
+//            }))
             viewControllerToPush = accountOnboardingVC
 
         case .documents:
