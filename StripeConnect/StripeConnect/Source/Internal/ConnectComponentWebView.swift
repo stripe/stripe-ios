@@ -35,10 +35,11 @@ class ConnectComponentWebView: ConnectWebView {
 
         super.init(frame: .zero, configuration: config)
 
-        registerMessageHandlers()
+        addMessageHandlers()
         addDebugReloadButton()
         loadContents()
         updateColors(connectInstance.appearance)
+        addNotificationObservers()
     }
 
     required init?(coder: NSCoder) {
@@ -80,13 +81,24 @@ extension ConnectComponentWebView {
 
 private extension ConnectComponentWebView {
     /// Registers JS -> Swift message handlers
-    func registerMessageHandlers() {
+    func addMessageHandlers() {
         addMessageHandler(.init(name: "debug", didReceiveMessage: { message in
             debugPrint(message.body)
         }))
         addMessageHandler(.init(name: "fetchClientSecret", didReceiveMessage: { [weak self] _ in
             return await self?.connectInstance.fetchClientSecret()
         }))
+    }
+
+    /// Adds NotificationCenter observers
+    func addNotificationObservers() {
+        NotificationCenter.default.addObserver(
+            forName: NSLocale.currentLocaleDidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.evaluateJavaScript("stripeConnectInstance.update({locale: \(Locale.autoupdatingCurrent.webIdentifier)})")
+        }
     }
 
     /// Updates the view's background color to match appearance.
