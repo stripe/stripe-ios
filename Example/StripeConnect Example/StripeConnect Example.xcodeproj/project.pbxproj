@@ -69,6 +69,7 @@
 		E6EC76D32BE72FB600D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC76A22BE72FB600D46678 /* Localizable.strings */; };
 		E6EC76D42BE72FB600D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC76A42BE72FB600D46678 /* Localizable.strings */; };
 		E6EC76D52BE72FB600D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC76A62BE72FB600D46678 /* Localizable.strings */; };
+		E6EC76DB2BE7665200D46678 /* YatraOne-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E6EC76DA2BE7665200D46678 /* YatraOne-LICENSE.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -149,6 +150,7 @@
 		E6EC76A12BE72FB600D46678 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E6EC76A32BE72FB600D46678 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E6EC76A52BE72FB600D46678 /* en-IN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-IN"; path = "en-IN.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC76DA2BE7665200D46678 /* YatraOne-LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "YatraOne-LICENSE.txt"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +220,7 @@
 		E6EC734F2BE6F13A00D46678 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				E6EC76DA2BE7665200D46678 /* YatraOne-LICENSE.txt */,
 				E6EC73502BE6F38200D46678 /* YatraOne-Regular.ttf */,
 			);
 			path = Fonts;
@@ -432,6 +435,7 @@
 				E6EC76CE2BE72FB600D46678 /* Localizable.strings in Resources */,
 				E6EC76C12BE72FB600D46678 /* Localizable.strings in Resources */,
 				E6EC76CD2BE72FB600D46678 /* Localizable.strings in Resources */,
+				E6EC76DB2BE7665200D46678 /* YatraOne-LICENSE.txt in Resources */,
 				E6EC76B62BE72FB600D46678 /* Localizable.strings in Resources */,
 				E6EC76AC2BE72FB600D46678 /* Localizable.strings in Resources */,
 				E6EC76C22BE72FB600D46678 /* Localizable.strings in Resources */,
