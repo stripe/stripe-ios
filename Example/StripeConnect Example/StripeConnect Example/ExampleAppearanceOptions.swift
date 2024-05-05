@@ -105,6 +105,7 @@ extension StripeConnectInstance.Appearance {
         case .hotDog:
             colorPrimary = UIColor(hex: 0xFF2200)
             colorText = UIColor(hex: 0x000000)
+            colorSecondaryText = UIColor(hex: 0x333333)
             colorBackground = UIColor(hex: 0xffff00)
             buttonPrimaryColorBackground = UIColor(hex: 0xc6c6c6)
             buttonPrimaryColorBorder = UIColor(hex: 0x1f1f1f)
