@@ -36,6 +36,53 @@
 		E6EC73472BE6B63700D46678 /* StripeConnectConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */; };
 		E6EC734E2BE6E5E300D46678 /* DocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC734D2BE6E5E300D46678 /* DocumentsViewController.swift */; };
 		E6EC73552BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73542BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift */; };
+		E6EC73D52BE7228700D46678 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73D42BE7228700D46678 /* STPLocalizedString.swift */; };
+		E6EC75042BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74A42BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75052BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74A62BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75062BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74A82BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75072BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74AA2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75082BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74AC2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75092BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74AE2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC750A2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74B02BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC750B2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74B22BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC750C2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74B42BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC750D2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74B62BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC750F2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74BA2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75102BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74BC2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75112BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74BE2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75122BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74C02BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75132BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74C22BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75152BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74C62BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75162BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74C82BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75172BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74CA2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75182BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74CC2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75192BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74CE2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC751A2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74D02BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC751B2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74D22BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC751C2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74D42BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC751D2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74D62BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC751E2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74D82BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC751F2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74DA2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75202BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74DC2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75212BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74DE2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75222BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74E02BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75232BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74E22BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75242BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74E42BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75252BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74E62BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75262BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74E82BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75272BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74EA2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75282BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74EC2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75292BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74EE2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC752A2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74F02BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC752B2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74F22BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC752C2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74F42BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC752D2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74F62BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC752E2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74F82BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC752F2BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74FA2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75302BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74FC2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75312BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC74FE2BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75322BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC75002BE72D2C00D46678 /* Localizable.strings */; };
+		E6EC75332BE72D2C00D46678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6EC75022BE72D2C00D46678 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +126,53 @@
 		E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectConstants.swift; sourceTree = "<group>"; };
 		E6EC734D2BE6E5E300D46678 /* DocumentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsViewController.swift; sourceTree = "<group>"; };
 		E6EC73542BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectInstanceCustomFontSource.swift; sourceTree = "<group>"; };
+		E6EC73D42BE7228700D46678 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		E6EC74A32BE72D2C00D46678 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74A52BE72D2C00D46678 /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74A72BE72D2C00D46678 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74A92BE72D2C00D46678 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74AB2BE72D2C00D46678 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74AD2BE72D2C00D46678 /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74AF2BE72D2C00D46678 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74B12BE72D2C00D46678 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74B32BE72D2C00D46678 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74B52BE72D2C00D46678 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74B92BE72D2C00D46678 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74BB2BE72D2C00D46678 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74BD2BE72D2C00D46678 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74BF2BE72D2C00D46678 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74C12BE72D2C00D46678 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74C52BE72D2C00D46678 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74C72BE72D2C00D46678 /* en-SG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-SG"; path = "en-SG.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74C92BE72D2C00D46678 /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74CB2BE72D2C00D46678 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74CD2BE72D2C00D46678 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74CF2BE72D2C00D46678 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74D12BE72D2C00D46678 /* en-IE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-IE"; path = "en-IE.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74D32BE72D2C00D46678 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74D52BE72D2C00D46678 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74D72BE72D2C00D46678 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74D92BE72D2C00D46678 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74DB2BE72D2C00D46678 /* en-NZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-NZ"; path = "en-NZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74DD2BE72D2C00D46678 /* en-AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-AU"; path = "en-AU.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74DF2BE72D2C00D46678 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74E12BE72D2C00D46678 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74E32BE72D2C00D46678 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74E52BE72D2C00D46678 /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74E72BE72D2C00D46678 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74E92BE72D2C00D46678 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74EB2BE72D2C00D46678 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74ED2BE72D2C00D46678 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74EF2BE72D2C00D46678 /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74F12BE72D2C00D46678 /* es-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-BR"; path = "es-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74F32BE72D2C00D46678 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74F52BE72D2C00D46678 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74F72BE72D2C00D46678 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74F92BE72D2C00D46678 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC74FB2BE72D2C00D46678 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74FD2BE72D2C00D46678 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6EC74FF2BE72D2C00D46678 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6EC75012BE72D2C00D46678 /* en-IN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-IN"; path = "en-IN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +260,7 @@
 				E6EC73542BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift */,
 				E63DA0602BDE349C005BF2A0 /* StripeConnect+Exports.swift */,
 				E63DA0652BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift */,
+				E6EC73D42BE7228700D46678 /* STPLocalizedString.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -202,6 +297,7 @@
 		E63DA0702BDE4863005BF2A0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E6EC75032BE72D2C00D46678 /* Localizations */,
 				E63DA0C32BE0BBFA005BF2A0 /* template.html */,
 			);
 			path = Resources;
@@ -216,6 +312,59 @@
 				E6EC73392BE342F600D46678 /* ScriptMessageHandlerWithReply.swift */,
 			);
 			path = WebViewHelpers;
+			sourceTree = "<group>";
+		};
+		E6EC75032BE72D2C00D46678 /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+				E6EC74A42BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74A62BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74A82BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74AA2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74AC2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74AE2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74B02BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74B22BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74B42BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74B62BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74BA2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74BC2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74BE2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74C02BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74C22BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74C62BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74C82BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74CA2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74CC2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74CE2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74D02BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74D22BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74D42BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74D62BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74D82BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74DA2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74DC2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74DE2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74E02BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74E22BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74E42BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74E62BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74E82BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74EA2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74EC2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74EE2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74F02BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74F22BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74F42BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74F62BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74F82BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74FA2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74FC2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC74FE2BE72D2C00D46678 /* Localizable.strings */,
+				E6EC75002BE72D2C00D46678 /* Localizable.strings */,
+				E6EC75022BE72D2C00D46678 /* Localizable.strings */,
+			);
+			path = Localizations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,6 +443,51 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				"lt-LT",
+				"zh-Hans",
+				ja,
+				"el-GR",
+				"ms-MY",
+				"zh-HK",
+				mt,
+				nb,
+				"en-GB",
+				da,
+				"es-419",
+				it,
+				"fr-CA",
+				"bg-BG",
+				sv,
+				ko,
+				fil,
+				"zh-Hant",
+				"ro-RO",
+				hu,
+				tr,
+				"et-EE",
+				"pt-BR",
+				"lv-LV",
+				vi,
+				"cs-CZ",
+				"sk-SK",
+				"sl-SI",
+				fr,
+				fi,
+				id,
+				nl,
+				"pl-PL",
+				"pt-PT",
+				hr,
+				"en-AU",
+				"en-IN",
+				"en-IE",
+				"en-NZ",
+				"en-SG",
+				"es-AR",
+				"es-BR",
+				"es-MX",
+				es,
 			);
 			mainGroup = E63DA0212BDE2623005BF2A0;
 			productRefGroup = E63DA02C2BDE2623005BF2A0 /* Products */;
@@ -311,15 +505,61 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6EC75092BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75272BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA04F2BDE2697005BF2A0 /* Project-Release.xcconfig in Resources */,
+				E6EC750F2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75042BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75132BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75202BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA0552BDE2697005BF2A0 /* StripeiOS-Release.xcconfig in Resources */,
+				E6EC75062BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC752C2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75232BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75292BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC750C2BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA0562BDE2697005BF2A0 /* StripeiOS-Shared.xcconfig in Resources */,
 				E63DA0C42BE0BD99005BF2A0 /* template.html in Resources */,
+				E6EC75332BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75282BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75312BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC751B2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC752D2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75242BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75122BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA0532BDE2697005BF2A0 /* StripeiOS Tests-Shared.xcconfig in Resources */,
+				E6EC751C2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75112BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75192BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75182BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA0542BDE2697005BF2A0 /* StripeiOS-Debug.xcconfig in Resources */,
+				E6EC750D2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC751A2BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA0502BDE2697005BF2A0 /* Project-Shared.xcconfig in Resources */,
+				E6EC75172BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75262BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC752E2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC751F2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75102BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC752F2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC751D2BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA0512BDE2697005BF2A0 /* StripeiOS Tests-Debug.xcconfig in Resources */,
+				E6EC752B2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC752A2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75072BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75052BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75222BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75152BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75302BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75212BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC750A2BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA0572BDE2697005BF2A0 /* Version.xcconfig in Resources */,
+				E6EC75162BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75322BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75082BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC75252BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC750B2BE72D2C00D46678 /* Localizable.strings in Resources */,
+				E6EC751E2BE72D2C00D46678 /* Localizable.strings in Resources */,
 				E63DA04E2BDE2697005BF2A0 /* Project-Debug.xcconfig in Resources */,
 				E63DA0522BDE2697005BF2A0 /* StripeiOS Tests-Release.xcconfig in Resources */,
 			);
@@ -348,6 +588,7 @@
 				E63DA06F2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift in Sources */,
 				E6EC73552BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift in Sources */,
 				E6EC733A2BE342F600D46678 /* ScriptMessageHandlerWithReply.swift in Sources */,
+				E6EC73D52BE7228700D46678 /* STPLocalizedString.swift in Sources */,
 				E6EC73322BE2E1C300D46678 /* AccountOnboardingViewController.swift in Sources */,
 				E63DA0612BDE349C005BF2A0 /* StripeConnect+Exports.swift in Sources */,
 				E6EC73382BE341B600D46678 /* ScriptMessageHandler.swift in Sources */,
@@ -373,6 +614,377 @@
 			targetProxy = E63DA0352BDE2624005BF2A0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E6EC74A42BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74A32BE72D2C00D46678 /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74A62BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74A52BE72D2C00D46678 /* lt-LT */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74A82BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74A72BE72D2C00D46678 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74AA2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74A92BE72D2C00D46678 /* ja */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74AC2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74AB2BE72D2C00D46678 /* el-GR */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74AE2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74AD2BE72D2C00D46678 /* ms-MY */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74B02BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74AF2BE72D2C00D46678 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74B22BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74B12BE72D2C00D46678 /* zh-HK */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74B42BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74B32BE72D2C00D46678 /* mt */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74B62BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74B52BE72D2C00D46678 /* nb */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74BA2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74B92BE72D2C00D46678 /* en-GB */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74BC2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74BB2BE72D2C00D46678 /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74BE2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74BD2BE72D2C00D46678 /* da */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74C02BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74BF2BE72D2C00D46678 /* es-419 */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74C22BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74C12BE72D2C00D46678 /* it */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74C62BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74C52BE72D2C00D46678 /* fr-CA */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74C82BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74C72BE72D2C00D46678 /* en-SG */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74CA2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74C92BE72D2C00D46678 /* bg-BG */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74CC2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74CB2BE72D2C00D46678 /* sv */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74CE2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74CD2BE72D2C00D46678 /* es-AR */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74D02BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74CF2BE72D2C00D46678 /* ko */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74D22BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74D12BE72D2C00D46678 /* en-IE */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74D42BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74D32BE72D2C00D46678 /* fil */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74D62BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74D52BE72D2C00D46678 /* zh-Hant */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74D82BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74D72BE72D2C00D46678 /* ro-RO */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74DA2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74D92BE72D2C00D46678 /* hu */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74DC2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74DB2BE72D2C00D46678 /* en-NZ */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74DE2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74DD2BE72D2C00D46678 /* en-AU */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74E02BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74DF2BE72D2C00D46678 /* tr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74E22BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74E12BE72D2C00D46678 /* et-EE */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74E42BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74E32BE72D2C00D46678 /* pt-BR */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74E62BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74E52BE72D2C00D46678 /* lv-LV */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74E82BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74E72BE72D2C00D46678 /* vi */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74EA2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74E92BE72D2C00D46678 /* es-MX */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74EC2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74EB2BE72D2C00D46678 /* cs-CZ */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74EE2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74ED2BE72D2C00D46678 /* sk-SK */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74F02BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74EF2BE72D2C00D46678 /* sl-SI */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74F22BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74F12BE72D2C00D46678 /* es-BR */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74F42BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74F32BE72D2C00D46678 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74F62BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74F52BE72D2C00D46678 /* fi */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74F82BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74F72BE72D2C00D46678 /* id */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74FA2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74F92BE72D2C00D46678 /* nl */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74FC2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74FB2BE72D2C00D46678 /* pl-PL */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC74FE2BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74FD2BE72D2C00D46678 /* pt-PT */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC75002BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC74FF2BE72D2C00D46678 /* hr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E6EC75022BE72D2C00D46678 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6EC75012BE72D2C00D46678 /* en-IN */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		E63DA03B2BDE2624005BF2A0 /* Debug */ = {

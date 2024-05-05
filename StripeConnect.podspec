@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
   s.swift_version		               = '5.0'
   s.source_files                   = 'StripeConnect/StripeConnect/**/*.swift'
   s.dependency                       'StripeCore', "#{s.version}"
+  s.ios.resource_bundle            = { 'StripeConnect' => 'StripeConnect/StripeConnect/Resources/**/*.lproj' }
 end

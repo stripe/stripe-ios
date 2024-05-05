@@ -136,6 +136,7 @@ modules:
   framework_name: StripeConnect
   custom_string_convertible_dir: StripeConnect/StripeConnect/Source
   supports_catalyst: false
+  localization_dir: StripeConnect/StripeConnect 
 
 - podspec: StripeCore.podspec
   scheme: StripeCore

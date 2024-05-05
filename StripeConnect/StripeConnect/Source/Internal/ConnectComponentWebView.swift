@@ -113,12 +113,18 @@ private extension ConnectComponentWebView {
             return
         }
 
+        // NOTE (Locale):
+        // By default, WKWebViews use the device's first preferred locale instead
+        // of the app's locale, so we have to explicitly pass the current locale
+        // to the JS connect instance.
+
         // TODO: Error handle if PK is nil
         htmlText = htmlText
             .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
             .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: connectInstance.apiClient.publishableKey ?? "")
             .replacingOccurrences(of: "{{APPEARANCE}}", with: connectInstance.appearance.asJsonString)
             .replacingOccurrences(of: "{{FONTS}}", with: connectInstance.customFonts.asJsonString)
+            .replacingOccurrences(of: "{{LOCALE}}", with: Locale.autoupdatingCurrent.webIdentifier)
 
         guard let data = htmlText.data(using: .utf8) else {
             debugPrint("Couldn't encode html data")
@@ -162,5 +168,16 @@ private extension ConnectComponentWebView {
         ])
 
         #endif
+    }
+}
+
+extension Locale {
+    /// iOS uses underscores for locale (`en_US`) but web uses hyphens (`en-US`)
+    var webIdentifier: String {
+        guard let region = stp_regionCode,
+              let language = stp_languageCode else {
+            return ""
+        }
+        return "\(language)-\(region)"
     }
 }
