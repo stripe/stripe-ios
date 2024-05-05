@@ -2,7 +2,7 @@
 //  StripeConnectInstanceCustomFontSource.swift
 //  StripeConnect
 //
-//  Created by Mel Ludowise on 5/4/24.
+//  Created by Mel Ludowise on 5/3/24.
 //
 
 import UIKit
