@@ -35,6 +35,7 @@
 		E6EC73452BE6B5C700D46678 /* ConnectWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73442BE6B5C700D46678 /* ConnectWebView.swift */; };
 		E6EC73472BE6B63700D46678 /* StripeConnectConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */; };
 		E6EC734E2BE6E5E300D46678 /* DocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC734D2BE6E5E300D46678 /* DocumentsViewController.swift */; };
+		E6EC73552BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73542BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		E6EC73442BE6B5C700D46678 /* ConnectWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectWebView.swift; sourceTree = "<group>"; };
 		E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectConstants.swift; sourceTree = "<group>"; };
 		E6EC734D2BE6E5E300D46678 /* DocumentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsViewController.swift; sourceTree = "<group>"; };
+		E6EC73542BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectInstanceCustomFontSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 				E63DA0672BDE3B29005BF2A0 /* Components */,
 				E63DA0622BDE3819005BF2A0 /* Internal */,
 				E63DA0632BDE382B005BF2A0 /* StripeConnectInstance.swift */,
+				E6EC73542BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift */,
 				E63DA0602BDE349C005BF2A0 /* StripeConnect+Exports.swift */,
 				E63DA0652BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift */,
 			);
@@ -343,6 +346,7 @@
 				E63DA0692BDE3B32005BF2A0 /* PaymentsViewController.swift in Sources */,
 				E63DA0BE2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift in Sources */,
 				E63DA06F2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift in Sources */,
+				E6EC73552BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift in Sources */,
 				E6EC733A2BE342F600D46678 /* ScriptMessageHandlerWithReply.swift in Sources */,
 				E6EC73322BE2E1C300D46678 /* AccountOnboardingViewController.swift in Sources */,
 				E63DA0612BDE349C005BF2A0 /* StripeConnect+Exports.swift in Sources */,

@@ -53,8 +53,7 @@ extension StripeConnectInstance.Appearance {
             headingSmTextTransform = .uppercase
             headingXlTextTransform = .uppercase
             headingXsTextTransform = .uppercase
-//            fontFamily = "Brush Script MT"
-            fontFamily = "Snell Roundhand"
+            fontFamily = "Yellowtail"
 
         case .ogre:
             colorPrimary = UIColor(hex: 0x5AE92B)
@@ -67,7 +66,7 @@ extension StripeConnectInstance.Appearance {
             buttonSecondaryColorText = UIColor(hex: 0x000000)
             badgeNeutralColorBackground = UIColor(hex: 0x638863)
             badgeNeutralColorText = UIColor(hex: 0x28D72A)
-//            fontFamily = "fantasy"
+            fontFamily = "Yatra One"
 
         case .protanopia:
             colorPrimary = UIColor(hex: 0x0969DA)

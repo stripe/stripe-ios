@@ -14,6 +14,7 @@ public class StripeConnectInstance {
     let fetchClientSecret: () async -> String?
 
     private(set) var appearance: Appearance
+    private(set) var customFonts: [CustomFontSource]
 
     /// A collection of weak pointers to all the web views instantiated from this instance
     private let webViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
@@ -24,13 +25,16 @@ public class StripeConnectInstance {
      - Parameters:
        - apiClient: The APIClient instance used to make requests to Stripe.
        - appearance: Describes the appearance of the connect element.
+       - customFonts: An array of custom fonts available for use by any embedded components.
        - fetchClientSecret: Closure that fetches client secret.
      */
     public init(apiClient: STPAPIClient = STPAPIClient.shared,
                 appearance: Appearance = .default,
+                customFonts: [CustomFontSource] = [],
                 fetchClientSecret: @escaping () async -> String?) {
         self.apiClient = apiClient
         self.appearance = appearance
+        self.customFonts = customFonts
         self.fetchClientSecret = fetchClientSecret
     }
 

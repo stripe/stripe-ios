@@ -38,7 +38,6 @@
             window.StripeConnect = window.StripeConnect || {};
 
             const fetchClientSecret = async () => {
-                console.debug("fetchClientSecret");
                 // Swift requires that the `postMessage` body be non-empty,
                 // but we don't require one for `fetchClientSecret`,
                 // so using empty string.
@@ -49,11 +48,9 @@
             };
 
             StripeConnect.onLoad = () => {
-                console.debug("PK: '{{PUBLISHABLE_KEY}}'");
-                console.debug("Appearance: " + JSON.stringify({{APPEARANCE}}));
-
                 stripeConnectInstance = StripeConnect.init({
                     publishableKey: '{{PUBLISHABLE_KEY}}',
+                    fonts: {{FONTS}},
                     fetchClientSecret: fetchClientSecret,
                     appearance: {{APPEARANCE}}
                 });

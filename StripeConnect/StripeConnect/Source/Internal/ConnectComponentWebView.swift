@@ -118,7 +118,7 @@ private extension ConnectComponentWebView {
             .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
             .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: connectInstance.apiClient.publishableKey ?? "")
             .replacingOccurrences(of: "{{APPEARANCE}}", with: connectInstance.appearance.asJsonString)
-            .replacingOccurrences(of: "{{BACKGROUND_COLOR}}", with: connectInstance.appearance.styleBackgroundColor)
+            .replacingOccurrences(of: "{{FONTS}}", with: connectInstance.customFonts.asJsonString)
 
         guard let data = htmlText.data(using: .utf8) else {
             debugPrint("Couldn't encode html data")

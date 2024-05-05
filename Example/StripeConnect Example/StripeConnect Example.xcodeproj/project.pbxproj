@@ -22,6 +22,7 @@
 		E6EC73422BE57DD700D46678 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73412BE57DD700D46678 /* ServerConfiguration.swift */; };
 		E6EC734A2BE6D54500D46678 /* AccountOnboardingConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC73492BE6D54500D46678 /* AccountOnboardingConfigurationView.swift */; };
 		E6EC734C2BE6DC2700D46678 /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC734B2BE6DC2700D46678 /* TextInput.swift */; };
+		E6EC73522BE6F38200D46678 /* YatraOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E6EC73502BE6F38200D46678 /* YatraOne-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +56,7 @@
 		E6EC73412BE57DD700D46678 /* ServerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfiguration.swift; sourceTree = "<group>"; };
 		E6EC73492BE6D54500D46678 /* AccountOnboardingConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOnboardingConfigurationView.swift; sourceTree = "<group>"; };
 		E6EC734B2BE6DC2700D46678 /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInput.swift; sourceTree = "<group>"; };
+		E6EC73502BE6F38200D46678 /* YatraOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YatraOne-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 		E63DA0A02BDE4B67005BF2A0 /* StripeConnect Example */ = {
 			isa = PBXGroup;
 			children = (
+				E6EC734F2BE6F13A00D46678 /* Fonts */,
 				E6EC73482BE6D47E00D46678 /* Views */,
 				E63DA0A12BDE4B67005BF2A0 /* AppDelegate.swift */,
 				E6EC732B2BE2AE9300D46678 /* ExampleAppearanceOptions.swift */,
@@ -121,6 +124,14 @@
 				E6EC732F2BE2B89A00D46678 /* Toast.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		E6EC734F2BE6F13A00D46678 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				E6EC73502BE6F38200D46678 /* YatraOne-Regular.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,6 +194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E63DA0AB2BDE4B68005BF2A0 /* Assets.xcassets in Resources */,
+				E6EC73522BE6F38200D46678 /* YatraOne-Regular.ttf in Resources */,
 				E63DA0AE2BDE4B68005BF2A0 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

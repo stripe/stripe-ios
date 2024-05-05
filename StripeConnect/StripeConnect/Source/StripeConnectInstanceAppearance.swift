@@ -255,18 +255,19 @@ private extension CGFloat {
     }
 }
 
-private extension UIFont.Weight {
+extension UIFont.Weight {
     var cssValue: String? {
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#common_weight_name_mapping
         switch self {
-        case .black: return "black"
-        case .bold: return "bold"
-        case .heavy: return "heavy"
-        case .light: return "light"
-        case .medium: return "medium"
-        case .regular: return "regular"
-        case .semibold: return "semi-bold"
-        case .thin: return "thin"
-        case .ultraLight: return "ultra-light"
+        case .thin: return "100"
+        case .ultraLight: return "200"
+        case .light: return "300"
+        case .regular: return "400"
+        case .medium: return "500"
+        case .semibold: return "600"
+        case .bold: return "700"
+        case .heavy: return "800"
+        case .black: return "900"
         default: return nil
         }
     }
