@@ -52,6 +52,7 @@ extension Collection where Element == StripeConnectInstance.CustomFontSource {
     var asJsonString: String {
         guard let data = try? JSONSerialization.data(withJSONObject: map(\.dictionary)),
               let string = String(data: data, encoding: .utf8) else {
+            debugPrint("Couldn't encode custom fonts")
             return "[]"
         }
         return string

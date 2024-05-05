@@ -101,10 +101,10 @@ extension StripeConnectInstance.Appearance {
             colorText = UIColor(hex: 0x24292f)
             colorBackground = UIColor(hex: 0xffffff)
             buttonPrimaryColorBackground = UIColor(hex: 0x0969da)
-            buttonPrimaryColorBorder = UIColor(red: 27.0 / 255, green: 31.0 / 255, blue: 36.0 / 255, alpha: 0.15)
+            buttonPrimaryColorBorder = UIColor(hex: 0x1B1F24, alpha: 0.15)
             buttonPrimaryColorText = UIColor(hex: 0xffffff)
             buttonSecondaryColorBackground = UIColor(hex: 0xf6f8fa)
-            buttonSecondaryColorBorder = UIColor(red: 27.0 / 255, green: 31.0 / 255, blue: 36.0 / 255, alpha: 0.15)
+            buttonSecondaryColorBorder = UIColor(hex: 0x1B1F24, alpha: 0.15)
             buttonSecondaryColorText = UIColor(hex: 0x24292f)
             colorSecondaryText = UIColor(hex: 0x57606a)
             actionPrimaryColorText = UIColor(hex: 0x0969da)
@@ -162,11 +162,11 @@ extension StripeConnectInstance.Appearance {
 }
 
 extension UIColor {
-    convenience init(hex: UInt32) {
+    convenience init(hex: UInt32, alpha: CGFloat = 1.0) {
         let red = CGFloat((hex >> 16) & 0xFF) / 255.0
         let green = CGFloat((hex >> 8) & 0xFF) / 255.0
         let blue = CGFloat(hex & 0xFF) / 255.0
 
-        self.init(red: red, green: green, blue: blue, alpha: 1.0)
+        self.init(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
