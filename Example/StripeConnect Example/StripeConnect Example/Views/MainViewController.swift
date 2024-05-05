@@ -63,29 +63,6 @@ class MainViewController: UITableViewController {
         }
     }
 
-    /// Custom fonts used by some of the ExampleAppearanceOptions
-    let customFonts: [StripeConnectInstance.CustomFontSource] = {
-        var customFonts: [StripeConnectInstance.CustomFontSource] = [
-            // Example remote URL
-            .init(
-                family: "Yellowtail",
-                url: URL(string: "https://fonts.gstatic.com/s/yellowtail/v22/OZpGg_pnoDtINPfRIlLohlvHwWL9f4k.woff2")!,
-                italic: false,
-                weight: .regular
-            ),
-        ]
-        // Example file URL
-        if let url = Bundle.main.url(forResource: "YatraOne-Regular", withExtension: "ttf") {
-            customFonts.append(.init(
-                family: "Yatra One",
-                url: url,
-                italic: false,
-                weight: .regular
-            ))
-        }
-        return customFonts
-    }()
-
     var currentAppearanceOption = ExampleAppearanceOptions.default
     var stripeConnectInstance: StripeConnectInstance?
 
@@ -96,7 +73,7 @@ class MainViewController: UITableViewController {
 
         // Initialize Stripe instance
         stripeConnectInstance = StripeConnectInstance(
-            customFonts: customFonts,
+            customFonts: ExampleAppearanceOptions.customFonts,
             fetchClientSecret: fetchClientSecret
         )
 
@@ -148,11 +125,6 @@ class MainViewController: UITableViewController {
                 }))
             button.accessibilityLabel = "Configure account onboarding"
             accountOnboardingVC.navigationItem.rightBarButtonItem = button
-//            accountOnboardingVC.navigationItem.leftBarButtonItem = .init(title: "Log out", primaryAction: .init(handler: { [weak stripeConnectInstance] _ in
-//                Task {
-//                    await stripeConnectInstance?.logout()
-//                }
-//            }))
             viewControllerToPush = accountOnboardingVC
 
         case .documents:

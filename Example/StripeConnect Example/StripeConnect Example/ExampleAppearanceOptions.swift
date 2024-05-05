@@ -19,6 +19,30 @@ enum ExampleAppearanceOptions: String, CaseIterable {
     case jazzCup = "Jazz cup"
 
     var label: String { rawValue }
+
+    /// Custom fonts used by some of the example options
+    static var customFonts: [StripeConnectInstance.CustomFontSource] {
+        var customFonts: [StripeConnectInstance.CustomFontSource] = []
+
+        // Example of a remote hosted font
+        customFonts.append(.init(
+            family: "Yellowtail",
+            url: URL(string: "https://fonts.gstatic.com/s/yellowtail/v22/OZpGg_pnoDtINPfRIlLohlvHwWL9f4k.woff2")!,
+            italic: false,
+            weight: .regular
+        ))
+
+        // Example of a locally embedded font
+        if let url = Bundle.main.url(forResource: "YatraOne-Regular", withExtension: "ttf") {
+            customFonts.append(.init(
+                family: "Yatra One",
+                url: url,
+                italic: false,
+                weight: .regular
+            ))
+        }
+        return customFonts
+    }
 }
 
 extension StripeConnectInstance.Appearance {
@@ -34,16 +58,16 @@ extension StripeConnectInstance.Appearance {
             colorPrimary = UIColor(hex: 0x414AC3)
             colorBackground = UIColor(hex: 0xE0C3FC)
             badgeNeutralColorBackground = UIColor(hex: 0xF2E8F8)
-//            badgeNeutralColorText = .white
-//            badgeSuccessColorText = .white
+//            badgeNeutralColorText = UIColor(hex: 0xFFFFFF)
+//            badgeSuccessColorText = UIColor(hex: 0xFFFFFF)
             badgeSuccessColorBackground = UIColor(hex: 0x8E94F2)
-            badgeSuccessColorBorder = .white
+            badgeSuccessColorBorder = UIColor(hex: 0xFFFFFF)
 //            badgeWarningColorText = UIColor(hex: 0x3B3B3B)
             badgeWarningColorBackground = UIColor(hex: 0xFFC2E2)
-            badgeWarningColorBorder = .white
-//            badgeDangerColorText = .white
+            badgeWarningColorBorder = UIColor(hex: 0xFFFFFF)
+//            badgeDangerColorText = UIColor(hex: 0xFFFFFF)
             badgeDangerColorBackground = UIColor(hex: 0xEF7A85)
-            badgeDangerColorBorder = .white
+            badgeDangerColorBorder = UIColor(hex: 0xFFFFFF)
             badgeBorderRadius = 24
             spacingUnit = 9
             labelMdTextTransform = .uppercase
@@ -53,6 +77,8 @@ extension StripeConnectInstance.Appearance {
             headingSmTextTransform = .uppercase
             headingXlTextTransform = .uppercase
             headingXsTextTransform = .uppercase
+
+            // 'Yellowtail' is a font remotely hosted font specified via a CustomFont
             fontFamily = "Yellowtail"
 
         case .ogre:
@@ -66,6 +92,8 @@ extension StripeConnectInstance.Appearance {
             buttonSecondaryColorText = UIColor(hex: 0x000000)
             badgeNeutralColorBackground = UIColor(hex: 0x638863)
             badgeNeutralColorText = UIColor(hex: 0x28D72A)
+
+            // 'Yatra One' is a custom font embedded in the app
             fontFamily = "Yatra One"
 
         case .protanopia:

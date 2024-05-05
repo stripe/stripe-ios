@@ -256,11 +256,10 @@
 			children = (
 				E63DA0672BDE3B29005BF2A0 /* Components */,
 				E63DA0622BDE3819005BF2A0 /* Internal */,
-				E63DA0632BDE382B005BF2A0 /* StripeConnectInstance.swift */,
-				E6EC73542BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift */,
 				E63DA0602BDE349C005BF2A0 /* StripeConnect+Exports.swift */,
+				E63DA0632BDE382B005BF2A0 /* StripeConnectInstance.swift */,
 				E63DA0652BDE3855005BF2A0 /* StripeConnectInstanceAppearance.swift */,
-				E6EC73D42BE7228700D46678 /* STPLocalizedString.swift */,
+				E6EC73542BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -277,6 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				E63DA06E2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift */,
+				E6EC73D42BE7228700D46678 /* STPLocalizedString.swift */,
 				E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */,
 				E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */,
 				E6EC73432BE6B55600D46678 /* WebViewHelpers */,
