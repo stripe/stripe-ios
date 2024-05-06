@@ -100,7 +100,9 @@ extension PaymentSheet {
         }
 
         // MARK: - Private properties
-        let intent: Intent
+        var intent: Intent {
+            return viewController.intent
+        }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
         var viewController: FlowControllerViewController
         private var presentPaymentOptionsCompletion: (() -> Void)?
@@ -150,7 +152,6 @@ extension PaymentSheet {
                                                                        configuration: configuration,
                                                                        intentConfig: loadResult.intent.intentConfig)
             self.configuration = configuration
-            self.intent = loadResult.intent
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult)
             self.viewController.delegate = self
         }
@@ -531,7 +532,9 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
 /// All the things FlowController needs from its UIViewController.
 internal protocol FlowControllerViewController: BottomSheetContentViewController {
     var error: Error? { get }
+    var intent: Intent { get }
     var selectedPaymentOption: PaymentOption? { get }
+    // TODO: This should be nullable instead of vending .unknown
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType { get }
     var delegate: FlowControllerViewControllerDelegate? { get set }
 }

@@ -15,10 +15,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var selectedPaymentOption: PaymentSheet.PaymentOption?
     /// The type of the payment method that's currently selected in the UI, or unknown if no payment method is selected.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.unknown)
-
-    var delegate: (any FlowControllerViewControllerDelegate)?
+    weak var delegate: FlowControllerViewControllerDelegate?
     let loadResult: PaymentSheetLoader.LoadResult
     let configuration: PaymentSheet.Configuration
+    var intent: Intent {
+        return loadResult.intent
+    }
     var error: Error?
 
     // MARK: - UI properties

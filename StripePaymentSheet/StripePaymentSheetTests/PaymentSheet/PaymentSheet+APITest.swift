@@ -727,15 +727,15 @@ class PaymentSheetAPITest: XCTestCase {
             switch result {
             case .success(let sut):
                 // ...the vc's intent should match the initial intent config...
-                XCTAssertFalse(sut.viewController.intent.isSettingUp)
-                XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+                XCTAssertFalse(sut.intent.isSettingUp)
+                XCTAssertTrue(sut.intent.isPaymentIntent)
                 // ...and updating the intent config should succeed...
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
                 sut.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
                     XCTAssertNil(sut.paymentOption)
-                    XCTAssertTrue(sut.viewController.intent.isSettingUp)
-                    XCTAssertFalse(sut.viewController.intent.isPaymentIntent)
+                    XCTAssertTrue(sut.intent.isSettingUp)
+                    XCTAssertFalse(sut.intent.isPaymentIntent)
                     firstUpdateExpectation.fulfill()
 
                     // ...updating the intent config multiple times should succeed...
@@ -743,8 +743,8 @@ class PaymentSheetAPITest: XCTestCase {
                     sut.update(intentConfiguration: intentConfig) { error in
                         XCTAssertNil(error)
                         XCTAssertNil(sut.paymentOption)
-                        XCTAssertFalse(sut.viewController.intent.isSettingUp)
-                        XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+                        XCTAssertFalse(sut.intent.isSettingUp)
+                        XCTAssertTrue(sut.intent.isPaymentIntent)
 
                         // Sanity check that the analytics...
                         let analytics = STPAnalyticsClient.sharedClient._testLogHistory
