@@ -23,8 +23,10 @@ jobs:
       - name: Checkout through merge base
         uses: rmacklin/fetch-through-merge-base@v0
         with:
-          ref: ${{ github.head_ref }}
-
+          base_ref: ${{ github.event.pull_request.base.ref }}
+          head_ref: ${{ github.event.pull_request.head.sha }}
+          deepen_length: 500
+    
       - name: Build frameworks and compare interfaces
         id: build-frameworks-compare-interface
         run: |
