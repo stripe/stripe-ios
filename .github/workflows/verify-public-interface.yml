@@ -16,9 +16,14 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
             fetch-depth: 0
+      
+      - name: Checkout through merge base
+        uses: rmacklin/fetch-through-merge-base@v0
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Build frameworks and compare interfaces
         id: build-frameworks-compare-interface
