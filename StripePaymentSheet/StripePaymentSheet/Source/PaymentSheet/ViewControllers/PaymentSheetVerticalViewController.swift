@@ -13,8 +13,7 @@ import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewController {
     var selectedPaymentOption: PaymentSheet.PaymentOption?
-    /// The type of the payment method that's currently selected in the UI, or unknown if no payment method is selected.
-    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.unknown)
+    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
     weak var delegate: FlowControllerViewControllerDelegate?
     let loadResult: PaymentSheetLoader.LoadResult
     let configuration: PaymentSheet.Configuration
