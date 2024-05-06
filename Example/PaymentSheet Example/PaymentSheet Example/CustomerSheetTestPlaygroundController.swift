@@ -155,10 +155,13 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             self._customerAdapter = customerAdapter
             return CustomerSheet(configuration: configuration, customer: customerAdapter)
         }
-        return CustomerSheet(configuration: configuration, customerSessionClientSecretProvider: {
-            return .init(customerId: customerId, clientSecret: customerSessionClientSecret!)
-        }, setupIntentClientSecretProvider: {
+        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: {
             return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+        })
+        return CustomerSheet(configuration: configuration,
+                             intentConfiguration: intentConfiguration,
+                             customerSessionClientSecretProvider: {
+            .init(customerId: customerId, clientSecret: customerSessionClientSecret!)
         })
     }
 

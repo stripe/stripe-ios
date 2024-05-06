@@ -19,6 +19,23 @@ internal enum InternalCustomerSheetResult {
     case canceled
     case failed(error: Error)
 }
+public extension CustomerSheet {
+    struct IntentConfiguration {
+
+        public typealias SetupIntentClientSecretProvider = (() async throws -> String)
+        public var paymentMethodTypes: [String]?
+
+        public let setupIntentClientSecretProvider: SetupIntentClientSecretProvider
+
+        public init(paymentMethodTypes: [String]? = nil,
+                    setupIntentClientSecretProvider: @escaping SetupIntentClientSecretProvider) {
+            self.paymentMethodTypes = paymentMethodTypes
+            self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
+        }
+
+    }
+
+}
 
 public class CustomerSheet {
     internal enum InternalError: Error {
@@ -67,22 +84,22 @@ public class CustomerSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
         self.configuration = configuration
         self.customerSessionClientSecretProvider = nil
-        self.setupIntentClientSecretProvider = nil
+        self.intentConfiguration = nil
         self.customerAdapter = customer
     }
 
     @_spi(CustomerSessionBetaAccess)
     public init(configuration: CustomerSheet.Configuration,
-                customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret,
-                setupIntentClientSecretProvider: @escaping (() async throws -> String)) {
+                intentConfiguration: IntentConfiguration,
+                customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
         self.configuration = configuration
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
-        self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
+        self.intentConfiguration = intentConfiguration
         self.customerAdapter = nil
     }
 
     var customerAdapter: CustomerAdapter?
-    let setupIntentClientSecretProvider: (() async throws -> String)?
+    let intentConfiguration: IntentConfiguration?
     let customerSessionClientSecretProvider: (() async throws -> CustomerSessionClientSecret)?
 
     private var csCompletion: CustomerSheetCompletion?
@@ -194,11 +211,26 @@ public class CustomerSheet {
 
 extension CustomerSheet {
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
-        if let customerAdapter = self.customerAdapter {
-            return loadPaymentMethodInfo(customerAdapter: customerAdapter, completion: completion)
-        } else {
-            assertionFailure("todo")
-            return completion(.failure(CustomerSheetError.unknown(debugDescription: "ha")))
+        Task {
+            if let customerAdapter = self.customerAdapter {
+                return loadPaymentMethodInfo(customerAdapter: customerAdapter, completion: completion)
+            } else {
+                guard let customerSessionClientSecretProvider = self.customerSessionClientSecretProvider,
+                      let intentConfiguration = self.intentConfiguration else {
+                    return completion(.failure(CustomerSheetError.unknown(debugDescription: "Required parameter for CustomerSession integrations")))
+                }
+                let customerSessionClientSecret = try await customerSessionClientSecretProvider()
+
+                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(
+                    paymentMethodTypes: intentConfiguration.paymentMethodTypes,
+                    customerSessionClientSecret: customerSessionClientSecret)
+
+                let paymentOption =  CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+                let elementsSession = try await elementsSessionResult
+
+                let savedPaymentMethods = elementsSession.customer?.paymentMethods ?? []
+                return completion(.success((savedPaymentMethods, paymentOption, elementsSession)))
+            }
         }
     }
     func loadPaymentMethodInfo(customerAdapter: CustomerAdapter, completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
@@ -297,7 +329,7 @@ extension StripeCustomerAdapter {
     }
 }
 extension CustomerSheet {
-    public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection? {
+    public func retrievePaymentOptionSelection() async throws -> PaymentOptionSelection? {
         guard let customerSessionClientSecretProvider else {
             return nil
         }

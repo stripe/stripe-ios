@@ -520,8 +520,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 if let customerAdapter = self.customerAdapter {
                     clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
                 } else {
-                    assertionFailure("todo")
-                    clientSecret = "123"
+                    assertionFailure("tood")
                 }
                 cachedClientSecret = clientSecret
             }
