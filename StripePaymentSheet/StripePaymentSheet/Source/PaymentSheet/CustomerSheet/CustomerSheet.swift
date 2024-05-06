@@ -32,9 +32,7 @@ public extension CustomerSheet {
             self.paymentMethodTypes = paymentMethodTypes
             self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
         }
-
     }
-
 }
 
 public class CustomerSheet {
@@ -83,9 +81,10 @@ public class CustomerSheet {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
         self.configuration = configuration
-        self.customerSessionClientSecretProvider = nil
-        self.intentConfiguration = nil
+
         self.customerAdapter = customer
+        self.customerSessionClientSecretProvider = nil
+        self.customerSheetIntentConfiguration = nil
     }
 
     @_spi(CustomerSessionBetaAccess)
@@ -93,14 +92,16 @@ public class CustomerSheet {
                 intentConfiguration: IntentConfiguration,
                 customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
         self.configuration = configuration
-        self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
-        self.intentConfiguration = intentConfiguration
+
         self.customerAdapter = nil
+        self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
+        self.customerSheetIntentConfiguration = intentConfiguration
+
     }
 
-    var customerAdapter: CustomerAdapter?
-    let intentConfiguration: IntentConfiguration?
     let customerSessionClientSecretProvider: (() async throws -> CustomerSessionClientSecret)?
+    let customerSheetIntentConfiguration: CustomerSheet.IntentConfiguration?
+    let customerAdapter: CustomerAdapter?
 
     private var csCompletion: CustomerSheetCompletion?
 
@@ -146,14 +147,23 @@ public class CustomerSheet {
             csCompletion(.error(error))
             return
         }
-        loadPaymentMethodInfo { result in
+        guard let customerSheetDataSource = createCustomerSheetDataSource() else {
+            let error = CustomerSheetError.unknown(
+                debugDescription: "Unable to determine configuration"
+            )
+            csCompletion(.error(error))
+            return
+        }
+
+        customerSheetDataSource.loadPaymentMethodInfo { result in
             switch result {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
-                let merchantSupportedPaymentMethodTypes = self.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
+                let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 self.present(from: presentingViewController,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
+                             customerSheetDataSource: customerSheetDataSource,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
                                                                      duration: Date().timeIntervalSince(loadingStartDate))
@@ -170,18 +180,12 @@ public class CustomerSheet {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController,
                                                       appearance: configuration.appearance)
     }
-    func merchantSupportedPaymentMethodTypes(elementsSession: STPElementsSession) -> [STPPaymentMethodType] {
-        if let customerAdapter = self.customerAdapter {
-            return customerAdapter.canCreateSetupIntents ? elementsSession.orderedPaymentMethodTypes : [.card]
-        } else {
-            return elementsSession.orderedPaymentMethodTypes
-        }
-    }
 
     func present(from presentingViewController: UIViewController,
                  savedPaymentMethods: [STPPaymentMethod],
                  selectedPaymentMethodOption: CustomerPaymentOption?,
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
+                 customerSheetDataSource: CustomerSheetDataSource,
                  cbcEligible: Bool) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -195,7 +199,7 @@ public class CustomerSheet {
                                                                                     selectedPaymentMethodOption: selectedPaymentMethodOption,
                                                                                     merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                                                                                     configuration: self.configuration,
-                                                                                    customerAdapter: self.customerAdapter,
+                                                                                    customerSheetDataSource: customerSheetDataSource,
                                                                                     isApplePayEnabled: isApplePayEnabled,
                                                                                     cbcEligible: cbcEligible,
                                                                                     csCompletion: self.csCompletion,
@@ -204,12 +208,27 @@ public class CustomerSheet {
             }
         }
     }
+
+    func createCustomerSheetDataSource() -> CustomerSheetDataSource? {
+        if let customerAdapater = self.customerAdapter {
+            return CustomerSheetDataSource(customerAdapater, configuration: configuration)
+        } else if let customerSessionClientSecretProvider = self.customerSessionClientSecretProvider,
+                  let intentConfiguration = self.customerSheetIntentConfiguration {
+            let customerSessionAdapter = CustomerSessionAdapter(customerSessionClientSecretProvider: customerSessionClientSecretProvider,
+                                                                intentConfiguration: intentConfiguration,
+                                                                configuration: configuration)
+            return CustomerSheetDataSource(customerSessionAdapter, configuration: configuration)
+        }
+        return nil
+    }
+
     // MARK: - Internal Properties
     var completion: (() -> Void)?
     var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
 }
 
 extension CustomerSheet {
+    /*
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
             if let customerAdapter = self.customerAdapter {
@@ -263,7 +282,7 @@ extension CustomerSheet {
                 }
             }
         }
-    }
+    }*/
 }
 
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
@@ -329,17 +348,19 @@ extension StripeCustomerAdapter {
     }
 }
 extension CustomerSheet {
-    public func retrievePaymentOptionSelection() async throws -> PaymentOptionSelection? {
-        guard let customerSessionClientSecretProvider else {
+    public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection? {
+        guard let dataSource = createCustomerSheetDataSource(),
+              case let .customerSession(customerSessionAdapter) = dataSource.dataSource else {
             return nil
         }
-        let cscs = try await customerSessionClientSecretProvider()
-        let selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: cscs.customerId)
+        let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
+        let selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+
         switch selectedPaymentOption {
         case .applePay:
             return .applePay()
         case .stripeId(let paymentMethodId):
-            let paymentMethods = try await self.fetchPaymentMethods()
+            let paymentMethods = elementsSession.customer?.paymentMethods ?? []
             guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                 return nil
             }
@@ -347,9 +368,5 @@ extension CustomerSheet {
         default:
             return nil
         }
-    }
-    // todo
-    func fetchPaymentMethods() async throws -> [STPPaymentMethod] {
-        return []
     }
 }
