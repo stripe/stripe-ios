@@ -19,21 +19,6 @@ internal enum InternalCustomerSheetResult {
     case canceled
     case failed(error: Error)
 }
-public extension CustomerSheet {
-    struct IntentConfiguration {
-
-        public typealias SetupIntentClientSecretProvider = (() async throws -> String)
-        public var paymentMethodTypes: [String]?
-
-        public let setupIntentClientSecretProvider: SetupIntentClientSecretProvider
-
-        public init(paymentMethodTypes: [String]? = nil,
-                    setupIntentClientSecretProvider: @escaping SetupIntentClientSecretProvider) {
-            self.paymentMethodTypes = paymentMethodTypes
-            self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
-        }
-    }
-}
 
 public class CustomerSheet {
     internal enum InternalError: Error {
@@ -89,10 +74,9 @@ public class CustomerSheet {
 
     @_spi(CustomerSessionBetaAccess)
     public init(configuration: CustomerSheet.Configuration,
-                intentConfiguration: IntentConfiguration,
+                intentConfiguration: CustomerSheet.IntentConfiguration,
                 customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
         self.configuration = configuration
-
         self.customerAdapter = nil
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
         self.customerSheetIntentConfiguration = intentConfiguration
@@ -310,5 +294,40 @@ extension CustomerSheet {
         default:
             return nil
         }
+    }
+}
+
+public extension CustomerSheet {
+    @_spi(CustomerSessionBetaAccess)
+    struct IntentConfiguration {
+
+        @_spi(CustomerSessionBetaAccess)
+        public typealias SetupIntentClientSecretProvider = (() async throws -> String)
+        var paymentMethodTypes: [String]?
+
+        let setupIntentClientSecretProvider: SetupIntentClientSecretProvider
+
+        @_spi(CustomerSessionBetaAccess)
+        public init(paymentMethodTypes: [String]? = nil,
+                    setupIntentClientSecretProvider: @escaping SetupIntentClientSecretProvider) {
+            self.paymentMethodTypes = paymentMethodTypes
+            self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
+        }
+    }
+}
+
+@_spi(CustomerSessionBetaAccess)
+public struct CustomerSessionClientSecret {
+    /// The identifier of the Stripe Customer object.
+    /// See https://stripe.com/docs/api/customers/object#customer_object-id
+    internal let customerId: String
+
+    /// Customer session client secret
+    /// See: https://docs.corp.stripe.com/api/customer_sessions/object
+    internal let clientSecret: String
+
+    public init(customerId: String, clientSecret: String) {
+        self.customerId = customerId
+        self.clientSecret = clientSecret
     }
 }

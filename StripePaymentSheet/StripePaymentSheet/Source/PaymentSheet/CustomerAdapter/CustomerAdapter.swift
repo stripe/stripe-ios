@@ -99,21 +99,7 @@ public struct CustomerEphemeralKey {
     }
 }
 
-@_spi(CustomerSessionBetaAccess)
-public struct CustomerSessionClientSecret {
-    /// The identifier of the Stripe Customer object.
-    /// See https://stripe.com/docs/api/customers/object#customer_object-id
-    internal let customerId: String
 
-    /// Customer session client secret
-    /// See: https://docs.corp.stripe.com/api/customer_sessions/object
-    internal let clientSecret: String
-
-    public init(customerId: String, clientSecret: String) {
-        self.customerId = customerId
-        self.clientSecret = clientSecret
-    }
-}
 
 extension StripeCustomerAdapter {
     internal enum CustomerAccessProvider {
@@ -157,6 +143,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
         self.paymentMethodTypes = paymentMethodTypes
     }
 
+    // To Remove:
     @_spi(CustomerSessionBetaAccess)
     public init(customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret,
                 setupIntentClientSecretProvider: @escaping (() async throws -> String),
