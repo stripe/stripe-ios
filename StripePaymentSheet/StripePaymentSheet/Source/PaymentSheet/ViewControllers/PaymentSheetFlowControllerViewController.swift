@@ -13,16 +13,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentSheetFlowControllerViewControllerDelegate: AnyObject {
-    func paymentSheetFlowControllerViewControllerShouldClose(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController, didCancel: Bool)
-    func paymentSheetFlowControllerViewControllerDidUpdateSelection(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
-}
-
 /// For internal SDK use only
-@objc(STP_Internal_PaymentSheetFlowControllerViewController)
-class PaymentSheetFlowControllerViewController: UIViewController {
+class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewController {
     // MARK: - Internal Properties
     let intent: Intent
     let configuration: PaymentSheet.Configuration
@@ -65,7 +57,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             return addPaymentMethodViewController.selectedPaymentMethodType
         }
     }
-    weak var delegate: PaymentSheetFlowControllerViewControllerDelegate?
+    weak var delegate: FlowControllerViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
@@ -242,6 +234,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
+        configuration.style.configure(self)
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
@@ -474,12 +467,12 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
         switch mode {
         case .selectingSaved:
-            self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)
+            self.delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
-                self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)
+                self.delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
 
@@ -489,7 +482,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         // When we close the window, unset the hacky Link button. This will reset the PaymentOption to nil, if needed.
         isHackyLinkButtonSelected = false
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
-        delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: didCancel)
+        delegate?.flowControllerViewControllerShouldClose(self, didCancel: didCancel)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             configureEditSavedPaymentMethodsButton()
@@ -567,10 +560,9 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             error = nil // Clear any errors
             updateUI()
         case .applePay, .link, .saved:
-            delegate?.paymentSheetFlowControllerViewControllerDidUpdateSelection(self)
             updateUI()
             if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
-                delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)
+                delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
     }

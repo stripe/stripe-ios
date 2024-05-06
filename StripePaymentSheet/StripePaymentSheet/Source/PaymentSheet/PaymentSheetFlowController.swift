@@ -100,12 +100,11 @@ extension PaymentSheet {
         }
 
         // MARK: - Private properties
-
-        private var intent: Intent {
+        var intent: Intent {
             return viewController.intent
         }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
-        var viewController: PaymentSheetFlowControllerViewController
+        var viewController: FlowControllerViewController
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
@@ -453,38 +452,40 @@ extension PaymentSheet {
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
             previousPaymentOption: PaymentOption? = nil
-        ) -> PaymentSheetFlowControllerViewController {
-            let vc = PaymentSheetFlowControllerViewController(
-                configuration: configuration,
-                loadResult: loadResult,
-                previousPaymentOption: previousPaymentOption
-            )
-            configuration.style.configure(vc)
-            return vc
+        ) -> FlowControllerViewController {
+            switch configuration.appearance.layout {
+            case .horizontal:
+                return PaymentSheetFlowControllerViewController(
+                    configuration: configuration,
+                    loadResult: loadResult,
+                    previousPaymentOption: previousPaymentOption
+                )
+            case .vertical:
+                return PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult)
+            }
         }
     }
-
 }
 
-// MARK: - PaymentSheetFlowControllerViewControllerDelegate
-extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerDelegate {
-    func paymentSheetFlowControllerViewControllerShouldClose(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController,
+// MARK: - FlowControllerViewControllerDelegate
+
+protocol FlowControllerViewControllerDelegate: AnyObject {
+    func flowControllerViewControllerShouldClose(
+        _ PaymentSheetFlowControllerViewController: FlowControllerViewController, didCancel: Bool)
+}
+
+extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
+    func flowControllerViewControllerShouldClose(
+        _ flowControllerViewController: FlowControllerViewController,
         didCancel: Bool
     ) {
         if !didCancel {
             self.didPresentAndContinue = true
         }
-        PaymentSheetFlowControllerViewController.dismiss(animated: true) {
+        flowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
             self.isPresented = false
         }
-    }
-
-    func paymentSheetFlowControllerViewControllerDidUpdateSelection(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
-    ) {
-        // no-op
     }
 }
 
@@ -524,4 +525,16 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return presentingViewController
     }
+}
+
+// MARK: - FlowControllerViewController
+
+/// All the things FlowController needs from its UIViewController.
+internal protocol FlowControllerViewController: BottomSheetContentViewController {
+    var error: Error? { get }
+    var intent: Intent { get }
+    var selectedPaymentOption: PaymentOption? { get }
+    // TODO: This should be nullable instead of vending .unknown
+    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType { get }
+    var delegate: FlowControllerViewControllerDelegate? { get set }
 }

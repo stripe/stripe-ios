@@ -195,6 +195,7 @@
 		B306EA3F66D07CCABF17CB9C /* LinkInlineSignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7910B57E6FD99F2AFCA4DAC2 /* LinkInlineSignupViewModel.swift */; };
 		B4679C9095BCD53CCC2C7D25 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E41AA4E90E5BB28D588FDE51 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B55EFA2557B5BE39CC12E357 /* STPPaymentMethod+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813E88EE408666654EF835E2 /* STPPaymentMethod+PaymentSheet.swift */; };
+		B6859A882BE54CD30018E06C /* PaymentSheetVerticalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */; };
 		B68CB9632B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CB9622B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift */; };
 		B6B3481CBA798CF22EE8411A /* TextFieldElement+IBAN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570931B897DCCAC0F55FB6E3 /* TextFieldElement+IBAN.swift */; };
 		B8A217F26AAEC592B9B0D2E1 /* CardScanButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AB1D50F770A8A035EF31DF /* CardScanButton.swift */; };
@@ -524,6 +525,7 @@
 		B54274B9DEB3F1B0906127D1 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B61FFE76D0960C7F1E34B405 /* PaymentSheetAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAppearance.swift; sourceTree = "<group>"; };
 		B667E074D30964FABC64B552 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetVerticalViewController.swift; sourceTree = "<group>"; };
 		B68CB9622B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+PaymentSheetTest.swift"; sourceTree = "<group>"; };
 		B70D161E50723A8953665C4B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B829BC7EEE9576F724F7A9B3 /* StripePaymentSheetTestHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StripePaymentSheetTestHostApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -864,6 +866,7 @@
 				6BA8D3352B0C1F9B008C51FF /* CVCReconfirmationViewController.swift */,
 				51FF291A25EA43D4D100983B /* LoadingViewController.swift */,
 				107DAAB4492531735377AA7C /* PaymentSheetFlowControllerViewController.swift */,
+				B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */,
 				0CACEA8571301D469FF07741 /* PaymentSheetViewController.swift */,
 				101DFBD8D19B7B182CDD8882 /* PollingViewController.swift */,
 				26C092533C67D8C7FDE12742 /* PollingViewModel.swift */,
@@ -1624,6 +1627,7 @@
 				40806EF506CB719299FC90CC /* STPLocalizedString.swift in Sources */,
 				71132CE036C3EE0655ECD2DB /* STPStringUtils.swift in Sources */,
 				1AF3BBA86D643AAF26CD0E2B /* StripePaymentSheet+Exports.swift in Sources */,
+				B6859A882BE54CD30018E06C /* PaymentSheetVerticalViewController.swift in Sources */,
 				73F3E8DCF2314972A162B2A3 /* StripePaymentSheetBundleLocator.swift in Sources */,
 				73EE441CF71707651109CE19 /* ConsumerSession+LookupResponse.swift in Sources */,
 				311AC53D6C76953E9B70148A /* ConsumerSession+PublishableKey.swift in Sources */,
