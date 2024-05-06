@@ -191,11 +191,7 @@ extension PaymentMethodTypeCollectionView {
             return paymentMethodLogo
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
-            shadowRoundedRectangle.layer.borderWidth = 1
-            shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
-                top: 15, left: 24, bottom: 15, right: 24)
-            return shadowRoundedRectangle
+            return ShadowedRoundedRectangle(appearance: appearance)
         }()
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
@@ -312,21 +308,9 @@ extension PaymentMethodTypeCollectionView {
             }
             updateImage(image)
 
-            if isSelected {
-                // Set text color
-                label.textColor = appearance.colors.primary
-
-                // Set border
-                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth * 2
-                shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
-            } else {
-                // Set text color
-                label.textColor = appearance.colors.componentText
-
-                // Set border
-                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
-                shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
-            }
+            shadowRoundedRectangle.isSelected = isSelected
+            // Set text color
+            label.textColor = isSelected ? appearance.colors.primary : appearance.colors.componentText
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
             accessibilityIdentifier = paymentMethodType.identifier
