@@ -255,7 +255,22 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 if case let .failed(error) = result {
                     self.mostRecentError = error
                 }
-                completion(result, deferredIntentConfirmationType)
+
+                if case .link = paymentOption {
+                    // End special Link blur animation before calling completion
+                    switch result {
+                    case .canceled, .failed:
+                        self.bottomSheetViewController.removeBlurEffect(animated: true) {
+                            completion(result, deferredIntentConfirmationType)
+                        }
+                    case .completed:
+                        self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
+                            completion(result, deferredIntentConfirmationType)
+                        }
+                    }
+                } else {
+                    completion(result, deferredIntentConfirmationType)
+                }
             }
         }
 
@@ -282,22 +297,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(result)
         }
-    }
-    func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
-                                                 completion: (() -> Void)? = nil) {
-        self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
-            completion?()
-        }
-    }
-
-    func paymentSheetViewControllerCanceledOnPay(_ paymentSheetViewController: PaymentSheetViewController,
-                                                 completion: (() -> Void)? = nil) {
-        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
-    }
-    func paymentSheetViewControllerFailedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
-                                               result: PaymentSheetResult,
-                                               completion: (() -> Void)? = nil) {
-        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
     }
 
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewController) {
