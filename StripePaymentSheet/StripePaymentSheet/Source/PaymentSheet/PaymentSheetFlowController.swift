@@ -534,7 +534,7 @@ internal protocol FlowControllerViewController: BottomSheetContentViewController
     var error: Error? { get }
     var intent: Intent { get }
     var selectedPaymentOption: PaymentOption? { get }
-    // TODO: This should be nullable instead of vending .unknown
-    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType { get }
+    /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil for Link and Apple Pay.
+    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var delegate: FlowControllerViewControllerDelegate? { get set }
 }

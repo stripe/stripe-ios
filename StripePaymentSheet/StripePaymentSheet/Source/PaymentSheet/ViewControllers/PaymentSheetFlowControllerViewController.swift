@@ -40,18 +40,21 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         }
     }
 
-    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
+    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? {
         switch mode {
         case .selectingSaved:
-            guard let selectedPaymentOption = selectedPaymentOption else {
-                return .stripe(.unknown)
+            guard let selectedPaymentOption else {
+                return nil
             }
-            if case let .saved(paymentMethod, _) = selectedPaymentOption {
+            switch selectedPaymentOption {
+            case let .saved(paymentMethod: paymentMethod, _):
                 return .stripe(paymentMethod.type)
-            } else if case .applePay = selectedPaymentOption {
-                return .stripe(.card)
-            } else {
-                return .stripe(.unknown)
+            case let .new(confirmParams: intentConfirmParams):
+                return intentConfirmParams.paymentMethodType
+            case .applePay, .link:
+                return nil
+            case let .external(paymentMethod: paymentMethod, _):
+                return .external(paymentMethod)
             }
         case .addingNew:
             return addPaymentMethodViewController.selectedPaymentMethodType
@@ -133,7 +136,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case .selectingSaved:
             return .customWithLock(title: String.Localized.continue)
         case .addingNew:
-            return .add(paymentMethodType: selectedPaymentMethodType)
+            return .add(paymentMethodType: selectedPaymentMethodType ?? .stripe(.unknown))
         }
     }
 
@@ -388,7 +391,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     func updateButton() {
         switch mode {
         case .selectingSaved:
-            if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
+            if selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false {
                 if confirmButton.isHidden {
                     confirmButton.alpha = 0
                     confirmButton.setHiddenIfNecessary(false)
@@ -449,7 +452,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     func updateBottomNotice() {
         switch mode {
         case .selectingSaved:
-            if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
+            if selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false {
                 self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString // TODO remove probably?
             } else {
                 self.bottomNoticeTextField.attributedText = nil
@@ -464,7 +467,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     @objc
     private func didTapAddButton() {
-        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
+        let paymentMethodType = selectedPaymentMethodType ?? .stripe(.unknown)
+        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         switch mode {
         case .selectingSaved:
             self.delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
@@ -561,7 +565,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             updateUI()
         case .applePay, .link, .saved:
             updateUI()
-            if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
+            if isDismissable, !(selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false) {
                 delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
