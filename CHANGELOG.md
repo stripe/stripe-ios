@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.27.2 2024-05-06
 ### CardScan
 * [Changed] ScannedCard to allow access for expiryMonth, expiryYear and name.
 
