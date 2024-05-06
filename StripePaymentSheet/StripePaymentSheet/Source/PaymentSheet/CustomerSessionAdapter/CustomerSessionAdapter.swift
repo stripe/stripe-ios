@@ -9,6 +9,8 @@ import Foundation
 private let CachedCustomerMaxAge: TimeInterval = 60 * 30 // 30 minutes, server-side timeout is 60
 
 class CustomerSessionAdapter {
+    typealias CustomerSessionClientSecretProvider = () async throws -> CustomerSessionClientSecret
+
     let customerSessionClientSecretProvider: CustomerSessionClientSecretProvider
     private var _cachedCustomerSessionClientSecret: CachedCustomerSessionClientSecret?
     let intentConfiguration: CustomerSheet.IntentConfiguration
@@ -19,6 +21,7 @@ class CustomerSessionAdapter {
         let apiKey: String
         let customerId: String
         let cacheDate: Date
+
         init(customerSessionClientSecret: CustomerSessionClientSecret, apiKey: String) {
             self.customerSessionClientSecret = customerSessionClientSecret
             self.customerId = customerSessionClientSecret.customerId
@@ -100,6 +103,4 @@ extension CustomerSessionAdapter {
                                                                           paymentMethodUpdateParams: paymentMethodUpdateParams,
                                                                           ephemeralKeySecret: cachedCustomerSessionClientSecret.apiKey)
     }
-
-
 }

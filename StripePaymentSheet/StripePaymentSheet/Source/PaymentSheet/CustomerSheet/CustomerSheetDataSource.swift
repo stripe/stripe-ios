@@ -5,9 +5,6 @@
 
 import Foundation
 
-
-typealias CustomerSessionClientSecretProvider = () async throws -> CustomerSessionClientSecret
-
 class CustomerSheetDataSource {
     enum DataSource {
         case customerSession(CustomerSessionAdapter)
@@ -16,17 +13,15 @@ class CustomerSheetDataSource {
     let dataSource: DataSource
     let configuration: CustomerSheet.Configuration
 
-    
-    init(_ customerSessionAdapter: CustomerSessionAdapter,
-         configuration: CustomerSheet.Configuration) {
-        self.dataSource = .customerSession(customerSessionAdapter)
-        self.configuration = configuration
-    }
     init(_ customerSessionAdapter: CustomerAdapter,
          configuration: CustomerSheet.Configuration) {
         self.dataSource = .customerAdapter(customerSessionAdapter)
-        //Fix me -- i don't reallyw ant to pass in the config here.
         self.configuration = configuration
+    }
+
+    init(_ customerSessionAdapter: CustomerSessionAdapter) {
+        self.dataSource = .customerSession(customerSessionAdapter)
+        self.configuration = customerSessionAdapter.configuration
     }
 
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
@@ -35,20 +30,15 @@ class CustomerSheetDataSource {
             loadPaymentMethodInfo(customerSessionAdapter: customerSessionAdapter, completion: completion)
         case .customerAdapter(let customerAdapter):
             return loadPaymentMethodInfo(customerAdapter: customerAdapter, completion: completion)
-
         }
     }
     func loadPaymentMethodInfo(customerSessionAdapter: CustomerSessionAdapter,
                                completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
-
             async let (elementsSessionResult, customerSessionClientSecret) = try customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
-//            self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(
-//                paymentMethodTypes: customerSessionAdapter.intentConfiguration.paymentMethodTypes,
-//                customerSessionClientSecret: customerSessionClientSecret)
 
+            // Ensure local specs are loaded prior to the ones from elementSession
             await loadFormSpecs()
-
             let paymentOption = CustomerPaymentOption.defaultPaymentMethod(for: try await customerSessionClientSecret.customerId)
             let elementSession = try await elementsSessionResult
 
@@ -91,7 +81,9 @@ class CustomerSheetDataSource {
             }
         }
     }
+}
 
+extension CustomerSheetDataSource {
     func merchantSupportedPaymentMethodTypes(elementsSession: STPElementsSession) -> [STPPaymentMethodType] {
         switch dataSource {
         case .customerSession:
@@ -100,6 +92,7 @@ class CustomerSheetDataSource {
             return customerAdapter.canCreateSetupIntents ? elementsSession.orderedPaymentMethodTypes : [.card]
         }
     }
+
     var canCreateSetupIntents: Bool {
         switch dataSource {
         case .customerAdapter(let customerAdapter):
@@ -117,6 +110,7 @@ class CustomerSheetDataSource {
             assertionFailure("Attach payment methods are not supported with CustomerSessions")
         }
     }
+
     func fetchSavedPaymentMethods() async throws -> [STPPaymentMethod]? {
         switch dataSource {
         case .customerAdapter(let customerAdapter):
@@ -126,6 +120,7 @@ class CustomerSheetDataSource {
             return elementsSessionResult.customer?.paymentMethods ?? []
         }
     }
+
     func fetchSetupIntentClientSecret() async throws -> String? {
         switch dataSource {
         case .customerAdapter(let customerAdapter):
@@ -162,6 +157,4 @@ class CustomerSheetDataSource {
             return try await customerSessionAdapter.updatePaymentMethod(paymentMethodId: paymentMethodId, paymentMethodUpdateParams: paymentMethodUpdateParams)
         }
     }
-
-
 }

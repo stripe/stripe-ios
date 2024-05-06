@@ -217,7 +217,7 @@ public class CustomerSheet {
             let customerSessionAdapter = CustomerSessionAdapter(customerSessionClientSecretProvider: customerSessionClientSecretProvider,
                                                                 intentConfiguration: intentConfiguration,
                                                                 configuration: configuration)
-            return CustomerSheetDataSource(customerSessionAdapter, configuration: configuration)
+            return CustomerSheetDataSource(customerSessionAdapter)
         }
         return nil
     }
@@ -225,64 +225,6 @@ public class CustomerSheet {
     // MARK: - Internal Properties
     var completion: (() -> Void)?
     var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
-}
-
-extension CustomerSheet {
-    /*
-    func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
-        Task {
-            if let customerAdapter = self.customerAdapter {
-                return loadPaymentMethodInfo(customerAdapter: customerAdapter, completion: completion)
-            } else {
-                guard let customerSessionClientSecretProvider = self.customerSessionClientSecretProvider,
-                      let intentConfiguration = self.intentConfiguration else {
-                    return completion(.failure(CustomerSheetError.unknown(debugDescription: "Required parameter for CustomerSession integrations")))
-                }
-                let customerSessionClientSecret = try await customerSessionClientSecretProvider()
-
-                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(
-                    paymentMethodTypes: intentConfiguration.paymentMethodTypes,
-                    customerSessionClientSecret: customerSessionClientSecret)
-
-                let paymentOption =  CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
-                let elementsSession = try await elementsSessionResult
-
-                let savedPaymentMethods = elementsSession.customer?.paymentMethods ?? []
-                return completion(.success((savedPaymentMethods, paymentOption, elementsSession)))
-            }
-        }
-    }
-    func loadPaymentMethodInfo(customerAdapter: CustomerAdapter, completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
-        Task {
-            do {
-                async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
-                async let selectedPaymentMethodResult = try customerAdapter.fetchSelectedPaymentOption()
-                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes, customerSessionClientSecret: nil)
-
-                // Ensure local specs are loaded prior to the ones from elementSession
-                await loadFormSpecs()
-
-                let (paymentMethods, selectedPaymentMethod, elementSession) = try await (paymentMethodsResult, selectedPaymentMethodResult, elementsSessionResult)
-
-                // Override with specs from elementSession
-                _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
-
-                completion(.success((paymentMethods, selectedPaymentMethod, elementSession)))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    func loadFormSpecs() async {
-        await withCheckedContinuation { continuation in
-            Task {
-                FormSpecProvider.shared.load { _ in
-                    continuation.resume()
-                }
-            }
-        }
-    }*/
 }
 
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {

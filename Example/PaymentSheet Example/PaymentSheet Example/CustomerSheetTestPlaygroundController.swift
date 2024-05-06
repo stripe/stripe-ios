@@ -146,7 +146,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func createCustomerSheet(configuration: CustomerSheet.Configuration,
                              customerId: String,
                              ephemeralKey: String?,
-                             customerSessionClientSecret: String?)-> CustomerSheet {
+                             customerSessionClientSecret: String?) -> CustomerSheet {
 
         if let ephemeralKey {
             let customerAdapter = self.customerAdapter(customerId: customerId,
