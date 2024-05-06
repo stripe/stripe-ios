@@ -81,10 +81,7 @@ extension SavedPaymentMethodCollectionView {
             light: .systemGray5, dark: .tertiaryLabel))
         lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.colors.primary)
         lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
-            shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
-                top: 15, left: 24, bottom: 15, right: 24)
-            return shadowRoundedRectangle
+            return ShadowedRoundedRectangle(appearance: appearance)
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .remove,
@@ -329,14 +326,12 @@ extension SavedPaymentMethodCollectionView {
             }
             let applyDefaultStyle: () -> Void = { [self] in
                 shadowRoundedRectangle.isEnabled = true
+                shadowRoundedRectangle.isSelected = false
                 label.textColor = appearance.colors.text
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = true
                 layer.shadowOpacity = 0
-                shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
-                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
-                shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
             }
 
             if isRemovingPaymentMethods {
@@ -362,8 +357,6 @@ extension SavedPaymentMethodCollectionView {
                     paymentMethodLogo.alpha = 0.6
                     plus.alpha = 0.6
                     label.textColor = appearance.colors.text.disabledColor
-                    shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
-                    shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
                 }
 
             } else if isSelected {
@@ -376,16 +369,12 @@ extension SavedPaymentMethodCollectionView {
                 selectedIcon.backgroundColor = appearance.colors.primary
 
                 // Draw a border with primary color
-                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth * 2
-                shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
-                shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
+                shadowRoundedRectangle.isSelected = true
             } else {
                 accessoryButton.isHidden = true
-                shadowRoundedRectangle.isEnabled = true
                 applyDefaultStyle()
             }
             accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
-            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.colors.componentBackground
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
 
             shadowRoundedRectangle.accessibilityTraits = {
