@@ -35,7 +35,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     var customerSheet: CustomerSheet?
-    var _customerAdapter: StripeCustomerAdapter?
+    var _customerAdapter: CustomerAdapter?
     var backend: CustomerSheetBackend!
     var currentEndpoint: String = defaultEndpoint
     var appearance = PaymentSheet.Appearance.default
@@ -144,17 +144,14 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     func createCustomerSheet(configuration: CustomerSheet.Configuration,
-                             customerId: String,
-                             ephemeralKey: String?,
-                             customerSessionClientSecret: String?) -> CustomerSheet {
+                             customerAdapter: CustomerAdapter) -> CustomerSheet {
 
-        if let ephemeralKey {
-            let customerAdapter = self.customerAdapter(customerId: customerId,
-                                                       ephemeralKey: ephemeralKey,
-                                                       configuration: configuration)
-            self._customerAdapter = customerAdapter
-            return CustomerSheet(configuration: configuration, customer: customerAdapter)
-        }
+        return CustomerSheet(configuration: configuration, customer: customerAdapter)
+    }
+
+    func createCustomerSheet(configuration: CustomerSheet.Configuration,
+                             customerId: String,
+                             customerSessionClientSecret: String?) -> CustomerSheet {
         let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: {
             return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
         })
@@ -165,7 +162,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         })
     }
 
-    func customerAdapter(customerId: String, ephemeralKey: String, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
+    func customerAdapter(customerId: String, ephemeralKey: String) -> StripeCustomerAdapter {
         switch settings.paymentMethodMode {
         case .setupIntent:
             return StripeCustomerAdapter(customerEphemeralKeyProvider: {
@@ -252,24 +249,24 @@ extension CustomerSheetTestPlaygroundController {
 
             STPAPIClient.shared.publishableKey = publishableKey
 
-            // Create Customer Sheet
-            var configuration = self.customerSheetConfiguration()
-
-            let customerSheet = self.createCustomerSheet(
-                configuration: configuration,
-                customerId: customerId,
-                ephemeralKey: ephemeralKey,
-                customerSessionClientSecret: customerSessionClientSecret)
-            self.customerSheet = customerSheet
-
-            // Retrieve selected PM, if possible
-            if let customerAdapter = self._customerAdapter {
+            let configuration = self.customerSheetConfiguration()
+            if let ephemeralKey {
+                // Create Customer Sheet using CustomerAdapter w/ legacy ephemeral key
+                let customerAdapter = self.customerAdapter(customerId: customerId,
+                                                           ephemeralKey: ephemeralKey)
+                self._customerAdapter = customerAdapter
+                self.customerSheet = self.createCustomerSheet(configuration: configuration, customerAdapter: customerAdapter)
                 Task { @MainActor in
                     do {
                         self.paymentOptionSelection = try await customerAdapter.retrievePaymentOptionSelection()
                     } catch {}
                 }
             } else {
+                // Create Customer Sheet using CustomerSession
+                let customerSheet = self.createCustomerSheet(configuration: configuration,
+                                                             customerId: customerId,
+                                                             customerSessionClientSecret: customerSessionClientSecret)
+                self.customerSheet = customerSheet
                 Task { @MainActor in
                     do {
                         self.paymentOptionSelection = try await customerSheet.retrievePaymentOptionSelection()
