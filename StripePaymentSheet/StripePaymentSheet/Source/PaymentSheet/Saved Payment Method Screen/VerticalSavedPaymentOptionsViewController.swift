@@ -5,20 +5,18 @@
 //  Created by Nick Porter on 5/7/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
 import Foundation
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
 class VerticalSavedPaymentOptionsViewController: UIViewController {
-    
+
     private let configuration: PaymentSheet.Configuration
-    
+
     // MARK: - UI properties
-    
+
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
@@ -26,13 +24,13 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
         navBar.delegate = self
         return navBar
     }()
-    
+
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
         label.text = .Localized.select_your_payment_method
         return label
     }()
-    
+
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [headerLabel])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
@@ -41,16 +39,16 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
         stackView.spacing = PaymentSheetUI.defaultPadding
         return stackView
     }()
-    
+
     init(configuration: PaymentSheet.Configuration) {
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
@@ -59,7 +57,6 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: 0, trailing: PaymentSheetUI.defaultSheetMargins.bottom))
     }
 }
-
 
 // MARK: - BottomSheetContentViewController
 extension VerticalSavedPaymentOptionsViewController: BottomSheetContentViewController {
@@ -87,8 +84,8 @@ extension VerticalSavedPaymentOptionsViewController: SheetNavigationBarDelegate 
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
         // no-op we are in 'back' style mode
     }
-    
+
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        let _ = bottomSheetController?.popContentViewController()
+        _ = bottomSheetController?.popContentViewController()
     }
 }

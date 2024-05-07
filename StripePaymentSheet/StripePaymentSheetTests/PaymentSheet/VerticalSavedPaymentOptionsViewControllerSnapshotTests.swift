@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 import XCTest
 
 final class VerticalSavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase {
-    
+
     func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode() {
         _test_VerticalSavedPaymentOptionsViewControllerSnapshotTests(darkMode: true)
     }
