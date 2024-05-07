@@ -870,7 +870,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: timeout))
         app.pickerWheels.firstMatch.swipeUp()
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Update card"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Update"].waitForExistenceAndTap(timeout: timeout)
 
         // We should have updated to Visa
         XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: timeout))
@@ -1006,7 +1006,7 @@ class CustomerSheetUITest: XCTestCase {
 
         // Should be able to edit CBC enabled PM even though it's the only one
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
-        XCTAssertTrue(app.buttons["Update card"].waitForExistence(timeout: timeout))
+        XCTAssertTrue(app.buttons["Update"].waitForExistence(timeout: timeout))
 
         // ...but should not be able to remove it.
         XCTAssertFalse(app.buttons["Remove card"].exists)
