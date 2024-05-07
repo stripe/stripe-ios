@@ -29,22 +29,6 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerDidSelectPayWithLink(
         _ paymentSheetViewController: PaymentSheetViewController
     )
-
-    func paymentSheetViewControllerFinishedOnPay(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        completion: (() -> Void)?
-    )
-
-    func paymentSheetViewControllerCanceledOnPay(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        completion: (() -> Void)?
-    )
-
-    func paymentSheetViewControllerFailedOnPay(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        result: PaymentSheetResult,
-        completion: (() -> Void)?
-    )
 }
 
 /// For internal SDK use only
@@ -523,7 +507,6 @@ class PaymentSheetViewController: UIViewController {
                 case .canceled:
                     // Do nothing, keep customer on payment sheet
                     self.updateUI()
-                    self.delegate?.paymentSheetViewControllerCanceledOnPay(self, completion: nil)
                 case .failed(let error):
                     #if !canImport(CompositorServices)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
@@ -533,29 +516,25 @@ class PaymentSheetViewController: UIViewController {
                     // Handle error
                     if PaymentSheetError.isUnrecoverable(error: error) {
                         self.delegate?.paymentSheetViewControllerDidFinish(self, result: result)
-                    } else {
-                        self.delegate?.paymentSheetViewControllerFailedOnPay(self, result: result, completion: nil)
                     }
                     self.updateUI()
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                 case .completed:
-                    self.delegate?.paymentSheetViewControllerFinishedOnPay(self) {
-                        // We're done!
-                        let delay: TimeInterval =
-                        self.presentedViewController?.isBeingDismissed == true ? 1 : 0
-                        // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
-                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    // We're done!
+                    let delay: TimeInterval =
+                    self.presentedViewController?.isBeingDismissed == true ? 1 : 0
+                    // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
 #if !canImport(CompositorServices)
-                            UINotificationFeedbackGenerator().notificationOccurred(.success)
+                        UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
-                            if animateBuyButton {
-                                self.buyButton.update(state: .succeeded, animated: true) {
-                                    // Wait a bit before closing the sheet
-                                    self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
-                                }
-                            } else {
+                        if animateBuyButton {
+                            self.buyButton.update(state: .succeeded, animated: true) {
+                                // Wait a bit before closing the sheet
                                 self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                             }
+                        } else {
+                            self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
                     }
                 }
