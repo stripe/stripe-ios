@@ -50,14 +50,21 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
 
-        let dummyView = UILabel()
-        dummyView.text = "Welcome to vertical mode"
+        let dummyButton = UIButton(type: .system)
+        dummyButton.setTitle("Welcome to vertical mode", for: .normal)
+        dummyButton.addTarget(self, action: #selector(presentManageScreen), for: .touchUpInside)
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
-            dummyView,
+            dummyButton,
         ])
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: 0, trailing: PaymentSheetUI.defaultSheetMargins.bottom))
+    }
+
+    // TOOD(porter) Remove/rename
+    @objc func presentManageScreen() {
+        bottomSheetController?.pushContentViewController(VerticalSavedPaymentOptionsViewController(configuration: configuration))
+        // TODO(porter) Set delegate
     }
 }
 

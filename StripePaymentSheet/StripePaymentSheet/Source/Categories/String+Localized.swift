@@ -234,4 +234,13 @@ extension String.Localized {
             "Amazon Pay mandate text"
         )
     }
+
+    static var select_your_payment_method: String {
+        STPLocalizedString(
+            "Select your payment method",
+            """
+            Title for a screen that allows users to select a payment method.
+            """
+        )
+    }
 }
