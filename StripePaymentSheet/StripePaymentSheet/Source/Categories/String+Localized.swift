@@ -81,7 +81,7 @@ extension String.Localized {
             """
         )
     }
-    
+
     static var update: String {
         STPLocalizedString(
             "Update",
