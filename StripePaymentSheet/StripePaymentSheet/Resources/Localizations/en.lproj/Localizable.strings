@@ -212,8 +212,7 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 to be saved and used in future checkout sessions. */
 "Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
 
-/* Title for a screen that allows users to select a payment method.
-   Title shown above a carousel containing the customer's payment methods */
+/* Title for a screen that allows users to select a payment method. */
 "Select your payment method" = "Select your payment method";
 
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
