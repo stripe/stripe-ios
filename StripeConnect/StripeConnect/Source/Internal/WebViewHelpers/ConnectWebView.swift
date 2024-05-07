@@ -47,30 +47,14 @@ class ConnectWebView: WKWebView {
     }
 }
 
-// MARK: - WKUIDelegate
+// MARK: - Private
 
-extension ConnectWebView: WKUIDelegate {
-    func webView(_ webView: WKWebView,
-                 createWebViewWith configuration: WKWebViewConfiguration,
-                 for navigationAction: WKNavigationAction,
-                 windowFeatures: WKWindowFeatures) -> WKWebView? {
-        // If targetFrame is nil, this is a popup
-        guard navigationAction.targetFrame == nil else { return nil }
-
+private extension ConnectWebView {
+    // Opens the given navigation in a PopupWebViewController
+    func openInPopup(configuration: WKWebViewConfiguration,
+                     navigationAction: WKNavigationAction) -> WKWebView? {
         guard let presentPopup else {
             assertionFailure("Cannot present popup")
-            return nil
-        }
-
-        // Only open popups to known hosts inside PopupWebViewController,
-        // otherwise use an SFSafariViewController
-        if let url = navigationAction.request.url,
-           url.host == nil || !StripeConnectConstants.allowedHosts.contains(url.host!) {
-            let safariVC = SFSafariViewController(url: url)
-            safariVC.dismissButtonStyle = .done
-            safariVC.modalPresentationStyle = .popover
-            // TODO: Do we want to update tint colors to match appearance?
-            presentPopup(safariVC)
             return nil
         }
 
@@ -82,6 +66,58 @@ extension ConnectWebView: WKUIDelegate {
 
         presentPopup(navController)
         return popupVC.webView
+    }
+
+    // Opens the given URL in an SFSafariViewController
+    func openInAppSafari(url: URL) {
+        guard let presentPopup else {
+            assertionFailure("Cannot present popup")
+            return
+        }
+
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.dismissButtonStyle = .done
+        safariVC.modalPresentationStyle = .popover
+        // TODO: Do we want to update tint colors to match appearance?
+        presentPopup(safariVC)
+    }
+
+    // Opens with UIApplication.open, if supported
+    func openOnSystem(url: URL) {
+        guard UIApplication.shared.canOpenURL(url) else { return }
+        UIApplication.shared.open(url)
+    }
+}
+
+// MARK: - WKUIDelegate
+
+extension ConnectWebView: WKUIDelegate {
+    func webView(_ webView: WKWebView,
+                 createWebViewWith configuration: WKWebViewConfiguration,
+                 for navigationAction: WKNavigationAction,
+                 windowFeatures: WKWindowFeatures) -> WKWebView? {
+        // If targetFrame is nil, this is a popup
+        guard navigationAction.targetFrame == nil else { return nil }
+
+        if let url = navigationAction.request.url {
+            // Only `http` or `https` URL schemes can be opened in WKWebView or
+            // SFSafariViewController. Opening other schemes, like `mailto`, will
+            // cause a fatal error.
+            guard Set(["http", "https"]).contains(url.scheme) else {
+                openOnSystem(url: url)
+                return nil
+            }
+
+            // Only open popups to known hosts inside PopupWebViewController,
+            // otherwise use an SFSafariViewController
+            guard let host = url.host, 
+                    StripeConnectConstants.allowedHosts.contains(host) else {
+                openInAppSafari(url: url)
+                return nil
+            }
+        }
+
+        return openInPopup(configuration: configuration, navigationAction: navigationAction)
     }
 
     func webView(_ webView: WKWebView,
