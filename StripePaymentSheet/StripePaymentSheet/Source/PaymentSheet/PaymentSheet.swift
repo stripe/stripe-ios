@@ -304,15 +304,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             self.completion?(.canceled)
         }
     }
-
-    func paymentSheetViewControllerDidSelectPayWithLink(
-        _ paymentSheetViewController: PaymentSheetViewController
-    ) {
-        self.presentPayWithLinkController(
-            from: paymentSheetViewController,
-            intent: paymentSheetViewController.intent
-        )
-    }
 }
 
 extension PaymentSheet: LoadingViewControllerDelegate {
@@ -326,54 +317,4 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 /// :nodoc:
 @_spi(STP) extension PaymentSheet: STPAnalyticsProtocol {
     @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
-}
-
-extension PaymentSheet: PayWithLinkWebControllerDelegate {
-
-    func payWithLinkWebControllerDidComplete(
-        _ PayWithLinkWebController: PayWithLinkWebController,
-        intent: Intent,
-        with paymentOption: PaymentOption
-    ) {
-        let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.85)
-        self.bottomSheetViewController.addBlurEffect(animated: false, backgroundColor: backgroundColor) {
-            self.bottomSheetViewController.startSpinner()
-            let psvc = self.findPaymentSheetViewController()
-            psvc?.clearTextFields()
-            psvc?.pay(with: paymentOption, animateBuyButton: true)
-        }
-    }
-
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
-    }
-
-    private func findPaymentSheetViewController() -> PaymentSheetViewController? {
-        for vc in bottomSheetViewController.contentStack {
-            if let paymentSheetVC = vc as? PaymentSheetViewController {
-                return paymentSheetVC
-            }
-        }
-
-        return nil
-    }
-}
-
-// MARK: - Link
-
-private extension PaymentSheet {
-
-    func presentPayWithLinkController(
-        from presentingController: UIViewController,
-        intent: Intent,
-        completion: (() -> Void)? = nil
-    ) {
-        let payWithLinkVC = PayWithLinkWebController(
-            intent: intent,
-            configuration: configuration
-        )
-
-        payWithLinkVC.payWithLinkDelegate = self
-        payWithLinkVC.present(over: presentingController)
-    }
-
 }

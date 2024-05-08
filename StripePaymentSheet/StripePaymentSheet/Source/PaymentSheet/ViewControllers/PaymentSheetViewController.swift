@@ -26,9 +26,6 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerDidCancel(
         _ paymentSheetViewController: PaymentSheetViewController
     )
-    func paymentSheetViewControllerDidSelectPayWithLink(
-        _ paymentSheetViewController: PaymentSheetViewController
-    )
 }
 
 /// For internal SDK use only
@@ -554,13 +551,38 @@ extension PaymentSheetViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewPayWithLinkTapped(_ header: WalletHeaderView) {
         set(error: nil)
-        delegate?.paymentSheetViewControllerDidSelectPayWithLink(self)
+        let payWithLinkVC = PayWithLinkWebController(
+            intent: intent,
+            configuration: configuration
+        )
+
+        payWithLinkVC.payWithLinkDelegate = self
+        payWithLinkVC.present(over: self)
+    }
+}
+
+// MARK: - PayWithLinkWebControllerDelegate
+
+extension PaymentSheetViewController: PayWithLinkWebControllerDelegate {
+
+    func payWithLinkWebControllerDidComplete(
+        _ PayWithLinkWebController: PayWithLinkWebController,
+        intent: Intent,
+        with paymentOption: PaymentOption
+    ) {
+        let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.85)
+        bottomSheetController?.addBlurEffect(animated: false, backgroundColor: backgroundColor) {
+            self.bottomSheetController?.startSpinner()
+            self.clearTextFields()
+            self.pay(with: paymentOption, animateBuyButton: true)
+        }
     }
 
+    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+    }
 }
 
 // MARK: - BottomSheetContentViewController
-/// :nodoc:
 extension PaymentSheetViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
         return isDismissable

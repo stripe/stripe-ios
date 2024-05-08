@@ -76,7 +76,4 @@ extension PaymentSheetViewControllerSnapshotTests: PaymentSheetViewControllerDel
 
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewController) {
     }
-
-    func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewController) {
-    }
 }
