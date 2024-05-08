@@ -248,4 +248,10 @@ extension String.Localized {
             "Title shown above a view containing the customer's card payment methods"
         )
     }
+
+    static var select_your_payment_method: String {
+        STPLocalizedString(
+                       "Select your payment method",
+                       "Title shown above a carousel containing the customer's payment methods")
+    }
 }

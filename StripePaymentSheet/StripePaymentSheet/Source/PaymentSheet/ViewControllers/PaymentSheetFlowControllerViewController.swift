@@ -343,9 +343,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         switch mode {
         case .selectingSaved:
-            headerLabel.text = STPLocalizedString(
-                "Select your payment method",
-                "Title shown above a carousel containing the customer's payment methods")
+            headerLabel.text = .Localized.select_your_payment_method
         case .addingNew:
             if addPaymentMethodViewController.paymentMethodTypes == [.stripe(.card)] {
                 headerLabel.text = STPLocalizedString("Add a card", "Title shown above a card entry form")
