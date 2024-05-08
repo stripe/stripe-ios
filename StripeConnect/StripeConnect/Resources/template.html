@@ -36,13 +36,6 @@
             var component;
 
             window.StripeConnect = window.StripeConnect || {};
-            /*
-            const heightObserver = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    console.log("height: " + component.scrollHeight);
-                });
-            });
-             */
 
             const fetchClientSecret = async () => {
                 // Swift requires that the `postMessage` body be non-empty,
@@ -67,7 +60,6 @@
                 // in the view hierarchy and only used as a logout proxy
                 if ('{{COMPONENT_TYPE}}' !== '') {
                     component = stripeConnectInstance.create('{{COMPONENT_TYPE}}');
-                    //heightObserver.observe(component, { attributes: true, childList: true });
 
                     // Payment details is added to the body from swift so the
                     // payment ID can be added first

@@ -20,26 +20,35 @@ struct PaymentsListView: View {
 
     let account: String
     let onSelection: (_ chargeId: String) -> Void
-    @State var charges: [Charge] = []
+    @State var charges: [Charge]?
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(charges) { charge in
-                    Button {
-                        onSelection(charge.id)
-                    } label: {
-                        VStack(alignment: .leading) {
-                            Text(charge.id)
-                            charge.description.map(Text.init)
-                            HStack {
-                                Text("\(charge.amount)")
-                                Text(charge.currency)
-                                Spacer()
+            Group {
+                if let charges, charges.isEmpty {
+                    Text("This account has no charges")
+                } else if let charges {
+                    List {
+                        ForEach(charges) { charge in
+                            Button {
+                                onSelection(charge.id)
+                            } label: {
+                                VStack(alignment: .leading) {
+                                    Text(charge.id)
+                                    charge.description.map(Text.init)
+                                    HStack {
+                                        Text("\(charge.amount)")
+                                        Text(charge.currency)
+                                        Spacer()
+                                    }
+                                }
+                                .foregroundColor(Color(uiColor: .label))
                             }
                         }
-                        .foregroundColor(Color(uiColor: .label))
                     }
+                } else {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
                 }
             }
             .listStyle(.insetGrouped)
