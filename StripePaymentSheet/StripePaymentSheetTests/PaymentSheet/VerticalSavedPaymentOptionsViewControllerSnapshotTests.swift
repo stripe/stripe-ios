@@ -34,7 +34,7 @@ final class VerticalSavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotT
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = sut
-        sut.view.autosizeHeight(width: 375, height: 280)
+        sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
 }
