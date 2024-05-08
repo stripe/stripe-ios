@@ -110,7 +110,7 @@ extension ConnectWebView: WKUIDelegate {
 
             // Only open popups to known hosts inside PopupWebViewController,
             // otherwise use an SFSafariViewController
-            guard let host = url.host, 
+            guard let host = url.host,
                     StripeConnectConstants.allowedHosts.contains(host) else {
                 openInAppSafari(url: url)
                 return nil
