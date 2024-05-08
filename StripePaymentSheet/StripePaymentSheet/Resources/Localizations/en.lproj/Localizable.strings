@@ -212,6 +212,12 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 to be saved and used in future checkout sessions. */
 "Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
 
+/* Title shown above a view containing the customer's card payment methods */
+"Select card" = "Select card";
+
+/* Title shown above a view containing the customer's payment methods */
+"Select payment method" = "Select payment method";
+
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
 

@@ -43,7 +43,7 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 }
 
-private extension UIView {
+extension UIView {
     /// Constrains the view to the given width and autosizes its height.
     /// - Parameter width: Resizes the view to this width
     /// - Parameter height: Resizes the view to this height

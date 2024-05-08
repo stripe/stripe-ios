@@ -234,4 +234,24 @@ extension String.Localized {
             "Amazon Pay mandate text"
         )
     }
+
+    static var select_payment_method: String {
+        STPLocalizedString(
+            "Select payment method",
+            "Title shown above a view containing the customer's payment methods"
+        )
+    }
+
+    static var select_card: String {
+        STPLocalizedString(
+            "Select card",
+            "Title shown above a view containing the customer's card payment methods"
+        )
+    }
+
+    static var select_your_payment_method: String {
+        STPLocalizedString(
+                       "Select your payment method",
+                       "Title shown above a carousel containing the customer's payment methods")
+    }
 }
