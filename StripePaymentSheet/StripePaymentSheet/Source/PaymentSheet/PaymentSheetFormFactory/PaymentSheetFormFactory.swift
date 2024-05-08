@@ -709,19 +709,11 @@ extension PaymentSheetFormFactory {
                     return nil // customer sheet is not supported
                 case .paymentSheet:
                     return makeSectionTitleLabelWith(
-                        text: STPLocalizedString(
-                            "Pay with your bank account in just a few steps.",
-                            "Instant Debits copy title for Mobile payment element form"
-                        )
+                        text: "Pay with your bank account in just a few steps." // TODO(kgaidis): localize string
                     )
                 }
             }(),
-            emailElement: (
-                // TODO: does this email logic make sense?
-                (configuration.billingDetailsCollectionConfiguration.email != .never)
-                ? makeEmail()
-                : nil
-            ),
+            emailElement: makeEmail(),
             theme: theme
         )
     }

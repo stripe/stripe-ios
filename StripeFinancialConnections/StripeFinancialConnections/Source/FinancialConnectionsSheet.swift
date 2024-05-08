@@ -248,7 +248,8 @@ final public class FinancialConnectionsSheet {
 /// :nodoc:
 extension FinancialConnectionsSheet: HostControllerDelegate {
     func hostController(
-        _ hostController: HostController, viewController: UIViewController,
+        _ hostController: HostController,
+        viewController: UIViewController,
         didFinish result: HostControllerResult
     ) {
         viewController.dismiss(

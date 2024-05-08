@@ -155,8 +155,7 @@ extension PaymentSheet {
                 intent.supportsLink,
                 !recommendedStripePaymentMethodTypes.contains(.USBankAccount),
                 !intent.isDeferredIntent,
-                intent.linkFlags["link_disable_instant_debits_on_mobile"] != true
-                // intent.linkFundingSources?.contains(.bankAccount) == true
+                intent.linkFundingSources?.contains(.bankAccount) == true
             {
                 recommendedStripePaymentMethodTypes.append(.instantDebits)
             }

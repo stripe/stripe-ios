@@ -32,10 +32,8 @@ final class InstantDebitsPaymentMethodElement: Element {
     var mandateString: NSMutableAttributedString? {
         var string: String?
         if linkedBank != nil {
-            string = STPLocalizedString(
-                "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.",
-                "Text providing link to terms for ACH payments"
-            )
+            // TODO(kgaidis): localize
+            string = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>."
         } else {
             string = nil
         }
@@ -93,19 +91,6 @@ final class InstantDebitsPaymentMethodElement: Element {
         emailElement: PaymentMethodElement?,
         theme: ElementsUITheme = .default
     ) {
-        let willShowEmailField = (configuration.billingDetailsCollectionConfiguration.email != .never)
-        let hasDefaultEmail = (
-            configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
-            && configuration.defaultBillingDetails.email != nil
-        )
-
-        // Fail loudly: This is an integration error
-        assert(
-            // TODO: is it a mandatory step to provide an email???
-            (willShowEmailField || hasDefaultEmail),
-            "If email is not collected, they must be provided through defaults"
-        )
-
         self.configuration = configuration
         self.linkedBankInfoView = BankAccountInfoView(frame: .zero, theme: theme)
         self.linkedBankInfoSectionElement = SectionElement(
