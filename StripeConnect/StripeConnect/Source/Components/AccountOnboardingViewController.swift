@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import WebKit
 
 /**
  The Account onboarding component uses the [Accounts API](https://docs.stripe.com/api/accounts) to read requirements and generate an onboarding form that’s localized for all Stripe-supported countries and that validates data. In addition, Embedded onboarding handles all business types, various configurations of company representatives, document uploads, identity verification, and verification statuses. See [Embedded onboarding](https://docs.stripe.com/connect/embedded-onboarding) for more information.

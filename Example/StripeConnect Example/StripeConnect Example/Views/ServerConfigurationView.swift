@@ -137,20 +137,22 @@ struct ServerConfigurationView: View {
         @Binding var selection: ServerConfiguration.DemoAccounts?
 
         var body: some View {
-            HStack {
-                Image(systemName: "checkmark")
-                    .foregroundColor(.accentColor)
-                    .opacity(demoAccount == selection ? 1.0 : 0.0)
-                VStack(alignment: .leading) {
-                    Text(title)
-                        .font(.body)
-                    subtitle.map(Text.init)
-                        .font(.caption)
-                        .foregroundColor(Color(UIColor.secondaryLabel))
-                }
-            }
-            .onTapGesture {
+            Button {
                 selection = demoAccount
+            } label: {
+                HStack {
+                    Image(systemName: "checkmark")
+                        .foregroundColor(.accentColor)
+                        .opacity(demoAccount == selection ? 1.0 : 0.0)
+                    VStack(alignment: .leading) {
+                        Text(title)
+                            .font(.body)
+                            .foregroundColor(Color(UIColor.label))
+                        subtitle.map(Text.init)
+                            .font(.caption)
+                            .foregroundColor(Color(UIColor.secondaryLabel))
+                    }
+                }
             }
         }
     }

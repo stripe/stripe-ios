@@ -7,6 +7,7 @@
 
 import JavaScriptCore
 import StripeCore
+import UIKit
 
 public class StripeConnectInstance {
 
@@ -46,7 +47,7 @@ public class StripeConnectInstance {
 
     /**
      Creates an account onboarding view controller.
-     - Returns: A AccountOnboardingViewController.
+     - Returns: An AccountOnboardingViewController.
      */
     public func createAccountOnboarding(onExit: @escaping () -> Void) -> AccountOnboardingViewController {
         let vc = AccountOnboardingViewController(connectInstance: self, onExit: onExit)
@@ -54,10 +55,46 @@ public class StripeConnectInstance {
         return vc
     }
 
+    /**
+     Creates an account management view controller.
+     - Returns: An AccountManagementViewController.
+     */
+    public func createAccountManagement() -> AccountManagementViewController {
+        let vc = AccountManagementViewController(connectInstance: self)
+        webViews.add(vc.webView)
+        return vc
+    }
+
+    /**
+     Creates a balances view.
+     - Returns: A balances view.
+     */
+    public func createBalances(presentViewController: @escaping (UIViewController) -> Void) -> BalancesView {
+        let view = BalancesView(connectInstance: self,
+                                presentViewController: presentViewController)
+        webViews.add(view.webView)
+        return view
+    }
+
+    /**
+     Creates a documents view controller.
+     - Returns: A DocumentsViewController
+     */
     public func createDocuments() -> DocumentsViewController {
         let vc = DocumentsViewController(connectInstance: self)
         webViews.add(vc.webView)
         return vc
+    }
+
+    /**
+     Creates a notification banner view.
+     - Returns: A NotificationBannerView
+     */
+    public func createNotificationBanner(presentViewController: @escaping (UIViewController) -> Void) -> NotificationBannerView {
+        let view = NotificationBannerView(connectInstance: self,
+                                presentViewController: presentViewController)
+        webViews.add(view.webView)
+        return view
     }
 
     /**
@@ -66,6 +103,37 @@ public class StripeConnectInstance {
      */
     public func createPayments() -> PaymentsViewController {
         let vc = PaymentsViewController(connectInstance: self)
+        webViews.add(vc.webView)
+        return vc
+    }
+
+    /**
+     Creates a payment details view controller.
+     - Returns: A PaymentDetailsViewController
+     */
+    public func createPaymentDetails(paymentId: String) -> PaymentDetailsViewController {
+        let view = PaymentDetailsViewController(paymentId: paymentId,
+                                                connectInstance: self)
+        webViews.add(view.webView)
+        return view
+    }
+
+    /**
+     Creates a payouts view controller.
+     - Returns: A PayoutsViewController
+     */
+    public func createPayouts() -> PayoutsViewController {
+        let vc = PayoutsViewController(connectInstance: self)
+        webViews.add(vc.webView)
+        return vc
+    }
+
+    /**
+     Creates a payouts list view controller.
+     - Returns: A PayoutsListViewController
+     */
+    public func createPayoutsList() -> PayoutsListViewController {
+        let vc = PayoutsListViewController(connectInstance: self)
         webViews.add(vc.webView)
         return vc
     }

@@ -13,7 +13,7 @@ import WebKit
  - Camera access
  - Popup windows
  - Downloads (TODO)
- - Opening email links (TODO)
+ - Opening email links
  */
 class ConnectWebView: WKWebView {
 

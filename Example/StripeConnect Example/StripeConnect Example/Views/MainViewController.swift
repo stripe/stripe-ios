@@ -14,8 +14,14 @@ class MainViewController: UITableViewController {
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
         case accountOnboarding = "Account onboarding"
+        case accountManagement = "Account management"
+        case balances = "Balances"
         case documents = "Documents"
+        case notificationBanner = "Notification banner"
         case payments = "Payments"
+        case paymentDetails = "Payment details"
+        case payouts = "Payouts"
+        case payoutsList = "Payouts list"
         case logout = "Log out"
 
         var label: String { rawValue }
@@ -112,11 +118,13 @@ class MainViewController: UITableViewController {
         let viewControllerToPush: UIViewController
 
         switch row {
+        case .accountManagement:
+            viewControllerToPush = stripeConnectInstance.createAccountManagement()
+
         case .accountOnboarding:
             let accountOnboardingVC = stripeConnectInstance.createAccountOnboarding { [weak navigationController] in
                 navigationController?.popViewController(animated: true)
             }
-            accountOnboardingVC.title = "Account onboarding"
             let button = UIBarButtonItem(
                 image: UIImage(systemName: "slider.horizontal.3"),
                 primaryAction: .init(handler: { [weak accountOnboardingVC] _ in
@@ -127,13 +135,72 @@ class MainViewController: UITableViewController {
             accountOnboardingVC.navigationItem.rightBarButtonItem = button
             viewControllerToPush = accountOnboardingVC
 
+        case .balances:
+            viewControllerToPush = UIViewController(nibName: nil, bundle: nil)
+            let view = stripeConnectInstance.createBalances { [weak viewControllerToPush] vc in
+                viewControllerToPush?.present(vc, animated: true)
+            }
+            viewControllerToPush.view.backgroundColor = .systemGray6
+            viewControllerToPush.view.addSubview(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                viewControllerToPush.view.topAnchor.constraint(equalTo: view.topAnchor),
+                viewControllerToPush.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                viewControllerToPush.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ])
+
         case .documents:
             viewControllerToPush = stripeConnectInstance.createDocuments()
-            viewControllerToPush.title = "Documents"
+
+        case .notificationBanner:
+            viewControllerToPush = UIViewController(nibName: nil, bundle: nil)
+            let view = stripeConnectInstance.createNotificationBanner { [weak viewControllerToPush] vc in
+                viewControllerToPush?.present(vc, animated: true)
+            }
+            viewControllerToPush.view.backgroundColor = .systemGray6
+            viewControllerToPush.view.addSubview(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                viewControllerToPush.view.topAnchor.constraint(equalTo: view.topAnchor),
+                viewControllerToPush.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                viewControllerToPush.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ])
 
         case .payments:
             viewControllerToPush = stripeConnectInstance.createPayments()
-            viewControllerToPush.title = "Payments"
+
+        case .paymentDetails:
+            if let account = ServerConfiguration.shared.account {
+                let view = PaymentsListView(account: account) { [weak navigationController] id in
+                    let detailsView = stripeConnectInstance.createPaymentDetails(paymentId: id)
+                    navigationController?.present(detailsView, animated: true)
+                }
+                viewControllerToPush = UIHostingController(rootView: view)
+            } else {
+                let alertController = UIAlertController(title: "Payment ID", message: "Specify a payment ID or switch to a demo account to choose from a list.", preferredStyle: .alert)
+
+                alertController.addTextField { (textField) in
+                    textField.placeholder = "ch_xxx"
+                }
+
+                // Create a Submit action
+                let submitAction = UIAlertAction(title: "Submit", style: .default) { [unowned alertController, weak navigationController] _ in
+                    if let id = alertController.textFields?.first?.text,
+                       !id.isEmpty {
+                        let detailsView = stripeConnectInstance.createPaymentDetails(paymentId: id)
+                        navigationController?.present(detailsView, animated: true)
+                    }
+                }
+                alertController.addAction(submitAction)
+                present(alertController, animated: true)
+                return
+            }
+
+        case .payouts:
+            viewControllerToPush = stripeConnectInstance.createPayouts()
+
+        case .payoutsList:
+            viewControllerToPush = stripeConnectInstance.createPayoutsList()
 
         case .logout:
             cell.accessoryView = logoutSpinner
@@ -143,8 +210,12 @@ class MainViewController: UITableViewController {
                 self.logoutSpinner.stopAnimating()
             }
             return
+
         }
 
+        if viewControllerToPush.title == nil {
+            viewControllerToPush.title = row.label
+        }
         addChangeAppearanceButtonNavigationItem(to: viewControllerToPush)
         navigationController?.pushViewController(viewControllerToPush, animated: true)
     }
