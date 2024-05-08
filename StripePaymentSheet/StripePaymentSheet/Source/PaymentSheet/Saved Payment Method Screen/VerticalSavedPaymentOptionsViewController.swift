@@ -27,7 +27,7 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
 
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-        label.text = .Localized.select_your_payment_method
+        label.text = .Localized.select_payment_method
         return label
     }()
 
