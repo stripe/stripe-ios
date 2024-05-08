@@ -171,8 +171,6 @@ public class PaymentSheet {
                         return verticalVC
                     }
                 }()
-
-                self.configuration.style.configure(paymentSheetVC)
                 self.bottomSheetViewController.contentStack = [paymentSheetVC]
             case .failure(let error):
                 completion(.failed(error: error))

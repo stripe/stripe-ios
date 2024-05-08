@@ -187,8 +187,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
 
         super.init(nibName: nil, bundle: nil)
+        self.configuration.style.configure(self)
         self.savedPaymentOptionsViewController.delegate = self
-        self.view.backgroundColor = configuration.appearance.colors.background
     }
 
     deinit {
@@ -199,7 +199,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configuration.style.configure(self)
+        self.view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
