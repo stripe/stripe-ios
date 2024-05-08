@@ -28,14 +28,18 @@ public class NotificationBannerView: UIView {
         addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            webView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            webView.topAnchor.constraint(equalTo: topAnchor),
+            webView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: trailingAnchor),
             heightConstraint,
         ])
         webView.presentPopup = presentViewController
+
+        // Disable scrolling and don't adjust scroll insets for safe area
         webView.scrollView.isScrollEnabled = false
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
+
         webView.addMessageHandler(.init(name: "updateHeight", didReceiveMessage: { [weak heightConstraint] message in
             if let height = message.body as? CGFloat {
                 heightConstraint?.constant = height

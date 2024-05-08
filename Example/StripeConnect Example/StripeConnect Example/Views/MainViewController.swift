@@ -144,9 +144,9 @@ class MainViewController: UITableViewController {
             viewControllerToPush.view.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                viewControllerToPush.view.topAnchor.constraint(equalTo: view.topAnchor),
-                viewControllerToPush.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                viewControllerToPush.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                viewControllerToPush.view.safeAreaLayoutGuide.topAnchor.constraint(equalTo: view.topAnchor),
+                viewControllerToPush.view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                viewControllerToPush.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             ])
 
         case .documents:
@@ -161,9 +161,9 @@ class MainViewController: UITableViewController {
             viewControllerToPush.view.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                viewControllerToPush.view.topAnchor.constraint(equalTo: view.topAnchor),
-                viewControllerToPush.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                viewControllerToPush.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                viewControllerToPush.view.safeAreaLayoutGuide.topAnchor.constraint(equalTo: view.topAnchor),
+                viewControllerToPush.view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                viewControllerToPush.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             ])
 
         case .payments:
