@@ -238,9 +238,7 @@ extension String.Localized {
     static var select_your_payment_method: String {
         STPLocalizedString(
             "Select your payment method",
-            """
-            Title for a screen that allows users to select a payment method.
-            """
+            "Title shown above a view containing the customer's payment methods"
         )
     }
 }
