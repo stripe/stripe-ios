@@ -120,6 +120,7 @@ struct ServerConfigurationView: View {
                 }
             }
         }
+        .environment(\.horizontalSizeClass, .compact)
     }
 
     func save() {

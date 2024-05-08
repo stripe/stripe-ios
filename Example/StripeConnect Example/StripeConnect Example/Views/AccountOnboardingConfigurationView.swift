@@ -66,6 +66,7 @@ struct AccountOnboardingConfigurationView: View {
                 }
             }
         }
+        .environment(\.horizontalSizeClass, .compact)
         .onChange(of: fullTermsOfService) { newValue in
             if let url = URL(string: newValue),
                UIApplication.shared.canOpenURL(url)

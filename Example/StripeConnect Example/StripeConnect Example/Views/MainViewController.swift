@@ -165,8 +165,16 @@ class MainViewController: UITableViewController {
 
     /// Displays a menu to pick from a selection of example appearances
     @objc
-    func selectAppearance() {
+    func selectAppearance(sender: UIBarButtonItem) {
         let optionMenu = UIAlertController(title: "Change appearance", message: "These are some example appearances configured in ExampleAppearanceOptions", preferredStyle: .actionSheet)
+
+        // iPad compatibility
+        if let popoverPresentationController = optionMenu.popoverPresentationController {
+            popoverPresentationController.sourceView = view
+            if let buttonView = sender.value(forKey: "view") as? UIView {
+                popoverPresentationController.sourceRect = view.convert(buttonView.frame, from: buttonView)
+            }
+        }
 
         ExampleAppearanceOptions.allCases.forEach { option in
             let action = UIAlertAction(title: option.label, style: .default) { [weak self] _ in
