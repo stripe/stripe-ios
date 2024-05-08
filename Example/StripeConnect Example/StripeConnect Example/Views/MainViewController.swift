@@ -170,9 +170,11 @@ class MainViewController: UITableViewController {
 
         // iPad compatibility
         if let popoverPresentationController = optionMenu.popoverPresentationController {
-            popoverPresentationController.sourceView = view
             if let buttonView = sender.value(forKey: "view") as? UIView {
-                popoverPresentationController.sourceRect = view.convert(buttonView.frame, from: buttonView)
+                popoverPresentationController.sourceRect = buttonView.frame
+                popoverPresentationController.sourceView = buttonView
+            } else {
+                popoverPresentationController.sourceView = view
             }
         }
 
