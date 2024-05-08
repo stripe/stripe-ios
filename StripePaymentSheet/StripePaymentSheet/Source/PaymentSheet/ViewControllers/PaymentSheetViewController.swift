@@ -13,27 +13,9 @@ import PassKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentSheetViewControllerDelegate: AnyObject {
-    func paymentSheetViewControllerShouldConfirm(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-    )
-    func paymentSheetViewControllerDidFinish(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        result: PaymentSheetResult
-    )
-    func paymentSheetViewControllerDidCancel(
-        _ paymentSheetViewController: PaymentSheetViewController
-    )
-    func paymentSheetViewControllerDidSelectPayWithLink(
-        _ paymentSheetViewController: PaymentSheetViewController
-    )
-}
-
 /// For internal SDK use only
 @objc(STP_Internal_PaymentSheetViewController)
-class PaymentSheetViewController: UIViewController {
+class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerProtocol {
     enum PaymentSheetViewControllerError: Error {
         case addingNewNoPaymentOptionOnBuyButtonTap
         case selectingSavedNoPaymentOptionOnBuyButtonTap
@@ -217,6 +199,7 @@ class PaymentSheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configuration.style.configure(self)
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
