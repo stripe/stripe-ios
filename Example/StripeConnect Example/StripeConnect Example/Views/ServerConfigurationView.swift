@@ -10,6 +10,7 @@ import SwiftUI
 /// A view to modify the configured server and account
 struct ServerConfigurationView: View {
     @State var demoAccount: ServerConfiguration.DemoAccounts?
+    @State var customAccount = ""
     @State var customEndpoint = ""
     @State var customPublishableKey = ""
 
@@ -22,7 +23,9 @@ struct ServerConfigurationView: View {
         switch configuration {
         case .demo(let account):
             self._demoAccount = State(initialValue: account)
-        case .custom(let endpoint, let publishableKey):
+        case .customAccount(let account):
+            self._customAccount = State(initialValue: account)
+        case .customEndpoint(let endpoint, let publishableKey):
             self._customEndpoint = State(initialValue: endpoint.absoluteString)
             self._customPublishableKey = State(initialValue: publishableKey)
         }
@@ -38,13 +41,20 @@ struct ServerConfigurationView: View {
         return UIApplication.shared.canOpenURL(url)
     }
 
+    var isCustomAccountValid: Bool {
+        customAccount.hasPrefix("acct_") && customAccount.count > 5
+    }
+
     var configuration: ServerConfiguration? {
+        if isCustomAccountValid {
+            return .customAccount(customAccount)
+        }
         if let demoAccount {
             return .demo(demoAccount)
         }
         if let endpoint = URL(string: customEndpoint),
            isCustomPublishableKeyValid && isCustomEndpointValid {
-            return .custom(endpoint: endpoint, publishableKey: customPublishableKey)
+            return .customEndpoint(endpoint, publishableKey: customPublishableKey)
         }
         return nil
     }
@@ -61,6 +71,26 @@ struct ServerConfigurationView: View {
                     }
                 } header: {
                     Text("Select a demo account")
+                }
+
+                Section {
+                    VStack(spacing: 16) {
+                        TextInput(label: Text("Enter a connected account for platform `\(ServerConfiguration.platformAccount)`"),
+                                  placeholder: "acct_xxx",
+                                  text: $customAccount,
+                                  isValid: isCustomAccountValid)
+
+                        Button(action: save) {
+                            Text("Apply")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .disabled(!isCustomAccountValid)
+                        .buttonBorderShape(.capsule)
+                        .buttonStyle(BorderedProminentButtonStyle())
+                    }
+                    .padding(.vertical, 8)
+                } header: {
+                    Text("Or another account")
                 }
 
                 Section {
@@ -88,9 +118,9 @@ struct ServerConfigurationView: View {
                 } header: {
                     Text("Or use your server")
                 }
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
             }
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
             .listStyle(.insetGrouped)
             .animation(.easeOut(duration: 0.2), value: demoAccount)
             .navigationTitle("Configure server")

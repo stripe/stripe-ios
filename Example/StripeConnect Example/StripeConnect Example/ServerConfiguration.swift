@@ -35,16 +35,18 @@ enum ServerConfiguration {
     }
 
     case demo(DemoAccounts)
-    case custom(endpoint: URL, publishableKey: String)
+    case customAccount(String)
+    case customEndpoint(_ endpoint: URL, publishableKey: String)
 }
 
 extension ServerConfiguration {
     private static let defaults = UserDefaults.standard
 
+    static let platformAccount = "acct_1MZRIlLirQdaQn8E"
+
     static var shared: ServerConfiguration = {
-        if let account = defaults.string(forKey: DefaultsKeys.account.rawValue),
-           let demoAccount = DemoAccounts(rawValue: account) {
-            return .demo(demoAccount)
+        if let account = defaults.string(forKey: DefaultsKeys.account.rawValue) {
+            return DemoAccounts(rawValue: account).map(ServerConfiguration.demo) ?? .customAccount(account)
         }
 
         guard let endpointString = defaults.string(forKey: DefaultsKeys.endpoint.rawValue),
@@ -53,7 +55,7 @@ extension ServerConfiguration {
             return .demo(.default)
         }
 
-        return .custom(endpoint: endpoint, publishableKey: publishableKey)
+        return .customEndpoint(endpoint, publishableKey: publishableKey)
     }() {
         didSet {
             switch shared {
@@ -61,8 +63,11 @@ extension ServerConfiguration {
                 defaults.set(account.rawValue, forKey: DefaultsKeys.account.rawValue)
                 defaults.removeObject(forKey: DefaultsKeys.endpoint.rawValue)
                 defaults.removeObject(forKey: DefaultsKeys.publishableKey.rawValue)
-
-            case .custom(let endpoint, let publishableKey):
+            case .customAccount(let account):
+                defaults.set(account, forKey: DefaultsKeys.account.rawValue)
+                defaults.removeObject(forKey: DefaultsKeys.endpoint.rawValue)
+                defaults.removeObject(forKey: DefaultsKeys.publishableKey.rawValue)
+            case .customEndpoint(let endpoint, let publishableKey):
                 defaults.removeObject(forKey: DefaultsKeys.account.rawValue)
                 defaults.set(endpoint.absoluteString, forKey: DefaultsKeys.endpoint.rawValue)
                 defaults.set(publishableKey, forKey: DefaultsKeys.publishableKey.rawValue)
@@ -79,25 +84,27 @@ extension ServerConfiguration {
         switch self {
         case .demo(let account):
             return account.rawValue
-        case .custom:
+        case .customAccount(let account):
+            return account
+        case .customEndpoint:
             return nil
         }
     }
 
     var endpoint: URL {
         switch self {
-        case .demo:
+        case .demo, .customAccount:
             return URL(string: "https://stripe-connect-example.glitch.me/account_session")!
-        case .custom(let endpoint, _):
+        case .customEndpoint(let endpoint, _):
             return endpoint
         }
     }
 
     var publishableKey: String {
         switch self {
-        case .demo:
+        case .demo, .customAccount:
             return "pk_test_51MZRIlLirQdaQn8EJpw9mcVeXokTGaiV1ylz5AVQtcA0zAkoM9fLFN81yQeHYBLkCiID1Bj0sL1Ngzsq9ksRmbBN00O3VsIUdQ"
-        case .custom(_, let publishableKey):
+        case .customEndpoint(_, let publishableKey):
             return publishableKey
         }
     }
@@ -136,7 +143,9 @@ extension ServerConfiguration {
         switch self {
         case .demo(let account):
             return account.label
-        case .custom(let endpoint, _):
+        case .customAccount(let account):
+            return account
+        case .customEndpoint(let endpoint, _):
             return endpoint.host ?? "Custom endpoint"
         }
     }
