@@ -7,8 +7,8 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 import UIKit
 
 protocol VerticalSavedPaymentOptionsViewControllerDelegate: AnyObject {
@@ -20,10 +20,10 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
 
     private let configuration: PaymentSheet.Configuration
     private let paymentMethods: [STPPaymentMethod]
-    
+
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentOptionsViewControllerDelegate?
-    
+
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
@@ -40,7 +40,7 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
         label.text = nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
         return label
     }()
-    
+
     private lazy var paymentMethodRows: [(paymentMethod: STPPaymentMethod, button: PaymentMethodRowButton)] = {
         return paymentMethods.map { paymentMethod in
             let button = PaymentMethodRowButton(viewModel: .init(appearance: configuration.appearance,
@@ -52,7 +52,7 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows.map{$0.button})
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows.map { $0.button })
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
@@ -118,13 +118,13 @@ extension VerticalSavedPaymentOptionsViewController: PaymentMethodRowButtonDeleg
             // TODO(porter) Handle error - no matching payment method found
             return
         }
-        
+
         // Deselect previous button        
-        paymentMethodRows.first{$0.button != button && $0.button.isSelected}?.button.isSelected = false
-        
+        paymentMethodRows.first { $0.button != button && $0.button.isSelected }?.button.isSelected = false
+
         // Disable interaction to prevent double selecting since we will be dismissing soon
         self.view.isUserInteractionEnabled = false
-        
+
         // Give time for new selected row to show it has been selected before dismissing
         // Makes UX feel a little nicer
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
