@@ -27,7 +27,7 @@ final class VerticalSavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotT
     func _test_VerticalSavedPaymentOptionsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
-        let sut = VerticalSavedPaymentOptionsViewController(configuration: configuration)
+        let sut = VerticalSavedPaymentOptionsViewController(configuration: configuration, paymentMethods: generatePaymentMethods())
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         if darkMode {
@@ -36,5 +36,10 @@ final class VerticalSavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotT
         testWindow.rootViewController = sut
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
+    }
+    
+    private func generatePaymentMethods() -> [STPPaymentMethod] {
+        // TODO(porter) Add SEPA and US Bank Acct. payment methods
+        return [STPFixtures.paymentMethod()]
     }
 }
