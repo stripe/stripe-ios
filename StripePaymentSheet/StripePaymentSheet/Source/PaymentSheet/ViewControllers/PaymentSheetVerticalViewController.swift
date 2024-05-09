@@ -11,16 +11,18 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewController {
+class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
     var selectedPaymentOption: PaymentSheet.PaymentOption?
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
-    weak var delegate: FlowControllerViewControllerDelegate?
     let loadResult: PaymentSheetLoader.LoadResult
     let configuration: PaymentSheet.Configuration
     var intent: Intent {
         return loadResult.intent
     }
     var error: Error?
+    let isFlowController: Bool
+    weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
+    weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
 
     // MARK: - UI properties
 
@@ -33,10 +35,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // MARK: - Initializers
 
-    init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult) {
+    init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool) {
         // TODO: Deal with previousPaymentOption
         self.loadResult = loadResult
         self.configuration = configuration
+        self.isFlowController = isFlowController
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -80,7 +83,11 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
 
     func didTapOrSwipeToDismiss() {
         // TODO
-        delegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
+        if isFlowController {
+            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
+        } else {
+            paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)
+        }
     }
 
     var requiresFullScreen: Bool {
