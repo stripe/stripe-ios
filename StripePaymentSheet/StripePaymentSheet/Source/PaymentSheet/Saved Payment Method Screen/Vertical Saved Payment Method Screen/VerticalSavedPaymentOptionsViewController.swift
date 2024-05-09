@@ -32,15 +32,6 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
         label.text = .Localized.select_payment_method
         return label
     }()
-
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows)
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.axis = .vertical
-        stackView.spacing = PaymentSheetUI.defaultPadding
-        return stackView
-    }()
     
     private lazy var paymentMethodRows: [PaymentMethodRowButton] = {
         return paymentMethods.map {
@@ -50,6 +41,15 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
             button.delegate = self
             return button
         }
+    }()
+
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows)
+        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+        stackView.spacing = PaymentSheetUI.defaultPadding
+        return stackView
     }()
 
     init(configuration: PaymentSheet.Configuration, paymentMethods: [STPPaymentMethod]) {
@@ -107,11 +107,7 @@ extension VerticalSavedPaymentOptionsViewController: SheetNavigationBarDelegate 
 // MARK: - PaymentMethodRowDelegate
 extension VerticalSavedPaymentOptionsViewController: PaymentMethodRowDelegate {
     func didSelectRow(_ row: PaymentMethodRowButton) {
-         // TODO(porter) Handle selection
+         // TODO(porter) Handle selection, deselect other rows, etc
+        // TODO(porter) How do we know which payment method to operate on/which row was tapped
     }
 }
-
-
-
-
-

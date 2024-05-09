@@ -85,7 +85,6 @@ final class PaymentMethodRowButton: UIView {
         super.init(frame: .zero)
 
         addSubview(shadowRoundedRect)
-        circleView.alpha = 0.0
         NSLayoutConstraint.activate([
             shadowRoundedRect.topAnchor.constraint(equalTo: topAnchor),
             shadowRoundedRect.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -95,7 +94,7 @@ final class PaymentMethodRowButton: UIView {
             paymentMethodImageView.heightAnchor.constraint(equalToConstant: 20),
             paymentMethodImageView.widthAnchor.constraint(equalToConstant: 25),
         ])
-        // TODO(accessibility)
+        // TODO(porter) accessibility?
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         addGestureRecognizer(tapGesture)
     }

@@ -8,12 +8,12 @@
 import Foundation
 import UIKit
 
+/// Draws a circle with the desired fill color with a white checkmark in the center
 final class CheckmarkCircleView: UIView {
 
     let checkmarkColor: UIColor = .white
     let fillColor: UIColor
-
-    // Initialization
+    
     init(fillColor: UIColor) {
         self.fillColor = fillColor
         super.init(frame: .zero)
