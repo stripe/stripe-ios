@@ -56,7 +56,8 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.spacing = PaymentSheetUI.defaultPadding
+        stackView.spacing = 12
+        stackView.setCustomSpacing(16, after: headerLabel)
         return stackView
     }()
 
