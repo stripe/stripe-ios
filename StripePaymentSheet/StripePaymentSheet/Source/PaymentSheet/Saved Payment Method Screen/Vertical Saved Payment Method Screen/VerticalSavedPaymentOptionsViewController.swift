@@ -11,7 +11,6 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 import UIKit
 
-//TODO(porter) Add VerticalSavedPaymentOptionsViewControllerDelegate
 protocol VerticalSavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didSelectPaymentMethod(_ paymentMethod: STPPaymentMethod)
 }
