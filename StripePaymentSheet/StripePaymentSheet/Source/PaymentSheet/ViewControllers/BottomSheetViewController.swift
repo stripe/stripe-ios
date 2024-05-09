@@ -121,6 +121,8 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             }
             self.rootParent.presentationController?.containerView?.layoutIfNeeded()
             self.contentViewController.view.alpha = 0
+            print("Content vc height \(self.contentViewController.view.bounds.size.height)")
+            print("Manual height \(manualHeightConstraint.constant)")
             // Now animate to the correct height.
             animateHeightChange(forceAnimation: true, {
                 self.contentViewController.view.alpha = 1
@@ -129,6 +131,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 // We shouldn't need this constraint anymore.
                 self.manualHeightConstraint.isActive = false
                 self.contentViewController.didFinishAnimatingHeight()
+                
             })
         }
     }

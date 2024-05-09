@@ -63,7 +63,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // TOOD(porter) Remove/rename
     @objc func presentManageScreen() {
-        bottomSheetController?.pushContentViewController(VerticalSavedPaymentOptionsViewController(configuration: configuration))
+        bottomSheetController?.pushContentViewController(VerticalSavedPaymentOptionsViewController(configuration: configuration,
+                                                                                                   paymentMethods: loadResult.savedPaymentMethods))
         // TODO(porter) Set delegate
     }
 }
