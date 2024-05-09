@@ -70,6 +70,7 @@ extension StripeConnectInstance.Appearance {
             badgeDangerColorBorder = UIColor(hex: 0xFFFFFF)
             badgeBorderRadius = 24
             spacingUnit = 9
+            horizontalPadding = 8
             labelMdTextTransform = .uppercase
             labelSmTextTransform = .uppercase
             headingLgTextTransform = .uppercase
@@ -129,6 +130,7 @@ extension StripeConnectInstance.Appearance {
             badgeNeutralColorText = UIColor(hex: 0x5A621D)
             badgeSuccessColorText = UIColor(hex: 0x2A6093)
             borderRadius = 23
+            horizontalPadding = 50
 
         case .hotDog:
             colorPrimary = UIColor(hex: 0xFF2200)

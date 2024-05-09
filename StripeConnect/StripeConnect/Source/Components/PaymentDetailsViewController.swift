@@ -17,7 +17,8 @@ public class PaymentDetailsViewController: UIViewController {
          connectInstance: StripeConnectInstance) {
         webView = ConnectComponentWebView(
             connectInstance: connectInstance,
-            componentType: "payment-details"
+            componentType: "payment-details",
+            shouldUseHorizontalPadding: false
         )
         super.init(nibName: nil, bundle: nil)
         webView.presentPopup = { [weak self] vc in

@@ -42,6 +42,9 @@ extension StripeConnectInstance {
         /// The color used to indicate errors or destructive actions. The alpha component is ignored.
         public var colorDanger: UIColor?
 
+        /// The horizontal padding for components. This applies to all ViewController components except payment details.
+        public var horizontalPadding: CGFloat = 20
+
         /// The color used as a background for primary buttons. The alpha component is ignored.
         public var buttonPrimaryColorBackground: UIColor?
         /// The border color used for primary buttons. The alpha component is ignored.
@@ -245,30 +248,6 @@ extension StripeConnectInstance {
 
         var styleBackgroundColor: String {
             colorBackground?.cssRgbValue ?? "inherit"
-        }
-    }
-}
-
-private extension CGFloat {
-    var pxString: String {
-        "\(Int(self))px"
-    }
-}
-
-extension UIFont.Weight {
-    var cssValue: String? {
-        // https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#common_weight_name_mapping
-        switch self {
-        case .thin: return "100"
-        case .ultraLight: return "200"
-        case .light: return "300"
-        case .regular: return "400"
-        case .medium: return "500"
-        case .semibold: return "600"
-        case .bold: return "700"
-        case .heavy: return "800"
-        case .black: return "900"
-        default: return nil
         }
     }
 }

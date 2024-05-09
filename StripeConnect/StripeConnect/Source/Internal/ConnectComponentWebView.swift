@@ -13,14 +13,17 @@ import WebKit
 class ConnectComponentWebView: ConnectWebView {
     private var connectInstance: StripeConnectInstance
     private var componentType: String
+    private var shouldUseHorizontalPadding: Bool
 
     /// The content controller that registers JS -> Swift message handlers
     private let contentController: WKUserContentController
 
     init(connectInstance: StripeConnectInstance,
-         componentType: String) {
+         componentType: String,
+         shouldUseHorizontalPadding: Bool = true) {
         self.connectInstance = connectInstance
         self.componentType = componentType
+        self.shouldUseHorizontalPadding = shouldUseHorizontalPadding
 
         contentController = WKUserContentController()
         let config = WKWebViewConfiguration()
@@ -52,10 +55,19 @@ class ConnectComponentWebView: ConnectWebView {
 extension ConnectComponentWebView {
     /// Calls `update({appearance: ...})` on the JS StripeConnectInstance
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
-        evaluateJavaScript("""
+        var script = """
             stripeConnectInstance.update({appearance: \(appearance.asJsonString)});
             document.body.setAttribute("style", "background-color:\(appearance.styleBackgroundColor);");
-        """)
+        """
+
+        if shouldUseHorizontalPadding {
+            script += """
+                document.body.style.marginRight = '\(appearance.horizontalPadding.pxString)';
+                document.body.style.marginLeft = '\(appearance.horizontalPadding.pxString)';
+            """
+        }
+
+        evaluateJavaScript(script)
         updateColors(appearance)
     }
 
@@ -125,6 +137,8 @@ private extension ConnectComponentWebView {
             return
         }
 
+        let horizontalMargin = shouldUseHorizontalPadding ? connectInstance.appearance.horizontalPadding : 0
+
         // NOTE (Locale):
         // By default, WKWebViews use the device's first preferred locale instead
         // of the app's locale, so we have to explicitly pass the current locale
@@ -137,6 +151,7 @@ private extension ConnectComponentWebView {
             .replacingOccurrences(of: "{{APPEARANCE}}", with: connectInstance.appearance.asJsonString)
             .replacingOccurrences(of: "{{FONTS}}", with: connectInstance.customFonts.asJsonString)
             .replacingOccurrences(of: "{{LOCALE}}", with: Locale.autoupdatingCurrent.webIdentifier)
+            .replacingOccurrences(of: "{{HORIZONTAL_MARGIN}}", with: horizontalMargin.pxString)
 
         guard let data = htmlText.data(using: .utf8) else {
             debugPrint("Couldn't encode html data")
