@@ -13,11 +13,9 @@ class MainViewController: UITableViewController {
 
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
-        case accountOnboarding = "Account onboarding"
         case accountManagement = "Account management"
-        case balances = "Balances"
+        case accountOnboarding = "Account onboarding"
         case documents = "Documents"
-        case notificationBanner = "Notification banner"
         case payments = "Payments"
         case paymentDetails = "Payment details"
         case payouts = "Payouts"
@@ -135,36 +133,8 @@ class MainViewController: UITableViewController {
             accountOnboardingVC.navigationItem.rightBarButtonItem = button
             viewControllerToPush = accountOnboardingVC
 
-        case .balances:
-            viewControllerToPush = UIViewController(nibName: nil, bundle: nil)
-            let view = stripeConnectInstance.createBalances { [weak viewControllerToPush] vc in
-                viewControllerToPush?.present(vc, animated: true)
-            }
-            viewControllerToPush.view.backgroundColor = .systemGray6
-            viewControllerToPush.view.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                viewControllerToPush.view.safeAreaLayoutGuide.topAnchor.constraint(equalTo: view.topAnchor),
-                viewControllerToPush.view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                viewControllerToPush.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ])
-
         case .documents:
             viewControllerToPush = stripeConnectInstance.createDocuments()
-
-        case .notificationBanner:
-            viewControllerToPush = UIViewController(nibName: nil, bundle: nil)
-            let view = stripeConnectInstance.createNotificationBanner { [weak viewControllerToPush] vc in
-                viewControllerToPush?.present(vc, animated: true)
-            }
-            viewControllerToPush.view.backgroundColor = .systemGray6
-            viewControllerToPush.view.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                viewControllerToPush.view.safeAreaLayoutGuide.topAnchor.constraint(equalTo: view.topAnchor),
-                viewControllerToPush.view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                viewControllerToPush.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ])
 
         case .payments:
             viewControllerToPush = stripeConnectInstance.createPayments()

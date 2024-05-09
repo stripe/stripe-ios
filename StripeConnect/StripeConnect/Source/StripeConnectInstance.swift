@@ -66,17 +66,6 @@ public class StripeConnectInstance {
     }
 
     /**
-     Creates a balances view.
-     - Returns: A balances view.
-     */
-    public func createBalances(presentViewController: @escaping (UIViewController) -> Void) -> BalancesView {
-        let view = BalancesView(connectInstance: self,
-                                presentViewController: presentViewController)
-        webViews.add(view.webView)
-        return view
-    }
-
-    /**
      Creates a documents view controller.
      - Returns: A DocumentsViewController
      */
@@ -84,17 +73,6 @@ public class StripeConnectInstance {
         let vc = DocumentsViewController(connectInstance: self)
         webViews.add(vc.webView)
         return vc
-    }
-
-    /**
-     Creates a notification banner view.
-     - Returns: A NotificationBannerView
-     */
-    public func createNotificationBanner(presentViewController: @escaping (UIViewController) -> Void) -> NotificationBannerView {
-        let view = NotificationBannerView(connectInstance: self,
-                                presentViewController: presentViewController)
-        webViews.add(view.webView)
-        return view
     }
 
     /**
