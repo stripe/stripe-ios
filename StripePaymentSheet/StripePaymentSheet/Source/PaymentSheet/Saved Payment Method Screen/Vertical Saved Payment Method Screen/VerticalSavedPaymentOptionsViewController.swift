@@ -118,8 +118,15 @@ extension VerticalSavedPaymentOptionsViewController: PaymentMethodRowDelegate {
             // TODO(porter) Handle error - no matching payment method found
             return
         }
-
-        _ = bottomSheetController?.popContentViewController()
-        delegate?.didSelectPaymentMethod(paymentMethod)
+        
+        // Deselect previous button
+        paymentMethodRows.filter{$0.button != button}.forEach { $0.button.isSelected = false }
+        
+        // Give time for new selected row to show it has been selected before dismissing
+        // Makes UX feel a little nicer
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            _ = self?.bottomSheetController?.popContentViewController()
+            self?.delegate?.didSelectPaymentMethod(paymentMethod)
+        }
     }
 }

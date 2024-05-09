@@ -43,6 +43,6 @@ final class VerticalSavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotT
                 STPFixtures.usBankAccountPaymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "BANK OF AMERICA"),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "STRIPE"),
-                STPFixtures.sepaDebitPaymentMethod(),]
+                STPFixtures.sepaDebitPaymentMethod(), ]
     }
 }

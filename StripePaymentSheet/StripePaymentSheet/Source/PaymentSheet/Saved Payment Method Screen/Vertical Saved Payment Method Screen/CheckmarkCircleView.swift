@@ -13,7 +13,7 @@ final class CheckmarkCircleView: UIView {
 
     let checkmarkColor: UIColor = .white
     let fillColor: UIColor
-    
+
     init(fillColor: UIColor) {
         self.fillColor = fillColor
         super.init(frame: .zero)

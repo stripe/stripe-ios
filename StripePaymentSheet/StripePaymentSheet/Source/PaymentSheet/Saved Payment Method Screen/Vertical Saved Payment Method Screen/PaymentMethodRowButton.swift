@@ -43,9 +43,9 @@ final class PaymentMethodRowButton: UIView {
     // MARK: Private properties
     private let viewModel: ViewModel
     private let height = 44.0 // Hardcoded height from figma
-    
+
     // MARK: Private views
-    
+
     private lazy var paymentMethodImageView: UIImageView = {
         let imageView = UIImageView(image: viewModel.image)
         imageView.contentMode = .scaleAspectFit
@@ -109,7 +109,7 @@ final class PaymentMethodRowButton: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: Tap handlers
     @objc private func handleTap() {
         shadowRoundedRect.isSelected = true
