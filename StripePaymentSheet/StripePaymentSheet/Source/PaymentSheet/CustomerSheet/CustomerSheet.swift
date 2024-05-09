@@ -80,7 +80,6 @@ public class CustomerSheet {
         self.customerAdapter = nil
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
         self.customerSheetIntentConfiguration = intentConfiguration
-
     }
 
     let customerSessionClientSecretProvider: (() async throws -> CustomerSessionClientSecret)?
@@ -275,24 +274,40 @@ extension StripeCustomerAdapter {
 }
 extension CustomerSheet {
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection? {
-        guard let dataSource = createCustomerSheetDataSource(),
-              case let .customerSession(customerSessionAdapter) = dataSource.dataSource else {
+        guard let customerSheetDataSource = createCustomerSheetDataSource() else {
             return nil
         }
-        let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
-        let selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+        switch customerSheetDataSource.dataSource {
+        case .customerSession(let customerSessionAdapter):
+            let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
+            let selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
 
-        switch selectedPaymentOption {
-        case .applePay:
-            return .applePay()
-        case .stripeId(let paymentMethodId):
-            let paymentMethods = elementsSession.customer?.paymentMethods ?? []
-            guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
+            switch selectedPaymentOption {
+            case .applePay:
+                return .applePay()
+            case .stripeId(let paymentMethodId):
+                let paymentMethods = elementsSession.customer?.paymentMethods ?? []
+                guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
+                    return nil
+                }
+                return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
+            default:
                 return nil
             }
-            return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
-        default:
-            return nil
+        case .customerAdapter(let customerAdapter):
+            let selectedPaymentOption = try await customerAdapter.fetchSelectedPaymentOption()
+            switch selectedPaymentOption {
+            case .applePay:
+                return .applePay()
+            case .stripeId(let paymentMethodId):
+                let paymentMethods = try await customerAdapter.fetchPaymentMethods()
+                guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
+                    return nil
+                }
+                return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
+            default:
+                return nil
+            }
         }
     }
 }
@@ -301,15 +316,12 @@ public extension CustomerSheet {
     @_spi(CustomerSessionBetaAccess)
     struct IntentConfiguration {
 
-        @_spi(CustomerSessionBetaAccess)
-        public typealias SetupIntentClientSecretProvider = (() async throws -> String)
-        var paymentMethodTypes: [String]?
+        internal var paymentMethodTypes: [String]?
+        internal let setupIntentClientSecretProvider: () async throws -> String
 
-        let setupIntentClientSecretProvider: SetupIntentClientSecretProvider
-
-        @_spi(CustomerSessionBetaAccess)
+        
         public init(paymentMethodTypes: [String]? = nil,
-                    setupIntentClientSecretProvider: @escaping SetupIntentClientSecretProvider) {
+                    setupIntentClientSecretProvider: @escaping (() async throws -> String)) {
             self.paymentMethodTypes = paymentMethodTypes
             self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
         }
