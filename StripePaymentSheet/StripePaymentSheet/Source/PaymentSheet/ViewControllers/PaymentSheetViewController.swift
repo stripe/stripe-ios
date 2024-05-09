@@ -189,6 +189,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         super.init(nibName: nil, bundle: nil)
         self.configuration.style.configure(self)
         self.savedPaymentOptionsViewController.delegate = self
+        // TODO: This self.view call should be moved to viewDidLoad
+        self.view.backgroundColor = configuration.appearance.colors.background
     }
 
     deinit {
