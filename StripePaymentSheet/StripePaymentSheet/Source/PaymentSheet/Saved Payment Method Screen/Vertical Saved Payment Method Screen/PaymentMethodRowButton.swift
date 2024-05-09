@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentMethodRowDelegate: AnyObject {
+protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: PaymentMethodRowButton)
     // TODO(porter) Add did delete and did update
 }
@@ -38,7 +38,7 @@ final class PaymentMethodRowButton: UIView {
         }
     }
 
-    weak var delegate: PaymentMethodRowDelegate?
+    weak var delegate: PaymentMethodRowButtonDelegate?
 
     // MARK: Private properties
     private let viewModel: ViewModel

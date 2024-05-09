@@ -111,8 +111,8 @@ extension VerticalSavedPaymentOptionsViewController: SheetNavigationBarDelegate 
     }
 }
 
-// MARK: - PaymentMethodRowDelegate
-extension VerticalSavedPaymentOptionsViewController: PaymentMethodRowDelegate {
+// MARK: - PaymentMethodRowButtonDelegate
+extension VerticalSavedPaymentOptionsViewController: PaymentMethodRowButtonDelegate {
     func didSelectButton(_ button: PaymentMethodRowButton) {
         guard let paymentMethod = paymentMethodRows.first(where: { $0.button === button })?.paymentMethod else {
             // TODO(porter) Handle error - no matching payment method found
