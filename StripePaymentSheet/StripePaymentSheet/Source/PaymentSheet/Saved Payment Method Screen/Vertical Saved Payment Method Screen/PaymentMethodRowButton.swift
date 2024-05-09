@@ -16,6 +16,7 @@ protocol PaymentMethodRowButtonDelegate: AnyObject {
     // TODO(porter) Add did delete and did update
 }
 
+// TODO: Make this use RowButton internally
 final class PaymentMethodRowButton: UIView {
 
     struct ViewModel {
@@ -53,13 +54,7 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var label: UILabel = {
-        let label = UILabel()
-        label.text = viewModel.text
-        label.font = viewModel.appearance.scaledFont(for: viewModel.appearance.font.base.medium,
-                                                     style: .callout,
-                                                     maximumPointSize: 25)
-        label.adjustsFontForContentSizeCategory = true
-        return label
+        return .makeVerticalRowButtonLabel(text: viewModel.text, appearance: viewModel.appearance)
     }()
 
     private lazy var circleView: CheckmarkCircleView = {
@@ -69,16 +64,7 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView])
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.directionalLayoutMargins = .init(top: 12, // Hardcoded from figma
-                                                   leading: PaymentSheetUI.defaultPadding,
-                                                   bottom: 12,
-                                                   trailing: PaymentSheetUI.defaultPadding)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.setCustomSpacing(12, after: paymentMethodImageView) // Hardcoded from figma
+        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [paymentMethodImageView, label, .makeSpacerView(), circleView])
         return stackView
     }()
 

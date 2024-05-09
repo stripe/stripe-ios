@@ -100,4 +100,16 @@ import UIKit
             }
         }
     }
+
+    static func makeSpacerView(width: CGFloat? = nil, height: CGFloat? = nil) -> UIView {
+        let spacerView = UIView(frame: .zero)
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        if let width {
+            spacerView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        }
+        if let height {
+            spacerView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+        return spacerView
+    }
 }

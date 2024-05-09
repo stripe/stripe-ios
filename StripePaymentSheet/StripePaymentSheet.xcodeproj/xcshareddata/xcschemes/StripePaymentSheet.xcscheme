@@ -42,6 +42,11 @@
             value = "$(SRCROOT)/../Tests/ReferenceImages"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "recordMode"
+            value = "false"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <Testables>
          <TestableReference

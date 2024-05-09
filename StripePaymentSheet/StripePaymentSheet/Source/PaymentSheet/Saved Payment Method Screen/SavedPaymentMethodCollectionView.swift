@@ -302,13 +302,13 @@ extension SavedPaymentMethodCollectionView {
                     accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage()
                 case .link:
                     label.text = STPPaymentMethodType.link.displayName
                     accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage()
                     paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
                         forBackgroundColor: appearance.colors.componentBackground
                     )
