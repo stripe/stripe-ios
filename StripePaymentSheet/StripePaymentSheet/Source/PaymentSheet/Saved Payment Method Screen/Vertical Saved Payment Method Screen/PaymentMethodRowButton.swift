@@ -12,11 +12,10 @@ import Foundation
 import UIKit
 
 protocol PaymentMethodRowDelegate: AnyObject {
-    func didSelectRow(_ row: PaymentMethodRowButton)
+    func didSelectButton(_ button: PaymentMethodRowButton)
     // TODO(porter) Add did delete and did update
 }
 
-// TODO(porter) Does this need to be a button?
 final class PaymentMethodRowButton: UIView {
 
     struct ViewModel {
@@ -26,8 +25,9 @@ final class PaymentMethodRowButton: UIView {
         // TODO(porter) Add can remove and can update
     }
 
-    // TODO(porter) Maybe expand this into an enum of (selected, unselected, editing)
-    public var isSelected: Bool {
+    // MARK: Internal properties
+    // TODO(porter) Maybe expand this into an enum of (selected, unselected, editing) state
+    var isSelected: Bool {
         get {
             return shadowRoundedRect.isSelected
         }
@@ -38,21 +38,28 @@ final class PaymentMethodRowButton: UIView {
         }
     }
 
-    private let viewModel: ViewModel
-    private let height = 44.0 // Hardcoded height from figma
-
     weak var delegate: PaymentMethodRowDelegate?
 
+    // MARK: Private properties
+    private let viewModel: ViewModel
+    private let height = 44.0 // Hardcoded height from figma
+    
+    // MARK: Private views
+    
     private lazy var paymentMethodImageView: UIImageView = {
         let imageView = UIImageView(image: viewModel.image)
         imageView.contentMode = .scaleAspectFit
+        // TODO(porter) Do we want to round the corners?
         return imageView
     }()
 
     private lazy var label: UILabel = {
         let label = UILabel()
         label.text = viewModel.text
-        label.font = viewModel.appearance.scaledFont(for: viewModel.appearance.font.base.medium, style: .callout, maximumPointSize: 20)
+        label.font = viewModel.appearance.scaledFont(for: viewModel.appearance.font.base.medium,
+                                                     style: .callout,
+                                                     maximumPointSize: 25)
+        label.adjustsFontForContentSizeCategory = true
         return label
     }()
 
@@ -69,7 +76,7 @@ final class PaymentMethodRowButton: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.setCustomSpacing(12, after: paymentMethodImageView)
+        stackView.setCustomSpacing(12, after: paymentMethodImageView) // Hardcoded from figma
         return stackView
     }()
 
@@ -102,16 +109,17 @@ final class PaymentMethodRowButton: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    // MARK: Tap handlers
     @objc private func handleTap() {
         shadowRoundedRect.isSelected = true
         circleView.alpha = 1.0
-        delegate?.didSelectRow(self)
+        delegate?.didSelectButton(self)
     }
 
 }
 
-// MARK: Extensions
+// MARK: Helper extensions
 extension UIView {
     public static var spacerView: UIView {
         let view = UIView()

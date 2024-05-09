@@ -11,12 +11,20 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 import UIKit
 
+//TODO(porter) Add VerticalSavedPaymentOptionsViewControllerDelegate
+protocol VerticalSavedPaymentOptionsViewControllerDelegate: AnyObject {
+    func didSelectPaymentMethod(_ paymentMethod: STPPaymentMethod)
+}
+
 /// A view controller that shows a list of saved payment methods in a vertical orientation
 class VerticalSavedPaymentOptionsViewController: UIViewController {
 
     private let configuration: PaymentSheet.Configuration
     private let paymentMethods: [STPPaymentMethod]
-
+    
+    // MARK: Internal properties
+    weak var delegate: VerticalSavedPaymentOptionsViewControllerDelegate?
+    
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
@@ -29,22 +37,23 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
 
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-        label.text = .Localized.select_payment_method
+        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        label.text = nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
         return label
     }()
     
-    private lazy var paymentMethodRows: [PaymentMethodRowButton] = {
-        return paymentMethods.map {
+    private lazy var paymentMethodRows: [(paymentMethod: STPPaymentMethod, button: PaymentMethodRowButton)] = {
+        return paymentMethods.map { paymentMethod in
             let button = PaymentMethodRowButton(viewModel: .init(appearance: configuration.appearance,
-                                                                 text: $0.paymentSheetLabel,
-                                                                 image: $0.makeSavedPaymentMethodRowImage()))
+                                                                 text: paymentMethod.paymentSheetLabel,
+                                                                 image: paymentMethod.makeSavedPaymentMethodRowImage()))
             button.delegate = self
-            return button
+            return (paymentMethod, button)
         }
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows)
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows.map{$0.button})
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
@@ -67,7 +76,7 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
         // TODO(porter) Pipe in selected payment method, default to selecting first for now
-        paymentMethodRows.first?.isSelected = true
+        paymentMethodRows.first?.button.isSelected = true
         view.addAndPinSubviewToSafeArea(stackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 }
@@ -75,7 +84,6 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
 // MARK: - BottomSheetContentViewController
 extension VerticalSavedPaymentOptionsViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
-        // TODO
         return true
     }
 
@@ -84,7 +92,6 @@ extension VerticalSavedPaymentOptionsViewController: BottomSheetContentViewContr
     }
 
     var requiresFullScreen: Bool {
-        // TODO
         return false
     }
 
@@ -106,8 +113,13 @@ extension VerticalSavedPaymentOptionsViewController: SheetNavigationBarDelegate 
 
 // MARK: - PaymentMethodRowDelegate
 extension VerticalSavedPaymentOptionsViewController: PaymentMethodRowDelegate {
-    func didSelectRow(_ row: PaymentMethodRowButton) {
-         // TODO(porter) Handle selection, deselect other rows, etc
-        // TODO(porter) How do we know which payment method to operate on/which row was tapped
+    func didSelectButton(_ button: PaymentMethodRowButton) {
+        guard let paymentMethod = paymentMethodRows.first(where: { $0.button === button })?.paymentMethod else {
+            // TODO(porter) Handle error - no matching payment method found
+            return
+        }
+
+        _ = bottomSheetController?.popContentViewController()
+        delegate?.didSelectPaymentMethod(paymentMethod)
     }
 }
