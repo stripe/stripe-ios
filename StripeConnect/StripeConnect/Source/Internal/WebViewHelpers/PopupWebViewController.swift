@@ -29,6 +29,9 @@ class PopupWebViewController: UIViewController {
         webView.didClose = { [weak self] _ in
             self?.dismiss(animated: true)
         }
+        webView.presentPopup = { [weak self] vc in
+            self?.present(vc, animated: true)
+        }
 
         // Add "Done" button to dismiss the view
         navigationItem.rightBarButtonItem = .init(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
