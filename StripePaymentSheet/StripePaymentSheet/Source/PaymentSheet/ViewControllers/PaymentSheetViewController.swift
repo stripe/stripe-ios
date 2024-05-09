@@ -13,27 +13,9 @@ import PassKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentSheetViewControllerDelegate: AnyObject {
-    func paymentSheetViewControllerShouldConfirm(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-    )
-    func paymentSheetViewControllerDidFinish(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        result: PaymentSheetResult
-    )
-    func paymentSheetViewControllerDidCancel(
-        _ paymentSheetViewController: PaymentSheetViewController
-    )
-    func paymentSheetViewControllerDidSelectPayWithLink(
-        _ paymentSheetViewController: PaymentSheetViewController
-    )
-}
-
 /// For internal SDK use only
 @objc(STP_Internal_PaymentSheetViewController)
-class PaymentSheetViewController: UIViewController {
+class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerProtocol {
     enum PaymentSheetViewControllerError: Error {
         case addingNewNoPaymentOptionOnBuyButtonTap
         case selectingSavedNoPaymentOptionOnBuyButtonTap
@@ -205,7 +187,9 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
+        self.configuration.style.configure(self)
         self.savedPaymentOptionsViewController.delegate = self
+        // TODO: This self.view call should be moved to viewDidLoad
         self.view.backgroundColor = configuration.appearance.colors.background
     }
 
@@ -217,6 +201,7 @@ class PaymentSheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [

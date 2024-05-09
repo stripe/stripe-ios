@@ -14,7 +14,7 @@ import Foundation
 import UIKit
 
 /// For internal SDK use only
-class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewController {
+class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewControllerProtocol {
     // MARK: - Internal Properties
     let intent: Intent
     let configuration: PaymentSheet.Configuration
@@ -60,7 +60,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             return addPaymentMethodViewController.selectedPaymentMethodType
         }
     }
-    weak var delegate: FlowControllerViewControllerDelegate?
+    weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
@@ -469,12 +469,12 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         switch mode {
         case .selectingSaved:
-            self.delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
-                self.delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
 
@@ -484,7 +484,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         // When we close the window, unset the hacky Link button. This will reset the PaymentOption to nil, if needed.
         isHackyLinkButtonSelected = false
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
-        delegate?.flowControllerViewControllerShouldClose(self, didCancel: didCancel)
+        flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: didCancel)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             configureEditSavedPaymentMethodsButton()
@@ -564,7 +564,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         case .applePay, .link, .saved:
             updateUI()
             if isDismissable, !(selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false) {
-                delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
     }
