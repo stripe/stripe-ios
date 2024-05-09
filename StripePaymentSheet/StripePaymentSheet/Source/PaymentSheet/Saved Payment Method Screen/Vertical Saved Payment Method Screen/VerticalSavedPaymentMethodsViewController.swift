@@ -1,5 +1,5 @@
 //
-//  VerticalSavedPaymentOptionsViewController.swift
+//  VerticalSavedPaymentMethodsViewController.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/7/24.
@@ -11,18 +11,18 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol VerticalSavedPaymentOptionsViewControllerDelegate: AnyObject {
+protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func didSelectPaymentMethod(_ paymentMethod: STPPaymentMethod)
 }
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
-class VerticalSavedPaymentOptionsViewController: UIViewController {
+class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private let configuration: PaymentSheet.Configuration
     private let paymentMethods: [STPPaymentMethod]
 
     // MARK: Internal properties
-    weak var delegate: VerticalSavedPaymentOptionsViewControllerDelegate?
+    weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
 
     // MARK: - UI properties
 
@@ -82,7 +82,7 @@ class VerticalSavedPaymentOptionsViewController: UIViewController {
 }
 
 // MARK: - BottomSheetContentViewController
-extension VerticalSavedPaymentOptionsViewController: BottomSheetContentViewController {
+extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
         return true
     }
@@ -101,7 +101,7 @@ extension VerticalSavedPaymentOptionsViewController: BottomSheetContentViewContr
 }
 
 // MARK: - SheetNavigationBarDelegate
-extension VerticalSavedPaymentOptionsViewController: SheetNavigationBarDelegate {
+extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
         // no-op we are in 'back' style mode
     }
@@ -112,7 +112,7 @@ extension VerticalSavedPaymentOptionsViewController: SheetNavigationBarDelegate 
 }
 
 // MARK: - PaymentMethodRowButtonDelegate
-extension VerticalSavedPaymentOptionsViewController: PaymentMethodRowButtonDelegate {
+extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDelegate {
     func didSelectButton(_ button: PaymentMethodRowButton) {
         guard let paymentMethod = paymentMethodRows.first(where: { $0.button === button })?.paymentMethod else {
             // TODO(porter) Handle error - no matching payment method found

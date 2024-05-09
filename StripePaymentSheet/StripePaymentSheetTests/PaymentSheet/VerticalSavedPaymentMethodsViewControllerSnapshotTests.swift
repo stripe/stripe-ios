@@ -1,5 +1,5 @@
 //
-//  VerticalSavedPaymentOptionsViewControllerSnapshotTests.swift
+//  VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/7/24.
@@ -10,24 +10,24 @@ import StripeCoreTestUtils
 @testable import StripePaymentsTestUtils
 import XCTest
 
-final class VerticalSavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase {
+final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode() {
-        _test_VerticalSavedPaymentOptionsViewControllerSnapshotTests(darkMode: true)
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: true)
     }
 
-    func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsLightMode() {
-        _test_VerticalSavedPaymentOptionsViewControllerSnapshotTests(darkMode: false)
+    func test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsLightMode() {
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false)
     }
 
-    func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsAppearance() {
-        _test_VerticalSavedPaymentOptionsViewControllerSnapshotTests(darkMode: false, appearance: ._testMSPaintTheme)
+    func test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsAppearance() {
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, appearance: ._testMSPaintTheme)
     }
 
-    func _test_VerticalSavedPaymentOptionsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default) {
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
-        let sut = VerticalSavedPaymentOptionsViewController(configuration: configuration, paymentMethods: generatePaymentMethods())
+        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration, paymentMethods: generatePaymentMethods())
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         if darkMode {
