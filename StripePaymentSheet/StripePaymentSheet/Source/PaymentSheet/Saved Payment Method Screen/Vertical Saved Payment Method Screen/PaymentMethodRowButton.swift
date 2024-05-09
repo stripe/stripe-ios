@@ -121,7 +121,7 @@ final class PaymentMethodRowButton: UIView {
 
 // MARK: Helper extensions
 extension UIView {
-    public static var spacerView: UIView {
+    static var spacerView: UIView {
         let view = UIView()
         view.isUserInteractionEnabled = false
         view.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
