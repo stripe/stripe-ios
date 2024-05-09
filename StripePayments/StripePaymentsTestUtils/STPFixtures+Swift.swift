@@ -46,6 +46,21 @@ public extension STPFixtures {
         }
         return STPPaymentIntent.decodedObject(fromAPIResponse: apiResponse)!
     }
+    
+    static func usBankAccountPaymentMethod(bankName: String? = nil) -> STPPaymentMethod {
+        var json = STPTestUtils.jsonNamed("USBankAccountPaymentMethod") as? [String: Any]
+        if let bankName = bankName {
+            var usBankAccountData = json?["us_bank_account"] as? [String: Any]
+            usBankAccountData?["bank_name"] = bankName
+            json?["us_bank_account"] = usBankAccountData
+        }
+        return STPPaymentMethod.decodedObject(fromAPIResponse: json)!
+    }
+    
+    static func sepaDebitPaymentMethod() -> STPPaymentMethod {
+        let json = STPTestUtils.jsonNamed("SEPADebitPaymentMethod")
+        return STPPaymentMethod.decodedObject(fromAPIResponse: json)!
+    }
 }
 
 public extension STPPaymentMethodParams {

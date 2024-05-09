@@ -91,7 +91,9 @@ final class PaymentMethodRowButton: UIView {
             shadowRoundedRect.leadingAnchor.constraint(equalTo: leadingAnchor),
             shadowRoundedRect.trailingAnchor.constraint(equalTo: trailingAnchor),
             shadowRoundedRect.bottomAnchor.constraint(equalTo: bottomAnchor),
-            shadowRoundedRect.heightAnchor.constraint(equalToConstant: height)
+            shadowRoundedRect.heightAnchor.constraint(equalToConstant: height),
+            paymentMethodImageView.heightAnchor.constraint(equalToConstant: 20),
+            paymentMethodImageView.widthAnchor.constraint(equalToConstant: 25)
         ])
         // TODO(accessibility)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))

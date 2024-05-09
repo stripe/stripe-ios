@@ -40,6 +40,10 @@ final class VerticalSavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotT
     
     private func generatePaymentMethods() -> [STPPaymentMethod] {
         // TODO(porter) Add SEPA and US Bank Acct. payment methods
-        return [STPFixtures.paymentMethod()]
+        return [STPFixtures.paymentMethod(),
+                STPFixtures.usBankAccountPaymentMethod(),
+                STPFixtures.usBankAccountPaymentMethod(bankName: "BANK OF AMERICA"),
+                STPFixtures.usBankAccountPaymentMethod(bankName: "STRIPE"),
+                STPFixtures.sepaDebitPaymentMethod()]
     }
 }
