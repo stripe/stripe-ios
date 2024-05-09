@@ -26,13 +26,23 @@ public class PaymentDetailsViewController: UIViewController {
         webView.addMessageHandler(.init(name: "componentOnClose", didReceiveMessage: { [weak self] _ in
             self?.dismiss(animated: true)
         }))
+
+        /*
+         - Setting `inline=true` makes the payment details full-screen
+
+         - The payment-details component requires that `setPayment` be called before
+           adding it to the DOM. The hosted page has special-case logic where it
+           doesn't add the component to the DOM if `componentType === 'payment-details'`
+           and assumes it will be added after the page has loaded from Swift.
+         */
         webView.didFinishLoading = { webView in
             webView.evaluateJavaScript("""
+            component.setAttribute('inline', true);
             component.setPayment('\(paymentId)');
-            document.body.appendChild(component);
             component.setOnClose(() => {
                 window.webkit.messageHandlers.componentOnClose.postMessage('');
             });
+            document.body.appendChild(component);
             """)
         }
     }
