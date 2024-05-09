@@ -31,7 +31,7 @@ struct TextInput: View {
 }
 
 extension TextInput {
-    init(label: String, 
+    init(label: String,
          placeholder: String,
          text: Binding<String>,
          isValid: Bool = true) {

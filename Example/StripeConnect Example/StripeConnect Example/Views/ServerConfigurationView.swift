@@ -136,17 +136,29 @@ struct ServerConfigurationView: View {
             }
             .onChange(of: demoAccount) { newValue in
                 if newValue != nil {
+                    customAccount = ""
+                    customEndpoint = ""
+                    customPublishableKey = ""
                     save()
                 }
             }
             .onChange(of: customEndpoint) { newValue in
                 if !newValue.isEmpty {
                     demoAccount = nil
+                    customAccount = ""
                 }
             }
             .onChange(of: customPublishableKey) { newValue in
                 if !newValue.isEmpty {
                     demoAccount = nil
+                    customAccount = ""
+                }
+            }
+            .onChange(of: customAccount) { newValue in
+                if !newValue.isEmpty {
+                    demoAccount = nil
+                    customEndpoint = ""
+                    customPublishableKey = ""
                 }
             }
         }
