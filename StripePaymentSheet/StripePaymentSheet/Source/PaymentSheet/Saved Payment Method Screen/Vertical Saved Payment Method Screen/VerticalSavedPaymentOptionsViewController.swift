@@ -119,7 +119,7 @@ extension VerticalSavedPaymentOptionsViewController: PaymentMethodRowButtonDeleg
         }
         
         // Deselect previous button
-        paymentMethodRows.filter{$0.button != button}.forEach { $0.button.isSelected = false }
+        paymentMethodRows.filter{$0.button != button}.forEach{$0.button.isSelected = false}
         
         // Give time for new selected row to show it has been selected before dismissing
         // Makes UX feel a little nicer
