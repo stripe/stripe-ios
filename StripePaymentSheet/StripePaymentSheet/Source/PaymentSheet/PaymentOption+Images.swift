@@ -97,7 +97,7 @@ extension STPPaymentMethod {
             return makeIcon()
         }
     }
-    
+
     /// Returns an image to display inside a row representing the given payment option in the saved PM row view
     func makeSavedPaymentMethodRowImage() -> UIImage {
         switch type {

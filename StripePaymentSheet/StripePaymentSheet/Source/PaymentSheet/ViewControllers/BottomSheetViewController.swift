@@ -129,7 +129,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 // We shouldn't need this constraint anymore.
                 self.manualHeightConstraint.isActive = false
                 self.contentViewController.didFinishAnimatingHeight()
-                
+
             })
         }
     }

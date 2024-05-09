@@ -37,13 +37,13 @@ final class VerticalSavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotT
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
-    
+
     private func generatePaymentMethods() -> [STPPaymentMethod] {
         // TODO(porter) Add SEPA and US Bank Acct. payment methods
         return [STPFixtures.paymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "BANK OF AMERICA"),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "STRIPE"),
-                STPFixtures.sepaDebitPaymentMethod()]
+                STPFixtures.sepaDebitPaymentMethod(),]
     }
 }
