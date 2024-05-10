@@ -39,7 +39,7 @@ final class PaymentMethodRowButton: UIView {
 
             selectionTapGesture.isEnabled = !isEditing
             shadowRoundedRect.isSelected = isSelected
-            circleView.alpha = isSelected ? 1.0 : 0.0
+            circleView.isHidden = !isSelected
             editButton.isHidden = !isEditing // TODO(porter) only show if we can edit
             removeButton.isHidden = !isEditing // TOOD(porter) only show if we can remove
         }
@@ -89,9 +89,10 @@ final class PaymentMethodRowButton: UIView {
         return label
     }()
 
-    private lazy var circleView: CheckmarkCircleView = {
-        let circleView = CheckmarkCircleView(fillColor: viewModel.appearance.colors.primary)
-        circleView.alpha = 0.0
+    private lazy var circleView: CircularButton = {
+        let circleView = CircularButton(style: .check, iconColor: .white)
+        circleView.backgroundColor = viewModel.appearance.colors.primary
+        circleView.isHidden = true
         return circleView
     }()
 

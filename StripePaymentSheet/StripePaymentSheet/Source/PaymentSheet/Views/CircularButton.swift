@@ -35,6 +35,7 @@ class CircularButton: UIControl {
         case close
         case remove
         case edit
+        case check
     }
 
     required init(style: Style, iconColor: UIColor = .secondaryLabel, dangerColor: UIColor = .systemRed) {
@@ -105,6 +106,10 @@ class CircularButton: UIControl {
             imageView.image = Image.icon_edit.makeImage(template: true)
             accessibilityLabel = String.Localized.update_card
             accessibilityIdentifier = "CircularButton.Edit"
+
+        case .check:
+            imageView.image = Image.icon_checkmark.makeImage(template: true)
+            // no accessibility for now, this is just used as a view, not a button
         }
     }
 
