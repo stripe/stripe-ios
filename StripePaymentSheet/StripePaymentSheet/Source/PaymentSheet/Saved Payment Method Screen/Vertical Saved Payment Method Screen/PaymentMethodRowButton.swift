@@ -15,7 +15,6 @@ protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: PaymentMethodRowButton)
     func didSelectRemoveButton(_ button: PaymentMethodRowButton)
     func didSelectEditButton(_ button: PaymentMethodRowButton)
-    // TODO(porter) Add did remove and did update
 }
 
 final class PaymentMethodRowButton: UIView {
