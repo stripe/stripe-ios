@@ -106,9 +106,8 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var editButton: CircularButton = {
-        let editButton = CircularButton(style: .edit, iconColor: viewModel.appearance.colors.icon)
-        editButton.backgroundColor = UIColor.dynamic(light: .systemGray5,
-                                                     dark: viewModel.appearance.colors.componentBackground.lighten(by: 0.075))
+        let editButton = CircularButton(style: .edit, iconColor: .white)
+        editButton.backgroundColor = viewModel.appearance.colors.icon
         editButton.isHidden = true
         editButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
         return editButton
