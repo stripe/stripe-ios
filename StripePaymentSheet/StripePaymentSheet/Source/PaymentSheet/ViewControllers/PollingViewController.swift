@@ -280,7 +280,7 @@ class PollingViewController: UIViewController {
             self.cancelButton.isHidden = true
             self.titleLabel.text = .Localized.payment_failed
             self.instructionLabel.text = .Localized.please_go_back
-            self.navigationBar.setStyle(.back)
+            self.navigationBar.setStyle(.back(showAdditionalButton: false))
             self.intentPoller.suspendPolling()
             self.oneSecondTimer?.invalidate()
 

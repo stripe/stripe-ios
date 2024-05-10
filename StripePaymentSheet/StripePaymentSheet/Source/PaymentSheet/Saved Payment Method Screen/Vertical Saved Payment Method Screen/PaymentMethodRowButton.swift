@@ -25,16 +25,49 @@ final class PaymentMethodRowButton: UIView {
         // TODO(porter) Add can remove and can update
     }
 
-    // MARK: Internal properties
-    // TODO(porter) Maybe expand this into an enum of (selected, unselected, editing) state
-    var isSelected: Bool {
-        get {
-            return shadowRoundedRect.isSelected
-        }
+    enum State {
+        case selected
+        case unselected
+        case editing
+    }
 
-        set {
-            shadowRoundedRect.isSelected = newValue
-            circleView.alpha = newValue ? 1.0 : 0.0
+    // MARK: Internal properties
+    var state: State = .unselected {
+        didSet {
+            previousState = oldValue
+
+            switch state {
+            case .selected:
+                shadowRoundedRect.isSelected = true
+                circleView.alpha = 1.0
+            case .unselected:
+                shadowRoundedRect.isSelected = false
+                circleView.alpha = 0.0
+            case .editing:
+                shadowRoundedRect.isSelected = false
+                circleView.alpha = 0.0
+                // TODO(porter) show edit buttons (edit and delete)
+            }
+        }
+    }
+
+    private(set) var previousState: State = .unselected
+
+    var isSelected: Bool {
+        switch state {
+        case .selected:
+            return true
+        case .unselected, .editing:
+            return false
+        }
+    }
+
+    var isEditing: Bool {
+        switch state {
+        case .selected, .unselected:
+            return false
+        case .editing:
+            return true
         }
     }
 
@@ -109,6 +142,8 @@ final class PaymentMethodRowButton: UIView {
 
     // MARK: Tap handlers
     @objc private func handleTap() {
+        // Ignore selection taps when editing
+        guard !isEditing else { return }
         shadowRoundedRect.isSelected = true
         circleView.alpha = 1.0
         delegate?.didSelectButton(self)

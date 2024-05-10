@@ -315,7 +315,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
                     return savedPaymentOptionsViewController.hasPaymentOptions
-                        ? .back : .close(showAdditionalButton: false)
+                        ? .back(showAdditionalButton: false) : .close(showAdditionalButton: false)
                 }
             }())
     }

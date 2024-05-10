@@ -324,7 +324,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     self.navigationBar.additionalButton.removeTarget(
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
-                    return shouldShowPaymentMethodCarousel ? .back : .close(showAdditionalButton: false)
+                    return shouldShowPaymentMethodCarousel ? .back(showAdditionalButton: false) : .close(showAdditionalButton: false)
                 }
             }())
     }

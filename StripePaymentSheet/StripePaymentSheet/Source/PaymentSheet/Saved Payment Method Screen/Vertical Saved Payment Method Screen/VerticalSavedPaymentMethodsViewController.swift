@@ -21,6 +21,31 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let configuration: PaymentSheet.Configuration
     private let paymentMethods: [STPPaymentMethod]
 
+    private var isEditingPaymentMethods: Bool = false {
+        didSet {
+            let additionalButtonTitle = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
+            navigationBar.additionalButton.setTitle(additionalButtonTitle, for: .normal)
+            headerLabel.text = headerText
+
+            // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
+            if isEditingPaymentMethods {
+                paymentMethodRows.map { $0.button }.forEach { $0.state = .editing }
+            } else {
+                paymentMethodRows.map { $0.button }.forEach { $0.state = $0.previousState }
+            }
+            // TODO(porter) Handle case where we delete the selected card
+        }
+    }
+
+    private var headerText: String {
+        if isEditingPaymentMethods {
+            return .Localized.manage_payment_methods
+        }
+
+        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        return nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
+    }
+
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
 
@@ -29,15 +54,19 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
-        navBar.setStyle(.back)
+        // TODO(porter) Only show edit button if we should
+        navBar.setStyle(.back(showAdditionalButton: true))
         navBar.delegate = self
+        navBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
+        navBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
+        navBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
         return navBar
     }()
 
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
-        label.text = nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
+        label.text = headerText
         return label
     }()
 
@@ -76,8 +105,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
         // TODO(porter) Pipe in selected payment method, default to selecting first for now
-        paymentMethodRows.first?.button.isSelected = true
+        paymentMethodRows.first?.button.state = .selected
         view.addAndPinSubviewToSafeArea(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+    }
+
+    @objc func didSelectEditSavedPaymentMethodsButton() {
+        isEditingPaymentMethods = !isEditingPaymentMethods
     }
 }
 
@@ -120,10 +153,11 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
         }
 
         // Deselect previous button        
-        paymentMethodRows.first { $0.button != button && $0.button.isSelected }?.button.isSelected = false
+        paymentMethodRows.first { $0.button != button && $0.button.isSelected }?.button.state = .unselected
 
         // Disable interaction to prevent double selecting since we will be dismissing soon
         self.view.isUserInteractionEnabled = false
+        self.navigationBar.isUserInteractionEnabled = false // Tint buttons in the nav bar to look disabled
 
         // Give time for new selected row to show it has been selected before dismissing
         // Makes UX feel a little nicer
