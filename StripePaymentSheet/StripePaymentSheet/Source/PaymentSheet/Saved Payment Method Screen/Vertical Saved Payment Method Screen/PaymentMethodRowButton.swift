@@ -96,6 +96,22 @@ final class PaymentMethodRowButton: UIView {
         circleView.isHidden = true
         return circleView
     }()
+    
+    lazy var deleteButton: CircularButton = {
+        let deleteButton = CircularButton(style: .remove, iconColor: .white)
+        deleteButton.backgroundColor = viewModel.appearance.colors.danger
+        deleteButton.isHidden = true
+        return deleteButton
+    }()
+    
+    private lazy var editButton: CircularButton = {
+        let editButton = CircularButton(style: .edit, iconColor: viewModel.appearance.colors.icon)
+        editButton.backgroundColor = UIColor.dynamic(light: .systemGray5,
+                                                     dark: viewModel.appearance.colors.componentBackground.lighten(by: 0.075))
+        editButton.isHidden = true
+        // TODO(porter) Handle tap
+        return editButton
+    }()
 
     lazy var removeButton: CircularButton = {
         let removeButton = CircularButton(style: .remove, iconColor: .white)
@@ -124,7 +140,6 @@ final class PaymentMethodRowButton: UIView {
                                                    trailing: PaymentSheetUI.defaultPadding)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = 12 // Hardcoded from figma
-
         return stackView
     }()
 
