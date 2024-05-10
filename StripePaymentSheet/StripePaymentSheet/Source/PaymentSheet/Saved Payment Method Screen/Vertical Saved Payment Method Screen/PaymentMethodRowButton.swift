@@ -96,7 +96,7 @@ final class PaymentMethodRowButton: UIView {
         circleView.isHidden = true
         return circleView
     }()
-    
+
     lazy var removeButton: CircularButton = {
         let removeButton = CircularButton(style: .remove, iconColor: .white)
         removeButton.backgroundColor = viewModel.appearance.colors.danger
@@ -104,7 +104,7 @@ final class PaymentMethodRowButton: UIView {
         removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
         return removeButton
     }()
-    
+
     private lazy var editButton: CircularButton = {
         let editButton = CircularButton(style: .edit, iconColor: viewModel.appearance.colors.icon)
         editButton.backgroundColor = UIColor.dynamic(light: .systemGray5,
@@ -150,7 +150,7 @@ final class PaymentMethodRowButton: UIView {
         shadowRoundedRect.addAndPinSubview(stackView)
         return shadowRoundedRect
     }()
-    
+
     private lazy var selectionTapGesture: UITapGestureRecognizer = {
         return UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap))
     }()
