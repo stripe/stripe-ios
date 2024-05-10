@@ -146,11 +146,11 @@ extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
 
 // MARK: - PaymentMethodRowButtonDelegate
 extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDelegate {
-    
+
     private func paymentMethod(from button: PaymentMethodRowButton) -> STPPaymentMethod? {
         return paymentMethodRows.first(where: { $0.button === button })?.paymentMethod
     }
-    
+
     func didSelectButton(_ button: PaymentMethodRowButton) {
         guard let paymentMethod = paymentMethod(from: button) else {
             // TODO(porter) Handle error - no matching payment method found
@@ -171,22 +171,22 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
             self?.delegate?.didSelectPaymentMethod(paymentMethod)
         }
     }
-    
+
     func didSelectRemoveButton(_ button: PaymentMethodRowButton) {
         guard let paymentMethod = paymentMethod(from: button) else {
             // TODO(porter) Handle error - no matching payment method found
             return
         }
-        
+
         print("Remove payment method with id: \(paymentMethod.stripeId)")
     }
-    
+
     func didSelectEditButton(_ button: PaymentMethodRowButton) {
         guard let paymentMethod = paymentMethod(from: button) else {
             // TODO(porter) Handle error - no matching payment method found
             return
         }
-        
+
         print("Edit payment method with id: \(paymentMethod.stripeId)")
     }
 }

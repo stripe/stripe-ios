@@ -37,7 +37,7 @@ final class PaymentMethodRowButton: UIView {
     var state: State = .unselected {
         didSet {
             previousState = oldValue
-            
+
             selectionTapGesture.isEnabled = !isEditing
             shadowRoundedRect.isSelected = isSelected
             circleView.alpha = isSelected ? 1.0 : 0.0
@@ -95,7 +95,7 @@ final class PaymentMethodRowButton: UIView {
         circleView.alpha = 0.0
         return circleView
     }()
-    
+
     lazy var removeButton: CircularButton = {
         let removeButton = CircularButton(style: .remove, iconColor: .white)
         removeButton.backgroundColor = viewModel.appearance.colors.danger
@@ -103,7 +103,7 @@ final class PaymentMethodRowButton: UIView {
         removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
         return removeButton
     }()
-    
+
     private lazy var editButton: CircularButton = {
         let editButton = CircularButton(style: .edit, iconColor: viewModel.appearance.colors.icon)
         editButton.backgroundColor = UIColor.dynamic(light: .systemGray5,
@@ -124,7 +124,7 @@ final class PaymentMethodRowButton: UIView {
                                                    trailing: PaymentSheetUI.defaultPadding)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = 12 // Hardcoded from figma
-        
+
         return stackView
     }()
 
@@ -134,7 +134,7 @@ final class PaymentMethodRowButton: UIView {
         shadowRoundedRect.addAndPinSubview(stackView)
         return shadowRoundedRect
     }()
-    
+
     private lazy var selectionTapGesture: UITapGestureRecognizer = {
         return UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap))
     }()
@@ -161,11 +161,11 @@ final class PaymentMethodRowButton: UIView {
         state = .selected
         delegate?.didSelectButton(self)
     }
-    
+
     @objc private func handleEditButtonTapped() {
         delegate?.didSelectEditButton(self)
     }
-    
+
     @objc private func handleRemoveButtonTapped() {
         delegate?.didSelectRemoveButton(self)
     }
