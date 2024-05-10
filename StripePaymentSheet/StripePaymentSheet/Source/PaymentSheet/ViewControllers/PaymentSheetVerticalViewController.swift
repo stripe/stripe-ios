@@ -66,7 +66,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // TOOD(porter) Remove/rename
     @objc func presentManageScreen() {
-        bottomSheetController?.pushContentViewController(VerticalSavedPaymentOptionsViewController(configuration: configuration))
+        let vc = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+                                                           paymentMethods: loadResult.savedPaymentMethods)
+        vc.delegate = self
+        bottomSheetController?.pushContentViewController(vc)
         // TODO(porter) Set delegate
     }
 }
@@ -94,5 +97,12 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
 
     func didFinishAnimatingHeight() {
         // no-op
+    }
+}
+
+extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewControllerDelegate {
+    func didSelectPaymentMethod(_ paymentMethod: STPPaymentMethod) {
+        // TODO
+        print("Selected payment method with id: \(paymentMethod.stripeId)")
     }
 }

@@ -97,6 +97,24 @@ extension STPPaymentMethod {
             return makeIcon()
         }
     }
+
+    /// Returns an image to display inside a row representing the given payment option in the saved PM row view
+    func makeSavedPaymentMethodRowImage() -> UIImage {
+        switch type {
+        case .card:
+            let cardBrand = card?.preferredDisplayBrand ?? .unknown
+            return STPImageLibrary.cardBrandImage(for: cardBrand)
+        case .USBankAccount:
+            return PaymentSheetImageLibrary.bankIcon(
+                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
+            )
+        case .SEPADebit:
+            return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
+        default:
+            assertionFailure("\(type) not supported for saved PMs")
+            return makeIcon()
+        }
+    }
 }
 
 extension STPPaymentMethodParams {
