@@ -40,12 +40,18 @@ final class PaymentMethodRowButton: UIView {
             case .selected:
                 shadowRoundedRect.isSelected = true
                 circleView.alpha = 1.0
+                deleteButton.isHidden = true
+                editButton.isHidden = true
             case .unselected:
                 shadowRoundedRect.isSelected = false
                 circleView.alpha = 0.0
+                deleteButton.isHidden = true
+                editButton.isHidden = true
             case .editing:
                 shadowRoundedRect.isSelected = false
                 circleView.alpha = 0.0
+                deleteButton.isHidden = false
+                editButton.isHidden = false
                 // TODO(porter) show edit buttons (edit and delete)
             }
         }
@@ -100,9 +106,25 @@ final class PaymentMethodRowButton: UIView {
         circleView.alpha = 0.0
         return circleView
     }()
+    
+    lazy var deleteButton: CircularButton = {
+        let deleteButton = CircularButton(style: .remove, iconColor: .white)
+        deleteButton.backgroundColor = viewModel.appearance.colors.danger
+        deleteButton.isHidden = true
+        return deleteButton
+    }()
+    
+    private lazy var editButton: CircularButton = {
+        let editButton = CircularButton(style: .edit, iconColor: viewModel.appearance.colors.icon)
+        editButton.backgroundColor = UIColor.dynamic(light: .systemGray5,
+                                                     dark: viewModel.appearance.colors.componentBackground.lighten(by: 0.075))
+        editButton.isHidden = true
+        // TODO(porter) Handle tap
+        return editButton
+    }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView])
+        let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView, editButton, deleteButton])
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -111,7 +133,8 @@ final class PaymentMethodRowButton: UIView {
                                                    bottom: 12,
                                                    trailing: PaymentSheetUI.defaultPadding)
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.setCustomSpacing(12, after: paymentMethodImageView) // Hardcoded from figma
+        stackView.spacing = 12 // Hardcoded from figma
+        
         return stackView
     }()
 
