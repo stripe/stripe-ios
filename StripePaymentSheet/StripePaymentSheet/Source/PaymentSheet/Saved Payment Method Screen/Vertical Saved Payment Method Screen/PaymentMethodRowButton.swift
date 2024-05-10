@@ -42,7 +42,7 @@ final class PaymentMethodRowButton: UIView {
 
     // MARK: Private properties
     private let viewModel: ViewModel
-    
+
     // MARK: Private views
 
     private lazy var paymentMethodImageView: UIImageView = {
