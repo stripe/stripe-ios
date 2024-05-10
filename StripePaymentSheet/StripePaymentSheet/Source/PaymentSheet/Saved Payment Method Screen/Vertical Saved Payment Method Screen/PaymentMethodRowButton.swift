@@ -42,8 +42,7 @@ final class PaymentMethodRowButton: UIView {
 
     // MARK: Private properties
     private let viewModel: ViewModel
-    private let height = 44.0 // Hardcoded height from figma
-
+    
     // MARK: Private views
 
     private lazy var paymentMethodImageView: UIImageView = {
@@ -74,7 +73,7 @@ final class PaymentMethodRowButton: UIView {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.directionalLayoutMargins = .init(top: 12,
+        stackView.directionalLayoutMargins = .init(top: 12, // Hardcoded from figma
                                                    leading: PaymentSheetUI.defaultPadding,
                                                    bottom: 12,
                                                    trailing: PaymentSheetUI.defaultPadding)
@@ -96,7 +95,7 @@ final class PaymentMethodRowButton: UIView {
 
         addAndPinSubview(shadowRoundedRect)
         NSLayoutConstraint.activate([
-            paymentMethodImageView.heightAnchor.constraint(equalToConstant: 20),
+            paymentMethodImageView.heightAnchor.constraint(equalToConstant: 20), // Hardcoded from figma
             paymentMethodImageView.widthAnchor.constraint(equalToConstant: 25),
         ])
         // TODO(porter) accessibility?
