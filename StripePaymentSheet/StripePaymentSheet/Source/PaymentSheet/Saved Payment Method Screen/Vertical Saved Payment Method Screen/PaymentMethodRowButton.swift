@@ -40,8 +40,8 @@ final class PaymentMethodRowButton: UIView {
             selectionTapGesture.isEnabled = !isEditing
             shadowRoundedRect.isSelected = isSelected
             circleView.alpha = isSelected ? 1.0 : 0.0
-            editButton.isHidden = !isEditing
-            removeButton.isHidden = !isEditing
+            editButton.isHidden = !isEditing // TODO(porter) only show if we can edit
+            removeButton.isHidden = !isEditing // TOOD(porter) only show if we can remove
         }
     }
 
@@ -104,9 +104,8 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var editButton: CircularButton = {
-        let editButton = CircularButton(style: .edit, iconColor: viewModel.appearance.colors.icon)
-        editButton.backgroundColor = UIColor.dynamic(light: .systemGray5,
-                                                     dark: viewModel.appearance.colors.componentBackground.lighten(by: 0.075))
+        let editButton = CircularButton(style: .edit, iconColor: .white)
+        editButton.backgroundColor = viewModel.appearance.colors.icon
         editButton.isHidden = true
         editButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
         return editButton
