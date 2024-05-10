@@ -97,11 +97,12 @@ final class PaymentMethodRowButton: UIView {
         return circleView
     }()
     
-    lazy var deleteButton: CircularButton = {
-        let deleteButton = CircularButton(style: .remove, iconColor: .white)
-        deleteButton.backgroundColor = viewModel.appearance.colors.danger
-        deleteButton.isHidden = true
-        return deleteButton
+    lazy var removeButton: CircularButton = {
+        let removeButton = CircularButton(style: .remove, iconColor: .white)
+        removeButton.backgroundColor = viewModel.appearance.colors.danger
+        removeButton.isHidden = true
+        removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
+        return removeButton
     }()
     
     private lazy var editButton: CircularButton = {
@@ -109,7 +110,7 @@ final class PaymentMethodRowButton: UIView {
         editButton.backgroundColor = UIColor.dynamic(light: .systemGray5,
                                                      dark: viewModel.appearance.colors.componentBackground.lighten(by: 0.075))
         editButton.isHidden = true
-        // TODO(porter) Handle tap
+        editButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
         return editButton
     }()
 
@@ -148,6 +149,10 @@ final class PaymentMethodRowButton: UIView {
         shadowRoundedRect.translatesAutoresizingMaskIntoConstraints = false
         shadowRoundedRect.addAndPinSubview(stackView)
         return shadowRoundedRect
+    }()
+    
+    private lazy var selectionTapGesture: UITapGestureRecognizer = {
+        return UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap))
     }()
 
     private lazy var selectionTapGesture: UITapGestureRecognizer = {
