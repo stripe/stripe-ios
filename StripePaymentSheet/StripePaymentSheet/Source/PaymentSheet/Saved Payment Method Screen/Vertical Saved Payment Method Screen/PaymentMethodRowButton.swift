@@ -13,7 +13,9 @@ import UIKit
 
 protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: PaymentMethodRowButton)
-    // TODO(porter) Add did delete and did update
+    func didSelectRemoveButton(_ button: PaymentMethodRowButton)
+    func didSelectEditButton(_ button: PaymentMethodRowButton)
+    // TODO(porter) Add did remove and did update
 }
 
 final class PaymentMethodRowButton: UIView {
@@ -35,25 +37,12 @@ final class PaymentMethodRowButton: UIView {
     var state: State = .unselected {
         didSet {
             previousState = oldValue
-
-            switch state {
-            case .selected:
-                shadowRoundedRect.isSelected = true
-                circleView.alpha = 1.0
-                deleteButton.isHidden = true
-                editButton.isHidden = true
-            case .unselected:
-                shadowRoundedRect.isSelected = false
-                circleView.alpha = 0.0
-                deleteButton.isHidden = true
-                editButton.isHidden = true
-            case .editing:
-                shadowRoundedRect.isSelected = false
-                circleView.alpha = 0.0
-                deleteButton.isHidden = false
-                editButton.isHidden = false
-                // TODO(porter) show edit buttons (edit and delete)
-            }
+            
+            selectionTapGesture.isEnabled = !isEditing
+            shadowRoundedRect.isSelected = isSelected
+            circleView.alpha = isSelected ? 1.0 : 0.0
+            editButton.isHidden = !isEditing
+            removeButton.isHidden = !isEditing
         }
     }
 
@@ -107,11 +96,12 @@ final class PaymentMethodRowButton: UIView {
         return circleView
     }()
     
-    lazy var deleteButton: CircularButton = {
-        let deleteButton = CircularButton(style: .remove, iconColor: .white)
-        deleteButton.backgroundColor = viewModel.appearance.colors.danger
-        deleteButton.isHidden = true
-        return deleteButton
+    lazy var removeButton: CircularButton = {
+        let removeButton = CircularButton(style: .remove, iconColor: .white)
+        removeButton.backgroundColor = viewModel.appearance.colors.danger
+        removeButton.isHidden = true
+        removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
+        return removeButton
     }()
     
     private lazy var editButton: CircularButton = {
@@ -119,12 +109,12 @@ final class PaymentMethodRowButton: UIView {
         editButton.backgroundColor = UIColor.dynamic(light: .systemGray5,
                                                      dark: viewModel.appearance.colors.componentBackground.lighten(by: 0.075))
         editButton.isHidden = true
-        // TODO(porter) Handle tap
+        editButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
         return editButton
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView, editButton, deleteButton])
+        let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView, editButton, removeButton])
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -144,6 +134,10 @@ final class PaymentMethodRowButton: UIView {
         shadowRoundedRect.addAndPinSubview(stackView)
         return shadowRoundedRect
     }()
+    
+    private lazy var selectionTapGesture: UITapGestureRecognizer = {
+        return UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap))
+    }()
 
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
@@ -155,8 +149,7 @@ final class PaymentMethodRowButton: UIView {
             paymentMethodImageView.widthAnchor.constraint(equalToConstant: 25),
         ])
         // TODO(porter) accessibility?
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        addGestureRecognizer(tapGesture)
+        addGestureRecognizer(selectionTapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -164,12 +157,17 @@ final class PaymentMethodRowButton: UIView {
     }
 
     // MARK: Tap handlers
-    @objc private func handleTap() {
-        // Ignore selection taps when editing
-        guard !isEditing else { return }
-        shadowRoundedRect.isSelected = true
-        circleView.alpha = 1.0
+    @objc private func handleSelectionTap() {
+        state = .selected
         delegate?.didSelectButton(self)
+    }
+    
+    @objc private func handleEditButtonTapped() {
+        delegate?.didSelectEditButton(self)
+    }
+    
+    @objc private func handleRemoveButtonTapped() {
+        delegate?.didSelectRemoveButton(self)
     }
 
 }
