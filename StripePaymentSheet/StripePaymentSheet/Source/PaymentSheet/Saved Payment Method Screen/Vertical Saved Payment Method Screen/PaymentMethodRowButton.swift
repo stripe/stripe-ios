@@ -74,7 +74,10 @@ final class PaymentMethodRowButton: UIView {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = .init(top: 12,
+                                                   leading: PaymentSheetUI.defaultPadding,
+                                                   bottom: 12,
+                                                   trailing: PaymentSheetUI.defaultPadding)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.setCustomSpacing(12, after: paymentMethodImageView) // Hardcoded from figma
         return stackView
@@ -93,7 +96,6 @@ final class PaymentMethodRowButton: UIView {
 
         addAndPinSubview(shadowRoundedRect)
         NSLayoutConstraint.activate([
-            shadowRoundedRect.heightAnchor.constraint(equalToConstant: height),
             paymentMethodImageView.heightAnchor.constraint(equalToConstant: 20),
             paymentMethodImageView.widthAnchor.constraint(equalToConstant: 25),
         ])
