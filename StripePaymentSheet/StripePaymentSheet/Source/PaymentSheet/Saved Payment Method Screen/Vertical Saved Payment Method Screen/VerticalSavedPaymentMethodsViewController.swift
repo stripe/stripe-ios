@@ -109,6 +109,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     @objc func didSelectEditSavedPaymentMethodsButton() {
         isEditingPaymentMethods = !isEditingPaymentMethods
     }
+
+    @objc func didSelectEditSavedPaymentMethodsButton() {
+        isEditingPaymentMethods = !isEditingPaymentMethods
+    }
 }
 
 // MARK: - BottomSheetContentViewController

@@ -258,7 +258,7 @@ extension String.Localized {
     static var manage_payment_methods: String {
         STPLocalizedString(
             "Manage payment methods",
-            "Title shown above a view containing the customer's payment methods that they can delete or update"
+            "Title shown above a view containing the customer's card payment methods that they can delete or update"
         )
     }
 }
