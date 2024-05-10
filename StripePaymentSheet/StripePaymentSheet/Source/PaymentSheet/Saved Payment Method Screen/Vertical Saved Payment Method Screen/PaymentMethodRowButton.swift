@@ -91,12 +91,8 @@ final class PaymentMethodRowButton: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
-        addSubview(shadowRoundedRect)
+        addAndPinSubview(shadowRoundedRect)
         NSLayoutConstraint.activate([
-            shadowRoundedRect.topAnchor.constraint(equalTo: topAnchor),
-            shadowRoundedRect.leadingAnchor.constraint(equalTo: leadingAnchor),
-            shadowRoundedRect.trailingAnchor.constraint(equalTo: trailingAnchor),
-            shadowRoundedRect.bottomAnchor.constraint(equalTo: bottomAnchor),
             shadowRoundedRect.heightAnchor.constraint(equalToConstant: height),
             paymentMethodImageView.heightAnchor.constraint(equalToConstant: 20),
             paymentMethodImageView.widthAnchor.constraint(equalToConstant: 25),
