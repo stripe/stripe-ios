@@ -1048,7 +1048,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
         XCTAssertFalse(app.buttons["Remove card"].exists)
 
-        //Dismiss Sheet.
+        // Dismiss Sheet
         app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
         app.buttons["Done"].waitForExistenceAndTap(timeout: timeout)
         app.buttons["Close"].waitForExistenceAndTap(timeout: timeout)
