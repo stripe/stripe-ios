@@ -231,7 +231,7 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
         present(alertController, animated: true, completion: nil)
     }
 
-    func didSelectEditButton(_ button: PaymentMethodRowButton) {
+    func didSelectUpdateButton(_ button: PaymentMethodRowButton) {
         guard let paymentMethod = paymentMethod(from: button) else {
             // TODO(porter) Handle error - no matching payment method found
             // TODO(porter) Don't forget to hide the remove button on the update VC if w.r.t to allowsRemovalOfLastSavedPM

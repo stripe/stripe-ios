@@ -14,7 +14,7 @@ import UIKit
 protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: PaymentMethodRowButton)
     func didSelectRemoveButton(_ button: PaymentMethodRowButton)
-    func didSelectEditButton(_ button: PaymentMethodRowButton)
+    func didSelectUpdateButton(_ button: PaymentMethodRowButton)
 }
 
 final class PaymentMethodRowButton: UIView {
@@ -125,7 +125,7 @@ final class PaymentMethodRowButton: UIView {
         let updateButton = CircularButton(style: .edit, iconColor: .white)
         updateButton.backgroundColor = viewModel.appearance.colors.icon
         updateButton.isHidden = true
-        updateButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
+        updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
         return updateButton
     }()
 
@@ -178,8 +178,8 @@ final class PaymentMethodRowButton: UIView {
         delegate?.didSelectButton(self)
     }
 
-    @objc private func handleEditButtonTapped() {
-        delegate?.didSelectEditButton(self)
+    @objc private func handleUpdateButtonTapped() {
+        delegate?.didSelectUpdateButton(self)
     }
 
     @objc private func handleRemoveButtonTapped() {
