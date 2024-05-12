@@ -22,13 +22,12 @@ final class PaymentMethodRowButton: UIView {
     struct ViewModel {
         let appearance: PaymentSheet.Appearance
         let paymentMethod: STPPaymentMethod
-        // TODO(porter) Add can remove and can update
     }
 
     enum State {
         case selected
         case unselected
-        case editing
+        case editing(allowsRemoval: Bool, allowsUpdating: Bool)
     }
 
     // MARK: Internal properties
@@ -39,8 +38,8 @@ final class PaymentMethodRowButton: UIView {
             selectionTapGesture.isEnabled = !isEditing
             shadowRoundedRect.isSelected = isSelected
             circleView.isHidden = !isSelected
-            editButton.isHidden = !isEditing // TODO(porter) only show if we can edit
-            removeButton.isHidden = !isEditing // TOOD(porter) only show if we can remove
+            updateButton.isHidden = !canUpdate
+            removeButton.isHidden = !canRemove
         }
     }
 
@@ -55,12 +54,30 @@ final class PaymentMethodRowButton: UIView {
         }
     }
 
-    var isEditing: Bool {
+    private var isEditing: Bool {
         switch state {
         case .selected, .unselected:
             return false
         case .editing:
             return true
+        }
+    }
+    
+    private var canUpdate: Bool {
+        switch state {
+        case .selected, .unselected:
+            return false
+        case .editing(_, let allowsUpdating):
+            return allowsUpdating
+        }
+    }
+    
+    private var canRemove: Bool {
+        switch state {
+        case .selected, .unselected:
+            return false
+        case .editing(let allowsRemoval, _):
+            return allowsRemoval
         }
     }
 
@@ -105,12 +122,12 @@ final class PaymentMethodRowButton: UIView {
         return removeButton
     }()
 
-    private lazy var editButton: CircularButton = {
-        let editButton = CircularButton(style: .edit, iconColor: .white)
-        editButton.backgroundColor = viewModel.appearance.colors.icon
-        editButton.isHidden = true
-        editButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
-        return editButton
+    private lazy var updateButton: CircularButton = {
+        let updateButton = CircularButton(style: .edit, iconColor: .white)
+        updateButton.backgroundColor = viewModel.appearance.colors.icon
+        updateButton.isHidden = true
+        updateButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
+        return updateButton
     }()
 
     lazy var removeButton: CircularButton = {
@@ -130,7 +147,7 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView, editButton, removeButton])
+        let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView, updateButton, removeButton])
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
