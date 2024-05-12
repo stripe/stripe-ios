@@ -66,8 +66,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             case .applePay, .link, .add:
                 return false
             case .saved(paymentMethod: let paymentMethod):
-                guard let availableNetworks = paymentMethod.card?.networks?.available else { return false }
-                return availableNetworks.count > 1
+                return paymentMethod.isCoBrandedCard
             }
         }
     }
@@ -724,5 +723,12 @@ extension SavedPaymentOptionsViewController: ElementDelegate {
     func didUpdate(element: Element) {
         delegate?.didUpdate(self)
         animateHeightChange()
+    }
+}
+
+extension STPPaymentMethod {
+    var isCoBrandedCard: Bool {
+        guard let availableNetworks = card?.networks?.available else { return false }
+        return availableNetworks.count > 1
     }
 }
