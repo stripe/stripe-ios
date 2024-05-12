@@ -20,6 +20,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         return loadResult.intent
     }
     var error: Error?
+    private var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
@@ -40,6 +41,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.loadResult = loadResult
         self.configuration = configuration
         self.isFlowController = isFlowController
+        self.savedPaymentMethods = loadResult.savedPaymentMethods
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -67,10 +69,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     // TOOD(porter) Remove/rename
     @objc func presentManageScreen() {
         let vc = VerticalSavedPaymentMethodsViewController(configuration: configuration,
-                                                           paymentMethods: loadResult.savedPaymentMethods)
+                                                           selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
+                                                           paymentMethods: savedPaymentMethods)
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
-        // TODO(porter) Set delegate
     }
 }
 
@@ -101,8 +103,10 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
 }
 
 extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewControllerDelegate {
-    func didSelectPaymentMethod(_ paymentMethod: STPPaymentMethod) {
+    func didComplete(with selectedPaymentMethod: STPPaymentMethod?, latestPaymentMethods: [STPPaymentMethod]) {
         // TODO
-        print("Selected payment method with id: \(paymentMethod.stripeId)")
+        print("Selected payment method with id: \(String(describing: selectedPaymentMethod?.stripeId))")
+        // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
+        savedPaymentMethods = latestPaymentMethods
     }
 }

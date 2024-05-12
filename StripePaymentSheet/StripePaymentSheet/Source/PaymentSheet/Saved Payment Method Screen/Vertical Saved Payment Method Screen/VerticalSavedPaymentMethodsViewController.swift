@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
-    func didSelectPaymentMethod(_ paymentMethod: STPPaymentMethod)
+    func didComplete(with selectedPaymentMethod: STPPaymentMethod?, latestPaymentMethods: [STPPaymentMethod])
 }
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
@@ -64,6 +64,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private var selectedPaymentMethod: STPPaymentMethod? {
         return paymentMethodRows.first {$0.button.isSelected}?.paymentMethod
     }
+    
+    private var paymentMethods: [STPPaymentMethod] {
+        return paymentMethodRows.map {$0.paymentMethod}
+    }
 
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
@@ -100,10 +104,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private var paymentMethodRows: [(paymentMethod: STPPaymentMethod, button: PaymentMethodRowButton)] = []
     
-    init(configuration: PaymentSheet.Configuration, paymentMethods: [STPPaymentMethod]) {
+    init(configuration: PaymentSheet.Configuration, selectedPaymentMethod: STPPaymentMethod?, paymentMethods: [STPPaymentMethod]) {
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
+        // Select `selectedPaymentMethod` or the first row if selectedPaymentMethod is nil
+        (paymentMethodRows.first {$0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId} ?? paymentMethodRows.first)?.button.state = .selected
     }
     
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [(paymentMethod: STPPaymentMethod, button: PaymentMethodRowButton)] {
@@ -124,8 +130,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
-        // TODO(porter) Pipe in selected payment method, default to selecting first for now
-        paymentMethodRows.first?.button.state = .selected
         view.addAndPinSubviewToSafeArea(stackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 
@@ -133,7 +137,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         isEditingPaymentMethods = !isEditingPaymentMethods
     }
     
-    func remove(paymentMethod: STPPaymentMethod) {
+    private func remove(paymentMethod: STPPaymentMethod) {
         guard let button = paymentMethodRows.first(where: {$0.paymentMethod.stripeId == paymentMethod.stripeId})?.button,
                 let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
         
@@ -147,11 +151,16 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         
         // If deleted the last payment method kick back out to the main screen
         if self.paymentMethodRows.isEmpty {
-            _ = self.bottomSheetController?.popContentViewController()
+            completeSelection()
         } else if !canEdit {
             // If we can no longer edit, exit edit mode and hide edit button
             isEditingPaymentMethods = false
         }
+    }
+    
+    private func completeSelection() {
+        _ = self.bottomSheetController?.popContentViewController()
+        self.delegate?.didComplete(with: selectedPaymentMethod, latestPaymentMethods: paymentMethods)
     }
 }
 
@@ -181,7 +190,7 @@ extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        _ = bottomSheetController?.popContentViewController()
+        completeSelection()
     }
 }
 
@@ -193,11 +202,6 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
     }
 
     func didSelectButton(_ button: PaymentMethodRowButton) {
-        guard let paymentMethod = paymentMethod(from: button) else {
-            // TODO(porter) Handle error - no matching payment method found
-            return
-        }
-
         // Deselect previous button        
         paymentMethodRows.first { $0.button != button && $0.button.isSelected }?.button.state = .unselected
 
@@ -208,8 +212,7 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
         // Give time for new selected row to show it has been selected before dismissing
         // Makes UX feel a little nicer
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            _ = self?.bottomSheetController?.popContentViewController()
-            self?.delegate?.didSelectPaymentMethod(paymentMethod)
+            self?.completeSelection()
         }
     }
 

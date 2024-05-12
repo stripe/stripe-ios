@@ -39,6 +39,15 @@ extension PaymentSheet {
                 return paymentMethod.type
             }
         }
+        
+        var savedPaymentMethod: STPPaymentMethod? {
+            switch self {
+            case .applePay, .link, .new, .external:
+                return nil
+            case .saved(let paymentMethod, _):
+                return paymentMethod
+            }
+        }
     }
 
     /// A class that presents the individual steps of a payment flow
