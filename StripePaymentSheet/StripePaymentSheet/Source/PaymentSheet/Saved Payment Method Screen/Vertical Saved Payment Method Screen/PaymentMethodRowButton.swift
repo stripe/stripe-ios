@@ -23,6 +23,7 @@ final class PaymentMethodRowButton: UIView {
         let appearance: PaymentSheet.Appearance
         let text: String
         let image: UIImage
+        let accessibilityLabel: String?
     }
 
     enum State {
@@ -41,6 +42,19 @@ final class PaymentMethodRowButton: UIView {
             circleView.isHidden = !isSelected
             updateButton.isHidden = !canUpdate
             removeButton.isHidden = !canRemove
+            
+            // Update accessibility
+            shadowRoundedRect.accessibilityTraits = {
+                if isEditing {
+                    return [.notEnabled]
+                } else {
+                    if isSelected {
+                        return [.button, .selected]
+                    } else {
+                        return [.button]
+                    }
+                }
+            }()
         }
     }
 
@@ -164,7 +178,18 @@ final class PaymentMethodRowButton: UIView {
             paymentMethodImageView.heightAnchor.constraint(equalToConstant: 20), // Hardcoded from figma
             paymentMethodImageView.widthAnchor.constraint(equalToConstant: 25),
         ])
-        // TODO(porter) accessibility?
+        
+        // Accessibility
+        isAccessibilityElement = false
+        // We choose the rectangle to represent the button
+        label.isAccessibilityElement = false
+        accessibilityElements = [shadowRoundedRect]
+        shadowRoundedRect.isAccessibilityElement = true
+        shadowRoundedRect.accessibilityTraits = [.button]
+        accessibilityIdentifier = label.text
+        shadowRoundedRect.accessibilityIdentifier = label.text
+        shadowRoundedRect.accessibilityLabel = accessibilityLabel
+        
         addGestureRecognizer(selectionTapGesture)
     }
 

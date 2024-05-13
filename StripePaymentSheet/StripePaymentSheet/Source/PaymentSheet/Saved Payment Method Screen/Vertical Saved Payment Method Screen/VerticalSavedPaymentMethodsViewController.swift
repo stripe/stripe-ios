@@ -117,7 +117,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return paymentMethods.map { paymentMethod in
             let button = PaymentMethodRowButton(viewModel: .init(appearance: configuration.appearance,
                                                                  text: paymentMethod.paymentSheetLabel,
-                                                                 image: paymentMethod.makeSavedPaymentMethodRowImage()))
+                                                                 image: paymentMethod.makeSavedPaymentMethodRowImage(),
+                                                                 accessibilityLabel: paymentMethod.paymentSheetAccessibilityLabel))
             button.delegate = self
             return (paymentMethod, button)
         }
@@ -275,7 +276,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         paymentMethodRows[indexToUpdate] = (updatedPaymentMethod,
                                             PaymentMethodRowButton(viewModel: .init(appearance: configuration.appearance,
                                                                                     text: updatedPaymentMethod.paymentSheetLabel,
-                                                                                    image: updatedPaymentMethod.makeSavedPaymentMethodRowImage())))
+                                                                                    image: updatedPaymentMethod.makeSavedPaymentMethodRowImage(),
+                                                                                    accessibilityLabel: paymentMethod.paymentSheetAccessibilityLabel)))
         paymentMethodRows[indexToUpdate].button.delegate = self
         paymentMethodRows[indexToUpdate].button.state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: paymentMethod.isCoBrandedCard && isCBCEligible)
         stackView.insertArrangedSubview(paymentMethodRows[indexToUpdate].button, at: indexToInsertAt)
