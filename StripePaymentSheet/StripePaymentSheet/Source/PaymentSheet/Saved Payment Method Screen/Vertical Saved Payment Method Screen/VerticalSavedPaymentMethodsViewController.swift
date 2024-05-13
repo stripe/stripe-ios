@@ -82,8 +82,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows.map { $0.button })
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-        stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
