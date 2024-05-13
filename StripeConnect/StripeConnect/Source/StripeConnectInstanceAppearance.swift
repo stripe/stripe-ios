@@ -160,7 +160,7 @@ extension StripeConnectInstance {
 
         // MARK: - Internal
 
-        private var variablesDictionary: [String: String] {
+        var variablesDictionary: [String: String] {
             var dict: [String: String] = [:]
 
             // Default font to "-apple-system" to use the system default,

@@ -57,7 +57,7 @@ extension ConnectComponentWebView {
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
         var script = """
             stripeConnectInstance.update({appearance: \(appearance.asJsonString)});
-            document.body.setAttribute("style", "background-color:\(appearance.styleBackgroundColor);");
+            document.body.style.backgroundColor = '\(appearance.styleBackgroundColor)';
         """
 
         if shouldUseHorizontalPadding {

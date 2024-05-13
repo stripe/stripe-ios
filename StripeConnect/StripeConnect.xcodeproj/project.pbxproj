@@ -29,6 +29,7 @@
 		E63DA0BE2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */; };
 		E63DA0C42BE0BD99005BF2A0 /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = E63DA0C32BE0BBFA005BF2A0 /* template.html */; };
 		E68002B12BED589A005D8BDC /* CSSHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68002B02BED589A005D8BDC /* CSSHelpers.swift */; };
+		E68002B32BED91B5005D8BDC /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68002B22BED91B5005D8BDC /* AuthenticationManager.swift */; };
 		E6D229942BEB266900EB1A52 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D229932BEB266900EB1A52 /* AccountManagementViewController.swift */; };
 		E6D229982BEB28B800EB1A52 /* PayoutsViewController copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D229972BEB28B800EB1A52 /* PayoutsViewController copy.swift */; };
 		E6D2299E2BEB2C2800EB1A52 /* PaymentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D2299D2BEB2C2800EB1A52 /* PaymentDetailsViewController.swift */; };
@@ -124,6 +125,7 @@
 		E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectBundleLocator.swift; sourceTree = "<group>"; };
 		E63DA0C32BE0BBFA005BF2A0 /* template.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = template.html; sourceTree = "<group>"; };
 		E68002B02BED589A005D8BDC /* CSSHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSHelpers.swift; sourceTree = "<group>"; };
+		E68002B22BED91B5005D8BDC /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		E6D229932BEB266900EB1A52 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
 		E6D229972BEB28B800EB1A52 /* PayoutsViewController copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayoutsViewController copy.swift"; sourceTree = "<group>"; };
 		E6D2299D2BEB2C2800EB1A52 /* PaymentDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewController.swift; sourceTree = "<group>"; };
@@ -291,6 +293,7 @@
 				E63DA0BD2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift */,
 				E6EC73462BE6B63700D46678 /* StripeConnectConstants.swift */,
 				E6EC73432BE6B55600D46678 /* WebViewHelpers */,
+				E68002B22BED91B5005D8BDC /* AuthenticationManager.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -603,6 +606,7 @@
 				E63DA0BE2BDE57AA005BF2A0 /* StripeConnectBundleLocator.swift in Sources */,
 				E63DA06F2BDE3D5B005BF2A0 /* ConnectComponentWebView.swift in Sources */,
 				E6EC73552BE6F50700D46678 /* StripeConnectInstanceCustomFontSource.swift in Sources */,
+				E68002B32BED91B5005D8BDC /* AuthenticationManager.swift in Sources */,
 				E6D2299E2BEB2C2800EB1A52 /* PaymentDetailsViewController.swift in Sources */,
 				E6EC733A2BE342F600D46678 /* ScriptMessageHandlerWithReply.swift in Sources */,
 				E68002B12BED589A005D8BDC /* CSSHelpers.swift in Sources */,

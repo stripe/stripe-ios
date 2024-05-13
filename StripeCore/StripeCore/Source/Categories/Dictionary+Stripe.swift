@@ -52,7 +52,7 @@ extension Dictionary {
         }
     }
 
-    public func mergingAssertingOnOverwrites<S>(_ other: S) -> [Key: Value] where S: Sequence, S.Element == (Key, Value) {
+    public func mergingAssertingOnOverwrites(_ other: [Key : Value]) -> [Key: Value] {
         merging(other) { a, b in
             stpAssertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
             return a

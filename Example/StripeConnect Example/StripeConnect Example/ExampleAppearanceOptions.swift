@@ -10,15 +10,25 @@ import UIKit
 
 /// A collection of example appearance options
 enum ExampleAppearanceOptions: String, CaseIterable {
-    case `default` = "Default"
-    case purpleHaze = "Purple haze"
-    case ogre = "Ogre"
-    case protanopia = "Protanopia"
-    case oceanBreeze = "🌊 Ocean breeze"
-    case hotDog = "🌭 Hot dog"
-    case jazzCup = "Jazz cup"
+    case `default`
+    case purpleHaze
+    case ogre
+    case protanopia
+    case oceanBreeze
+    case hotDog
+    case jazzCup
 
-    var label: String { rawValue }
+    var label: String {
+        switch self {
+        case .default: return "Default"
+        case .purpleHaze: return "Purple haze"
+        case .ogre: return "Ogre"
+        case .protanopia: return "Protanopia"
+        case .oceanBreeze: return "🌊 Ocean breeze"
+        case .hotDog: return "🌭 Hot dog"
+        case .jazzCup: return "Jazz cup"
+        }
+    }
 
     /// Custom fonts used by some of the example options
     static var customFonts: [StripeConnectInstance.CustomFontSource] {

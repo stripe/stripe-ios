@@ -9,6 +9,11 @@ import Foundation
 
 enum StripeConnectConstants {
 
+    // TODO: Host this on stripe-connect
+    static let secureHostedURL = URL(string: "https://mludowise-secure-connect-wrapper.glitch.me")!
+
+    static let secureHostedCallbackScheme = "stripe-connect"
+
     /**
      URL for the hosted HTML page that wraps the JS `StripeConnectInstance` for iOS.
 

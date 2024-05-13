@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
+import AuthenticationServices
+import SafariServices
 import StripeConnect
 import SwiftUI
 import UIKit
@@ -12,23 +14,63 @@ import UIKit
 class MainViewController: UITableViewController {
 
     /// Rows that display inside this table
-    enum Row: String, CaseIterable {
-        case accountManagement = "Account management"
-        case accountOnboarding = "Account onboarding"
-        case documents = "Documents"
-        case payments = "Payments"
-        case paymentDetails = "Payment details"
-        case payouts = "Payouts"
-        case payoutsList = "Payouts list"
-        case logout = "Log out"
+    enum Row: CaseIterable {
+        case accountManagement
+        case accountOnboardingSafari
+        case accountOnboardingAuthClient
+        case accountOnboardingAuthServer
+        case documents
+        case payments
+        case paymentDetails
+        case payouts
+        case payoutsList
+        case logout
 
-        var label: String { rawValue }
-
-        var accessoryType: UITableViewCell.AccessoryType {
-            if self == .logout {
-                return .none
+        var label: String {
+            switch self {
+            case .accountManagement: 
+                return "Account management"
+            case .accountOnboardingSafari,
+                 .accountOnboardingAuthClient,
+                 .accountOnboardingAuthServer:
+                return "Account onboarding"
+            case .documents: 
+                return "Documents"
+            case .payments: 
+                return "Payments"
+            case .paymentDetails: 
+                return "Payment details"
+            case .payouts: 
+                return "Payouts"
+            case .payoutsList: 
+                return "Payouts list"
+            case .logout: 
+                return "Log out"
             }
-            return .disclosureIndicator
+        }
+        var subtitle: String? {
+            switch self {
+            case .accountOnboardingSafari:
+                return "Safari; server-side secret fetch"
+            case .accountOnboardingAuthClient:
+                return "AuthSession; mobile-side secret fetch"
+            case .accountOnboardingAuthServer:
+                return "AuthSession; server-side secret fetch"
+            default:
+                return nil
+            }
+        }
+
+        var hasDisclosureAccessory: Bool {
+            switch self {
+            case .accountOnboardingSafari,
+                 .accountOnboardingAuthClient,
+                 .accountOnboardingAuthServer,
+                 .logout:
+                return false
+            default:
+                return true
+            }
         }
 
         var labelColor: UIColor {
@@ -38,13 +80,6 @@ class MainViewController: UITableViewController {
             return .label
         }
     }
-
-    /// Spinner that displays when log out row is selected
-    let logoutSpinner: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .medium)
-        view.hidesWhenStopped = true
-        return view
-    }()
 
     /// Navbar button title view
     lazy var navbarTitleButton: UIButton = {
@@ -119,19 +154,49 @@ class MainViewController: UITableViewController {
         case .accountManagement:
             viewControllerToPush = stripeConnectInstance.createAccountManagement()
 
-        case .accountOnboarding:
-            let accountOnboardingVC = stripeConnectInstance.createAccountOnboarding { [weak navigationController] in
-                navigationController?.popViewController(animated: true)
+        case .accountOnboardingSafari:
+            let safariVC = SFSafariViewController(url: getHostedComponentURL(component: "account-onboarding"))
+            safariVC.modalPresentationStyle = .popover
+            safariVC.dismissButtonStyle = .close
+            present(safariVC, animated: true)
+            return
+
+        case .accountOnboardingAuthClient:
+            let spinner = cell.accessoryView as? UIActivityIndicatorView
+            spinner?.startAnimating()
+            Task { @MainActor in
+                await stripeConnectInstance.presentAccountOnboarding(self)
+                spinner?.stopAnimating()
             }
-            let button = UIBarButtonItem(
-                image: UIImage(systemName: "slider.horizontal.3"),
-                primaryAction: .init(handler: { [weak accountOnboardingVC] _ in
-                    let view = AccountOnboardingConfigurationView(accountOnboardingViewController: accountOnboardingVC)
-                    accountOnboardingVC?.present(UIHostingController(rootView: view), animated: true)
-                }))
-            button.accessibilityLabel = "Configure account onboarding"
-            accountOnboardingVC.navigationItem.rightBarButtonItem = button
-            viewControllerToPush = accountOnboardingVC
+
+            return
+
+        case .accountOnboardingAuthServer:
+            /*
+             1. Create an auth session from a URL that hosts the
+                `account-onboarding` or `account-management` component.
+             2. Set the callbackURLScheme to the the URL your webpage will
+                redirect to when the user exits account onboarding. 
+                For example: 'stripe-connect-example-app://exit-flow'.
+             */
+            let authSession = ASWebAuthenticationSession(
+                url: getHostedComponentURL(component: "account-onboarding", returnScheme: "stripe-connect-example-app"),
+                callbackURLScheme: "stripe-connect-example-app") { _, error in
+                    if let error {
+                        print(error)
+                    }
+                }
+
+            // 3. Set the `presentationContextProvider` so the auth session can
+            //    be presented on the current window
+            authSession.presentationContextProvider = self
+
+            // 4. Start the session to present the view
+            if authSession.canStart {
+                authSession.start()
+            }
+
+            return
 
         case .documents:
             viewControllerToPush = stripeConnectInstance.createDocuments()
@@ -173,11 +238,11 @@ class MainViewController: UITableViewController {
             viewControllerToPush = stripeConnectInstance.createPayoutsList()
 
         case .logout:
-            cell.accessoryView = logoutSpinner
-            logoutSpinner.startAnimating()
+            let spinner = cell.accessoryView as? UIActivityIndicatorView
+            spinner?.startAnimating()
             Task { @MainActor in
                 await stripeConnectInstance.logout()
-                self.logoutSpinner.stopAnimating()
+                spinner?.stopAnimating()
             }
             return
 
@@ -188,6 +253,31 @@ class MainViewController: UITableViewController {
         }
         addChangeAppearanceButtonNavigationItem(to: viewControllerToPush)
         navigationController?.pushViewController(viewControllerToPush, animated: true)
+    }
+
+    func getHostedComponentURL(component: String, returnScheme: String? = nil) -> URL {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = ServerConfiguration.shared.endpoint.host
+        urlComponents.path = ""
+        urlComponents.queryItems = [
+            // The user's preferred locale may differ from the app locale.
+            // It's recommended to send the app's locale to your server for use
+            // in the StripeConnectInstance.
+            .init(name: "locale", value: "\(Locale.current.languageCode!)-\(Locale.current.regionCode!)"),
+
+            // For demo purposes, the account and component type are
+            // configured from the client, but it's recommended that these
+            // be configured on your server
+            .init(name: "account", value: ServerConfiguration.shared.account),
+            .init(name: "component", value: "account-onboarding"),
+
+            .init(name: "appearance", value: currentAppearanceOption.rawValue),
+        ]
+        if let returnScheme {
+            urlComponents.queryItems?.append(.init(name: "returnScheme", value: returnScheme))
+        }
+        return urlComponents.url!
     }
 
     func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
@@ -252,9 +342,20 @@ class MainViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row.allCases[indexPath.row]
         let cell = UITableViewCell()
-        cell.textLabel?.text = row.label
-        cell.textLabel?.textColor = row.labelColor
-        cell.accessoryType = row.accessoryType
+        var content = cell.defaultContentConfiguration()
+        content.text = row.label
+        content.textProperties.color = row.labelColor
+        content.secondaryText = row.subtitle
+        content.secondaryTextProperties.color = .secondaryLabel
+        cell.contentConfiguration = content
+        cell.accessoryType = row.hasDisclosureAccessory ? .disclosureIndicator : .none
+
+        if !row.hasDisclosureAccessory {
+            let spinner = UIActivityIndicatorView(style: .medium)
+            spinner.hidesWhenStopped = true
+            cell.accessoryView = spinner
+        }
+
         return cell
     }
 
@@ -267,6 +368,14 @@ class MainViewController: UITableViewController {
         cell.isSelected = false
 
         performAction(Row.allCases[indexPath.row], cell: cell)
+    }
+}
+
+// MARK: - ASWebAuthenticationPresentationContextProviding
+
+extension MainViewController: ASWebAuthenticationPresentationContextProviding {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        view.window ?? ASPresentationAnchor()
     }
 }
 
