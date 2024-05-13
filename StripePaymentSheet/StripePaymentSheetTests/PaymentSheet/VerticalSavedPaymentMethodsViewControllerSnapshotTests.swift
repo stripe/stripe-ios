@@ -28,14 +28,16 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration, paymentMethods: generatePaymentMethods())
+        let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         if darkMode {
             testWindow.overrideUserInterfaceStyle = .dark
         }
-        testWindow.rootViewController = sut
-        sut.view.autosizeHeight(width: 375)
-        STPSnapshotVerifyView(sut.view)
+        testWindow.rootViewController = bottomSheet
+        bottomSheet.view.autosizeHeight(width: 375, height: 400)
+        STPSnapshotVerifyView(bottomSheet.view)
     }
 
     private func generatePaymentMethods() -> [STPPaymentMethod] {
