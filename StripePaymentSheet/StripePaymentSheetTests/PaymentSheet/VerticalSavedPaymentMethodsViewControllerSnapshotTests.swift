@@ -30,7 +30,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration, paymentMethods: generatePaymentMethods())
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         bottomSheet.view.autosizeHeight(width: 375)
-        
+
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         if darkMode {
