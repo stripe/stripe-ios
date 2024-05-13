@@ -106,7 +106,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         configuration.style.configure(self)
         // TODO(porter) Pipe in selected payment method, default to selecting first for now
         paymentMethodRows.first?.button.state = .selected
-        view.addAndPinSubviewToSafeArea(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+        view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 
     @objc func didSelectEditSavedPaymentMethodsButton() {
