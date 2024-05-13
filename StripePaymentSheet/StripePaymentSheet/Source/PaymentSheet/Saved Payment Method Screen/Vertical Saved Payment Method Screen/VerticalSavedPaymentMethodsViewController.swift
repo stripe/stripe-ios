@@ -58,6 +58,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         navBar.setStyle(.back(showAdditionalButton: true))
         navBar.delegate = self
         navBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
         navBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
         navBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
