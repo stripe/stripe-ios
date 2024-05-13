@@ -69,6 +69,15 @@ class SavedPaymentOptionsViewController: UIViewController {
                 return paymentMethod.isCoBrandedCard
             }
         }
+        
+        var paymentMethod: STPPaymentMethod? {
+            switch self {
+            case .applePay, .link, .add:
+                return nil
+            case .saved(paymentMethod: let paymentMethod):
+                return paymentMethod
+            }
+        }
     }
 
     struct Configuration {
@@ -543,8 +552,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             return
         }
 
-        let editVc = UpdateCardViewController(paymentOptionCell: paymentOptionCell,
-                                              paymentMethod: paymentMethod,
+        let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
@@ -570,15 +578,15 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
-            self.removePaymentMethod(paymentOptionCell: paymentOptionCell)
+            self.removePaymentMethod(paymentMethod: paymentMethod)
         }
 
         present(alertController, animated: true, completion: nil)
     }
 
-    private func removePaymentMethod(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
-        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-              case .saved(let paymentMethod) = viewModels[indexPath.row]
+    private func removePaymentMethod(paymentMethod: STPPaymentMethod) {
+
+        guard let row = viewModels.firstIndex(where: {$0.paymentMethod?.stripeId == paymentMethod.stripeId})
         else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: Error.removePaymentMethodOnNonSavedItem)
@@ -586,6 +594,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             stpAssertionFailure()
             return
         }
+        
+        let indexPath = IndexPath(row: row, section: 0)
         let viewModel = viewModels[indexPath.row]
         self.viewModels.remove(at: indexPath.row)
         // the deletion needs to be in a performBatchUpdates so we make sure it is completed
@@ -616,20 +626,20 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 
 // MARK: - UpdateCardViewControllerDelegate
 extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
-    func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
-        removePaymentMethod(paymentOptionCell: paymentOptionCell)
+    func didRemove(paymentMethod: STPPaymentMethod) {
+        removePaymentMethod(paymentMethod: paymentMethod)
     }
 
-    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+    func didUpdate(paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws {
-        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-              case .saved = viewModels[indexPath.row],
+        guard let row = viewModels.firstIndex(where: {$0.paymentMethod?.stripeId == paymentMethod.stripeId}),
               let delegate = delegate
         else {
             stpAssertionFailure()
             throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
         }
-
+        
+        let indexPath = IndexPath(row: row, section: 0)
         let viewModel = viewModels[indexPath.row]
         let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
                                                     paymentMethodSelection: viewModel,

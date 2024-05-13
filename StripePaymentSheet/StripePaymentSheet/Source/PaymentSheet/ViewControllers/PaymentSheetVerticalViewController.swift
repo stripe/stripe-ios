@@ -70,7 +70,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     @objc func presentManageScreen() {
         let vc = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                            selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
-                                                           paymentMethods: savedPaymentMethods)
+                                                           paymentMethods: savedPaymentMethods,
+                                                           isCBCEligible: loadResult.intent.cardBrandChoiceEligible)
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
     }
