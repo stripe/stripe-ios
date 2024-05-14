@@ -1238,7 +1238,7 @@ public class STPPaymentHandler: NSObject {
                                     intentID: currentAction.intentStripeID
                                 )
 
-                                self._retrieveAndCheckIntentForCurrentAction()
+                                self._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction)
                             }
 
                         } else if let fallbackURL = authenticateResponse.fallbackURL {
@@ -1417,7 +1417,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    func _retrieveAndCheckIntentForCurrentAction(retryCount: Int = maxChallengeRetries) {
+    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams?, retryCount: Int = maxChallengeRetries) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
             currentAction,
@@ -1473,6 +1473,7 @@ public class STPPaymentHandler: NSObject {
                         {
                             self._retryAfterDelay(retryCount: retryCount) {
                                 self._retrieveAndCheckIntentForCurrentAction(
+                                    currentAction: currentAction,
                                     retryCount: retryCount - 1
                                 )
                             }
@@ -1511,6 +1512,7 @@ public class STPPaymentHandler: NSObject {
                                     {
                                         self._retryAfterDelay(retryCount: retryCount) {
                                             self._retrieveAndCheckIntentForCurrentAction(
+                                                currentAction: currentAction,
                                                 retryCount: retryCount - 1
                                             )
                                         }
@@ -1546,7 +1548,8 @@ public class STPPaymentHandler: NSObject {
                    setupIntent.status == .processing && retryCount > 0
                 {
                     self._retryAfterDelay(retryCount: retryCount) {
-                        self._retrieveAndCheckIntentForCurrentAction(retryCount: retryCount - 1)
+                        self._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction,
+                                                                     retryCount: retryCount - 1)
                     }
                 } else {
                     let requiresAction: Bool = self._handleSetupIntentStatus(
@@ -1575,9 +1578,8 @@ public class STPPaymentHandler: NSObject {
                             if retryCount > 0
                                 && (shouldRetryForCard || shouldRetryForAppRedirect) {
                                 self._retryAfterDelay(retryCount: retryCount) {
-                                    self._retrieveAndCheckIntentForCurrentAction(
-                                        retryCount: retryCount - 1
-                                    )
+                                    self._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction,
+                                                                                 retryCount: retryCount - 1)
                                 }
                             } else {
                                 // If the status is still RequiresAction, the user exited from the redirect before the
@@ -1608,7 +1610,7 @@ public class STPPaymentHandler: NSObject {
             object: nil
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
-        _retrieveAndCheckIntentForCurrentAction()
+        _retrieveAndCheckIntentForCurrentAction(currentAction: currentAction)
     }
 
     @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?) {
@@ -2176,7 +2178,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         }
         safariViewController = nil
         STPURLCallbackHandler.shared().unregisterListener(self)
-        _retrieveAndCheckIntentForCurrentAction()
+        _retrieveAndCheckIntentForCurrentAction(currentAction: currentAction)
     }
 }
 #endif
@@ -2204,7 +2206,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         safariViewController?.dismiss(animated: true) {
             self.safariViewController = nil
         }
-        _retrieveAndCheckIntentForCurrentAction()
+        _retrieveAndCheckIntentForCurrentAction(currentAction: currentAction)
         return true
     }
 }

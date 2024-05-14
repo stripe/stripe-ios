@@ -29,7 +29,9 @@ public extension STPFixtures {
         paymentMethodTypes: [String],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
         currency: String = "usd",
-        status: STPPaymentIntentStatus = .requiresPaymentMethod
+        status: STPPaymentIntentStatus = .requiresPaymentMethod,
+        paymentMethod: [AnyHashable: Any]? = nil,
+        nextAction: STPIntentActionType? = nil
     ) -> STPPaymentIntent {
         var apiResponse: [AnyHashable: Any] = [
             "id": "123",
@@ -44,7 +46,37 @@ public extension STPFixtures {
         if let setupFutureUsage = setupFutureUsage.stringValue {
             apiResponse["setup_future_usage"] = setupFutureUsage
         }
+        if let paymentMethod = paymentMethod {
+            apiResponse["payment_method"] = paymentMethod
+        }
+        if let nextAction = nextAction {
+            apiResponse["next_action"] = ["type": nextAction.stringValue]
+        }
         return STPPaymentIntent.decodedObject(fromAPIResponse: apiResponse)!
+    }
+
+    static func setupIntent(
+        paymentMethodTypes: [String],
+        status: STPSetupIntentStatus = .requiresPaymentMethod,
+        paymentMethod: [AnyHashable: Any]? = nil,
+        nextAction: STPIntentActionType? = nil
+    ) -> STPSetupIntent {
+        var apiResponse: [AnyHashable: Any] = [
+            "id": "123",
+            "client_secret": "sec",
+            "status": STPSetupIntentStatus.string(from: status),
+            "livemode": false,
+            "created": 1652736692.0,
+            "payment_method_types": paymentMethodTypes,
+        ]
+
+        if let paymentMethod = paymentMethod {
+            apiResponse["payment_method"] = paymentMethod
+        }
+        if let nextAction = nextAction {
+            apiResponse["next_action"] = ["type": nextAction.stringValue]
+        }
+        return STPSetupIntent.decodedObject(fromAPIResponse: apiResponse)!
     }
 
     static func usBankAccountPaymentMethod(bankName: String? = nil) -> STPPaymentMethod {
