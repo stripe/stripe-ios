@@ -456,11 +456,24 @@ extension STPAPIClient {
             parameters["client_secret"] = secret
         }
 
+        STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshPaymentIntentStarted, params: [:]))
+        let startDate = Date()
         APIRequest<STPPaymentIntent>.post(
             with: self,
             endpoint: endpoint,
             parameters: parameters
         ) { paymentIntent, _, error in
+
+            if let error = error {
+                let errorAnalytic = ErrorAnalytic(event: .refreshPaymentIntentFailed,
+                                                  error: error,
+                                                  additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            } else {
+                STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshPaymentIntentSuccess,
+                                                                              params: ["duration": Date().timeIntervalSince(startDate)]))
+            }
+
             completion(paymentIntent, error)
         }
     }
@@ -754,11 +767,23 @@ extension STPAPIClient {
             parameters["client_secret"] = secret
         }
 
+        STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshSetupIntentStarted, params: [:]))
+        let startDate = Date()
         APIRequest<STPSetupIntent>.post(
             with: self,
             endpoint: endpoint,
             parameters: parameters
         ) { setupIntent, _, error in
+            if let error = error {
+                let errorAnalytic = ErrorAnalytic(event: .refreshSetupIntentFailed,
+                                                  error: error,
+                                                  additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            } else {
+                STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshSetupIntentSuccess,
+                                                                              params: ["duration": Date().timeIntervalSince(startDate)]))
+            }
+
             completion(setupIntent, error)
         }
     }
