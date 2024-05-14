@@ -34,6 +34,7 @@
 		617C1C822BB4940500B10AC5 /* AlmaExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617C1C812BB4940500B10AC5 /* AlmaExampleViewController.swift */; };
 		61951FBB2B8674EC005F90BE /* AmazonPayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61951FBA2B8674EC005F90BE /* AmazonPayExampleViewController.swift */; };
 		61E1CA232BD6B9DF00A421AE /* MultibancoExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E1CA222BD6B9DE00A421AE /* MultibancoExampleViewController.swift */; };
+		6BA4B9182BF3E2AF00D1F21D /* MobilePayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA4B9172BF3E2AF00D1F21D /* MobilePayExampleViewController.swift */; };
 		6BF09625088A9D5009307E38 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8CE9A736DA9941DECAD86F1B /* Localizable.strings */; };
 		7347961ABF706602E2915A53 /* USBankAccountConnectionsExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C7B53B74E206CF2A2DF38C /* USBankAccountConnectionsExampleViewController.swift */; };
 		80466B86A1F4896FE7811E9D /* GrabPayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E3343A1F8432A0B56CEA5 /* GrabPayExampleViewController.swift */; };
@@ -123,6 +124,7 @@
 		61E1CA222BD6B9DE00A421AE /* MultibancoExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultibancoExampleViewController.swift; sourceTree = "<group>"; };
 		64F13592DB0CDD803283B035 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		673900BEF4553912511DBFE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6BA4B9172BF3E2AF00D1F21D /* MobilePayExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilePayExampleViewController.swift; sourceTree = "<group>"; };
 		6CA51E7BD0D4D1E0B94075FE /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EB5EE88F3BCE3D52302C896 /* Non-Card-Payment-Examples-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Non-Card-Payment-Examples-Release.xcconfig"; sourceTree = "<group>"; };
 		7F068CC4E3F81CB0E96CED03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				61951FBA2B8674EC005F90BE /* AmazonPayExampleViewController.swift */,
 				617C1C812BB4940500B10AC5 /* AlmaExampleViewController.swift */,
 				61E1CA222BD6B9DE00A421AE /* MultibancoExampleViewController.swift */,
+				6BA4B9172BF3E2AF00D1F21D /* MobilePayExampleViewController.swift */,
 				05FF02CFBFA8863282D020E0 /* AppDelegate.h */,
 				A83C61D70652D6E6ED09230B /* AppDelegate.m */,
 				C2D98BF0E8488281BB3607A6 /* ApplePayExampleViewController.h */,
@@ -451,6 +454,7 @@
 				88AE1CED5467E828AE738B62 /* SwishExampleViewController.swift in Sources */,
 				7347961ABF706602E2915A53 /* USBankAccountConnectionsExampleViewController.swift in Sources */,
 				07E1B52EA12E4F9789013E8C /* USBankAccountExampleViewController.swift in Sources */,
+				6BA4B9182BF3E2AF00D1F21D /* MobilePayExampleViewController.swift in Sources */,
 				616358522C3A1FCD579F2B37 /* WeChatPayExampleViewController.m in Sources */,
 				975D189CB2E61E7C1871F0DA /* iDEALExampleViewController.m in Sources */,
 				4331C8C4F8BA76E560F420DF /* main.m in Sources */,
