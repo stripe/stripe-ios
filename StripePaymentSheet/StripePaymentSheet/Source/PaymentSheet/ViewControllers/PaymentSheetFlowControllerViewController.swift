@@ -594,14 +594,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
-        if savedPaymentOptionsViewController.isRemovingPaymentMethods {
-            navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
-        } else {
-            navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
-        }
-        navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
-        navigationBar.additionalButton.titleLabel?.font = configuration.appearance.font.base.medium
-        navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }

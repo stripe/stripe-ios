@@ -57,11 +57,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         // TODO(porter) Only show edit button if we should
         navBar.setStyle(.back(showAdditionalButton: true))
         navBar.delegate = self
-        navBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
+        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
+        // TODO(porter) Read color from new secondary action color from appearance
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
-        navBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
-        navBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
         return navBar
     }()

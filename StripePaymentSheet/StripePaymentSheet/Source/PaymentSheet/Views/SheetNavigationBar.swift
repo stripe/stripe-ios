@@ -170,3 +170,12 @@ class SheetNavigationBar: UIView {
         layer.shadowOffset = CGSize(width: 0, height: 2)
     }
 }
+
+extension UIButton {
+    func configureCommonEditButton(isEditingPaymentMethods: Bool) {
+        let title = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
+        setTitle(title, for: .normal)
+        titleLabel?.adjustsFontForContentSizeCategory = true
+        accessibilityIdentifier = "edit_saved_button"
+    }
+}

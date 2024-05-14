@@ -664,7 +664,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
-            navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                 self.actionButton.setHiddenIfNecessary(true)
                 self.updateBottomNotice()
@@ -675,10 +674,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.actionButton.setHiddenIfNecessary(!showActionButton)
                 self.updateBottomNotice()
             }
-            navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
-        navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
-        navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }
