@@ -1030,7 +1030,7 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Save"].tap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
 
-        // Shouldn't be able to edit, only one saved PM when paymentMethodRemove = .disabled
+        // Shouldn't be able to edit non-CBC eligible card when paymentMethodRemove = .disabled
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
 
         // Add a CBC enabled PM
