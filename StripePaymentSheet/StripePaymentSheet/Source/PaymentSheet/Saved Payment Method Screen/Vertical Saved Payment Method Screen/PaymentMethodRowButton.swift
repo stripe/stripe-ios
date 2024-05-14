@@ -12,17 +12,16 @@ import Foundation
 import UIKit
 
 protocol PaymentMethodRowButtonDelegate: AnyObject {
-    func didSelectButton(_ button: PaymentMethodRowButton)
-    func didSelectRemoveButton(_ button: PaymentMethodRowButton)
-    func didSelectEditButton(_ button: PaymentMethodRowButton)
+    func didSelectButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
+    func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
+    func didSelectEditButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
 final class PaymentMethodRowButton: UIView {
 
     struct ViewModel {
         let appearance: PaymentSheet.Appearance
-        let text: String
-        let image: UIImage
+        let paymentMethod: STPPaymentMethod
         // TODO(porter) Add can remove and can update
     }
 
@@ -68,12 +67,13 @@ final class PaymentMethodRowButton: UIView {
     weak var delegate: PaymentMethodRowButtonDelegate?
 
     // MARK: Private properties
-    private let viewModel: ViewModel
+    private let paymentMethod: STPPaymentMethod
+    private let appearance: PaymentSheet.Appearance
 
     // MARK: Private views
 
     private lazy var paymentMethodImageView: UIImageView = {
-        let imageView = UIImageView(image: viewModel.image)
+        let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
         // TODO(porter) Do we want to round the corners?
         return imageView
@@ -81,8 +81,8 @@ final class PaymentMethodRowButton: UIView {
 
     private lazy var label: UILabel = {
         let label = UILabel()
-        label.text = viewModel.text
-        label.font = viewModel.appearance.scaledFont(for: viewModel.appearance.font.base.medium,
+        label.text = paymentMethod.paymentSheetLabel
+        label.font = appearance.scaledFont(for: appearance.font.base.medium,
                                                      style: .callout,
                                                      maximumPointSize: 25)
         label.adjustsFontForContentSizeCategory = true
@@ -92,14 +92,14 @@ final class PaymentMethodRowButton: UIView {
     // TODO(porter) Refactor CircleIconView out of SavedPaymentMethodCollectionView once it is deleted
     private lazy var circleView: SavedPaymentMethodCollectionView.CircleIconView = {
         let circleView = SavedPaymentMethodCollectionView.CircleIconView(icon: .icon_checkmark,
-                                                                         fillColor: viewModel.appearance.colors.primary)
+                                                                         fillColor: appearance.colors.primary)
         circleView.isHidden = true
         return circleView
     }()
 
     lazy var removeButton: CircularButton = {
         let removeButton = CircularButton(style: .remove, iconColor: .white)
-        removeButton.backgroundColor = viewModel.appearance.colors.danger
+        removeButton.backgroundColor = appearance.colors.danger
         removeButton.isHidden = true
         removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
         return removeButton
@@ -107,7 +107,7 @@ final class PaymentMethodRowButton: UIView {
 
     private lazy var editButton: CircularButton = {
         let editButton = CircularButton(style: .edit, iconColor: .white)
-        editButton.backgroundColor = viewModel.appearance.colors.icon
+        editButton.backgroundColor = appearance.colors.icon
         editButton.isHidden = true
         editButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
         return editButton
@@ -129,7 +129,7 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
-        let shadowRoundedRect = ShadowedRoundedRectangle(appearance: viewModel.appearance)
+        let shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         shadowRoundedRect.translatesAutoresizingMaskIntoConstraints = false
         shadowRoundedRect.addAndPinSubview(stackView)
         return shadowRoundedRect
@@ -139,8 +139,9 @@ final class PaymentMethodRowButton: UIView {
         return UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap))
     }()
 
-    init(viewModel: ViewModel) {
-        self.viewModel = viewModel
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
+        self.paymentMethod = paymentMethod
+        self.appearance = appearance
         super.init(frame: .zero)
 
         addAndPinSubview(shadowRoundedRect)
@@ -159,15 +160,15 @@ final class PaymentMethodRowButton: UIView {
     // MARK: Tap handlers
     @objc private func handleSelectionTap() {
         state = .selected
-        delegate?.didSelectButton(self)
+        delegate?.didSelectButton(self, with: paymentMethod)
     }
 
     @objc private func handleEditButtonTapped() {
-        delegate?.didSelectEditButton(self)
+        delegate?.didSelectEditButton(self, with: paymentMethod)
     }
 
     @objc private func handleRemoveButtonTapped() {
-        delegate?.didSelectRemoveButton(self)
+        delegate?.didSelectRemoveButton(self, with: paymentMethod)
     }
 
 }

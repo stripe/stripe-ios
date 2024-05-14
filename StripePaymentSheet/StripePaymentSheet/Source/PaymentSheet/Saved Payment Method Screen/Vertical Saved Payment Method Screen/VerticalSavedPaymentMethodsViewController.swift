@@ -29,9 +29,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
-                paymentMethodRows.map { $0.button }.forEach { $0.state = .editing }
+                paymentMethodRows.forEach { $0.state = .editing }
             } else {
-                paymentMethodRows.map { $0.button }.forEach { $0.state = $0.previousState }
+                paymentMethodRows.forEach { $0.state = $0.previousState }
             }
             // TODO(porter) Handle case where we delete the selected card
         }
@@ -72,18 +72,16 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return label
     }()
 
-    private lazy var paymentMethodRows: [(paymentMethod: STPPaymentMethod, button: PaymentMethodRowButton)] = {
+    private lazy var paymentMethodRows: [PaymentMethodRowButton] = {
         return paymentMethods.map { paymentMethod in
-            let button = PaymentMethodRowButton(viewModel: .init(appearance: configuration.appearance,
-                                                                 text: paymentMethod.paymentSheetLabel,
-                                                                 image: paymentMethod.makeSavedPaymentMethodRowImage()))
+            let button = PaymentMethodRowButton(paymentMethod: paymentMethod, appearance: configuration.appearance)
             button.delegate = self
-            return (paymentMethod, button)
+            return button
         }
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows.map { $0.button })
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows)
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
@@ -105,7 +103,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
         // TODO(porter) Pipe in selected payment method, default to selecting first for now
-        paymentMethodRows.first?.button.state = .selected
+        paymentMethodRows.first?.state = .selected
         view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 
@@ -147,18 +145,9 @@ extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
 // MARK: - PaymentMethodRowButtonDelegate
 extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDelegate {
 
-    private func paymentMethod(from button: PaymentMethodRowButton) -> STPPaymentMethod? {
-        return paymentMethodRows.first(where: { $0.button === button })?.paymentMethod
-    }
-
-    func didSelectButton(_ button: PaymentMethodRowButton) {
-        guard let paymentMethod = paymentMethod(from: button) else {
-            // TODO(porter) Handle error - no matching payment method found
-            return
-        }
-
+    func didSelectButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         // Deselect previous button        
-        paymentMethodRows.first { $0.button != button && $0.button.isSelected }?.button.state = .unselected
+        paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
 
         // Disable interaction to prevent double selecting since we will be dismissing soon
         self.view.isUserInteractionEnabled = false
@@ -172,21 +161,11 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
         }
     }
 
-    func didSelectRemoveButton(_ button: PaymentMethodRowButton) {
-        guard let paymentMethod = paymentMethod(from: button) else {
-            // TODO(porter) Handle error - no matching payment method found
-            return
-        }
-
+    func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         print("Remove payment method with id: \(paymentMethod.stripeId)")
     }
 
-    func didSelectEditButton(_ button: PaymentMethodRowButton) {
-        guard let paymentMethod = paymentMethod(from: button) else {
-            // TODO(porter) Handle error - no matching payment method found
-            return
-        }
-
+    func didSelectEditButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         print("Edit payment method with id: \(paymentMethod.stripeId)")
     }
 }
