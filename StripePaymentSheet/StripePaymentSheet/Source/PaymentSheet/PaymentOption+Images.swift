@@ -103,7 +103,7 @@ extension STPPaymentMethod {
         switch type {
         case .card:
             let cardBrand = card?.preferredDisplayBrand ?? .unknown
-            return STPImageLibrary.cardBrandImage(for: cardBrand)
+            return STPImageLibrary.unpaddedCardBrandImage(for: cardBrand)
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
