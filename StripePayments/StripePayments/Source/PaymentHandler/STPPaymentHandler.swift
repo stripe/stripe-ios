@@ -1575,7 +1575,9 @@ public class STPPaymentHandler: NSObject {
                             if retryCount > 0
                                 && (shouldRetryForCard || shouldRetryForAppRedirect) {
                                 self._retryAfterDelay(retryCount: retryCount) {
-                                    self._retrieveAndCheckIntentForCurrentAction(retryCount: retryCount - 1)
+                                    self._retrieveAndCheckIntentForCurrentAction(
+                                        retryCount: retryCount - 1
+                                    )
                                 }
                             } else {
                                 // If the status is still RequiresAction, the user exited from the redirect before the
