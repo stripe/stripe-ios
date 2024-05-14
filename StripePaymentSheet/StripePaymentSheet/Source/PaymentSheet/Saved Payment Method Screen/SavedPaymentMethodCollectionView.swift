@@ -110,7 +110,7 @@ extension SavedPaymentMethodCollectionView {
         }
 
         var cbcEligible: Bool = false
-        var paymentMethodRemove: Bool = true
+        var allowsPaymentMethodRemoval: Bool = true
 
         /// Indicates whether the cell should be editable or just removable.
         /// If the card is a co-branded card and the merchant is eligible for card brand choice, then
@@ -220,13 +220,13 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
 
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, paymentMethodRemove: Bool) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
             self.cbcEligible = cbcEligible
-            self.paymentMethodRemove = paymentMethodRemove
+            self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
             update()
         }
 
@@ -248,7 +248,7 @@ extension SavedPaymentMethodCollectionView {
         private func didSelectAccessory() {
             if shouldAllowEditing {
                 delegate?.paymentOptionCellDidSelectEdit(self)
-            } else if paymentMethodRemove {
+            } else if allowsPaymentMethodRemoval {
                 delegate?.paymentOptionCellDidSelectRemove(self)
             }
         }
@@ -340,7 +340,7 @@ extension SavedPaymentMethodCollectionView {
                         accessoryButton.backgroundColor = UIColor.dynamic(
                             light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
                         accessoryButton.iconColor = appearance.colors.icon
-                    } else if paymentMethodRemove {
+                    } else if allowsPaymentMethodRemoval {
                         accessoryButton.isHidden = false
                         accessoryButton.set(style: .remove, with: appearance.colors.danger)
                         accessoryButton.backgroundColor = appearance.colors.danger
