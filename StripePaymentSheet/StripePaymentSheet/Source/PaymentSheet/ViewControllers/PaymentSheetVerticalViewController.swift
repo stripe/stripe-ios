@@ -28,14 +28,23 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(
+            isTestMode: configuration.apiClient.isTestmode,
+            appearance: configuration.appearance
+        )
         navBar.delegate = self
         return navBar
     }()
 
     lazy var paymentMethodListView: VerticalPaymentMethodListView = {
-        return VerticalPaymentMethodListView(savedPaymentMethod: loadResult.savedPaymentMethods.first, paymentMethodTypes: paymentMethodTypes, shouldShowApplePay: loadResult.isApplePayEnabled, shouldShowLink: loadResult.isLinkEnabled, appearance: configuration.appearance, delegate: self)
+        return VerticalPaymentMethodListView(
+            savedPaymentMethod: loadResult.savedPaymentMethods.first,
+            paymentMethodTypes: paymentMethodTypes,
+            shouldShowApplePay: loadResult.isApplePayEnabled,
+            shouldShowLink: loadResult.isLinkEnabled,
+            appearance: configuration.appearance,
+            delegate: self
+        )
     }()
 
     // MARK: - Initializers
@@ -76,8 +85,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // TOOD(porter) Remove/rename
     @objc func presentManageScreen() {
-        let vc = VerticalSavedPaymentMethodsViewController(configuration: configuration,
-                                                           paymentMethods: loadResult.savedPaymentMethods)
+        let vc = VerticalSavedPaymentMethodsViewController(
+            configuration: configuration,
+            paymentMethods: loadResult.savedPaymentMethods
+        )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
         // TODO(porter) Set delegate
