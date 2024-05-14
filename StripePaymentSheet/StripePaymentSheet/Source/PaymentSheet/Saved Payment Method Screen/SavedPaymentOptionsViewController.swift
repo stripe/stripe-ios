@@ -483,7 +483,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, paymentMethodRemove: self.paymentSheetConfiguration.paymentMethodRemove)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.paymentSheetConfiguration.paymentMethodRemove)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
