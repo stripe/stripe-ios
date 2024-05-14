@@ -34,7 +34,7 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
                                                           paymentMethod: paymentMethodDict,
                                                           nextAction: .useStripeSDK)
 
-            let apiClientMock = STPAPIClientMock(mockPaymentIntent: paymentIntent)
+            let apiClientMock = STPAPIClientMock()
             let currentAction = STPPaymentHandlerPaymentIntentActionParams.makeTestable(apiClient: apiClientMock,
                                                                                         paymentMethodTypes: [paymentMethodType.identifier],
                                                                                         paymentIntent: paymentIntent)
@@ -64,7 +64,7 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
                                                       paymentMethod: paymentMethodDict,
                                                       nextAction: .useStripeSDK)
 
-            let apiClientMock = STPAPIClientMock(mockSetupIntent: setupIntent)
+            let apiClientMock = STPAPIClientMock()
             let currentAction = STPPaymentHandlerSetupIntentActionParams.makeTestable(apiClient: apiClientMock,
                                                                                       paymentMethodTypes: [paymentMethodType.identifier],
                                                                                       setupIntent: setupIntent)
@@ -88,17 +88,6 @@ class STPAPIClientMock: STPAPIClient {
     var refreshSetupIntentCalled = false
     var retrievePaymentIntentCalled = false
     var retrieveSetupIntentCalled = false
-
-    private var mockPaymentIntent: STPPaymentIntent?
-    private var mockSetupIntent: STPSetupIntent?
-
-    init(mockPaymentIntent: STPPaymentIntent) {
-        self.mockPaymentIntent = mockPaymentIntent
-    }
-
-    init(mockSetupIntent: STPSetupIntent) {
-        self.mockSetupIntent = mockSetupIntent
-    }
 
     override func refreshPaymentIntent(withClientSecret secret: String, completion: @escaping STPPaymentIntentCompletionBlock) {
         refreshPaymentIntentCalled = true
