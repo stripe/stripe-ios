@@ -63,13 +63,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
 
-        let dummyButton = UIButton(type: .system)
-        dummyButton.setTitle("Welcome to vertical mode", for: .normal)
-        dummyButton.addTarget(self, action: #selector(presentManageScreen), for: .touchUpInside)
-
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
-            dummyButton,
             paymentMethodListView,
         ])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
