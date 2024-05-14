@@ -148,9 +148,9 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
         // Deselect previous button        
         paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
 
-        // Disable interaction to prevent double selecting since we will be dismissing soon
+        // Disable interaction to prevent double selecting or entering edit mode since we will be dismissing soon
         self.view.isUserInteractionEnabled = false
-        self.navigationBar.isUserInteractionEnabled = false // Tint buttons in the nav bar to look disabled
+        self.navigationBar.isUserInteractionEnabled = false
 
         // Give time for new selected row to show it has been selected before dismissing
         // Makes UX feel a little nicer
