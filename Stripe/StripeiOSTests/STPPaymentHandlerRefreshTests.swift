@@ -45,6 +45,8 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
             let requiresRefresh = shouldRefresh.contains(paymentMethodType)
             XCTAssertEqual(apiClientMock.refreshPaymentIntentCalled, requiresRefresh,
                            "\(paymentMethodType.displayName) should \(requiresRefresh ? "" : "not ")hit the refresh endpoint when using a PaymentIntent")
+            XCTAssertEqual(apiClientMock.retrievePaymentIntentCalled, !requiresRefresh,
+                           "\(paymentMethodType.displayName) should \(requiresRefresh ? "" : "not ")hit the retrieve endpoint when using a PaymentIntent")
         }
     }
 
@@ -73,6 +75,8 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
             let requiresRefresh = shouldRefresh.contains(paymentMethodType)
             XCTAssertEqual(apiClientMock.refreshSetupIntentCalled, requiresRefresh,
                            "\(paymentMethodType.displayName) should \(requiresRefresh ? "" : "not ")hit the refresh endpoint when using a SetupIntent")
+            XCTAssertEqual(apiClientMock.retrieveSetupIntentCalled, !requiresRefresh,
+                           "\(paymentMethodType.displayName) should \(requiresRefresh ? "" : "not ")hit the retrieve endpoint when using a SetupIntent")
         }
     }
 }
@@ -82,6 +86,8 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
 class STPAPIClientMock: STPAPIClient {
     var refreshPaymentIntentCalled = false
     var refreshSetupIntentCalled = false
+    var retrievePaymentIntentCalled = false
+    var retrieveSetupIntentCalled = false
 
     private var mockPaymentIntent: STPPaymentIntent?
     private var mockSetupIntent: STPSetupIntent?
@@ -107,8 +113,7 @@ class STPAPIClientMock: STPAPIClient {
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
-        // no-op, prevent from hitting network
-        completion(mockPaymentIntent, nil)
+        retrievePaymentIntentCalled = true
     }
 
     override func retrieveSetupIntent(
@@ -116,8 +121,7 @@ class STPAPIClientMock: STPAPIClient {
         expand: [String]?,
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
-        // no-op, prevent from hitting network
-        completion(mockSetupIntent, nil)
+        retrieveSetupIntentCalled = true
     }
 }
 
