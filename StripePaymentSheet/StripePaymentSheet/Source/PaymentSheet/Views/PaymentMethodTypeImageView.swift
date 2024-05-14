@@ -49,6 +49,7 @@ class PaymentMethodTypeImageView: UIImageView {
             tintColor = resolvedBackgroundColor?.contrastingColor
         } else {
             self.image = image
+            tintColor = nil
         }
     }
 }

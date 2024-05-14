@@ -72,7 +72,6 @@ final class VerticalPaymentMethodListViewSnapshotTest: STPSnapshotTestCase {
         let window = UIWindow()
         window.isHidden = false
         window.addAndPinSubview(sut, insets: .zero)
-        window.overrideUserInterfaceStyle = .dark
         STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
     }
 }

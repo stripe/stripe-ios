@@ -60,6 +60,7 @@ open class STPSnapshotTestCase: XCTestCase {
         suffixes: NSOrderedSet = NSOrderedSet(),
         perPixelTolerance: CGFloat = 0.02,
         overallTolerance: CGFloat = 0,
+        autoSizingHeightForWidth: CGFloat? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) {
