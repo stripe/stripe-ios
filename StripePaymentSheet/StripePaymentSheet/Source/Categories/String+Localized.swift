@@ -272,4 +272,11 @@ extension String.Localized {
             "Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc."
         )
     }
+
+    static var manage_payment_methods: String {
+        STPLocalizedString(
+            "Manage payment methods",
+            "Title shown above a view containing the customer's payment methods that they can delete or update"
+        )
+    }
 }

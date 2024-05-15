@@ -402,6 +402,10 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
+        override var intrinsicContentSize: CGSize {
+            return CGSize(width: 20, height: 20)
+        }
+
         required init(icon: Image, fillColor: UIColor) {
             imageView = UIImageView(image: icon.makeImage(template: true))
             super.init(frame: .zero)
