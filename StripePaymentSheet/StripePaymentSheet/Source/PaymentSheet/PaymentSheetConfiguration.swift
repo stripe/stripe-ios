@@ -167,9 +167,6 @@ extension PaymentSheet {
         /// Initializes a Configuration with default values
         public init() {}
 
-        // MARK: Internal
-        internal var linkPaymentMethodsOnly: Bool = false
-
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
 
@@ -196,6 +193,22 @@ extension PaymentSheet {
         /// If true (the default), the customer can delete all saved payment methods.
         /// If false, the customer can't delete if they only have one saved payment method remaining.
         @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
+
+        /// The layout of payment methods in PaymentSheet. Defaults to `.horizontal`.
+        /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
+        @_spi(STP) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
+
+        // MARK: Internal
+        internal var linkPaymentMethodsOnly: Bool = false
+    }
+
+    /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
+    @_spi(STP) public enum PaymentMethodLayout {
+        /// Payment methods are arranged horizontally. Users can swipe left or right to navigate through different payment methods.
+        case horizontal
+
+        /// Payment methods are arranged vertically. Users can scroll up or down to navigate through different payment methods.
+        case vertical
     }
 
     internal enum CustomerAccessProvider {

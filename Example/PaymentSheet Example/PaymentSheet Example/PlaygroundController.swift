@@ -15,7 +15,7 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
-@testable @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import SwiftUI
 import UIKit
@@ -168,9 +168,9 @@ class PlaygroundController: ObservableObject {
 
         switch settings.layout {
         case .horizontal:
-            configuration.appearance.layout = .horizontal
+            configuration.paymentMethodLayout = .horizontal
         case .vertical:
-            configuration.appearance.layout = .vertical
+            configuration.paymentMethodLayout = .vertical
         }
         return configuration
     }
