@@ -284,7 +284,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                         action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside
                     )
-                    return !savedPaymentOptionsViewController.hasPaymentOptions ? .close(showAdditionalButton: false) : .back
+                    return !savedPaymentOptionsViewController.hasPaymentOptions ? .close(showAdditionalButton: false) : .back(showAdditionalButton: false)
                 }
             }()
         )
@@ -629,14 +629,11 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
-            navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
             buyButton.update(state: .disabled)
         } else {
             buyButton.update(state: buyButtonEnabledForSavedPayments())
-            navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
-        navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
-        navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
         navigationBar.additionalButton.addTarget(
             self,
             action: #selector(didSelectEditSavedPaymentMethodsButton),
