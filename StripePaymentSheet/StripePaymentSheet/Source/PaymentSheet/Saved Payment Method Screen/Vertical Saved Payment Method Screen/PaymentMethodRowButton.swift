@@ -14,7 +14,7 @@ import UIKit
 protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
     func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
-    func didSelectEditButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
+    func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
 final class PaymentMethodRowButton: UIView {
@@ -83,8 +83,8 @@ final class PaymentMethodRowButton: UIView {
 
     weak var delegate: PaymentMethodRowButtonDelegate?
 
-    // MARK: Private properties
-    private let paymentMethod: STPPaymentMethod
+    // MARK: Internal/private properties
+    let paymentMethod: STPPaymentMethod
     private let appearance: PaymentSheet.Appearance
 
     // MARK: Private views
@@ -114,17 +114,9 @@ final class PaymentMethodRowButton: UIView {
         return circleView
     }()
 
-    lazy var removeButton: CircularButton = {
-        let removeButton = CircularButton(style: .remove, iconColor: .white)
-        removeButton.backgroundColor = viewModel.appearance.colors.danger
-        removeButton.isHidden = true
-        removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
-        return removeButton
-    }()
-
     private lazy var updateButton: CircularButton = {
         let updateButton = CircularButton(style: .edit, iconColor: .white)
-        updateButton.backgroundColor = viewModel.appearance.colors.icon
+        updateButton.backgroundColor = appearance.colors.icon
         updateButton.isHidden = true
         updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
         return updateButton
@@ -137,15 +129,7 @@ final class PaymentMethodRowButton: UIView {
         removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
         return removeButton
     }()
-
-    private lazy var editButton: CircularButton = {
-        let editButton = CircularButton(style: .edit, iconColor: .white)
-        editButton.backgroundColor = appearance.colors.icon
-        editButton.isHidden = true
-        editButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
-        return editButton
-    }()
-
+    
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView, updateButton, removeButton])
         stackView.axis = .horizontal
@@ -165,10 +149,6 @@ final class PaymentMethodRowButton: UIView {
         shadowRoundedRect.translatesAutoresizingMaskIntoConstraints = false
         shadowRoundedRect.addAndPinSubview(stackView)
         return shadowRoundedRect
-    }()
-
-    private lazy var selectionTapGesture: UITapGestureRecognizer = {
-        return UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap))
     }()
 
     private lazy var selectionTapGesture: UITapGestureRecognizer = {
@@ -199,8 +179,8 @@ final class PaymentMethodRowButton: UIView {
         delegate?.didSelectButton(self, with: paymentMethod)
     }
 
-    @objc private func handleEditButtonTapped() {
-        delegate?.didSelectEditButton(self, with: paymentMethod)
+    @objc private func handleUpdateButtonTapped() {
+        delegate?.didSelectUpdateButton(self, with: paymentMethod)
     }
 
     @objc private func handleRemoveButtonTapped() {
