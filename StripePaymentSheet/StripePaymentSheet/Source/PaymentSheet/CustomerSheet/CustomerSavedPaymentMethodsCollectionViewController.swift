@@ -91,9 +91,9 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             return false
         case 1:
             // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM is editable
-            return savedPaymentMethodsConfiguration.paymentMethodRemove && (configuration.allowsRemovalOfLastSavedPaymentMethod || viewModels.contains(where: {
+            return (savedPaymentMethodsConfiguration.paymentMethodRemove && configuration.allowsRemovalOfLastSavedPaymentMethod) || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
-            }))
+            })
         default:
             return savedPaymentMethodsConfiguration.paymentMethodRemove || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
