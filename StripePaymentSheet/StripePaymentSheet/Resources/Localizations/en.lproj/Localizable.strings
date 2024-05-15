@@ -122,6 +122,9 @@
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
 
+/* Title shown above a view containing the customer's payment methods that they can delete or update */
+"Manage payment methods" = "Manage payment methods";
+
 /* Title shown above a carousel containing the customer's payment methods */
 "Manage your payment methods" = "Manage your payment methods";
 
