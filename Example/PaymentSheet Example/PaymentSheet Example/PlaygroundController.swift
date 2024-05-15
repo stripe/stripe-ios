@@ -150,6 +150,8 @@ class PlaygroundController: ObservableObject {
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
         }
+        configuration.paymentMethodRemove = settings.paymentMethodRemove == .enabled
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
