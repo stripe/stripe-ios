@@ -103,6 +103,7 @@
 		68F9810F66FB2D6B278429D7 /* STPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740C01696C56E269129C86CF /* STPAddress.swift */; };
 		6AF719654B7BC4062C1AF65C /* STPPaymentMethodAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3403BA8AC9DAEAAEF288879 /* STPPaymentMethodAddress.swift */; };
 		6B55465E2BDAFEF900CA88F6 /* STPPaymentMethodAllowRedisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B55465D2BDAFEF900CA88F6 /* STPPaymentMethodAllowRedisplay.swift */; };
+		6BA4B9162BF3E0C900D1F21D /* STPPaymentMethodMobilePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA4B9152BF3E0C900D1F21D /* STPPaymentMethodMobilePay.swift */; };
 		6BE5D7C3F86951E73DAAEB6B /* STPThreeDSCustomizationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458CF0D5A7EE56A02D750F2 /* STPThreeDSCustomizationSettings.swift */; };
 		6F09091B2E770D0072201C45 /* StripePayments+Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C6DBBF4EED92890747C305 /* StripePayments+Export.swift */; };
 		6F3835CEBF9618207F8332AA /* STPPaymentMethodBacsDebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C040209FB6165F70AA7E97 /* STPPaymentMethodBacsDebit.swift */; };
@@ -437,6 +438,7 @@
 		69C77D6D92668C1E541E3C0F /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6A7CE39E853BD92ABE59F8EA /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		6B55465D2BDAFEF900CA88F6 /* STPPaymentMethodAllowRedisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAllowRedisplay.swift; sourceTree = "<group>"; };
+		6BA4B9152BF3E0C900D1F21D /* STPPaymentMethodMobilePay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodMobilePay.swift; sourceTree = "<group>"; };
 		6BF260394EEC61199F0EABF8 /* STPPaymentMethodEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodEnums.swift; sourceTree = "<group>"; };
 		6C360F4D54167F6A484B8D9F /* STPTestAPIClient+Swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPTestAPIClient+Swift.swift"; sourceTree = "<group>"; };
 		6CC7BD1E3971B7E4EAE98F40 /* STPThreeDSLabelCustomization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPThreeDSLabelCustomization.swift; sourceTree = "<group>"; };
@@ -1094,6 +1096,7 @@
 				B9F83C7EDA9903D041E4C001 /* STPPaymentMethodKlarnaParams.swift */,
 				E99B164CDD13E8F5C9CAD349 /* STPPaymentMethodLink.swift */,
 				3E397BCD2C450E4770A278DA /* STPPaymentMethodLinkParams.swift */,
+				6BA4B9152BF3E0C900D1F21D /* STPPaymentMethodMobilePay.swift */,
 				92A9741EA9B8FD4301DEB5FD /* STPPaymentMethodMobilePayParams.swift */,
 				48A73DA27ABEC6115513F315 /* STPPaymentMethodNetBanking.swift */,
 				80DC82D6BCE42502F71F8796 /* STPPaymentMethodNetBankingParams.swift */,
@@ -1450,6 +1453,7 @@
 				6F3835CEBF9618207F8332AA /* STPPaymentMethodBacsDebit.swift in Sources */,
 				2BFBE84BD5718D4D8D4718D8 /* STPPaymentMethodBacsDebitParams.swift in Sources */,
 				17083CBB3962C5ADB155EEF4 /* STPPaymentMethodBancontact.swift in Sources */,
+				6BA4B9162BF3E0C900D1F21D /* STPPaymentMethodMobilePay.swift in Sources */,
 				34B8762E977C25C6F715C7C6 /* STPPaymentMethodBancontactParams.swift in Sources */,
 				754AA58F8D3AE8431E01D47E /* STPPaymentMethodBoleto.swift in Sources */,
 				01328A80E436C968E4545922 /* STPPaymentMethodBoletoParams.swift in Sources */,

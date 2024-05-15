@@ -1,3 +1,7 @@
+## x.x.x xxxx-xx-xx
+### Payments
+* [Added] Updated support for MobilePay bindings.
+
 ## 23.27.2 2024-05-06
 ### CardScan
 * [Changed] ScannedCard to allow access for expiryMonth, expiryYear and name.
