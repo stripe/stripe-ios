@@ -135,8 +135,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "grabpay",
             async: false,
             fields: [.name(nameSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -165,8 +164,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "grabpay",
             async: false,
             fields: [.name(nameSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -257,8 +255,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "mock_pm",
             async: false,
             fields: [.email(emailSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -317,8 +314,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "mock_pm",
             async: false,
             fields: [.email(emailSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -350,8 +346,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "sepa_debit",
             async: false,
             fields: [.selector(selectorSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.SEPADebit))
@@ -398,8 +393,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "klarna",
             async: false,
             fields: [.klarna_country(.init(apiPath: nil))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.klarna))
@@ -427,8 +421,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "klarna",
             async: false,
             fields: [.klarna_country(.init(apiPath: ["v1": "billing_details[address][country]"]))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.klarna))
@@ -527,8 +520,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "au_becs_debit",
             async: false,
             fields: [.au_becs_bsb_number(.init(apiPath: nil))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
@@ -571,8 +563,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "au_becs_debit",
             async: false,
             fields: [.au_becs_bsb_number(.init(apiPath: ["v1": "au_becs_debit[bsb_number]"]))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
@@ -605,8 +596,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "au_becs_debit",
             async: false,
             fields: [.au_becs_account_number(.init(apiPath: nil))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
@@ -653,8 +643,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             fields: [
                 .au_becs_account_number(.init(apiPath: ["v1": "au_becs_debit[account_number]"])),
             ],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
@@ -752,8 +741,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "sofort",
             async: false,
             fields: [.country(.init(apiPath: nil, allowedCountryCodes: ["AT", "BE"]))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.sofort))
@@ -781,8 +769,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     .init(apiPath: ["v1": "sofort[country]"], allowedCountryCodes: ["AT", "BE"])
                 ),
             ],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.sofort))
@@ -881,8 +868,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 type: "sepa_debit",
                 async: false,
                 fields: [.iban(.init(apiPath: nil))],
-                selectorIcon: nil,
-                nextActionSpec: nil
+                selectorIcon: nil
             )
             return factory.makeFormElementFromSpec(spec: spec)
         }
@@ -920,8 +906,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 type: "sepa_debit",
                 async: false,
                 fields: [.iban(.init(apiPath: ["v1": "SEPADebit[iban]"]))],
-                selectorIcon: nil,
-                nextActionSpec: nil
+                selectorIcon: nil
             )
             return factory.makeFormElementFromSpec(spec: spec)
         }
@@ -1010,8 +995,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 .email(.init(apiPath: nil)),
                 .unknown("some_unknownField2"),
             ],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -1092,8 +1076,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "grabpay",
             async: false,
             fields: [.billing_address(billingAddressSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
@@ -1122,8 +1105,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "grabpay",
             async: false,
             fields: [.billing_address(billingAddressSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)

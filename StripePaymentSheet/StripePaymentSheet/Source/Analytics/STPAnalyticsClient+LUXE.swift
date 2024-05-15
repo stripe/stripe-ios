@@ -12,10 +12,6 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .luxeSerializeFailure)
     }
 
-    func logLUXEUnknownActionsFailure() {
-        self.logPaymentSheetEvent(event: .luxeUnknownActionsFailure)
-    }
-
     func logLUXESpecSerilizeFailure(error: Error?) {
         self.logPaymentSheetEvent(event: .luxeSpecSerializeFailure, error: error)
     }

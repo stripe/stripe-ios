@@ -445,7 +445,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 return
             }
             let e = expectation(description: "Confirm")
-            let paymentHandler = STPPaymentHandler(apiClient: apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
+            let paymentHandler = STPPaymentHandler(apiClient: apiClient)
             var redirectShimCalled = false
             paymentHandler._redirectShim = { _, _, _ in
                 // This gets called instead of the PaymentSheet.confirm callback if the Intent is successfully confirmed and requires next actions.

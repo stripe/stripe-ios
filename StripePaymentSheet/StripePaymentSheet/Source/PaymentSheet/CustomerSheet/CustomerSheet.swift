@@ -31,7 +31,7 @@ public class CustomerSheet {
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = {
-        STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
+        STPPaymentHandler(apiClient: configuration.apiClient)
     }()
 
     /// The parent view controller to present

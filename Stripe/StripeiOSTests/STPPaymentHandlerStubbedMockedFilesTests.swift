@@ -319,25 +319,10 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                                   paymentIntentParams: paymentIntentParams)
     }
 
-    func testCallConfirmAfterpay_Redirect_thenSucceeded_withoutNextActionSpec() {
+    func testCallConfirmAfterpay_Redirect() {
         let formSpecProvider = formSpecProvider()
         let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider)
-        // Validate affirm is read in with next action spec
-        guard let affirm = formSpecProvider.formSpec(for: "affirm"),
-            affirm.fields.count == 1,
-            affirm.fields.first == .affirm_header,
-            case .redirect_to_url = affirm.nextActionSpec?.confirmResponseStatusSpecs[
-                "requires_action"
-            ]?.type,
-            case .finished = affirm.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["succeeded"]?
-                .type,
-            case .canceled = affirm.nextActionSpec?.postConfirmHandlingPiStatusSpecs?[
-                "requires_action"
-            ]?.type
-        else {
-            XCTFail()
-            return
-        }
+
         // Override it with a spec that doesn't define a next action so that we force the SDK to default behavior
         let updatedSpecJson =
             """
@@ -353,11 +338,10 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
         XCTAssert(formSpecProvider.loadFrom(formSpec))
-        guard let affirmUpdated = formSpecProvider.formSpec(for: "affirm") else {
+        guard formSpecProvider.formSpec(for: "affirm") != nil else {
             XCTFail()
             return
         }
-        XCTAssertNil(affirmUpdated.nextActionSpec)
 
         let nextActionData = """
               {
@@ -547,11 +531,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
     }
 
     private func stubbedPaymentHandler(formSpecProvider: FormSpecProvider) -> STPPaymentHandler {
-        let stubbedAPIClient = stubbedAPIClient()
-        let paymentSheetFormSpecHandler = PaymentSheetFormSpecPaymentHandler(urlSession: stubbedAPIClient.urlSession,
-                                                                             formSpecProvider: formSpecProvider)
-        return STPPaymentHandler(apiClient: stubbedAPIClient,
-                                 formSpecPaymentHandler: paymentSheetFormSpecHandler)
+        return STPPaymentHandler(apiClient: stubbedAPIClient())
     }
 
     private func replaceData(data: Data, variables: [String: String]) -> Data {

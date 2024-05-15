@@ -127,12 +127,10 @@ public class STPPaymentHandler: NSObject {
     @_spi(STP) public init(
         apiClient: STPAPIClient = .shared,
         threeDSCustomizationSettings: STPThreeDSCustomizationSettings =
-            STPThreeDSCustomizationSettings(),
-        formSpecPaymentHandler: FormSpecPaymentHandler? = nil
+            STPThreeDSCustomizationSettings()
     ) {
         self.apiClient = apiClient
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
-        self.formSpecPaymentHandler = formSpecPaymentHandler
         super.init()
     }
 
@@ -162,8 +160,6 @@ public class STPPaymentHandler: NSObject {
             _simulateAppToAppRedirect = newValue
         }
     }
-
-    private var formSpecPaymentHandler: FormSpecPaymentHandler?
 
     internal var _redirectShim: ((URL, URL?, Bool) -> Void)?
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
@@ -210,17 +206,8 @@ public class STPPaymentHandler: NSObject {
             // Reset our internal state
             Self.inProgress = false
 
-            // Use spec first to determine if we are in a terminal state
-            if status == .succeeded,
-                self.formSpecPaymentHandler?.isPIStatusSpecFinishedForPostConfirmPIStatus(
-                    paymentIntent: paymentIntent,
-                    paymentHandler: self
-                ) ?? false
-            {
-                completion(.succeeded, paymentIntent, nil)
-                return
-                //             Else ensure the .succeeded case returns a PaymentIntent in the expected state.
-            } else if let paymentIntent = paymentIntent, status == .succeeded {
+            // Ensure the .succeeded case returns a PaymentIntent in the expected state.
+            if let paymentIntent = paymentIntent, status == .succeeded {
                 let successIntentState =
                     paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture
                     || (paymentIntent.status == .processing
@@ -785,17 +772,9 @@ public class STPPaymentHandler: NSObject {
             completion(status, resultPaymentIntent, error)
         }
         currentAction = action
-        let specHandledNextAction =
-            self.formSpecPaymentHandler?.handleNextActionSpec(
-                for: paymentIntent,
-                action: action,
-                paymentHandler: self
-            ) ?? false
-        if !specHandledNextAction {
-            let requiresAction = _handlePaymentIntentStatus(forAction: action)
-            if requiresAction {
-                _handleAuthenticationForCurrentAction()
-            }
+        let requiresAction = _handlePaymentIntentStatus(forAction: action)
+        if requiresAction {
+            _handleAuthenticationForCurrentAction()
         }
     }
 
@@ -1478,13 +1457,6 @@ public class STPPaymentHandler: NSObject {
                                 )
                             }
                         } else {
-                            if self.formSpecPaymentHandler?.handlePostConfirmPIStatusSpec(
-                                for: currentAction.paymentIntent,
-                                action: currentAction,
-                                paymentHandler: self
-                            ) ?? false {
-                                return
-                            }
                             let requiresAction: Bool = self._handlePaymentIntentStatus(
                                 forAction: currentAction
                             )
@@ -2424,21 +2396,4 @@ extension STPPaymentHandler {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
-}
-
-@_spi(STP) public protocol FormSpecPaymentHandler {
-    func isPIStatusSpecFinishedForPostConfirmPIStatus(
-        paymentIntent: STPPaymentIntent?,
-        paymentHandler: STPPaymentHandler
-    ) -> Bool
-    func handleNextActionSpec(
-        for paymentIntent: STPPaymentIntent,
-        action: STPPaymentHandlerPaymentIntentActionParams,
-        paymentHandler: STPPaymentHandler
-    ) -> Bool
-    func handlePostConfirmPIStatusSpec(
-        for paymentIntent: STPPaymentIntent?,
-        action: STPPaymentHandlerPaymentIntentActionParams,
-        paymentHandler: STPPaymentHandler
-    ) -> Bool
 }
