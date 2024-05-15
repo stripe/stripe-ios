@@ -35,8 +35,11 @@ class PaymentMethodTypeImageView: UIImageView {
 #endif
 
     func updateImage() {
+        // Unfortunately the DownloadManager API returns either a placeholder image _or_ the actual image
+        // Set the image now...
         let image = paymentMethodType.makeImage(forDarkBackground: resolvedBackgroundColor?.contrastingColor == .white) { [weak self] image in
             DispatchQueue.main.async {
+                // ...and set it again if the callback is called with a downloaded image
                 self?.setImage(image)
             }
         }

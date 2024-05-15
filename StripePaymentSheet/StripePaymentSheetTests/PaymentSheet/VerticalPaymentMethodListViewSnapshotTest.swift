@@ -37,12 +37,6 @@ final class VerticalPaymentMethodListViewSnapshotTest: STPSnapshotTestCase {
         .UPI,
     ]
 
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-//        self.recordMode = true
-    }
-
     func testNoSavedPM_noApplePayLink() {
         let sut = VerticalPaymentMethodListView(savedPaymentMethod: nil, paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: false, shouldShowLink: false, appearance: .default, delegate: self)
         STPSnapshotVerifyView(sut, autoSizingHeightForWidth: 375)
