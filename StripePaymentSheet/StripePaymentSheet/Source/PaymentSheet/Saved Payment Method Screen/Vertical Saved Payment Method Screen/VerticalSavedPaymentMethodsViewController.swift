@@ -43,7 +43,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             return .Localized.manage_payment_methods
         }
 
-        let nonCardPaymentMethods = paymentMethodRows.filter({ $0.paymentMethod.type != .card })
+        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
         return nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
     }
 
