@@ -129,6 +129,7 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         print("Selected payment method with id: \(String(describing: selectedPaymentMethod?.stripeId))")
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         savedPaymentMethods = latestPaymentMethods
+        // TODO update selected payment method with `selectedPaymentMethod`
     }
 }
 
