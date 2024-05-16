@@ -53,7 +53,9 @@ class RowButton: UIView {
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        return RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, didTap: didTap)
+        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, didTap: didTap)
+        button.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+        return button
     }
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) {
@@ -75,7 +77,7 @@ class RowButton: UIView {
         }
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
-
+        
         // TODO: Accessory view
 
         addAndPinSubview(shadowRoundedRect)
@@ -97,6 +99,11 @@ class RowButton: UIView {
             labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -4),
         ])
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+        
+        // Accessibility
+        accessibilityIdentifier = text
+        accessibilityTraits = .button
+        // TODO(porter) More accessibility such as isAccessibilityElement, accessibilityTraits, selection state, etc
     }
 
     required init?(coder: NSCoder) {

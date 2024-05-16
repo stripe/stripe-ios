@@ -3499,7 +3499,7 @@ extension PaymentSheetUITestCase {
         
         app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        XCTAssertTrue(app.buttons["Welcome to vertical mode"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["••••4242"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
         
@@ -3509,8 +3509,8 @@ extension PaymentSheetUITestCase {
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
         
-        // Verify we are kicked out to the back screen
-        XCTAssertTrue(app.buttons["Welcome to vertical mode"].waitForExistence(timeout: 5.0))
+        // Verify we are kicked out to the main screen
+        XCTAssertTrue(app.staticTexts["New payment method"].waitForExistence(timeout: 5.0))
     }
     
     func testRemovalOfSavedPaymentMethods_verticalMode_allowsRemovalOfLastSavedPaymentMethod() {
@@ -3528,7 +3528,7 @@ extension PaymentSheetUITestCase {
         
         app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        XCTAssertTrue(app.buttons["Welcome to vertical mode"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
         
@@ -3557,7 +3557,7 @@ extension PaymentSheetUITestCase {
         
         app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        XCTAssertTrue(app.buttons["Welcome to vertical mode"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
         
