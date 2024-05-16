@@ -72,7 +72,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        paymentMethods: singlePaymentMethods)
         XCTAssertTrue(viewController.canEdit)
     }
-    
+
     func testCanEdit_singleRemovableAndEditablePaymentMethod_returnsTrue() {
         let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
