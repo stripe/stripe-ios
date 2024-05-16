@@ -148,7 +148,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
         // Update the editing state if needed
         isEditingPaymentMethods = canEdit
-        
+
         // If we deleted the last payment method kick back out to the main screen
         if paymentMethodRows.isEmpty {
             completeSelection()
