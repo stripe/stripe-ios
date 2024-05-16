@@ -1,6 +1,10 @@
 ## x.x.x xxxx-xx-xx
+### PaymentSheet
+* [Changed] Improved reliability and UX when paying with Cash App Pay.
+
 ### Payments
 * [Added] Updated support for MobilePay bindings.
+* [Changed] Improved reliability and UX when paying with Cash App Pay.
 
 ## 23.27.2 2024-05-06
 ### CardScan
