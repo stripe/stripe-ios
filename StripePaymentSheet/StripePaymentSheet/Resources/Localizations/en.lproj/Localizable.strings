@@ -122,11 +122,17 @@
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
 
+/* Title shown above a view containing the customer's payment methods that they can delete or update */
+"Manage payment methods" = "Manage payment methods";
+
 /* Title shown above a carousel containing the customer's payment methods */
 "Manage your payment methods" = "Manage your payment methods";
 
 /* Label for name on card field */
 "Name on card" = "Name on card";
+
+/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
+"New payment method" = "New payment method";
 
 /* Countdown timer text on a screen asking the user to approve a payment */
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
@@ -211,6 +217,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Label for a checkbox that when checked allows the payment information
 to be saved and used in future checkout sessions. */
 "Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
+
+/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
+"Saved" = "Saved";
 
 /* Title shown above a view containing the customer's card payment methods */
 "Select card" = "Select card";

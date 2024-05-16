@@ -21,6 +21,31 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let configuration: PaymentSheet.Configuration
     private let paymentMethods: [STPPaymentMethod]
 
+    private var isEditingPaymentMethods: Bool = false {
+        didSet {
+            let additionalButtonTitle = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
+            navigationBar.additionalButton.setTitle(additionalButtonTitle, for: .normal)
+            headerLabel.text = headerText
+
+            // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
+            if isEditingPaymentMethods {
+                paymentMethodRows.forEach { $0.state = .editing }
+            } else {
+                paymentMethodRows.forEach { $0.state = $0.previousState }
+            }
+            // TODO(porter) Handle case where we delete the selected card
+        }
+    }
+
+    private var headerText: String {
+        if isEditingPaymentMethods {
+            return .Localized.manage_payment_methods
+        }
+
+        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        return nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
+    }
+
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
 
@@ -29,32 +54,33 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
-        navBar.setStyle(.back)
+        // TODO(porter) Only show edit button if we should
+        navBar.setStyle(.back(showAdditionalButton: true))
         navBar.delegate = self
+        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
+        // TODO(porter) Read color from new secondary action color from appearance
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
+        navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
         return navBar
     }()
 
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
-        label.text = nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
+        label.text = headerText
         return label
     }()
 
-    private lazy var paymentMethodRows: [(paymentMethod: STPPaymentMethod, button: PaymentMethodRowButton)] = {
+    private lazy var paymentMethodRows: [PaymentMethodRowButton] = {
         return paymentMethods.map { paymentMethod in
-            let button = PaymentMethodRowButton(viewModel: .init(appearance: configuration.appearance,
-                                                                 text: paymentMethod.paymentSheetLabel,
-                                                                 image: paymentMethod.makeSavedPaymentMethodRowImage()))
+            let button = PaymentMethodRowButton(paymentMethod: paymentMethod, appearance: configuration.appearance)
             button.delegate = self
-            return (paymentMethod, button)
+            return button
         }
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows.map { $0.button })
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-        stackView.isLayoutMarginsRelativeArrangement = true
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows)
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
@@ -76,8 +102,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
         // TODO(porter) Pipe in selected payment method, default to selecting first for now
-        paymentMethodRows.first?.button.isSelected = true
-        view.addAndPinSubviewToSafeArea(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+        paymentMethodRows.first?.state = .selected
+        view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+    }
+
+    @objc func didSelectEditSavedPaymentMethodsButton() {
+        isEditingPaymentMethods = !isEditingPaymentMethods
     }
 }
 
@@ -113,17 +143,14 @@ extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
 
 // MARK: - PaymentMethodRowButtonDelegate
 extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDelegate {
-    func didSelectButton(_ button: PaymentMethodRowButton) {
-        guard let paymentMethod = paymentMethodRows.first(where: { $0.button === button })?.paymentMethod else {
-            // TODO(porter) Handle error - no matching payment method found
-            return
-        }
 
+    func didSelectButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         // Deselect previous button        
-        paymentMethodRows.first { $0.button != button && $0.button.isSelected }?.button.isSelected = false
+        paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
 
-        // Disable interaction to prevent double selecting since we will be dismissing soon
+        // Disable interaction to prevent double selecting or entering edit mode since we will be dismissing soon
         self.view.isUserInteractionEnabled = false
+        self.navigationBar.isUserInteractionEnabled = false
 
         // Give time for new selected row to show it has been selected before dismissing
         // Makes UX feel a little nicer
@@ -131,5 +158,13 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
             _ = self?.bottomSheetController?.popContentViewController()
             self?.delegate?.didSelectPaymentMethod(paymentMethod)
         }
+    }
+
+    func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
+        print("Remove payment method with id: \(paymentMethod.stripeId)")
+    }
+
+    func didSelectEditButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
+        print("Edit payment method with id: \(paymentMethod.stripeId)")
     }
 }

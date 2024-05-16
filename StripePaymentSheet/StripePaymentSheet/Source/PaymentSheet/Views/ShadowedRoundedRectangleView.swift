@@ -69,6 +69,7 @@ class ShadowedRoundedRectangle: UIView {
         super.layoutSubviews()
         // Update shadow paths based on current frame
         roundedRectangle.frame = bounds
+        roundedRectangle.layer.shadowPath = UIBezierPath(rect: bounds).cgPath
     }
 
     #if !canImport(CompositorServices)
