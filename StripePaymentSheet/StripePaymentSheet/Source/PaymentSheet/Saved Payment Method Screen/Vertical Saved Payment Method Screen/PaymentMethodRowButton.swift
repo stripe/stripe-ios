@@ -30,8 +30,8 @@ final class PaymentMethodRowButton: UIView {
     var state: State = .unselected {
         didSet {
             previousState = oldValue
-            
-            rowButton.gestureRecognizers?.forEach {$0.isEnabled = !isEditing}
+
+            rowButton.gestureRecognizers?.forEach { $0.isEnabled = !isEditing }
             rowButton.isSelected = isSelected
             circleView.isHidden = !isSelected
             updateButton.isHidden = !canUpdate
@@ -58,7 +58,7 @@ final class PaymentMethodRowButton: UIView {
             return true
         }
     }
-    
+
     private var canUpdate: Bool {
         switch state {
         case .selected, .unselected:
@@ -67,7 +67,7 @@ final class PaymentMethodRowButton: UIView {
             return allowsUpdating
         }
     }
-    
+
     private var canRemove: Bool {
         switch state {
         case .selected, .unselected:
@@ -100,7 +100,7 @@ final class PaymentMethodRowButton: UIView {
         removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
         return removeButton
     }()
-    
+
     private lazy var updateButton: CircularButton = {
         let updateButton = CircularButton(style: .edit, iconColor: .white)
         updateButton.backgroundColor = appearance.colors.icon
@@ -108,18 +108,18 @@ final class PaymentMethodRowButton: UIView {
         updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
         return updateButton
     }()
-    
+
     private lazy var stackView: UIStackView = {
         return UIStackView.makeRowButtonContentStackView(arrangedSubviews: [.makeSpacerView(), circleView, updateButton, removeButton])
     }()
-    
+
     private lazy var rowButton: RowButton = {
         let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance) { [weak self] _ in
             guard let self, !isEditing else { return }
             state = .selected
             delegate?.didSelectButton(self, with: paymentMethod)
         }
-        
+
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAndPinSubview(stackView)
         return button

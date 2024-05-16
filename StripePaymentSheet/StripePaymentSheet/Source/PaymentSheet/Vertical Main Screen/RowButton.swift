@@ -77,7 +77,7 @@ class RowButton: UIView {
         }
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
-        
+
         // TODO: Accessory view
 
         addAndPinSubview(shadowRoundedRect)
@@ -99,7 +99,7 @@ class RowButton: UIView {
             labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -4),
         ])
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
-        
+
         // Accessibility
         accessibilityIdentifier = text
         accessibilityTraits = .button

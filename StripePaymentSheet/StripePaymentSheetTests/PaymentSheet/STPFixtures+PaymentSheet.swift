@@ -97,7 +97,7 @@ extension STPPaymentMethod {
             ],
         ])!
     }
-    
+
     static func _testCardCoBranded() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
@@ -105,7 +105,7 @@ extension STPPaymentMethod {
             "card": [
                 "last4": "4242",
                 "brand": "visa",
-                "networks": ["available": ["visa", "amex"]]
+                "networks": ["available": ["visa", "amex"]],
             ],
         ])!
     }

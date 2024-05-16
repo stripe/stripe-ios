@@ -46,24 +46,24 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         let nonCardPaymentMethods = paymentMethodRows.filter({ $0.paymentMethod.type != .card })
         return nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
     }
-    
+
     var canRemovePaymentMethods: Bool {
         // Can remove a payment method if we have more than one payment method or if we have one payment method and `allowsRemovalOfLastSavedPaymentMethod` is true
         return paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod
     }
-    
+
     var canEdit: Bool {
-        let hasCoBrandedCards = !paymentMethodRows.filter{$0.paymentMethod.isCoBrandedCard}.isEmpty
+        let hasCoBrandedCards = !paymentMethodRows.filter { $0.paymentMethod.isCoBrandedCard }.isEmpty
         // We can edit if there are removable or editable payment methods
         return canRemovePaymentMethods || hasCoBrandedCards
     }
-    
+
     private var selectedPaymentMethod: STPPaymentMethod? {
-        return paymentMethodRows.first {$0.isSelected}?.paymentMethod
+        return paymentMethodRows.first { $0.isSelected }?.paymentMethod
     }
-    
+
     private var paymentMethods: [STPPaymentMethod] {
-        return paymentMethodRows.map {$0.paymentMethod}
+        return paymentMethodRows.map { $0.paymentMethod }
     }
 
     // MARK: Internal properties
@@ -99,15 +99,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }()
 
     private var paymentMethodRows: [PaymentMethodRowButton] = []
-    
+
     init(configuration: PaymentSheet.Configuration, selectedPaymentMethod: STPPaymentMethod?, paymentMethods: [STPPaymentMethod]) {
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         // Select `selectedPaymentMethod` or the first row if selectedPaymentMethod is nil
-        (paymentMethodRows.first {$0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId} ?? paymentMethodRows.first)?.state = .selected
+        (paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId } ?? paymentMethodRows.first)?.state = .selected
     }
-    
+
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [PaymentMethodRowButton] {
         return paymentMethods.map { paymentMethod in
             let button = PaymentMethodRowButton(paymentMethod: paymentMethod,
@@ -133,19 +133,19 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     @objc func didSelectEditSavedPaymentMethodsButton() {
         isEditingPaymentMethods = !isEditingPaymentMethods
     }
-    
+
     private func remove(paymentMethod: STPPaymentMethod) {
-        guard let button = paymentMethodRows.first(where: {$0.paymentMethod.stripeId == paymentMethod.stripeId}),
+        guard let button = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
                 let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
-        
+
         // Detach the payment method from the customer
         let manager = SavedPaymentMethodManager(configuration: configuration)
         manager.detach(paymentMethod: paymentMethod, using: ephemeralKeySecret)
-        
+
         // Remove the payment method row button
-        paymentMethodRows.removeAll{button === $0}
+        paymentMethodRows.removeAll { button === $0 }
         stackView.removeArrangedSubview(button, animated: true)
-        
+
         // If we deleted the last payment method kick back out to the main screen
         if self.paymentMethodRows.isEmpty {
             completeSelection()
@@ -158,7 +158,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             isEditingPaymentMethods = false
         }
     }
-    
+
     private func completeSelection() {
         _ = self.bottomSheetController?.popContentViewController()
         self.delegate?.didComplete(with: selectedPaymentMethod, latestPaymentMethods: paymentMethods)
@@ -219,7 +219,7 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
             guard let self = self else { return }
             self.remove(paymentMethod: paymentMethod)
         }
-        
+
         present(alertController, animated: true, completion: nil)
     }
 
