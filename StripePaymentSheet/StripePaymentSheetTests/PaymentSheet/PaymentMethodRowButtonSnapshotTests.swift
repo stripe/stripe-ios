@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import UIKit
 
