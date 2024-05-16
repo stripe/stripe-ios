@@ -17,6 +17,7 @@ protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
+// TODO: Make this use RowButton internally
 final class PaymentMethodRowButton: UIView {
 
     enum State {
@@ -110,17 +111,7 @@ final class PaymentMethodRowButton: UIView {
     
     // todo reuse
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [UIView.spacerView, circleView, updateButton, removeButton])
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.directionalLayoutMargins = .init(top: 12, // Hardcoded from figma
-                                                   leading: PaymentSheetUI.defaultPadding,
-                                                   bottom: 12,
-                                                   trailing: PaymentSheetUI.defaultPadding)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.spacing = 12 // Hardcoded from figma
-        return stackView
+        return UIStackView.makeRowButtonContentStackView(arrangedSubviews: [paymentMethodImageView, label, .makeSpacerView(), circleView, editButton, removeButton])
     }()
     
     private lazy var rowButton: RowButton = {

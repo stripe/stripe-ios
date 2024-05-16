@@ -288,7 +288,6 @@
 		C8226E24CA51133091131391 /* STPConfirmCardOptionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD77D4B1C5B64E45F9DA09B5 /* STPConfirmCardOptionsTest.swift */; };
 		C8490E55B1F2EB836144F91C /* STPConnectAccountFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97018A201D01A8FA59999C2 /* STPConnectAccountFunctionalTest.swift */; };
 		C861BB9EAAD04949E338D7FF /* PaymentTypeCellSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A4A2B0FB9F8C743BBED48 /* PaymentTypeCellSnapshotTests.swift */; };
-		C8A6CA6352B7C8FEE3D91476 /* UIView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0293B82D7078EE11F9B5639 /* UIView+Helpers.swift */; };
 		C9E66A22494C02050AE34A9B /* FBSnapshotTestCase+STPViewControllerLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180CF848E3ABF0236C494D8B /* FBSnapshotTestCase+STPViewControllerLoading.swift */; };
 		CA189278AD606BEAC62D545F /* STPPaymentIntentParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF902DC49DD90860BD0E5E80 /* STPPaymentIntentParamsTest.swift */; };
 		CA4F392070740C56FE2BB461 /* STPStringUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6AE83989B0596F0C111E13 /* STPStringUtilsTest.swift */; };
@@ -838,7 +837,6 @@
 		EDD30E5DB8DB3AA3567F5C20 /* STPPaymentOptionTuple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentOptionTuple.swift; sourceTree = "<group>"; };
 		EF48EC440E1ED5D6BAA567FF /* STPPaymentHandlerStubbedMockedFilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentHandlerStubbedMockedFilesTests.swift; sourceTree = "<group>"; };
 		EFD2F6A5A046A620BAB75B41 /* AutoCompleteViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
-		F0293B82D7078EE11F9B5639 /* UIView+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Helpers.swift"; sourceTree = "<group>"; };
 		F13E3DE09A463B4501733B87 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F153420EA142B5CA76E89A04 /* STPMocks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPMocks.h; sourceTree = "<group>"; };
 		F372EDF9C2C45E1CA2C76866 /* STPPaymentMethodGiropayParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodGiropayParamsTests.swift; sourceTree = "<group>"; };
@@ -1008,7 +1006,6 @@
 				2C078573F46762353664AC92 /* UINavigationController+Stripe_Completion.swift */,
 				5476BD87E0480A93958F0328 /* UITableViewCell+Stripe_Borders.swift */,
 				E2307F2C5E53540D4ACAA1F6 /* UIToolbar+Stripe_InputAccessory.swift */,
-				F0293B82D7078EE11F9B5639 /* UIView+Helpers.swift */,
 				1B76DF0FE363F59BF0940A8B /* UIView+Stripe_FirstResponder.swift */,
 				86798C95A778362EF815B4C6 /* UIView+Stripe_SafeAreaBounds.swift */,
 				2F08757CA6F6B2DA65C14E0A /* UIViewController+Stripe_KeyboardAvoiding.swift */,
@@ -1688,7 +1685,6 @@
 				9C13E8A017A4E23BCCDE618B /* UINavigationController+Stripe_Completion.swift in Sources */,
 				54331380F5AC68846DBE94D5 /* UITableViewCell+Stripe_Borders.swift in Sources */,
 				093FE3D65978E3DB6B79AE05 /* UIToolbar+Stripe_InputAccessory.swift in Sources */,
-				C8A6CA6352B7C8FEE3D91476 /* UIView+Helpers.swift in Sources */,
 				7F235CD649F6E97E4E7DD180 /* UIView+Stripe_FirstResponder.swift in Sources */,
 				44672917D3AC4B83F9EC3BC3 /* UIView+Stripe_SafeAreaBounds.swift in Sources */,
 				CC072EBAD035AA54A2AD3ABC /* UIViewController+Stripe_KeyboardAvoiding.swift in Sources */,

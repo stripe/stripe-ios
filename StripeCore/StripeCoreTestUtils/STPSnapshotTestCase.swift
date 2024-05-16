@@ -31,9 +31,13 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(),
         perPixelTolerance: CGFloat = 0.02,
         overallTolerance: CGFloat = 0,
+        autoSizingHeightForWidth: CGFloat? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) {
+        if let autoSizingHeightForWidth {
+            view.autosizeHeight(width: autoSizingHeightForWidth)
+        }
         FBSnapshotVerifyView(
             view,
             identifier: identifier,
@@ -56,6 +60,7 @@ open class STPSnapshotTestCase: XCTestCase {
         suffixes: NSOrderedSet = NSOrderedSet(),
         perPixelTolerance: CGFloat = 0.02,
         overallTolerance: CGFloat = 0,
+        autoSizingHeightForWidth: CGFloat? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) {

@@ -462,7 +462,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
-            switch configuration.appearance.layout {
+            switch configuration.paymentMethodLayout {
             case .horizontal:
                 return PaymentSheetFlowControllerViewController(
                     configuration: configuration,

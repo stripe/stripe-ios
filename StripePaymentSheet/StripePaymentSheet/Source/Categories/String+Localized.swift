@@ -221,6 +221,9 @@ extension String.Localized {
         STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
     }
 
+    static var buy_now_or_pay_later_with_klarna: String {
+        STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
+    }
     static var klarna_mandate_text: String {
         STPLocalizedString(
             "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@.",
@@ -251,8 +254,23 @@ extension String.Localized {
 
     static var select_your_payment_method: String {
         STPLocalizedString(
-                       "Select your payment method",
-                       "Title shown above a carousel containing the customer's payment methods")
+            "Select your payment method",
+            "Title shown above a carousel containing the customer's payment methods"
+        )
+    }
+
+    static var saved: String {
+        STPLocalizedString(
+            "Saved",
+            "Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account."
+        )
+    }
+
+    static var new_payment_method: String {
+        STPLocalizedString(
+            "New payment method",
+            "Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc."
+        )
     }
 
     static var manage_payment_methods: String {

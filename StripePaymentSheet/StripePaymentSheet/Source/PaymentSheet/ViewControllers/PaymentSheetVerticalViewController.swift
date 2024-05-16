@@ -15,6 +15,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var selectedPaymentOption: PaymentSheet.PaymentOption?
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
     let loadResult: PaymentSheetLoader.LoadResult
+    let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let configuration: PaymentSheet.Configuration
     var intent: Intent {
         return loadResult.intent
@@ -28,10 +29,23 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
-                                        appearance: configuration.appearance)
-        // TODO: set navBar.delegate = self
+        let navBar = SheetNavigationBar(
+            isTestMode: configuration.apiClient.isTestmode,
+            appearance: configuration.appearance
+        )
+        navBar.delegate = self
         return navBar
+    }()
+
+    lazy var paymentMethodListView: VerticalPaymentMethodListView = {
+        return VerticalPaymentMethodListView(
+            savedPaymentMethod: loadResult.savedPaymentMethods.first,
+            paymentMethodTypes: paymentMethodTypes,
+            shouldShowApplePay: loadResult.isApplePayEnabled,
+            shouldShowLink: loadResult.isLinkEnabled,
+            appearance: configuration.appearance,
+            delegate: self
+        )
     }()
 
     // MARK: - Initializers
@@ -42,6 +56,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.configuration = configuration
         self.isFlowController = isFlowController
         self.savedPaymentMethods = loadResult.savedPaymentMethods
+        self.paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: loadResult.intent,
+            configuration: configuration,
+            logAvailability: false
+        )
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -55,15 +74,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
 
-        let dummyButton = UIButton(type: .system)
-        dummyButton.setTitle("Welcome to vertical mode", for: .normal)
-        dummyButton.addTarget(self, action: #selector(presentManageScreen), for: .touchUpInside)
-
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
-            dummyButton,
+            paymentMethodListView,
         ])
-        view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: 0, trailing: PaymentSheetUI.defaultSheetMargins.bottom))
+        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+
+        view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
     }
 
     // TOOD(porter) Remove/rename
@@ -108,5 +127,32 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         print("Selected payment method with id: \(String(describing: selectedPaymentMethod?.stripeId))")
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         savedPaymentMethods = latestPaymentMethods
+    }
+}
+
+extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDelegate {
+    func didSelectPaymentMethod(_ selection: VerticalPaymentMethodListView.Selection) {
+        switch selection {
+        case .applePay, .link, .new:
+            // TODO
+            return
+        case .saved:
+            presentManageScreen()
+        }
+    }
+}
+
+extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
+    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+        // TODO:
+        if isFlowController {
+            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
+        } else {
+            paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)
+        }
+    }
+
+    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        // TODO:
     }
 }
