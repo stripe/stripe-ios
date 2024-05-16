@@ -11,7 +11,11 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class USBankAccountPaymentMethodElement: Element {
+final class USBankAccountPaymentMethodElement: ContainerElement {
+    var elements: [Element] {
+        return [formElement]
+    }
+    
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
     var delegate: ElementDelegate?
@@ -147,7 +151,7 @@ final class USBankAccountPaymentMethodElement: Element {
            let bankName = linkedBank.bankName {
             self.bankInfoView.setBankName(text: bankName)
             self.bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
-            formElement.setElements(linkedAccountElements, hidden: false, animated: true)
+            formElement.toggleElements(linkedAccountElements, hidden: false, animated: true)
         }
         self.delegate?.didUpdate(element: self)
     }
@@ -196,7 +200,7 @@ final class USBankAccountPaymentMethodElement: Element {
 extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
     func didTapXIcon() {
         let completionClosure = {
-            self.formElement.setElements(self.linkedAccountElements, hidden: true, animated: true)
+            self.formElement.toggleElements(self.linkedAccountElements, hidden: true, animated: true)
             self.linkedBank = nil
             self.delegate?.didUpdate(element: self)
         }
