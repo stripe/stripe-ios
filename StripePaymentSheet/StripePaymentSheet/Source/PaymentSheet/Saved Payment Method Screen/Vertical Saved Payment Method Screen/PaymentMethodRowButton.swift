@@ -17,6 +17,7 @@ protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectEditButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
+// TODO: Make this use RowButton internally
 final class PaymentMethodRowButton: UIView {
 
     struct ViewModel {
@@ -80,13 +81,7 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var label: UILabel = {
-        let label = UILabel()
-        label.text = paymentMethod.paymentSheetLabel
-        label.font = appearance.scaledFont(for: appearance.font.base.medium,
-                                                     style: .callout,
-                                                     maximumPointSize: 25)
-        label.adjustsFontForContentSizeCategory = true
-        return label
+        return .makeVerticalRowButtonLabel(text: paymentMethod.paymentSheetLabel, appearance: appearance)
     }()
 
     // TODO(porter) Refactor CircleIconView out of SavedPaymentMethodCollectionView once it is deleted
@@ -114,18 +109,7 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [paymentMethodImageView, label, UIView.spacerView, circleView, editButton, removeButton])
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.directionalLayoutMargins = .init(top: 12, // Hardcoded from figma
-                                                   leading: PaymentSheetUI.defaultPadding,
-                                                   bottom: 12,
-                                                   trailing: PaymentSheetUI.defaultPadding)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.spacing = 12 // Hardcoded from figma
-
-        return stackView
+        return UIStackView.makeRowButtonContentStackView(arrangedSubviews: [paymentMethodImageView, label, .makeSpacerView(), circleView, editButton, removeButton])
     }()
 
     private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {

@@ -52,6 +52,7 @@ extension PaymentSheet {
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
         func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+            // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
             case .external(let paymentMethod):

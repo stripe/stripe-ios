@@ -39,8 +39,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         config.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
         let sut = AddPaymentMethodViewController(intent: intent, configuration: config, previousCustomerInput: previousCustomerInput)
-        sut.view.autosizeHeight(width: 375)
-        STPSnapshotVerifyView(sut.view)
+        STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
     }
 }
 #endif
