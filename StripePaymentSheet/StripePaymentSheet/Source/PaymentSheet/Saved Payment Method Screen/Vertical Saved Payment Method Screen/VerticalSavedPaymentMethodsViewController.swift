@@ -143,11 +143,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         manager.detach(paymentMethod: paymentMethod, using: ephemeralKeySecret)
 
         // Remove the payment method row button
-        paymentMethodRows.removeAll { button === $0 }
+        paymentMethodRows.removeAll { $0.paymentMethod.stripeId == paymentMethod.stripeId }
         stackView.removeArrangedSubview(button, animated: true)
 
         // If we deleted the last payment method kick back out to the main screen
-        if self.paymentMethodRows.isEmpty {
+        if paymentMethodRows.isEmpty {
             completeSelection()
         } else if canEdit {
             // We can still edit, update the accessory buttons on the rows if needed

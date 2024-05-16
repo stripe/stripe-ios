@@ -3495,9 +3495,11 @@ extension PaymentSheetUITestCase {
         )
 
         let testCard = "4242424242424242"
+        
+        // Save some test cards to the customer
         setupCards(cards: [testCard, testCard], settings: settings)
 
-        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
+        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["••••4242"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
@@ -3509,7 +3511,7 @@ extension PaymentSheetUITestCase {
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
-        // Verify we are kicked out to the main screen
+        // Verify we are kicked out to the main screen after removing all saved payment methods
         XCTAssertTrue(app.staticTexts["New payment method"].waitForExistence(timeout: 5.0))
     }
 
@@ -3524,9 +3526,11 @@ extension PaymentSheetUITestCase {
         )
 
         let testCard = "4242424242424242"
+        
+        // Save some test cards to the customer
         setupCards(cards: [testCard, testCard], settings: settings)
 
-        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
+        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
@@ -3536,10 +3540,15 @@ extension PaymentSheetUITestCase {
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
-        // Only 1 payment method left and allowsRemovalOfLastSavedPaymentMethod is false, should be kicked out of edit mode and should not show edit button
+        // Only 1 payment method left and allowsRemovalOfLastSavedPaymentMethod is false
+        
+        // We should automatically exit edit mode hiding the edit/done button
         XCTAssertFalse(app.buttons["Edit"].waitForExistence(timeout: 2.0))
         XCTAssertFalse(app.buttons["Done"].waitForExistence(timeout: 2.0))
+        
+        // We should also hide the remove button on the last saved payment method as allowsRemovalOfLastSavedPaymentMethod is false
         XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+        // We should still be on the manage screen not kicked to the main screen as one saved payment method remains
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
     }
 
@@ -3553,9 +3562,10 @@ extension PaymentSheetUITestCase {
             settings
         )
 
+        // Save some test cards to the customer
         setupCards(cards: ["4000002500001001", "4242424242424242"], settings: settings)
 
-        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
+        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
@@ -3571,7 +3581,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 2.0))
         // Show the update icon
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistence(timeout: 2.0))
-        // Don't show the remove icon
+        // Don't show the remove icon since allowsRemovalOfLastSavedPaymentMethod is false
         XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
     }
 

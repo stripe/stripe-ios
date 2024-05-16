@@ -31,6 +31,7 @@ final class PaymentMethodRowButton: UIView {
         didSet {
             previousState = oldValue
 
+            // Any gesture recognizers on the rowButton will intercept taps on the update and remove buttons, disable them if in edit mode
             rowButton.gestureRecognizers?.forEach { $0.isEnabled = !isEditing }
             rowButton.isSelected = isSelected
             circleView.isHidden = !isSelected
