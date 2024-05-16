@@ -20,7 +20,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
 
         paymentMethods = [STPPaymentMethod._testCard(),
                           STPPaymentMethod._testCard(),
-                          STPPaymentMethod._testCard(),]
+                          STPPaymentMethod._testCard(), ]
         configuration = PaymentSheet.Configuration()
     }
 

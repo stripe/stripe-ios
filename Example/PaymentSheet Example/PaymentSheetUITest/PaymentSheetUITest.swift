@@ -3495,7 +3495,7 @@ extension PaymentSheetUITestCase {
         )
 
         let testCard = "4242424242424242"
-        
+
         // Save some test cards to the customer
         setupCards(cards: [testCard, testCard], settings: settings)
 
@@ -3526,7 +3526,7 @@ extension PaymentSheetUITestCase {
         )
 
         let testCard = "4242424242424242"
-        
+
         // Save some test cards to the customer
         setupCards(cards: [testCard, testCard], settings: settings)
 
@@ -3541,11 +3541,11 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Only 1 payment method left and allowsRemovalOfLastSavedPaymentMethod is false
-        
+
         // We should automatically exit edit mode hiding the edit/done button
         XCTAssertFalse(app.buttons["Edit"].waitForExistence(timeout: 2.0))
         XCTAssertFalse(app.buttons["Done"].waitForExistence(timeout: 2.0))
-        
+
         // We should also hide the remove button on the last saved payment method as allowsRemovalOfLastSavedPaymentMethod is false
         XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
         // We should still be on the manage screen not kicked to the main screen as one saved payment method remains
