@@ -146,16 +146,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         paymentMethodRows.removeAll { $0.paymentMethod.stripeId == paymentMethod.stripeId }
         stackView.removeArrangedSubview(button, animated: true)
 
+        // Update the editing state if needed
+        isEditingPaymentMethods = canEdit
+        
         // If we deleted the last payment method kick back out to the main screen
         if paymentMethodRows.isEmpty {
             completeSelection()
-        } else if canEdit {
-            // We can still edit, update the accessory buttons on the rows if needed
-            paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
-                                                            allowsUpdating: $0.paymentMethod.isCoBrandedCard) }
-        } else {
-            // If we can no longer edit, exit edit mode and hide edit button
-            isEditingPaymentMethods = false
         }
     }
 
@@ -216,7 +212,7 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
     func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.remove(paymentMethod: paymentMethod)
         }
 
