@@ -39,7 +39,7 @@ extension PaymentSheet {
                 return paymentMethod.type
             }
         }
-        
+
         var savedPaymentMethod: STPPaymentMethod? {
             switch self {
             case .applePay, .link, .new, .external:
