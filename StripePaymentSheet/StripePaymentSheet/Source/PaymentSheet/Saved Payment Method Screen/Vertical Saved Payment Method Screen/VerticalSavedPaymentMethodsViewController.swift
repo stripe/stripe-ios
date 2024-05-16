@@ -47,12 +47,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
     }
     
-    private var canRemovePaymentMethods: Bool {
+    var canRemovePaymentMethods: Bool {
         // Can remove a payment method if we have more than one payment method or if we have one payment method and `allowsRemovalOfLastSavedPaymentMethod` is true
         return paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod
     }
     
-    private var canEdit: Bool {
+    var canEdit: Bool {
         let hasCoBrandedCards = !paymentMethodRows.filter{$0.paymentMethod.isCoBrandedCard}.isEmpty
         // We can edit if there are removable or editable payment methods
         return canRemovePaymentMethods || hasCoBrandedCards
@@ -146,10 +146,14 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         paymentMethodRows.removeAll{button === $0}
         stackView.removeArrangedSubview(button, animated: true)
         
-        // If deleted the last payment method kick back out to the main screen
+        // If we deleted the last payment method kick back out to the main screen
         if self.paymentMethodRows.isEmpty {
             completeSelection()
-        } else if !canEdit {
+        } else if canEdit {
+            // We can still edit, update the accessory buttons on the rows if needed
+            paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
+                                                            allowsUpdating: $0.paymentMethod.isCoBrandedCard) }
+        } else {
             // If we can no longer edit, exit edit mode and hide edit button
             isEditingPaymentMethods = false
         }

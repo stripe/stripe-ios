@@ -3389,6 +3389,112 @@ extension PaymentSheetUITestCase {
     }
 }
 
+// MARK: Vertical mode saved payment method management
+extension PaymentSheetUITestCase {
+    func testRemovalOfSavedPaymentMethods_verticalMode() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.mode = .setup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let testCard = "4242424242424242"
+        setupCards(cards: [testCard, testCard], settings: settings)
+        
+        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Welcome to vertical mode"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        
+        // Remove both the payment methods just added
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+        
+        // Verify we are kicked out to the back screen
+        XCTAssertTrue(app.buttons["Welcome to vertical mode"].waitForExistence(timeout: 5.0))
+    }
+    
+    func testRemovalOfSavedPaymentMethods_verticalMode_allowsRemovalOfLastSavedPaymentMethod() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        settings.mode = .setup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let testCard = "4242424242424242"
+        setupCards(cards: [testCard, testCard], settings: settings)
+        
+        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Welcome to vertical mode"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        
+        // Remove a payment method just added
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+        
+        // Only 1 payment method left and allowsRemovalOfLastSavedPaymentMethod is false, should be kicked out of edit mode and should not show edit button
+        XCTAssertFalse(app.buttons["Edit"].waitForExistence(timeout: 2.0))
+        XCTAssertFalse(app.buttons["Done"].waitForExistence(timeout: 2.0))
+        XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
+    }
+    
+    func testRemovalOfSavedPaymentMethods_verticalMode_allowsRemovalOfLastSavedPaymentMethod_updatableCards() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        settings.mode = .setup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        setupCards(cards: ["4000002500001001", "4242424242424242"], settings: settings)
+        
+        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when read
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Welcome to vertical mode"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        
+        // Remove a payment method just added
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+        
+        // Only 1 payment method left and allowsRemovalOfLastSavedPaymentMethod is false, but we have an updatable card
+        
+        // Remain in edit mode
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 2.0))
+        // Show the update icon
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistence(timeout: 2.0))
+        // Don't show the remove icon
+        XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+    }
+    
+    private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {
+        for cardNumber in cards {
+            reload(app, settings: settings)
+            app.buttons["Present PaymentSheet"].tap()
+            let addCardButton = app.buttons["+ Add"]
+            addCardButton.waitForExistenceAndTap()
+            try! fillCardData(app, cardNumber: cardNumber)
+            app.buttons["Set up"].tap()
+            let successText = app.staticTexts["Success!"]
+            XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        }
+    }
+}
+
 extension XCUIElement {
     func clearText() {
         guard let stringValue = value as? String, !stringValue.isEmpty else {

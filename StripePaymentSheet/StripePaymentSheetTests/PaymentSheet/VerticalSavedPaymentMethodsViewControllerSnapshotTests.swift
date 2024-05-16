@@ -27,7 +27,10 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
-        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration, paymentMethods: generatePaymentMethods())
+        let paymentMethods = generatePaymentMethods()
+        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+                                                            selectedPaymentMethod: paymentMethods.first,
+                                                            paymentMethods: paymentMethods)
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         bottomSheet.view.autosizeHeight(width: 375)
 
