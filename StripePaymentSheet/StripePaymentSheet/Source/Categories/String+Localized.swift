@@ -76,18 +76,14 @@ extension String.Localized {
     static var update_card_brand: String {
         STPLocalizedString(
             "Update card brand",
-            """
-            Title for a screen for updating a card brand.
-            """
+            "Title for a screen for updating a card brand."
         )
     }
 
     static var update: String {
         STPLocalizedString(
             "Update",
-            """
-            Title for a button that when tapped, updates a card brand.
-            """
+            "Title for a button that when tapped, updates a card brand."
         )
     }
 
