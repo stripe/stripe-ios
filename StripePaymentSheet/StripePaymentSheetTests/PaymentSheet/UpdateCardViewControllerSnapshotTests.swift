@@ -25,8 +25,7 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 
     func _test_UpdateCardViewController(darkMode: Bool, appearance: PaymentSheet.Appearance = .default) {
-        let sut = UpdateCardViewController(paymentOptionCell: .init(frame: .zero),
-                                           paymentMethod: STPFixtures.paymentMethod(),
+        let sut = UpdateCardViewController(paymentMethod: STPFixtures.paymentMethod(),
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            appearance: appearance,
                                            hostedSurface: .paymentSheet,
