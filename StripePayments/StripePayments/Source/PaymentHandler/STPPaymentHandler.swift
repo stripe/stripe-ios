@@ -1417,7 +1417,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    func _retrieveAndCheckIntentForCurrentAction(retryCount: Int = maxChallengeRetries) {
+    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, retryCount: Int = maxChallengeRetries) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
             currentAction,
@@ -1441,7 +1441,7 @@ public class STPPaymentHandler: NSObject {
                 completionBlock()
             }
         }
-        guard let currentAction else {
+        guard let currentAction = currentAction ?? self.currentAction else {
             stpAssertionFailure("Calling _retrieveAndCheckIntentForCurrentAction without a currentAction")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _retrieveAndCheckIntentForCurrentAction without a currentAction"])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
@@ -1452,9 +1452,8 @@ public class STPPaymentHandler: NSObject {
             pingMarlinIfNecessary(
                 currentAction,
                 {
-                    currentAction.apiClient.retrievePaymentIntent(
-                        withClientSecret: currentAction.paymentIntent.clientSecret,
-                        expand: ["payment_method"]
+                    self.retrieveOrRefreshPaymentIntent(
+                        currentAction: currentAction
                     ) { [self] paymentIntent, error in
                         guard let paymentIntent, error == nil else {
                             let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
@@ -1530,9 +1529,8 @@ public class STPPaymentHandler: NSObject {
                 }
             )
         } else if let currentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
-            currentAction.apiClient.retrieveSetupIntent(
-                withClientSecret: currentAction.setupIntent.clientSecret,
-                expand: ["payment_method"]
+            retrieveOrRefreshSetupIntent(
+                currentAction: currentAction
             ) { setupIntent, error in
                 guard let setupIntent, error == nil else {
                     let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
@@ -2018,6 +2016,34 @@ public class STPPaymentHandler: NSObject {
                     completion(success, error)
                 }
             }
+        }
+    }
+
+    func retrieveOrRefreshPaymentIntent(currentAction: STPPaymentHandlerPaymentIntentActionParams,
+                                        completion: @escaping STPPaymentIntentCompletionBlock) {
+        let paymentMethodType = currentAction.paymentIntent.paymentMethod?.type ?? .unknown
+
+        if paymentMethodType.supportsRefreshing {
+            currentAction.apiClient.refreshPaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
+                                                         completion: completion)
+        } else {
+            currentAction.apiClient.retrievePaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
+                                                          expand: ["payment_method"],
+                                                          completion: completion)
+        }
+    }
+
+    func retrieveOrRefreshSetupIntent(currentAction: STPPaymentHandlerSetupIntentActionParams,
+                                      completion: @escaping STPSetupIntentCompletionBlock) {
+        let paymentMethodType = currentAction.setupIntent.paymentMethod?.type ?? .unknown
+
+        if paymentMethodType.supportsRefreshing {
+            currentAction.apiClient.refreshSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
+                                                       completion: completion)
+        } else {
+            currentAction.apiClient.retrieveSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
+                                                        expand: ["payment_method"],
+                                                        completion: completion)
         }
     }
 

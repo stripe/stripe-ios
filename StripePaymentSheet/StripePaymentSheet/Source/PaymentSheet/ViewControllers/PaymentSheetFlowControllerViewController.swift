@@ -14,7 +14,7 @@ import Foundation
 import UIKit
 
 /// For internal SDK use only
-class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewController {
+class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewControllerProtocol {
     // MARK: - Internal Properties
     let intent: Intent
     let configuration: PaymentSheet.Configuration
@@ -60,7 +60,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             return addPaymentMethodViewController.selectedPaymentMethodType
         }
     }
-    weak var delegate: FlowControllerViewControllerDelegate?
+    weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
@@ -315,7 +315,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
                     return savedPaymentOptionsViewController.hasPaymentOptions
-                        ? .back : .close(showAdditionalButton: false)
+                        ? .back(showAdditionalButton: false) : .close(showAdditionalButton: false)
                 }
             }())
     }
@@ -343,9 +343,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         switch mode {
         case .selectingSaved:
-            headerLabel.text = STPLocalizedString(
-                "Select your payment method",
-                "Title shown above a carousel containing the customer's payment methods")
+            headerLabel.text = .Localized.select_your_payment_method
         case .addingNew:
             if addPaymentMethodViewController.paymentMethodTypes == [.stripe(.card)] {
                 headerLabel.text = STPLocalizedString("Add a card", "Title shown above a card entry form")
@@ -471,12 +469,12 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         switch mode {
         case .selectingSaved:
-            self.delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
-                self.delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
 
@@ -486,7 +484,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         // When we close the window, unset the hacky Link button. This will reset the PaymentOption to nil, if needed.
         isHackyLinkButtonSelected = false
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
-        delegate?.flowControllerViewControllerShouldClose(self, didCancel: didCancel)
+        flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: didCancel)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             configureEditSavedPaymentMethodsButton()
@@ -566,7 +564,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         case .applePay, .link, .saved:
             updateUI()
             if isDismissable, !(selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false) {
-                delegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
     }
@@ -596,14 +594,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
-        if savedPaymentOptionsViewController.isRemovingPaymentMethods {
-            navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
-        } else {
-            navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
-        }
-        navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
-        navigationBar.additionalButton.titleLabel?.font = configuration.appearance.font.base.medium
-        navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }

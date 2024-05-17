@@ -10,6 +10,7 @@
 import PassKit
 import Stripe
 import StripeCoreTestUtils
+@_spi(STP) import StripePayments
 import XCTest
 
 class StripeAPIBridgeNetworkTest: XCTestCase {
@@ -234,6 +235,23 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testRefreshPaymentIntent() {
+        let exp = expectation(description: "Refresh")
+
+        let testClient = STPTestingAPIClient()
+        testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
+            XCTAssertNil(error)
+
+            client?.refreshPaymentIntent(withClientSecret: clientSecret!) { pi, error2 in
+                XCTAssertNotNil(pi)
+                XCTAssertNil(error2)
+                exp.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+
     // MARK: Setup Intents
 
     func testRetrieveSetupIntent() {
@@ -270,6 +288,23 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmSetupIntent(with: params) { si, error2 in
+                XCTAssertNotNil(si)
+                XCTAssertNil(error2)
+                exp.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+
+    func testRefreshSetupIntent() {
+        let exp = expectation(description: "Refresh")
+
+        let testClient = STPTestingAPIClient()
+        testClient.createSetupIntent(withParams: nil) { [self] clientSecret, error in
+            XCTAssertNil(error)
+
+            client?.refreshSetupIntent(withClientSecret: clientSecret!) { si, error2 in
                 XCTAssertNotNil(si)
                 XCTAssertNil(error2)
                 exp.fulfill()

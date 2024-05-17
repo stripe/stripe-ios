@@ -447,6 +447,37 @@ extension STPAPIClient {
         }
     }
 
+    @_spi(STP) @objc public func refreshPaymentIntent(withClientSecret secret: String,
+                                                      completion: @escaping STPPaymentIntentCompletionBlock) {
+        let endpoint = "\(paymentIntentEndpoint(from: secret))/refresh"
+        var parameters: [String: Any] = [:]
+
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = secret
+        }
+
+        STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshPaymentIntentStarted, params: [:]))
+        let startDate = Date()
+        APIRequest<STPPaymentIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { paymentIntent, _, error in
+
+            if let error = error {
+                let errorAnalytic = ErrorAnalytic(event: .refreshPaymentIntentFailed,
+                                                  error: error,
+                                                  additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            } else {
+                STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshPaymentIntentSuccess,
+                                                                              params: ["duration": Date().timeIntervalSince(startDate)]))
+            }
+
+            completion(paymentIntent, error)
+        }
+    }
+
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
     /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
@@ -724,6 +755,36 @@ extension STPAPIClient {
             ]
         ) { setupIntent, _, responseError in
             completion(setupIntent, responseError)
+        }
+    }
+
+    @_spi(STP) @objc public func refreshSetupIntent(withClientSecret secret: String,
+                                                    completion: @escaping STPSetupIntentCompletionBlock) {
+        let endpoint = "\(setupIntentEndpoint(from: secret))/refresh"
+        var parameters: [String: Any] = [:]
+
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = secret
+        }
+
+        STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshSetupIntentStarted, params: [:]))
+        let startDate = Date()
+        APIRequest<STPSetupIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { setupIntent, _, error in
+            if let error = error {
+                let errorAnalytic = ErrorAnalytic(event: .refreshSetupIntentFailed,
+                                                  error: error,
+                                                  additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            } else {
+                STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshSetupIntentSuccess,
+                                                                              params: ["duration": Date().timeIntervalSince(startDate)]))
+            }
+
+            completion(setupIntent, error)
         }
     }
 }

@@ -13,27 +13,9 @@ import PassKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentSheetViewControllerDelegate: AnyObject {
-    func paymentSheetViewControllerShouldConfirm(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-    )
-    func paymentSheetViewControllerDidFinish(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        result: PaymentSheetResult
-    )
-    func paymentSheetViewControllerDidCancel(
-        _ paymentSheetViewController: PaymentSheetViewController
-    )
-    func paymentSheetViewControllerDidSelectPayWithLink(
-        _ paymentSheetViewController: PaymentSheetViewController
-    )
-}
-
 /// For internal SDK use only
 @objc(STP_Internal_PaymentSheetViewController)
-class PaymentSheetViewController: UIViewController {
+class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerProtocol {
     enum PaymentSheetViewControllerError: Error {
         case addingNewNoPaymentOptionOnBuyButtonTap
         case selectingSavedNoPaymentOptionOnBuyButtonTap
@@ -205,7 +187,9 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
+        self.configuration.style.configure(self)
         self.savedPaymentOptionsViewController.delegate = self
+        // TODO: This self.view call should be moved to viewDidLoad
         self.view.backgroundColor = configuration.appearance.colors.background
     }
 
@@ -217,6 +201,7 @@ class PaymentSheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
@@ -299,7 +284,7 @@ class PaymentSheetViewController: UIViewController {
                         action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside
                     )
-                    return !savedPaymentOptionsViewController.hasPaymentOptions ? .close(showAdditionalButton: false) : .back
+                    return !savedPaymentOptionsViewController.hasPaymentOptions ? .close(showAdditionalButton: false) : .back(showAdditionalButton: false)
                 }
             }()
         )
@@ -336,10 +321,7 @@ class PaymentSheetViewController: UIViewController {
             )
         case .selectingSaved:
             headerLabel.isHidden = shouldShowWalletHeader
-            headerLabel.text = STPLocalizedString(
-                "Select your payment method",
-                "Title shown above a carousel containing the customer's payment methods"
-            )
+            headerLabel.text = .Localized.select_your_payment_method
         }
 
         // Content
@@ -647,14 +629,11 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
-            navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
             buyButton.update(state: .disabled)
         } else {
             buyButton.update(state: buyButtonEnabledForSavedPayments())
-            navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
-        navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
-        navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
         navigationBar.additionalButton.addTarget(
             self,
             action: #selector(didSelectEditSavedPaymentMethodsButton),

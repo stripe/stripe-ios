@@ -688,7 +688,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaCopyLabel() -> StaticElement {
-        let text = STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
+        let text = String.Localized.buy_now_or_pay_later_with_klarna
 
         let label = UILabel()
         label.text = text

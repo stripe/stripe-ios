@@ -36,7 +36,7 @@ extension PaymentOption {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(for view: UIView) -> UIImage {
+    func makeSavedPaymentMethodCellImage() -> UIImage {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false)
@@ -92,6 +92,24 @@ extension STPPaymentMethod {
             return Image.carousel_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         case .link:
             return Image.link_logo.makeImage().withRenderingMode(.alwaysOriginal)
+        default:
+            assertionFailure("\(type) not supported for saved PMs")
+            return makeIcon()
+        }
+    }
+
+    /// Returns an image to display inside a row representing the given payment option in the saved PM row view
+    func makeSavedPaymentMethodRowImage() -> UIImage {
+        switch type {
+        case .card:
+            let cardBrand = card?.preferredDisplayBrand ?? .unknown
+            return STPImageLibrary.unpaddedCardBrandImage(for: cardBrand)
+        case .USBankAccount:
+            return PaymentSheetImageLibrary.bankIcon(
+                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
+            )
+        case .SEPADebit:
+            return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()

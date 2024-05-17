@@ -42,7 +42,7 @@ final class UpdateCardViewController: UIViewController {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: appearance)
         navBar.delegate = self
-        navBar.setStyle(.back)
+        navBar.setStyle(.back(showAdditionalButton: false))
         return navBar
     }()
 

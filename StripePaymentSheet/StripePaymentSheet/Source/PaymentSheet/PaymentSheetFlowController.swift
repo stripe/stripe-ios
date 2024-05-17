@@ -104,7 +104,7 @@ extension PaymentSheet {
             return viewController.intent
         }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
-        var viewController: FlowControllerViewController
+        var viewController: FlowControllerViewControllerProtocol
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
@@ -153,7 +153,7 @@ extension PaymentSheet {
                                                                        intentConfig: loadResult.intent.intentConfig)
             self.configuration = configuration
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult)
-            self.viewController.delegate = self
+            self.viewController.flowControllerDelegate = self
         }
 
         // MARK: - Public methods
@@ -416,7 +416,7 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         previousPaymentOption: self._paymentOption
                     )
-                    self.viewController.delegate = self
+                    self.viewController.flowControllerDelegate = self
 
                     // Synchronously pre-load image into cache
                     // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
@@ -452,8 +452,8 @@ extension PaymentSheet {
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
             previousPaymentOption: PaymentOption? = nil
-        ) -> FlowControllerViewController {
-            switch configuration.appearance.layout {
+        ) -> FlowControllerViewControllerProtocol {
+            switch configuration.paymentMethodLayout {
             case .horizontal:
                 return PaymentSheetFlowControllerViewController(
                     configuration: configuration,
@@ -461,7 +461,7 @@ extension PaymentSheet {
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical:
-                return PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult)
+                return PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult, isFlowController: true)
             }
         }
     }
@@ -471,12 +471,12 @@ extension PaymentSheet {
 
 protocol FlowControllerViewControllerDelegate: AnyObject {
     func flowControllerViewControllerShouldClose(
-        _ PaymentSheetFlowControllerViewController: FlowControllerViewController, didCancel: Bool)
+        _ PaymentSheetFlowControllerViewController: FlowControllerViewControllerProtocol, didCancel: Bool)
 }
 
 extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
     func flowControllerViewControllerShouldClose(
-        _ flowControllerViewController: FlowControllerViewController,
+        _ flowControllerViewController: FlowControllerViewControllerProtocol,
         didCancel: Bool
     ) {
         if !didCancel {
@@ -527,14 +527,14 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     }
 }
 
-// MARK: - FlowControllerViewController
+// MARK: - FlowControllerViewControllerProtocol
 
 /// All the things FlowController needs from its UIViewController.
-internal protocol FlowControllerViewController: BottomSheetContentViewController {
+internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewController {
     var error: Error? { get }
     var intent: Intent { get }
     var selectedPaymentOption: PaymentOption? { get }
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil for Link and Apple Pay.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
-    var delegate: FlowControllerViewControllerDelegate? { get set }
+    var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
 }
