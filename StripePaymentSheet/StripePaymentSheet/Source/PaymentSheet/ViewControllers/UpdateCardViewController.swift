@@ -62,12 +62,12 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
-        label.text = .Localized.update_card
+        label.text = .Localized.update_card_brand
         return label
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update_card), appearance: appearance, didTap: {  [weak self] in
+        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: {  [weak self] in
             Task {
                 await self?.updateCard()
             }
