@@ -42,9 +42,6 @@ extension StripeConnectInstance {
         /// The color used to indicate errors or destructive actions. The alpha component is ignored.
         public var colorDanger: UIColor?
 
-        /// The horizontal padding for components. This applies to all ViewController components except payment details.
-        public var horizontalPadding: CGFloat = 20
-
         /// The color used as a background for primary buttons. The alpha component is ignored.
         public var buttonPrimaryColorBackground: UIColor?
         /// The border color used for primary buttons. The alpha component is ignored.
@@ -236,14 +233,18 @@ extension StripeConnectInstance {
             return dict
         }
 
+        var asJsonDictionary: [String: Any] {
+            ["variables": variablesDictionary]
+        }
+
         var asJsonString: String {
-            guard let data = try? JSONSerialization.data(withJSONObject: variablesDictionary),
+            guard let data = try? JSONSerialization.data(withJSONObject: asJsonDictionary),
                   let stringValue = String(data: data, encoding: .utf8) else {
                 debugPrint("Couldn't encode appearance")
                 return "{}"
             }
 
-            return "{ variables: \(stringValue) }"
+            return stringValue
         }
 
         var styleBackgroundColor: String {

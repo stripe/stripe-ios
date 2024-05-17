@@ -9,12 +9,11 @@ import Foundation
 
 enum StripeConnectConstants {
 
-    /**
-     URL for the hosted HTML page that wraps the JS `StripeConnectInstance` for iOS.
+    /// The horizontal body margin for the Account onboarding/management components
+    static let accountHorizontalMargin: CGFloat = 10
 
-     TODO: Change this to the remote index page. See note on ComponentWebView.loadContents()
-     */
-    static let connectWrapperURL = URL(string: "https://connect-js.stripe.com")!
+    /// Hosted webpage that wraps the Connect-JS library with iOS-specific code
+    static let connectWrapperURL = URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!
 
     /**'
      Pages or navigation requests matching any of these hosts will...

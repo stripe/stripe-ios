@@ -13,7 +13,6 @@ import WebKit
 class ConnectComponentWebView: ConnectWebView {
     private var connectInstance: StripeConnectInstance
     private var componentType: String
-    private var shouldUseHorizontalPadding: Bool
 
     /// The content controller that registers JS -> Swift message handlers
     private let contentController: WKUserContentController
@@ -23,7 +22,6 @@ class ConnectComponentWebView: ConnectWebView {
          shouldUseHorizontalPadding: Bool = true) {
         self.connectInstance = connectInstance
         self.componentType = componentType
-        self.shouldUseHorizontalPadding = shouldUseHorizontalPadding
 
         contentController = WKUserContentController()
         let config = WKWebViewConfiguration()
@@ -39,10 +37,11 @@ class ConnectComponentWebView: ConnectWebView {
         super.init(frame: .zero, configuration: config)
 
         addMessageHandlers()
-        addDebugReloadButton()
-        loadContents()
         updateColors(connectInstance.appearance)
         addNotificationObservers()
+
+        load(URLRequest(url: initialURL))
+
     }
 
     required init?(coder: NSCoder) {
@@ -55,19 +54,10 @@ class ConnectComponentWebView: ConnectWebView {
 extension ConnectComponentWebView {
     /// Calls `update({appearance: ...})` on the JS StripeConnectInstance
     func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
-        var script = """
+        evaluateJavaScript("""
             stripeConnectInstance.update({appearance: \(appearance.asJsonString)});
             document.body.setAttribute("style", "background-color:\(appearance.styleBackgroundColor);");
-        """
-
-        if shouldUseHorizontalPadding {
-            script += """
-                document.body.style.marginRight = '\(appearance.horizontalPadding.pxString)';
-                document.body.style.marginLeft = '\(appearance.horizontalPadding.pxString)';
-            """
-        }
-
-        evaluateJavaScript(script)
+        """)
         updateColors(appearance)
     }
 
@@ -100,6 +90,12 @@ private extension ConnectComponentWebView {
         addMessageHandler(.init(name: "fetchClientSecret", didReceiveMessage: { [weak self] _ in
             return await self?.connectInstance.fetchClientSecret()
         }))
+        addMessageHandler(.init(name: "fetchAppearanceOptions", didReceiveMessage: { [weak self] _ in
+            return self?.connectInstance.appearance.asJsonDictionary
+        }))
+        addMessageHandler(.init(name: "fetchFonts", didReceiveMessage: { [weak self] _ in
+            return self?.connectInstance.customFonts.compactMap(\.asJsonDictionary)
+        }))
     }
 
     /// Adds NotificationCenter observers
@@ -120,81 +116,20 @@ private extension ConnectComponentWebView {
         backgroundColor = appearance.colorBackground ?? .systemBackground
     }
 
-    /**
-     Loads the contents of `template.html`, passing in appearance, componentType,
-     and publishableKey, then spoofs it's coming from connect-js.stripe.com.
+    /// Generates a URL with initial params
+    var initialURL: URL {
+        var components = URLComponents(url: StripeConnectConstants.connectWrapperURL, resolvingAgainstBaseURL: true)!
+        components.queryItems = [
+            .init(name: "componentType", value: componentType),
+            .init(name: "locale", value: Locale.autoupdatingCurrent.webIdentifier),
+            .init(name: "publishableKey", value: connectInstance.apiClient.publishableKey),
+        ]
 
-     - Note: This is a temporary hack. Long term, we should host this page on connect-js.stripe.com
+        // Convert to hash-param instead of query-params
+        let urlString = components.url!.absoluteString
+            .replacingOccurrences(of: "?", with: "#")
 
-     TODO: Delete this function before beta release
-     */
-    func loadContents() {
-        // Load HTML file and spoof that it's coming from connect-js.stripe.com
-        // to avoid CORS restrictions from loading a local file.
-        guard let htmlFile = BundleLocator.resourcesBundle.url(forResource: "template", withExtension: "html"),
-              var htmlText = try? String(contentsOf: htmlFile, encoding: .utf8) else {
-            debugPrint("Couldn't load `template.html`")
-            return
-        }
-
-        let horizontalMargin = shouldUseHorizontalPadding ? connectInstance.appearance.horizontalPadding : 0
-
-        // NOTE (Locale):
-        // By default, WKWebViews use the device's first preferred locale instead
-        // of the app's locale, so we have to explicitly pass the current locale
-        // to the JS connect instance.
-
-        // TODO: Error handle if PK is nil
-        htmlText = htmlText
-            .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
-            .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: connectInstance.apiClient.publishableKey ?? "")
-            .replacingOccurrences(of: "{{APPEARANCE}}", with: connectInstance.appearance.asJsonString)
-            .replacingOccurrences(of: "{{FONTS}}", with: connectInstance.customFonts.asJsonString)
-            .replacingOccurrences(of: "{{LOCALE}}", with: Locale.autoupdatingCurrent.webIdentifier)
-            .replacingOccurrences(of: "{{HORIZONTAL_MARGIN}}", with: horizontalMargin.pxString)
-
-        guard let data = htmlText.data(using: .utf8) else {
-            debugPrint("Couldn't encode html data")
-            return
-        }
-
-        load(data, mimeType: "text/html", characterEncodingName: "utf8", baseURL: StripeConnectConstants.connectWrapperURL)
-    }
-
-    /**
-     Overlays a "Reload" button on top of the web view, for debug purposes only
-     so the contents can be reloaded after connecting to the Safari debugger.
-     
-     - Note: This is only needed while we're implementing the hack to spoof
-     `connect-js.stripe.com` mentioned in `loadContents` comments. The Safari 
-     debugger has a reload button, however it currently loads `connect-js.stripe.com`
-     instead of reloading `template.html`. Once this has been updated to use a
-     remote web page, the refresh button in the Safari debugger will be sufficient.
-
-     TODO: Delete this function before beta release
-     */
-    func addDebugReloadButton() {
-        #if DEBUG
-        let reloadButton = UIButton(
-            type: .system,
-            primaryAction: .init(handler: { [weak self] _ in
-                // Calling `reload` will just load `connect-js.stripe.com`,
-                // so we need to reload the contents instead.
-                self?.loadContents()
-            })
-        )
-        reloadButton.setTitle("Reload", for: .normal)
-        reloadButton.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
-        reloadButton.layer.cornerRadius = 4
-
-        addSubview(reloadButton)
-        reloadButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            reloadButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 8),
-            reloadButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -8),
-        ])
-
-        #endif
+        return URL(string: urlString)!
     }
 }
 

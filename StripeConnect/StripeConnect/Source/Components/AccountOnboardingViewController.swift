@@ -33,7 +33,10 @@ public class AccountOnboardingViewController: UIViewController {
             webView.evaluateJavaScript("""
             component.setOnExit(() => {
                 window.webkit.messageHandlers.componentOnExit.postMessage('');
-            })
+            });
+
+            document.body.style.marginRight = '\(StripeConnectConstants.accountHorizontalMargin.pxString)';
+            document.body.style.marginLeft = '\(StripeConnectConstants.accountHorizontalMargin.pxString)';
             """)
         }
     }

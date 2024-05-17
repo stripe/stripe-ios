@@ -22,6 +22,12 @@ public class AccountManagementViewController: UIViewController {
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
         }
+        webView.didFinishLoading = { webView in
+            webView.evaluateJavaScript("""
+                document.body.style.marginRight = '\(StripeConnectConstants.accountHorizontalMargin.pxString)';
+                document.body.style.marginLeft = '\(StripeConnectConstants.accountHorizontalMargin.pxString)';
+            """)
+        }
     }
 
     required init?(coder: NSCoder) {
