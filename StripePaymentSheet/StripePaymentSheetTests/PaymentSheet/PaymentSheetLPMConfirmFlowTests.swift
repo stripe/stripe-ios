@@ -329,12 +329,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .stripe(.SEPADebit), merchantCountry: .US, customer: customer, apiClient: apiClient) {
                 let e = expectation(description: "")
                 // Confirm the intent with the form details
+                let paymentHandler = STPPaymentHandler(apiClient: apiClient)
                 PaymentSheet.confirm(
                     configuration: configuration,
                     authenticationContext: self,
                     intent: intent,
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
-                    paymentHandler: STPPaymentHandler(apiClient: apiClient)
+                    paymentHandler: paymentHandler
                 ) { result, _  in
                     e.fulfill()
                     switch result {
