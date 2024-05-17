@@ -12,6 +12,11 @@ import Foundation
 import UIKit
 
 protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
+    /// Handles the selection of a payment method from the list or the modification of the list such as the removal or update of payment methods.
+    ///
+    /// - Parameters:
+    ///    - selectedPaymentMethod: The selected method of payment, if any.
+    ///    - latestPaymentMethods: The most recent up-to-date list of payment methods.
     func didComplete(with selectedPaymentMethod: STPPaymentMethod?, latestPaymentMethods: [STPPaymentMethod])
 }
 
