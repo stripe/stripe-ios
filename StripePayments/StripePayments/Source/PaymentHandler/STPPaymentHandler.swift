@@ -215,7 +215,7 @@ public class STPPaymentHandler: NSObject {
                             for: paymentIntent.paymentMethod?.type ?? .unknown
                         )
                         || (paymentIntent.status == .requiresAction
-                            && self.isNextActionSuccessState(
+                            && strongSelf.isNextActionSuccessState(
                                 nextAction: paymentIntent.nextAction
                             )))
 
