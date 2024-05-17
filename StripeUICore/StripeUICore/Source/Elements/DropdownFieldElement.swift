@@ -219,6 +219,8 @@ private extension DropdownFieldElement {
 // MARK: Element
 
 extension DropdownFieldElement: Element {
+    public var collectsUserInput: Bool { true }
+
     public var view: UIView {
         return pickerFieldView
     }

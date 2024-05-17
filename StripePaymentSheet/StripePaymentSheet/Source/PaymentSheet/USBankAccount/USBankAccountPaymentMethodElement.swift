@@ -15,7 +15,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     var elements: [Element] {
         return [formElement]
     }
-    
+
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
     var delegate: ElementDelegate?
