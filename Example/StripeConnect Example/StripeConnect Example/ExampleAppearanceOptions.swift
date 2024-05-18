@@ -123,12 +123,36 @@ extension StripeConnectInstance.Appearance {
             spacingUnit = 8
 
         case .oceanBreeze:
-            colorPrimary = UIColor(hex: 0x15609E)
-            colorBackground = UIColor(hex: 0xEAF6FB)
-            buttonSecondaryColorBorder = UIColor(hex: 0x2C93E8)
-            buttonSecondaryColorText = UIColor(hex: 0x2C93E8)
-            badgeNeutralColorText = UIColor(hex: 0x5A621D)
-            badgeSuccessColorText = UIColor(hex: 0x2A6093)
+            colorPrimary = UIColor {
+                $0.userInterfaceStyle == .dark
+                ? UIColor(hex: 0xEAF6FB)
+                : UIColor(hex: 0x15609E)
+            }
+            colorBackground = UIColor {
+                $0.userInterfaceStyle == .dark
+                ? UIColor(hex: 0x114774)
+                : UIColor(hex: 0xEAF6FB)
+            }
+            buttonSecondaryColorBorder = UIColor {
+                $0.userInterfaceStyle == .dark
+                ? UIColor(hex: 0x255C88)
+                : UIColor(hex: 0x2C93E8)
+            }
+            buttonSecondaryColorText = UIColor {
+                $0.userInterfaceStyle == .dark
+                ? UIColor(hex: 0x255C88)
+                : UIColor(hex: 0x2C93E8)
+            }
+            badgeNeutralColorText = UIColor {
+                $0.userInterfaceStyle == .dark
+                ? UIColor(hex: 0xEFEEBA)
+                : UIColor(hex: 0x5A621D)
+            }
+            badgeSuccessColorText = UIColor {
+                $0.userInterfaceStyle == .dark
+                ? UIColor(hex: 0xC7F3F0)
+                : UIColor(hex: 0x2A6093)
+            }
             borderRadius = 23
             horizontalPadding = 50
 
