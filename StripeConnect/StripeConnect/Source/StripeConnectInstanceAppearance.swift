@@ -160,14 +160,21 @@ extension StripeConnectInstance {
 
         // MARK: - Internal
 
-        private var variablesDictionary: [String: String] {
+        private func variablesDictionary(traitCollection: UITraitCollection,
+                                         defaultFontSizeBase: CGFloat?) -> [String: String] {
             var dict: [String: String] = [:]
+
+            let fontSizeBase = (self.fontSizeBase ?? defaultFontSizeBase).map { $0 }
 
             // Default font to "-apple-system" to use the system default,
             // otherwise the webView will use Times
             dict["fontFamily"] = fontFamily ?? "-apple-system"
 
-            dict["fontSizeBase"] = fontSizeBase?.pxString
+            // Scale font based on accessibility settings
+            dict["fontSizeBase"] = (fontSizeBase ?? defaultFontSizeBase).map {
+                UIFontMetrics.default.scaledValue(for: $0, compatibleWith: traitCollection)
+            }?.pxString
+
             dict["spacingUnit"] = spacingUnit?.pxString
             dict["borderRadius"] = borderRadius?.pxString
             dict["colorPrimary"] = colorPrimary?.cssRgbValue
@@ -236,8 +243,9 @@ extension StripeConnectInstance {
             return dict
         }
 
-        var asJsonString: String {
-            guard let data = try? JSONSerialization.data(withJSONObject: variablesDictionary),
+        func asJsonString(traitCollection: UITraitCollection,
+                          defaultFontSizeBase: CGFloat?) -> String {
+            guard let data = try? JSONSerialization.data(withJSONObject: variablesDictionary(traitCollection: traitCollection, defaultFontSizeBase: defaultFontSizeBase)),
                   let stringValue = String(data: data, encoding: .utf8) else {
                 debugPrint("Couldn't encode appearance")
                 return "{}"

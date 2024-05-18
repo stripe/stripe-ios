@@ -18,6 +18,26 @@ class ConnectComponentWebView: ConnectWebView {
     /// The content controller that registers JS -> Swift message handlers
     private let contentController: WKUserContentController
 
+    private var defaultFontSizeBase: CGFloat?
+
+    private var _didFinishLoading: ((ConnectWebView) -> Void)?
+    override var didFinishLoading: ((ConnectWebView) -> Void)? {
+        set {
+            _didFinishLoading = newValue
+        }
+        get {
+            { [weak self] webView in
+                Task { @MainActor in
+                    // TODO: Error log
+                    self?.defaultFontSizeBase = try? await webView.evaluateJavaScript("defaultFontSizeBase") as? CGFloat
+                    // TODO: This doesn't really work, need to debug
+                    self?.didUpdateAppearance()
+                }
+                self?._didFinishLoading?(webView)
+            }
+        }
+    }
+
     init(connectInstance: StripeConnectInstance,
          componentType: String,
          shouldUseHorizontalPadding: Bool = true) {
@@ -65,7 +85,7 @@ extension ConnectComponentWebView {
     func didUpdateAppearance() {
         let appearance = connectInstance.appearance
         var script = """
-            updateAppearance(\(appearance.asJsonString));
+            updateAppearance(\(appearance.asJsonString(traitCollection: traitCollection, defaultFontSizeBase: defaultFontSizeBase)));
         """
 
         if shouldUseHorizontalPadding {
@@ -155,7 +175,7 @@ private extension ConnectComponentWebView {
         htmlText = htmlText
             .replacingOccurrences(of: "{{COMPONENT_TYPE}}", with: componentType)
             .replacingOccurrences(of: "{{PUBLISHABLE_KEY}}", with: connectInstance.apiClient.publishableKey ?? "")
-            .replacingOccurrences(of: "{{APPEARANCE}}", with: connectInstance.appearance.asJsonString)
+            .replacingOccurrences(of: "{{APPEARANCE}}", with: connectInstance.appearance.asJsonString(traitCollection: traitCollection, defaultFontSizeBase: defaultFontSizeBase))
             .replacingOccurrences(of: "{{FONTS}}", with: connectInstance.customFonts.asJsonString)
             .replacingOccurrences(of: "{{LOCALE}}", with: Locale.autoupdatingCurrent.webIdentifier)
             .replacingOccurrences(of: "{{HORIZONTAL_MARGIN}}", with: horizontalMargin.pxString)

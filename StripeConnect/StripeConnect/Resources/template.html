@@ -25,6 +25,7 @@
                 badgeDangerColorText: "#EC93AF",
                 offsetBackgroundColor: "#171717",
             };
+            const defaultFontSizeBase = 16;
 
             const adjustAppearanceForDarkMode = (appearance) => {
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -117,7 +118,7 @@
                     }
                 }
             };
-             
+
         </script>
         <!-- Make the page mobile-responsive and pinch-to-zoom as well as auto-zoom when selecting text fields -->
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
