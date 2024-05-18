@@ -41,12 +41,20 @@ class ConnectComponentWebView: ConnectWebView {
         addMessageHandlers()
         addDebugReloadButton()
         loadContents()
-        updateColors(connectInstance.appearance)
+        didUpdateColors()
         addNotificationObservers()
+        isOpaque = false
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            didUpdateAppearance()
+        }
     }
 }
 
@@ -54,10 +62,10 @@ class ConnectComponentWebView: ConnectWebView {
 
 extension ConnectComponentWebView {
     /// Calls `update({appearance: ...})` on the JS StripeConnectInstance
-    func updateAppearance(_ appearance: StripeConnectInstance.Appearance) {
+    func didUpdateAppearance() {
+        let appearance = connectInstance.appearance
         var script = """
-            stripeConnectInstance.update({appearance: \(appearance.asJsonString)});
-            document.body.setAttribute("style", "background-color:\(appearance.styleBackgroundColor);");
+            updateAppearance(\(appearance.asJsonString));
         """
 
         if shouldUseHorizontalPadding {
@@ -68,7 +76,7 @@ extension ConnectComponentWebView {
         }
 
         evaluateJavaScript(script)
-        updateColors(appearance)
+        didUpdateColors()
     }
 
     /// Calls `logout()` on the JS StripeConnectInstance
@@ -115,9 +123,8 @@ private extension ConnectComponentWebView {
 
     /// Updates the view's background color to match appearance.
     /// - Note: This avoids a white flash when initially loading the page when a background color is set
-    func updateColors(_ appearance: StripeConnectInstance.Appearance) {
-        isOpaque = appearance.colorBackground == nil
-        backgroundColor = appearance.colorBackground ?? .systemBackground
+    func didUpdateColors() {
+        backgroundColor = connectInstance.appearance.colorBackground ?? .systemBackground
     }
 
     /**

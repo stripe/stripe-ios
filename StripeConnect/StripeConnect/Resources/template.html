@@ -10,6 +10,45 @@
         }
         </style>
         <script>
+            // TODO: Replace this with Sail darkmode colors
+            const darkModeAppearanceVariables = {
+                colorPrimary: "#EBF0F4",
+                colorBackground: "#272626",
+                buttonPrimaryColorBackground: "#077EDF",
+                buttonSecondaryColorBackground: "#3D4042",
+                buttonSecondaryColorBorder: "#89969F",
+                colorBorder: "#3D3D3D",
+                formHighlightColorBorder: "#363636",
+                badgeNeutralColorText: "#D1D3DC",
+                badgeSuccessColorText: "#CFE3D0",
+                badgeWarningColorText: "#E7A288",
+                badgeDangerColorText: "#EC93AF",
+                offsetBackgroundColor: "#171717",
+            };
+
+            const adjustAppearanceForDarkMode = (appearance) => {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    // dark mode is enabled
+                    return {
+                        ...appearance,
+                        variables: {
+                            ...darkModeAppearanceVariables,
+                            ...appearance.variables
+                        }
+                    };
+                } else {
+                    // dark mode is NOT enabled
+                    return appearance;
+                }
+            };
+
+            // Wrapper for `component.setAppearance` which defaults dark mode colors
+            const updateAppearance = (appearance) => {
+                const adjustedAppearance = adjustAppearanceForDarkMode(appearance);
+                stripeConnectInstance.update({appearance: adjustedAppearance});
+                document.body.style.backgroundColor = adjustedAppearance.variables.colorBackground ?? 'inherit';
+            };
+
             // Forward console messages to the Xcode debugger
             const originalConsole = {
                 debug: console.debug,
@@ -56,13 +95,15 @@
             };
 
             StripeConnect.onLoad = () => {
+                const adjustedAppearance = adjustAppearanceForDarkMode({{APPEARANCE}});
                 stripeConnectInstance = StripeConnect.init({
                     publishableKey: '{{PUBLISHABLE_KEY}}',
                     fonts: {{FONTS}},
                     fetchClientSecret: fetchClientSecret,
-                    appearance: {{APPEARANCE}},
+                    appearance: adjustedAppearance,
                     locale: '{{LOCALE}}'
                 });
+                document.body.style.backgroundColor = adjustedAppearance.variables.colorBackground ?? 'inherit';
 
                 // Component type will be empty string if this web view isn't
                 // in the view hierarchy and only used as a logout proxy
@@ -76,6 +117,7 @@
                     }
                 }
             };
+             
         </script>
         <!-- Make the page mobile-responsive and pinch-to-zoom as well as auto-zoom when selecting text fields -->
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />

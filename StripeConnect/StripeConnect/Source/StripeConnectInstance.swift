@@ -123,7 +123,7 @@ public class StripeConnectInstance {
     public func update(appearance: Appearance) {
         self.appearance = appearance
         webViews.allObjects.forEach { webView in
-            webView.updateAppearance(appearance)
+            webView.didUpdateAppearance()
         }
     }
 

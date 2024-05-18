@@ -240,7 +240,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         // ...with valid external payment methods configured...
         configuration.externalPaymentMethodConfiguration = .init(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
+            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */   }
         )
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, isFlowController: false) { result in
             expectation.fulfill()
@@ -281,7 +281,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         // ...with invalid external payment methods configured...
         configuration.externalPaymentMethodConfiguration = .init(
             externalPaymentMethods: ["external_invalid_value"],
-            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
+            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */   }
         )
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, isFlowController: true) { result in
             expectation.fulfill()

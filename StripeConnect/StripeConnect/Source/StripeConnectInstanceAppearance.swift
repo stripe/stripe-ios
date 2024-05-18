@@ -245,9 +245,5 @@ extension StripeConnectInstance {
 
             return "{ variables: \(stringValue) }"
         }
-
-        var styleBackgroundColor: String {
-            colorBackground?.cssRgbValue ?? "inherit"
-        }
     }
 }
