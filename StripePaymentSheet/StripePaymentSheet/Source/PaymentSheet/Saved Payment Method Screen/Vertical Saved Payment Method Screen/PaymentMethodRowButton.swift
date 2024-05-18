@@ -113,14 +113,12 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance) { [weak self] _ in
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
             guard let self, !isEditing else { return }
             state = .selected
             delegate?.didSelectButton(self, with: paymentMethod)
         }
 
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addAndPinSubview(stackView)
         return button
     }()
 

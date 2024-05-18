@@ -50,11 +50,11 @@ class RowButton: UIView {
         return RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, didTap: didTap)
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, didTap: didTap)
-        button.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, rightAccessoryView: rightAccessoryView, didTap: didTap)
+        button.shadowRoundedRect.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }
 
@@ -78,11 +78,10 @@ class RowButton: UIView {
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
-        // TODO: Accessory view
-
         addAndPinSubview(shadowRoundedRect)
         for view in [imageView, labelsStackView] {
             view.translatesAutoresizingMaskIntoConstraints = false
+            view.isUserInteractionEnabled = false
             addSubview(view)
         }
         NSLayoutConstraint.activate([
@@ -98,6 +97,17 @@ class RowButton: UIView {
             labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 4),
             labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -4),
         ])
+
+        if let rightAccessoryView {
+            rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(rightAccessoryView)
+            NSLayoutConstraint.activate([
+                rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
+                rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            ])
+        }
+
         shadowRoundedRect.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
 
         // Accessibility
