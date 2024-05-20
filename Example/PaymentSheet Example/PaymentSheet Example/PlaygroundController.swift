@@ -447,6 +447,7 @@ extension PlaygroundController {
             "use_link": settings.linkEnabled == .on,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            // "supported_payment_methods": ["card", "link"], // Uncomment to override payment methods (also make sure Automatic PM's is off)
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in

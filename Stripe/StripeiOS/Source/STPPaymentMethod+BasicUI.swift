@@ -62,7 +62,7 @@ extension STPPaymentMethod: STPPaymentOption {
 
     @objc public var isReusable: Bool {
         switch type {
-        case .card, .link, .USBankAccount:
+        case .card, .link, .USBankAccount, .instantDebits:
             return true
         case .alipay,  // Careful! Revisit this if/when we support recurring Alipay
             .AUBECSDebit,

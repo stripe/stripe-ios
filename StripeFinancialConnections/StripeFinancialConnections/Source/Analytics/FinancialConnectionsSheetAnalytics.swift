@@ -55,7 +55,7 @@ struct FinancialConnectionsSheetCompletionAnalytic {
     /// Returns either a `FinancialConnectionsSheetClosedAnalytic` or `FinancialConnectionsSheetFailedAnalytic` depending on the result
     static func make(
         clientSecret: String,
-        result: FinancialConnectionsSheet.Result
+        result: HostControllerResult
     ) -> FinancialConnectionsSheetAnalytic {
         switch result {
         case .completed:

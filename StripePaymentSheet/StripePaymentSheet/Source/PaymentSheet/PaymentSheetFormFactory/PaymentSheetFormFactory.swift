@@ -162,6 +162,8 @@ class PaymentSheetFormFactory {
             return makeBoleto()
         } else if paymentMethod == .swish {
             return makeSwish()
+        } else if paymentMethod == .instantDebits {
+            return makeInstantDebits()
         }
 
         guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -696,6 +698,24 @@ extension PaymentSheetFormFactory {
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
         return StaticElement(view: label)
+    }
+
+    func makeInstantDebits() -> PaymentMethodElement {
+        return InstantDebitsPaymentMethodElement(
+            configuration: configuration,
+            titleElement: {
+                switch configuration {
+                case .customerSheet:
+                    return nil // customer sheet is not supported
+                case .paymentSheet:
+                    return makeSectionTitleLabelWith(
+                        text: "Pay with your bank account in just a few steps." // TODO(kgaidis): localize string
+                    )
+                }
+            }(),
+            emailElement: makeEmail(),
+            theme: theme
+        )
     }
 
     private func makeUSBankAccountCopyLabel() -> StaticElement {
