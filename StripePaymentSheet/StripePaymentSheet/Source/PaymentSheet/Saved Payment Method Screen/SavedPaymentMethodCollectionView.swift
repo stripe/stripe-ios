@@ -81,10 +81,7 @@ extension SavedPaymentMethodCollectionView {
             light: .systemGray5, dark: .tertiaryLabel))
         lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.colors.primary)
         lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
-            shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
-                top: 15, left: 24, bottom: 15, right: 24)
-            return shadowRoundedRectangle
+            return ShadowedRoundedRectangle(appearance: appearance)
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .remove,
@@ -113,6 +110,7 @@ extension SavedPaymentMethodCollectionView {
         }
 
         var cbcEligible: Bool = false
+        var allowsPaymentMethodRemoval: Bool = true
 
         /// Indicates whether the cell should be editable or just removable.
         /// If the card is a co-branded card and the merchant is eligible for card brand choice, then
@@ -192,10 +190,6 @@ extension SavedPaymentMethodCollectionView {
             ])
         }
 
-        override func layoutSubviews() {
-            super.layoutSubviews()
-        }
-
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
@@ -226,12 +220,13 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
 
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
             self.cbcEligible = cbcEligible
+            self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
             update()
         }
 
@@ -253,7 +248,7 @@ extension SavedPaymentMethodCollectionView {
         private func didSelectAccessory() {
             if shouldAllowEditing {
                 delegate?.paymentOptionCellDidSelectEdit(self)
-            } else {
+            } else if allowsPaymentMethodRemoval {
                 delegate?.paymentOptionCellDidSelectRemove(self)
             }
         }
@@ -305,13 +300,13 @@ extension SavedPaymentMethodCollectionView {
                     accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage()
                 case .link:
                     label.text = STPPaymentMethodType.link.displayName
                     accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage()
                     paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
                         forBackgroundColor: appearance.colors.componentBackground
                     )
@@ -329,31 +324,31 @@ extension SavedPaymentMethodCollectionView {
             }
             let applyDefaultStyle: () -> Void = { [self] in
                 shadowRoundedRectangle.isEnabled = true
+                shadowRoundedRectangle.isSelected = false
                 label.textColor = appearance.colors.text
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = true
                 layer.shadowOpacity = 0
-                shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
-                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
-                shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
             }
 
             if isRemovingPaymentMethods {
                 if case .saved = viewModel {
-                    accessoryButton.isHidden = false
                     if shouldAllowEditing {
+                        accessoryButton.isHidden = false
                         accessoryButton.set(style: .edit, with: appearance.colors.danger)
                         accessoryButton.backgroundColor = UIColor.dynamic(
                             light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
                         accessoryButton.iconColor = appearance.colors.icon
-                    } else {
+                    } else if allowsPaymentMethodRemoval {
+                        accessoryButton.isHidden = false
                         accessoryButton.set(style: .remove, with: appearance.colors.danger)
                         accessoryButton.backgroundColor = appearance.colors.danger
                         accessoryButton.iconColor = appearance.colors.danger.contrastingColor
                     }
                     contentView.bringSubviewToFront(accessoryButton)
                     applyDefaultStyle()
+
                 } else {
                     accessoryButton.isHidden = true
 
@@ -362,8 +357,6 @@ extension SavedPaymentMethodCollectionView {
                     paymentMethodLogo.alpha = 0.6
                     plus.alpha = 0.6
                     label.textColor = appearance.colors.text.disabledColor
-                    shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
-                    shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
                 }
 
             } else if isSelected {
@@ -376,16 +369,12 @@ extension SavedPaymentMethodCollectionView {
                 selectedIcon.backgroundColor = appearance.colors.primary
 
                 // Draw a border with primary color
-                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth * 2
-                shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
-                shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
+                shadowRoundedRectangle.isSelected = true
             } else {
                 accessoryButton.isHidden = true
-                shadowRoundedRectangle.isEnabled = true
                 applyDefaultStyle()
             }
             accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
-            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.colors.componentBackground
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
 
             shadowRoundedRectangle.accessibilityTraits = {
@@ -411,6 +400,10 @@ extension SavedPaymentMethodCollectionView {
             didSet {
                 imageView.tintColor = backgroundColor?.contrastingColor
             }
+        }
+
+        override var intrinsicContentSize: CGSize {
+            return CGSize(width: 20, height: 20)
         }
 
         required init(icon: Image, fillColor: UIColor) {

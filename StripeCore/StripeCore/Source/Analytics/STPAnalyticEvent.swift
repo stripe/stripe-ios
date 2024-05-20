@@ -258,5 +258,13 @@ import Foundation
     case unexpectedPaymentHandlerError = "unexpected_error.paymenthandler"
 
     // MARK: - Misc. errors
-    case stripeCoreDownloadManagerError = "stripecore.downloadmanager.error"
+    case stripePaymentSheetDownloadManagerError = "stripepaymentsheet.downloadmanager.error"
+
+    // MARK: - Refresh Endpoint
+    case refreshPaymentIntentStarted = "stripeios.refresh_payment_intent_started"
+    case refreshSetupIntentStarted = "stripeios.refresh_setup_intent_started"
+    case refreshPaymentIntentSuccess = "stripeios.refresh_payment_intent_success"
+    case refreshSetupIntentSuccess = "stripeios.refresh_setup_intent_success"
+    case refreshPaymentIntentFailed = "stripeios.refresh_payment_intent_failed"
+    case refreshSetupIntentFailed = "stripeios.refresh_setup_intent_failed"
 }

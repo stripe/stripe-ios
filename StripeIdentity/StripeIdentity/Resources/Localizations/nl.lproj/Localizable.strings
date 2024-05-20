@@ -62,6 +62,8 @@
 
 "Move farther" = "Verder weg houden";
 
+"Move to a darker area" = "Ga naar een donkerdere plek";
+
 "Move to a well-lit area" = "Zorg dat er voldoende belichting is";
 
 "NRIC or FIN" = "NRIC of FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Fout bij het verkrijgen van toegang tot de camera.";
 
 "Try Again" = "Opnieuw proberen";
+
+"Try reduce glare and make ID visible" = "Probeer de glans te verminderen en zorg dat de ID zichtbaar is";
 
 "Unable to establish a connection." = "Kan geen verbinding maken";
 

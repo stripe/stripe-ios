@@ -144,7 +144,7 @@ class STPCardFormViewTests: XCTestCase {
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
-        cardParams.expYear = 2080
+        cardParams.expYear = 2050
         cardParams.expMonth = 12
         cardParams.cvc = "123"
         cardParams.networks = .init(preferred: "cartes_bancaires")
@@ -161,12 +161,19 @@ class STPCardFormViewTests: XCTestCase {
         waitForExpectations(timeout: 3.0)
     }
 
+    func testCBCOBO() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
+        cardFormView.onBehalfOf = "acct_abc123"
+        XCTAssertEqual((cardFormView.numberField.validator as! STPCardNumberInputTextFieldValidator).cbcController.onBehalfOf, "acct_abc123")
+    }
+
     func testCBCFourDigitCVCIsInvalid() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
-        cardParams.expYear = 2080
+        cardParams.expYear = 2050
         cardParams.expMonth = 12
         cardParams.cvc = "1234"
         let billingDetails = STPPaymentMethodBillingDetails(postalCode: "12345", countryCode: "US")

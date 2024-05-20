@@ -8,7 +8,7 @@
 import Foundation
 
 /// The Affirm Payment Method.
-/// - seealso: <TODO>
+/// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-affirm
 public class STPPaymentMethodAffirm: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]

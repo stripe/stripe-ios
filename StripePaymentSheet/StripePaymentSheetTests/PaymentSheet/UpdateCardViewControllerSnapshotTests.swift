@@ -25,8 +25,7 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 
     func _test_UpdateCardViewController(darkMode: Bool, appearance: PaymentSheet.Appearance = .default) {
-        let sut = UpdateCardViewController(paymentOptionCell: .init(frame: .zero),
-                                           paymentMethod: STPFixtures.paymentMethod(),
+        let sut = UpdateCardViewController(paymentMethod: STPFixtures.paymentMethod(),
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            appearance: appearance,
                                            hostedSurface: .paymentSheet,
@@ -43,7 +42,7 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 }
 
-private extension UIView {
+extension UIView {
     /// Constrains the view to the given width and autosizes its height.
     /// - Parameter width: Resizes the view to this width
     /// - Parameter height: Resizes the view to this height

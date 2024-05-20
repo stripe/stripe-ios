@@ -62,6 +62,8 @@
 
 "Move farther" = "Siirrä kauemmas";
 
+"Move to a darker area" = "Siirry hämärämpään tilaan";
+
 "Move to a well-lit area" = "Siirry hyvin valaistuun tilaan";
 
 "NRIC or FIN" = "NRIC tai FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Kameran käytössä tapahtui virhe.";
 
 "Try Again" = "Yritä uudelleen";
+
+"Try reduce glare and make ID visible" = "Yritä vähentää häikäisyä niin että henkilöllisyystodistus näkyy";
 
 "Unable to establish a connection." = "Yhteyttä ei voida muodostaa.";
 

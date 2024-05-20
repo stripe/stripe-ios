@@ -74,6 +74,8 @@ extension CustomerSheet {
         /// If false, the customer can't delete if they only have one saved payment method remaining.
         @_spi(STP) public var allowsRemovalOfLastSavedPaymentMethod = true
 
+        /// Prototype: Remove when added to customer session configuration
+        @_spi(STP) public var paymentMethodRemove = true
         public init () {
         }
     }

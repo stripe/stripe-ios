@@ -20,7 +20,6 @@ extension PaymentSheetFormFactory {
                 merchantDisplayName: configuration.merchantDisplayName
             )
         )
-        let shouldDisplaySPMSaveCheckbox: Bool = saveMode == .userSelectable
 
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {
@@ -87,7 +86,7 @@ extension PaymentSheetFormFactory {
                 optionalPhoneAndEmailInformationSection,
                 cardSection,
                 billingAddressSection,
-                shouldDisplaySPMSaveCheckbox ? saveCheckbox : nil,
+                shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             ],
             theme: theme)
 
@@ -98,7 +97,7 @@ extension PaymentSheetFormFactory {
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode,
-                showCheckbox: !shouldDisplaySPMSaveCheckbox
+                showCheckbox: !shouldDisplaySaveCheckbox
             )
         } else {
             return cardFormElement

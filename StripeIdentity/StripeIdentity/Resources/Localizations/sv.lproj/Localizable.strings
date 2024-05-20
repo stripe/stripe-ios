@@ -62,6 +62,8 @@
 
 "Move farther" = "Flytta längre bort";
 
+"Move to a darker area" = "Flytta till en mörkare plats";
+
 "Move to a well-lit area" = "Flytta till en plats med bra belysning";
 
 "NRIC or FIN" = "NRIC eller FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Ett fel uppstod vid åtkomst till kameran.";
 
 "Try Again" = "Försök igen";
+
+"Try reduce glare and make ID visible" = "Försök att minska bländningen och se till att id-handlingen är synlig";
 
 "Unable to establish a connection." = "Det gick inte att upprätta en anslutning.";
 

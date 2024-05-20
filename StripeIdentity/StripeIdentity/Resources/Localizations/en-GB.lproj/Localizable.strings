@@ -62,6 +62,8 @@
 
 "Move farther" = "Move further away";
 
+"Move to a darker area" = "Move to a darker area";
+
 "Move to a well-lit area" = "Move to a well-lit area";
 
 "NRIC or FIN" = "NRIC or FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "There was an error accessing the camera.";
 
 "Try Again" = "Try Again";
+
+"Try reduce glare and make ID visible" = "Try to reduce glare and make ID visible";
 
 "Unable to establish a connection." = "Unable to establish a connection.";
 

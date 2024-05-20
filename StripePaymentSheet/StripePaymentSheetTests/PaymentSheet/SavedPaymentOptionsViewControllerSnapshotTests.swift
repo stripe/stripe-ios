@@ -40,7 +40,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
                                                     paymentSheetConfiguration: PaymentSheet.Configuration(),
                                                     intent: intent,
                                                     appearance: appearance)
-        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        let testWindow = UIWindow()
         testWindow.isHidden = false
         if darkMode {
             testWindow.overrideUserInterfaceStyle = .dark

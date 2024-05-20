@@ -10,7 +10,7 @@ import Foundation
 
 extension StripeAPIConfiguration {
     /// The current version of this library.
-    public static let STPSDKVersion = "23.27.0"
+    public static let STPSDKVersion = "23.27.2"
 
     // NOTE: `STPSDKVersion` must be a hard-coded static string instead of
     // dynamically generated from the bundle's `CFBundleShortVersionString` to

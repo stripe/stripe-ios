@@ -37,6 +37,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     var runAgainstLiveService: Bool = false
     override func setUp() {
         super.setUp()
+//        recordMode = true
 
         configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."

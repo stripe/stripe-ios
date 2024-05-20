@@ -742,7 +742,8 @@ public class STPPaymentHandler: NSObject {
             .konbini,
             .promptPay,
             .swish,
-            .twint:
+            .twint,
+            .multibanco:
             return false
 
         case .unknown:
@@ -1063,6 +1064,13 @@ public class STPPaymentHandler: NSObject {
 
         case .boletoDisplayDetails:
             if let hostedVoucherURL = authenticationAction.boletoDisplayDetails?.hostedVoucherURL {
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+            } else {
+                failCurrentActionWithMissingNextActionDetails()
+            }
+
+        case .multibancoDisplayDetails:
+            if let hostedVoucherURL = authenticationAction.multibancoDisplayDetails?.hostedVoucherURL {
                 self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1409,7 +1417,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    func _retrieveAndCheckIntentForCurrentAction(retryCount: Int = maxChallengeRetries) {
+    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, retryCount: Int = maxChallengeRetries) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
             currentAction,
@@ -1433,7 +1441,7 @@ public class STPPaymentHandler: NSObject {
                 completionBlock()
             }
         }
-        guard let currentAction else {
+        guard let currentAction = currentAction ?? self.currentAction else {
             stpAssertionFailure("Calling _retrieveAndCheckIntentForCurrentAction without a currentAction")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _retrieveAndCheckIntentForCurrentAction without a currentAction"])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
@@ -1444,12 +1452,11 @@ public class STPPaymentHandler: NSObject {
             pingMarlinIfNecessary(
                 currentAction,
                 {
-                    currentAction.apiClient.retrievePaymentIntent(
-                        withClientSecret: currentAction.paymentIntent.clientSecret,
-                        expand: ["payment_method"]
-                    ) { paymentIntent, error in
-                        guard let paymentIntent, let paymentMethod = paymentIntent.paymentMethod, error == nil else {
-                            let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent or paymentIntent.paymentMethod.")
+                    self.retrieveOrRefreshPaymentIntent(
+                        currentAction: currentAction
+                    ) { [self] paymentIntent, error in
+                        guard let paymentIntent, error == nil else {
+                            let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
                             currentAction.complete(
                                 with: STPPaymentHandlerActionStatus.failed,
                                 error: error as NSError
@@ -1460,6 +1467,7 @@ public class STPPaymentHandler: NSObject {
                         // If the transaction is still unexpectedly processing, refresh the PaymentIntent
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
+                            let paymentMethod = paymentIntent.paymentMethod,
                             !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type),
                             paymentIntent.status == .processing && retryCount > 0
                         {
@@ -1480,6 +1488,13 @@ public class STPPaymentHandler: NSObject {
                                 forAction: currentAction
                             )
                             if requiresAction {
+                                guard let paymentMethod = paymentIntent.paymentMethod else {
+                                    currentAction.complete(
+                                        with: STPPaymentHandlerActionStatus.failed,
+                                        error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "PaymentIntent requires action but missing PaymentMethod.")
+                                    )
+                                    return
+                                }
                                 // If the status is still RequiresAction, the user exited from the redirect before the
                                 // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
                                 if self.isNextActionSuccessState(
@@ -1514,12 +1529,11 @@ public class STPPaymentHandler: NSObject {
                 }
             )
         } else if let currentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
-            currentAction.apiClient.retrieveSetupIntent(
-                withClientSecret: currentAction.setupIntent.clientSecret,
-                expand: ["payment_method"]
+            retrieveOrRefreshSetupIntent(
+                currentAction: currentAction
             ) { setupIntent, error in
-                guard let setupIntent, let paymentMethod = setupIntent.paymentMethod, error == nil else {
-                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent or setupIntent.paymentMethod.")
+                guard let setupIntent, error == nil else {
+                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
                         error: error as NSError
@@ -1540,6 +1554,13 @@ public class STPPaymentHandler: NSObject {
                     )
 
                     if requiresAction {
+                        guard let paymentMethod = setupIntent.paymentMethod else {
+                            currentAction.complete(
+                                with: STPPaymentHandlerActionStatus.failed,
+                                error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "SetupIntent requires action but missing PaymentMethod.")
+                            )
+                            return
+                        }
                         // If the status is still RequiresAction, the user exited from the redirect before the
                         // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
                         if self.isNextActionSuccessState(
@@ -1825,7 +1846,8 @@ public class STPPaymentHandler: NSObject {
                 .konbiniDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
-                .upiAwaitNotification:
+                .upiAwaitNotification,
+                .multibancoDisplayDetails:
                 return true
             }
         }
@@ -1851,7 +1873,7 @@ public class STPPaymentHandler: NSObject {
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
             .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
-            .promptpayDisplayQrCode, .swishHandleRedirect:
+            .promptpayDisplayQrCode, .swishHandleRedirect, .multibancoDisplayDetails:
             break
         }
 
@@ -1994,6 +2016,34 @@ public class STPPaymentHandler: NSObject {
                     completion(success, error)
                 }
             }
+        }
+    }
+
+    func retrieveOrRefreshPaymentIntent(currentAction: STPPaymentHandlerPaymentIntentActionParams,
+                                        completion: @escaping STPPaymentIntentCompletionBlock) {
+        let paymentMethodType = currentAction.paymentIntent.paymentMethod?.type ?? .unknown
+
+        if paymentMethodType.supportsRefreshing {
+            currentAction.apiClient.refreshPaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
+                                                         completion: completion)
+        } else {
+            currentAction.apiClient.retrievePaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
+                                                          expand: ["payment_method"],
+                                                          completion: completion)
+        }
+    }
+
+    func retrieveOrRefreshSetupIntent(currentAction: STPPaymentHandlerSetupIntentActionParams,
+                                      completion: @escaping STPSetupIntentCompletionBlock) {
+        let paymentMethodType = currentAction.setupIntent.paymentMethod?.type ?? .unknown
+
+        if paymentMethodType.supportsRefreshing {
+            currentAction.apiClient.refreshSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
+                                                       completion: completion)
+        } else {
+            currentAction.apiClient.retrieveSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
+                                                        expand: ["payment_method"],
+                                                        completion: completion)
         }
     }
 

@@ -62,6 +62,8 @@
 
 "Move farther" = "少し遠ざけてください";
 
+"Move to a darker area" = "もっと暗い場所に移動してください";
+
 "Move to a well-lit area" = "明るい場所に移動してください";
 
 "NRIC or FIN" = "NRIC または FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "カメラへのアクセス中にエラーが発生しました。";
 
 "Try Again" = "やり直す";
+
+"Try reduce glare and make ID visible" = "光の反射を抑えて、身分証明書が見えるようにしてください";
 
 "Unable to establish a connection." = "接続を確立できません";
 

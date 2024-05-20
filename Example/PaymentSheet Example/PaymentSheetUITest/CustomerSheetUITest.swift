@@ -870,7 +870,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: timeout))
         app.pickerWheels.firstMatch.swipeUp()
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Update card"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Update"].waitForExistenceAndTap(timeout: timeout)
 
         // We should have updated to Visa
         XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: timeout))
@@ -1006,10 +1006,87 @@ class CustomerSheetUITest: XCTestCase {
 
         // Should be able to edit CBC enabled PM even though it's the only one
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
-        XCTAssertTrue(app.buttons["Update card"].waitForExistence(timeout: timeout))
+        XCTAssertTrue(app.buttons["Update"].waitForExistence(timeout: timeout))
 
         // ...but should not be able to remove it.
         XCTAssertFalse(app.buttons["Remove card"].exists)
+    }
+    // MARK: - PaymentMethodRemove w/ CBC
+    func testCSPaymentMethodRemoveTwoCards() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.merchantCountryCode = .FR
+        settings.customerMode = .new
+        settings.applePay = .on
+        settings.paymentMethodRemove = .disabled
+        settings.allowsRemovalOfLastSavedPaymentMethod = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        // Save a card
+        app.staticTexts["None"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
+
+        // Shouldn't be able to edit non-CBC eligible card when paymentMethodRemove = .disabled
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+
+        // Add a CBC enabled PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
+
+        // Should be able to edit because of CBC saved PMs
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Assert there are no remove buttons on each tile and the update screen
+        XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertFalse(app.buttons["Remove card"].exists)
+
+        // Dismiss Sheet
+        app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Done"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Close"].waitForExistenceAndTap(timeout: timeout)
+    }
+
+    func testCSPaymentMethodRemoveTwoCards_keeplastSavedPaymentMethod_CBC() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.merchantCountryCode = .FR
+        settings.customerMode = .new
+        settings.applePay = .on
+        settings.paymentMethodRemove = .disabled
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        // Save a card
+        app.staticTexts["None"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
+
+        // Should be able to edit because of CBC saved PMs
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Assert there are no remove buttons on each tile and the update screen
+        XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertFalse(app.buttons["Remove card"].exists)
+
+        // Dismiss Sheet
+        app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Done"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Close"].waitForExistenceAndTap(timeout: timeout)
     }
 
     // MARK: - Helpers

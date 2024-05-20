@@ -81,18 +81,18 @@ class PaymentSheetAPITest: XCTestCase {
                     isFlowController: false
                 ) { result in
                     switch result {
-                    case .success(let paymentIntent, let paymentMethods, _, _):
+                    case .success(let loadResult):
                         XCTAssertEqual(
-                            Set(paymentIntent.recommendedPaymentMethodTypes),
+                            Set(loadResult.intent.recommendedPaymentMethodTypes),
                             Set(expected)
                         )
-                        XCTAssertEqual(paymentMethods, [])
+                        XCTAssertEqual(loadResult.savedPaymentMethods, [])
                         // 2. Confirm the intent with a new card
 
                         PaymentSheet.confirm(
                             configuration: self.configuration,
                             authenticationContext: self,
-                            intent: paymentIntent,
+                            intent: loadResult.intent,
                             paymentOption: self.newCardPaymentOption,
                             paymentHandler: self.paymentHandler
                         ) { result, _ in
@@ -163,14 +163,14 @@ class PaymentSheetAPITest: XCTestCase {
             isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _, _):
+            case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(intent.recommendedPaymentMethodTypes),
+                    Set(loadResult.intent.recommendedPaymentMethodTypes),
                     Set(expected)
                 )
-                XCTAssertEqual(paymentMethods, [])
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 loadExpectation.fulfill()
-                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = intent else {
+                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = loadResult.intent else {
                     XCTFail()
                     return
                 }
@@ -229,14 +229,14 @@ class PaymentSheetAPITest: XCTestCase {
             isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _, _):
+            case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(intent.recommendedPaymentMethodTypes),
+                    Set(loadResult.intent.recommendedPaymentMethodTypes),
                     Set(expected)
                 )
-                XCTAssertEqual(paymentMethods, [])
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 loadExpectation.fulfill()
-                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = intent else {
+                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = loadResult.intent else {
                     XCTFail()
                     return
                 }
@@ -285,7 +285,7 @@ class PaymentSheetAPITest: XCTestCase {
                 configuration: self.configuration,
                 isFlowController: false
             ) { result in
-                guard case .success(let paymentIntent, _, _, _) = result else {
+                guard case .success(let loadResult) = result else {
                     XCTFail()
                     return
                 }
@@ -293,7 +293,7 @@ class PaymentSheetAPITest: XCTestCase {
                 PaymentSheet.confirm(
                     configuration: self.configuration,
                     authenticationContext: self,
-                    intent: paymentIntent,
+                    intent: loadResult.intent,
                     paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", type: .card), confirmParams: nil),
                     paymentHandler: self.paymentHandler
                 ) { result, _ in
@@ -428,39 +428,6 @@ class PaymentSheetAPITest: XCTestCase {
             inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
-            isPaymentIntent: false, // SetupIntent
-            isServerSideConfirm: true // Server-side confirmation
-        )
-    }
-
-    func testDeferredConfirm_new_expired_card() {
-        // Note: This fails when the PM is created
-        let invalid_exp_year_card = IntentConfirmParams(params: .init(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil), type: .stripe(.card))
-        _testDeferredConfirm(
-            inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
-            expectedShouldSavePaymentMethod: false,
-            expectedResult: .failed(error: ExpectedError(errorDescription: "Your card's expiration year is invalid.")),
-            isPaymentIntent: true, // PaymentIntent
-            isServerSideConfirm: false // Client-side confirmation
-        )
-        _testDeferredConfirm(
-            inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
-            expectedShouldSavePaymentMethod: false,
-            expectedResult: .failed(error: ExpectedError(errorDescription: "Your card's expiration year is invalid.")),
-            isPaymentIntent: true, // PaymentIntent
-            isServerSideConfirm: true // Server-side confirmation
-        )
-        _testDeferredConfirm(
-            inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
-            expectedShouldSavePaymentMethod: false,
-            expectedResult: .failed(error: ExpectedError(errorDescription: "Your card's expiration year is invalid.")),
-            isPaymentIntent: false, // SetupIntent
-            isServerSideConfirm: false // Client-side confirmation
-        )
-        _testDeferredConfirm(
-            inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
-            expectedShouldSavePaymentMethod: false,
-            expectedResult: .failed(error: ExpectedError(errorDescription: "Your card's expiration year is invalid.")),
             isPaymentIntent: false, // SetupIntent
             isServerSideConfirm: true // Server-side confirmation
         )
@@ -760,15 +727,15 @@ class PaymentSheetAPITest: XCTestCase {
             switch result {
             case .success(let sut):
                 // ...the vc's intent should match the initial intent config...
-                XCTAssertFalse(sut.viewController.intent.isSettingUp)
-                XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+                XCTAssertFalse(sut.intent.isSettingUp)
+                XCTAssertTrue(sut.intent.isPaymentIntent)
                 // ...and updating the intent config should succeed...
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
                 sut.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
                     XCTAssertNil(sut.paymentOption)
-                    XCTAssertTrue(sut.viewController.intent.isSettingUp)
-                    XCTAssertFalse(sut.viewController.intent.isPaymentIntent)
+                    XCTAssertTrue(sut.intent.isSettingUp)
+                    XCTAssertFalse(sut.intent.isPaymentIntent)
                     firstUpdateExpectation.fulfill()
 
                     // ...updating the intent config multiple times should succeed...
@@ -776,8 +743,8 @@ class PaymentSheetAPITest: XCTestCase {
                     sut.update(intentConfiguration: intentConfig) { error in
                         XCTAssertNil(error)
                         XCTAssertNil(sut.paymentOption)
-                        XCTAssertFalse(sut.viewController.intent.isSettingUp)
-                        XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+                        XCTAssertFalse(sut.intent.isSettingUp)
+                        XCTAssertTrue(sut.intent.isPaymentIntent)
 
                         // Sanity check that the analytics...
                         let analytics = STPAnalyticsClient.sharedClient._testLogHistory

@@ -62,6 +62,8 @@
 
 "Move farther" = "Allontanalo";
 
+"Move to a darker area" = "Sposta il documento in un punto meno illuminato.";
+
 "Move to a well-lit area" = "Sposta il documento in modo che l'illuminazione sia adeguata";
 
 "NRIC or FIN" = "NRIC o FIN";
@@ -113,6 +115,8 @@
 "There was an error accessing the camera." = "Si è verificato un errore durante l'accesso alla fotocamera.";
 
 "Try Again" = "Riprova";
+
+"Try reduce glare and make ID visible" = "Cerca di ridurre i riflessi e assicurati che il documento di identità sia visibile.";
 
 "Unable to establish a connection." = "Impossibile stabilire una connessione.";
 

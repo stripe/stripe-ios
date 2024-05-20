@@ -122,7 +122,11 @@ class BottomSheetPresentationController: UIPresentationController {
     }
 
     @objc func didTapBackgroundView() {
-        presentable?.didTapOrSwipeToDismiss()
+        // This animation isn't cleanly interruptable, don't allow dismissal until it completes.
+        // We're not aware of the animation state ourselves, so we'll check the presentedView for any attached animations.
+        if presentedView.layer.animationKeys()?.count ?? 0 == 0 {
+            presentable?.didTapOrSwipeToDismiss()
+        }
     }
 }
 

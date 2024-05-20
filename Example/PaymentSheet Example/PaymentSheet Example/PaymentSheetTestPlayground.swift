@@ -24,10 +24,12 @@ struct PaymentSheetTestPlayground: View {
         //  (each view can hold 10 direct subviews)
         Group {
             SettingView(setting: $playgroundController.settings.uiStyle)
+            SettingView(setting: $playgroundController.settings.layout)
             SettingView(setting: $playgroundController.settings.shippingInfo)
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
             SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+            SettingView(setting: $playgroundController.settings.paymentMethodRemove)
         }
         Group {
             SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
@@ -41,7 +43,7 @@ struct PaymentSheetTestPlayground: View {
         Group {
             SettingView(setting: $playgroundController.settings.linkEnabled)
             SettingView(setting: $playgroundController.settings.userOverrideCountry)
-            SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
+            SettingView(setting: $playgroundController.settings.externalPaymentMethods)
             SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
             SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
         }

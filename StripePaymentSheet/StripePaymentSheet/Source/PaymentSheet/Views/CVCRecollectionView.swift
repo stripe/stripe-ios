@@ -89,10 +89,7 @@ class CVCRecollectionView: UIView {
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, stackView, errorLabel])
         if mode == .inputOnly {
-            let spacerView = UIView(frame: .zero)
-            spacerView.translatesAutoresizingMaskIntoConstraints = false
-            spacerView.heightAnchor.constraint(equalToConstant: 10).isActive = true
-            stack.insertArrangedSubview(spacerView, at: 0)
+            stack.insertArrangedSubview(.makeSpacerView(height: 10), at: 0)
         }
         stack.axis = .vertical
         stack.spacing = 4

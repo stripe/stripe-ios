@@ -7,11 +7,11 @@ If you need to accept card payments, we advise using the [StripePaymentSheet](..
 ## Table of contents
 
 <!--ts-->
-* [Requirements](#requirements)
-* [Getting started](#getting-started)
-   * [Integration](#integration)
-   * [Example](#example)
-* [Manual linking](#manual-linking)
+* [Requirements](#Requirements)
+* [Getting started](#Getting-started)
+   * [Integration](#Integration)
+   * [Example](#Example)
+* [Manual linking](#Manual-linking)
 
 <!--te-->
 
@@ -23,11 +23,11 @@ The StripePayments module is compatible with apps targeting iOS 13.0 or above.
 
 #### Integration
 
-Get started with our [📚 integration guides](https://stripe.com/docs/payments/payment-methods/overview) and [example projects](/Example), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/stripe-payments/index.html) for fine-grained documentation of all the classes and methods in the SDK.
+Get started with our [📚 integration guides](https://stripe.com/docs/payments/payment-methods/overview) and [example projects](../Example), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/stripe-payments/index.html) for fine-grained documentation of all the classes and methods in the SDK.
 
 #### Example
 
-- [Non-Card Payment Examples](/Example/Non-Card%20Payment%20Examples)
+- [Non-Card Payment Examples](../Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
 
 ## Manual linking

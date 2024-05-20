@@ -141,3 +141,30 @@ extension UIFont {
         return UIFont(descriptor: descriptor, size: pointSize)
     }
 }
+
+extension UILabel {
+    static func makeVerticalRowButtonLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
+        let label = UILabel()
+        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
+        label.adjustsFontSizeToFitWidth = true
+        label.adjustsFontForContentSizeCategory = true
+        label.text = text
+        label.numberOfLines = 1
+        label.textColor = appearance.colors.componentText
+        return label
+    }
+}
+
+extension UIStackView {
+    /// Convenience DRY method that creates a stackview for use in horizontal "row button" content
+    static func makeRowButtonContentStackView(arrangedSubviews: [UIView]) -> UIStackView {
+        let margin = 12.0
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.directionalLayoutMargins = .init(top: margin, leading: margin, bottom: margin, trailing: margin)
+        stackView.spacing = margin
+        stackView.isLayoutMarginsRelativeArrangement = true
+        return stackView
+    }
+}

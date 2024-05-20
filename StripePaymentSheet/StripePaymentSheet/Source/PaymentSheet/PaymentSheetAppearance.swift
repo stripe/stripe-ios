@@ -211,5 +211,4 @@ public extension PaymentSheet {
             public var shadow: Shadow?
         }
     }
-
 }

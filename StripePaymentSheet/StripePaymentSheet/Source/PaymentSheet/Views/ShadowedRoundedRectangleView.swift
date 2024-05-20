@@ -10,78 +10,66 @@
 import UIKit
 
 /// The shadowed rounded rectangle that our cells use to display content
-/// For internal SDK use only
-@objc(STP_Internal_ShadowedRoundedRectangle)
 class ShadowedRoundedRectangle: UIView {
-    let roundedRectangle: UIView
+    private let roundedRectangle: UIView
     var appearance: PaymentSheet.Appearance {
         didSet {
-            layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
-            layer.cornerRadius = appearance.cornerRadius
-            roundedRectangle.layer.cornerRadius = appearance.cornerRadius
-            roundedRectangle.backgroundColor = appearance.colors.componentBackground
-        }
-    }
-
-    lazy var shouldDisplayShadow: Bool = true {
-        didSet {
-            if shouldDisplayShadow {
-                layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
-            } else {
-                layer.shadowOpacity = 0
-            }
+            update()
         }
     }
 
     var isEnabled: Bool = true {
         didSet {
-            updateBackgroundColor()
+            update()
         }
     }
 
-    private func updateBackgroundColor() {
+    var isSelected: Bool = false {
+        didSet {
+            update()
+        }
+    }
+
+    /// All mutations to this class should route to this single method to update the UI
+    private func update() {
+        // Background color
         if isEnabled {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground
         } else {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
+        }
+
+        // Corner radius
+        roundedRectangle.layer.cornerRadius = appearance.cornerRadius
+        layer.cornerRadius = appearance.cornerRadius
+
+        // Shadow
+        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+
+        // Border
+        if isSelected {
+            layer.borderWidth = appearance.borderWidth * 2
+            layer.borderColor = appearance.colors.primary.cgColor
+        } else {
+            layer.borderWidth = appearance.borderWidth
+            layer.borderColor = appearance.colors.componentBorder.cgColor
         }
     }
 
     required init(appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         roundedRectangle = UIView()
-        roundedRectangle.layer.cornerRadius = appearance.cornerRadius
         roundedRectangle.layer.masksToBounds = true
-
         super.init(frame: .zero)
-
-        layer.cornerRadius = appearance.cornerRadius
-        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
-
-        addSubview(roundedRectangle)
-        updateBackgroundColor()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        // Update shadow paths based on current frame
-        roundedRectangle.frame = bounds
-
-        // Turn off shadows in dark mode
-        if traitCollection.userInterfaceStyle == .dark || !shouldDisplayShadow {
-            layer.shadowOpacity = 0
-        } else {
-            layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
-        }
-
-        // Update shadow (cg)color
-        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
+        addAndPinSubview(roundedRectangle)
+        update()
     }
 
     #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        setNeedsLayout()
+        update()
     }
     #endif
 
