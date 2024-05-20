@@ -42,11 +42,21 @@ class RowButton: UIView {
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
-        // TODO: Accessory view
-
         addAndPinSubview(shadowRoundedRect)
+
+        if let rightAccessoryView {
+            rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(rightAccessoryView)
+            NSLayoutConstraint.activate([
+                rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
+                rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            ])
+        }
+
         for view in [imageView, labelsStackView] {
             view.translatesAutoresizingMaskIntoConstraints = false
+            view.isUserInteractionEnabled = false
             addSubview(view)
         }
 
@@ -65,7 +75,7 @@ class RowButton: UIView {
             imageView.widthAnchor.constraint(equalToConstant: 24),
 
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            labelsStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            labelsStackView.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 4),
             labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -4),
@@ -74,7 +84,12 @@ class RowButton: UIView {
             imageViewTopConstraint,
         ])
 
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+        shadowRoundedRect.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+
+        // Accessibility
+        shadowRoundedRect.accessibilityIdentifier = text
+        shadowRoundedRect.accessibilityTraits = .button
+        // TODO(porter) More accessibility such as isAccessibilityElement, accessibilityTraits, selection state, etc
     }
 
     required init?(coder: NSCoder) {
