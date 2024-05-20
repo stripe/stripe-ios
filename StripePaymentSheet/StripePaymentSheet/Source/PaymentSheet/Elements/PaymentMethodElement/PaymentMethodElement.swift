@@ -11,6 +11,8 @@
 // MARK: - PaymentMethodElement protocol
 /**
  This allows a user of an Element to collect all fields in the Element hierarchy into an instance of `IntentConfirmParams`.
+ This exists separate from `Element` because `IntentConfirmParams` is a type specific to `StripePaymentSheet`, whereas `Element` is shared
+ across modules that don't have this type.
  
  - Remark:In practice, only "leaf" Elements - text fields, drop downs, etc. - have any user data to update params with. These elements can be wrapped in `PaymentMethodElementWrapper`.
  Other elements can rely on the default implementation provided in this file.

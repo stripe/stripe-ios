@@ -96,7 +96,7 @@ enum PaymentSheetFormFactoryConfig {
     var isUsingBillingAddressCollection: Bool {
         switch self {
         case .paymentSheet(let config):
-            return config.isUsingBillingAddressCollection()
+            return config.requiresBillingDetailCollection()
         case .customerSheet(let config):
             return config.isUsingBillingAddressCollection()
         }

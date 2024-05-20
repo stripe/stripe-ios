@@ -16,6 +16,8 @@ import XCTest
 @testable@_spi(STP) import StripeUICore
 
 class MockElement: Element {
+    var collectsUserInput: Bool = false
+
     var paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams?
 
     init(

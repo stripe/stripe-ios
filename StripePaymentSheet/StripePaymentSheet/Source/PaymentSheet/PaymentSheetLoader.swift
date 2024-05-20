@@ -118,7 +118,7 @@ final class PaymentSheetLoader {
         guard intent.supportsLink else {
             return false
         }
-        return !configuration.isUsingBillingAddressCollection()
+        return !configuration.requiresBillingDetailCollection()
     }
 
     // MARK: - Helper methods that load things

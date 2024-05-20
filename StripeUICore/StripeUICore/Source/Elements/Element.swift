@@ -17,30 +17,23 @@ import UIKit
  Think of this as a light-weight, specialized view controller.
  */
 @_spi(STP) public protocol Element: AnyObject {
-    /**
-     - Note: This is set by your parent.
-     */
+    /// - Note: This is set by your parent.
     var delegate: ElementDelegate? { get set }
 
-    /**
-     Return your UIView instance.
-     */
+    /// Return your UIView instance.
     var view: UIView { get }
 
-    /**
-     - Returns: Whether or not this Element began editing.
-     */
+    /// - Returns: Whether or not this Element began editing.
     func beginEditing() -> Bool
 
-    /**
-     Whether this element contains valid user input or not.
-     */
+    /// Whether this element contains valid user input or not.
     var validationState: ElementValidationState { get }
 
-    /**
-     Text to display to the user under the item, if any.
-     */
+    /// Text to display to the user under the item, if any.
     var subLabelText: String? { get }
+
+    /// Whether or not this Element collects user input (e.g. a text field, dropdown, picker, checkbox).
+    var collectsUserInput: Bool { get }
 }
 
 public extension Element {
