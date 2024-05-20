@@ -73,13 +73,17 @@ extension String.Localized {
         STPLocalizedString("Back", "Text for back button")
     }
 
-    static var update_card: String {
+    static var update_card_brand: String {
         STPLocalizedString(
-            "Update card",
-            """
-            Title for a button that when tapped, presents a screen for updating a card. Also
-            the heading the screen itself.
-            """
+            "Update card brand",
+            "Title for a screen for updating a card brand."
+        )
+    }
+
+    static var update: String {
+        STPLocalizedString(
+            "Update",
+            "Title for a button that when tapped, updates a card brand."
         )
     }
 

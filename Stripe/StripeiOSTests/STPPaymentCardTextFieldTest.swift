@@ -939,6 +939,13 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         waitForExpectations(timeout: 3.0)
     }
 
+    func testOBOCBC() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let sut = STPPaymentCardTextField()
+        sut.onBehalfOf = "acct_abc123"
+        XCTAssertEqual(sut.viewModel.cbcController.onBehalfOf, "acct_abc123")
+    }
+
     func testFourDigitCVCNotAllowedUnknownCBCCard() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let sut = STPPaymentCardTextField()

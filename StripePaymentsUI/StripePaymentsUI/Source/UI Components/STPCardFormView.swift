@@ -607,6 +607,19 @@ public class STPCardFormView: STPFormView {
         }
         self.preferredNetworks = preferredNetworks.map { STPCardBrand(rawValue: $0.intValue) ?? .unknown }
     }
+
+    /// The account (if any) for which the funds of the intent are intended.
+    /// The Stripe account ID (if any) which is the business of record.
+    /// See [use cases](https://docs.stripe.com/connect/charges#on_behalf_of) to determine if this option is relevant for your integration.
+    /// This should match the [on_behalf_of](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-on_behalf_of)
+    /// provided on the Intent used when confirming payment.
+    public var onBehalfOf: String? {
+        didSet {
+            if let cardValidator = (numberField.validator as? STPCardNumberInputTextFieldValidator) {
+                cardValidator.cbcController.onBehalfOf = onBehalfOf
+            }
+        }
+    }
 }
 
 /// :nodoc:

@@ -1,6 +1,10 @@
 ## x.x.x xxxx-xx-xx
+### PaymentSheet
+* [Changed] Improved reliability and UX when paying with Cash App Pay.
+
 ### Payments
 * [Added] Updated support for MobilePay bindings.
+* [Changed] Improved reliability and UX when paying with Cash App Pay.
 
 ## 23.27.2 2024-05-06
 ### CardScan
@@ -22,6 +26,9 @@
 
 ### Apple Pay
 * [Changed] Apple Pay additionalEnabledApplePayNetworks are now in front of the supported network list.
+
+### PaymentsUI
+* [Added] Added support for `onBehalfOf` to STPPaymentCardTextField and STPCardFormView. This parameter may be required when setting a connected account as the merchant of record for a payment. For more information, see the [Connect docs](https://docs.stripe.com/connect/charges#on_behalf_of).
 
 ## 23.27.0 2024-04-08
 ### Payments
