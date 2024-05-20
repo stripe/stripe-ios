@@ -27,7 +27,9 @@ class PaymentMethodFormViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        _ = self.form.beginEditing()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            _ = self.form.beginEditing()
+        }
     }
 
     override func willMove(toParent parent: UIViewController?) {

@@ -89,8 +89,18 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         stackView.axis = .vertical
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
-        add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
+        // If there are no saved payment methods and we have only one payment method and it collects user input, display the form instead of the payment method list.
+        let form = makeForm(paymentMethodType: paymentMethodTypes[0])
+        if savedPaymentMethods.isEmpty && paymentMethodTypes.count == 1 && form.collectsUserInput {
+            let paymentMethodFormViewController = PaymentMethodFormViewController(form: form)
+            self.paymentMethodFormViewController = paymentMethodFormViewController
+            add(childViewController: paymentMethodFormViewController, containerView: paymentContainerView)
+        } else {
+            add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
+        }
     }
+
+    // MARK: - Helpers
 
     // TOOD(porter) Remove/rename
     @objc func presentManageScreen() {
@@ -102,6 +112,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
+    }
+
+    func makeForm(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
+        return PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType).make()
     }
 }
 
@@ -150,8 +164,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         case .applePay, .link:
             return true
         case let .new(paymentMethodType: paymentMethodType):
-            let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType)
-            let form = formFactory.make()
+            let form = makeForm(paymentMethodType: paymentMethodType)
             if form.collectsUserInput {
                 // The payment method form collects user input; display it
                 let paymentMethodFormViewController = PaymentMethodFormViewController(form: form)
