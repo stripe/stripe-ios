@@ -487,7 +487,8 @@ extension PaymentSheet {
 }
 
 extension PaymentSheet.Configuration {
-    func isUsingBillingAddressCollection() -> Bool {
+    /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
+    func requiresBillingDetailCollection() -> Bool {
         return billingDetailsCollectionConfiguration.name == .always
         || billingDetailsCollectionConfiguration.phone == .always
         || billingDetailsCollectionConfiguration.email == .always

@@ -10,6 +10,8 @@
 import UIKit
 
 class LinkEmailElement: Element {
+    let collectsUserInput: Bool = true
+
     weak var delegate: ElementDelegate?
 
     private let emailAddressElement: TextFieldElement

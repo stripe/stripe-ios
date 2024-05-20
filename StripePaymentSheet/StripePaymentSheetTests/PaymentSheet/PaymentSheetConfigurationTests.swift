@@ -10,55 +10,55 @@ import XCTest
 class PaymentSheetConfigurationTests: XCTestCase {
     func testIsUsingBillingAddressCollection_Default() {
         let configuration = PaymentSheet.Configuration()
-        XCTAssertFalse(configuration.isUsingBillingAddressCollection())
+        XCTAssertFalse(configuration.requiresBillingDetailCollection())
     }
 
     func testIsUsingBillingAddressCollection_address_never() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.address = .never
-        XCTAssertFalse(configuration.isUsingBillingAddressCollection())
+        XCTAssertFalse(configuration.requiresBillingDetailCollection())
     }
 
     func testIsUsingBillingAddressCollection_address_full() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.address = .full
-        XCTAssert(configuration.isUsingBillingAddressCollection())
+        XCTAssert(configuration.requiresBillingDetailCollection())
     }
 
     func testIsUsingBillingAddressCollection_email_never() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.email = .never
-        XCTAssertFalse(configuration.isUsingBillingAddressCollection())
+        XCTAssertFalse(configuration.requiresBillingDetailCollection())
     }
 
     func testIsUsingBillingAddressCollection_email_full() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.email = .always
-        XCTAssert(configuration.isUsingBillingAddressCollection())
+        XCTAssert(configuration.requiresBillingDetailCollection())
     }
 
     func testIsUsingBillingAddressCollection_name_never() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .never
-        XCTAssertFalse(configuration.isUsingBillingAddressCollection())
+        XCTAssertFalse(configuration.requiresBillingDetailCollection())
     }
 
     func testIsUsingBillingAddressCollection_name_full() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .always
-        XCTAssert(configuration.isUsingBillingAddressCollection())
+        XCTAssert(configuration.requiresBillingDetailCollection())
     }
 
     func testIsUsingBillingAddressCollection_phone_never() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.phone = .never
-        XCTAssertFalse(configuration.isUsingBillingAddressCollection())
+        XCTAssertFalse(configuration.requiresBillingDetailCollection())
     }
 
     func testIsUsingBillingAddressCollection_phone_full() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.phone = .always
-        XCTAssert(configuration.isUsingBillingAddressCollection())
+        XCTAssert(configuration.requiresBillingDetailCollection())
     }
 
     func testSTPPaymentMethodBillingDetailsToPaymentSheetBillingDetails() {
