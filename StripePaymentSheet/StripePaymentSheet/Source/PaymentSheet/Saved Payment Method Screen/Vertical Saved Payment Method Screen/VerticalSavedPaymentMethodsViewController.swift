@@ -15,9 +15,12 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     /// Handles the selection of a payment method from the list or the modification of the list such as the removal or update of payment methods.
     ///
     /// - Parameters:
+    ///    - viewController: The `VerticalSavedPaymentMethodsViewController` that completed it's selection
     ///    - selectedPaymentMethod: The selected method of payment, if any.
     ///    - latestPaymentMethods: The most recent up-to-date list of payment methods.
-    func didComplete(with selectedPaymentMethod: STPPaymentMethod?, latestPaymentMethods: [STPPaymentMethod])
+    func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
+                     with selectedPaymentMethod: STPPaymentMethod?,
+                     latestPaymentMethods: [STPPaymentMethod])
 }
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
@@ -162,8 +165,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func completeSelection() {
-        _ = self.bottomSheetController?.popContentViewController()
-        self.delegate?.didComplete(with: selectedPaymentMethod, latestPaymentMethods: paymentMethods)
+        self.delegate?.didComplete(viewController: self, with: selectedPaymentMethod, latestPaymentMethods: paymentMethods)
     }
 }
 

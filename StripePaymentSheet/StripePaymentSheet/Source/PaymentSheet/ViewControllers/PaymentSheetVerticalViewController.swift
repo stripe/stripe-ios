@@ -124,11 +124,14 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
 }
 
 extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewControllerDelegate {
-    func didComplete(with selectedPaymentMethod: STPPaymentMethod?, latestPaymentMethods: [STPPaymentMethod]) {
+    func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
+                     with selectedPaymentMethod: STPPaymentMethod?,
+                     latestPaymentMethods: [STPPaymentMethod]) {
         // TODO
         print("Selected payment method with id: \(String(describing: selectedPaymentMethod?.stripeId))")
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         savedPaymentMethods = latestPaymentMethods
+        _ = viewController.bottomSheetController?.popContentViewController()
         // TODO update selected payment method with `selectedPaymentMethod`
     }
 }
