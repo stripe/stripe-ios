@@ -11,7 +11,10 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class InstantDebitsPaymentMethodElement: Element {
+final class InstantDebitsPaymentMethodElement: ContainerElement {
+    var elements: [Element] {
+        return [formElement]
+    }
 
     private let configuration: PaymentSheetFormFactoryConfig
     private let formElement: FormElement
@@ -124,7 +127,7 @@ final class InstantDebitsPaymentMethodElement: Element {
         {
             linkedBankInfoView.setBankName(text: bankName)
             linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
-            formElement.setElements(
+            formElement.toggleElements(
                 linkedBankElements,
                 hidden: false,
                 animated: true
@@ -144,7 +147,7 @@ extension InstantDebitsPaymentMethodElement: BankAccountInfoViewDelegate {
 
     func didTapXIcon() {
         let hideLinkedBankElement = {
-            self.formElement.setElements(
+            self.formElement.toggleElements(
                 self.linkedBankElements,
                 hidden: true,
                 animated: true
