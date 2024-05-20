@@ -79,6 +79,8 @@ class RowButton: UIView {
         labelsStackView.alignment = .leading
 
         addAndPinSubview(shadowRoundedRect)
+
+        if let rightAccessoryView {
             rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(rightAccessoryView)
             NSLayoutConstraint.activate([
