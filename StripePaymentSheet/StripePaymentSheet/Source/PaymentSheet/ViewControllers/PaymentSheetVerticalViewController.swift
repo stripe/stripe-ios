@@ -37,8 +37,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         return navBar
     }()
 
-    lazy var paymentMethodListView: VerticalPaymentMethodListView = {
-        return VerticalPaymentMethodListView(
+    lazy var paymentMethodListViewController: VerticalPaymentMethodListViewController = {
+        return VerticalPaymentMethodListViewController(
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled,
@@ -46,6 +46,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             appearance: configuration.appearance,
             delegate: self
         )
+    }()
+
+    var paymentMethodFormViewController: PaymentMethodFormViewController?
+
+    lazy var paymentContainerView: DynamicHeightContainerView = {
+        return DynamicHeightContainerView()
     }()
 
     // MARK: - Initializers
@@ -76,13 +82,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
-            paymentMethodListView,
+            paymentContainerView,
         ])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
+        add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
     }
 
     // TOOD(porter) Remove/rename
@@ -136,14 +143,32 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
     }
 }
 
-extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDelegate {
-    func didSelectPaymentMethod(_ selection: VerticalPaymentMethodListView.Selection) {
+extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewControllerDelegate {
+    func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool {
         switch selection {
-        case .applePay, .link, .new:
-            // TODO
-            return
+        case .applePay, .link:
+            return true
+        case let .new(paymentMethodType: paymentMethodType):
+            let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType)
+            let form = formFactory.make()
+            if form.collectsUserInput {
+                // The payment method form collects user input; display it
+                let paymentMethodFormViewController = PaymentMethodFormViewController(form: form)
+                self.paymentMethodFormViewController = paymentMethodFormViewController
+#if !canImport(CompositorServices)
+                UISelectionFeedbackGenerator().selectionChanged()
+#endif
+                // Return false so the payment method isn't selected in the list; this implicitly keeps the most recently selected payment method as selected.
+                switchContentIfNecessary(to: paymentMethodFormViewController, containerView: paymentContainerView)
+                navigationBar.setStyle(.back(showAdditionalButton: false))
+                return false
+            } else {
+                // Otherwise, return true so the payment method appears selected in the list
+                return true
+            }
         case .saved:
             presentManageScreen()
+            return true
         }
     }
 }
@@ -159,6 +184,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        // TODO:
+        switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView)
+        navigationBar.setStyle(.close(showAdditionalButton: false))
     }
 }

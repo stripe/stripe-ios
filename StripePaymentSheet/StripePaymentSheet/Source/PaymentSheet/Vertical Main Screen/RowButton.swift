@@ -24,6 +24,7 @@ class RowButton: UIView {
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         super.init(frame: .zero)
+        accessibilityIdentifier = text
 
         // Label and sublabel
         let labelsStackView = UIStackView(arrangedSubviews: [
