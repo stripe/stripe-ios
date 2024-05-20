@@ -19,7 +19,7 @@ protocol PaymentMethodRowButtonDelegate: AnyObject {
 
 final class PaymentMethodRowButton: UIView {
 
-    enum State {
+    enum State: Equatable {
         case selected
         case unselected
         case editing(allowsRemoval: Bool, allowsUpdating: Bool)
@@ -28,7 +28,7 @@ final class PaymentMethodRowButton: UIView {
     // MARK: Internal properties
     var state: State = .unselected {
         didSet {
-            if case .selected = oldValue, case .unselected = oldValue {
+            if oldValue == .selected || oldValue == .unselected {
                 previousSelectedState = oldValue
             }
 

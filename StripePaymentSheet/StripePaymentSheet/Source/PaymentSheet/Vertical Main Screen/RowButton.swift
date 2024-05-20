@@ -79,6 +79,15 @@ class RowButton: UIView {
         labelsStackView.alignment = .leading
 
         addAndPinSubview(shadowRoundedRect)
+            rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(rightAccessoryView)
+            NSLayoutConstraint.activate([
+                rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
+                rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            ])
+        }
+
         for view in [imageView, labelsStackView] {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.isUserInteractionEnabled = false
@@ -93,20 +102,11 @@ class RowButton: UIView {
             imageView.widthAnchor.constraint(equalToConstant: 24),
 
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
+            labelsStackView.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 4),
             labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -4),
         ])
-
-        if let rightAccessoryView {
-            rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(rightAccessoryView)
-            NSLayoutConstraint.activate([
-                rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
-                rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            ])
-        }
 
         shadowRoundedRect.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
 
