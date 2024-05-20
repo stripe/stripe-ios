@@ -16,7 +16,8 @@ final class VerticalPaymentMethodListViewTest: XCTestCase {
     func testCurrentSelection() {
         let savedPaymentMethod = STPPaymentMethod._testCard()
         // Given a list view with a saved card...
-        let sut = VerticalPaymentMethodListView(savedPaymentMethod: savedPaymentMethod, paymentMethodTypes: [.stripe(.card)], shouldShowApplePay: true, shouldShowLink: true, appearance: .default, delegate: self)
+        let sut = VerticalPaymentMethodListView(savedPaymentMethod: savedPaymentMethod, paymentMethodTypes: [.stripe(.card)], shouldShowApplePay: true, shouldShowLink: true, appearance: .default)
+        sut.delegate = self
         // ...the current selection should be the saved PM
         let savedPMButton = sut.getRowButton(accessibilityIdentifier: "••••4242")
         XCTAssertEqual(sut.currentSelection, .saved(paymentMethod: savedPaymentMethod))
