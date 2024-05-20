@@ -28,6 +28,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
     private let configuration: PaymentSheet.Configuration
+    private let isCBCEligible: Bool
 
     private var isEditingPaymentMethods: Bool = false {
         didSet {
@@ -38,7 +39,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
                 paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
-                                                                allowsUpdating: $0.paymentMethod.isCoBrandedCard) }
+                                                                allowsUpdating: $0.paymentMethod.isCoBrandedCard && isCBCEligible) }
             } else if oldValue {
                 // If we are exiting edit mode restore previous selected states
                 paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
@@ -64,7 +65,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     var canEdit: Bool {
         let hasCoBrandedCards = !paymentMethodRows.filter { $0.paymentMethod.isCoBrandedCard }.isEmpty
         // We can edit if there are removable or editable payment methods
-        return canRemovePaymentMethods || hasCoBrandedCards
+        return canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
@@ -109,8 +110,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private var paymentMethodRows: [PaymentMethodRowButton] = []
 
-    init(configuration: PaymentSheet.Configuration, selectedPaymentMethod: STPPaymentMethod?, paymentMethods: [STPPaymentMethod]) {
+    init(configuration: PaymentSheet.Configuration, selectedPaymentMethod: STPPaymentMethod?,
+         paymentMethods: [STPPaymentMethod],
+         isCBCEligible: Bool) {
         self.configuration = configuration
+        self.isCBCEligible = isCBCEligible
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         // Select `selectedPaymentMethod` or the first row if selectedPaymentMethod is nil
@@ -228,6 +232,41 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
     }
 
     func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        print("Edit payment method with id: \(paymentMethod.stripeId)")
+        let updateVC = UpdateCardViewController(paymentMethod: paymentMethod,
+                                                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                appearance: configuration.appearance,
+                                                hostedSurface: .paymentSheet,
+                                                canRemoveCard: canRemovePaymentMethods,
+                                                isTestMode: configuration.apiClient.isTestmode)
+        updateVC.delegate = self
+        self.bottomSheetController?.pushContentViewController(updateVC)
     }
+}
+
+// MARK: - UpdateCardViewControllerDelegate
+extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDelegate {
+    func didRemove(paymentMethod: StripePayments.STPPaymentMethod) {
+        remove(paymentMethod: paymentMethod)
+    }
+
+    func didUpdate(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+        guard let indexToUpdate = paymentMethodRows.firstIndex(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
+              let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
+
+        // Update the payment method
+        let manager = SavedPaymentMethodManager(configuration: configuration)
+        let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
+
+        // Remove old button
+        let button = paymentMethodRows[indexToUpdate]
+        let indexToInsertAt = stackView.arrangedSubviews.firstIndex(of: button) ?? 0
+        button.removeFromSuperview()
+
+        // Create and add new button
+        paymentMethodRows[indexToUpdate] = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
+        paymentMethodRows[indexToUpdate].delegate = self
+        paymentMethodRows[indexToUpdate].state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: updatedPaymentMethod.isCoBrandedCard && isCBCEligible)
+        stackView.insertArrangedSubview(paymentMethodRows[indexToUpdate], at: indexToInsertAt)
+    }
+
 }
