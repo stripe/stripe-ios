@@ -255,9 +255,11 @@ is not supported by the merchant */
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
-/* Title for a button that when tapped, presents a screen for updating a card. Also
-the heading the screen itself. */
-"Update card" = "Update card";
+/* Title for a button that when tapped, updates a card brand. */
+"Update" = "Update";
+
+/* Title for a screen for updating a card brand. */
+"Update card brand" = "Update card brand";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
