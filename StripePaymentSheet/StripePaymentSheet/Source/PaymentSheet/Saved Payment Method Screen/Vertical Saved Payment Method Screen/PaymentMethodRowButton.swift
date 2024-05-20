@@ -17,7 +17,6 @@ protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
-// TODO: Make this use RowButton internally
 final class PaymentMethodRowButton: UIView {
 
     enum State {
@@ -29,7 +28,9 @@ final class PaymentMethodRowButton: UIView {
     // MARK: Internal properties
     var state: State = .unselected {
         didSet {
-            previousState = oldValue
+            if case .selected = oldValue, case .unselected = oldValue {
+                previousSelectedState = oldValue
+            }
 
             rowButton.isSelected = isSelected
             circleView.isHidden = !isSelected
@@ -38,7 +39,7 @@ final class PaymentMethodRowButton: UIView {
         }
     }
 
-    private(set) var previousState: State = .unselected
+    private(set) var previousSelectedState: State = .unselected
 
     var isSelected: Bool {
         switch state {

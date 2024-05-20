@@ -36,8 +36,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             if isEditingPaymentMethods {
                 paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
                                                                 allowsUpdating: $0.paymentMethod.isCoBrandedCard) }
-            } else {
-                paymentMethodRows.forEach { $0.state = $0.previousState }
+            } else if oldValue {
+                // If we are exiting edit mode restore previous selected states
+                paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
                 navigationBar.setStyle(.back(showAdditionalButton: canEdit)) // Hide edit button if needed
             }
         }

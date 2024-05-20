@@ -3508,6 +3508,13 @@ extension PaymentSheetUITestCase {
         // Remove both the payment methods just added
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Exit edit mode, remove button should be hidden
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
+        XCTAssertFalse( app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+
+        // Remove last payment method
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
@@ -3579,6 +3586,14 @@ extension PaymentSheetUITestCase {
 
         // Remain in edit mode
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 2.0))
+
+        // Exit edit mode, remove and edit button should be hidden
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
+        XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+        XCTAssertFalse(app.buttons["CircularButton.Edit"].waitForExistence(timeout: 2.0))
+
+        // Re-enter edit mode
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
         // Show the update icon
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistence(timeout: 2.0))
         // Don't show the remove icon since allowsRemovalOfLastSavedPaymentMethod is false
