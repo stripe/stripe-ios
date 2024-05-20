@@ -3483,6 +3483,59 @@ extension PaymentSheetUITestCase {
     }
 }
 
+// MARK: Vertical mode saved payment method management
+extension PaymentSheetUITestCase {
+    func testRemovalOfSavedPaymentMethods_verticalMode() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.mode = .setup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let testCard = "4242424242424242"
+
+        // Save some test cards to the customer
+        setupCards(cards: [testCard, testCard], settings: settings)
+
+        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["••••4242"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+
+        // Remove both the payment methods just added
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Exit edit mode, remove button should be hidden
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
+        XCTAssertFalse( app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+
+        // Remove last payment method
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Verify we are kicked out to the main screen after removing all saved payment methods
+        XCTAssertTrue(app.staticTexts["New payment method"].waitForExistence(timeout: 5.0))
+    }
+
+    private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {
+        for cardNumber in cards {
+            reload(app, settings: settings)
+            app.buttons["Present PaymentSheet"].tap()
+            let addCardButton = app.buttons["+ Add"]
+            addCardButton.waitForExistenceAndTap()
+            try! fillCardData(app, cardNumber: cardNumber)
+            app.buttons["Set up"].tap()
+            let successText = app.staticTexts["Success!"]
+            XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        }
+    }
+}
+
 extension XCUIElement {
     func clearText() {
         guard let stringValue = value as? String, !stringValue.isEmpty else {
