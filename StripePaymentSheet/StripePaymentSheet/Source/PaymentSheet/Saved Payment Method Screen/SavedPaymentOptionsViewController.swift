@@ -640,14 +640,13 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
             throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
         }
 
-        let indexPath = IndexPath(row: row, section: 0)
-        let viewModel = viewModels[indexPath.row]
+        let viewModel = viewModels[row]
         let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
                                                     paymentMethodSelection: viewModel,
                                                     updateParams: updateParams)
 
         let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
-        viewModels[indexPath.row] = updatedViewModel
+        viewModels[row] = updatedViewModel
         collectionView.reloadData()
     }
 }
