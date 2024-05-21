@@ -141,8 +141,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
-        // TODO(porter) Pipe in selected payment method, default to selecting first for now
-        paymentMethodRows.first?.state = .selected
         view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 
