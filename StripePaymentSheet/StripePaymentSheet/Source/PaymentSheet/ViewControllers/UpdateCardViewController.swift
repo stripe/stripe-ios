@@ -12,8 +12,9 @@ import Foundation
 import UIKit
 
 protocol UpdateCardViewControllerDelegate: AnyObject {
-    func didRemove(paymentMethod: STPPaymentMethod)
-    func didUpdate(paymentMethod: STPPaymentMethod,
+    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod)
+    func didUpdate(viewController: UpdateCardViewController,
+                   paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws
 }
 
@@ -164,11 +165,9 @@ final class UpdateCardViewController: UIViewController {
     }
 
     // MARK: Private helpers
-    private func dismiss(didUpdate: Bool = false) {
+    private func dismiss() {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
-        if !didUpdate {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
-        }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
     }
 
@@ -176,8 +175,7 @@ final class UpdateCardViewController: UIViewController {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
-            self.delegate?.didRemove(paymentMethod: self.paymentMethod)
-            self.dismiss()
+            self.delegate?.didRemove(viewController: self, paymentMethod: self.paymentMethod)
         }
 
         present(alertController, animated: true, completion: nil)
@@ -196,8 +194,7 @@ final class UpdateCardViewController: UIViewController {
 
         // Make the API request to update the payment method
         do {
-            try await delegate.didUpdate(paymentMethod: paymentMethod, updateParams: updateParams)
-            dismiss(didUpdate: true)
+            try await delegate.didUpdate(viewController: self, paymentMethod: paymentMethod, updateParams: updateParams)
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .updateCardBrand),
                                                                  params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         } catch {

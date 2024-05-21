@@ -3488,16 +3488,16 @@ extension PaymentSheetUITestCase {
     func testRemovalOfSavedPaymentMethods_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
+        settings.currency = .eur
+        settings.merchantCountryCode = .FR
         settings.mode = .setup
         loadPlayground(
             app,
             settings
         )
 
-        let testCard = "4242424242424242"
-
         // Save some test cards to the customer
-        setupCards(cards: [testCard, testCard], settings: settings)
+        setupCards(cards: ["4000002500001001", "4242424242424242"], settings: settings)
 
         app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -3511,11 +3511,35 @@ extension PaymentSheetUITestCase {
 
         // Exit edit mode, remove button should be hidden
         XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
-        XCTAssertFalse( app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+        XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
 
-        // Remove last payment method
+        // Update the card brand on the last card
+        XCTAssertTrue(app.images["stp_card_unpadded_cartes_bancaires"].waitForExistence(timeout: 2.0)) // Cartes Bancaires should be the current brand
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+
+        // Should present the update card view controller
+        XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 2.0))
+
+        // Update card brand to Visa
+        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
+        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.selectNextOption()
+        app.toolbars.buttons["Done"].tap()
+
+        // We should have selected Visa
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
+
+        // Update the card
+        app.buttons["Update"].waitForExistenceAndTap(timeout: 5)
+
+        // We should have updated to Visa
+        XCTAssertTrue(app.images["stp_card_unpadded_visa"].waitForExistence(timeout: 5))
+
+        // Reselect edit icon and delete the card from the update view controller
+        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Remove card"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Verify we are kicked out to the main screen after removing all saved payment methods

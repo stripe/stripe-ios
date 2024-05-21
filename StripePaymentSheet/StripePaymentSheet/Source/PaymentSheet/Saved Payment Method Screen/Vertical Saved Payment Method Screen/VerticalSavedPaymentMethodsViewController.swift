@@ -30,6 +30,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let configuration: PaymentSheet.Configuration
     private let isCBCEligible: Bool
 
+    private var updateViewController: UpdateCardViewController?
+
     private var isEditingPaymentMethods: Bool = false {
         didSet {
             let additionalButtonTitle = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
@@ -169,6 +171,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func completeSelection() {
+        // Edge-case: Dismiss update view controller if presented, this can occur if the last card is deleted while it is presented
+        _ = updateViewController?.bottomSheetController?.popContentViewController()
         self.delegate?.didComplete(viewController: self, with: selectedPaymentMethod, latestPaymentMethods: paymentMethods)
     }
 }
@@ -232,24 +236,27 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
     }
 
     func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateVC = UpdateCardViewController(paymentMethod: paymentMethod,
+        let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                 appearance: configuration.appearance,
                                                 hostedSurface: .paymentSheet,
                                                 canRemoveCard: canRemovePaymentMethods,
                                                 isTestMode: configuration.apiClient.isTestmode)
-        updateVC.delegate = self
-        self.bottomSheetController?.pushContentViewController(updateVC)
+
+        updateViewController.delegate = self
+        self.updateViewController = updateViewController
+        self.bottomSheetController?.pushContentViewController(updateViewController)
     }
 }
 
 // MARK: - UpdateCardViewControllerDelegate
 extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDelegate {
-    func didRemove(paymentMethod: StripePayments.STPPaymentMethod) {
+    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
         remove(paymentMethod: paymentMethod)
+       _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let indexToUpdate = paymentMethodRows.firstIndex(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
               let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
 
@@ -263,10 +270,14 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         button.removeFromSuperview()
 
         // Create and add new button
-        paymentMethodRows[indexToUpdate] = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
-        paymentMethodRows[indexToUpdate].delegate = self
-        paymentMethodRows[indexToUpdate].state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: updatedPaymentMethod.isCoBrandedCard && isCBCEligible)
-        stackView.insertArrangedSubview(paymentMethodRows[indexToUpdate], at: indexToInsertAt)
+        let newButton = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
+        newButton.delegate = self
+        newButton.state = .editing(allowsRemoval: canRemovePaymentMethods,
+                                   allowsUpdating: updatedPaymentMethod.isCoBrandedCard && isCBCEligible)
+        paymentMethodRows[indexToUpdate] = newButton
+
+        stackView.insertArrangedSubview(newButton, at: indexToInsertAt)
+        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
 }
