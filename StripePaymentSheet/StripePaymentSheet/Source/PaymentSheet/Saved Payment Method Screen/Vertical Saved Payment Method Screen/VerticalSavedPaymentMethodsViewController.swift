@@ -112,7 +112,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private var paymentMethodRows: [PaymentMethodRowButton] = []
 
-    init(configuration: PaymentSheet.Configuration, selectedPaymentMethod: STPPaymentMethod?,
+    init(configuration: PaymentSheet.Configuration,
+         selectedPaymentMethod: STPPaymentMethod?,
          paymentMethods: [STPPaymentMethod],
          isCBCEligible: Bool) {
         self.configuration = configuration

@@ -107,7 +107,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        isCBCEligible: false)
         XCTAssertFalse(viewController.canEdit)
     }
-    
+
     func testCanEdit_oneEditablePaymentMethod_disallowsLastRemoval_isCBCEligible_returnsFalse() {
         configuration.allowsRemovalOfLastSavedPaymentMethod = false
         let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
