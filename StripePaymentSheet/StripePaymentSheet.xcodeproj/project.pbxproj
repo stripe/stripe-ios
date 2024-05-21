@@ -196,7 +196,6 @@
 		ABE13E65678673EC4DE14EF4 /* PaymentSheetLinkAccountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0901281208BEB220D0B491A8 /* PaymentSheetLinkAccountTests.swift */; };
 		AE8EF3966E7BABDFC3B426ED /* PaymentSheet+DashboardConfirmParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C21D5722BDEB8BAA71F69F /* PaymentSheet+DashboardConfirmParamsTest.swift */; };
 		AF0D609C28A8B0ECD11FD539 /* UpdateCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0E71D9DEA93036E4C87CEC /* UpdateCardViewController.swift */; };
-		B1B6FB086F9D63A9F1BC076F /* FormSpecPaymentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1BDCEE21C2C081FB9FD784 /* FormSpecPaymentHandler.swift */; };
 		B2979A0740F8730FC14DFEC1 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73853A55045C53AF2BBB8489 /* BottomSheetViewController.swift */; };
 		B306EA3F66D07CCABF17CB9C /* LinkInlineSignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7910B57E6FD99F2AFCA4DAC2 /* LinkInlineSignupViewModel.swift */; };
 		B4679C9095BCD53CCC2C7D25 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E41AA4E90E5BB28D588FDE51 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -229,7 +228,6 @@
 		D592BEF7679F39A4DE26E5AF /* FormSpecProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94104A367EAF6C8785C17A1 /* FormSpecProvider.swift */; };
 		D77514C28C9A031908E99CA1 /* PaymentMethodMessagingViewFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C830FEC205E7162FF4D414BE /* PaymentMethodMessagingViewFunctionalTest.swift */; };
 		D792BA37B04E5A3AD30E37CF /* AffirmCopyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CE362B80042827F47ABC3F /* AffirmCopyLabel.swift */; };
-		D90987C72BBD76D20D60CE04 /* DictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB05D43F6A475F28E0BD38D /* DictionaryTests.swift */; };
 		DB8A4C5FC11D0EED55E8C975 /* CustomerSheet+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B9F7D1AF32BA2370546446 /* CustomerSheet+SwiftUI.swift */; };
 		DE6A86725BC219EF19EF29AC /* form_specs.json in Resources */ = {isa = PBXBuildFile; fileRef = 67A8D073B075B32BECCD905A /* form_specs.json */; };
 		DFA10770E494AFB895BA4EE2 /* TextFieldElement+Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C5DB8C01BA7137369C8B4D /* TextFieldElement+Card.swift */; };
@@ -497,7 +495,6 @@
 		8A1D1B8BFBA136BAE1D74194 /* CustomerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerAdapter.swift; sourceTree = "<group>"; };
 		8D03000A6807B09BFD8E6CB1 /* CardSectionWithScannerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSectionWithScannerElement.swift; sourceTree = "<group>"; };
 		8E73D6AA921C813A243D3CFD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
-		8F1BDCEE21C2C081FB9FD784 /* FormSpecPaymentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSpecPaymentHandler.swift; sourceTree = "<group>"; };
 		8FF44D69B2A917BF700496C9 /* CustomerSheetError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetError.swift; sourceTree = "<group>"; };
 		903DC6133304F3BCEC73F9D6 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		926A26F7B0C8469E610C5ED8 /* CustomerPaymentOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerPaymentOption.swift; sourceTree = "<group>"; };
@@ -574,7 +571,6 @@
 		C90A2636C2A577AF36FB793B /* PaymentSheetLoaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetLoaderTest.swift; sourceTree = "<group>"; };
 		C94104A367EAF6C8785C17A1 /* FormSpecProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSpecProvider.swift; sourceTree = "<group>"; };
 		C9726902C985C99F69E6880C /* CustomerSheet+PaymentMethodAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomerSheet+PaymentMethodAvailability.swift"; sourceTree = "<group>"; };
-		CBB05D43F6A475F28E0BD38D /* DictionaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryTests.swift; sourceTree = "<group>"; };
 		CBCFE3D39D670C3C77C59722 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CC3498CF4AEAA8F169616CDF /* STPCardBrandChoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardBrandChoice.swift; sourceTree = "<group>"; };
 		CCA2B5817236F64A212A8C61 /* IntentConfirmParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentConfirmParams.swift; sourceTree = "<group>"; };
@@ -812,7 +808,6 @@
 			isa = PBXGroup;
 			children = (
 				25CAEB848B70E2676F9E2D9D /* FormSpec.swift */,
-				8F1BDCEE21C2C081FB9FD784 /* FormSpecPaymentHandler.swift */,
 				C94104A367EAF6C8785C17A1 /* FormSpecProvider.swift */,
 			);
 			path = FormSpec;
@@ -1081,7 +1076,6 @@
 			children = (
 				F8A74FF9A80AC3BCD5856058 /* PaymentSheet */,
 				542BE18D619AA9AED8761CD1 /* Resources */,
-				CBB05D43F6A475F28E0BD38D /* DictionaryTests.swift */,
 				BB48D1FD7CD00B3DF85C5FC1 /* Info.plist */,
 				7D8FE374BAAD0EDA9FEEF550 /* STPAnalyticsClient+PaymentSheetTests.swift */,
 			);
@@ -1607,7 +1601,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D90987C72BBD76D20D60CE04 /* DictionaryTests.swift in Sources */,
 				E5C7667A08EA85C0FF12523D /* AddPaymentMethodViewControllerSnapshotTests.swift in Sources */,
 				61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */,
 				8180BC3615767F896E2F9355 /* AddressViewControllerSnapshotTests.swift in Sources */,
@@ -1782,7 +1775,6 @@
 				727874C468C0E1CD3653C91A /* PaymentSheetError.swift in Sources */,
 				45F8109B55B9013945ACB2C6 /* PaymentSheetFlowController.swift in Sources */,
 				209FF56603EE6FC381BB58F1 /* FormSpec.swift in Sources */,
-				B1B6FB086F9D63A9F1BC076F /* FormSpecPaymentHandler.swift in Sources */,
 				D592BEF7679F39A4DE26E5AF /* FormSpecProvider.swift in Sources */,
 				D39475E63F8372FFDB0F06EA /* PaymentSheetFormFactory+BLIK.swift in Sources */,
 				B99DA5A48A9EF5E352DDA872 /* PaymentSheetFormFactory+Boleto.swift in Sources */,
