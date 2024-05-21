@@ -172,7 +172,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func completeSelection() {
-        // Edge-case: Dismiss update view controller if presented, this can occur if the last card is deleted while it is presented
+        // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `completeSelection` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
         _ = updateViewController?.bottomSheetController?.popContentViewController()
         self.delegate?.didComplete(viewController: self, with: selectedPaymentMethod, latestPaymentMethods: paymentMethods)
     }
@@ -238,11 +238,11 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
 
     func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
-                                                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                appearance: configuration.appearance,
-                                                hostedSurface: .paymentSheet,
-                                                canRemoveCard: canRemovePaymentMethods,
-                                                isTestMode: configuration.apiClient.isTestmode)
+                                                            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                            appearance: configuration.appearance,
+                                                            hostedSurface: .paymentSheet,
+                                                            canRemoveCard: canRemovePaymentMethods,
+                                                            isTestMode: configuration.apiClient.isTestmode)
 
         updateViewController.delegate = self
         self.updateViewController = updateViewController
