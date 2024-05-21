@@ -17,7 +17,6 @@ struct FormSpec: Decodable {
     let async: Bool?
     let fields: [FieldSpec]
     let selectorIcon: DownloadableImageSpec?
-    let nextActionSpec: NextActionSpec?
 
     enum FieldSpec: Decodable, Equatable {
         case name(NameFieldSpec)
@@ -90,108 +89,6 @@ struct FormSpec: Decodable {
     struct DownloadableImageSpec: Decodable {
         let lightThemePng: String
         let darkThemePng: String?
-    }
-
-    struct NextActionSpec: Decodable {
-        let confirmResponseStatusSpecs: [String: ConfirmResponseStatusSpecs]
-        let postConfirmHandlingPiStatusSpecs: [String: PostConfirmHandlingPiStatusSpecs]?
-
-        struct ConfirmResponseStatusSpecs: Decodable {
-            let type: NextActionStateType
-
-            struct RedirectToURL: Decodable {
-                let urlPath: String
-                let returnUrlPath: String
-                let redirectStrategy: RedirectStrategy
-                private enum CodingKeys: String, CodingKey {
-                    case urlPath
-                    case returnUrlPath
-                    case nativeMobileRedirectStrategy
-                }
-                init(from decoder: Decoder) throws {
-                    let container = try decoder.container(keyedBy: CodingKeys.self)
-                    self.urlPath = try container.decodeIfPresent(String.self, forKey: .urlPath) ?? "next_action[redirect_to_url][url]"
-                    self.returnUrlPath = try container.decodeIfPresent(String.self, forKey: .returnUrlPath) ?? "next_action[redirect_to_url][return_url]"
-                    let redirectStrategy = try container.decodeIfPresent(String.self, forKey: .nativeMobileRedirectStrategy) ?? "none"
-                    switch redirectStrategy {
-                    case "external_browser":
-                        self.redirectStrategy = .external_browser
-                    case "follow_redirects":
-                        self.redirectStrategy = .follow_redirects
-                    default:
-                        self.redirectStrategy = .none
-                    }
-                }
-                enum RedirectStrategy: Decodable, Equatable {
-                    case external_browser
-                    case follow_redirects
-                    case none
-                }
-            }
-
-            enum NextActionStateType: Decodable {
-                case redirect_to_url(RedirectToURL)
-                case finished
-                case unknown(String)
-            }
-
-            private enum CodingKeys: String, CodingKey {
-                case type
-            }
-
-            init(from decoder: Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-
-                let nextActionType = try container.decode(String.self, forKey: .type)
-
-                switch nextActionType {
-                case "redirect_to_url":
-                    self.type = .redirect_to_url(try RedirectToURL(from: decoder))
-                case "finished":
-                    self.type = .finished
-                default:
-                    self.type = .unknown(nextActionType)
-                }
-            }
-        }
-
-        struct PostConfirmHandlingPiStatusSpecs: Decodable, Equatable {
-            let type: NextActionStateType
-
-            enum NextActionStateType: Decodable, Equatable {
-                case finished
-                case canceled
-                case unknown(String)
-            }
-
-            private enum CodingKeys: String, CodingKey {
-                case type
-            }
-
-            init(from decoder: Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-
-                let nextActionType = try container.decode(String.self, forKey: .type)
-                switch nextActionType {
-                case "finished":
-                    self.type = .finished
-                case "canceled":
-                    self.type = .canceled
-                default:
-                    self.type = .unknown(nextActionType)
-                }
-            }
-        }
-    }
-}
-extension FormSpec {
-    static func nextActionSpec(paymentIntent: STPPaymentIntent, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec? {
-        // Don't use LUXE to handle Amazon Pay's next action b/c it requires polling
-        // TODO(porter) Figure out a better way to handle FormSpecPaymentHandler vs STPPaymentHandler
-        guard let paymentMethod = paymentIntent.paymentMethod, paymentMethod.type != .amazonPay else {
-            return nil
-        }
-        return formSpecProvider.nextActionSpec(for: paymentMethod.type.identifier)
     }
 }
 

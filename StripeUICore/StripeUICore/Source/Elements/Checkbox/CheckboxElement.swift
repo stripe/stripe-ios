@@ -53,6 +53,10 @@ import UIKit
 
 /// :nodoc:
 extension CheckboxElement: Element {
+    public var collectsUserInput: Bool {
+        true
+    }
+
     public var view: UIView {
         return checkboxButton
     }

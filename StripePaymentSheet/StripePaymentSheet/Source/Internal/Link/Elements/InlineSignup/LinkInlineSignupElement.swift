@@ -10,6 +10,7 @@
 import UIKit
 
 final class LinkInlineSignupElement: Element {
+    let collectsUserInput: Bool = true
 
     private let signupView: LinkInlineSignupView
 

@@ -56,12 +56,16 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
         DispatchQueue.main.async {
-            completion(FinancialConnectionsSDKResult.completed(linkedBank: StubbedLinkedBank()))
+            completion(
+                FinancialConnectionsSDKResult.completed(
+                    .financialConnections(StubbedFinancialConnectionsLinkedBank())
+                )
+            )
         }
     }
 }
 
-struct StubbedLinkedBank: LinkedBank {
+struct StubbedFinancialConnectionsLinkedBank: FinancialConnectionsLinkedBank {
     var sessionId: String = "las_123"
 
     var accountId: String = "fca_123"

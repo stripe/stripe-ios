@@ -11,6 +11,8 @@ import Foundation
 import UIKit
 
 final class IdentityTextButtonElement: Element {
+    let collectsUserInput: Bool = true
+
     typealias DidTapIdentityTextButton = () -> Void
     weak var delegate: StripeUICore.ElementDelegate?
 

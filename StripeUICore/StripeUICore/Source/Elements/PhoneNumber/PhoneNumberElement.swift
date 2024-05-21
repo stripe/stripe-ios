@@ -13,7 +13,6 @@ import UIKit
     A simple hstack of  [🇺🇸 + 1] `DropdownElement` and [ Phone number ] `TextFieldElement`
  */
 @_spi(STP) public class PhoneNumberElement: ContainerElement {
-
     // MARK: - ContainerElement protocol
     public lazy var elements: [Element] = { [countryDropdownElement, textFieldElement] }()
     public var delegate: ElementDelegate?
@@ -114,6 +113,7 @@ import UIKit
     }
 
     // MARK: - Element protocol
+    public let collectsUserInput: Bool = true
     public func beginEditing() -> Bool {
         return textFieldElement.beginEditing()
     }

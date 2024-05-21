@@ -13,6 +13,8 @@ import UIKit
 extension LinkInlineSignupView {
 
     final class CheckboxElement: Element {
+        let collectsUserInput: Bool = true
+
         weak var delegate: ElementDelegate?
 
         private let merchantName: String

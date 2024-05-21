@@ -152,6 +152,15 @@ extension PaymentSheet {
                 print("[Stripe SDK]: PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
             }
 
+            if
+                intent.supportsLink,
+                !recommendedStripePaymentMethodTypes.contains(.USBankAccount),
+                !intent.isDeferredIntent,
+                intent.linkFundingSources?.contains(.bankAccount) == true
+            {
+                recommendedStripePaymentMethodTypes.append(.instantDebits)
+            }
+
             // The full ordered list of recommended payment method types:
             var recommendedPaymentMethodTypes: [PaymentMethodType] =
                 // Stripe PaymentMethod types
@@ -221,7 +230,7 @@ extension PaymentSheet {
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .linkInstantDebit,
-                        .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco:
+                        .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco, .instantDebits:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -246,7 +255,7 @@ extension PaymentSheet {
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .afterpayClearpay:
                         return [.returnURL, .shippingAddress]
-                    case .link, .unknown:
+                    case .link, .unknown, .instantDebits:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]

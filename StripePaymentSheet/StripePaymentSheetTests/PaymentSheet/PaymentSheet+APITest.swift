@@ -21,8 +21,7 @@ class PaymentSheetAPITest: XCTestCase {
     let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     lazy var paymentHandler: STPPaymentHandler = {
         return STPPaymentHandler(
-            apiClient: apiClient,
-            formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()
+            apiClient: apiClient
         )
     }()
     lazy var configuration: PaymentSheet.Configuration = {

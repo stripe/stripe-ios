@@ -67,6 +67,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         switch overrideBuyButtonBehavior {
         case .LinkUSBankAccount:
             return usBankAccountFormElement?.canLinkAccount ?? false
+        case .instantDebits:
+            return false // instant debits is not supported for customer sheet
         }
     }
 
@@ -249,6 +251,8 @@ extension CustomerAddPaymentMethodViewController {
         switch behavior {
         case .LinkUSBankAccount:
             handleCollectBankAccount(from: viewController, clientSecret: clientSecret)
+        case .instantDebits:
+            assertionFailure("instant debits is not supported for customer sheet")
         }
     }
     func handleCollectBankAccount(from viewController: UIViewController, clientSecret: String) {
@@ -292,8 +296,12 @@ extension CustomerAddPaymentMethodViewController {
             switch financialConnectionsResult {
             case .cancelled:
                 break
-            case .completed(let linkedBank):
-                usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+            case .completed(let completedResult):
+                if case .financialConnections(let linkedBank) = completedResult {
+                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+                } else {
+                    self.delegate?.updateErrorLabel(for: genericError)
+                }
             case .failed:
                 self.delegate?.updateErrorLabel(for: genericError)
             }

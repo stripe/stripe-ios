@@ -12,8 +12,8 @@ import Foundation
 import UIKit
 
 protocol UpdateCardViewControllerDelegate: AnyObject {
-    func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
-    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+    func didRemove(paymentMethod: STPPaymentMethod)
+    func didUpdate(paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws
 }
 
@@ -22,7 +22,6 @@ protocol UpdateCardViewControllerDelegate: AnyObject {
 final class UpdateCardViewController: UIViewController {
     private let appearance: PaymentSheet.Appearance
     private let paymentMethod: STPPaymentMethod
-    private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     private let removeSavedPaymentMethodMessage: String?
     private let isTestMode: Bool
     private let hostedSurface: HostedSurface
@@ -134,14 +133,12 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     // MARK: Overrides
-    init(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
-         paymentMethod: STPPaymentMethod,
+    init(paymentMethod: STPPaymentMethod,
          removeSavedPaymentMethodMessage: String?,
          appearance: PaymentSheet.Appearance,
          hostedSurface: HostedSurface,
          canRemoveCard: Bool,
          isTestMode: Bool) {
-        self.paymentOptionCell = paymentOptionCell
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
@@ -196,7 +193,7 @@ final class UpdateCardViewController: UIViewController {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
-            self.delegate?.didRemove(paymentOptionCell: self.paymentOptionCell)
+            self.delegate?.didRemove(paymentMethod: self.paymentMethod)
             self.dismiss()
         }
 
@@ -216,7 +213,7 @@ final class UpdateCardViewController: UIViewController {
 
         // Make the API request to update the payment method
         do {
-            try await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
+            try await delegate.didUpdate(paymentMethod: paymentMethod, updateParams: updateParams)
             dismiss(didUpdate: true)
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .updateCardBrand),
                                                                  params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
