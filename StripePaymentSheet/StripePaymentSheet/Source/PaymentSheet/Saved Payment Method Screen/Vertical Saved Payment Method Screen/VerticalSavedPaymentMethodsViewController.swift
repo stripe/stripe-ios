@@ -258,27 +258,35 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
     }
 
     func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
-        guard let indexToUpdate = paymentMethodRows.firstIndex(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
-              let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
+        guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
 
         // Update the payment method
         let manager = SavedPaymentMethodManager(configuration: configuration)
         let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
 
-        // Remove old button
-        let button = paymentMethodRows[indexToUpdate]
-        let indexToInsertAt = stackView.arrangedSubviews.firstIndex(of: button) ?? 0
-        button.removeFromSuperview()
+        replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
 
-        // Create and add new button
+    private func replace(paymentMethod: STPPaymentMethod, with updatedPaymentMethod: STPPaymentMethod) {
+        guard let oldButton = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
+              let oldButtonModelIndex = paymentMethodRows.firstIndex(of: oldButton),
+              let oldButtonViewIndex = stackView.arrangedSubviews.firstIndex(of: oldButton) else {
+            return
+        }
+
+        // Create the new button
         let newButton = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
         newButton.delegate = self
         newButton.state = .editing(allowsRemoval: canRemovePaymentMethods,
                                    allowsUpdating: updatedPaymentMethod.isCoBrandedCard && isCBCEligible)
-        paymentMethodRows[indexToUpdate] = newButton
 
-        stackView.insertArrangedSubview(newButton, at: indexToInsertAt)
-        _ = viewController.bottomSheetController?.popContentViewController()
+        // Replace the old button with the new button in the model
+        paymentMethodRows[oldButtonModelIndex] = newButton
+
+        // Replace the old button with the new button in the stack view
+        oldButton.removeFromSuperview()
+        stackView.insertArrangedSubview(newButton, at: oldButtonViewIndex)
     }
 
 }
