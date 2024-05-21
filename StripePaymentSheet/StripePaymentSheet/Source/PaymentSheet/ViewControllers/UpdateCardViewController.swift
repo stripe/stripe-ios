@@ -48,14 +48,11 @@ final class UpdateCardViewController: UIViewController {
     // MARK: Views
     lazy var formStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [headerLabel, cardSection.view, updateButton, deleteButton, errorLabel])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding - 4, after: headerLabel) // custom spacing from figma
         stackView.setCustomSpacing(32, after: cardSection.view) // custom spacing from figma
-        stackView.setCustomSpacing(stackView.spacing / 2, after: updateButton)
-        stackView.layoutMargins.bottom = PaymentSheetUI.defaultPadding * 1.1
+        stackView.setCustomSpacing(10, after: updateButton) // custom spacing from figma
         return stackView
     }()
 
@@ -157,22 +154,8 @@ final class UpdateCardViewController: UIViewController {
         super.viewDidLoad()
         // disable swipe to dismiss
         isModalInPresentation = true
-
-        let stackView = UIStackView(arrangedSubviews: [formStackView])
-        stackView.spacing = PaymentSheetUI.defaultPadding
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.backgroundColor = appearance.colors.background
-        view.backgroundColor = appearance.colors.background
-        view.addSubview(stackView)
-
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-        ])
+        self.view.backgroundColor = appearance.colors.background
+        view.addAndPinSubview(formStackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 
     override func viewDidAppear(_ animated: Bool) {
