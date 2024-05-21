@@ -60,6 +60,7 @@ class PaymentTypeCellSnapshotTests: STPSnapshotTestCase {
 
     func testCardSelected_forceDarkMode() {
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
+        cell.appearance.colors.componentBackground = .black
         cell.overrideUserInterfaceStyle = .dark
         cell.paymentMethodType = .stripe(.card)
         cell.frame = CGRect(
