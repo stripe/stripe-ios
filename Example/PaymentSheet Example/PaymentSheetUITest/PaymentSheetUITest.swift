@@ -852,17 +852,11 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testPaymentIntent_instantDebits() {
-        // UI tests need more fixes to work for iOS 17
-        if #unavailable(iOS 17.0) {
-            _testInstantDebits(mode: .payment)
-        }
+        _testInstantDebits(mode: .payment)
     }
 
     func testSetupIntent_instantDebits() {
-        // UI tests need more fixes to work for iOS 17
-        if #unavailable(iOS 17.0) {
-            _testInstantDebits(mode: .setup)
-        }
+        _testInstantDebits(mode: .setup)
     }
 
     func testUPIPaymentMethod() throws {
@@ -3419,12 +3413,28 @@ extension PaymentSheetUITestCase {
         app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
 
         // "Institution Picker" pane
-        let testInstitutionButton = app
-            .buttons
-            .matching(NSPredicate(format: "label CONTAINS 'Test Institution'"))
+        let searchTextField = app.textFields
+            .matching(NSPredicate(format: "label CONTAINS 'Search'"))
             .firstMatch
-        testInstitutionButton.swipeUp()
-        testInstitutionButton.waitForExistenceAndTap(timeout: 10)
+        searchTextField.waitForExistenceAndTap(timeout: 10)
+        app.typeText("Test Institution" + XCUIKeyboardKey.return.rawValue)
+        searchTextField
+            .coordinate(
+                withNormalizedOffset: CGVector(
+                    dx: 0.5,
+                    // bottom of search text field
+                    dy: 1.0
+                )
+            )
+        // at this point, we searched "Test Institution"
+        // and the only search result is "Test Instiuttion,"
+        // so here we guess that 80 pixels below search bar
+        // there will be a "Test Institution"
+        //
+        // we do this "guess" because every other method of
+        // selecting the institution did not work on iOS 17
+            .withOffset(CGVector(dx: 0, dy: 80))
+            .tap()
 
         // "Account Picker" pane
         _ = app.staticTexts["Select account"].waitForExistence(timeout: 10)
