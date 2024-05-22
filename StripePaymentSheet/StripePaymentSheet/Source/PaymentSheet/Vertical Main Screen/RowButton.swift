@@ -47,8 +47,10 @@ class RowButton: UIView {
         super.init(frame: .zero)
 
         // Label and sublabel
+        let label = UILabel.makeVerticalRowButtonLabel(text: text, appearance: appearance)
+        label.isAccessibilityElement = false
         let labelsStackView = UIStackView(arrangedSubviews: [
-            UILabel.makeVerticalRowButtonLabel(text: text, appearance: appearance),
+            label
         ])
         if let subtext {
             let sublabel = UILabel()
@@ -78,6 +80,7 @@ class RowButton: UIView {
         for view in [imageView, labelsStackView] {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.isUserInteractionEnabled = false
+            view.isAccessibilityElement = false
             addSubview(view)
         }
 
@@ -108,6 +111,8 @@ class RowButton: UIView {
         shadowRoundedRect.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
 
         // Accessibility
+        // Subviews of an accessibility element are ignored
+        isAccessibilityElement = false
         shadowRoundedRect.accessibilityIdentifier = text
         shadowRoundedRect.accessibilityLabel = text
         shadowRoundedRect.isAccessibilityElement = true
