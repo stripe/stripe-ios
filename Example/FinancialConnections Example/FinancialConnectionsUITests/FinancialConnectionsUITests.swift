@@ -181,8 +181,8 @@ final class FinancialConnectionsUITests: XCTestCase {
             // check that the WebView loaded
             var predicateString = "label CONTAINS '\(institutionName)'"
             if institutionName == "Chase" {
-                // Chase does not contain the word "Chase" on their log-in page
-                predicateString = "label CONTAINS 'username' OR label CONTAINS 'password'"
+                // Chase (usually) does not contain the word "Chase" on their log-in page
+                predicateString = "label CONTAINS '\(institutionName)' OR label CONTAINS 'username' OR label CONTAINS 'password'"
             }
             let institutionWebViewText = app.webViews
                 .staticTexts
