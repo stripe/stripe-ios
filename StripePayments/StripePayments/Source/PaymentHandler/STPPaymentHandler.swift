@@ -13,6 +13,7 @@ import SafariServices
 
 #if canImport(Stripe3DS2)
 import Stripe3DS2
+import AuthenticationServices
 #endif
 
 /// `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
@@ -1008,7 +1009,12 @@ public class STPPaymentHandler: NSObject {
             )
         case .redirectToURL:
             if let redirectToURL = authenticationAction.redirectToURL {
-                _handleRedirect(to: redirectToURL.url, withReturn: redirectToURL.returnURL)
+                let redirectURL = currentAction.shouldUseASWebAuthenticationSession ?
+                    // Pre-follow the redirect trampoline and pass the final URL to ASWebAuthenticationSession
+                    // so that the consent dialog will show the correct domain (e.g. "klarna.com" instead of "stripe.com")
+                    self.followRedirect(to: redirectToURL.url) :
+                    redirectToURL.url
+                _handleRedirect(to: redirectURL, withReturn: redirectToURL.returnURL)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
             }
@@ -1364,7 +1370,17 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-   @_spi(STP) public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
+    // A URLSessionTaskDelegate that can not be redirected by HTTP redirect codes. It is very focused on its task, you see.
+    fileprivate class UnredirectableSessionDelegate: NSObject, URLSessionTaskDelegate {
+        public func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+            // Stops the redirection, and returns (internally) the response body.
+            completionHandler(nil)
+        }
+    }
+    
+    // Follow the first redirect for a url, but not any subsequent redirects
+    @_spi(STP) public func followRedirect(to url: URL) -> URL {
+        let urlSession = URLSession(configuration: .default, delegate: UnredirectableSessionDelegate(), delegateQueue: nil)
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
 
@@ -1376,8 +1392,9 @@ public class STPPaymentHandler: NSObject {
 
             guard error == nil,
                 let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode),
-                let responseURL = response?.url
+                (200...308).contains(httpResponse.statusCode),
+                  let responseURLString = httpResponse.allHeaderFields["Location"] as? String,
+                  let responseURL = URL(string: responseURLString)
             else {
                 return
             }
@@ -1683,21 +1700,43 @@ public class STPPaymentHandler: NSObject {
                 if let fallbackURL,
                     ["http", "https"].contains(fallbackURL.scheme)
                 {
-                    let safariViewController = SFSafariViewController(url: fallbackURL)
-                    safariViewController.modalPresentationStyle = .overFullScreen
+                    if currentAction.shouldUseASWebAuthenticationSession {
+                        let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "TODOstripesdk", completionHandler: { callbackURL, error in
+                            if context.responds(
+                                to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
+                            ) {
+                                // TODO: This isn't great, but UIViewController is non-nil in the protocol
+                                context.authenticationContextWillDismiss?(UIViewController())
+                            }
+                            STPURLCallbackHandler.shared().unregisterListener(self)
+                            self._retrieveAndCheckIntentForCurrentAction()
+                        })
+                        asWebAuthenticationSession.prefersEphemeralWebBrowserSession = false
+                        asWebAuthenticationSession.presentationContextProvider = currentAction
+                        if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
+                            context.prepare?(forPresentation: {
+                                asWebAuthenticationSession.start()
+                            })
+                        } else {
+                            asWebAuthenticationSession.start()
+                        }
+                    } else {
+                        let safariViewController = SFSafariViewController(url: fallbackURL)
+                        safariViewController.modalPresentationStyle = .overFullScreen
 #if !canImport(CompositorServices)
-                    safariViewController.dismissButtonStyle = .close
-                    safariViewController.delegate = self
+                        safariViewController.dismissButtonStyle = .close
+                        safariViewController.delegate = self
 #endif
-                    if context.responds(
-                        to: #selector(STPAuthenticationContext.configureSafariViewController(_:))
-                    ) {
-                        context.configureSafariViewController?(safariViewController)
+                        if context.responds(
+                            to: #selector(STPAuthenticationContext.configureSafariViewController(_:))
+                        ) {
+                            context.configureSafariViewController?(safariViewController)
+                        }
+                        self.safariViewController = safariViewController
+                        presentingViewController.present(safariViewController, animated: true, completion: {
+                            completion?(safariViewController)
+                        })
                     }
-                    self.safariViewController = safariViewController
-                    presentingViewController.present(safariViewController, animated: true, completion: {
-                      completion?(safariViewController)
-                    })
                 } else {
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
@@ -2158,6 +2197,12 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
 @_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {
     /// :nodoc:
     @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
+        if let currentAction = currentAction, currentAction.shouldUseASWebAuthenticationSession {
+            // Don't handle the URL — If a user clicks the URL in ASWebAuthenticationSession, ASWebAuthenticationSession will handle it internally.
+            // If we're returning from another app via a URL while ASWebAuthenticationSession is open, it's likely that the PM initiated a redirect to another app
+            // (such as a banking app) and is waiting for a response from that app.
+            return false
+        }
         // Note: At least my iOS 15 device, willEnterForegroundNotification is triggered before this method when returning from another app, which means this method isn't called because it unregisters from STPURLCallbackHandler.
         let context = currentAction?.authenticationContext
         if context?.responds(
@@ -2423,4 +2468,16 @@ extension STPPaymentHandler {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
+}
+
+extension STPPaymentHandlerActionParams {
+    var shouldUseASWebAuthenticationSession: Bool {
+        if let self = self as? STPPaymentHandlerPaymentIntentActionParams {
+            return (self.paymentIntent.paymentMethod?.type ?? .unknown).useASWebAuthSession
+        }
+        if let self = self as? STPPaymentHandlerSetupIntentActionParams {
+            return (self.setupIntent.paymentMethod?.type ?? .unknown).useASWebAuthSession
+        }
+        return false
+    }
 }
