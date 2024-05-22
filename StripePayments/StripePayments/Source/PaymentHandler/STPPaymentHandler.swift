@@ -1702,11 +1702,17 @@ public class STPPaymentHandler: NSObject {
                     ["http", "https"].contains(fallbackURL.scheme)
                 {
                     if currentAction.shouldUseASWebAuthenticationSession {
-                        let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "TODOstripesdk", completionHandler: { _, _ in
+                        if self._redirectShim != nil {
+                            // No-op if the redirect shim is active, as we don't want to open the consent dialog. We'll call the completion block automatically.
+                            return
+                        }
+                        // Note that ASWebAuthenticationSession will also close based on the `redirectURL` defined in the app's Info.plist if called within the ASWAS,
+                        // not only via this callbackURLScheme.
+                        let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "stripesdk", completionHandler: { _, _ in
                             if context.responds(
                                 to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
                             ) {
-                                // TODO: This isn't great, but UIViewController is non-nil in the protocol
+                                // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
                                 context.authenticationContextWillDismiss?(UIViewController())
                             }
                             STPURLCallbackHandler.shared().unregisterListener(self)
