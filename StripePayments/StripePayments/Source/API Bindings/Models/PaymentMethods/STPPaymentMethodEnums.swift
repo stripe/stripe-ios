@@ -304,7 +304,7 @@ extension STPPaymentMethodType {
             return false
         }
     }
-    
+
     var useASWebAuthSession: Bool {
         switch self {
             // Some payment methods benefit from sharing cookies with Safari and

@@ -12,8 +12,8 @@ import SafariServices
 @_spi(STP) import StripeCore
 
 #if canImport(Stripe3DS2)
-import Stripe3DS2
 import AuthenticationServices
+import Stripe3DS2
 #endif
 
 /// `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
@@ -1373,11 +1373,11 @@ public class STPPaymentHandler: NSObject {
     // A URLSessionTaskDelegate that can not be redirected by HTTP redirect codes. It is very focused on its task, you see.
     fileprivate class UnredirectableSessionDelegate: NSObject, URLSessionTaskDelegate {
         public func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
-            // Stops the redirection, and returns (internally) the response body.
+            // Don't get redirected, just call the completion handler
             completionHandler(nil)
         }
     }
-    
+
     // Follow the first redirect for a url, but not any subsequent redirects
     @_spi(STP) public func followRedirect(to url: URL) -> URL {
         let urlSession = URLSession(configuration: .default, delegate: UnredirectableSessionDelegate(), delegateQueue: nil)
@@ -1701,7 +1701,7 @@ public class STPPaymentHandler: NSObject {
                     ["http", "https"].contains(fallbackURL.scheme)
                 {
                     if currentAction.shouldUseASWebAuthenticationSession {
-                        let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "TODOstripesdk", completionHandler: { callbackURL, error in
+                        let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "TODOstripesdk", completionHandler: { _, _ in
                             if context.responds(
                                 to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
                             ) {
