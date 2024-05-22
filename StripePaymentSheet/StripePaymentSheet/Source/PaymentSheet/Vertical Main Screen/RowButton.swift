@@ -60,6 +60,7 @@ class RowButton: UIView {
             sublabel.adjustsFontForContentSizeCategory = true
             sublabel.text = subtext
             sublabel.textColor = appearance.colors.componentPlaceholderText
+            // TODO Do we handle accessibility on the subtext?
             labelsStackView.addArrangedSubview(sublabel)
         }
         labelsStackView.axis = .vertical
