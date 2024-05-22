@@ -111,6 +111,7 @@ public class STPPaymentHandler: NSObject {
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
     private static var inProgress = false
     private var safariViewController: SFSafariViewController?
+    private var asWebAuthenticationSession: ASWebAuthenticationSession?
 
     /// Set this to true if you want a specific test to run the _canPresent code
     /// it will automatically toggle back to false after running the code once
@@ -1710,9 +1711,11 @@ public class STPPaymentHandler: NSObject {
                             }
                             STPURLCallbackHandler.shared().unregisterListener(self)
                             self._retrieveAndCheckIntentForCurrentAction()
+                            self.asWebAuthenticationSession = nil
                         })
                         asWebAuthenticationSession.prefersEphemeralWebBrowserSession = false
                         asWebAuthenticationSession.presentationContextProvider = currentAction
+                        self.asWebAuthenticationSession = asWebAuthenticationSession
                         if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
                             context.prepare?(forPresentation: {
                                 asWebAuthenticationSession.start()
