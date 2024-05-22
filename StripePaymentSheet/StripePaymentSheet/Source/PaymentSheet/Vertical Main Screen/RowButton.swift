@@ -17,7 +17,28 @@ class RowButton: UIView {
     var isSelected: Bool = false {
         didSet {
             shadowRoundedRect.isSelected = isSelected
+            shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
         }
+    }
+
+    /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
+    var isEnabled: Bool = true {
+        didSet {
+            shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
+        }
+    }
+
+    private var computedAccessibilityTraits: UIAccessibilityTraits {
+        var traits: UIAccessibilityTraits = [.button]
+        if isSelected {
+            traits.insert(.selected)
+        }
+
+        if !isEnabled {
+            traits.insert(.notEnabled)
+        }
+
+        return traits
     }
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) {
@@ -88,8 +109,9 @@ class RowButton: UIView {
 
         // Accessibility
         shadowRoundedRect.accessibilityIdentifier = text
-        shadowRoundedRect.accessibilityTraits = .button
-        // TODO(porter) More accessibility such as isAccessibilityElement, accessibilityTraits, selection state, etc
+        shadowRoundedRect.accessibilityLabel = text
+        shadowRoundedRect.isAccessibilityElement = true
+        shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
     }
 
     required init?(coder: NSCoder) {
@@ -97,6 +119,7 @@ class RowButton: UIView {
     }
 
     @objc private func handleTap() {
+        guard isEnabled else { return }
         didTap(self)
     }
 }
@@ -130,7 +153,9 @@ extension RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
         // TODO: Add Link subtext
-        return RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, didTap: didTap)
+        let button = RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, didTap: didTap)
+        button.shadowRoundedRect.accessibilityLabel = String.Localized.pay_with_link
+        return button
     }
 
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) -> RowButton {

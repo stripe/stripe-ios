@@ -33,6 +33,7 @@ final class PaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
+            rowButton.isEnabled = !isEditing
             circleView.isHidden = !isSelected
             updateButton.isHidden = !canUpdate
             removeButton.isHidden = !canRemove
@@ -115,7 +116,7 @@ final class PaymentMethodRowButton: UIView {
 
     private lazy var rowButton: RowButton = {
         let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
-            guard let self, !isEditing else { return }
+            guard let self else { return }
             state = .selected
             delegate?.didSelectButton(self, with: paymentMethod)
         }
