@@ -19,21 +19,23 @@ public class STPIntentActionRedirectToURL: NSObject {
     /// authenticating.
     @objc public let returnURL: URL?
 
-    /// If true, we'll follow redirects.
+    /// If true, we'll follow one 30x redirect and open the webview using the resulting URL.
     @_spi(STP) public var followRedirects: Bool {
-        return urlFlagValue("followRedirectsInSDK")
+        return stripeFlagValue("followRedirectsInSDK")
     }
 
     /// If true, we'll use ASWebAuthenticationSession instead of SFSafariViewController.
     /// Some payment methods benefit from sharing cookies with Safari and
-    /// using URL protocol handlers to return to the app.
+    /// using URL protocol handlers to return to the merchant's app.
     @_spi(STP) public var useWebAuthSession: Bool {
-        return urlFlagValue("useWebAuthSession")
+        return stripeFlagValue("useWebAuthSession")
     }
 
-    /// Checks the value of an internal Stripe URL flag, if available
-    internal func urlFlagValue(_ flagName: String) -> Bool {
+    /// Checks the value of an internal Stripe URL flag, returning `true` if the flag exists and is true, otherwise returning `false`.
+    internal func stripeFlagValue(_ flagName: String) -> Bool {
         if let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false),
+           let host = urlComponents.host,
+           host.hasSuffix("stripe.com"),
             let queryItems = urlComponents.queryItems,
             let item = queryItems.first(where: { $0.name == flagName }),
            item.value == "true" {

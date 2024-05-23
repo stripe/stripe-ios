@@ -120,5 +120,17 @@ class STPIntentActionTest: XCTestCase {
         XCTAssertNotNil(withFlags?.redirectToURL?.url)
         XCTAssertTrue(withFlags!.redirectToURL!.followRedirects)
         XCTAssertTrue(withFlags!.redirectToURL!.useWebAuthSession)
+
+        // Don't observe flags on non-Stripe URLs
+        let withNonStripeFlags = decode(
+            [
+                        "type": "redirect_to_url",
+                        "redirect_to_url": [
+                        "url": "https://example.com/redirect?useWebAuthSession=true&followRedirectsInSDK=true",
+                        "return_url": "my-app://payment-complete",
+                    ],
+                    ])
+        XCTAssertFalse(withFlags!.redirectToURL!.followRedirects)
+        XCTAssertFalse(withFlags!.redirectToURL!.useWebAuthSession)
     }
 }

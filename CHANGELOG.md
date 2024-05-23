@@ -5,7 +5,7 @@
 ### Payments
 * [Added] Updated support for MobilePay bindings.
 * [Changed] Improved reliability and UX when paying with Cash App Pay.
-* [Changed] Klarna and PayPal now authenticate using ASWebAuthenticationSession, enabling these payment methods to share session storage across apps.
+* [Changed] Some Payment Methods (including Klarna and PayPal) may now authenticate using ASWebAuthenticationSession, enabling these payment methods to share session storage across apps.
 
 ## 23.27.2 2024-05-06
 ### CardScan
