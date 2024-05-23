@@ -7,6 +7,8 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripePayments
+
 class STPIntentActionTest: XCTestCase {
     func testDecodedObjectFromAPIResponseRedirectToURL() {
 
@@ -102,5 +104,21 @@ class STPIntentActionTest: XCTestCase {
         XCTAssertEqual(
             complete?.redirectToURL?.returnURL,
             URL(string: "my-app://payment-complete"))
+        XCTAssertFalse(complete!.redirectToURL!.followRedirects)
+        XCTAssertFalse(complete!.redirectToURL!.useWebAuthSession)
+
+        let withFlags = decode(
+            [
+                        "type": "redirect_to_url",
+                        "redirect_to_url": [
+                        "url": "https://stripe.com/redirect?useWebAuthSession=true&followRedirectsInSDK=true",
+                        "return_url": "my-app://payment-complete",
+                    ],
+                    ])
+        XCTAssertNotNil(withFlags)
+        XCTAssertEqual(withFlags?.type, .redirectToURL)
+        XCTAssertNotNil(withFlags?.redirectToURL?.url)
+        XCTAssertTrue(withFlags!.redirectToURL!.followRedirects)
+        XCTAssertTrue(withFlags!.redirectToURL!.useWebAuthSession)
     }
 }
