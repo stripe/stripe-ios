@@ -612,8 +612,13 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Attempt payment
         payButton.tap()
 
-        // Close the webview, no need to see the successful pay
-        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open:
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let sbContinueButton = springboard.buttons["Continue"]
+        XCTAssertTrue(sbContinueButton.waitForExistence(timeout: 10.0))
+        sbContinueButton.tap()
+
+        let webviewCloseButton = app.buttons["Cancel"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }

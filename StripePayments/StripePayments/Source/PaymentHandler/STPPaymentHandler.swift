@@ -10,9 +10,9 @@ import Foundation
 import PassKit
 import SafariServices
 @_spi(STP) import StripeCore
+import AuthenticationServices
 
 #if canImport(Stripe3DS2)
-import AuthenticationServices
 import Stripe3DS2
 #endif
 

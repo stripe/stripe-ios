@@ -111,15 +111,13 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertTrue(statusView.waitForExistence(timeout: 20.0))
         XCTAssertNotNil(statusView.label.range(of: "complete!"))
     }
-
+    
     func testAllIntegrationMethods() throws {
         for integrationMethod in IntegrationMethod.allCases {
             print("Testing \(integrationMethod.rawValue)")
             switch integrationMethod {
             case .iDEAL, .giropay, .przelewy24, .bancontact, .eps, .afterpay, .sofort, .paypal:
                 testNoInputIntegrationMethod(integrationMethod, shouldConfirm: true)
-            case .klarna:
-                testKlarna()
             case .alipay:
                 testAppToAppRedirect(integrationMethod)
             case .weChatPay:
@@ -128,7 +126,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
                 break
             case .bacsDebit, .sepaDebit:
                 testNoInputIntegrationMethod(integrationMethod, shouldConfirm: false)
-            case .card, .cardSetupIntents, .fpx, .aubecsDebit, .applePay:
+            case .card, .cardSetupIntents, .fpx, .aubecsDebit, .applePay, .klarna:
                 // Tested in method-specific functions.
                 break
             case .grabpay:
@@ -222,6 +220,30 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
     }
+    
+    func testKlarna() {
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let rowForPaymentMethod = tablesQuery.cells.buttons[IntegrationMethod.klarna.rawValue]
+        rowForPaymentMethod.scrollToAndTap(in: app)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
+        buyButton.forceTapElement()
+
+        // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open:
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        springboard.buttons["Continue"].tap()
+
+        // This is where we'd fill out Klarna's forms, but we'll just cancel for now
+        app.buttons["Cancel"].tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment canceled"))
+    }
+
 }
 
 class IntegrationTesterUITests: XCTestCase {
@@ -333,29 +355,6 @@ class IntegrationTesterUITests: XCTestCase {
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
-    }
-
-    func testKlarna() {
-        self.popToMainMenu()
-        let tablesQuery = app.collectionViews
-
-        let rowForPaymentMethod = tablesQuery.cells.buttons[IntegrationMethod.klarna.rawValue]
-        rowForPaymentMethod.scrollToAndTap(in: app)
-
-        let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
-        buyButton.forceTapElement()
-
-        // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open:
-        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        springboard.buttons["Continue"].tap()
-
-        // This is where we'd fill out Klarna's forms, but we'll just cancel for now
-        app.buttons["Cancel"].tap()
-
-        let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
-        XCTAssertNotNil(statusView.label.range(of: "Payment canceled"))
     }
 
     func testAppToAppRedirect(_ integrationMethod: IntegrationMethod) {
