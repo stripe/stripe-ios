@@ -32,7 +32,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
-        customerSheet.loadPaymentMethodInfo { result in
+        let csDataSource = customerSheet.createCustomerSheetDataSource()!
+        csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
@@ -60,7 +61,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
-        customerSheet.loadPaymentMethodInfo { result in
+        let csDataSource = customerSheet.createCustomerSheetDataSource()!
+        csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
@@ -89,7 +91,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
-        customerSheet.loadPaymentMethodInfo { result in
+        let csDataSource = customerSheet.createCustomerSheetDataSource()!
+        csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, let elementsSession)) = result else {
                 XCTFail()
                 return
@@ -120,7 +123,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
-        customerSheet.loadPaymentMethodInfo { result in
+        let csDataSource = customerSheet.createCustomerSheetDataSource()!
+        csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
@@ -150,7 +154,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
-        customerSheet.loadPaymentMethodInfo { result in
+        let csDataSource = customerSheet.createCustomerSheetDataSource()!
+        csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
@@ -190,7 +195,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completion block called")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
-        customerSheet.loadPaymentMethodInfo { result in
+        let csDataSource = customerSheet.createCustomerSheetDataSource()!
+        csDataSource.loadPaymentMethodInfo { result in
             guard case .failure(let error) = result,
                   let nserror = error as NSError?,
                   nserror.code == NSURLErrorTimedOut,

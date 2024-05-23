@@ -273,6 +273,7 @@ extension StripeCustomerAdapter {
     }
 }
 extension CustomerSheet {
+    @_spi(CustomerSessionBetaAccess)
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection? {
         guard let customerSheetDataSource = createCustomerSheetDataSource() else {
             return nil
@@ -315,11 +316,9 @@ extension CustomerSheet {
 public extension CustomerSheet {
     @_spi(CustomerSessionBetaAccess)
     struct IntentConfiguration {
-
         internal var paymentMethodTypes: [String]?
         internal let setupIntentClientSecretProvider: () async throws -> String
 
-        
         public init(paymentMethodTypes: [String]? = nil,
                     setupIntentClientSecretProvider: @escaping (() async throws -> String)) {
             self.paymentMethodTypes = paymentMethodTypes
