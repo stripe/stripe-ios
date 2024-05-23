@@ -1381,6 +1381,13 @@ public class STPPaymentHandler: NSObject {
 
     // Follow the first redirect for a url, but not any subsequent redirects
     @_spi(STP) public func followRedirect(to url: URL) -> URL {
+        guard let host = url.host,
+                host.hasSuffix("stripe.com") else {
+            // Only follow redirects for stripe.com URLs, which should be from the bouncer.
+            // We don't want to inadvertantly follow a third-party's redirect (which may be trying to
+            // set session storage before redirecting).
+            return url
+        }
         let urlSession = URLSession(configuration: .default, delegate: UnredirectableSessionDelegate(), delegateQueue: nil)
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
