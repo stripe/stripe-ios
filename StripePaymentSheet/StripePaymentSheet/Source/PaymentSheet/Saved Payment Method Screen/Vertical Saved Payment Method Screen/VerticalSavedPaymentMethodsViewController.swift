@@ -51,6 +51,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private var headerText: String {
+        if isRemoveOnlyMode {
+            return .Localized.remove_payment_method
+        }
+
         if isEditingPaymentMethods {
             return .Localized.manage_payment_methods
         }
@@ -66,8 +70,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     var canEdit: Bool {
         let hasCoBrandedCards = !paymentMethodRows.filter { $0.paymentMethod.isCoBrandedCard }.isEmpty
-        // We can edit if there are removable or editable payment methods
-        return canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)
+        // We can edit if there are removable or editable payment methods and we are not in remove only mode
+        return (canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
@@ -77,6 +81,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private var paymentMethods: [STPPaymentMethod] {
         return paymentMethodRows.map { $0.paymentMethod }
     }
+
+    /// Determines if the we should operate in "Remove Only Mode". This mode is enabled under the following conditions:
+    /// - There is exactly one payment method available at init time.
+    /// - The single available payment method is not a co-branded card.
+    /// In this mode, the user can only delete the payment method; updating or selecting other payment methods is disabled.
+    private lazy var isRemoveOnlyMode: Bool = {
+        let hasCoBrandedCards = !paymentMethodRows.filter { $0.paymentMethod.isCoBrandedCard }.isEmpty
+        return paymentMethods.count == 1 && !hasCoBrandedCards
+    }()
 
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
@@ -120,8 +133,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.isCBCEligible = isCBCEligible
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
-        // Select `selectedPaymentMethod` or the first row if selectedPaymentMethod is nil
-        (paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId } ?? paymentMethodRows.first)?.state = .selected
+        setInitialState(selectedPaymentMethod: selectedPaymentMethod)
     }
 
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [PaymentMethodRowButton] {
@@ -130,6 +142,14 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                                                 appearance: configuration.appearance)
             button.delegate = self
             return button
+        }
+    }
+
+    private func setInitialState(selectedPaymentMethod: STPPaymentMethod?) {
+        // Select `selectedPaymentMethod` or the first row if selectedPaymentMethod is nil
+        (paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId } ?? paymentMethodRows.first)?.state = .selected
+        if isRemoveOnlyMode {
+            paymentMethodRows.first?.state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: false)
         }
     }
 
