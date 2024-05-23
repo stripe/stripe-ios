@@ -86,7 +86,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     /// - There is exactly one payment method available at init time.
     /// - The single available payment method is not a co-branded card.
     /// In this mode, the user can only delete the payment method; updating or selecting other payment methods is disabled.
-    private lazy var isRemoveOnlyMode: Bool = {
+    private(set) lazy var isRemoveOnlyMode: Bool = {
         let hasCoBrandedCards = !paymentMethodRows.filter { $0.paymentMethod.isCoBrandedCard }.isEmpty
         return paymentMethods.count == 1 && !hasCoBrandedCards
     }()

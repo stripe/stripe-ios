@@ -70,13 +70,15 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         XCTAssertTrue(viewController.canEdit)
     }
 
-    func testCanEdit_singlePaymentMethod_returnsTrue() {
+    func testCanEdit_singlePaymentMethod_returnsFalse() {
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        isCBCEligible: false)
-        XCTAssertTrue(viewController.canEdit)
+        XCTAssertFalse(viewController.canEdit)
+        // Should be in remove only mode
+        XCTAssertTrue(viewController.isRemoveOnlyMode)
     }
 
     func testCanEdit_singleRemovableAndEditablePaymentMethod_returnsTrue() {
