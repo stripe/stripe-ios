@@ -60,11 +60,9 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
-        let successAccountRow = app.scrollViews.staticTexts["Success"]
-        XCTAssertTrue(successAccountRow.waitForExistence(timeout: 60.0))
-        successAccountRow.tap()
-
+        // "Success" institution is automatically selected as the first one
         app.fc_nativeConnectAccountsButton.tap()
+
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -181,8 +179,8 @@ final class FinancialConnectionsUITests: XCTestCase {
             // check that the WebView loaded
             var predicateString = "label CONTAINS '\(institutionName)'"
             if institutionName == "Chase" {
-                // Chase does not contain the word "Chase" on their log-in page
-                predicateString = "label CONTAINS 'username' OR label CONTAINS 'password'"
+                // Chase (usually) does not contain the word "Chase" on their log-in page
+                predicateString = "label CONTAINS '\(institutionName)' OR label CONTAINS 'username' OR label CONTAINS 'password'"
             }
             let institutionWebViewText = app.webViews
                 .staticTexts
