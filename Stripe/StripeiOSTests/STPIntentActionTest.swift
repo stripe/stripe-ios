@@ -130,7 +130,7 @@ class STPIntentActionTest: XCTestCase {
                         "return_url": "my-app://payment-complete",
                     ],
                     ])
-        XCTAssertFalse(withFlags!.redirectToURL!.followRedirects)
-        XCTAssertFalse(withFlags!.redirectToURL!.useWebAuthSession)
+        XCTAssertFalse(withNonStripeFlags!.redirectToURL!.followRedirects)
+        XCTAssertFalse(withNonStripeFlags!.redirectToURL!.useWebAuthSession)
     }
 }
