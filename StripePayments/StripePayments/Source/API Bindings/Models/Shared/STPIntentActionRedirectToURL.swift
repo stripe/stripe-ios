@@ -19,6 +19,29 @@ public class STPIntentActionRedirectToURL: NSObject {
     /// authenticating.
     @objc public let returnURL: URL?
 
+    /// If true, we'll follow redirects.
+    @_spi(STP) public var followRedirects: Bool {
+        return urlFlagValue("followRedirectsInSDK")
+    }
+
+    /// If true, we'll use ASWebAuthenticationSession instead of SFSafariViewController.
+    /// Some payment methods benefit from sharing cookies with Safari and
+    /// using URL protocol handlers to return to the app.
+    @_spi(STP) public var useWebAuthSession: Bool {
+        return urlFlagValue("useWebAuthSession")
+    }
+
+    /// Checks the value of an internal Stripe URL flag, if available
+    internal func urlFlagValue(_ flagName: String) -> Bool {
+        if let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false),
+            let queryItems = urlComponents.queryItems,
+            let item = queryItems.first(where: { $0.name == flagName }),
+           item.value == "true" {
+            return true
+        }
+        return false
+    }
+
     @objc public let allResponseFields: [AnyHashable: Any]
 
     let threeDSSourceID: String?

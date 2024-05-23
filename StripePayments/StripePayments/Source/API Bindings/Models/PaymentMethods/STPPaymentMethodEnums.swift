@@ -304,16 +304,4 @@ extension STPPaymentMethodType {
             return false
         }
     }
-
-    var useASWebAuthSession: Bool {
-        switch self {
-            // Some payment methods benefit from sharing cookies with Safari and
-            // using URL protocol handlers to return to the app.
-            // Use ASWebAuthenticationSession for these PMs.
-        case .klarna, .payPal:
-            return true
-        default:
-            return false
-        }
-    }
 }

@@ -1010,12 +1010,12 @@ public class STPPaymentHandler: NSObject {
             )
         case .redirectToURL:
             if let redirectToURL = authenticationAction.redirectToURL {
-                let redirectURL = currentAction.shouldUseASWebAuthenticationSession ?
+                let redirectURL = redirectToURL.followRedirects ?
                     // Pre-follow the redirect trampoline and pass the final URL to ASWebAuthenticationSession
                     // so that the consent dialog will show the correct domain (e.g. "klarna.com" instead of "stripe.com")
                     self.followRedirect(to: redirectToURL.url) :
                     redirectToURL.url
-                _handleRedirect(to: redirectURL, withReturn: redirectToURL.returnURL)
+                _handleRedirect(to: redirectURL, withReturn: redirectToURL.returnURL, useWebAuthSession: redirectToURL.useWebAuthSession)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
             }
@@ -1025,7 +1025,8 @@ public class STPPaymentHandler: NSObject {
                 _handleRedirect(
                     to: alipayHandleRedirect.nativeURL,
                     fallbackURL: alipayHandleRedirect.url,
-                    return: alipayHandleRedirect.returnURL
+                    return: alipayHandleRedirect.returnURL,
+                    useWebAuthSession: false
                 )
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1036,7 +1037,8 @@ public class STPPaymentHandler: NSObject {
                 _handleRedirect(
                     to: weChatPayRedirectToApp.nativeURL,
                     fallbackURL: nil,
-                    return: nil
+                    return: nil,
+                    useWebAuthSession: false
                 )
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1044,21 +1046,21 @@ public class STPPaymentHandler: NSObject {
 
         case .OXXODisplayDetails:
             if let hostedVoucherURL = authenticationAction.oxxoDisplayDetails?.hostedVoucherURL {
-                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil, useWebAuthSession: false)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
             }
 
         case .boletoDisplayDetails:
             if let hostedVoucherURL = authenticationAction.boletoDisplayDetails?.hostedVoucherURL {
-                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil, useWebAuthSession: false)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
             }
 
         case .multibancoDisplayDetails:
             if let hostedVoucherURL = authenticationAction.multibancoDisplayDetails?.hostedVoucherURL {
-                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil, useWebAuthSession: false)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
             }
@@ -1231,7 +1233,7 @@ public class STPPaymentHandler: NSObject {
                         } else if let fallbackURL = authenticateResponse.fallbackURL {
                             self._handleRedirect(
                                 to: fallbackURL,
-                                withReturn: URL(string: currentAction.returnURLString ?? "")
+                                withReturn: URL(string: currentAction.returnURLString ?? ""), useWebAuthSession: false
                             )
                         } else {
                             currentAction.complete(
@@ -1255,7 +1257,7 @@ public class STPPaymentHandler: NSObject {
                     } else {
                         returnURL = nil
                     }
-                    _handleRedirect(to: redirectURL, withReturn: returnURL)
+                    _handleRedirect(to: redirectURL, withReturn: returnURL, useWebAuthSession: false)
                 }
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1299,7 +1301,7 @@ public class STPPaymentHandler: NSObject {
             }
 
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
-                _handleRedirect(to: mobileAuthURL, fallbackURL: mobileAuthURL, return: returnURL)
+                _handleRedirect(to: mobileAuthURL, fallbackURL: mobileAuthURL, return: returnURL, useWebAuthSession: false)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
             }
@@ -1322,13 +1324,13 @@ public class STPPaymentHandler: NSObject {
                 currentAction.complete(with: .failed, error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling payNowDisplayQrCode next action with SetupIntent is not supported"))
                 return
             }
-            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) { safariViewController in
+            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL, useWebAuthSession: false) { safariViewController in
                 // Present the polling view controller behind the web view so we can start polling right away
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow, safariViewController: safariViewController)
             }
         case .konbiniDisplayDetails:
             if let hostedVoucherURL = authenticationAction.konbiniDisplayDetails?.hostedVoucherURL {
-                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil, useWebAuthSession: false)
             } else {
                 failCurrentActionWithMissingNextActionDetails()
             }
@@ -1352,7 +1354,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
 
-            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) { safariViewController in
+            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL, useWebAuthSession: false) { safariViewController in
                 // Present the polling view controller behind the web view so we can start polling right away
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .promptPay, safariViewController: safariViewController)
             }
@@ -1367,7 +1369,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
 
-            _handleRedirect(to: mobileAuthURL, withReturn: returnURL)
+            _handleRedirect(to: mobileAuthURL, withReturn: returnURL, useWebAuthSession: false)
         }
     }
 
@@ -1381,13 +1383,6 @@ public class STPPaymentHandler: NSObject {
 
     // Follow the first redirect for a url, but not any subsequent redirects
     @_spi(STP) public func followRedirect(to url: URL) -> URL {
-        guard let host = url.host,
-                host.hasSuffix("stripe.com") else {
-            // Only follow redirects for stripe.com URLs, which should be from the bouncer.
-            // We don't want to inadvertantly follow a third-party's redirect (which may be trying to
-            // set session storage before redirecting).
-            return url
-        }
         let urlSession = URLSession(configuration: .default, delegate: UnredirectableSessionDelegate(), delegateQueue: nil)
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
@@ -1609,8 +1604,8 @@ public class STPPaymentHandler: NSObject {
         _retrieveAndCheckIntentForCurrentAction()
     }
 
-    @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?) {
-        _handleRedirect(to: url, fallbackURL: url, return: returnURL)
+    @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?, useWebAuthSession: Bool) {
+        _handleRedirect(to: url, fallbackURL: url, return: returnURL, useWebAuthSession: useWebAuthSession)
     }
 
     @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?) {
@@ -1659,8 +1654,9 @@ public class STPPaymentHandler: NSObject {
     ///     - nativeURL: A URL to be opened natively.
     ///     - fallbackURL: A secondary URL to be attempted if the native URL is not available.
     ///     - returnURL: The URL to be registered with the `STPURLCallbackHandler`.
+    ///     - useWebAuthSession: Use ASWebAuthenticationSession instead of SFSafariViewController.
     ///     - completion: A completion block invoked after the URL redirection is handled. The SFSafariViewController used is provided as an argument, if it was used for the redirect.
-    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: ((SFSafariViewController?) -> Void)? = nil) {
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, useWebAuthSession: Bool, completion: ((SFSafariViewController?) -> Void)? = nil) {
         if let _redirectShim, let url = nativeURL ?? fallbackURL {
             _redirectShim(url, returnURL, true)
         }
@@ -1708,7 +1704,8 @@ public class STPPaymentHandler: NSObject {
                 if let fallbackURL,
                     ["http", "https"].contains(fallbackURL.scheme)
                 {
-                    if currentAction.shouldUseASWebAuthenticationSession {
+                    if useWebAuthSession {
+//                      TODO: Add analytics here to compare ASWebAuthSession vs SFSafariViewController, monitor dropoff
                         if self._redirectShim != nil {
                             // No-op if the redirect shim is active, as we don't want to open the consent dialog. We'll call the completion block automatically.
                             return
@@ -2213,7 +2210,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
 @_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {
     /// :nodoc:
     @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
-        if let currentAction = currentAction, currentAction.shouldUseASWebAuthenticationSession {
+        if currentAction?.nextAction()?.redirectToURL?.useWebAuthSession ?? false {
             // Don't handle the URL — If a user clicks the URL in ASWebAuthenticationSession, ASWebAuthenticationSession will handle it internally.
             // If we're returning from another app via a URL while ASWebAuthenticationSession is open, it's likely that the PM initiated a redirect to another app
             // (such as a banking app) and is waiting for a response from that app.
@@ -2484,16 +2481,4 @@ extension STPPaymentHandler {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
-}
-
-extension STPPaymentHandlerActionParams {
-    var shouldUseASWebAuthenticationSession: Bool {
-        if let self = self as? STPPaymentHandlerPaymentIntentActionParams {
-            return (self.paymentIntent.paymentMethod?.type ?? .unknown).useASWebAuthSession
-        }
-        if let self = self as? STPPaymentHandlerSetupIntentActionParams {
-            return (self.setupIntent.paymentMethod?.type ?? .unknown).useASWebAuthSession
-        }
-        return false
-    }
 }
