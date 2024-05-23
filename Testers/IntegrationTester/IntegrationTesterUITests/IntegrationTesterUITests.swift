@@ -111,7 +111,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertTrue(statusView.waitForExistence(timeout: 20.0))
         XCTAssertNotNil(statusView.label.range(of: "complete!"))
     }
-    
+
     func testAllIntegrationMethods() throws {
         for integrationMethod in IntegrationMethod.allCases {
             print("Testing \(integrationMethod.rawValue)")
@@ -220,7 +220,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
     }
-    
+
     func testKlarna() {
         self.popToMainMenu()
         let tablesQuery = app.collectionViews

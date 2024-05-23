@@ -6,11 +6,11 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+import AuthenticationServices
 import Foundation
 import PassKit
 import SafariServices
 @_spi(STP) import StripeCore
-import AuthenticationServices
 
 #if canImport(Stripe3DS2)
 import Stripe3DS2
