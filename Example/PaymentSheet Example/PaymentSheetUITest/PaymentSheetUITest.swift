@@ -3340,8 +3340,8 @@ extension PaymentSheetUITestCase {
         // Go through connections flow
         app.buttons["Agree and continue"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
-        app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["connect_accounts_button"].tap()
+        // "Success" institution is automatically selected because its the first
+        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: 10.0) {
@@ -3360,7 +3360,7 @@ extension PaymentSheetUITestCase {
         // Reload and pay with the now-saved us bank account
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].tap()
-        XCTAssertTrue(app.buttons["••••1113"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons[confirmButtonText].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }

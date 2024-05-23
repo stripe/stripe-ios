@@ -1,4 +1,4 @@
-# <img src="../readme-images/FinancialConnections-light-80x80.png" width="40" /> Stripe Financial Connections iOS SDK (Beta)
+# <img src="../readme-images/FinancialConnections-light-80x80.png" width="40" /> Stripe Financial Connections iOS SDK
 
 Stripe Financial Connections iOS SDK lets your users securely share their financial data by linking their external financial accounts to your business in your iOS app.
 

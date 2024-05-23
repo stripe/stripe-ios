@@ -10,7 +10,6 @@ import UIKit
 
 /**
  A drop-in class that presents a sheet for a user to connect their financial accounts.
- This class is in beta; see https://stripe.com/docs/financial-connections for access
  */
 final public class FinancialConnectionsSheet {
 
