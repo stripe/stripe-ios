@@ -450,7 +450,10 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             }
             paymentOption = selectedPaymentOption
         }
-        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentOption.paymentMethodTypeAnalyticsValue)
+        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(
+            paymentMethodTypeIdentifier: paymentOption.paymentMethodTypeAnalyticsValue,
+            linkContext: paymentOption.linkContext
+        )
         pay(with: paymentOption, animateBuyButton: true)
     }
 
@@ -481,6 +484,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     deferredIntentConfirmationType: deferredIntentConfirmationType,
                     paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
                     error: result.error,
+                    linkContext: paymentOption.linkContext,
                     apiClient: self.configuration.apiClient
                 )
 
