@@ -44,10 +44,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativePrepaneContinueButton.tap()
 
-        let successInstitution = app.scrollViews.staticTexts["Success"]
-        XCTAssertTrue(successInstitution.waitForExistence(timeout: 60.0))
-        successInstitution.tap()
-
+        // "Success" institution is automatically selected in the Account Picker
         app.fc_nativeConnectAccountsButton.tap()
 
         let emailTextField = app.textFields["email_text_field"]
