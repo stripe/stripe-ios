@@ -60,11 +60,9 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
-        let successAccountRow = app.scrollViews.staticTexts["Success"]
-        XCTAssertTrue(successAccountRow.waitForExistence(timeout: 60.0))
-        successAccountRow.tap()
-
+        // "Success" institution is automatically selected as the first one
         app.fc_nativeConnectAccountsButton.tap()
+
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
