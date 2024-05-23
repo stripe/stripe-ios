@@ -50,7 +50,7 @@ class RowButton: UIView {
             NSLayoutConstraint.activate([
                 rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
                 rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             ])
         }
 

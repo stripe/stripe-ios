@@ -26,6 +26,21 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
 
+    private var accessoryButtonType: VerticalPaymentMethodListView.AccessoryButtonType {
+        var buttonType: VerticalPaymentMethodListView.AccessoryButtonType = .none
+        if savedPaymentMethods.count > 1 {
+            buttonType = .viewMore
+        } else if savedPaymentMethods.count == 1 && (savedPaymentMethods.first?.isCoBrandedCard ?? false) && loadResult.intent.cardBrandChoiceEligible {
+            // If only one card left but it is co-branded we can edit it
+            buttonType = .edit
+        } else if savedPaymentMethods.count == 1 && configuration.allowsRemovalOfLastSavedPaymentMethod {
+            // If only one payment method left and we can remove it we can edit
+            buttonType = .edit
+        }
+        
+        return buttonType
+    }
+    
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
@@ -44,6 +59,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             shouldShowApplePay: loadResult.isApplePayEnabled,
             shouldShowLink: loadResult.isLinkEnabled,
             appearance: configuration.appearance,
+            accessoryButtonType: accessoryButtonType,
             delegate: self
         )
     }()
@@ -84,17 +100,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
     }
-
-    // TOOD(porter) Remove/rename
-    @objc func presentManageScreen() {
-        let vc = VerticalSavedPaymentMethodsViewController(
-            configuration: configuration,
-            selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
-            paymentMethods: savedPaymentMethods
-        )
-        vc.delegate = self
-        bottomSheetController?.pushContentViewController(vc)
-    }
 }
 
 // MARK: - BottomSheetContentViewController
@@ -131,8 +136,20 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         print("Selected payment method with id: \(String(describing: selectedPaymentMethod?.stripeId))")
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         savedPaymentMethods = latestPaymentMethods
-        _ = viewController.bottomSheetController?.popContentViewController()
+        
+        paymentMethodListView.removeFromSuperview()
+        paymentMethodListView = VerticalPaymentMethodListView(
+            savedPaymentMethod: selectedPaymentMethod,
+            paymentMethodTypes: paymentMethodTypes,
+            shouldShowApplePay: loadResult.isApplePayEnabled,
+            shouldShowLink: loadResult.isLinkEnabled,
+            appearance: configuration.appearance,
+            accessoryButtonType: accessoryButtonType,
+            delegate: self
+        )
         // TODO update selected payment method with `selectedPaymentMethod`
+        // TODO update the accessory button
+        _ = viewController.bottomSheetController?.popContentViewController()
     }
 }
 
@@ -143,7 +160,27 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDeleg
             // TODO
             return
         case .saved:
-            presentManageScreen()
+            // TODO
+            return
+        }
+    }
+    
+    func didSelectAccessoryButton(_ type: VerticalPaymentMethodListView.AccessoryButtonType) {
+        switch type {
+        case .none:
+            // no-op
+            break
+        case .edit:
+            // TODO present update view controller
+            break
+        case .viewMore:
+            let vc = VerticalSavedPaymentMethodsViewController(
+                configuration: configuration,
+                selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
+                paymentMethods: savedPaymentMethods
+            )
+            vc.delegate = self
+            bottomSheetController?.pushContentViewController(vc)
         }
     }
 }
