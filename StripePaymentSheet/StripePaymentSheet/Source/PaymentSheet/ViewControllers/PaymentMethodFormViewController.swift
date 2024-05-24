@@ -10,12 +10,14 @@ import UIKit
 
 class PaymentMethodFormViewController: UIViewController {
     let form: PaymentMethodElement
+    let paymentMethodType: PaymentSheet.PaymentMethodType
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(form: PaymentMethodElement) {
+    init(type: PaymentSheet.PaymentMethodType, form: PaymentMethodElement) {
+        self.paymentMethodType = type
         self.form = form
         super.init(nibName: nil, bundle: nil)
     }
