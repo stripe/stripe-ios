@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -13,6 +14,36 @@ class PaymentMethodFormViewController: UIViewController {
     let form: PaymentMethodElement
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheet.Configuration
+    var paymentOption: PaymentOption? {
+        // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have such divergent paths for link and instant debits. Where is the setDefaultBillingDetailsIfNecessary call, for example?
+        if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
+            return linkEnabledElement.makePaymentOption()
+        } else if let instantDebitsFormElement = form as? InstantDebitsPaymentMethodElement {
+            // we use `.instantDebits` payment method locally to display a
+            // new button, but the actual payment method is `.link`, so
+            // here we change it for the intent confirmation process
+            let paymentMethodParams = STPPaymentMethodParams(type: .link)
+            let intentConfirmParams = IntentConfirmParams(
+                params: paymentMethodParams,
+                type: .stripe(.link)
+            )
+            if let confirmParams = instantDebitsFormElement.updateParams(params: intentConfirmParams) {
+                return .new(confirmParams: confirmParams)
+            } else {
+                return nil
+            }
+        }
+
+        let params = IntentConfirmParams(type: paymentMethodType)
+        params.setDefaultBillingDetailsIfNecessary(for: configuration)
+        if let params = form.updateParams(params: params) {
+            if case .external(let paymentMethod) = paymentMethodType {
+                return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
+            }
+            return .new(confirmParams: params)
+        }
+        return nil
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

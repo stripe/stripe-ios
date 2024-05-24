@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 5/24/24.
 //
 
-import XCTest
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
+import XCTest
 
 final class PaymentMethodFormViewControllerTest: XCTestCase {
 
@@ -25,7 +25,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
     func testUpdatesFormWithLatestShippingDetails() {
         // Given a Configuration w/ shipping details...
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        var shippingDetails: AddressViewController.AddressDetails? = nil
+        var shippingDetails: AddressViewController.AddressDetails?
         configuration.shippingDetails = {
             return shippingDetails
         }
@@ -36,7 +36,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...PaymentMethodFormVC...
         let form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [.card]), configuration: .paymentSheet(configuration), paymentMethod: .stripe(.card)).make()
         let sut = PaymentMethodFormViewController(type: .stripe(.card), form: form, configuration: configuration)
-        
+
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
         sut.endAppearanceTransition()

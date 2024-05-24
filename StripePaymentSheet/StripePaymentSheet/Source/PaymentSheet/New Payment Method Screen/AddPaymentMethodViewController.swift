@@ -55,33 +55,7 @@ class AddPaymentMethodViewController: UIViewController {
         return paymentMethodTypesView.selected
     }
     var paymentOption: PaymentOption? {
-        if let linkEnabledElement = paymentMethodFormElement as? LinkEnabledPaymentMethodElement {
-            return linkEnabledElement.makePaymentOption()
-        } else if let instantDebitsFormElement = paymentMethodFormElement as? InstantDebitsPaymentMethodElement {
-            // we use `.instantDebits` payment method locally to display a
-            // new button, but the actual payment method is `.link`, so
-            // here we change it for the intent confirmation process
-            let paymentMethodParams = STPPaymentMethodParams(type: .link)
-            let intentConfirmParams = IntentConfirmParams(
-                params: paymentMethodParams,
-                type: .stripe(.link)
-            )
-            if let confirmParams = instantDebitsFormElement.updateParams(params: intentConfirmParams) {
-                return .new(confirmParams: confirmParams)
-            } else {
-                return nil
-            }
-        }
-
-        let params = IntentConfirmParams(type: selectedPaymentMethodType)
-        params.setDefaultBillingDetailsIfNecessary(for: configuration)
-        if let params = paymentMethodFormElement.updateParams(params: params) {
-            if case .external(let paymentMethod) = selectedPaymentMethodType {
-                return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
-            }
-            return .new(confirmParams: params)
-        }
-        return nil
+        return paymentMethodFormViewController.paymentOption
     }
 
     var overrideCallToAction: ConfirmButton.CallToActionType? {
