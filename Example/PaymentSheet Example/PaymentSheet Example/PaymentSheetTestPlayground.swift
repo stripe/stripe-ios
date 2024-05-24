@@ -96,6 +96,8 @@ struct PaymentSheetTestPlayground: View {
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
+                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
+                            .autocapitalization(.none)
                     }
                     Divider()
                     Group {
@@ -179,6 +181,18 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
+    var supportedPaymentMethodsBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.supportedPaymentMethods ?? ""
+        } set: { newString in
+            playgroundController.settings.supportedPaymentMethods = (newString != "") ? newString : nil
+
+            // for supported payment methods to work, apms must be off
+            if playgroundController.settings.supportedPaymentMethods != nil {
+                playgroundController.settings.apmsEnabled = .off
+            }
+        }
+    }
 }
 
 @available(iOS 14.0, *)
