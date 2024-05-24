@@ -89,9 +89,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     /// - There is exactly one payment method available at init time.
     /// - The single available payment method is not a co-branded card.
     /// In this mode, the user can only delete the payment method; updating or selecting other payment methods is disabled.
-    private(set) lazy var isRemoveOnlyMode: Bool = {
-        return paymentMethods.count == 1 && !hasCoBrandedCards
-    }()
+    let isRemoveOnlyMode: Bool
 
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
@@ -133,6 +131,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
          isCBCEligible: Bool) {
         self.configuration = configuration
         self.isCBCEligible = isCBCEligible
+        self.isRemoveOnlyMode = paymentMethods.count == 1 && paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
