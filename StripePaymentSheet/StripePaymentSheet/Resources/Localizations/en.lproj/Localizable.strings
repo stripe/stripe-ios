@@ -193,6 +193,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for confirmation alert to remove a card */
 "Remove card?" = "Remove card?";
 
+/* Title shown above a view containing a customer's payment method that they can delete */
+"Remove payment method" = "Remove payment method";
+
 /* A button used for saving a new payment method */
 "Save" = "Save";
 

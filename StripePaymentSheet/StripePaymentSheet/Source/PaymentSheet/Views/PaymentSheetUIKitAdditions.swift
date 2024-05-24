@@ -105,14 +105,18 @@ extension UIViewController {
                 }
             )
         } else {
-            addChild(toVC)
-            containerView.addPinnedSubview(toVC.view)
-            containerView.updateHeight()
-            toVC.didMove(toParent: self)
+            add(childViewController: toVC, containerView: containerView)
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
             UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
         }
+    }
+
+    func add(childViewController: UIViewController, containerView: DynamicHeightContainerView) {
+        addChild(childViewController)
+        containerView.addPinnedSubview(childViewController.view)
+        containerView.updateHeight()
+        childViewController.didMove(toParent: self)
     }
 
     func remove(childViewController: UIViewController) {

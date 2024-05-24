@@ -283,4 +283,11 @@ extension String.Localized {
             "Title shown above a view containing the customer's payment methods that they can delete or update"
         )
     }
+
+    static var remove_payment_method: String {
+        STPLocalizedString(
+            "Remove payment method",
+            "Title shown above a view containing a customer's payment method that they can delete"
+        )
+    }
 }

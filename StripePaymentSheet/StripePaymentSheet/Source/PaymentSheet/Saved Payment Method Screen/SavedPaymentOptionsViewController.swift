@@ -626,11 +626,13 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 
 // MARK: - UpdateCardViewControllerDelegate
 extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
-    func didRemove(paymentMethod: STPPaymentMethod) {
+    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
         removePaymentMethod(paymentMethod)
+        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(paymentMethod: STPPaymentMethod,
+    func didUpdate(viewController: UpdateCardViewController,
+                   paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
@@ -647,6 +649,7 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
         let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
         viewModels[row] = updatedViewModel
         collectionView.reloadData()
+        _ = viewController.bottomSheetController?.popContentViewController()
     }
 }
 
