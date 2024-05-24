@@ -209,7 +209,6 @@ class CustomerSheetTests: APIStubbedTestCase {
         wait(for: [loadPaymentMethodInfo], timeout: 10.0)
     }
 
-
     func testLoadPaymentMethodInfo_CustomerSession() throws {
         let stubbedAPIClient = stubbedAPIClient()
         StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessions_200)
@@ -218,7 +217,7 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,
-                                          intentConfiguration: .init(setupIntentClientSecretProvider: {return "si_123" }),
+                                          intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
                                           customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
@@ -241,7 +240,7 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,
-                                          intentConfiguration: .init(setupIntentClientSecretProvider: {return "si_123" }),
+                                          intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
                                           customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
@@ -264,7 +263,7 @@ class CustomerSheetTests: APIStubbedTestCase {
 
         let expectedFailure = expectation(description: "loadPaymentMethodInfo failed")
         let customerSheet = CustomerSheet(configuration: configuration,
-                                          intentConfiguration: .init(setupIntentClientSecretProvider: {return "si_123" }),
+                                          intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
                                           customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
