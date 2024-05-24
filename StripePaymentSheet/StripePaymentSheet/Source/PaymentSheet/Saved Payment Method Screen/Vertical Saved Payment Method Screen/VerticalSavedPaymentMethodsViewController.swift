@@ -290,6 +290,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         guard let oldButton = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
               let oldButtonModelIndex = paymentMethodRows.firstIndex(of: oldButton),
               let oldButtonViewIndex = stackView.arrangedSubviews.firstIndex(of: oldButton) else {
+            stpAssertionFailure("Unable to retrieve the original button/payment method for replacement.")
             return
         }
 
