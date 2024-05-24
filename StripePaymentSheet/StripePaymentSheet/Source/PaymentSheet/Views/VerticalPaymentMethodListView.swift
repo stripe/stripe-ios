@@ -10,33 +10,44 @@
 import UIKit
 
 protocol VerticalPaymentMethodListViewDelegate: AnyObject {
-    func didSelectPaymentMethod(_ selection: VerticalPaymentMethodListView.Selection)
+    /// - Returns: Whether or not the payment method row button should appear selected.
+    func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool
     // TODO: didSelectEdit/ViewMore
 }
 
-class VerticalPaymentMethodListView: UIView {
-    enum Selection: Equatable {
-        case new(paymentMethodType: PaymentSheet.PaymentMethodType)
-        case saved(paymentMethod: STPPaymentMethod)
-        case applePay
-        case link
-    }
+enum VerticalPaymentMethodListSelection: Equatable {
+    case new(paymentMethodType: PaymentSheet.PaymentMethodType)
+    case saved(paymentMethod: STPPaymentMethod)
+    case applePay
+    case link
+}
 
+class VerticalPaymentMethodListView: UIView {
     let stackView: UIStackView
     weak var delegate: VerticalPaymentMethodListViewDelegate?
+    /// Returns the currently selected payment option i.e. the one that appears selected
+    var currentSelection: VerticalPaymentMethodListSelection?
 
-    init(savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, appearance: PaymentSheet.Appearance, delegate: VerticalPaymentMethodListViewDelegate) {
-        self.delegate = delegate
-        // TODO: Add Apple Pay, Link
+    init(savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, appearance: PaymentSheet.Appearance) {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 12.0
+        self.stackView = stackView
+        super.init(frame: .zero)
+
+        // Create stack view views after super.init so that we can reference `self`
         var views = [UIView]()
         // Saved payment methods:
         if let savedPaymentMethod {
+            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance) { [weak self] in
+                self?.didTap(rowButton: $0, selection: .saved(paymentMethod: savedPaymentMethod))
+            }
+            // Make the saved PM the default selected
+            savedPaymentMethodButton.isSelected = true
+            currentSelection = .saved(paymentMethod: savedPaymentMethod)
             views += [
                 Self.makeSectionLabel(text: .Localized.saved, appearance: appearance),
-                RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance) { [weak delegate] _ in
-                    // TODO: If selectable (no form), set selected and deselect other
-                    delegate?.didSelectPaymentMethod(.saved(paymentMethod: savedPaymentMethod))
-                },
+                savedPaymentMethodButton,
                 .makeSpacerView(height: 12),
                 Self.makeSectionLabel(text: .Localized.new_payment_method, appearance: appearance),
             ]
@@ -45,35 +56,47 @@ class VerticalPaymentMethodListView: UIView {
         // Apple Pay and Link:
         if shouldShowApplePay {
             views.append(
-                RowButton.makeForApplePay(appearance: appearance, didTap: { [weak delegate] _ in
-                    delegate?.didSelectPaymentMethod(.applePay)
-                })
+                RowButton.makeForApplePay(appearance: appearance) { [weak self] in
+                    self?.didTap(rowButton: $0, selection: .applePay)
+                }
             )
         }
         if shouldShowLink {
             views.append(
-                RowButton.makeForLink(appearance: appearance, didTap: { [weak delegate] _ in
-                    delegate?.didSelectPaymentMethod(.link)
-                })
+                RowButton.makeForLink(appearance: appearance) { [weak self] in
+                    self?.didTap(rowButton: $0, selection: .link)
+                }
             )
         }
 
         // All other payment methods:
         for paymentMethodType in paymentMethodTypes {
             views.append(
-                RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, appearance: appearance) { [weak delegate] _ in
-                    // TODO: If selectable (no form), set selected and deselect other
-                    delegate?.didSelectPaymentMethod(.new(paymentMethodType: paymentMethodType))
+                RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, appearance: appearance) { [weak self] in
+                    self?.didTap(rowButton: $0, selection: .new(paymentMethodType: paymentMethodType))
                 }
             )
         }
-        let stackView = UIStackView(arrangedSubviews: views)
-        stackView.axis = .vertical
-        stackView.spacing = 12.0
-        self.stackView = stackView
-        super.init(frame: .zero)
+
+        for view in views {
+            stackView.addArrangedSubview(view)
+        }
         backgroundColor = appearance.colors.background
         addAndPinSubview(stackView)
+    }
+
+    func didTap(rowButton: RowButton, selection: VerticalPaymentMethodListSelection) {
+        guard let delegate else { return }
+        let shouldSelect = delegate.didTapPaymentMethod(selection)
+        if shouldSelect {
+            // Deselect previous row
+            stackView.arrangedSubviews.forEach {
+                ($0 as? RowButton)?.isSelected = false
+            }
+            // Select new row
+            rowButton.isSelected = shouldSelect
+            currentSelection = selection
+        }
     }
 
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
