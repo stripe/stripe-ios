@@ -24,7 +24,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, appearance: ._testMSPaintTheme)
     }
 
-    func test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsLightModeRemoveOnlyMode() {
+    func test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsRemoveOnlyMode() {
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, isRemoveOnlyMode: true)
     }
 
