@@ -69,7 +69,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     var canEdit: Bool {
-        let hasCoBrandedCards = !paymentMethodRows.filter { $0.paymentMethod.isCoBrandedCard }.isEmpty
         // We can edit if there are removable or editable payment methods and we are not in remove only mode
         return (canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode
     }
@@ -82,12 +81,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return paymentMethodRows.map { $0.paymentMethod }
     }
 
+    private var hasCoBrandedCards: Bool {
+        return !paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
+    }
+
     /// Determines if the we should operate in "Remove Only Mode". This mode is enabled under the following conditions:
     /// - There is exactly one payment method available at init time.
     /// - The single available payment method is not a co-branded card.
     /// In this mode, the user can only delete the payment method; updating or selecting other payment methods is disabled.
     private(set) lazy var isRemoveOnlyMode: Bool = {
-        let hasCoBrandedCards = !paymentMethodRows.filter { $0.paymentMethod.isCoBrandedCard }.isEmpty
         return paymentMethods.count == 1 && !hasCoBrandedCards
     }()
 
