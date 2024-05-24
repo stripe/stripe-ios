@@ -116,7 +116,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func makeForm(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
-        return PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType).make()
+        return PaymentSheetFormFactory(
+            intent: intent,
+            configuration: .paymentSheet(configuration),
+            paymentMethod: paymentMethodType
+            // TODO: previousCustomerInput, offerSaveToLinkWhenSupported, linkAccount
+        ).make()
     }
 }
 
