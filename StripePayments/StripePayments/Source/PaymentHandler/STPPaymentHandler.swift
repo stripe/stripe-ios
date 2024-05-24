@@ -1623,7 +1623,8 @@ public class STPPaymentHandler: NSObject {
         }
         analyticsClient.logURLRedirectNextAction(
             with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID
+            intentID: currentAction.intentStripeID,
+            usesWebAuthSession: false
         )
 
         // Setting universalLinksOnly to false will allow iOS to open https:// urls in an external browser, hopefully Safari.
@@ -1682,7 +1683,8 @@ public class STPPaymentHandler: NSObject {
 
         analyticsClient.logURLRedirectNextAction(
             with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID
+            intentID: currentAction.intentStripeID,
+            usesWebAuthSession: useWebAuthSession
         )
 
         // Open the link in SafariVC
@@ -1720,6 +1722,11 @@ public class STPPaymentHandler: NSObject {
                                 context.authenticationContextWillDismiss?(UIViewController())
                             }
                             STPURLCallbackHandler.shared().unregisterListener(self)
+                            self.analyticsClient.logURLRedirectNextActionCompleted(
+                                with: currentAction.apiClient._stored_configuration,
+                                intentID: currentAction.intentStripeID,
+                                usesWebAuthSession: true
+                            )
                             self._retrieveAndCheckIntentForCurrentAction()
                             self.asWebAuthenticationSession = nil
                         })
@@ -2202,6 +2209,12 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         safariViewController = nil
         STPURLCallbackHandler.shared().unregisterListener(self)
         _retrieveAndCheckIntentForCurrentAction()
+
+        self.analyticsClient.logURLRedirectNextActionCompleted(
+            with: currentAction?.apiClient._stored_configuration,
+            intentID: currentAction?.intentStripeID,
+            usesWebAuthSession: true
+        )
     }
 }
 #endif
