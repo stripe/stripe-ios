@@ -851,6 +851,14 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         _testUSBankAccount(mode: .setup, integrationType: .normal)
     }
 
+    func testPaymentIntent_instantDebits() {
+        _testInstantDebits(mode: .payment)
+    }
+
+    func testSetupIntent_instantDebits() {
+        _testInstantDebits(mode: .setup)
+    }
+
     func testUPIPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -3358,6 +3366,95 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons[confirmButtonText].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+
+    func _testInstantDebits(mode: PaymentSheetTestPlaygroundSettings.Mode) {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = mode
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card,link"
+
+        loadPlayground(
+            app,
+            settings
+        )
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select "Bank Account"
+        guard let bankAccount = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Bank Account") else {
+            XCTFail()
+            return
+        }
+        bankAccount.tap()
+
+        let email = "paymentsheetuitest-\(UUID().uuidString)@example.com"
+
+        // Fill out name and email fields
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.isEnabled)
+        app.textFields["Email"].tap()
+        app.typeText(email + XCUIKeyboardKey.return.rawValue)
+        XCTAssertTrue(continueButton.isEnabled)
+        continueButton.tap()
+
+        // "Consent" pane
+        app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10)
+
+        // "Sign Up" pane
+        app.textFields
+            .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
+            .firstMatch
+            .waitForExistenceAndTap(timeout: 10)
+        app.typeText(email + XCUIKeyboardKey.return.rawValue)
+        app.textFields["Phone number"].tap()
+        // the `XCUIKeyboardKey.return.rawValue` will automatically
+        // press the "Continue with Link" button to proceed to next
+        // screen
+        app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
+
+        // "Institution Picker" pane
+        let searchTextField = app.textFields
+            .matching(NSPredicate(format: "label CONTAINS 'Search'"))
+            .firstMatch
+        searchTextField.waitForExistenceAndTap(timeout: 10)
+        app.typeText("Test Institution" + XCUIKeyboardKey.return.rawValue)
+        searchTextField
+            .coordinate(
+                withNormalizedOffset: CGVector(
+                    dx: 0.5,
+                    // bottom of search text field
+                    dy: 1.0
+                )
+            )
+        // at this point, we searched "Test Institution"
+        // and the only search result is "Test Institution,"
+        // so here we guess that 80 pixels below search bar
+        // there will be a "Test Institution"
+        //
+        // we do this "guess" because every other method of
+        // selecting the institution did not work on iOS 17
+            .withOffset(CGVector(dx: 0, dy: 80))
+            .tap()
+
+        // "Account Picker" pane
+        _ = app.staticTexts["Select account"].waitForExistence(timeout: 10)
+        // `swipeUp` is necessary to see the `High Balance` account
+        app.swipeUp()
+        sleep(1) // wait for swipe up to finish
+        app.webViews
+            .buttons
+            .containing(NSPredicate(format: "label CONTAINS 'High Balance'"))
+            .firstMatch
+            .tap()
+        app.buttons["Connect account"].tap()
+
+        // "Success" pane
+        XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
+        app.buttons["Done"].forceTapWhenHittableInTestCase(self)
+
+        // Back to Payment Sheet
+        app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
     func payWithApplePay() {
