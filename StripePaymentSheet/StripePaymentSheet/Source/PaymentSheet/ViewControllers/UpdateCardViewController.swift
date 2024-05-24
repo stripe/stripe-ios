@@ -12,8 +12,9 @@ import Foundation
 import UIKit
 
 protocol UpdateCardViewControllerDelegate: AnyObject {
-    func didRemove(paymentMethod: STPPaymentMethod)
-    func didUpdate(paymentMethod: STPPaymentMethod,
+    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod)
+    func didUpdate(viewController: UpdateCardViewController,
+                   paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws
 }
 
@@ -48,14 +49,11 @@ final class UpdateCardViewController: UIViewController {
     // MARK: Views
     lazy var formStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [headerLabel, cardSection.view, updateButton, deleteButton, errorLabel])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding - 4, after: headerLabel) // custom spacing from figma
         stackView.setCustomSpacing(32, after: cardSection.view) // custom spacing from figma
-        stackView.setCustomSpacing(stackView.spacing / 2, after: updateButton)
-        stackView.layoutMargins.bottom = PaymentSheetUI.defaultPadding * 1.1
+        stackView.setCustomSpacing(10, after: updateButton) // custom spacing from figma
         return stackView
     }()
 
@@ -157,22 +155,8 @@ final class UpdateCardViewController: UIViewController {
         super.viewDidLoad()
         // disable swipe to dismiss
         isModalInPresentation = true
-
-        let stackView = UIStackView(arrangedSubviews: [formStackView])
-        stackView.spacing = PaymentSheetUI.defaultPadding
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.backgroundColor = appearance.colors.background
-        view.backgroundColor = appearance.colors.background
-        view.addSubview(stackView)
-
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-        ])
+        self.view.backgroundColor = appearance.colors.background
+        view.addAndPinSubview(formStackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -181,11 +165,9 @@ final class UpdateCardViewController: UIViewController {
     }
 
     // MARK: Private helpers
-    private func dismiss(didUpdate: Bool = false) {
+    private func dismiss() {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
-        if !didUpdate {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
-        }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
     }
 
@@ -193,8 +175,7 @@ final class UpdateCardViewController: UIViewController {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
-            self.delegate?.didRemove(paymentMethod: self.paymentMethod)
-            self.dismiss()
+            self.delegate?.didRemove(viewController: self, paymentMethod: self.paymentMethod)
         }
 
         present(alertController, animated: true, completion: nil)
@@ -213,8 +194,7 @@ final class UpdateCardViewController: UIViewController {
 
         // Make the API request to update the payment method
         do {
-            try await delegate.didUpdate(paymentMethod: paymentMethod, updateParams: updateParams)
-            dismiss(didUpdate: true)
+            try await delegate.didUpdate(viewController: self, paymentMethod: paymentMethod, updateParams: updateParams)
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .updateCardBrand),
                                                                  params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         } catch {
