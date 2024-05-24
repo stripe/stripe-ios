@@ -35,18 +35,22 @@ class CustomerSheetDataSource {
     func loadPaymentMethodInfo(customerSessionAdapter: CustomerSessionAdapter,
                                completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
-            async let (elementsSessionResult, customerSessionClientSecret) = try customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
+            do {
+                async let (elementsSessionResult, customerSessionClientSecret) = try customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
 
-            // Ensure local specs are loaded prior to the ones from elementSession
-            await loadFormSpecs()
-            let paymentOption = CustomerPaymentOption.defaultPaymentMethod(for: try await customerSessionClientSecret.customerId)
-            let elementSession = try await elementsSessionResult
+                // Ensure local specs are loaded prior to the ones from elementSession
+                await loadFormSpecs()
+                let paymentOption = CustomerPaymentOption.defaultPaymentMethod(for: try await customerSessionClientSecret.customerId)
+                let elementSession = try await elementsSessionResult
 
-            // Override with specs from elementSession
-            _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
+                // Override with specs from elementSession
+                _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
 
-            let savedPaymentMethods = elementSession.customer?.paymentMethods ?? []
-            return completion(.success((savedPaymentMethods, paymentOption, elementSession)))
+                let savedPaymentMethods = elementSession.customer?.paymentMethods ?? []
+                return completion(.success((savedPaymentMethods, paymentOption, elementSession)))
+            } catch {
+                return completion(.failure(error))
+            }
         }
     }
 

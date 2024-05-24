@@ -71,6 +71,8 @@ public class ClassForBundle {}
     case saved_payment_methods_withSepa_200 = "MockFiles/saved_payment_methods_withSepa_200"
 
     case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
+    case elementsSessions_customerSessions_200 = "MockFiles/elements_sessions_customerSession_200"
+    case elementsSessions_customerSessionsWithSavedPM_200 = "MockFiles/elements_sessions_customerSessionWithSavedPM_200"
 
     case elementsSessionsPaymentMethod_savedPM_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_200"
     case elementsSessionsPaymentMethod_link_200 = "MockFiles/elements_sessions_paymentMethod_link_200"
