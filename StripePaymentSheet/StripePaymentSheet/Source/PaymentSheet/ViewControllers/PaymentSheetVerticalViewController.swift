@@ -93,7 +93,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         let firstPaymentMethodType = paymentMethodTypes[0]
         let form = makeForm(paymentMethodType: firstPaymentMethodType)
         if paymentMethodListViewController.rowCount == 1 && form.collectsUserInput {
-            let paymentMethodFormViewController = PaymentMethodFormViewController(type: firstPaymentMethodType, form: form)
+            let paymentMethodFormViewController = PaymentMethodFormViewController(type: firstPaymentMethodType, form: form, configuration: configuration)
             self.paymentMethodFormViewController = paymentMethodFormViewController
             add(childViewController: paymentMethodFormViewController, containerView: paymentContainerView)
         } else {
@@ -177,7 +177,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                         // Reuse the existing payment method form so that the customer doesn't have to type their details in again
                         return currentPaymentMethodFormVC
                     } else {
-                        return PaymentMethodFormViewController(type: paymentMethodType, form: form)
+                        return PaymentMethodFormViewController(type: paymentMethodType, form: form, configuration: configuration)
                     }
                 }()
                 paymentMethodFormViewController = paymentMethodFormVC
@@ -209,6 +209,8 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        // Hide the keyboard if it appeared and switch back to the vertical list
+        view.endEditing(true)
         switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
     }

@@ -5,40 +5,54 @@
 //  Created by Yuki Tokuhiro on 5/16/24.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
 class PaymentMethodFormViewController: UIViewController {
     let form: PaymentMethodElement
     let paymentMethodType: PaymentSheet.PaymentMethodType
+    let configuration: PaymentSheet.Configuration
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(type: PaymentSheet.PaymentMethodType, form: PaymentMethodElement) {
+    init(type: PaymentSheet.PaymentMethodType, form: PaymentMethodElement, configuration: PaymentSheet.Configuration) {
         self.paymentMethodType = type
         self.form = form
+        self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view = form.view
+        view.addAndPinSubview(form.view)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            _ = self.form.beginEditing()
-        }
+        STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: paymentMethodType.identifier, apiClient: configuration.apiClient)
+        sendEventToSubviews(.viewDidAppear, from: view)
     }
 
-    override func willMove(toParent parent: UIViewController?) {
-        super.willMove(toParent: parent)
-        // viewWillAppear is called too late (when the dismissal animation is done), so we override this method instead
-        if parent == nil {
-            view.endEditing(true)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
+        if
+            configuration.defaultBillingDetails == .init(),
+            let addressSection = formElement.getAllSubElements()
+                .compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first?.element
+        {
+            // If we're displaying an AddressSectionElement and we don't have default billing details, update it with the latest shipping details
+            let delegate = addressSection.delegate
+            addressSection.delegate = nil  // Stop didUpdate delegate calls to avoid laying out while we're being presented
+            if let newShippingAddress = configuration.shippingDetails()?.address {
+                addressSection.updateBillingSameAsShippingDefaultAddress(.init(newShippingAddress))
+            } else {
+                addressSection.updateBillingSameAsShippingDefaultAddress(.init())
+            }
+            addressSection.delegate = delegate
         }
     }
 }

@@ -170,8 +170,11 @@ class AddPaymentMethodViewController: UIViewController {
     }()
 
     // MARK: - Views
-    private lazy var paymentMethodDetailsView: UIView = {
-        return paymentMethodFormElement.view
+    private var paymentMethodDetailsView: UIView {
+        return paymentMethodFormViewController.view
+    }
+    private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
+        return PaymentMethodFormViewController(type: selectedPaymentMethodType, form: paymentMethodFormElement, configuration: configuration)
     }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
@@ -187,8 +190,6 @@ class AddPaymentMethodViewController: UIViewController {
         // when displaying link, we aren't in the bottom/payment sheet so pin to top for height changes
         let view = DynamicHeightContainerView(pinnedDirection: configuration.linkPaymentMethodsOnly ? .top : .bottom)
         view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-        view.addPinnedSubview(paymentMethodDetailsView)
-        view.updateHeight()
         return view
     }()
 
@@ -222,13 +223,7 @@ class AddPaymentMethodViewController: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        view.addAndPinSubview(stackView)
         if paymentMethodTypes == [.stripe(.card)] {
             paymentMethodTypesView.isHidden = true
         } else {
@@ -237,30 +232,8 @@ class AddPaymentMethodViewController: UIViewController {
         updateUI()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        let formElement = (paymentMethodFormElement as? PaymentMethodElementWrapper<FormElement>)?.element
-            ?? paymentMethodFormElement
-        if configuration.defaultBillingDetails == .init(),
-            let addressSection = formElement.getAllSubElements()
-                .compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first?.element
-        {
-            // If we're displaying an AddressSectionElement and we don't have default billing details, update it with the latest shipping details
-            let delegate = addressSection.delegate
-            addressSection.delegate = nil  // Stop didUpdate delegate calls to avoid laying out while we're being presented
-            if let newShippingAddress = configuration.shippingDetails()?.address {
-                addressSection.updateBillingSameAsShippingDefaultAddress(.init(newShippingAddress))
-            } else {
-                addressSection.updateBillingSameAsShippingDefaultAddress(.init())
-            }
-            addressSection.delegate = delegate
-        }
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier, apiClient: configuration.apiClient)
-        sendEventToSubviews(.viewDidAppear, from: view)
         delegate?.didUpdate(self)
     }
 
@@ -276,33 +249,12 @@ class AddPaymentMethodViewController: UIViewController {
 
     private func updateUI() {
         // Swap out the input view if necessary
-        if paymentMethodFormElement.view !== paymentMethodDetailsView {
-            STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier, apiClient: configuration.apiClient)
-            let oldView = paymentMethodDetailsView
-            let newView = paymentMethodFormElement.view
-            self.paymentMethodDetailsView = newView
-
-            // Add the new one and lay it out so it doesn't animate from a zero size
-            paymentMethodDetailsContainerView.addPinnedSubview(newView)
-            paymentMethodDetailsContainerView.layoutIfNeeded()
-            newView.alpha = 0
-            #if !canImport(CompositorServices)
+        if paymentMethodFormElement !== paymentMethodDetailsView {
+#if !canImport(CompositorServices)
             UISelectionFeedbackGenerator().selectionChanged()
-            #endif
-            // Fade the new one in and the old one out
-            animateHeightChange {
-                self.paymentMethodDetailsContainerView.updateHeight()
-                oldView.alpha = 0
-                newView.alpha = 1
-            } completion: { _ in
-                // Remove the old one
-                // This if check protects against a race condition where if you switch
-                // between types with a re-used element (aka USBankAccountPaymentPaymentElement)
-                // we swap the views before the animation completes
-                if oldView !== self.paymentMethodDetailsView {
-                    oldView.removeFromSuperview()
-                }
-            }
+#endif
+            paymentMethodFormViewController = PaymentMethodFormViewController(type: selectedPaymentMethodType, form: paymentMethodFormElement, configuration: configuration)
+            switchContentIfNecessary(to: paymentMethodFormViewController, containerView: paymentMethodDetailsContainerView)
         }
     }
 
