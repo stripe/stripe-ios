@@ -3427,7 +3427,7 @@ extension PaymentSheetUITestCase {
                 )
             )
         // at this point, we searched "Test Institution"
-        // and the only search result is "Test Instiuttion,"
+        // and the only search result is "Test Institution,"
         // so here we guess that 80 pixels below search bar
         // there will be a "Test Institution"
         //

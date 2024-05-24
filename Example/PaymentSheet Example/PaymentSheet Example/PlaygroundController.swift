@@ -450,7 +450,10 @@ extension PlaygroundController {
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
-            body["supported_payment_methods"] = supportedPaymentMethods.split(separator: ",")
+            body["supported_payment_methods"] = supportedPaymentMethods
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .split(separator: ",")
+                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
         }
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, reload again
