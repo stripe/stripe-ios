@@ -72,6 +72,12 @@ public class CustomerSheet {
         self.customerSheetIntentConfiguration = nil
     }
 
+    /// - Parameter configuration: Configuration for CustomerSheet. E.g. your business name,
+    ///   appearance api, billing details collection, etc.
+    /// - Parameter intentConfiguration: Information about the setup intent used when saving
+    ///   a new payment method
+    /// - Parameter customerSessionClientSecretProvider: A callback that returns a newly created
+    ///   instance of CustomerSessionClientSecret
     @_spi(CustomerSessionBetaAccess)
     public init(configuration: CustomerSheet.Configuration,
                 intentConfiguration: CustomerSheet.IntentConfiguration,
@@ -273,6 +279,9 @@ extension StripeCustomerAdapter {
     }
 }
 extension CustomerSheet {
+    /// Returns the selected Payment Option
+    /// You can use this to obtain the selected payment method
+    /// Calling this method causes CustomerSheet to load and throws an error if loading fails.
     @_spi(CustomerSessionBetaAccess)
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection? {
         guard let customerSheetDataSource = createCustomerSheetDataSource() else {
@@ -319,6 +328,13 @@ public extension CustomerSheet {
         internal var paymentMethodTypes: [String]?
         internal let setupIntentClientSecretProvider: () async throws -> String
 
+        /// - Parameter paymentMethodTypes: A list of payment method types to display to the customers
+        ///             Valid values include: "card", "us_bank_account", "sepa_debit"
+        ///             If nil or empty, the SDK will dynamically determine the payment methods using your
+        ///             Stripe Dashboard settings.
+        /// - Parameter setupIntentClientSecretProvider: Creates a SetupIntent configured to attach a new
+        ///             payment method to a customer. Returns the client secret for the created SetupIntent.
+        ///             This will be used to confirm a new payment method.
         public init(paymentMethodTypes: [String]? = nil,
                     setupIntentClientSecretProvider: @escaping (() async throws -> String)) {
             self.paymentMethodTypes = paymentMethodTypes
