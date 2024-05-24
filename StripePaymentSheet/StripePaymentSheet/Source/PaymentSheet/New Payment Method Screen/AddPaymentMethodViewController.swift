@@ -267,8 +267,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethod: type,
             previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
-            linkAccount: LinkAccountContext.shared.account,
-            cardBrandChoiceEligible: intent.cardBrandChoiceEligible
+            linkAccount: LinkAccountContext.shared.account
         ).make()
         formElement.delegate = self
         return formElement
