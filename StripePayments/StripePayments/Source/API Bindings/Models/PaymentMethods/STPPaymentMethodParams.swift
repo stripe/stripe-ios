@@ -1345,7 +1345,7 @@ extension STPPaymentMethodParams {
         case .multibanco:
             return "Multibanco"
         case .instantDebits:
-            return "Bank Account"
+            return "Bank"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish:

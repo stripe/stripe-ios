@@ -35,14 +35,13 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     var mandateString: NSMutableAttributedString? {
         var string: String?
         if linkedBank != nil {
-            // TODO(kgaidis): localize
-            string = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>."
+            string = USBankAccountPaymentMethodElement.ContinueMandateText
         } else {
             string = nil
         }
         if let string {
             let links = [
-                "terms": URL(string: "https://stripe.com/legal/ach-payments/authorization")!,
+                "terms": URL(string: "https://link.com/terms/ach-authorization")!,
             ]
             let mutableString = STPStringUtils.applyLinksToString(
                 template: string,

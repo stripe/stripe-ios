@@ -3381,7 +3381,7 @@ extension PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
 
         // Select "Bank Account"
-        guard let bankAccount = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Bank Account") else {
+        guard let bankAccount = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Bank") else {
             XCTFail()
             return
         }

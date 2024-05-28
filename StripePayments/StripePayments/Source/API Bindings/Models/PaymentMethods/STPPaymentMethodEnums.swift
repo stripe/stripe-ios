@@ -97,6 +97,7 @@ import Foundation
 
     /// Localized display name for this payment method type
     @_spi(STP) public var displayName: String {
+        let instantDebitsDisplayName = STPLocalizedString("Bank", "Link Instant Debit payment method display name")
         switch self {
         case .alipay:
             return STPLocalizedString("Alipay", "Payment Method type brand name")
@@ -146,7 +147,7 @@ import Foundation
         case .klarna:
             return STPLocalizedString("Klarna", "Payment Method type brand name")
         case .linkInstantDebit:
-            return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
+            return instantDebitsDisplayName
         case .affirm:
             return STPLocalizedString("Affirm", "Payment Method type brand name")
         case .USBankAccount:
@@ -181,7 +182,7 @@ import Foundation
         case .multibanco:
             return "Multibanco"
         case .instantDebits:
-            return "Bank Account"
+            return instantDebitsDisplayName
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")

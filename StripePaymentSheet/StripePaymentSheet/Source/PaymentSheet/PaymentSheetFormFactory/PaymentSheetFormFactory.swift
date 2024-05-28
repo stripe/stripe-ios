@@ -53,6 +53,11 @@ class PaymentSheetFormFactory {
         return configuration.appearance.asElementsTheme
     }
 
+    private static let PayByBankDescriptionText = STPLocalizedString(
+        "Pay with your bank account in just a few steps.",
+        "US Bank Account copy title for Mobile payment element form"
+    )
+
     convenience init(
         intent: Intent,
         configuration: PaymentSheetFormFactoryConfig,
@@ -709,7 +714,7 @@ extension PaymentSheetFormFactory {
                     return nil // customer sheet is not supported
                 case .paymentSheet:
                     return makeSectionTitleLabelWith(
-                        text: "Pay with your bank account in just a few steps." // TODO(kgaidis): localize string
+                        text: Self.PayByBankDescriptionText
                     )
                 }
             }(),
@@ -729,10 +734,7 @@ extension PaymentSheetFormFactory {
             )
         case .paymentSheet:
             return makeSectionTitleLabelWith(
-                text: STPLocalizedString(
-                    "Pay with your bank account in just a few steps.",
-                    "US Bank Account copy title for Mobile payment element form"
-                )
+                text: Self.PayByBankDescriptionText
             )
         }
     }
