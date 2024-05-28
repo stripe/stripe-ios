@@ -23,7 +23,7 @@ class AccessoryButtonSnapshotTests: STPSnapshotTestCase {
         let button = try XCTUnwrap(AccessoryButton(accessoryType: .viewMore, appearance: .default))
         verify(button)
     }
-    
+
     func testAccessoryButtonSnapshotTests_viewMore_customAppearance() throws {
         var appearance = PaymentSheet.Appearance.default
         appearance.colors.primary = .red
@@ -35,14 +35,14 @@ class AccessoryButtonSnapshotTests: STPSnapshotTestCase {
         let button = try XCTUnwrap(AccessoryButton(accessoryType: .edit, appearance: .default))
         verify(button)
     }
-    
+
     func testAccessoryButtonSnapshotTests_edit_customAppearance() throws {
         var appearance = PaymentSheet.Appearance.default
         appearance.colors.primary = .red
         let button = try XCTUnwrap(AccessoryButton(accessoryType: .edit, appearance: appearance))
         verify(button)
     }
-    
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,

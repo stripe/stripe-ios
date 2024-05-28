@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class AccessoryButton: UIButton {
-    
+
     enum AccessoryType {
         case none
         case edit
@@ -35,7 +35,7 @@ final class AccessoryButton: UIButton {
                 return Image.icon_chevron_right.makeImage(template: true)
             }
         }
-        
+
         var imageEdgeInsets: UIEdgeInsets {
             switch self {
             case .none, .edit:
@@ -45,16 +45,16 @@ final class AccessoryButton: UIButton {
             }
         }
     }
-    
+
     override var intrinsicContentSize: CGSize {
         let size = super.intrinsicContentSize
         return CGSize(width: size.width + imageEdgeInsets.left + imageEdgeInsets.right,
                       height: size.height + imageEdgeInsets.top + imageEdgeInsets.bottom)
     }
-    
+
     init?(accessoryType: AccessoryType, appearance: PaymentSheet.Appearance) {
         guard accessoryType != .none else { return nil }
-        
+
         super.init(frame: .zero)
         setTitle(accessoryType.text, for: .normal)
         setTitleColor(appearance.colors.primary, for: .normal) // TODO read secondary action color
@@ -63,9 +63,9 @@ final class AccessoryButton: UIButton {
         imageView?.tintColor = appearance.colors.primary // TODO read secondary action color
         imageEdgeInsets = accessoryType.imageEdgeInsets
         semanticContentAttribute = .forceRightToLeft
-        
+
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

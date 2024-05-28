@@ -110,7 +110,10 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var stackView: UIStackView = {
-        return UIStackView.makeRowButtonContentStackView(arrangedSubviews: [.makeSpacerView(), circleView, updateButton, removeButton])
+        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [.makeSpacerView(), circleView, updateButton, removeButton])
+        // margins handled by the `RowButton`
+        stackView.directionalLayoutMargins = .zero
+        return stackView
     }()
 
     private lazy var rowButton: RowButton = {
