@@ -307,7 +307,7 @@ import Foundation
             "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783"
         )
     }
-    
+
     static var edit: String {
         STPLocalizedString(
             "Edit",

@@ -59,12 +59,12 @@ final class AccessoryButton: UIButton {
         super.init(frame: .zero)
         setTitle(accessoryType.text, for: .normal)
         setTitleColor(appearance.colors.primary, for: .normal) // TODO read secondary action color
-        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
         setImage(accessoryType.accessoryImage, for: .normal)
         imageView?.tintColor = appearance.colors.primary // TODO read secondary action color
         imageEdgeInsets = accessoryType.imageEdgeInsets
         semanticContentAttribute = .forceRightToLeft
-        
+
         accessibilityLabel = accessoryType.text
         accessibilityIdentifier = accessoryType.text
 
