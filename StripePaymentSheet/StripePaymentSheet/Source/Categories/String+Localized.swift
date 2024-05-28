@@ -290,4 +290,11 @@ extension String.Localized {
             "Title shown above a view containing a customer's payment method that they can delete"
         )
     }
+    
+    static var view_more: String {
+        STPLocalizedString(
+            "View more",
+            "Text shown on a button that when tapped opens a user's screen with their payment methods."
+        )
+    }
 }

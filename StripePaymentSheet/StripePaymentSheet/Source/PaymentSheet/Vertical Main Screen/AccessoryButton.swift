@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -21,9 +22,9 @@ final class AccessoryButton: UIButton {
             case .none:
                 return nil
             case .edit:
-                return "Edit"
+                return .Localized.edit
             case .viewMore:
-                return "View more"
+                return .Localized.view_more
             }
         }
 
@@ -58,11 +59,14 @@ final class AccessoryButton: UIButton {
         super.init(frame: .zero)
         setTitle(accessoryType.text, for: .normal)
         setTitleColor(appearance.colors.primary, for: .normal) // TODO read secondary action color
-        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 20)
+        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
         setImage(accessoryType.accessoryImage, for: .normal)
         imageView?.tintColor = appearance.colors.primary // TODO read secondary action color
         imageEdgeInsets = accessoryType.imageEdgeInsets
         semanticContentAttribute = .forceRightToLeft
+        
+        accessibilityLabel = accessoryType.text
+        accessibilityIdentifier = accessoryType.text
 
     }
 
