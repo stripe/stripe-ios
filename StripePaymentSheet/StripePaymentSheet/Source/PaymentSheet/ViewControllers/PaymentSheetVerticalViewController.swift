@@ -191,6 +191,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 return true
             }
         case .saved:
+            // TODO(porter) Look for taps on the "view more" button
             presentManageScreen()
             return true
         }

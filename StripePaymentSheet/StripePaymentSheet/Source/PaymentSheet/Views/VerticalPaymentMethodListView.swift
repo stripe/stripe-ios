@@ -42,7 +42,10 @@ class VerticalPaymentMethodListView: UIView {
         var views = [UIView]()
         // Saved payment methods:
         if let savedPaymentMethod {
-            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance) { [weak self] in
+            // TOOD(porter) Pass in correct `accessoryType`
+            let accessoryButton = AccessoryButton(accessoryType: .viewMore, appearance: appearance)
+            accessoryButton?.addTarget(self, action: #selector(didTapAccessoryButton), for: .touchUpInside)
+            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance, rightAccessoryView: accessoryButton) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .saved(paymentMethod: savedPaymentMethod))
             }
             // Make the saved PM the default selected
@@ -100,6 +103,10 @@ class VerticalPaymentMethodListView: UIView {
             rowButton.isSelected = shouldSelect
             currentSelection = selection
         }
+    }
+
+    @objc func didTapAccessoryButton() {
+        // TODO(porter) Handle taps
     }
 
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
