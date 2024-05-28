@@ -18,6 +18,10 @@ protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
 class VerticalPaymentMethodListViewController: UIViewController {
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
     let listView: VerticalPaymentMethodListView
+    /// Returns the number of row buttons in the vertical list
+    var rowCount: Int {
+        return listView.rowButtons.count
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -204,6 +204,7 @@
 		B63B2CF12BF8313D003810F3 /* VerticalPaymentMethodListViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63B2CF02BF8313D003810F3 /* VerticalPaymentMethodListViewTest.swift */; };
 		B63B2CF32BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63B2CF22BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift */; };
 		B63B2CF52BFBEEAD003810F3 /* PaymentMethodFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63B2CF42BFBEEAD003810F3 /* PaymentMethodFormViewController.swift */; };
+		B63B2CF72BFC116A003810F3 /* VerticalPaymentSheetViewControllerSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63B2CF62BFC116A003810F3 /* VerticalPaymentSheetViewControllerSnapshotTest.swift */; };
 		B65FE7092BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift */; };
 		B667BF0B2BF2B7C60050EFD8 /* RowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B667BF0A2BF2B7C60050EFD8 /* RowButton.swift */; };
 		B6859A882BE54CD30018E06C /* PaymentSheetVerticalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */; };
@@ -544,6 +545,7 @@
 		B63B2CF02BF8313D003810F3 /* VerticalPaymentMethodListViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPaymentMethodListViewTest.swift; sourceTree = "<group>"; };
 		B63B2CF22BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPaymentMethodListViewController.swift; sourceTree = "<group>"; };
 		B63B2CF42BFBEEAD003810F3 /* PaymentMethodFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodFormViewController.swift; sourceTree = "<group>"; };
+		B63B2CF62BFC116A003810F3 /* VerticalPaymentSheetViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPaymentSheetViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
 		B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPaymentMethodListViewSnapshotTest.swift; sourceTree = "<group>"; };
 		B667BF0A2BF2B7C60050EFD8 /* RowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowButton.swift; sourceTree = "<group>"; };
 		B667E074D30964FABC64B552 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1371,6 +1373,7 @@
 				7E2803AA0D975AF78D787757 /* PaymentSheetSnapshotTests.swift */,
 				E0838F23622121FEF4A15136 /* PaymentSheetViewControllerSnapshotTests.swift */,
 				B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift */,
+				B63B2CF62BFC116A003810F3 /* VerticalPaymentSheetViewControllerSnapshotTest.swift */,
 				1ADE49E72DD5EDA448D12D88 /* PollingViewTests.swift */,
 				C1AED4473AD4C07D461E9E48 /* SavedPaymentOptionsViewControllerSnapshotTests.swift */,
 				BA3902DA8D647E934686CB5C /* SepaMandateViewControllerSnapshotTest.swift */,
@@ -1635,6 +1638,7 @@
 				830DB7F3A2D341445BDB600F /* PaymentSheetAddressTests.swift in Sources */,
 				731DA57DAF9979D11AA5A0F6 /* PaymentSheetDeferredValidatorTests.swift in Sources */,
 				96575C19CD0FE05ADA0B0094 /* PaymentSheetErrorTest.swift in Sources */,
+				B63B2CF72BFC116A003810F3 /* VerticalPaymentSheetViewControllerSnapshotTest.swift in Sources */,
 				0C22490240EB2D9642DC2A17 /* PaymentSheetExternalPaymentMethodTests.swift in Sources */,
 				8A420C567E5EF4CC2AE3193D /* PaymentSheetFlowControllerViewControllerSnapshotTests.swift in Sources */,
 				9A1D214DA26BAB676EFA0FFF /* PaymentSheetFormFactorySnapshotTest.swift in Sources */,

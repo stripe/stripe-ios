@@ -27,6 +27,9 @@ class VerticalPaymentMethodListView: UIView {
     weak var delegate: VerticalPaymentMethodListViewDelegate?
     /// Returns the currently selected payment option i.e. the one that appears selected
     var currentSelection: VerticalPaymentMethodListSelection?
+    var rowButtons: [RowButton] {
+        return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
+    }
 
     init(savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, appearance: PaymentSheet.Appearance) {
         let stackView = UIStackView()
@@ -90,8 +93,8 @@ class VerticalPaymentMethodListView: UIView {
         let shouldSelect = delegate.didTapPaymentMethod(selection)
         if shouldSelect {
             // Deselect previous row
-            stackView.arrangedSubviews.forEach {
-                ($0 as? RowButton)?.isSelected = false
+            rowButtons.forEach {
+                $0.isSelected = false
             }
             // Select new row
             rowButton.isSelected = shouldSelect
