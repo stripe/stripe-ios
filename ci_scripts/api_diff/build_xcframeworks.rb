@@ -6,7 +6,13 @@ require_relative 'get_frameworks'
 def checkout_build_generate(branch, archive_name)
   # Checkout old or new version, build and generate API JSON
   puts "Building and generating public interface from #{branch}..."
-  system("git checkout #{branch}")
+  if archive_name == "master"
+    head_ref = ENV['GITHUB_HEAD_REF']
+    commit_sha = system("git merge-base #{branch} #{head_ref}")
+    system("git checkout #{commit_sha}")
+  else 
+    system("git checkout #{branch}")
+  end
 
   system("xcodebuild clean archive \
   -quiet \
@@ -30,5 +36,5 @@ def checkout_build_generate(branch, archive_name)
 end
 
 # Run function for master and head_ref
-checkout_build_generate("master", "master")
+checkout_build_generate(ENV["GITHUB_BASE_REF"], "master")
 checkout_build_generate(ENV['GITHUB_HEAD_REF'], "new")
