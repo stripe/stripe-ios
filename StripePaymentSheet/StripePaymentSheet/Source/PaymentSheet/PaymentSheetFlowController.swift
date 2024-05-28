@@ -48,6 +48,22 @@ extension PaymentSheet {
                 return paymentMethod
             }
         }
+
+        // Both "Link" and "Instant Debits" use the same payment method type
+        // of "link." To differentiate between the two in metrics, we sometimes
+        // need a "link_context."
+        var linkContext: String? {
+            if case .link = self {
+                return "wallet"
+            } else if
+                case .new(let confirmParams) = self,
+                confirmParams.instantDebitsLinkedBank != nil
+            {
+                return "instant_debits"
+            } else {
+                return nil
+            }
+        }
     }
 
     /// A class that presents the individual steps of a payment flow
