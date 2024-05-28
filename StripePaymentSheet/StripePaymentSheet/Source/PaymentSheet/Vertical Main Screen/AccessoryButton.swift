@@ -49,8 +49,14 @@ final class AccessoryButton: UIButton {
 
     override var intrinsicContentSize: CGSize {
         let size = super.intrinsicContentSize
+
+        // TODO(porter) Figure out how to handle this for VisionOS, the alternative (`UIButton.Configuration) was introduced in iOS 15 and we currently support below iOS 15.
+        #if !canImport(CompositorServices)
         return CGSize(width: size.width + imageEdgeInsets.left + imageEdgeInsets.right,
                       height: size.height + imageEdgeInsets.top + imageEdgeInsets.bottom)
+        #else
+        return size
+        #endif
     }
 
     init?(accessoryType: AccessoryType, appearance: PaymentSheet.Appearance) {
@@ -62,8 +68,11 @@ final class AccessoryButton: UIButton {
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
         setImage(accessoryType.accessoryImage, for: .normal)
         imageView?.tintColor = appearance.colors.primary // TODO read secondary action color
-        imageEdgeInsets = accessoryType.imageEdgeInsets
         semanticContentAttribute = .forceRightToLeft
+        // TODO(porter) Figure out how to handle this for VisionOS, the alternative (`UIButton.Configuration) was introduced in iOS 15 and we currently support below iOS 15.
+        #if !canImport(CompositorServices)
+        imageEdgeInsets = accessoryType.imageEdgeInsets
+        #endif
 
         accessibilityLabel = accessoryType.text
         accessibilityIdentifier = accessoryType.text
