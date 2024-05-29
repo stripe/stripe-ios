@@ -457,7 +457,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // Card number from https://docs.stripe.com/testing#regulatory-cards
         try! fillCardData(app, cardNumber: "4000002760003184")
         app.buttons["Pay €9.73"].tap()
-//        TODO(RUN_MOBILESDK-3222) Figure out why we are going to the web flow rather than the native flow in test mode
+//        TODO(RUN_MOBILESDK-3222) Renable this test and figure out why we are going to the web flow rather than the native flow in test mode
 //        let challengeCodeTextField = app.textFields["STDSTextField"]
 //        XCTAssertTrue(challengeCodeTextField.waitForExistenceAndTap())
 //        challengeCodeTextField.typeText("424242")
