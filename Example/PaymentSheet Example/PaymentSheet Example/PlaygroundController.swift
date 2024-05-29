@@ -150,7 +150,6 @@ class PlaygroundController: ObservableObject {
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
         }
-        configuration.paymentMethodRemove = settings.paymentMethodRemove == .enabled
 
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
@@ -447,10 +446,9 @@ extension PlaygroundController {
             "use_link": settings.linkEnabled == .on,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
-            "customer_session_payment_method_save": "enabled",
-            "customer_session_payment_method_remove": "enabled",
-            "customer_session_payment_method_redisplay": "enabled",
-            "customer_session_payment_method_allow_redisplay_filters": ["unspecified", "limited", "always"],
+            "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
+            "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
+            "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {

@@ -163,6 +163,18 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case enabled
         case disabled
     }
+    enum PaymentMethodSave: String, PickerEnum {
+        static var enumName: String { "PaymentMethodSave" }
+
+        case enabled
+        case disabled
+    }
+    enum PaymentMethodRedisplay: String, PickerEnum {
+        static var enumName: String { "PaymentMethodRedisplay" }
+
+        case enabled
+        case disabled
+    }
 
     enum DefaultBillingAddress: String, PickerEnum {
         static var enumName: String { "Default billing address" }
@@ -356,6 +368,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var paymentMethodRemove: PaymentMethodRemove
+    var paymentMethodSave: PaymentMethodSave
+    var paymentMethodRedisplay: PaymentMethodRedisplay
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
     var linkEnabled: LinkEnabled
@@ -391,6 +405,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
             paymentMethodRemove: .enabled,
+            paymentMethodSave: .enabled,
+            paymentMethodRedisplay: .enabled,
             defaultBillingAddress: .off,
             customEmail: nil,
             linkEnabled: .off,

@@ -99,6 +99,19 @@ struct PaymentSheetTestPlayground: View {
                         TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
                             .autocapitalization(.none)
                     }
+                    Group {
+                        VStack {
+                            HStack {
+                                Text("Customer Session Settings")
+                                    .font(.subheadline)
+                                    .bold()
+                                Spacer()
+                            }
+                            SettingPickerView(setting: $playgroundController.settings.paymentMethodSave)
+                            SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                            SettingPickerView(setting: $playgroundController.settings.paymentMethodRedisplay)
+                        }
+                    }
                     Divider()
                     Group {
                         HStack {

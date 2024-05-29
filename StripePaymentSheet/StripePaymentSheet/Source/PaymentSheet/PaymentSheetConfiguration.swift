@@ -179,9 +179,6 @@ extension PaymentSheet {
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String?
 
-        /// Prototype: To be added to customer session configuration
-        @_spi(STP) public var paymentMethodRemove = true
-
         /// Configuration for external payment methods.
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
 
