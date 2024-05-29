@@ -74,6 +74,10 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         emailTextField.text = emailAddress
     }
 
+    func beginEditingEmailAddressField() {
+        _ = emailTextField.becomeFirstResponder()
+    }
+
     func endEditingEmailAddressField() {
         _ = emailTextField.endEditing(true)
     }
