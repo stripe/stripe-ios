@@ -38,6 +38,8 @@ import Foundation
     #if ENABLE_STPASSERTIONFAILURE
     assert(condition(), message(), file: file, line: line)
     #else
-    print("⚠️ STPAssertionFailure: \(message()) in \(file) on line \(line)")
+    if !condition() {
+        print("⚠️ STPAssertionFailure: \(message()) in \(file) on line \(line)")
+    }
     #endif
 }
