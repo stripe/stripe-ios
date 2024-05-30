@@ -111,6 +111,36 @@ class AnalyticLoggableErrorTest: XCTestCase {
                 "error_code": "-1009",
             ]
         )
+
+        // StripeCore.StripeError
+        func CreateStripeError() -> StripeError {
+            let errorJson: [String: Any] = [
+                "error": [
+                    "type": "card_error",
+                    "message": "Your card number is incorrect.",
+                    "code": "incorrect_number",
+                ],
+            ]
+            let errorJsonData = try! JSONSerialization.data(
+                withJSONObject: errorJson,
+                options: [.prettyPrinted]
+            )
+            let decodedErrorResponse: StripeAPIErrorResponse = try! StripeJSONDecoder.decode(
+                jsonData: errorJsonData
+            )
+            var apiError = decodedErrorResponse.error!
+            apiError.statusCode = 402
+            return StripeError.apiError(apiError)
+        }
+        let stripeCoreStripeError = CreateStripeError()
+        XCTAssertEqual(
+            stripeCoreStripeError.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "card_error",
+                "error_code": "incorrect_number",
+                "request_id": "req_123",
+            ]
+        )
     }
 
     func testAnalyticLoggableError() {
