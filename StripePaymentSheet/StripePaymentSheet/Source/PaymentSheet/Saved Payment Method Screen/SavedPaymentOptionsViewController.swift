@@ -574,7 +574,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               error: Error.paymentOptionCellDidSelectRemoveOnNonSavedItem,
                                               additionalNonPIIParams: [
                                                 "indexPathRow": collectionView.indexPath(for: paymentOptionCell)?.row ?? "nil",
-                                                "viewModels": viewModels.map { $0.analyticsValue.rawValue }
+                                                "viewModels": viewModels.map { $0.analyticsValue.rawValue },
                                               ]
             )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
