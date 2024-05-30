@@ -294,7 +294,7 @@ extension String.Localized {
     static var view_more: String {
         STPLocalizedString(
             "View more",
-            "Text shown on a button that when tapped opens a user's screen with their payment methods."
+            "Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods."
         )
     }
 }
