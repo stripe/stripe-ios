@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import StripePayments
 
 class CustomerSheetDataSource {
     enum DataSource {
