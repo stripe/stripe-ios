@@ -1,6 +1,7 @@
 ## x.x.x xxxx-xx-xx
 ### PaymentSheet
 * [Changed] Improved reliability and UX when paying with Cash App Pay.
+* [Fixed] Fixed an issue where changing the country of a phone number would not update the UI when the phone number's validity changed.
 
 ### Payments
 * [Added] Updated support for MobilePay bindings.

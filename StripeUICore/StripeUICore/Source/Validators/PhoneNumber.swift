@@ -436,6 +436,6 @@ import UIKit
 
 extension PhoneNumber: Equatable {
     public static func == (lhs: PhoneNumber, rhs: PhoneNumber) -> Bool {
-        return lhs.number == rhs.number
+        return lhs.number == rhs.number && lhs.countryCode == rhs.countryCode
     }
 }
