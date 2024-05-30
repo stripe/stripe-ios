@@ -14,11 +14,6 @@ import XCTest
 
 class AccessoryButtonSnapshotTests: STPSnapshotTestCase {
 
-    func testAccessoryButtonSnapshotTests_none() {
-        let button = AccessoryButton(accessoryType: .none, appearance: .default)
-        XCTAssertNil(button)
-    }
-
     func testAccessoryButtonSnapshotTests_viewMore() throws {
         let button = try XCTUnwrap(AccessoryButton(accessoryType: .viewMore, appearance: .default))
         verify(button)

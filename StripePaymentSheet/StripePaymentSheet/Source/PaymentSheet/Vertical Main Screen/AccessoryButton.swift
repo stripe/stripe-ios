@@ -13,14 +13,11 @@ import UIKit
 final class AccessoryButton: UIButton {
 
     enum AccessoryType {
-        case none
         case edit
         case viewMore
 
         var text: String? {
             switch self {
-            case .none:
-                return nil
             case .edit:
                 return .Localized.edit
             case .viewMore:
@@ -30,7 +27,7 @@ final class AccessoryButton: UIButton {
 
         var accessoryImage: UIImage? {
             switch self {
-            case .none, .edit:
+            case .edit:
                 return nil
             case .viewMore:
                 return Image.icon_chevron_right.makeImage(template: true)
@@ -39,7 +36,7 @@ final class AccessoryButton: UIButton {
 
         var imageEdgeInsets: UIEdgeInsets {
             switch self {
-            case .none, .edit:
+            case .edit:
                 return .zero
             case .viewMore:
                 return UIEdgeInsets(top: 2, left: 4, bottom: 0, right: 0)
@@ -59,9 +56,7 @@ final class AccessoryButton: UIButton {
         #endif
     }
 
-    init?(accessoryType: AccessoryType, appearance: PaymentSheet.Appearance) {
-        guard accessoryType != .none else { return nil }
-
+    init(accessoryType: AccessoryType, appearance: PaymentSheet.Appearance) {
         super.init(frame: .zero)
         setTitle(accessoryType.text, for: .normal)
         setTitleColor(appearance.colors.primary, for: .normal) // TODO read secondary action color
