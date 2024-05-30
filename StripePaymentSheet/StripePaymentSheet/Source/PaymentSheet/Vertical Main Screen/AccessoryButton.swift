@@ -43,7 +43,8 @@ final class AccessoryButton: UIButton {
             }
         }
     }
-
+    
+    // Overridden so auto layout properly accounts for the image offset (if any) and positions the button correctly
     override var intrinsicContentSize: CGSize {
         let size = super.intrinsicContentSize
 
