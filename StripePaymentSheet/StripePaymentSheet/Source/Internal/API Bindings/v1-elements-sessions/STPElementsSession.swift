@@ -203,7 +203,8 @@ extension STPElementsSession {
             if let paymentSheetComponent = customerSession.paymentSheetComponent,
                paymentSheetComponent.enabled,
                let features = paymentSheetComponent.features {
-                return features.paymentMethodSave ? .showConsentCheckbox : .hideConsentCheckbox
+                return features.paymentMethodSave ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+                                                  : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
             } else {
                 // CustomerSession exists, but payment_sheet component is not available. This can happen
                 // if a merchant creates a CustomerSession with the wrong component. This is effectively

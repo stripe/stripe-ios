@@ -42,11 +42,11 @@ class PaymentSheetFormFactory {
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
-        case .legacy, .hideConsentCheckbox:
+        case .legacy, .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
             return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
-        case .showConsentCheckbox:
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
             return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
-        case .consentImplicit:
+        case .customerSheetWithCustomerSession:
             return false
         }
     }
@@ -866,9 +866,9 @@ extension PaymentSheetFormFactory {
 extension PaymentSheetFormFactory {
     enum SavePaymentMethodConsentCheckboxDisplayBehavior: Equatable {
         case legacy
-        case hideConsentCheckbox
-        case showConsentCheckbox
-        case consentImplicit
+        case paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
+        case paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+        case customerSheetWithCustomerSession
     }
 }
 

@@ -108,7 +108,7 @@ class IntentConfirmParams {
         case .legacy:
             // Always send unspecified
             paymentMethodParams.allowRedisplay = .unspecified
-        case .hideConsentCheckbox:
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
             switch saveForFutureUseCheckboxState {
             case .hidden:
                 // For PI+SFU & SI:
@@ -120,14 +120,14 @@ class IntentConfirmParams {
                 // For PI w/out SFU
                 paymentMethodParams.allowRedisplay = .always
             }
-        case .showConsentCheckbox:
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
             // Checkbox is shown for all cases: PI, PI+SFU, SI
             if saveForFutureUseCheckboxState == .selected {
                 paymentMethodParams.allowRedisplay = .always
             } else if saveForFutureUseCheckboxState == .deselected {
                 paymentMethodParams.allowRedisplay = .limited
             }
-        case .consentImplicit:
+        case .customerSheetWithCustomerSession:
             // UX (CustomerSheet) implies consent based on the UX
             paymentMethodParams.allowRedisplay = .always
         }
