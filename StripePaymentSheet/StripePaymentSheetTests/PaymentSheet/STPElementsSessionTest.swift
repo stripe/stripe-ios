@@ -109,4 +109,39 @@ class STPElementsSessionTest: XCTestCase {
             (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionEPMLoadFailed.rawValue
         }))
     }
+    func testSavePaymentMethodConsentBehavior_legacy() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: nil)
+
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+
+        XCTAssertEqual(.legacy, savePaymentMethodConsentBehavior)
+    }
+    func testSavePaymentMethodConsentBehavior_paymentMethodSave_enabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
+                                                                                                    "payment_method_remove": "enabled"]))
+
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+
+        XCTAssertEqual(.paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, savePaymentMethodConsentBehavior)
+    }
+    func testSavePaymentMethodConsentBehavior_paymentMethodSave_disabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: ("payment_sheet", ["payment_method_save": "disabled",
+                                                                                                    "payment_method_remove": "enabled"]))
+
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+
+        XCTAssertEqual(.paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, savePaymentMethodConsentBehavior)
+    }
+    func testSavePaymentMethodConsentBehavior_paymentMethodSave_invalidComponent() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: ("payment_element", ["payment_method_save": "enabled",
+                                                                                                      "payment_method_remove": "enabled"]))
+
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+
+        XCTAssertEqual(.legacy, savePaymentMethodConsentBehavior)
+    }
 }
