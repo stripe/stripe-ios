@@ -37,10 +37,18 @@ class PaymentSheetFormFactory {
     let amount: Int?
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
+    let savePaymentMethodConsentBehavior: SavePaymentMethodConsentCheckboxDisplayBehavior
     let analyticsClient: STPAnalyticsClient
 
     var shouldDisplaySaveCheckbox: Bool {
-        return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        switch savePaymentMethodConsentBehavior {
+        case .legacy, .hideConsentCheckbox:
+            return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .showConsentCheckbox:
+            return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .consentImplicit:
+            return false
+        }
     }
 
     var theme: ElementsUITheme {
@@ -75,6 +83,7 @@ class PaymentSheetFormFactory {
                   currency: intent.currency,
                   amount: intent.amount,
                   countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
+                  savePaymentMethodConsentBehavior: intent.elementsSession.savePaymentMethodConsentBehavior(),
                   analyticsClient: analyticsClient)
     }
 
@@ -92,6 +101,7 @@ class PaymentSheetFormFactory {
         currency: String?,
         amount: Int?,
         countryCode: String?,
+        savePaymentMethodConsentBehavior: SavePaymentMethodConsentCheckboxDisplayBehavior,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.configuration = configuration
@@ -112,6 +122,7 @@ class PaymentSheetFormFactory {
         self.amount = amount
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
+        self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.analyticsClient = analyticsClient
     }
 
@@ -850,6 +861,14 @@ extension PaymentSheetFormFactory {
                 }
             }
         }
+    }
+}
+extension PaymentSheetFormFactory {
+    enum SavePaymentMethodConsentCheckboxDisplayBehavior: Equatable {
+        case legacy
+        case hideConsentCheckbox
+        case showConsentCheckbox
+        case consentImplicit
     }
 }
 

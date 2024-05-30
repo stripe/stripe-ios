@@ -196,3 +196,23 @@ extension STPElementsSession {
         return allowsRemovalOfPaymentMethods
     }
 }
+
+extension STPElementsSession {
+    func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentCheckboxDisplayBehavior {
+        if let customerSession = customer?.customerSession {
+            if let paymentSheetComponent = customerSession.paymentSheetComponent,
+               paymentSheetComponent.enabled,
+               let features = paymentSheetComponent.features {
+                return features.paymentMethodSave ? .showConsentCheckbox : .hideConsentCheckbox
+            } else {
+                // CustomerSession exists, but payment_sheet component is not available. This can happen
+                // if a merchant creates a CustomerSession with the wrong component. This is effectively
+                // an integration error. Defaulting to .legacy and sending 'unspecified' seems like the
+                // most appropriate thing to do.
+                return .legacy
+            }
+        } else {
+            return .legacy
+        }
+    }
+}

@@ -237,7 +237,9 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             isSettingUp: true,
             currency: nil,
             amount: nil,
-            countryCode: nil)
+            countryCode: nil,
+            // TODO: CustomerSheet
+            savePaymentMethodConsentBehavior: .legacy)
             .make()
         formElement.delegate = self
         return formElement

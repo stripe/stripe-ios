@@ -88,7 +88,7 @@ class IntentConfirmParams {
 
     private func setDefaultBillingDetailsIfNecessary(defaultBillingDetails: PaymentSheet.BillingDetails, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration) {
         guard billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-           return
+            return
         }
         if let name = defaultBillingDetails.name {
             paymentMethodParams.nonnil_billingDetails.name = name
@@ -101,6 +101,35 @@ class IntentConfirmParams {
         }
         if defaultBillingDetails.address != .init() {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
+        }
+    }
+    func setAllowRedisplay(for savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentCheckboxDisplayBehavior) {
+        switch savePaymentMethodConsentBehavior {
+        case .legacy:
+            // Always send unspecified
+            paymentMethodParams.allowRedisplay = .unspecified
+        case .hideConsentCheckbox:
+            switch saveForFutureUseCheckboxState {
+            case .hidden:
+                // For PI+SFU & SI:
+                paymentMethodParams.allowRedisplay = .limited
+            case .deselected:
+                // For PI w/out SFU
+                paymentMethodParams.allowRedisplay = .limited
+            case .selected:
+                // For PI w/out SFU
+                paymentMethodParams.allowRedisplay = .always
+            }
+        case .showConsentCheckbox:
+            // Checkbox is shown for all cases: PI, PI+SFU, SI
+            if saveForFutureUseCheckboxState == .selected {
+                paymentMethodParams.allowRedisplay = .always
+            } else if saveForFutureUseCheckboxState == .deselected {
+                paymentMethodParams.allowRedisplay = .limited
+            }
+        case .consentImplicit:
+            // UX (CustomerSheet) implies consent based on the UX
+            paymentMethodParams.allowRedisplay = .always
         }
     }
 }
