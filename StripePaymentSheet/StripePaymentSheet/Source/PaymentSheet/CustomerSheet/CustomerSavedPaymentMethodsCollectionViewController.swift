@@ -143,7 +143,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     // MARK: - Internal Properties
     let configuration: Configuration
     let savedPaymentMethodsConfiguration: CustomerSheet.Configuration
-    let customerAdapter: CustomerAdapter
     let cbcEligible: Bool
 
     var selectedPaymentOption: PaymentOption? {
@@ -236,7 +235,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         selectedPaymentMethodOption: CustomerPaymentOption?,
         mostRecentlyAddedPaymentMethod: CustomerPaymentOption?,
         savedPaymentMethodsConfiguration: CustomerSheet.Configuration,
-        customerAdapter: CustomerAdapter,
         configuration: Configuration,
         appearance: PaymentSheet.Appearance,
         cbcEligible: Bool,
@@ -246,7 +244,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         self.originalSelectedSavedPaymentMethod = selectedPaymentMethodOption
         self.savedPaymentMethodsConfiguration = savedPaymentMethodsConfiguration
         self.configuration = configuration
-        self.customerAdapter = customerAdapter
         self.appearance = appearance
         self.cbcEligible = cbcEligible
         self.delegate = delegate

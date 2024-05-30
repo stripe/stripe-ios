@@ -112,7 +112,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         })
     }
 
-    func customerSheetConfiguration(customerId: String) -> CustomerSheet.Configuration {
+    func customerSheetConfiguration() -> CustomerSheet.Configuration {
         var configuration = CustomerSheet.Configuration()
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
@@ -139,37 +139,44 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
+        configuration.applePayEnabled = self.applePayEnabled()
         return configuration
     }
 
-    func customerAdapter(customerId: String, ephemeralKey: String?, customerSessionClientSecret: String?, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter? {
-        var customerAdapter: StripeCustomerAdapter?
+    func createCustomerSheet(configuration: CustomerSheet.Configuration,
+                             customerAdapter: CustomerAdapter) -> CustomerSheet {
+
+        return CustomerSheet(configuration: configuration, customer: customerAdapter)
+    }
+
+    func createCustomerSheet(configuration: CustomerSheet.Configuration,
+                             customerId: String,
+                             customerSessionClientSecret: String?) -> CustomerSheet {
+        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: {
+            return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+        })
+        return CustomerSheet(configuration: configuration,
+                             intentConfiguration: intentConfiguration,
+                             customerSessionClientSecretProvider: {
+            .init(customerId: customerId, clientSecret: customerSessionClientSecret!)
+        })
+    }
+
+    func customerAdapter(customerId: String, ephemeralKey: String) -> StripeCustomerAdapter {
         switch settings.paymentMethodMode {
         case .setupIntent:
-            if let customerSessionClientSecret {
-                customerAdapter = StripeCustomerAdapter(customerSessionClientSecretProvider: {
-                    // This should be a block that fetches this from your server
-                    return .init(customerId: customerId, clientSecret: customerSessionClientSecret)
-                }, setupIntentClientSecretProvider: {
-                    return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
-                })
-            } else if let ephemeralKey {
-                customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
-                    // This should be a block that fetches this from your server
-                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-                }, setupIntentClientSecretProvider: {
-                    return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
-                })
-            }
+            return StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                // This should be a block that fetches this from your server
+                return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+            }, setupIntentClientSecretProvider: {
+                return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+            })
         case .createAndAttach:
-            if let ephemeralKey {
-                customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
-                    // This should be a block that fetches this from your server
-                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-                }, setupIntentClientSecretProvider: nil)
-            }
+            return StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                // This should be a block that fetches this from your server
+                return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+            }, setupIntentClientSecretProvider: nil)
         }
-        return customerAdapter
     }
 
     func applePayEnabled() -> Bool {
@@ -242,41 +249,36 @@ extension CustomerSheetTestPlaygroundController {
 
             STPAPIClient.shared.publishableKey = publishableKey
 
-            Task {
-                // Create Customer Sheet
-                var configuration = self.customerSheetConfiguration(customerId: customerId)
-                configuration.applePayEnabled = self.applePayEnabled()
-                guard let customerAdapter = self.customerAdapter(customerId: customerId,
-                                                                 ephemeralKey: ephemeralKey,
-                                                                 customerSessionClientSecret: customerSessionClientSecret,
-                                                                 configuration: configuration) else {
-                    print("Failed to initalize CustomerAdapter")
-                    return
-                }
+            let configuration = self.customerSheetConfiguration()
+            if let ephemeralKey {
+                // Create Customer Sheet using CustomerAdapter w/ legacy ephemeral key
+                let customerAdapter = self.customerAdapter(customerId: customerId,
+                                                           ephemeralKey: ephemeralKey)
                 self._customerAdapter = customerAdapter
-                self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
-
-                // Retrieve selected PM
-                do {
-                    let selection = try await customerAdapter.retrievePaymentOptionSelection()
-                    DispatchQueue.main.async {
-                        self.paymentOptionSelection = selection
-                        self.settings.customerId = customerId
-                        self.settings.customerMode = .customID
-                        self.currentlyRenderedSettings = self.settings
-                        self.serializeSettingsToNSUserDefaults()
-                        self.isLoading = false
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        self.settings.customerId = customerId
-                        self.settings.customerMode = .customID
-                        self.currentlyRenderedSettings = self.settings
-                        self.serializeSettingsToNSUserDefaults()
-                        self.isLoading = false
-                    }
-                    throw error
+                self.customerSheet = self.createCustomerSheet(configuration: configuration, customerAdapter: customerAdapter)
+                Task { @MainActor in
+                    do {
+                        self.paymentOptionSelection = try await customerAdapter.retrievePaymentOptionSelection()
+                    } catch {}
                 }
+            } else {
+                // Create Customer Sheet using CustomerSession
+                let customerSheet = self.createCustomerSheet(configuration: configuration,
+                                                             customerId: customerId,
+                                                             customerSessionClientSecret: customerSessionClientSecret)
+                self.customerSheet = customerSheet
+                Task { @MainActor in
+                    do {
+                        self.paymentOptionSelection = try await customerSheet.retrievePaymentOptionSelection()
+                    } catch {}
+                }
+            }
+            DispatchQueue.main.async {
+                self.settings.customerId = customerId
+                self.settings.customerMode = .customID
+                self.currentlyRenderedSettings = self.settings
+                self.serializeSettingsToNSUserDefaults()
+                self.isLoading = false
             }
         }
     }
