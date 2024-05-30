@@ -32,15 +32,32 @@ class AnalyticLoggableErrorTest: XCTestCase {
 
     func testSerializeForV1Logging() {
         // Stripe API Error
-        let stripeAPIError = NSError.stp_error(fromStripeResponse: [
+        let stripeAPIErrorJSON = [
             "error": [
                 "type": "card_error",
                 "message": "Your card number is incorrect.",
                 "code": "incorrect_number",
             ],
-        ], httpResponse: HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 402, httpVersion: nil, headerFields: ["request-id": "req_123"]))!
+        ]
+        let stripeAPIErrorHTTPResponse = HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 402, httpVersion: nil, headerFields: ["request-id": "req_123"])
+        let stripeAPIError = NSError.stp_error(fromStripeResponse: stripeAPIErrorJSON, httpResponse: stripeAPIErrorHTTPResponse)!
         XCTAssertEqual(
             stripeAPIError.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "card_error",
+                "error_code": "incorrect_number",
+                "request_id": "req_123",
+            ]
+        )
+
+        // StripeCore.StripeError.stripeAPIError - same as above, but different type
+        let stripeAPIErrorJSONData = try! JSONSerialization.data(
+            withJSONObject: stripeAPIErrorJSON,
+            options: [.prettyPrinted]
+        )
+        let stripeCoreStripeError = STPAPIClient.decodeStripeErrorResponse(data: stripeAPIErrorJSONData, response: stripeAPIErrorHTTPResponse)!
+        XCTAssertEqual(
+            stripeCoreStripeError.serializeForV1Analytics() as? [String: String],
             [
                 "error_type": "card_error",
                 "error_code": "incorrect_number",
@@ -109,36 +126,6 @@ class AnalyticLoggableErrorTest: XCTestCase {
             [
                 "error_type": "NSURLErrorDomain",
                 "error_code": "-1009",
-            ]
-        )
-
-        // StripeCore.StripeError
-        func CreateStripeError() -> StripeError {
-            let errorJson: [String: Any] = [
-                "error": [
-                    "type": "card_error",
-                    "message": "Your card number is incorrect.",
-                    "code": "incorrect_number",
-                ],
-            ]
-            let errorJsonData = try! JSONSerialization.data(
-                withJSONObject: errorJson,
-                options: [.prettyPrinted]
-            )
-            let decodedErrorResponse: StripeAPIErrorResponse = try! StripeJSONDecoder.decode(
-                jsonData: errorJsonData
-            )
-            var apiError = decodedErrorResponse.error!
-            apiError.statusCode = 402
-            return StripeError.apiError(apiError)
-        }
-        let stripeCoreStripeError = CreateStripeError()
-        XCTAssertEqual(
-            stripeCoreStripeError.serializeForV1Analytics() as? [String: String],
-            [
-                "error_type": "card_error",
-                "error_code": "incorrect_number",
-                "request_id": "req_123",
             ]
         )
     }
