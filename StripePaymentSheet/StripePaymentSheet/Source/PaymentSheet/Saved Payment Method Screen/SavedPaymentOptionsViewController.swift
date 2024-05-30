@@ -571,7 +571,12 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.paymentOptionCellDidSelectRemoveOnNonSavedItem)
+                                              error: Error.paymentOptionCellDidSelectRemoveOnNonSavedItem,
+                                              additionalNonPIIParams: [
+                                                "indexPathRow": collectionView.indexPath(for: paymentOptionCell)?.row ?? "nil",
+                                                "viewModels": viewModels.map { $0.analyticsValue.rawValue },
+                                              ]
+            )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
             return
