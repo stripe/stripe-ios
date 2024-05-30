@@ -49,7 +49,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         let emailTextField = app.textFields["email_text_field"]
         XCTAssertTrue(emailTextField.waitForExistence(timeout: 120.0))  // wait for synchronize to complete
-        emailTextField.tap()
+        // there is no need to tap inside of the e-mail text
+        // field because we auto-focus it
         emailTextField.typeText(emailAddress)
 
         let phoneTextField = app.textFields["phone_text_field"]
