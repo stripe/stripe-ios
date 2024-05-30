@@ -121,7 +121,7 @@ extension CustomerSheetDataSource {
             return try await customerAdapter.fetchPaymentMethods()
         case .customerSession(let customerSessionAdapter):
             let elementsSessionResult = try await customerSessionAdapter.elementsSession()
-            return elementsSessionResult.customer?.paymentMethods ?? []
+            return elementsSessionResult.customer?.paymentMethods
         }
     }
 
