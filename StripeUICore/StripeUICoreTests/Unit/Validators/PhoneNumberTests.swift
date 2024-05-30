@@ -191,7 +191,7 @@ class PhoneNumberTests: XCTestCase {
             PhoneNumber(number: "08022223333", countryCode: "JP"),
             PhoneNumber(number: "08022223333", countryCode: "US")
         )
-        XCTAssertNotEqual(
+        XCTAssertEqual(
             PhoneNumber(number: "+08022223333", countryCode: "US"),
             PhoneNumber(number: "08022223333", countryCode: "US")
         )
