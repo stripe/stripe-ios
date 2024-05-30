@@ -264,7 +264,7 @@ is not supported by the merchant */
 /* Title for a screen for updating a card brand. */
 "Update card brand" = "Update card brand";
 
-/* Text shown on a button that when tapped opens a user's screen with their payment methods. */
+/* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";
 
 /* An error message. */

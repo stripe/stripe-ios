@@ -43,7 +43,7 @@ class VerticalPaymentMethodListView: UIView {
         // Saved payment methods:
         if let savedPaymentMethod {
             // TOOD(porter) Pass in correct `accessoryType`
-            let accessoryButton = AccessoryButton(accessoryType: .viewMore, appearance: appearance)
+            let accessoryButton = RowButton.RightAccessoryButton(accessoryType: .viewMore, appearance: appearance)
             accessoryButton.addTarget(self, action: #selector(didTapAccessoryButton), for: .touchUpInside)
             let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance, rightAccessoryView: accessoryButton) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .saved(paymentMethod: savedPaymentMethod))
