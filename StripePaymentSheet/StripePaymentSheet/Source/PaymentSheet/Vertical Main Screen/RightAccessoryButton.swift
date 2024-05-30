@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 extension RowButton {
-    final class RightAccessoryButton: UIButton {
+    final class RightAccessoryButton: UIView {
 
         enum AccessoryType {
             case edit
@@ -31,49 +31,63 @@ extension RowButton {
                 case .edit:
                     return nil
                 case .viewMore:
-                    return Image.icon_chevron_right.makeImage(template: true)
-                }
-            }
-
-            var imageEdgeInsets: UIEdgeInsets {
-                switch self {
-                case .edit:
-                    return .zero
-                case .viewMore:
-                    return UIEdgeInsets(top: 2, left: 4, bottom: 0, right: 0)
+                    return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
                 }
             }
         }
 
-        // Overridden so auto layout properly accounts for the image offset (if any) and positions the button correctly
-        override var intrinsicContentSize: CGSize {
-            let size = super.intrinsicContentSize
-
-            // TODO(porter) Figure out how to handle this for VisionOS, the alternative (`UIButton.Configuration) was introduced in iOS 15 and we currently support below iOS 15.
-            #if !canImport(CompositorServices)
-            return CGSize(width: size.width + imageEdgeInsets.left + imageEdgeInsets.right,
-                          height: size.height + imageEdgeInsets.top + imageEdgeInsets.bottom)
-            #else
-            return size
-            #endif
+        private var label: UILabel {
+            let label = UILabel()
+            label.text = accessoryType.text
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
+            label.textColor = appearance.colors.primary // TODO(porter) use secondary action color
+            label.adjustsFontSizeToFitWidth = true
+            label.adjustsFontForContentSizeCategory = true
+            label.isAccessibilityElement = false
+            return label
         }
 
-        init(accessoryType: AccessoryType, appearance: PaymentSheet.Appearance) {
+        private var imageView: UIImageView? {
+            guard let image = accessoryType.accessoryImage else { return nil }
+            let imageView = UIImageView(image: image)
+            imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
+            imageView.contentMode = .scaleAspectFit
+            imageView.isAccessibilityElement = false
+            return imageView
+        }
+
+        private var stackView: UIStackView {
+            var views: [UIView] = [label]
+            if let imageView {
+                views.append(imageView)
+            }
+
+            let stackView = UIStackView(arrangedSubviews: views)
+            stackView.axis = .horizontal
+            stackView.spacing = 4
+            return stackView
+        }
+
+        let accessoryType: AccessoryType
+        let appearance: PaymentSheet.Appearance
+        let didTap: () -> Void
+
+        init(accessoryType: AccessoryType, appearance: PaymentSheet.Appearance, didTap: @escaping () -> Void) {
+            self.accessoryType = accessoryType
+            self.appearance = appearance
+            self.didTap = didTap
             super.init(frame: .zero)
-            setTitle(accessoryType.text, for: .normal)
-            setTitleColor(appearance.colors.primary, for: .normal) // TODO read secondary action color
-            titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
-            setImage(accessoryType.accessoryImage, for: .normal)
-            imageView?.tintColor = appearance.colors.primary // TODO read secondary action color
-            semanticContentAttribute = .forceRightToLeft
-            // TODO(porter) Figure out how to handle this for VisionOS, the alternative (`UIButton.Configuration) was introduced in iOS 15 and we currently support below iOS 15.
-            #if !canImport(CompositorServices)
-            imageEdgeInsets = accessoryType.imageEdgeInsets
-            #endif
+            addAndPinSubview(stackView)
 
             accessibilityLabel = accessoryType.text
             accessibilityIdentifier = accessoryType.text
+            accessibilityTraits = [.button]
 
+            addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(handleTap)))
+        }
+
+        @objc private func handleTap() {
+            didTap()
         }
 
         required init?(coder: NSCoder) {
