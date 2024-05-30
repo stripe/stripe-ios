@@ -23,6 +23,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let cbcEligible: Bool
+    let savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior
 
     // MARK: - Read-only Properties
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
@@ -121,6 +122,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         configuration: CustomerSheet.Configuration,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         cbcEligible: Bool,
+        savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior,
         delegate: CustomerAddPaymentMethodViewControllerDelegate
     ) {
         self.configuration = configuration
@@ -133,6 +135,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.paymentMethodTypes = paymentMethodTypes
         self.cbcEligible = cbcEligible
+        self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
     }
@@ -238,8 +241,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             currency: nil,
             amount: nil,
             countryCode: nil,
-            // TODO: CustomerSheet
-            savePaymentMethodConsentBehavior: .legacy)
+            savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior)
             .make()
         formElement.delegate = self
         return formElement

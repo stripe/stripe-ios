@@ -37,7 +37,7 @@ class PaymentSheetFormFactory {
     let amount: Int?
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
-    let savePaymentMethodConsentBehavior: SavePaymentMethodConsentCheckboxDisplayBehavior
+    let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let analyticsClient: STPAnalyticsClient
 
     var shouldDisplaySaveCheckbox: Bool {
@@ -101,7 +101,7 @@ class PaymentSheetFormFactory {
         currency: String?,
         amount: Int?,
         countryCode: String?,
-        savePaymentMethodConsentBehavior: SavePaymentMethodConsentCheckboxDisplayBehavior,
+        savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.configuration = configuration
@@ -864,7 +864,7 @@ extension PaymentSheetFormFactory {
     }
 }
 extension PaymentSheetFormFactory {
-    enum SavePaymentMethodConsentCheckboxDisplayBehavior: Equatable {
+    enum SavePaymentMethodConsentBehavior: Equatable {
         case legacy
         case paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
         case paymentSheetWithCustomerSessionPaymentMethodSaveEnabled

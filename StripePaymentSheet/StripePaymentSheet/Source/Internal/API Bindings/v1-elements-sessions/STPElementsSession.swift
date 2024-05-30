@@ -198,7 +198,7 @@ extension STPElementsSession {
 }
 
 extension STPElementsSession {
-    func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentCheckboxDisplayBehavior {
+    func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
         if let customerSession = customer?.customerSession {
             if let paymentSheetComponent = customerSession.paymentSheetComponent,
                paymentSheetComponent.enabled,

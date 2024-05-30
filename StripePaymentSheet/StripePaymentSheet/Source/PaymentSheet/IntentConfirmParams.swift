@@ -103,7 +103,7 @@ class IntentConfirmParams {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
         }
     }
-    func setAllowRedisplay(for savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentCheckboxDisplayBehavior) {
+    func setAllowRedisplay(for savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior) {
         switch savePaymentMethodConsentBehavior {
         case .legacy:
             // Always send unspecified
