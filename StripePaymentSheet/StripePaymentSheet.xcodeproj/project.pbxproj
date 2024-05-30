@@ -131,6 +131,7 @@
 		6A5997192BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */; };
 		6B28A6B62BE9494500B47DBF /* CustomerSheetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28A6B52BE9494500B47DBF /* CustomerSheetDataSource.swift */; };
 		6B28A6B92BE9712500B47DBF /* CustomerSessionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28A6B82BE9712500B47DBF /* CustomerSessionAdapter.swift */; };
+		6B0E5AE72C08F4B5008AAFBE /* IntentConfirmParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */; };
 		6B31B9B82B9019730064E210 /* ElementsCustomer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B31B9B72B9019730064E210 /* ElementsCustomer.swift */; };
 		6B31B9BA2B90FCE60064E210 /* CustomerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B31B9B92B90FCE60064E210 /* CustomerSession.swift */; };
 		6B7E675071649AE3047D388C /* PaymentSheetFormFactoryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A21CC86104388EFE07CB37D /* PaymentSheetFormFactoryConfig.swift */; };
@@ -466,6 +467,7 @@
 		6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsPaymentMethodElement.swift; sourceTree = "<group>"; };
 		6B28A6B52BE9494500B47DBF /* CustomerSheetDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetDataSource.swift; sourceTree = "<group>"; };
 		6B28A6B82BE9712500B47DBF /* CustomerSessionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSessionAdapter.swift; sourceTree = "<group>"; };
+		6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentConfirmParamsTest.swift; sourceTree = "<group>"; };
 		6B31B9B72B9019730064E210 /* ElementsCustomer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsCustomer.swift; sourceTree = "<group>"; };
 		6B31B9B92B90FCE60064E210 /* CustomerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSession.swift; sourceTree = "<group>"; };
 		6B680A2FF197F612D065F16C /* PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheet.swift; sourceTree = "<group>"; };
@@ -1375,6 +1377,7 @@
 				73FB30705EC36BD0868904A2 /* Elements+TestHelpers.swift */,
 				64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */,
 				990304EF35A0EE37DCE20D5B /* IntentStatusPollerTest.swift */,
+				6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */,
 				FCA28FF8CD5BA829A44CDCE7 /* Link */,
 				33B8F21A22FA091BC9D2924B /* LinkStubs.swift */,
 				C830FEC205E7162FF4D414BE /* PaymentMethodMessagingViewFunctionalTest.swift */,
@@ -1642,6 +1645,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B0E5AE72C08F4B5008AAFBE /* IntentConfirmParamsTest.swift in Sources */,
 				E5C7667A08EA85C0FF12523D /* AddPaymentMethodViewControllerSnapshotTests.swift in Sources */,
 				B63B2CF12BF8313D003810F3 /* VerticalPaymentMethodListViewTest.swift in Sources */,
 				61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */,

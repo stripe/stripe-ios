@@ -1273,6 +1273,82 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
     }
 
+    func testShowsCheckbox_PI_save_enabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                        customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
+                                                                                "payment_method_remove": "enabled"])),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testShowsCheckbox_PISFU_save_enabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                        setupFutureUsage: .offSession,
+                                        customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
+                                                                                "payment_method_remove": "enabled"])),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testShowsCheckbox_PISFU_save_disabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                        setupFutureUsage: .offSession,
+                                        customerSessionData: ("payment_sheet", ["payment_method_save": "disabled",
+                                                                                "payment_method_remove": "enabled"])),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testShowsCheckbox_SI_save_disabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testSetupIntent(paymentMethodTypes: [.card],
+                                      customerSessionData: ("payment_sheet", ["payment_method_save": "disabled",
+                                                                              "payment_method_remove": "enabled"])),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertTrue(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testShowsCheckbox_SI_save_enabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testSetupIntent(paymentMethodTypes: [.card],
+                                      customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
+                                                                              "payment_method_remove": "enabled"])),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertTrue(factory.isSettingUp)
+        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
+    }
     func testBillingAddressSection() {
         let defaultAddress = PaymentSheet.Address(
             city: "San Francisco",
