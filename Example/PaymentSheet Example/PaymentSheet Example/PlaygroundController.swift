@@ -449,7 +449,7 @@ extension PlaygroundController {
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
             "customer_session_payment_method_save": "enabled",
             "customer_session_payment_method_remove": "enabled",
-            "customer_session_payment_method_redisplay": "enabled"
+            "customer_session_payment_method_redisplay": "enabled",
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
