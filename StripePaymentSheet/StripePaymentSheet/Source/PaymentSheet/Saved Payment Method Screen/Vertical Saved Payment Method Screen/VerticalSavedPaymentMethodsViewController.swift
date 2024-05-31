@@ -64,8 +64,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     var canRemovePaymentMethods: Bool {
-        // Can remove a payment method if we have more than one payment method or if we have one payment method and `allowsRemovalOfLastSavedPaymentMethod` is true
-        return paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod
+        // Can remove a payment method if we have more than one payment method or if we have one payment method and `allowsRemovalOfLastSavedPaymentMethod` is true AND paymentMethodRemove is true
+        return (paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod) && configuration.paymentMethodRemove
     }
 
     var canEdit: Bool {
