@@ -165,7 +165,9 @@ extension FinancialConnectionsWebFlowViewController {
                         {
                             let instantDebitsLinkedBank = InstantDebitsLinkedBankImplementation(
                                 paymentMethodId: paymentMethodId,
-                                bankName: Self.extractValue(from: returnUrl, key: "bank_name"),
+                                bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
+                                // backend can return "+" instead of a more-common encoding of "%20" for spaces
+                                    .replacingOccurrences(of: "+", with: " "),
                                 last4: Self.extractValue(from: returnUrl, key: "last4")
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
@@ -293,9 +295,7 @@ extension FinancialConnectionsWebFlowViewController {
             .queryItems?
             .first(where: { $0.name == key })?
             .value?
-            .removingPercentEncoding?
-        // backend can return "+" instead of a more-common encoding of "%20" for spaces
-            .replacingOccurrences(of: "+", with: " ")
+            .removingPercentEncoding
     }
 }
 
