@@ -292,7 +292,10 @@ extension FinancialConnectionsWebFlowViewController {
         return components
             .queryItems?
             .first(where: { $0.name == key })?
-            .value?.removingPercentEncoding
+            .value?
+            .removingPercentEncoding?
+        // backend can return "+" instead of a more-common encoding of "%20" for spaces
+            .replacingOccurrences(of: "+", with: " ")
     }
 }
 
