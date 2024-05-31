@@ -245,6 +245,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             isCustom: false,
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
+            isLinkEmailPrefilled: walletHeader.isDisplayingLinkEmail,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
             intentConfig: intent.intentConfig,

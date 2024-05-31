@@ -74,6 +74,7 @@ extension STPAnalyticsClient {
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
         linkEnabled: Bool,
+        isLinkEmailPrefilled: Bool,
         activeLinkSession: Bool,
         currency: String?,
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
@@ -88,6 +89,9 @@ extension STPAnalyticsClient {
             activeLinkSession: activeLinkSession,
             currency: currency,
             intentConfig: intentConfig,
+            params: [
+                "email_displayed_in_link_button": "",
+            ],
             apiClient: apiClient
         )
     }

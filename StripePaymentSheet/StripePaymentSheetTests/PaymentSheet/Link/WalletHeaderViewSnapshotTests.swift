@@ -22,6 +22,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
             delegate: nil
         )
         verify(headerView)
+        XCTAssertFalse(headerView.isDisplayingLinkEmail)
     }
 
     func testApplePayButtonWithCustomCta() {
@@ -31,6 +32,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
             delegate: nil
         )
         verify(headerView)
+        XCTAssertFalse(headerView.isDisplayingLinkEmail)
     }
 
     func testLinkButton() {
@@ -39,7 +41,19 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
             delegate: nil
         )
         verify(headerView)
+        XCTAssertFalse(headerView.isDisplayingLinkEmail)
     }
+    
+    func testLinkButtonWithEmail() {
+        LinkAccountContext.shared.account = .init(email: "foo@bar.com", session: .init(clientSecret: "", emailAddress: "foo@bar.com", verificationSessions: []), publishableKey: nil)
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: .link,
+            delegate: nil
+        )
+        verify(headerView)
+        XCTAssertTrue(headerView.isDisplayingLinkEmail)
+    }
+
 
     // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
     func testAdaptiveElements() {
@@ -67,6 +81,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
         headerView.traitCollectionDidChange(nil)
 
         verify(headerView, identifier: "Dark")
+        XCTAssertFalse(headerView.isDisplayingLinkEmail)
     }
 
     // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
@@ -96,6 +111,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
         headerView.traitCollectionDidChange(nil)
 
         verify(headerView, identifier: "Dark")
+        XCTAssertFalse(headerView.isDisplayingLinkEmail)
     }
 
     func testAllButtons() {
@@ -107,6 +123,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
 
         headerView.showsCardPaymentMessage = true
         verify(headerView, identifier: "Card only")
+        XCTAssertFalse(headerView.isDisplayingLinkEmail)
     }
 
     func testAllButtonsWithCustomApplePayCta() {
@@ -119,6 +136,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
 
         headerView.showsCardPaymentMessage = true
         verify(headerView, identifier: "Card only")
+        XCTAssertFalse(headerView.isDisplayingLinkEmail)
     }
 
     func testCustomFont() throws {
@@ -171,6 +189,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
 
         headerView.showsCardPaymentMessage = true
         verify(headerView, identifier: "Card only")
+        XCTAssertFalse(headerView.isDisplayingLinkEmail)
     }
 
     func verify(

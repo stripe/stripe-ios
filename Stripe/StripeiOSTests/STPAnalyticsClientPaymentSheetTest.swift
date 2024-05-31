@@ -114,7 +114,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         client.logPaymentSheetShow(
             isCustom: true,
             paymentMethod: .newPM,
-            linkEnabled: false,
+            linkEnabled: false, isLinkEmailPrefilled: false,
             activeLinkSession: false,
             currency: "USD",
             apiClient: .init()
@@ -125,7 +125,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         client.logPaymentSheetShow(
             isCustom: false,
             paymentMethod: .savedPM,
-            linkEnabled: false,
+            linkEnabled: false, isLinkEmailPrefilled: false,
             activeLinkSession: false,
             currency: "USD",
             apiClient: .init()
@@ -231,7 +231,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         client.logPaymentSheetShow(
             isCustom: false,
             paymentMethod: .newPM,
-            linkEnabled: false,
+            linkEnabled: false, isLinkEmailPrefilled: false,
             activeLinkSession: false,
             currency: "USD",
             apiClient: .init()

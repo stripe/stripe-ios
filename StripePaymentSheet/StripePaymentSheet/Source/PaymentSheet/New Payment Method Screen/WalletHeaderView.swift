@@ -100,6 +100,10 @@ extension PaymentSheetViewController {
             }
         }
 
+        var isDisplayingLinkEmail: Bool {
+            return stackView.arrangedSubviews.contains(payWithLinkButton) && payWithLinkButton.isDisplayingEmail
+        }
+
         init(options: WalletOptions,
              appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
              applePayButtonType: PKPaymentButtonType = .plain,
@@ -160,7 +164,7 @@ extension PaymentSheetViewController {
             button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
 
             NSLayoutConstraint.activate([
-                button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
+                button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight),
             ])
 
             button.cornerRadius = appearance.cornerRadius

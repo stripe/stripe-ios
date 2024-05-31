@@ -211,6 +211,10 @@ final class PayWithLinkButton: UIControl {
         return .noValidAccount
     }
 
+    var isDisplayingEmail: Bool {
+        return !(emailLabel.text?.isEmpty ?? true) && !emailStackView.isHidden
+    }
+
     init() {
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true

@@ -287,6 +287,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             isCustom: true,
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
+            isLinkEmailPrefilled: walletHeader.isDisplayingLinkEmail,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
             intentConfig: intent.intentConfig,

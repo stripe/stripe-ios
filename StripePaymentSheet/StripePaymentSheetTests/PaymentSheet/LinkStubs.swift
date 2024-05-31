@@ -51,5 +51,4 @@ extension LinkStubs {
             verificationSessions: []
         )
     }
-
 }

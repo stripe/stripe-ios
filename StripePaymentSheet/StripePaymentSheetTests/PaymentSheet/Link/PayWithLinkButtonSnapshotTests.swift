@@ -28,6 +28,7 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
 
         sut.isHighlighted = true
         verify(sut, identifier: "Highlighted")
+        XCTAssertFalse(sut.isDisplayingEmail)
     }
 
     func testDefault_rounded() {
@@ -35,18 +36,21 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         sut.cornerRadius = 16
         sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)
         verify(sut)
+        XCTAssertFalse(sut.isDisplayingEmail)
     }
 
     func testDisabled() {
         let sut = makeSUT()
         sut.isEnabled = false
         verify(sut)
+        XCTAssertFalse(sut.isDisplayingEmail)
     }
 
     func testRegistered() {
         let sut = makeSUT()
         sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
         verify(sut)
+        XCTAssertFalse(sut.isDisplayingEmail)
     }
 
     func testRegistered_rounded() {
@@ -54,6 +58,7 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         sut.cornerRadius = 16
         sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
         verify(sut)
+        XCTAssertTrue(sut.isDisplayingEmail)
     }
 
     func testRegistered_square() {
@@ -61,12 +66,14 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         sut.cornerRadius = 0
         sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
         verify(sut)
+        XCTAssertTrue(sut.isDisplayingEmail)
     }
 
     func testRegistered_withLongEmailAddress() {
         let sut = makeSUT()
         sut.linkAccount = makeAccountStub(email: longEmailAddress, isRegistered: true)
         verify(sut)
+        XCTAssertTrue(sut.isDisplayingEmail)
     }
 
     func verify(
@@ -78,25 +85,22 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         sut.autosizeHeight(width: 300)
         STPSnapshotVerifyView(sut, identifier: identifier, file: file, line: line)
     }
-
+    
+    fileprivate func makeSUT() -> PayWithLinkButton {
+        return PayWithLinkButton()
+    }
 }
 
 extension PayWithLinkButtonSnapshotTests {
-
-    fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let isRegistered: Bool
     }
 
-    fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
+    func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
         return LinkAccountStub(
             email: email,
             isRegistered: isRegistered
         )
     }
-
-    fileprivate func makeSUT() -> PayWithLinkButton {
-        return PayWithLinkButton()
-    }
-
 }
