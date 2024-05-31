@@ -29,6 +29,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     // MARK: Private properties
     private let configuration: PaymentSheet.Configuration
     private let isCBCEligible: Bool
+    private let paymentMethodRemove: Bool
 
     private var updateViewController: UpdateCardViewController?
 
@@ -65,7 +66,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     var canRemovePaymentMethods: Bool {
         // Can remove a payment method if we have more than one payment method or if we have one payment method and `allowsRemovalOfLastSavedPaymentMethod` is true AND paymentMethodRemove is true
-        return (paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod) && configuration.paymentMethodRemove
+        return (paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod) && paymentMethodRemove
     }
 
     var canEdit: Bool {
@@ -128,8 +129,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(configuration: PaymentSheet.Configuration,
          selectedPaymentMethod: STPPaymentMethod?,
          paymentMethods: [STPPaymentMethod],
+         paymentMethodRemove: Bool,
          isCBCEligible: Bool) {
         self.configuration = configuration
+        self.paymentMethodRemove = paymentMethodRemove
         self.isCBCEligible = isCBCEligible
         self.isRemoveOnlyMode = paymentMethods.count == 1 && paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
         super.init(nibName: nil, bundle: nil)
