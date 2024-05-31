@@ -79,7 +79,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         stackView.axis = .vertical
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
-        
+
         updateUI()
     }
 
@@ -98,7 +98,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             bottomSheetController?.pushContentViewController(updateViewController)
             return
         }
-        
+
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
@@ -112,7 +112,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     func makeForm(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
         return PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType).make()
     }
-    
+
     func updateUI() {
         self.paymentMethodListViewController = VerticalPaymentMethodListViewController(
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod ?? savedPaymentMethods.first,
@@ -123,7 +123,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             appearance: configuration.appearance,
             delegate: self
         )
-        
+
         // If we have only one row in the vertical list and it collects user input, display the form instead of the payment method list.
         let firstPaymentMethodType = paymentMethodTypes[0]
         let form = makeForm(paymentMethodType: firstPaymentMethodType)
@@ -215,7 +215,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             return true
         }
     }
-    
+
     func didTapSavedPaymentMethodAccessoryButton() {
         presentManageScreen()
     }
@@ -241,37 +241,36 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
 extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
         guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
-        
+
         // Detach the payment method from the customer
         let manager = SavedPaymentMethodManager(configuration: configuration)
         manager.detach(paymentMethod: paymentMethod, using: ephemeralKeySecret)
-        
+
         // Update our model
         self.selectedPaymentOption = nil
-        self.savedPaymentMethods.removeAll(where: {$0.stripeId == paymentMethod.stripeId})
-        
+        self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
+
         // Update UI
         updateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
-    
+
     func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
 
         // Update the payment method
         let manager = SavedPaymentMethodManager(configuration: configuration)
         let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
-        
+
         // Update our model
         self.selectedPaymentOption = .saved(paymentMethod: updatedPaymentMethod, confirmParams: nil)
-        if let row = self.savedPaymentMethods.firstIndex(where: {$0.stripeId == paymentMethod.stripeId}) {
+        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == paymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
-        
+
         // Update UI
         updateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
-    
-    
+
 }

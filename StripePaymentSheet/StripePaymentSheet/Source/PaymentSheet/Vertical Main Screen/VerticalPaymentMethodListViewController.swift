@@ -11,8 +11,7 @@ import UIKit
 protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
     /// - Returns: Whether or not the payment method row button should appear selected.
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool
-    
-    
+
     func didTapSavedPaymentMethodAccessoryButton()
 }
 
@@ -50,11 +49,11 @@ class VerticalPaymentMethodListViewController: UIViewController {
 }
 
 extension VerticalPaymentMethodListViewController: VerticalPaymentMethodListViewDelegate {
-    
+
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool {
         return delegate?.didTapPaymentMethod(selection) ?? false
     }
-    
+
     func didTapSavedPaymentMethodAccessoryButton() {
         delegate?.didTapSavedPaymentMethodAccessoryButton()
     }

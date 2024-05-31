@@ -81,19 +81,19 @@ extension RowButton {
             accessibilityLabel = accessoryType.text
             accessibilityIdentifier = accessoryType.text
             accessibilityTraits = [.button]
-            
+
             addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
         }
-        
+
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
-        
+
         @objc func handleTap() {
             didTap()
         }
     }
-    
+
 }
 
 extension RowButton.RightAccessoryButton {
@@ -112,7 +112,7 @@ extension RowButton.RightAccessoryButton {
             // If only one payment method left and we can remove it we can edit
             return .edit
         }
-        
+
         return nil
     }
 }

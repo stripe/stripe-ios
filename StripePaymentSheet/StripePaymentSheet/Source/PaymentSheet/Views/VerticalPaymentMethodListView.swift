@@ -12,7 +12,7 @@ import UIKit
 protocol VerticalPaymentMethodListViewDelegate: AnyObject {
     /// - Returns: Whether or not the payment method row button should appear selected.
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool
-    
+
     func didTapSavedPaymentMethodAccessoryButton()
 }
 
@@ -43,7 +43,7 @@ class VerticalPaymentMethodListView: UIView {
         var views = [UIView]()
         // Saved payment methods:
         if let savedPaymentMethod {
-            var accessoryButton: RowButton.RightAccessoryButton? = nil
+            var accessoryButton: RowButton.RightAccessoryButton?
             if let rightAccessoryType {
                 accessoryButton = RowButton.RightAccessoryButton(accessoryType: rightAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
             }
