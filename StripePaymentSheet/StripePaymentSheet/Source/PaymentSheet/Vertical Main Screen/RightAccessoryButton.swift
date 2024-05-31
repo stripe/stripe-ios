@@ -57,11 +57,7 @@ extension RowButton {
         }
 
         private var stackView: UIStackView {
-            var views: [UIView] = [label]
-            if let imageView {
-                views.append(imageView)
-            }
-
+            let views: [UIView] = [label, imageView].compactMap { $0 }
             let stackView = UIStackView(arrangedSubviews: views)
             stackView.spacing = 4
             return stackView
