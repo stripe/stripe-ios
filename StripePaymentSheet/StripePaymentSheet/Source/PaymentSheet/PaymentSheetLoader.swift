@@ -89,8 +89,11 @@ final class PaymentSheetLoader {
                     showApplePay: isFlowController ? isApplePayEnabled : false,
                     showLink: isFlowController ? isLinkEnabled : false
                 )
-                analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate,
-                                                             linkEnabled: intent.supportsLink, defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
+                analyticsClient.logPaymentSheetLoadSucceeded(
+                    loadingStartDate: loadingStartDate,
+                    linkEnabled: isLinkEnabled,
+                    defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
+                )
                 if isFlowController {
                     AnalyticsHelper.shared.startTimeMeasurement(.checkout)
                 }
@@ -142,7 +145,7 @@ final class PaymentSheetLoader {
 
     static func lookupLinkAccount(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
         // Only lookup the consumer account if Link is supported
-        guard intent.supportsLink else {
+        guard isLinkEnabled(intent: intent, configuration: configuration) else {
             return nil
         }
 

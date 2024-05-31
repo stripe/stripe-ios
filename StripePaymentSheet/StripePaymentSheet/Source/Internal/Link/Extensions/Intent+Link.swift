@@ -18,10 +18,6 @@ extension Intent {
         return supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
-    var onlySupportsLinkBank: Bool {
-        return supportsLink && (linkFundingSources == [.bankAccount])
-    }
-
     var linkFlags: [String: Bool] {
         switch self {
         case .paymentIntent(let paymentIntent, _):
