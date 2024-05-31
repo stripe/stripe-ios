@@ -63,7 +63,6 @@ extension RowButton {
             }
 
             let stackView = UIStackView(arrangedSubviews: views)
-            stackView.axis = .horizontal
             stackView.spacing = 4
             return stackView
         }
@@ -82,16 +81,38 @@ extension RowButton {
             accessibilityLabel = accessoryType.text
             accessibilityIdentifier = accessoryType.text
             accessibilityTraits = [.button]
-
-            addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(handleTap)))
+            
+            addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
         }
-
-        @objc private func handleTap() {
-            didTap()
-        }
-
+        
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
+        
+        @objc func handleTap() {
+            didTap()
+        }
+    }
+    
+}
+
+extension RowButton.RightAccessoryButton {
+    static func getAccessoryButtonType(savedPaymentMethodsCount: Int,
+                                       isFirstCardCoBranded: Bool,
+                                       isCBCEligible: Bool,
+                                       allowsRemovalOfLastSavedPaymentMethod: Bool,
+                                       paymentMethodRemove: Bool) -> AccessoryType? {
+        // If we have more than 1 saved payment method always show the "View more" button
+        if savedPaymentMethodsCount > 1 {
+            return .viewMore
+        } else if savedPaymentMethodsCount == 1 && isFirstCardCoBranded && isCBCEligible {
+            // If only one card left but it is co-branded we can edit it
+            return .edit
+        } else if savedPaymentMethodsCount == 1 && allowsRemovalOfLastSavedPaymentMethod && paymentMethodRemove {
+            // If only one payment method left and we can remove it we can edit
+            return .edit
+        }
+        
+        return nil
     }
 }
