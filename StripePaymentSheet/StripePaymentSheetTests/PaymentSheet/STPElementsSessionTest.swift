@@ -144,4 +144,30 @@ class STPElementsSessionTest: XCTestCase {
 
         XCTAssertEqual(.legacy, savePaymentMethodConsentBehavior)
     }
+    func testAllowsRemovalOfPaymentMethodsForPaymentSheet_noCustomerSessions() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: nil)
+
+        let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+
+        XCTAssertTrue(allowsRemoval)
+    }
+    func testAllowsRemovalOfPaymentMethodsForPaymentSheet_pmr_disabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
+                                                                                                    "payment_method_remove": "disabled"]))
+
+        let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+
+        XCTAssertFalse(allowsRemoval)
+    }
+    func testAllowsRemovalOfPaymentMethodsForPaymentSheet_pmr_enabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
+                                                                                                    "payment_method_remove": "enabled"]))
+
+        let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+
+        XCTAssertTrue(allowsRemoval)
+    }
 }
