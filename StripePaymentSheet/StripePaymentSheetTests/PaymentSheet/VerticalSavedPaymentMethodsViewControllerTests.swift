@@ -29,6 +29,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
@@ -38,6 +39,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
@@ -47,6 +49,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
@@ -57,6 +60,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertFalse(viewController.canRemovePaymentMethods)
     }
@@ -66,6 +70,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertTrue(viewController.canEdit)
     }
@@ -75,6 +80,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertFalse(viewController.canEdit)
         // Should be in remove only mode
@@ -86,6 +92,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertTrue(viewController.canEdit)
     }
@@ -96,6 +103,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertFalse(viewController.canEdit)
     }
@@ -106,6 +114,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: false)
         XCTAssertFalse(viewController.canEdit)
     }
@@ -116,6 +125,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
                                                                        isCBCEligible: true)
         XCTAssertTrue(viewController.canEdit)
     }
