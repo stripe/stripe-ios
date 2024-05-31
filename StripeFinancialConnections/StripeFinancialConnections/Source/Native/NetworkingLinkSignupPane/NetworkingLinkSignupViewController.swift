@@ -312,24 +312,11 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         // first time they enter the e-mail
                         if didShowPhoneNumberFieldForTheFirstTime {
                             let didPrefillPhoneNumber = (self.formView.phoneTextField.phoneNumber?.number ?? "").count > 1
-                            // if the phone number is pre-filled, we don't focus on the phone number field
                             if !didPrefillPhoneNumber {
-                                let didPrefillEmailAddress = {
-                                    if
-                                        let accountholderCustomerEmailAddress = self.dataSource.manifest.accountholderCustomerEmailAddress,
-                                        !accountholderCustomerEmailAddress.isEmpty
-                                    {
-                                        return true
-                                    } else {
-                                        return false
-                                    }
-                                }()
-                                // we don't want to auto-focus the phone number field if we pre-filled the email
-                                if !didPrefillEmailAddress {
-                                    // this disables the "Phone" label animating (we don't want that animation here)
-                                    UIView.performWithoutAnimation {
-                                        self.formView.beginEditingPhoneNumberField()
-                                    }
+                                // this disables the "Phone" label animating (we don't want that animation here)
+                                UIView.performWithoutAnimation {
+                                    // auto-focus the non-prefilled phone field
+                                    self.formView.beginEditingPhoneNumberField()
                                 }
                             } else {
                                 // user is done with e-mail AND phone number, so dismiss the keyboard
