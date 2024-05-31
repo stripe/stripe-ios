@@ -115,10 +115,11 @@ final class PaymentSheetLoader {
     // MARK: - Helpers
 
     static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
-        guard intent.supportsLink else {
-            return false
-        }
-        return !configuration.requiresBillingDetailCollection()
+        return intent.supportsLink
+        // Link can't be configured to require additional billing address collection
+        && !configuration.requiresBillingDetailCollection()
+        // Link doesn't make sense for Dashboard b/c the customer is not present
+        && configuration.apiClient.publishableKeyIsUserKey
     }
 
     // MARK: - Helper methods that load things
