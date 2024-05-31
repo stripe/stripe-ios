@@ -37,6 +37,7 @@ final class PaymentMethodRowButton: UIView {
             circleView.isHidden = !isSelected
             updateButton.isHidden = !canUpdate
             removeButton.isHidden = !canRemove
+            stackView.isUserInteractionEnabled = isEditing
         }
     }
 
@@ -111,9 +112,10 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [.makeSpacerView(), circleView, updateButton, removeButton])
+        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, updateButton, removeButton])
         // margins handled by the `RowButton`
         stackView.directionalLayoutMargins = .zero
+        stackView.isUserInteractionEnabled = isEditing
         return stackView
     }()
 
