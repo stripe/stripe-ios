@@ -3600,7 +3600,7 @@ extension PaymentSheetUITestCase {
 
         app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        XCTAssertTrue(app.buttons["••••4242"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
 

@@ -13,7 +13,7 @@ import UIKit
 extension RowButton {
     final class RightAccessoryButton: UIView {
 
-        enum AccessoryType {
+        enum AccessoryType: Equatable {
             case edit
             case viewMore
 
@@ -98,17 +98,14 @@ extension RowButton.RightAccessoryButton {
                                        isCBCEligible: Bool,
                                        allowsRemovalOfLastSavedPaymentMethod: Bool,
                                        paymentMethodRemove: Bool) -> AccessoryType? {
+        guard savedPaymentMethodsCount > 0 else { return nil }
+
         // If we have more than 1 saved payment method always show the "View more" button
         if savedPaymentMethodsCount > 1 {
             return .viewMore
-        } else if savedPaymentMethodsCount == 1 && isFirstCardCoBranded && isCBCEligible {
-            // If only one card left but it is co-branded we can edit it
-            return .edit
-        } else if savedPaymentMethodsCount == 1 && allowsRemovalOfLastSavedPaymentMethod && paymentMethodRemove {
-            // If only one payment method left and we can remove it we can edit
-            return .edit
         }
 
-        return nil
+        // We only have 1 payment method... show the edit icon if the card brand can be updated or if it can be removed
+        return (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && paymentMethodRemove) ? .edit : nil
     }
 }
