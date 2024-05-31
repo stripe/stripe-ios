@@ -100,16 +100,17 @@ struct PaymentSheetTestPlayground: View {
                             .autocapitalization(.none)
                     }
                     Group {
-                        VStack {
-                            HStack {
-                                Text("Customer Session Settings")
-                                    .font(.subheadline)
-                                    .bold()
-                                Spacer()
+                        if playgroundController.settings.customerKeyType == .customerSession {
+                            VStack {
+                                HStack {
+                                    Text("Customer Session Settings")
+                                        .font(.subheadline)
+                                        .bold()
+                                    Spacer()
+                                }
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRedisplay)
                             }
-                            SettingPickerView(setting: $playgroundController.settings.paymentMethodSave)
-                            SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
-                            SettingPickerView(setting: $playgroundController.settings.paymentMethodRedisplay)
                         }
                     }
                     Divider()
