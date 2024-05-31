@@ -210,8 +210,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 // Otherwise, return true so the payment method appears selected in the list
                 return true
             }
-        case .saved:
-            // TOOD Handle selection of saved payment method
+        case let .saved(paymentMethod: paymentMethod):
+            selectedPaymentOption = .saved(paymentMethod: paymentMethod, confirmParams: nil)
             return true
         }
     }
