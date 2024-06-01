@@ -165,7 +165,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             fetchedSetupIntentExpectation.fulfill()
             return HTTPStubsResponse(jsonObject: STPTestUtils.jsonNamed("SetupIntent")!, statusCode: 400, headers: nil)
         }
-        
+
         let paymentHandlerExpectation = expectation(
             description: "paymentHandlerFinished"
         )
