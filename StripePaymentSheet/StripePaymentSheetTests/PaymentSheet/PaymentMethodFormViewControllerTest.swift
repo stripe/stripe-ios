@@ -34,8 +34,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...and no default billing address...
         XCTAssertEqual(configuration.defaultBillingDetails, PaymentSheet.Configuration().defaultBillingDetails)
         // ...PaymentMethodFormVC...
-        let form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [.card]), configuration: .paymentSheet(configuration), paymentMethod: .stripe(.card)).make()
-        let sut = PaymentMethodFormViewController(type: .stripe(.card), form: form, configuration: configuration)
+        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, delegate: self)
 
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
@@ -51,5 +50,15 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
 
         // ...should update its address fields with the shipping address
         XCTAssertEqual(sut.form.getTextFieldElement("Address line 1")?.text, "Updated line1")
+    }
+}
+
+extension PaymentMethodFormViewControllerTest: PaymentMethodFormViewControllerDelegate {
+    func didUpdate(_ viewController: StripePaymentSheet.PaymentMethodFormViewController) {
+
+    }
+
+    func updateErrorLabel(for error: (any Error)?) {
+
     }
 }
