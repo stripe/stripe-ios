@@ -13,7 +13,6 @@ import Foundation
 import UIKit
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: AddPaymentMethodViewController)
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool
     func updateErrorLabel(for: Error?)
 }
 
@@ -60,8 +59,8 @@ class AddPaymentMethodViewController: UIViewController {
 
     var overrideCallToAction: ConfirmButton.CallToActionType? {
         return overrideBuyButtonBehavior != nil
-            ? ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
-            : nil
+        ? ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
+        : nil
     }
 
     var overrideCallToActionShouldEnable: Bool {
@@ -78,11 +77,11 @@ class AddPaymentMethodViewController: UIViewController {
 
     var bottomNoticeAttributedString: NSAttributedString? {
         if selectedPaymentMethodType == .stripe(.USBankAccount) {
-            if let usBankPaymentMethodElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement {
+            if let usBankPaymentMethodElement = usBankAccountFormElement {
                 return usBankPaymentMethodElement.mandateString
             }
         } else if selectedPaymentMethodType == .stripe(.instantDebits) {
-            if let instantDebitsLinkedBank = paymentMethodFormElement as? InstantDebitsPaymentMethodElement {
+            if let instantDebitsLinkedBank = instantDebitsFormElement {
                 return instantDebitsLinkedBank.mandateString
             }
         }
@@ -108,47 +107,27 @@ class AddPaymentMethodViewController: UIViewController {
 
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
+    private let isLinkEnabled: Bool
     var previousCustomerInput: IntentConfirmParams?
 
-    // We are keeping usBankAccountInfo in memory to preserve state if the user switches payment method types
-    private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
+    private var usBankAccountFormElement: USBankAccountPaymentMethodElement? {
+        paymentMethodFormElement as? USBankAccountPaymentMethodElement
+    }
     // We are keeping `instantDebitsFormElement` in memory to preserve state if the user switches payment method types
-    private var instantDebitsFormElement: InstantDebitsPaymentMethodElement?
+    private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? {
+        paymentMethodFormElement as? InstantDebitsPaymentMethodElement
+    }
 
-    private lazy var paymentMethodFormElement: PaymentMethodElement = {
-        if selectedPaymentMethodType == .stripe(.USBankAccount) {
-            if let usBankAccountFormElement {
-                // Use the cached form instead of creating a new one
-                return usBankAccountFormElement
-            } else {
-                // Cache the form
-                let element = makeElement(for: .stripe(.USBankAccount))
-                usBankAccountFormElement = element as? USBankAccountPaymentMethodElement
-                return element
-            }
-        } else if selectedPaymentMethodType == .stripe(.instantDebits) {
-            if let instantDebitsFormElement {
-                // Use the cached form instead of creating a new one
-                return instantDebitsFormElement
-            } else {
-                // Cache the form
-                let element = makeElement(for: .stripe(.instantDebits))
-                instantDebitsFormElement = element as? InstantDebitsPaymentMethodElement
-                return element
-            }
-        }
-        let element = makeElement(for: selectedPaymentMethodType)
-        // Only use the previous customer input in the very first load, to avoid overwriting customer input
-        previousCustomerInput = nil
-        return element
-    }()
+    private var paymentMethodFormElement: PaymentMethodElement {
+        paymentMethodFormViewController.form
+    }
 
     // MARK: - Views
-    private var paymentMethodDetailsView: UIView {
-        return paymentMethodFormViewController.view
-    }
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        return PaymentMethodFormViewController(type: selectedPaymentMethodType, form: paymentMethodFormElement, configuration: configuration)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, previousCustomerInput: previousCustomerInput, configuration: configuration, isLinkEnabled: isLinkEnabled, delegate: self)
+        // Only use the previous customer input in the very first load, to avoid overwriting customer input
+        previousCustomerInput = nil
+        return pmFormVC
     }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
@@ -176,12 +155,14 @@ class AddPaymentMethodViewController: UIViewController {
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         previousCustomerInput: IntentConfirmParams? = nil,
+        isLinkEnabled: Bool,
         delegate: AddPaymentMethodViewControllerDelegate? = nil
     ) {
         self.configuration = configuration
         self.intent = intent
         self.previousCustomerInput = previousCustomerInput
         self.delegate = delegate
+        self.isLinkEnabled = isLinkEnabled
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -223,54 +204,14 @@ class AddPaymentMethodViewController: UIViewController {
 
     private func updateUI() {
         // Swap out the input view if necessary
-        if paymentMethodFormElement !== paymentMethodDetailsView {
-#if !canImport(CompositorServices)
-            UISelectionFeedbackGenerator().selectionChanged()
-#endif
-            paymentMethodFormViewController = PaymentMethodFormViewController(type: selectedPaymentMethodType, form: paymentMethodFormElement, configuration: configuration)
-            switchContentIfNecessary(to: paymentMethodFormViewController, containerView: paymentMethodDetailsContainerView)
-        }
-    }
-
-    private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
-        let offerSaveToLinkWhenSupported = delegate?.shouldOfferLinkSignup(self) ?? false
-
-        let formElement = PaymentSheetFormFactory(
-            intent: intent,
-            configuration: .paymentSheet(configuration),
-            paymentMethod: type,
-            previousCustomerInput: previousCustomerInput,
-            offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
-            linkAccount: LinkAccountContext.shared.account
-        ).make()
-        formElement.delegate = self
-        return formElement
+        switchContentIfNecessary(to: paymentMethodFormViewController, containerView: paymentMethodDetailsContainerView)
     }
 
     private func updateFormElement() {
-        if selectedPaymentMethodType == .stripe(.USBankAccount) {
-            if let usBankAccountFormElement {
-                // Use the cached form instead of creating a new one
-                paymentMethodFormElement = usBankAccountFormElement
-            } else {
-                // Cache the form
-                paymentMethodFormElement = makeElement(for: .stripe(.USBankAccount))
-                usBankAccountFormElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement
-            }
-        } else if selectedPaymentMethodType == .stripe(.instantDebits) {
-            if let instantDebitsFormElement {
-                // Use the cached form instead of creating a new one
-                paymentMethodFormElement = instantDebitsFormElement
-            } else {
-                // Cache the form
-                paymentMethodFormElement = makeElement(for: .stripe(.instantDebits))
-                instantDebitsFormElement = paymentMethodFormElement as? InstantDebitsPaymentMethodElement
-            }
-        } else {
-            paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
+        if selectedPaymentMethodType != paymentMethodFormViewController.paymentMethodType {
+            paymentMethodFormViewController = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, previousCustomerInput: previousCustomerInput, configuration: configuration, isLinkEnabled: isLinkEnabled, delegate: self)
         }
         updateUI()
-        sendEventToSubviews(.viewDidAppear, from: view)
     }
 
     func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
@@ -455,27 +396,22 @@ class AddPaymentMethodViewController: UIViewController {
 
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
+#if !canImport(CompositorServices)
+            UISelectionFeedbackGenerator().selectionChanged()
+#endif
         updateFormElement()
         delegate?.didUpdate(self)
     }
 }
 
-// MARK: - ElementDelegate
+// MARK: - PaymentMethodFormViewControllerDelegate
 
-extension AddPaymentMethodViewController: ElementDelegate {
-    func continueToNextField(element: Element) {
+extension AddPaymentMethodViewController: PaymentMethodFormViewControllerDelegate {
+    func didUpdate(_ viewController: PaymentMethodFormViewController) {
         delegate?.didUpdate(self)
     }
 
-    func didUpdate(element: Element) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
-        delegate?.didUpdate(self)
-        animateHeightChange()
-    }
-}
-
-extension AddPaymentMethodViewController: PresentingViewControllerDelegate {
-    func presentViewController(viewController: UIViewController, completion: (() -> Void)?) {
-        self.present(viewController, animated: true, completion: completion)
+    func updateErrorLabel(for error: Swift.Error?) {
+        delegate?.updateErrorLabel(for: error)
     }
 }
