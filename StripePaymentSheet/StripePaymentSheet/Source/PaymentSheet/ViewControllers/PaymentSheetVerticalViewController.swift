@@ -37,7 +37,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         return navBar
     }()
 
-    var paymentMethodListViewController: VerticalPaymentMethodListViewController!
+    lazy var paymentMethodListViewController: VerticalPaymentMethodListViewController = {
+        return VerticalPaymentMethodListViewController(
+            savedPaymentMethod: loadResult.savedPaymentMethods.first,
+            paymentMethodTypes: paymentMethodTypes,
+            shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
+            shouldShowLink: loadResult.isLinkEnabled && isFlowController, // TODO: Edge case where we show Link as button in FC if Apple Pay not enabled
+            rightAccessoryType: nil,
+            appearance: configuration.appearance,
+            delegate: self
+        )
+    }()
     var paymentMethodFormViewController: PaymentMethodFormViewController?
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
@@ -57,6 +67,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             configuration: configuration,
             logAvailability: false
         )
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -87,7 +98,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     @objc func presentManageScreen() {
         // Special case, only 1 card remaining but is co-branded, show update view controller
-        if let paymentMethod = savedPaymentMethods.first, savedPaymentMethods.count == 1, paymentMethod.isCoBrandedCard {
+        if savedPaymentMethods.count == 1,
+           let paymentMethod = savedPaymentMethods.first,
+           paymentMethod.isCoBrandedCard {
             let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                 appearance: configuration.appearance,
@@ -247,7 +260,10 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         manager.detach(paymentMethod: paymentMethod, using: ephemeralKeySecret)
 
         // Update our model
-        self.selectedPaymentOption = nil
+        // If we removed the selected option, reset to nil
+        if self.selectedPaymentOption?.savedPaymentMethod?.stripeId == paymentMethod.stripeId {
+            self.selectedPaymentOption = nil
+        }
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 
         // Update UI
