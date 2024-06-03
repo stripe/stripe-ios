@@ -216,16 +216,17 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
     func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
                      with selectedPaymentMethod: STPPaymentMethod?,
                      latestPaymentMethods: [STPPaymentMethod]) {
-        // Only update current selection if a selection was made
-        if let selectedPaymentMethod {
-            _ = didTapPaymentMethod(.saved(paymentMethod: selectedPaymentMethod))
-        } else if case .saved = lastVerticalSelection {
-            // Reset the selected payment option if we had previously selected a saved payment method and the new selection is nil
+        // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
+        self.savedPaymentMethods = latestPaymentMethods
+
+        // Update current selection if a selection was made or default to the first saved payment method if no selection was made
+        if let selectedPaymentMethod = selectedPaymentMethod ?? latestPaymentMethods.first {
+            self.lastVerticalSelection = .saved(paymentMethod: selectedPaymentMethod)
+        } else {
+            // If no selection was made and no saved payment methods are left, set selection to nil
             self.lastVerticalSelection = nil
         }
 
-        // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
-        self.savedPaymentMethods = latestPaymentMethods
         updateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
