@@ -192,14 +192,6 @@ class AddPaymentMethodViewController: UIViewController {
         delegate?.didUpdate(self)
     }
 
-    // MARK: - Internal
-
-    /// Returns true iff we could map the error to one of the displayed fields
-    func setErrorIfNecessary(for error: Swift.Error?) -> Bool {
-        // TODO
-        return false
-    }
-
     // MARK: - Private
 
     private func updateUI() {
@@ -213,6 +205,8 @@ class AddPaymentMethodViewController: UIViewController {
         }
         updateUI()
     }
+
+    // MARK: - Internal
 
     func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
         switch behavior {
