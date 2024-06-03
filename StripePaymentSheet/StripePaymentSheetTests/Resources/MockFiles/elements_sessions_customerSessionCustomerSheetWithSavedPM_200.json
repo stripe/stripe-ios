@@ -12,12 +12,15 @@
           "enabled": false
         },
         "payment_element": {
+          "enabled": false
+        },
+        "payment_sheet": {
+          "enabled": false
+        },
+        "customer_sheet": {
           "enabled": true,
           "features": {
-            "payment_method_remove": "enabled",
-            "payment_method_save": "enabled",
-            "payment_method_set_as_default": "enabled",
-            "payment_method_update": "enabled"
+            "payment_method_remove": "enabled"
           }
         },
         "pricing_table": {

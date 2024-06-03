@@ -99,7 +99,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
     }
 
     func testReturnsEphemeralKeyFromElements() {
-        let deferredIntent = Intent.deferredIntent(elementsSession: STPElementsSession.elementsSessionWithCustomerSession(apiKey: "ek_11223344"),
+        let deferredIntent = Intent.deferredIntent(elementsSession: STPElementsSession.elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"),
                                                    intentConfig: .init(mode: .payment(amount: 500,
                                                                                       currency: "usd",
                                                                                       setupFutureUsage: .offSession,
@@ -113,7 +113,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
 }
 
 extension STPElementsSession {
-    static func elementsSessionWithCustomerSession(apiKey: String) -> STPElementsSession {
+    static func elementsSessionWithCustomerSessionForPaymentSheet(apiKey: String) -> STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
@@ -124,6 +124,15 @@ extension STPElementsSession {
                                                                             "api_key": apiKey,
                                                                             "api_key_expiry": 123456678,
                                                                             "customer": "cus_456",
+                                                                            "components": [
+                                                                                "payment_sheet": [
+                                                                                    "enabled" : true,
+                                                                                    "features" : [
+                                                                                        "payment_method_save": "enabled",
+                                                                                        "payment_method_remove": "enabled"
+                                                                                    ]
+                                                                                ]
+                                                                            ]
                                                                            ],
                                                       ],
         ]
