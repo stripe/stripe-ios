@@ -1557,7 +1557,7 @@ public class STPPaymentHandler: NSObject {
                                 // setup intent was updated. Consider it a cancel
                                 self._markChallengeCanceled(currentAction: currentAction) { _, _ in
                                     // We don't forward cancelation errors
-                                    currentAction.complete(with: .canceled, error: bil)
+                                    currentAction.complete(with: .canceled, error: nil)
                                 }
                             }
                         }
