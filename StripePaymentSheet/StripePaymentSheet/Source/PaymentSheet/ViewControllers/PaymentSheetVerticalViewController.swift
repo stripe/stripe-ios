@@ -67,7 +67,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             configuration: configuration,
             logAvailability: false
         )
-        
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -100,7 +100,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Special case, only 1 card remaining but is co-branded, show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
-           paymentMethod.isCoBrandedCard {
+           paymentMethod.isCoBrandedCard,
+           loadResult.intent.cardBrandChoiceEligible {
             let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                 appearance: configuration.appearance,
@@ -127,12 +128,20 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateUI() {
+        let rightAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
+            savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
+            isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
+            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
+            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+            paymentMethodRemove: configuration.paymentMethodRemove
+        )
+
         self.paymentMethodListViewController = VerticalPaymentMethodListViewController(
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod ?? savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
             shouldShowLink: loadResult.isLinkEnabled && isFlowController, // TODO: Edge case where we show Link as button in FC if Apple Pay not enabled
-            rightAccessoryType: RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: loadResult.savedPaymentMethods.count, isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false, isCBCEligible: loadResult.intent.cardBrandChoiceEligible, allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod, paymentMethodRemove: configuration.paymentMethodRemove),
+            rightAccessoryType: rightAccessoryType,
             appearance: configuration.appearance,
             delegate: self
         )

@@ -93,6 +93,15 @@ extension RowButton {
 }
 
 extension RowButton.RightAccessoryButton {
+
+    /// Determines the type of accessory button that will be displayed with the saved payment method.
+    /// - Parameters:
+    ///   - savedPaymentMethodsCount: The count of saved payment methods.
+    ///   - isFirstCardCoBranded: True if the first saved payment method is a co-branded card, false otherwise
+    ///   - isCBCEligible: True if the merchant is eligible for card brand choice, false otherwise
+    ///   - allowsRemovalOfLastSavedPaymentMethod: True if we can remove the last saved payment method, false otherwise
+    ///   - paymentMethodRemove: True if removing payment methods is enabled, false otherwise
+    /// - Returns: 'AccessoryType.viewMore' if more than one payment method is saved, 'AccessoryType.edit' if only one payment method exists and it can either be updated or removed, and 'nil' otherwise.
     static func getAccessoryButtonType(savedPaymentMethodsCount: Int,
                                        isFirstCardCoBranded: Bool,
                                        isCBCEligible: Bool,
