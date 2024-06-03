@@ -60,7 +60,6 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        cardBrandChoiceEligible: Bool = false,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.init(configuration: configuration,
@@ -69,7 +68,7 @@ class PaymentSheetFormFactory {
                   addressSpecProvider: addressSpecProvider,
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
-                  cardBrandChoiceEligible: cardBrandChoiceEligible,
+                  cardBrandChoiceEligible: intent.cardBrandChoiceEligible,
                   supportsLinkCard: intent.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,

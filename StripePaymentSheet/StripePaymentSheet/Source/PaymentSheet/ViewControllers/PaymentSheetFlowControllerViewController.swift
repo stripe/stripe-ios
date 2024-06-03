@@ -225,7 +225,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
-            previousCustomerInput: previousNewPaymentMethodParams // Restore the customer's previous new payment method input
+            previousCustomerInput: previousNewPaymentMethodParams, // Restore the customer's previous new payment method input
+            isLinkEnabled: isLinkEnabled
         )
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self
@@ -613,15 +614,6 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()
-    }
-
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled && !intent.disableLinkSignup else {
-            return false
-        }
-
-        let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-        return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
     }
 
     func updateErrorLabel(for error: Error?) {

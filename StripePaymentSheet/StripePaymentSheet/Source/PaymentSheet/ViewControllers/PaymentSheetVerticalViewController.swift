@@ -91,11 +91,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
         // If we have only one row in the vertical list and it collects user input, display the form instead of the payment method list.
         let firstPaymentMethodType = paymentMethodTypes[0]
-        let form = makeForm(paymentMethodType: firstPaymentMethodType)
-        if paymentMethodListViewController.rowCount == 1 && form.collectsUserInput {
-            let paymentMethodFormViewController = PaymentMethodFormViewController(type: firstPaymentMethodType, form: form)
-            self.paymentMethodFormViewController = paymentMethodFormViewController
-            add(childViewController: paymentMethodFormViewController, containerView: paymentContainerView)
+        // TODO: Handle offerSaveToLinkWhenSupported, previousCustomerInput, delegate
+        let pmFormVC = PaymentMethodFormViewController(type: firstPaymentMethodType, intent: intent, previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, delegate: self)
+        if paymentMethodListViewController.rowCount == 1 && pmFormVC.form.collectsUserInput {
+            self.paymentMethodFormViewController = pmFormVC
+            add(childViewController: pmFormVC, containerView: paymentContainerView)
         } else {
             add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
         }
@@ -113,10 +113,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
-    }
-
-    func makeForm(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
-        return PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType).make()
     }
 }
 
@@ -168,27 +164,27 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         case .applePay, .link:
             return true
         case let .new(paymentMethodType: paymentMethodType):
-            let form = makeForm(paymentMethodType: paymentMethodType)
-            if form.collectsUserInput {
-                // The payment method form collects user input, display it
-                // 1. Create the PM form VC
-                let paymentMethodFormVC: PaymentMethodFormViewController = {
-                    if let currentPaymentMethodFormVC = paymentMethodFormViewController, paymentMethodType == currentPaymentMethodFormVC.paymentMethodType {
-                        // Reuse the existing payment method form so that the customer doesn't have to type their details in again
-                        return currentPaymentMethodFormVC
-                    } else {
-                        return PaymentMethodFormViewController(type: paymentMethodType, form: form)
-                    }
-                }()
-                paymentMethodFormViewController = paymentMethodFormVC
-                // 2. Switch the main content to the form
-                switchContentIfNecessary(to: paymentMethodFormVC, containerView: paymentContainerView)
+            // If we can, reuse the existing payment method form so that the customer doesn't have to type their details in again
+            if let currentPaymentMethodFormVC = paymentMethodFormViewController, paymentMethodType == currentPaymentMethodFormVC.paymentMethodType {
+                // Switch the main content to the form
+                switchContentIfNecessary(to: currentPaymentMethodFormVC, containerView: paymentContainerView)
                 navigationBar.setStyle(.back(showAdditionalButton: false))
-                // 3. Return false so the payment method isn't selected in the list; this implicitly keeps the most recently selected payment method as selected.
+                // Return false so the payment method isn't selected in the list; this implicitly keeps the most recently selected payment method as selected.
                 return false
             } else {
-                // Otherwise, return true so the payment method appears selected in the list
-                return true
+                // Otherwise, create the form and decide whether we should display it or not
+                let pmFormVC = PaymentMethodFormViewController(type: paymentMethodType, intent: intent, previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, delegate: self)
+
+                if pmFormVC.form.collectsUserInput {
+                    // The payment method form collects user input, display it
+                    self.paymentMethodFormViewController = pmFormVC
+                    switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView)
+                    navigationBar.setStyle(.back(showAdditionalButton: false))
+                    return false
+                } else {
+                    // Otherwise, return true so the payment method appears selected in the list
+                   return true
+                }
             }
         case .saved:
             // TODO(porter) Look for taps on the "view more" button
@@ -209,7 +205,19 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        // Hide the keyboard if it appeared and switch back to the vertical list
+        view.endEditing(true)
         switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
+    }
+}
+
+extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDelegate {
+    func didUpdate(_ viewController: PaymentMethodFormViewController) {
+        // TODO
+    }
+
+    func updateErrorLabel(for error: (any Error)?) {
+        // TODO
     }
 }
