@@ -48,13 +48,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             delegate: self
         )
     }()
-    
+
     var paymentMethodFormViewController: PaymentMethodFormViewController?
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
     }()
-    
+
     var rightAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
         return RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
@@ -294,7 +294,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         if self.selectedPaymentOption?.savedPaymentMethod?.stripeId == updatedPaymentMethod.stripeId {
             self.selectedPaymentOption = .saved(paymentMethod: updatedPaymentMethod, confirmParams: nil)
         }
-        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == paymentMethod.stripeId }) {
+        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
 
