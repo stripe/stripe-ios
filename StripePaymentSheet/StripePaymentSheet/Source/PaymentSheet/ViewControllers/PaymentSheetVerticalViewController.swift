@@ -73,6 +73,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // TODO: Deal with previousPaymentOption, default to first saved PM for now
         if let savedPaymentMethod = loadResult.savedPaymentMethods.first {
             self.selectedPaymentOption = .saved(paymentMethod: savedPaymentMethod, confirmParams: nil)
+            self.lastVerticalSelection = .saved(paymentMethod: savedPaymentMethod)
         }
         self.loadResult = loadResult
         self.configuration = configuration
@@ -143,6 +144,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateUI() {
+        remove(childViewController: self.paymentMethodListViewController)
+        if let paymentMethodFormViewController = self.paymentMethodFormViewController {
+            remove(childViewController: paymentMethodFormViewController)
+        }
+
         self.paymentMethodListViewController = VerticalPaymentMethodListViewController(
             currentSelection: lastVerticalSelection,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod ?? savedPaymentMethods.first,

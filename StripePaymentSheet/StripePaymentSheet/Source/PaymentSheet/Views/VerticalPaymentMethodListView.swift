@@ -68,9 +68,6 @@ class VerticalPaymentMethodListView: UIView {
             if case .saved(let paymentMethod) = currentSelection {
                 savedPaymentMethodButton.isSelected = true
                 self.currentSelection = .saved(paymentMethod: paymentMethod)
-            } else if currentSelection == nil {
-                savedPaymentMethodButton.isSelected = true
-                self.currentSelection = .saved(paymentMethod: savedPaymentMethod)
             }
 
             views += [
