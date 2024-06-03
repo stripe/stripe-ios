@@ -12,7 +12,21 @@
 import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
-    var selectedPaymentOption: PaymentSheet.PaymentOption?
+    // TODO make sure `selectedPaymentOption` is correct
+    var selectedPaymentOption: PaymentSheet.PaymentOption? {
+        switch lastVerticalSelection {
+        case .new(let paymentMethodType):
+            return .new(confirmParams: .init(type: paymentMethodType))
+        case .saved(let paymentMethod):
+            return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+        case .applePay:
+            return .applePay
+        case .link:
+            return .link(option: .wallet)
+        case nil:
+            return nil
+        }
+    }
     var lastVerticalSelection: VerticalPaymentMethodListSelection?
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
     let loadResult: PaymentSheetLoader.LoadResult
@@ -72,7 +86,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool) {
         // TODO: Deal with previousPaymentOption, default to first saved PM for now
         if let savedPaymentMethod = loadResult.savedPaymentMethods.first {
-            self.selectedPaymentOption = .saved(paymentMethod: savedPaymentMethod, confirmParams: nil)
             self.lastVerticalSelection = .saved(paymentMethod: savedPaymentMethod)
         }
         self.loadResult = loadResult
@@ -206,9 +219,9 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         // Only update current selection if a selection was made
         if let selectedPaymentMethod {
             _ = didTapPaymentMethod(.saved(paymentMethod: selectedPaymentMethod))
-        } else if case .saved = selectedPaymentOption {
+        } else if case .saved = lastVerticalSelection {
             // Reset the selected payment option if we had previously selected a saved payment method and the new selection is nil
-            self.selectedPaymentOption = nil
+            self.lastVerticalSelection = nil
         }
 
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
@@ -228,7 +241,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         case .applePay, .link:
             return true
         case let .new(paymentMethodType: paymentMethodType):
-            selectedPaymentOption = .new(confirmParams: .init(type: paymentMethodType))
             let form = makeForm(paymentMethodType: paymentMethodType)
             if form.collectsUserInput {
                 // The payment method form collects user input, display it
@@ -251,8 +263,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 // Otherwise, return true so the payment method appears selected in the list
                 return true
             }
-        case let .saved(paymentMethod: paymentMethod):
-            selectedPaymentOption = .saved(paymentMethod: paymentMethod, confirmParams: nil)
+        case .saved:
             return true
         }
     }
@@ -290,7 +301,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         // Update our model
         // If we removed the selected option, reset to nil
         if self.selectedPaymentOption?.savedPaymentMethod?.stripeId == paymentMethod.stripeId {
-            self.selectedPaymentOption = nil
+            self.lastVerticalSelection = nil
         }
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 
@@ -309,7 +320,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         // Update our model
         // If we updated the currently selected payment option, update it
         if self.selectedPaymentOption?.savedPaymentMethod?.stripeId == updatedPaymentMethod.stripeId {
-            self.selectedPaymentOption = .saved(paymentMethod: updatedPaymentMethod, confirmParams: nil)
+            self.lastVerticalSelection = .saved(paymentMethod: updatedPaymentMethod)
         }
         if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
