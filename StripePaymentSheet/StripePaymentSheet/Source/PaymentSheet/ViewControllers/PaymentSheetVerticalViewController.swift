@@ -70,7 +70,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     // MARK: - Initializers
 
     init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool) {
-        // TODO: Deal with previousPaymentOption
+        // TODO: Deal with previousPaymentOption, default to first saved PM for now
         if let savedPaymentMethod = loadResult.savedPaymentMethods.first {
             self.selectedPaymentOption = .saved(paymentMethod: savedPaymentMethod, confirmParams: nil)
         }
@@ -200,7 +200,11 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         // Only update current selection if a selection was made
         if let selectedPaymentMethod {
             _ = didTapPaymentMethod(.saved(paymentMethod: selectedPaymentMethod))
+        } else if case .saved = selectedPaymentOption {
+            // Reset the selected payment option if we had previously selected a saved payment method
+            selectedPaymentOption = nil
         }
+
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
         updateUI()

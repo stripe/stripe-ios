@@ -47,7 +47,6 @@ class VerticalPaymentMethodListView: UIView {
         stackView.axis = .vertical
         stackView.spacing = 12.0
         self.stackView = stackView
-
         super.init(frame: .zero)
 
         // Create stack view views after super.init so that we can reference `self`
@@ -65,7 +64,7 @@ class VerticalPaymentMethodListView: UIView {
                 self?.didTap(rowButton: $0, selection: .saved(paymentMethod: savedPaymentMethod))
             }
 
-            // Select the saved payment method row if present or if no current selection as the default
+            // Selected saved payment method button if current selection is a saved payment method or if current selection is nil
             if case .saved(let paymentMethod) = currentSelection {
                 savedPaymentMethodButton.isSelected = true
                 self.currentSelection = .saved(paymentMethod: paymentMethod)
