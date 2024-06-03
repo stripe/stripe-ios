@@ -147,7 +147,7 @@ extension PaymentMethodFormViewController {
     /// This caches forms for payment methods so that customers don't have to re-enter details
     /// This class expects the formCache to be invalidated (cleared) when we load PaymentSheet; we assume the form generated for a given PM type _does not change_ at any point after load.
     static var formCache: [PaymentSheet.PaymentMethodType: PaymentMethodElement] = [:]
-    
+
     static func clearFormCache() {
         formCache = [:]
     }

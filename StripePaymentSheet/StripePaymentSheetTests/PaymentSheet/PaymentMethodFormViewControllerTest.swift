@@ -16,6 +16,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             FormSpecProvider.shared.load { _ in
+                PaymentMethodFormViewController.clearFormCache()
                 expectation.fulfill()
             }
         }
