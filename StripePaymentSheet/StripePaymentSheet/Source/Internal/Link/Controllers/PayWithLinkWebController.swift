@@ -88,12 +88,6 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     }
 
     private var context: Context
-    private var accountContext: LinkAccountContext = .shared
-
-    private var linkAccount: PaymentSheetLinkAccount? {
-        get { accountContext.account }
-        set { accountContext.account = newValue }
-    }
 
     weak var payWithLinkDelegate: PayWithLinkWebControllerDelegate?
 

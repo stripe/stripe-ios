@@ -84,16 +84,6 @@ class AddPaymentMethodViewController: UIViewController {
         return nil
     }
 
-    var linkAccount: PaymentSheetLinkAccount? = LinkAccountContext.shared.account {
-        didSet {
-            if oldValue?.sessionState != linkAccount?.sessionState {
-                // TODO(link): This code ends up reloading the payment method form when `FlowController.update` is called, losing previous customer input.
-                // I added this check to avoid reloading unless necessary but I'm not sure it works. When Link is re-enabled, we should make sure this works!
-                updateFormElement()
-            }
-        }
-    }
-
     var overrideCallToAction: ConfirmButton.CallToActionType? {
         return overrideBuyButtonBehavior != nil
             ? ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
@@ -245,12 +235,6 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypesView.isHidden = false
         }
         updateUI()
-
-        LinkAccountContext.shared.addObserver(self, selector: #selector(linkAccountChanged(_:)))
-    }
-
-    deinit {
-        LinkAccountContext.shared.removeObserver(self)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -286,13 +270,6 @@ class AddPaymentMethodViewController: UIViewController {
     func setErrorIfNecessary(for error: Swift.Error?) -> Bool {
         // TODO
         return false
-    }
-
-    @objc
-    func linkAccountChanged(_ notification: Notification) {
-        DispatchQueue.main.async { [weak self] in
-            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
-        }
     }
 
     // MARK: - Private
@@ -338,7 +315,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethod: type,
             previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
-            linkAccount: linkAccount,
+            linkAccount: LinkAccountContext.shared.account,
             cardBrandChoiceEligible: intent.cardBrandChoiceEligible
         ).make()
         formElement.delegate = self
