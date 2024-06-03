@@ -129,11 +129,9 @@ final class PaymentMethodRowButton: UIView {
         return button
     }()
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, state: State = .unselected, previousSelectedState: State = .unselected) {
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
-        self.state = state
-        self.previousSelectedState = previousSelectedState
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)

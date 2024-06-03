@@ -17,7 +17,7 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     /// - Parameters:
     ///    - viewController: The `VerticalSavedPaymentMethodsViewController` that completed it's selection
     ///    - selectedPaymentMethod: The selected method of payment, if any.
-    ///    - latestPaymentMethods: The most recent up-to-date list of payment methods.
+    ///    - latestPaymentMethods: The most recent up-to-date list of payment methods, with the selected (if any) payment method at the front of the list.
     func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
                      with selectedPaymentMethod: STPPaymentMethod?,
                      latestPaymentMethods: [STPPaymentMethod])
@@ -147,8 +147,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func setInitialState(selectedPaymentMethod: STPPaymentMethod?) {
-        // Select `selectedPaymentMethod` or the first row if selectedPaymentMethod is nil
-        (paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId } ?? paymentMethodRows.first)?.state = .selected
+        paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId }?.state = .selected
         if isRemoveOnlyMode {
             paymentMethodRows.first?.state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: false)
         }
@@ -193,7 +192,14 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private func completeSelection() {
         // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `completeSelection` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
         _ = updateViewController?.bottomSheetController?.popContentViewController()
-        self.delegate?.didComplete(viewController: self, with: selectedPaymentMethod, latestPaymentMethods: paymentMethods)
+
+        var latestPaymentMethods = paymentMethods
+        // Move selected payment method to the front of `latestPaymentMethods`
+        if let selectedPaymentMethod {
+            latestPaymentMethods.remove(selectedPaymentMethod)
+            latestPaymentMethods.insert(selectedPaymentMethod, at: 0)
+        }
+        self.delegate?.didComplete(viewController: self, with: selectedPaymentMethod, latestPaymentMethods: latestPaymentMethods)
     }
 }
 
@@ -296,10 +302,9 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         }
 
         // Create the new button
-        let newButton = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod,
-                                               appearance: configuration.appearance,
-                                               state: oldButton.state,
-                                               previousSelectedState: oldButton.previousSelectedState)
+        let newButton = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
+        newButton.state = oldButton.previousSelectedState // save the previous state from the old button too
+        newButton.state = oldButton.state
         newButton.delegate = self
 
         // Replace the old button with the new button in the model

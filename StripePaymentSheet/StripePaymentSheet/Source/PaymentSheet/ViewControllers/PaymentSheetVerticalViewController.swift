@@ -13,6 +13,7 @@ import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
     var selectedPaymentOption: PaymentSheet.PaymentOption?
+    var lastVerticalSelection: VerticalPaymentMethodListSelection?
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
@@ -39,6 +40,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     lazy var paymentMethodListViewController: VerticalPaymentMethodListViewController = {
         return VerticalPaymentMethodListViewController(
+            currentSelection: lastVerticalSelection,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
@@ -69,6 +71,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool) {
         // TODO: Deal with previousPaymentOption
+        if let savedPaymentMethod = loadResult.savedPaymentMethods.first {
+            self.selectedPaymentOption = .saved(paymentMethod: savedPaymentMethod, confirmParams: nil)
+        }
         self.loadResult = loadResult
         self.configuration = configuration
         self.isFlowController = isFlowController
@@ -138,8 +143,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateUI() {
-        // TODO(porter) Pipe in current selection into `VerticalPaymentMethodListViewController` to preserve what was previously selected
         self.paymentMethodListViewController = VerticalPaymentMethodListViewController(
+            currentSelection: lastVerticalSelection,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod ?? savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
@@ -194,7 +199,7 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
                      latestPaymentMethods: [STPPaymentMethod]) {
         // Only update current selection if a selection was made
         if let selectedPaymentMethod {
-            self.selectedPaymentOption = .saved(paymentMethod: selectedPaymentMethod, confirmParams: nil)
+            _ = didTapPaymentMethod(.saved(paymentMethod: selectedPaymentMethod))
         }
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
@@ -205,6 +210,7 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
 
 extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewControllerDelegate {
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool {
+        self.lastVerticalSelection = selection
 #if !canImport(CompositorServices)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
@@ -212,6 +218,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         case .applePay, .link:
             return true
         case let .new(paymentMethodType: paymentMethodType):
+            selectedPaymentOption = .new(confirmParams: .init(type: paymentMethodType))
             let form = makeForm(paymentMethodType: paymentMethodType)
             if form.collectsUserInput {
                 // The payment method form collects user input, display it
