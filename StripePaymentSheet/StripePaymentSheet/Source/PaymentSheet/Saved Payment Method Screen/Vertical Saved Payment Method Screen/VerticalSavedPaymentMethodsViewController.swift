@@ -147,6 +147,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func setInitialState(selectedPaymentMethod: STPPaymentMethod?) {
+        // Select `selectedPaymentMethod` or the first row if selectedPaymentMethod is nil
+        (paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId } ?? paymentMethodRows.first)?.state = .selected
         if isRemoveOnlyMode {
             paymentMethodRows.first?.state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: false)
         }
@@ -294,10 +296,11 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         }
 
         // Create the new button
-        let newButton = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
+        let newButton = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod,
+                                               appearance: configuration.appearance,
+                                               state: oldButton.state,
+                                               previousSelectedState: oldButton.previousSelectedState)
         newButton.delegate = self
-        newButton.state = oldButton.previousSelectedState // store the previous state of the button too
-        newButton.state = oldButton.state
 
         // Replace the old button with the new button in the model
         paymentMethodRows[oldButtonModelIndex] = newButton

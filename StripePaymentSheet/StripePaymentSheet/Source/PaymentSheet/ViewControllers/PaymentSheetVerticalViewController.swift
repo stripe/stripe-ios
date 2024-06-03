@@ -43,11 +43,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
             shouldShowLink: loadResult.isLinkEnabled && isFlowController, // TODO: Edge case where we show Link as button in FC if Apple Pay not enabled
-            rightAccessoryType: nil,
+            rightAccessoryType: rightAccessoryType,
             appearance: configuration.appearance,
             delegate: self
         )
     }()
+    
     var paymentMethodFormViewController: PaymentMethodFormViewController?
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
@@ -77,7 +78,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             configuration: configuration,
             logAvailability: false
         )
-
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -192,12 +192,11 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
     func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
                      with selectedPaymentMethod: STPPaymentMethod?,
                      latestPaymentMethods: [STPPaymentMethod]) {
-        // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
+        // Only update current selection if a selection was made
         if let selectedPaymentMethod {
             self.selectedPaymentOption = .saved(paymentMethod: selectedPaymentMethod, confirmParams: nil)
-        } else {
-            self.selectedPaymentOption = nil
         }
+        // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
         updateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
@@ -291,7 +290,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
 
         // Update our model
-        // If we update the currently selected payment option, update it
+        // If we updated the currently selected payment option, update it
         if self.selectedPaymentOption?.savedPaymentMethod?.stripeId == updatedPaymentMethod.stripeId {
             self.selectedPaymentOption = .saved(paymentMethod: updatedPaymentMethod, confirmParams: nil)
         }
