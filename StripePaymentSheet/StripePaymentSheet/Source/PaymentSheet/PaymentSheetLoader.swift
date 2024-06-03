@@ -59,7 +59,7 @@ final class PaymentSheetLoader {
                 }
 
                 // Clear the payment method form cache
-                PaymentMethodFormViewController.formCache = [:]
+                PaymentMethodFormViewController.clearFormCache()
 
                 // List the Customer's saved PaymentMethods
                 async let savedPaymentMethods = fetchSavedPaymentMethods(intent: intent, configuration: configuration)
