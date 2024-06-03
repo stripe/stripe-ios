@@ -26,8 +26,9 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
 
     let billingDetails: PaymentSheet.BillingDetails = {
         var billingDetails = PaymentSheet.BillingDetails()
-        billingDetails.email = "test@example.com"
-        billingDetails.phone = "+15551232414567"
+        // uncomment to test prefilled email
+        // billingDetails.email = "test@example.com"
+        // billingDetails.phone = "+15551232414567"
         return billingDetails
     }()
 
