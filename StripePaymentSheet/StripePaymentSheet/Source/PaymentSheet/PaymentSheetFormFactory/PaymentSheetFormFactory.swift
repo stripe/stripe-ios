@@ -39,12 +39,6 @@ class PaymentSheetFormFactory {
     let cardBrandChoiceEligible: Bool
     let analyticsClient: STPAnalyticsClient
 
-    var canSaveToLink: Bool {
-        return (supportsLinkCard &&
-                paymentMethod == .stripe(.card) &&
-                !configuration.isUsingBillingAddressCollection)
-    }
-
     var shouldDisplaySaveCheckbox: Bool {
         return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
     }

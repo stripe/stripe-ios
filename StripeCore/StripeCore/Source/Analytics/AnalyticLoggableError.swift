@@ -74,7 +74,7 @@ extension AnalyticLoggableError where Self: Error {}
         ]
         params["request_id"] = Self.extractStripeAPIRequestID(from: self)
 
-        if let analyticLoggableError = self as? AnalyticLoggableError {
+        if let analyticLoggableError = self as? AnalyticLoggableError, !analyticLoggableError.additionalNonPIIErrorDetails.isEmpty {
             params["error_details"] = analyticLoggableError.additionalNonPIIErrorDetails
         }
         return params
@@ -131,6 +131,8 @@ extension AnalyticLoggableError where Self: Error {}
         let error = error as NSError
         if error.domain == STPError.stripeDomain {
             return error.userInfo[STPError.stripeRequestIDKey] as? String
+        } else if let error = error as? StripeCore.StripeError, case let .apiError(apiError) = error {
+            return apiError.requestID
         } else {
             return nil
         }

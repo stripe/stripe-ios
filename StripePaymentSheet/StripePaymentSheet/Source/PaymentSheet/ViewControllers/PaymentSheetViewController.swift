@@ -193,10 +193,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.view.backgroundColor = configuration.appearance.colors.background
     }
 
-    deinit {
-        LinkAccountContext.shared.removeObserver(self)
-    }
-
     // MARK: UIViewController Methods
 
     override func viewDidLoad() {
@@ -244,7 +240,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
             isCustom: false,
             paymentMethod: mode.analyticsValue,
-            linkEnabled: intent.supportsLink,
+            linkEnabled: isLinkEnabled,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
             intentConfig: intent.intentConfig,
@@ -476,7 +472,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     isCustom: false,
                     paymentMethod: paymentOption.analyticsValue,
                     result: result,
-                    linkEnabled: self.intent.supportsLink,
+                    linkEnabled: self.isLinkEnabled,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                     linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
