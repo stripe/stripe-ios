@@ -151,7 +151,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
     }
-    
+
     func updateUI() {
         remove(childViewController: self.paymentMethodListViewController)
         if let paymentMethodFormViewController = self.paymentMethodFormViewController {
