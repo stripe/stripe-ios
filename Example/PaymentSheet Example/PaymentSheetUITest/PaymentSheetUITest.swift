@@ -3642,7 +3642,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Verify we are kicked out to the main screen after removing all saved payment methods
-        XCTAssertTrue(app.staticTexts["New payment method"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["Card"].waitForExistence(timeout: 5.0))
     }
 
     private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {

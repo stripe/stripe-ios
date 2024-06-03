@@ -59,8 +59,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var rightAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
         return RowButton.RightAccessoryButton.getAccessoryButtonType(
-            savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
-            isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
+            savedPaymentMethodsCount: savedPaymentMethods.count,
+            isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
             paymentMethodRemove: configuration.paymentMethodRemove
