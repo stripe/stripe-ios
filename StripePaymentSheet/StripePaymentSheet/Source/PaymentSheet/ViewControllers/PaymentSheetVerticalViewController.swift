@@ -207,8 +207,8 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         if let selectedPaymentMethod {
             _ = didTapPaymentMethod(.saved(paymentMethod: selectedPaymentMethod))
         } else if case .saved = selectedPaymentOption {
-            // Reset the selected payment option if we had previously selected a saved payment method
-            selectedPaymentOption = nil
+            // Reset the selected payment option if we had previously selected a saved payment method and the new selection is nil
+            self.selectedPaymentOption = nil
         }
 
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
