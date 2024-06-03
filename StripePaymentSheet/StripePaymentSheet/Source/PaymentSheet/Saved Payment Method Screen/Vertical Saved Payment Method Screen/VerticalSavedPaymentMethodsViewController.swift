@@ -147,8 +147,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func setInitialState(selectedPaymentMethod: STPPaymentMethod?) {
-        // Select `selectedPaymentMethod` or the first row if selectedPaymentMethod is nil
-        (paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId } ?? paymentMethodRows.first)?.state = .selected
         if isRemoveOnlyMode {
             paymentMethodRows.first?.state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: false)
         }

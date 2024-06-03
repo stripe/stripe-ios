@@ -13,7 +13,7 @@ final class RightAccessoryButtonTest: XCTestCase {
 
     // MARK: No saved payment methods
     func testNil_Returned_When_NoSavedPaymentMethods() {
-        // Regardless of any flags, if we have zero we should return nil
+        // Regardless of any flags, if we have zero payment methods we should return nil
 
         // Iterating over all combinations of isFirstCardCoBranded, isCBCEligible, allowsRemovalOfLastSavedPaymentMethod, and paymentMethodRemove
         let booleans = [false, true]

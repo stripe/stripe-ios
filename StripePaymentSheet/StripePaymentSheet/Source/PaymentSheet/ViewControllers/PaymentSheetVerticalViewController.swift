@@ -53,6 +53,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
     }()
+    
+    var rightAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
+        return RowButton.RightAccessoryButton.getAccessoryButtonType(
+            savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
+            isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
+            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
+            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+            paymentMethodRemove: configuration.paymentMethodRemove
+        )
+    }
 
     // MARK: - Initializers
 
@@ -128,14 +138,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateUI() {
-        let rightAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
-            savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
-            isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
-            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
-            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-            paymentMethodRemove: configuration.paymentMethodRemove
-        )
-
         self.paymentMethodListViewController = VerticalPaymentMethodListViewController(
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod ?? savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
@@ -288,7 +290,10 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
 
         // Update our model
-        self.selectedPaymentOption = .saved(paymentMethod: updatedPaymentMethod, confirmParams: nil)
+        // If we update the currently selected payment option, update it
+        if self.selectedPaymentOption?.savedPaymentMethod?.stripeId == updatedPaymentMethod.stripeId {
+            self.selectedPaymentOption = .saved(paymentMethod: updatedPaymentMethod, confirmParams: nil)
+        }
         if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == paymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
