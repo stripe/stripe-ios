@@ -138,6 +138,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateUI() {
+        // TODO(porter) Pipe in current selection into `VerticalPaymentMethodListViewController` to preserve what was previously selected
         self.paymentMethodListViewController = VerticalPaymentMethodListViewController(
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod ?? savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
