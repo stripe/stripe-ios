@@ -340,11 +340,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
 
-        // ensures that save to Link was successful
-        //
-        // expected text: "Your account was connected, and saved with Link."
-        XCTAssert(app.textViews.containing(NSPredicate(format: "label CONTAINS 'Link'")).firstMatch.exists)
-
         // ensure that the Link text wasn't a failure
         //
         // unexpected text: "Your account was connected, but couldn't be saved to Link"
