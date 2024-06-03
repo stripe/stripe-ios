@@ -26,7 +26,7 @@ class FlowControllerStateTests: XCTestCase {
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
         let apmvcDelegate = StubAPMVCDelegate(expectation: exp)
-        _ = AddPaymentMethodViewController(intent: intent, configuration: config, delegate: apmvcDelegate)
+        _ = AddPaymentMethodViewController(intent: intent, configuration: config, isLinkEnabled: true, delegate: apmvcDelegate)
         waitForExpectations(timeout: 0.1)
     }
 }
@@ -39,11 +39,6 @@ class StubAPMVCDelegate: AddPaymentMethodViewControllerDelegate {
 
     func didUpdate(_ viewController: StripePaymentSheet.AddPaymentMethodViewController) {
         expectation.fulfill()
-    }
-
-    func shouldOfferLinkSignup(_ viewController: StripePaymentSheet.AddPaymentMethodViewController) -> Bool {
-        expectation.fulfill()
-        return true
     }
 
     func updateErrorLabel(for: Error?) {

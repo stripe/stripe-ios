@@ -68,6 +68,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         return AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
+            isLinkEnabled: isLinkEnabled,
             delegate: self
         )
     }()
@@ -658,15 +659,6 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()
-    }
-
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled && !intent.disableLinkSignup else {
-            return false
-        }
-
-        let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-        return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
     }
 
     func updateErrorLabel(for error: Error?) {
