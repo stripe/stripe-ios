@@ -29,9 +29,6 @@ enum OverrideableBuyButtonBehavior {
 class AddPaymentMethodViewController: UIViewController {
     enum Error: Swift.Error {
         case paymentMethodTypesEmpty
-        case usBankAccountParamsMissing
-        case instantDebitsDeferredIntentNotSupported
-        case instantDebitsParamsMissing
     }
 
     // MARK: - Read-only Properties
@@ -51,72 +48,24 @@ class AddPaymentMethodViewController: UIViewController {
         return paymentMethodTypes
     }()
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
-        return paymentMethodTypesView.selected
+        paymentMethodTypesView.selected
     }
     var paymentOption: PaymentOption? {
-        return paymentMethodFormViewController.paymentOption
+        paymentMethodFormViewController.paymentOption
     }
 
-    var overrideCallToAction: ConfirmButton.CallToActionType? {
-        return overrideBuyButtonBehavior != nil
-        ? ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
-        : nil
-    }
-
-    var overrideCallToActionShouldEnable: Bool {
-        guard let overrideBuyButtonBehavior = overrideBuyButtonBehavior else {
-            return false
-        }
-        switch overrideBuyButtonBehavior {
-        case .LinkUSBankAccount:
-            return usBankAccountFormElement?.canLinkAccount ?? false
-        case .instantDebits:
-            return instantDebitsFormElement?.enableCTA ?? false
-        }
+    var overridePrimaryButtonState: OverridePrimaryButtonState? {
+        paymentMethodFormViewController.overridePrimaryButtonState
     }
 
     var bottomNoticeAttributedString: NSAttributedString? {
-        if selectedPaymentMethodType == .stripe(.USBankAccount) {
-            if let usBankPaymentMethodElement = usBankAccountFormElement {
-                return usBankPaymentMethodElement.mandateString
-            }
-        } else if selectedPaymentMethodType == .stripe(.instantDebits) {
-            if let instantDebitsLinkedBank = instantDebitsFormElement {
-                return instantDebitsLinkedBank.mandateString
-            }
-        }
-        return nil
-    }
-
-    var overrideBuyButtonBehavior: OverrideableBuyButtonBehavior? {
-        if selectedPaymentMethodType == .stripe(.USBankAccount) {
-            if
-                let paymentOption = paymentOption,
-                case .new = paymentOption
-            {
-                return nil  // already have PaymentOption
-            } else {
-                return .LinkUSBankAccount
-            }
-        } else if selectedPaymentMethodType == .stripe(.instantDebits) {
-            // only override buy button (show "Continue") IF we don't have a linked bank
-            return (instantDebitsFormElement?.getLinkedBank() != nil) ? nil : .instantDebits
-        }
-        return nil
+        paymentMethodFormViewController.bottomNoticeAttributedString
     }
 
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
     private let isLinkEnabled: Bool
     var previousCustomerInput: IntentConfirmParams?
-
-    private var usBankAccountFormElement: USBankAccountPaymentMethodElement? {
-        paymentMethodFormElement as? USBankAccountPaymentMethodElement
-    }
-    // We are keeping `instantDebitsFormElement` in memory to preserve state if the user switches payment method types
-    private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? {
-        paymentMethodFormElement as? InstantDebitsPaymentMethodElement
-    }
 
     private var paymentMethodFormElement: PaymentMethodElement {
         paymentMethodFormViewController.form
@@ -208,177 +157,8 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Internal
 
-    func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
-        switch behavior {
-        case .LinkUSBankAccount:
-            handleCollectBankAccount(from: viewController)
-        case .instantDebits:
-            handleCollectInstantDebits(from: viewController)
-        }
-    }
-
-    func handleCollectBankAccount(from viewController: UIViewController) {
-        guard
-            let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement,
-            let name = usBankAccountPaymentMethodElement.name,
-            let email = usBankAccountPaymentMethodElement.email
-        else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.usBankAccountParamsMissing)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-            return
-        }
-
-        let params = STPCollectBankAccountParams.collectUSBankAccountParams(
-            with: name,
-            email: email
-        )
-        let client = STPBankAccountCollector()
-        let genericError = PaymentSheetError.accountLinkFailure
-
-        let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
-            result,
-            _,
-            error in
-            if error != nil {
-                self.delegate?.updateErrorLabel(for: genericError)
-                return
-            }
-            guard let financialConnectionsResult = result else {
-                self.delegate?.updateErrorLabel(for: genericError)
-                return
-            }
-
-            switch financialConnectionsResult {
-            case .cancelled:
-                break
-            case .completed(let completedResult):
-                if case .financialConnections(let linkedBank) = completedResult {
-                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
-                } else {
-                    self.delegate?.updateErrorLabel(for: genericError)
-                }
-            case .failed:
-                self.delegate?.updateErrorLabel(for: genericError)
-            }
-        }
-        switch intent {
-        case .paymentIntent(_, let paymentIntent):
-            client.collectBankAccountForPayment(
-                clientSecret: paymentIntent.clientSecret,
-                returnURL: configuration.returnURL,
-                onEvent: nil,
-                params: params,
-                from: viewController,
-                financialConnectionsCompletion: financialConnectionsCompletion
-            )
-        case .setupIntent(_, let setupIntent):
-            client.collectBankAccountForSetup(
-                clientSecret: setupIntent.clientSecret,
-                returnURL: configuration.returnURL,
-                onEvent: nil,
-                params: params,
-                from: viewController,
-                financialConnectionsCompletion: financialConnectionsCompletion
-            )
-        case let .deferredIntent(elementsSession, intentConfig):
-            let amount: Int?
-            let currency: String?
-            switch intentConfig.mode {
-            case let .payment(amount: _amount, currency: _currency, _, _):
-                amount = _amount
-                currency = _currency
-            case let .setup(currency: _currency, _):
-                amount = nil
-                currency = _currency
-            }
-            client.collectBankAccountForDeferredIntent(
-                sessionId: elementsSession.sessionID,
-                returnURL: configuration.returnURL,
-                onEvent: nil,
-                amount: amount,
-                currency: currency,
-                onBehalfOf: intentConfig.onBehalfOf,
-                from: viewController,
-                financialConnectionsCompletion: financialConnectionsCompletion
-            )
-        }
-    }
-
-    private func handleCollectInstantDebits(from viewController: UIViewController) {
-        guard
-            let instantDebitsPaymentMethodElement = self.paymentMethodFormElement as? InstantDebitsPaymentMethodElement,
-            let email = instantDebitsPaymentMethodElement.email
-        else {
-            let errorAnalytic = ErrorAnalytic(
-                event: .unexpectedPaymentSheetError,
-                error: Error.instantDebitsParamsMissing
-            )
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-            return
-        }
-
-        let params = STPCollectBankAccountParams.collectInstantDebitsParams(
-            email: email
-        )
-        let client = STPBankAccountCollector()
-        let genericError = PaymentSheetError.accountLinkFailure
-
-        let financialConnectionsCompletion: (
-            FinancialConnectionsSDKResult?,
-            LinkAccountSession?,
-            NSError?
-        ) -> Void = { result, _, error in
-            if error != nil {
-                self.delegate?.updateErrorLabel(for: genericError)
-                return
-            }
-            guard let financialConnectionsResult = result else {
-                self.delegate?.updateErrorLabel(for: genericError)
-                return
-            }
-            switch financialConnectionsResult {
-            case .completed(let completedResult):
-                if case .instantDebits(let instantDebitsLinkedBank) = completedResult {
-                    instantDebitsPaymentMethodElement.setLinkedBank(instantDebitsLinkedBank)
-                } else {
-                    self.delegate?.updateErrorLabel(for: genericError)
-                }
-            case .cancelled:
-                break
-            case .failed:
-                self.delegate?.updateErrorLabel(for: genericError)
-            }
-        }
-        switch intent {
-        case .paymentIntent(_, let paymentIntent):
-            client.collectBankAccountForPayment(
-                clientSecret: paymentIntent.clientSecret,
-                returnURL: configuration.returnURL,
-                onEvent: nil,
-                params: params,
-                from: viewController,
-                financialConnectionsCompletion: financialConnectionsCompletion
-            )
-        case .setupIntent(_, let setupIntent):
-            client.collectBankAccountForSetup(
-                clientSecret: setupIntent.clientSecret,
-                returnURL: configuration.returnURL,
-                onEvent: nil,
-                params: params,
-                from: viewController,
-                financialConnectionsCompletion: financialConnectionsCompletion
-            )
-        case .deferredIntent: // not supported
-            let errorAnalytic = ErrorAnalytic(
-                event: .unexpectedPaymentSheetError,
-                error: Error.instantDebitsDeferredIntentNotSupported
-            )
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-        }
+    func didTapCallToActionButton(from viewController: UIViewController) {
+        paymentMethodFormViewController.didTapCallToActionButton(from: viewController)
     }
 
     func clearTextFields() {

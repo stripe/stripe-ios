@@ -428,9 +428,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             }()
 
             var callToAction: ConfirmButton.CallToActionType = callToAction
-            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
-                callToAction = overrideCallToAction
-                confirmButtonState = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+            if let overridePrimaryButtonState = addPaymentMethodViewController.overridePrimaryButtonState {
+                callToAction = overridePrimaryButtonState.ctaType
+                confirmButtonState = overridePrimaryButtonState.enabled ? .enabled : .disabled
             }
 
             confirmButton.update(
@@ -465,8 +465,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case .selectingSaved:
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
         case .addingNew:
-            if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
-                addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
+            if addPaymentMethodViewController.overridePrimaryButtonState != nil {
+                addPaymentMethodViewController.didTapCallToActionButton(from: self)
             } else {
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
