@@ -180,16 +180,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
         // Caveats:
-        // - Only card details (including checkbox state) and billing details are restored
+        // - Only payment method details (including checkbox state) and billing details are restored
         // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
-        // TODO(Link): Consider how we want to restore the customer's previous inputs, if at all.
-        let previousNewPaymentMethodParams: IntentConfirmParams? = {
-            guard let previousPaymentOption = previousPaymentOption else {
-                return nil
-            }
+        let previousConfirmParams: IntentConfirmParams? = {
             switch previousPaymentOption {
-            case .applePay, .saved, .link:
-                // TODO(Link): Handle link when we re-enable it
+            case .applePay, .saved, .link, nil:
                 return nil
             case .new(confirmParams: let params):
                 return params
@@ -199,9 +194,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 return params
             }
         }()
+
         // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
         // and they have saved PMs or Apple Pay or Link is enabled
-        self.mode = (previousNewPaymentMethodParams == nil) && (loadResult.savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled)
+        self.mode = (previousConfirmParams == nil) && (loadResult.savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled)
                 ? .selectingSaved
                 : .addingNew
 
@@ -225,7 +221,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
-            previousCustomerInput: previousNewPaymentMethodParams, // Restore the customer's previous new payment method input
+            previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             isLinkEnabled: isLinkEnabled
         )
         super.init(nibName: nil, bundle: nil)

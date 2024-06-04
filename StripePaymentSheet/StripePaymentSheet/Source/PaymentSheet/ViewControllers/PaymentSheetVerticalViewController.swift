@@ -12,22 +12,35 @@
 import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
-    var selectedPaymentOption: PaymentSheet.PaymentOption?
+    enum Error: Swift.Error {
+        case missingPaymentMethodFormViewController
+    }
+    var selectedPaymentOption: PaymentSheet.PaymentOption? {
+        // If we're showing the list, use its selection:
+        if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
+            switch paymentMethodListViewController.currentSelection {
+            case nil:
+                return nil
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link(option: .wallet)
+            case .new(paymentMethodType: let paymentMethodType):
+                return .new(confirmParams: IntentConfirmParams(type: paymentMethodType))
+            case .saved(paymentMethod: let paymentMethod):
+                // TODO: Handle confirmParams - look at SavedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams & CVC
+                return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+            }
+        } else {
+            // Otherwise, we must be showing the form - use its payment option
+            guard let paymentMethodFormViewController else {
+                stpAssertionFailure("Expected paymentMethodFormViewController")
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: Error.missingPaymentMethodFormViewController)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                return nil
+            }
+            return paymentMethodFormViewController.paymentOption
 
-    var lastVerticalSelection: VerticalPaymentMethodListSelection? {
-        switch selectedPaymentOption {
-        case .applePay: // TODO(porter) Flesh out when these are selected from the wallet (technically not a vertical list selection)
-            return .applePay
-        case .saved(let paymentMethod, _):
-            return .saved(paymentMethod: paymentMethod)
-        case .new(let confirmParams):
-            return .new(paymentMethodType: confirmParams.paymentMethodType)
-        case .link: // TODO(porter) Flesh out when these are selected from the wallet (technically not a vertical list selection)
-            return .link
-        case .external(let paymentMethod, _):
-            return .new(paymentMethodType: .external(paymentMethod))
-        case nil:
-            return nil
         }
     }
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
@@ -37,9 +50,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var intent: Intent {
         return loadResult.intent
     }
-    var error: Error?
+    var error: Swift.Error?
     private var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
+    var previousPaymentOption: PaymentOption?
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
 
@@ -54,19 +68,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         return navBar
     }()
 
-    lazy var paymentMethodListViewController: VerticalPaymentMethodListViewController = {
-        return VerticalPaymentMethodListViewController(
-            initialSelection: lastVerticalSelection,
-            savedPaymentMethod: loadResult.savedPaymentMethods.first,
-            paymentMethodTypes: paymentMethodTypes,
-            shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
-            shouldShowLink: loadResult.isLinkEnabled && walletHeaderView == nil,
-            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            appearance: configuration.appearance,
-            delegate: self
-        )
-    }()
-
+    var paymentMethodListViewController: VerticalPaymentMethodListViewController?
     var paymentMethodFormViewController: PaymentMethodFormViewController?
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
@@ -117,13 +119,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // MARK: - Initializers
 
-    init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool) {
-        // TODO: Deal with previousPaymentOption, default to first saved PM for now
-        if let savedPaymentMethod = loadResult.savedPaymentMethods.first {
-            self.selectedPaymentOption = .saved(paymentMethod: savedPaymentMethod, confirmParams: nil)
-        }
+    init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool, previousPaymentOption: PaymentOption? = nil) {
         self.loadResult = loadResult
         self.configuration = configuration
+        self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
@@ -132,6 +131,95 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             logAvailability: false
         )
         super.init(nibName: nil, bundle: nil)
+
+        regenerateUI()
+        // Only use the previous customer input for the first form shown
+        self.previousPaymentOption = nil
+    }
+
+    /// Regenerates the main content - either the PM list or the PM form
+    func regenerateUI() {
+        // Determine whether to show the form only or the payment method list
+        if let paymentMethodListViewController {
+            remove(childViewController: paymentMethodListViewController)
+        }
+        if let paymentMethodFormViewController {
+            remove(childViewController: paymentMethodFormViewController)
+        }
+        let firstPaymentMethodType = paymentMethodTypes[0]
+        let displayLinkInList = loadResult.isLinkEnabled && isFlowController
+        let displayApplePayInList = loadResult.isApplePayEnabled && isFlowController
+        if savedPaymentMethods.isEmpty && paymentMethodTypes.count == 1 && !displayLinkInList && !displayApplePayInList && shouldDisplayForm(for: firstPaymentMethodType) {
+            // If we'd only show one PM in the vertical list and it collects user input, display the form instead of the payment method list.
+            let formVC = makeFormVC(paymentMethodType: firstPaymentMethodType)
+            self.paymentMethodFormViewController = formVC
+            add(childViewController: formVC, containerView: paymentContainerView)
+        } else {
+            if case let .new(confirmParams: confirmParams) = previousPaymentOption,
+               paymentMethodTypes.contains(confirmParams.paymentMethodType),
+               shouldDisplayForm(for: confirmParams.paymentMethodType)
+            {
+                // If the previous customer input was for a PM form and it collects user input, display the form
+                self.paymentMethodListViewController = makePaymentMethodListViewController()
+                let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
+                self.paymentMethodFormViewController = formVC
+                add(childViewController: formVC, containerView: paymentContainerView)
+                navigationBar.setStyle(.back(showAdditionalButton: false))
+            } else {
+                // Otherwise, show the list of PMs
+                // Create the PM List VC
+                // Determine the initial selection - either the previous payment option or the last VC's selection
+                let paymentMethodListViewController = makePaymentMethodListViewController()
+                self.paymentMethodListViewController = paymentMethodListViewController
+                add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
+            }
+        }
+    }
+
+    func makePaymentMethodListViewController() -> VerticalPaymentMethodListViewController {
+        let initialSelection: VerticalPaymentMethodListSelection? = {
+            switch previousPaymentOption {
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link
+            case .external(paymentMethod: let paymentMethod, billingDetails: _):
+                return .new(paymentMethodType: .external(paymentMethod))
+            case .saved(paymentMethod: let paymentMethod, confirmParams: _):
+                return .saved(paymentMethod: paymentMethod)
+            case .new(confirmParams: let confirmParams):
+                if shouldDisplayForm(for: confirmParams.paymentMethodType) {
+                    return nil
+                } else {
+                    return .new(paymentMethodType: confirmParams.paymentMethodType)
+                }
+            case nil:
+                // If there's no previous customer input...
+                if let paymentMethodListViewController, let lastSelection = paymentMethodListViewController.currentSelection {
+                    // ...use the previous paymentMethodListViewController's selection
+                    if case let .saved(paymentMethod: paymentMethod) = lastSelection {
+                        // If the previous selection was a saved PM, only use it if it still exists:
+                        if savedPaymentMethods.map({ $0.stripeId }).contains(paymentMethod.stripeId) {
+                            return lastSelection
+                        }
+                    } else {
+                        return lastSelection
+                    }
+                }
+                // Default to the first saved payment method, if any
+                return savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
+            }
+        }()
+        return VerticalPaymentMethodListViewController(
+            initialSelection: initialSelection,
+            savedPaymentMethod: savedPaymentMethods.first,
+            paymentMethodTypes: paymentMethodTypes,
+            shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
+            shouldShowLink: loadResult.isLinkEnabled && walletHeaderView == nil,
+            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
+            appearance: configuration.appearance,
+            delegate: self
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -156,8 +244,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
-
-        updateUI()
     }
 
     // MARK: - Helpers
@@ -188,35 +274,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
     }
-
-    func updateUI() {
-        remove(childViewController: self.paymentMethodListViewController)
-        if let paymentMethodFormViewController = self.paymentMethodFormViewController {
-            remove(childViewController: paymentMethodFormViewController)
-        }
-
-        self.paymentMethodListViewController = VerticalPaymentMethodListViewController(
-            initialSelection: lastVerticalSelection,
-            savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod ?? savedPaymentMethods.first,
-            paymentMethodTypes: paymentMethodTypes,
-            shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
-            shouldShowLink: loadResult.isLinkEnabled && isFlowController, // TODO: Edge case where we show Link as button in FC if Apple Pay not enabled
-            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            appearance: configuration.appearance,
-            delegate: self
-        )
-
-        // If we have only one row in the vertical list and it collects user input, display the form instead of the payment method list.
-        let firstPaymentMethodType = paymentMethodTypes[0]
-        // TODO: Handle offerSaveToLinkWhenSupported, previousCustomerInput, delegate
-        let pmFormVC = PaymentMethodFormViewController(type: firstPaymentMethodType, intent: intent, previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, delegate: self)
-        if paymentMethodListViewController.rowCount == 1 && pmFormVC.form.collectsUserInput {
-            self.paymentMethodFormViewController = pmFormVC
-            add(childViewController: pmFormVC, containerView: paymentContainerView)
-        } else {
-            add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
-        }
-    }
 }
 
 // MARK: - BottomSheetContentViewController
@@ -245,28 +302,21 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
     }
 }
 
+// MARK: - VerticalSavedPaymentMethodsViewControllerDelegate
+
 extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewControllerDelegate {
     func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
                      with selectedPaymentMethod: STPPaymentMethod?,
                      latestPaymentMethods: [STPPaymentMethod]) {
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
+        regenerateUI()
 
-        // If a selection was made update the selection
-        if let selectedPaymentMethod {
-            self.selectedPaymentOption = .saved(paymentMethod: selectedPaymentMethod, confirmParams: nil)
-        } else if case .saved = selectedPaymentOption, let firstSavedPaymentMethod = latestPaymentMethods.first {
-            // If no selection was made, default to the first saved payment method if we were selecting a saved payment method
-            self.selectedPaymentOption = .saved(paymentMethod: firstSavedPaymentMethod, confirmParams: nil)
-        } else if case .saved = selectedPaymentOption {
-            // If we had a saved payment method selected and we did not make a selection and no saved payment methods remain, reset to nil
-            self.selectedPaymentOption = nil
-        }
-
-        updateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 }
+
+// MARK: - VerticalPaymentMethodListViewControllerDelegate
 
 extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewControllerDelegate {
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool {
@@ -275,7 +325,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 #endif
         switch selection {
         case .applePay, .link:
-            // TODO Set payment option
             return true
         case let .new(paymentMethodType: paymentMethodType):
             // Update the header view, hide wallet if needed and show header label if needed
@@ -287,8 +336,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             } else {
                 headerView.update(with: paymentMethodType)
             }
-
-            selectedPaymentOption = .new(confirmParams: .init(type: paymentMethodType))
+            
             // If we can, reuse the existing payment method form so that the customer doesn't have to type their details in again
             if let currentPaymentMethodFormVC = paymentMethodFormViewController, paymentMethodType == currentPaymentMethodFormVC.paymentMethodType {
                 // Switch the main content to the form
@@ -298,8 +346,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 return false
             } else {
                 // Otherwise, create the form and decide whether we should display it or not
-                let pmFormVC = PaymentMethodFormViewController(type: paymentMethodType, intent: intent, previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, delegate: self)
-
+                let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
                 if pmFormVC.form.collectsUserInput {
                     // The payment method form collects user input, display it
                     self.paymentMethodFormViewController = pmFormVC
@@ -311,14 +358,35 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                    return true
                 }
             }
-        case .saved(let paymentMethod):
-            selectedPaymentOption = .saved(paymentMethod: paymentMethod, confirmParams: nil)
+        case .saved:
             return true
         }
     }
 
     func didTapSavedPaymentMethodAccessoryButton() {
         presentManageScreen()
+    }
+
+    private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
+        let previousCustomerInput: IntentConfirmParams? = {
+            if case let .new(confirmParams: confirmParams) = previousPaymentOption {
+                return confirmParams
+            } else {
+                return nil
+            }
+        }()
+        return PaymentMethodFormViewController(
+            type: paymentMethodType,
+            intent: intent,
+            previousCustomerInput: previousCustomerInput,
+            configuration: configuration,
+            isLinkEnabled: false, // TODO: isLinkEnabled
+            delegate: self
+        )
+    }
+
+    private func shouldDisplayForm(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
+        return makeFormVC(paymentMethodType: paymentMethodType).form.collectsUserInput
     }
 }
 
@@ -335,7 +403,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
         // Hide the keyboard if it appeared and switch back to the vertical list
         view.endEditing(true)
-        switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView)
+        switchContentIfNecessary(to: paymentMethodListViewController!, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
         headerView.set(text: .Localized.select_payment_method)
         headerView.isHidden = walletHeaderView != nil
@@ -352,15 +420,11 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         let manager = SavedPaymentMethodManager(configuration: configuration)
         manager.detach(paymentMethod: paymentMethod, using: ephemeralKeySecret)
 
-        // Update our model
-        // If we removed the selected option, reset to nil
-        if self.selectedPaymentOption?.savedPaymentMethod?.stripeId == paymentMethod.stripeId {
-            self.selectedPaymentOption = nil
-        }
+        // Update savedPaymentMethods
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 
         // Update UI
-        updateUI()
+        regenerateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
@@ -371,17 +435,13 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         let manager = SavedPaymentMethodManager(configuration: configuration)
         let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
 
-        // Update our model
-        // If we updated the currently selected payment option, update it
-        if self.selectedPaymentOption?.savedPaymentMethod?.stripeId == updatedPaymentMethod.stripeId {
-            self.selectedPaymentOption = .saved(paymentMethod: updatedPaymentMethod, confirmParams: nil)
-        }
+        // Update savedPaymentMethods
         if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
 
         // Update UI
-        updateUI()
+        regenerateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 }
@@ -391,7 +451,7 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
         // TODO
     }
 
-    func updateErrorLabel(for error: (any Error)?) {
+    func updateErrorLabel(for error: Swift.Error?) {
         // TODO
     }
 }
