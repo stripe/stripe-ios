@@ -16,13 +16,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var lastVerticalSelection: VerticalPaymentMethodListSelection? {
         switch selectedPaymentOption {
-        case .applePay:
+        case .applePay: // TODO(porter) Flesh out when these are selected from the wallet (technically not a vertical list selection)
             return .applePay
         case .saved(let paymentMethod, _):
             return .saved(paymentMethod: paymentMethod)
         case .new(let confirmParams):
             return .new(paymentMethodType: confirmParams.paymentMethodType)
-        case .link:
+        case .link: // TODO(porter) Flesh out when these are selected from the wallet (technically not a vertical list selection)
             return .link
         case .external(let paymentMethod, _):
             return .new(paymentMethodType: .external(paymentMethod))
