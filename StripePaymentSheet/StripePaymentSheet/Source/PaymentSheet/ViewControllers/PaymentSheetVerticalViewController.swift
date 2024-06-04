@@ -200,12 +200,16 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         case .applePay, .link:
             return true
         case let .new(paymentMethodType: paymentMethodType):
+            // Update the header view, hide wallet if needed and show header label if needed
+            walletHeaderView?.isHidden = true
+            headerView.isHidden = false
             if paymentMethodType == .stripe(.card) {
                 let text = savedPaymentMethods.isEmpty ? String.Localized.add_card : String.Localized.add_new_card
                 headerView.set(text: text)
             } else {
                 headerView.update(with: paymentMethodType)
             }
+
             // If we can, reuse the existing payment method form so that the customer doesn't have to type their details in again
             if let currentPaymentMethodFormVC = paymentMethodFormViewController, paymentMethodType == currentPaymentMethodFormVC.paymentMethodType {
                 // Switch the main content to the form
@@ -252,6 +256,8 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
         headerView.set(text: .Localized.select_payment_method)
+        headerView.isHidden = walletHeaderView != nil
+        walletHeaderView?.isHidden = walletHeaderView == nil
     }
 }
 
