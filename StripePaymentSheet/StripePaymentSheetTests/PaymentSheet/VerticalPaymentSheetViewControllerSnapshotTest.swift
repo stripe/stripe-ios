@@ -33,7 +33,7 @@ final class VerticalPaymentSheetViewControllerSnapshotTest: STPSnapshotTestCase 
         verify(with: loadResult)
     }
     
-    func testMultiplePaymentMethodTypes_withWallet() {
+    func testDisplaysFormDirectly_withWallet() {
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             savedPaymentMethods: [],
