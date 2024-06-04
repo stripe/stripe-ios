@@ -187,7 +187,7 @@ extension PaymentMethodFormViewController {
             }
         } else if paymentMethodType == .stripe(.instantDebits) {
             // only override buy button (show "Continue") IF we don't have a linked bank
-            return instantDebitsFormElement?.getLinkedBank() != nil
+            return instantDebitsFormElement?.getLinkedBank() == nil
         }
         return false
     }
