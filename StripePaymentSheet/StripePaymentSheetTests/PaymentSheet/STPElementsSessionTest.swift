@@ -120,7 +120,8 @@ class STPElementsSessionTest: XCTestCase {
     func testSavePaymentMethodConsentBehavior_paymentMethodSave_enabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
-                                                                                                    "payment_method_remove": "enabled"]))
+                                                                                                    "payment_method_remove": "enabled",
+                                                                                                   ]))
 
         let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
 
@@ -129,7 +130,8 @@ class STPElementsSessionTest: XCTestCase {
     func testSavePaymentMethodConsentBehavior_paymentMethodSave_disabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: ("payment_sheet", ["payment_method_save": "disabled",
-                                                                                                    "payment_method_remove": "enabled"]))
+                                                                                                    "payment_method_remove": "enabled",
+                                                                                                   ]))
 
         let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
 
@@ -138,7 +140,8 @@ class STPElementsSessionTest: XCTestCase {
     func testSavePaymentMethodConsentBehavior_paymentMethodSave_invalidComponent() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: ("payment_element", ["payment_method_save": "enabled",
-                                                                                                      "payment_method_remove": "enabled"]))
+                                                                                                      "payment_method_remove": "enabled",
+                                                                                                     ]))
 
         let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
 
@@ -155,7 +158,8 @@ class STPElementsSessionTest: XCTestCase {
     func testAllowsRemovalOfPaymentMethodsForPaymentSheet_pmr_disabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
-                                                                                                    "payment_method_remove": "disabled"]))
+                                                                                                    "payment_method_remove": "disabled",
+                                                                                                   ]))
 
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
@@ -164,7 +168,8 @@ class STPElementsSessionTest: XCTestCase {
     func testAllowsRemovalOfPaymentMethodsForPaymentSheet_pmr_enabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
-                                                                                                    "payment_method_remove": "enabled"]))
+                                                                                                    "payment_method_remove": "enabled",
+                                                                                                   ]))
 
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 

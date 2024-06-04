@@ -55,14 +55,14 @@ extension STPElementsSession {
                                     "customer": "cus_123",
                                     "components": [
                                         componentName: [
-                                            "enabled" : true,
+                                            "enabled": true,
                                             "features": [
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                                            ],
+                                        ],
+                                    ],
+                                ],
             ]
-            json[jsonDict: "customer"]?[jsonDict: "customer_session"]?[jsonDict: "components"]?[jsonDict: componentName]?[jsonDict:"features"] = featureData
+            json[jsonDict: "customer"]?[jsonDict: "customer_session"]?[jsonDict: "components"]?[jsonDict: componentName]?[jsonDict: "features"] = featureData
         }
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
