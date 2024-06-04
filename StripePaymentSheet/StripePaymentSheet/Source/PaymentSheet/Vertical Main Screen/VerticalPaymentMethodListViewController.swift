@@ -11,7 +11,9 @@ import UIKit
 protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
     /// - Returns: Whether or not the payment method row button should appear selected.
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool
-    // TODO: didSelectEdit/ViewMore
+
+    /// Called when the accessory button on the saved payment method row is tapped
+    func didTapSavedPaymentMethodAccessoryButton()
 }
 
 /// A simple container VC for the VerticalPaymentMethodListView, which displays payment options in a vertical list.
@@ -27,13 +29,15 @@ class VerticalPaymentMethodListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, appearance: PaymentSheet.Appearance, delegate: VerticalPaymentMethodListViewControllerDelegate) {
+    init(initialSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance, delegate: VerticalPaymentMethodListViewControllerDelegate) {
         self.delegate = delegate
         self.listView = VerticalPaymentMethodListView(
+            initialSelection: initialSelection,
             savedPaymentMethod: savedPaymentMethod,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
+            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             appearance: appearance
         )
         super.init(nibName: nil, bundle: nil)
@@ -49,5 +53,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
 extension VerticalPaymentMethodListViewController: VerticalPaymentMethodListViewDelegate {
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool {
         return delegate?.didTapPaymentMethod(selection) ?? false
+    }
+
+    func didTapSavedPaymentMethodAccessoryButton() {
+        delegate?.didTapSavedPaymentMethodAccessoryButton()
     }
 }

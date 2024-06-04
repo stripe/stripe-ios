@@ -121,6 +121,8 @@ extension UIViewController {
     }
 
     func remove(childViewController: UIViewController) {
+        childViewController.willMove(toParent: nil)
+        childViewController.removeFromParent()
         childViewController.view.removeFromSuperview()
         childViewController.didMove(toParent: nil)
     }
