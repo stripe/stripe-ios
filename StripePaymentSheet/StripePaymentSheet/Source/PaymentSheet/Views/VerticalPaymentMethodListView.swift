@@ -38,11 +38,12 @@ class VerticalPaymentMethodListView: UIView {
     weak var delegate: VerticalPaymentMethodListViewDelegate?
     /// Returns the currently selected payment option i.e. the one that appears selected
     var currentSelection: VerticalPaymentMethodListSelection?
+    var initialSelection: VerticalPaymentMethodListSelection?
     var rowButtons: [RowButton] {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
 
-    init(currentSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance) {
+    init(initialSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance) {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 12.0
@@ -67,10 +68,10 @@ class VerticalPaymentMethodListView: UIView {
             // Select saved payment method button if current selection is a saved payment method or if current selection is nil
             if case .saved(let savedPaymentMethod) = currentSelection {
                 savedPaymentMethodButton.isSelected = true
-                self.currentSelection = .saved(paymentMethod: savedPaymentMethod)
+                self.initialSelection = .saved(paymentMethod: savedPaymentMethod)
             } else if currentSelection == nil {
                 savedPaymentMethodButton.isSelected = true
-                self.currentSelection = .saved(paymentMethod: savedPaymentMethod)
+                self.initialSelection = .saved(paymentMethod: savedPaymentMethod)
             }
 
             views += [
@@ -117,6 +118,7 @@ class VerticalPaymentMethodListView: UIView {
         }
         backgroundColor = appearance.colors.background
         addAndPinSubview(stackView)
+        currentSelection = initialSelection
     }
 
     func didTap(rowButton: RowButton, selection: VerticalPaymentMethodListSelection) {

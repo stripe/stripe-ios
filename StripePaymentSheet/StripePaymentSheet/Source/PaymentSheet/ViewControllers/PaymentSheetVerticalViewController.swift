@@ -56,7 +56,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     lazy var paymentMethodListViewController: VerticalPaymentMethodListViewController = {
         return VerticalPaymentMethodListViewController(
-            currentSelection: lastVerticalSelection,
+            initialSelection: lastVerticalSelection,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
@@ -161,7 +161,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
 
         self.paymentMethodListViewController = VerticalPaymentMethodListViewController(
-            currentSelection: lastVerticalSelection,
+            initialSelection: lastVerticalSelection,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod ?? savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
