@@ -107,6 +107,7 @@ struct PaymentSheetTestPlayground: View {
                                         .bold()
                                     Spacer()
                                 }
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodSave)
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
                                 SettingPickerView(setting: paymentMethodRedisplayBinding)
                                 if playgroundController.settings.paymentMethodRedisplay == .enabled {
