@@ -13,7 +13,7 @@ import UIKit
 extension RowButton {
     final class RightAccessoryButton: UIView {
 
-        enum AccessoryType {
+        enum AccessoryType: Equatable {
             case edit
             case viewMore
 
@@ -57,13 +57,8 @@ extension RowButton {
         }
 
         private var stackView: UIStackView {
-            var views: [UIView] = [label]
-            if let imageView {
-                views.append(imageView)
-            }
-
+            let views: [UIView] = [label, imageView].compactMap { $0 }
             let stackView = UIStackView(arrangedSubviews: views)
-            stackView.axis = .horizontal
             stackView.spacing = 4
             return stackView
         }
@@ -83,15 +78,43 @@ extension RowButton {
             accessibilityIdentifier = accessoryType.text
             accessibilityTraits = [.button]
 
-            addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(handleTap)))
-        }
-
-        @objc private func handleTap() {
-            didTap()
+            addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
         }
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
+
+        @objc func handleTap() {
+            didTap()
+        }
+    }
+
+}
+
+extension RowButton.RightAccessoryButton {
+
+    /// Determines the type of accessory button that will be displayed with the saved payment method.
+    /// - Parameters:
+    ///   - savedPaymentMethodsCount: The count of saved payment methods.
+    ///   - isFirstCardCoBranded: True if the first saved payment method is a co-branded card, false otherwise
+    ///   - isCBCEligible: True if the merchant is eligible for card brand choice, false otherwise
+    ///   - allowsRemovalOfLastSavedPaymentMethod: True if we can remove the last saved payment method, false otherwise
+    ///   - allowsPaymentMethodRemoval: True if removing payment methods is enabled, false otherwise
+    /// - Returns: 'AccessoryType.viewMore' if more than one payment method is saved, 'AccessoryType.edit' if only one payment method exists and it can either be updated or removed, and 'nil' otherwise.
+    static func getAccessoryButtonType(savedPaymentMethodsCount: Int,
+                                       isFirstCardCoBranded: Bool,
+                                       isCBCEligible: Bool,
+                                       allowsRemovalOfLastSavedPaymentMethod: Bool,
+                                       allowsPaymentMethodRemoval: Bool) -> AccessoryType? {
+        guard savedPaymentMethodsCount > 0 else { return nil }
+
+        // If we have more than 1 saved payment method always show the "View more" button
+        if savedPaymentMethodsCount > 1 {
+            return .viewMore
+        }
+
+        // We only have 1 payment method... show the edit icon if the card brand can be updated or if it can be removed
+        return (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && allowsPaymentMethodRemoval) ? .edit : nil
     }
 }

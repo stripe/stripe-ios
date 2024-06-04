@@ -3592,7 +3592,7 @@ extension PaymentSheetUITestCase {
 
         app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        XCTAssertTrue(app.buttons["••••4242"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
 
@@ -3634,7 +3634,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Verify we are kicked out to the main screen after removing all saved payment methods
-        XCTAssertTrue(app.staticTexts["New payment method"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["Card"].waitForExistence(timeout: 5.0))
     }
 
     private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {
