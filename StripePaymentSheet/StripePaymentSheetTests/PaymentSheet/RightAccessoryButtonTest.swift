@@ -20,12 +20,12 @@ final class RightAccessoryButtonTest: XCTestCase {
         for isFirstCardCoBranded in booleans {
             for isCBCEligible in booleans {
                 for allowsRemovalOfLastSavedPaymentMethod in booleans {
-                    for paymentMethodRemove in booleans {
+                    for allowsPaymentMethodRemoval in booleans {
                         let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 0,
                                                                                            isFirstCardCoBranded: isFirstCardCoBranded,
                                                                                            isCBCEligible: isCBCEligible,
                                                                                            allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                                                           paymentMethodRemove: paymentMethodRemove)
+                                                                                           allowsPaymentMethodRemoval: allowsPaymentMethodRemoval)
                         XCTAssertNil(result)
                     }
                 }
@@ -41,16 +41,16 @@ final class RightAccessoryButtonTest: XCTestCase {
         for isFirstCardCoBranded in booleans {
             for isCBCEligible in booleans {
                 for allowsRemovalOfLastSavedPaymentMethod in booleans {
-                    for paymentMethodRemove in booleans {
+                    for allowsPaymentMethodRemoval in booleans {
 
                         // We should only show the edit button if it is update-able or removable
-                        let canEdit = (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && paymentMethodRemove)
+                        let canEdit = (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && allowsPaymentMethodRemoval)
                         let expected: RowButton.RightAccessoryButton.AccessoryType? = canEdit ? .edit : nil
                         let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 1,
                                                                                            isFirstCardCoBranded: isFirstCardCoBranded,
                                                                                            isCBCEligible: isCBCEligible,
                                                                                            allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                                                           paymentMethodRemove: paymentMethodRemove)
+                                                                                           allowsPaymentMethodRemoval: allowsPaymentMethodRemoval)
                         XCTAssertEqual(result, expected)
                     }
                 }
@@ -68,12 +68,12 @@ final class RightAccessoryButtonTest: XCTestCase {
         for isFirstCardCoBranded in booleans {
             for isCBCEligible in booleans {
                 for allowsRemovalOfLastSavedPaymentMethod in booleans {
-                    for paymentMethodRemove in booleans {
+                    for allowsPaymentMethodRemoval in booleans {
                         let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 2,
                                                                                            isFirstCardCoBranded: isFirstCardCoBranded,
                                                                                            isCBCEligible: isCBCEligible,
                                                                                            allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                                                           paymentMethodRemove: paymentMethodRemove)
+                                                                                           allowsPaymentMethodRemoval: allowsPaymentMethodRemoval)
                         XCTAssertEqual(result, .viewMore)
                     }
                 }

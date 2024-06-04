@@ -100,13 +100,13 @@ extension RowButton.RightAccessoryButton {
     ///   - isFirstCardCoBranded: True if the first saved payment method is a co-branded card, false otherwise
     ///   - isCBCEligible: True if the merchant is eligible for card brand choice, false otherwise
     ///   - allowsRemovalOfLastSavedPaymentMethod: True if we can remove the last saved payment method, false otherwise
-    ///   - paymentMethodRemove: True if removing payment methods is enabled, false otherwise
+    ///   - allowsPaymentMethodRemoval: True if removing payment methods is enabled, false otherwise
     /// - Returns: 'AccessoryType.viewMore' if more than one payment method is saved, 'AccessoryType.edit' if only one payment method exists and it can either be updated or removed, and 'nil' otherwise.
     static func getAccessoryButtonType(savedPaymentMethodsCount: Int,
                                        isFirstCardCoBranded: Bool,
                                        isCBCEligible: Bool,
                                        allowsRemovalOfLastSavedPaymentMethod: Bool,
-                                       paymentMethodRemove: Bool) -> AccessoryType? {
+                                       allowsPaymentMethodRemoval: Bool) -> AccessoryType? {
         guard savedPaymentMethodsCount > 0 else { return nil }
 
         // If we have more than 1 saved payment method always show the "View more" button
@@ -115,6 +115,6 @@ extension RowButton.RightAccessoryButton {
         }
 
         // We only have 1 payment method... show the edit icon if the card brand can be updated or if it can be removed
-        return (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && paymentMethodRemove) ? .edit : nil
+        return (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && allowsPaymentMethodRemoval) ? .edit : nil
     }
 }
