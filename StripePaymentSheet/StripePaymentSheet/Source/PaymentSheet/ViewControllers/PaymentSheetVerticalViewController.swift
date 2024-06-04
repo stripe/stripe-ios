@@ -104,7 +104,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         headerView.isHidden = walletHeaderView != nil // Only show this header view if the wallet header view is empty
         return headerView
     }()
-    
+
     var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
         return RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
