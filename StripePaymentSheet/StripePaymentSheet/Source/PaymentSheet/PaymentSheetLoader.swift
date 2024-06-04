@@ -29,18 +29,12 @@ final class PaymentSheetLoader {
     ) {
         let loadingStartDate = Date()
         analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
+
         Task { @MainActor in
             do {
                 if !mode.isDeferred && configuration.apiClient.publishableKeyIsUserKey {
                     // User keys can't pass payment_method_data directly to /confirm, which is what the non-deferred intent flows do
                     assertionFailure("Dashboard isn't supported in non-deferred intent flows")
-                }
-                
-                // Kick off Radar Session ahead of payment
-                // Unless someone passes one in
-                configuration.apiClient.createRadarSession { session, error in
-                    // TODO: Here's where we'd store the Radar Session to use in the final payment
-                    
                 }
 
                 // Fetch ElementsSession
