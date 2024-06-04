@@ -9,7 +9,8 @@ import Foundation
 import WebKit
 
 extension HCaptchaWebViewManager: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if navigationAction.targetFrame == nil, let url = navigationAction.request.url, urlOpener.canOpenURL(url) {
             urlOpener.openURL(url)
@@ -38,7 +39,7 @@ extension HCaptchaWebViewManager: WKNavigationDelegate {
                             code: kHCaptchaErrorWebViewProcessDidTerminate,
                             userInfo: [
                                 NSLocalizedDescriptionKey: "WebView web content process did terminate",
-                                NSLocalizedRecoverySuggestionErrorKey: "Call HCaptcha.reset()"])
+                                NSLocalizedRecoverySuggestionErrorKey: "Call HCaptcha.reset()", ])
         completion?(HCaptchaResult(self, error: .unexpected(error)))
         didFinishLoading = false
     }

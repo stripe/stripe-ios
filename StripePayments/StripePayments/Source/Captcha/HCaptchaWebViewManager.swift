@@ -129,9 +129,15 @@ internal class HCaptchaWebViewManager: NSObject {
          - rqdata: Custom supplied challenge data
          - theme: Widget theme, value must be valid JS Object or String with brackets
      */
-    init(html: String, apiKey: String, baseURL: URL, endpoint: URL,
-         size: HCaptchaSize, orientation: HCaptchaOrientation, rqdata: String?,
-         theme: String, urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener()) {
+    init(html: String,
+         apiKey: String,
+         baseURL: URL,
+         endpoint: URL,
+         size: HCaptchaSize,
+         orientation: HCaptchaOrientation,
+         rqdata: String?,
+         theme: String,
+         urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener()) {
         Log.debug("WebViewManager.init")
         self.urlOpener = urlOpener
         super.init()
@@ -148,7 +154,7 @@ internal class HCaptchaWebViewManager: NSObject {
                                                                   "orientation": orientation.rawValue,
                                                                   "rqdata": rqdata ?? "",
                                                                   "theme": theme,
-                                                                  "debugInfo": debugInfo
+                                                                  "debugInfo": debugInfo,
                                                                  ])
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -254,7 +260,7 @@ fileprivate extension HCaptchaWebViewManager {
         case .onExpired: onEvent?(.expired, nil)
         case .onChallengeExpired: onEvent?(.challengeExpired, nil)
         case .onClose: onEvent?(.close, nil)
-        case .log(_): break
+        case .log: break
         }
     }
 

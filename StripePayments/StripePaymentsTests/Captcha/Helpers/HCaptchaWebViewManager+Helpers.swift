@@ -30,7 +30,7 @@ extension HCaptchaWebViewManager {
         let html = String(format: HCaptchaWebViewManager.unformattedHTML,
                           arguments: [
                             "message": messageBody,
-                            "shouldFail": shouldFail.description
+                            "shouldFail": shouldFail.description,
                           ])
 
         self.init(
@@ -58,7 +58,7 @@ extension HCaptchaWebViewManager {
 
         self.init(
             html: html,
-            apiKey: apiKey ?? String(arc4random()),
+            apiKey: apiKey ?? UUID().uuidString,
             baseURL: localhost,
             endpoint: endpoint ?? localhost,
             size: size,

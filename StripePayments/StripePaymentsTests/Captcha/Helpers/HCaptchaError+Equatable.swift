@@ -30,7 +30,7 @@ extension HCaptchaError: Equatable {
     }
 
     static func random() -> HCaptchaError {
-        switch arc4random_uniform(7) {
+        switch Int.random(in: 0...8) {
         case 0: return .htmlLoadError
         case 1: return .apiKeyNotFound
         case 2: return .baseURLNotFound
@@ -40,7 +40,7 @@ extension HCaptchaError: Equatable {
         case 6: return .rateLimit
         case 7: return .invalidCustomTheme
         case 8: return .networkError
-        default: return .unexpected(NSError())
+        default: return .unexpected(NSError(domain: "HCaptchaTestError", code: 0, userInfo: nil))
         }
     }
 }

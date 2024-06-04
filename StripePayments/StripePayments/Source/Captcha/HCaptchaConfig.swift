@@ -6,9 +6,9 @@
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
 
-import WebKit
-import UIKit
 import JavaScriptCore
+import UIKit
+import WebKit
 
 /** Widget display mode
  */
@@ -244,7 +244,7 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
             URLQueryItem(name: "onload", value: "onloadCallback"),
             URLQueryItem(name: "render", value: "explicit"),
             URLQueryItem(name: "recaptchacompat", value: "off"),
-            URLQueryItem(name: "host", value: host ?? "\(apiKey).ios-sdk.hcaptcha.com")
+            URLQueryItem(name: "host", value: host ?? "\(apiKey).ios-sdk.hcaptcha.com"),
         ]
 
         if let sentry = sentry {

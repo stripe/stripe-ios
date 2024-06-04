@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import XCTest
 @testable import StripePayments
+import XCTest
 
 class HCaptcha__Bench: XCTestCase {
     override func setUp() {

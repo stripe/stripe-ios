@@ -5,8 +5,8 @@
 //  Copyright © 2024 HCaptcha. All rights reserved.
 //
 
-import Foundation
 import CryptoKit
+import Foundation
 import ObjectiveC.runtime
 import UIKit
 
@@ -94,7 +94,7 @@ class HCaptchaDebugInfo {
             "deps_\(String(describing: depsHash))",
             "app_\(String(describing: appHash))",
             "iver_\(String(describing: iver))",
-            "sdk_\(bundleShortVersion())"
+            "sdk_\(bundleShortVersion())",
         ]
     }
 }

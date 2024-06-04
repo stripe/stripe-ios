@@ -6,9 +6,9 @@
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
 
-import WebKit
-import UIKit
 import JavaScriptCore
+import UIKit
+import WebKit
 
 /**
   hCaptcha SDK facade (entry point)
@@ -154,7 +154,6 @@ public class HCaptcha: NSObject {
         manager.validate(on: view)
     }
 
-
     /// Stops the execution of the webview
     @objc
     public func stop() {
@@ -162,7 +161,6 @@ public class HCaptcha: NSObject {
 
         manager.stop()
     }
-
 
     /**
      - parameter configure: A closure that receives an instance of `WKWebView` for configuration.
@@ -256,7 +254,6 @@ public class HCaptcha: NSObject {
         try self.init(locale: nil, size: size)
     }
 
-
     @objc
     public convenience init(apiKey: String, baseURL: URL) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: nil)
@@ -266,7 +263,6 @@ public class HCaptcha: NSObject {
     public convenience init(apiKey: String, baseURL: URL, locale: Locale) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: locale, size: .invisible)
     }
-
 
     @objc
     public convenience init(apiKey: String, baseURL: URL, locale: Locale, size: HCaptchaSize) throws {

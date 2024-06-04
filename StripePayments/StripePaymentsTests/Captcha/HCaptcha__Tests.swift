@@ -9,7 +9,6 @@
 @testable import StripePayments
 import XCTest
 
-
 class HCaptcha__Tests: XCTestCase {
     fileprivate struct Constants {
         struct InfoDictKeys {
@@ -131,7 +130,6 @@ class HCaptcha__Tests: XCTestCase {
         wait(for: [exp], timeout: 10)
     }
 }
-
 
 private extension Bundle {
     @objc func failHTMLLoad(_ resource: String, type: String) -> String? {

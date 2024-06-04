@@ -11,7 +11,6 @@
 import WebKit
 import XCTest
 
-
 class HCaptchaWebViewManager__Tests: XCTestCase {
 
     fileprivate var apiKey: String!
@@ -21,7 +20,7 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
         super.setUp()
 
         presenterView = UIApplication.shared.keyWindow?.rootViewController?.view
-        apiKey = String(arc4random())
+        apiKey = UUID().uuidString
     }
 
     override func tearDown() {
@@ -51,12 +50,10 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
 
         waitForExpectations(timeout: 10)
 
-
         // Verify
         XCTAssertNotNil(result1)
         XCTAssertNil(result1?.error)
         XCTAssertEqual(result1?.token, apiKey)
-
 
         // Validate again
         let exp2 = expectation(description: "reload token")
@@ -70,13 +67,11 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
 
         waitForExpectations(timeout: 10)
 
-
         // Verify
         XCTAssertNotNil(result2)
         XCTAssertNil(result2?.error)
         XCTAssertEqual(result2?.token, apiKey)
     }
-
 
     func test__Validate__Show_HCaptcha() {
         let exp = expectation(description: "show hcaptcha")
@@ -93,7 +88,6 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
 
         waitForExpectations(timeout: 10)
     }
-
 
     func test__Validate__Message_Error() {
         let exp0 = expectation(description: "should call configureWebView")
@@ -575,7 +569,7 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
     func test__OnEvent_Without_Validation() {
         let testParams: [(String, HCaptchaEvent)] = [("onChallengeExpired", .challengeExpired),
                                                      ("onExpired", .expired),
-                                                     ("onClose", .close)]
+                                                     ("onClose", .close), ]
 
         testParams.forEach { (action, expectedEventType) in
             let exp0 = expectation(description: "should call configureWebView")
