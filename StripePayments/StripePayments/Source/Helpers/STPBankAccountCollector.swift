@@ -183,6 +183,7 @@ public class STPBankAccountCollector: NSObject {
         )
     }
 
+    @_spi(STP) public typealias CollectBankAccountCompletionBlock = (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void
     @_spi(STP) public func collectBankAccountForPayment(
         clientSecret: String,
         returnURL: String?,
