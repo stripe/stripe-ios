@@ -32,7 +32,7 @@ final class VerticalPaymentSheetViewControllerSnapshotTest: STPSnapshotTestCase 
         )
         verify(with: loadResult)
     }
-    
+
     func testDisplaysFormDirectly_withWallet() {
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -42,7 +42,7 @@ final class VerticalPaymentSheetViewControllerSnapshotTest: STPSnapshotTestCase 
         )
         verify(with: loadResult)
     }
-    
+
     private func verify(with loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool = false) {
         let sut = PaymentSheetVerticalViewController(configuration: .init(), loadResult: loadResult, isFlowController: isFlowController)
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: .default, isTestMode: false, didCancelNative3DS2: {})
