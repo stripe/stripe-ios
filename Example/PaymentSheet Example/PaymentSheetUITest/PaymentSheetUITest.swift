@@ -2485,6 +2485,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.customerKeyType = .customerSession
+        settings.paymentMethodRedisplay = .enabled
+        settings.paymentMethodAllowRedisplayFilters = .unspecified_limited_always
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -2535,6 +2537,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.customerKeyType = .customerSession
+        settings.paymentMethodRedisplay = .enabled
+        settings.paymentMethodAllowRedisplayFilters = .unspecified_limited_always
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
