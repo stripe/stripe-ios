@@ -41,7 +41,7 @@ final class PaymentMethodRowButton: UIView {
         }
     }
 
-    private(set) var previousSelectedState: State = .unselected
+    var previousSelectedState: State = .unselected
 
     var isSelected: Bool {
         switch state {

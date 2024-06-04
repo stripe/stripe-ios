@@ -304,7 +304,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         // Create the new button
         let newButton = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
         newButton.delegate = self
-        newButton.state = oldButton.previousSelectedState // save the previous state from the old button too
+        newButton.previousSelectedState = oldButton.previousSelectedState
         newButton.state = oldButton.state
 
         // Replace the old button with the new button in the model
