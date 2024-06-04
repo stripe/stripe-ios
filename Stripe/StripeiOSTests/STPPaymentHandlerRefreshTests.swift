@@ -22,7 +22,7 @@ import XCTest
 class STPPaymentHandlerRefreshTests: XCTestCase {
 
     func testPaymentIntentShouldHitRefreshEndpoint() {
-        let shouldRefresh: [STPPaymentMethodType] = [.cashApp]
+        let shouldRefresh: [STPPaymentMethodType] = []
 
         for paymentMethodType in STPPaymentMethodType.allCases {
             let paymentMethodDict: [AnyHashable: Any] = [
@@ -51,7 +51,7 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
     }
 
     func testSetupIntentShouldHitRefreshEndpoint() {
-        let shouldRefresh: [STPPaymentMethodType] = [.cashApp]
+        let shouldRefresh: [STPPaymentMethodType] = []
 
         for paymentMethodType in STPPaymentMethodType.allCases {
             let paymentMethodDict: [AnyHashable: Any] = [
