@@ -126,13 +126,13 @@ extension STPElementsSession {
                                                                             "customer": "cus_456",
                                                                             "components": [
                                                                                 "payment_sheet": [
-                                                                                    "enabled" : true,
-                                                                                    "features" : [
+                                                                                    "enabled": true,
+                                                                                    "features": [
                                                                                         "payment_method_save": "enabled",
-                                                                                        "payment_method_remove": "enabled"
-                                                                                    ]
-                                                                                ]
-                                                                            ]
+                                                                                        "payment_method_remove": "enabled",
+                                                                                    ],
+                                                                                ],
+                                                                            ],
                                                                            ],
                                                       ],
         ]
