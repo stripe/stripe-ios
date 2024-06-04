@@ -140,15 +140,15 @@ internal class HCaptchaWebViewManager: NSObject {
             self?.handle(result: result)
         }
         DispatchQueue.global(qos: .userInitiated).async {
-//            let debugInfo = HCaptchaDebugInfo.json
+            let debugInfo = HCaptchaDebugInfo.json
             Log.debug("WebViewManager.init after debug")
             self.formattedHTML = String(format: html, arguments: ["apiKey": apiKey,
                                                                   "endpoint": endpoint.absoluteString,
                                                                   "size": size.rawValue,
                                                                   "orientation": orientation.rawValue,
                                                                   "rqdata": rqdata ?? "",
-                                                                  "theme": theme
-//                                                                  "debugInfo": debugInfo
+                                                                  "theme": theme,
+                                                                  "debugInfo": debugInfo
                                                                  ])
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
