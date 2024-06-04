@@ -30,7 +30,21 @@ final class VerticalPaymentSheetViewControllerSnapshotTest: STPSnapshotTestCase 
             isLinkEnabled: false,
             isApplePayEnabled: false
         )
-        let sut = PaymentSheetVerticalViewController(configuration: .init(), loadResult: loadResult, isFlowController: false)
+        verify(with: loadResult)
+    }
+    
+    func testMultiplePaymentMethodTypes_withWallet() {
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            savedPaymentMethods: [],
+            isLinkEnabled: true,
+            isApplePayEnabled: true
+        )
+        verify(with: loadResult)
+    }
+    
+    private func verify(with loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool = false) {
+        let sut = PaymentSheetVerticalViewController(configuration: .init(), loadResult: loadResult, isFlowController: isFlowController)
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: .default, isTestMode: false, didCancelNative3DS2: {})
         let height = bottomSheet.view.systemLayoutSizeFitting(.init(width: 375, height: UIView.noIntrinsicMetric)).height
         bottomSheet.view.frame = .init(origin: .zero, size: .init(width: 375, height: height))
