@@ -38,7 +38,6 @@ class VerticalPaymentMethodListView: UIView {
     weak var delegate: VerticalPaymentMethodListViewDelegate?
     /// Returns the currently selected payment option i.e. the one that appears selected
     var currentSelection: VerticalPaymentMethodListSelection?
-    var initialSelection: VerticalPaymentMethodListSelection?
     var rowButtons: [RowButton] {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
@@ -48,6 +47,7 @@ class VerticalPaymentMethodListView: UIView {
         stackView.axis = .vertical
         stackView.spacing = 12.0
         self.stackView = stackView
+        self.currentSelection = initialSelection
         super.init(frame: .zero)
 
         // Create stack view views after super.init so that we can reference `self`
@@ -66,12 +66,12 @@ class VerticalPaymentMethodListView: UIView {
             }
 
             // Select saved payment method button if current selection is a saved payment method or if current selection is nil
-            if case .saved(let savedPaymentMethod) = currentSelection {
+            if case .saved(let savedPaymentMethod) = initialSelection {
                 savedPaymentMethodButton.isSelected = true
-                self.initialSelection = .saved(paymentMethod: savedPaymentMethod)
-            } else if currentSelection == nil {
+                self.currentSelection = .saved(paymentMethod: savedPaymentMethod)
+            } else if initialSelection == nil {
                 savedPaymentMethodButton.isSelected = true
-                self.initialSelection = .saved(paymentMethod: savedPaymentMethod)
+                self.currentSelection = .saved(paymentMethod: savedPaymentMethod)
             }
 
             views += [
@@ -87,7 +87,7 @@ class VerticalPaymentMethodListView: UIView {
             let button = RowButton.makeForApplePay(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .applePay)
             }
-            if case .applePay = currentSelection {
+            if case .applePay = initialSelection {
                 button.isSelected = true
             }
             views.append(button)
@@ -96,7 +96,7 @@ class VerticalPaymentMethodListView: UIView {
             let button = RowButton.makeForLink(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
-            if case .link = currentSelection {
+            if case .link = initialSelection {
                 button.isSelected = true
             }
             views.append(button)
@@ -107,7 +107,7 @@ class VerticalPaymentMethodListView: UIView {
             let button = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .new(paymentMethodType: paymentMethodType))
             }
-            if paymentMethodType == currentSelection?.paymentMethodType {
+            if paymentMethodType == initialSelection?.paymentMethodType {
                 button.isSelected = true
             }
             views.append(button)
@@ -118,7 +118,6 @@ class VerticalPaymentMethodListView: UIView {
         }
         backgroundColor = appearance.colors.background
         addAndPinSubview(stackView)
-        currentSelection = initialSelection
     }
 
     func didTap(rowButton: RowButton, selection: VerticalPaymentMethodListSelection) {
