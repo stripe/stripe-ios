@@ -450,6 +450,7 @@ extension PlaygroundController {
             "customer_session_payment_method_save": "enabled",
             "customer_session_payment_method_remove": "enabled",
             "customer_session_payment_method_redisplay": "enabled",
+            "customer_session_payment_method_allow_redisplay_filters": ["unspecified", "limited", "always"],
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
