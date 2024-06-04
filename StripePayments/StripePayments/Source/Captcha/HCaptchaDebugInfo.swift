@@ -41,7 +41,7 @@ private func bundleShortVersion() -> String {
 
 class HCaptchaDebugInfo {
 
-    public static let json: String = HCaptchaDebugInfo.buildDebugInfoJson()
+    static let json: String = HCaptchaDebugInfo.buildDebugInfoJson()
 
     private class func buildDebugInfoJson() -> String {
         let failsafeJson = "[]"

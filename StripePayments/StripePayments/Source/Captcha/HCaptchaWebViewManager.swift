@@ -35,7 +35,7 @@ internal class HCaptchaWebViewManager: NSObject {
     }
 
     /// Allows validation stubbing for testing
-    public var shouldSkipForTests = false
+    var shouldSkipForTests = false
 #endif
 
     /// True if validation  token was dematerialized

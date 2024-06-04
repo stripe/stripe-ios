@@ -10,16 +10,16 @@ import Foundation
 /** Events which can be received from HCaptcha SDK
  */
 @objc
-public enum HCaptchaEvent: Int, RawRepresentable {
+enum HCaptchaEvent: Int, RawRepresentable {
     case open
     case expired
     case challengeExpired
     case close
     case error
 
-    public typealias RawValue = String
+    typealias RawValue = String
 
-    public var rawValue: RawValue {
+    var rawValue: RawValue {
         switch self {
         case .open:
             return "open"
@@ -34,7 +34,7 @@ public enum HCaptchaEvent: Int, RawRepresentable {
         }
     }
 
-    public init?(rawValue: RawValue) {
+    init?(rawValue: RawValue) {
         switch rawValue {
         case "open":
             self = .open

@@ -13,14 +13,14 @@ import WebKit
 /** Widget display mode
  */
 @objc
-public enum HCaptchaSize: Int, RawRepresentable {
+enum HCaptchaSize: Int, RawRepresentable {
     case invisible
     case compact
     case normal
 
-    public typealias RawValue = String
+    typealias RawValue = String
 
-    public var rawValue: RawValue {
+    var rawValue: RawValue {
         switch self {
         case .invisible:
             return "invisible"
@@ -31,7 +31,7 @@ public enum HCaptchaSize: Int, RawRepresentable {
         }
     }
 
-    public init?(rawValue: RawValue) {
+    init?(rawValue: RawValue) {
         switch rawValue {
         case "invisible":
             self = .invisible
@@ -48,13 +48,13 @@ public enum HCaptchaSize: Int, RawRepresentable {
 /** Widget orientation mode
  */
 @objc
-public enum HCaptchaOrientation: Int, RawRepresentable {
+enum HCaptchaOrientation: Int, RawRepresentable {
     case portrait
     case landscape
 
-    public typealias RawValue = String
+    typealias RawValue = String
 
-    public var rawValue: RawValue {
+    var rawValue: RawValue {
         switch self {
         case .portrait:
             return "portrait"
@@ -63,7 +63,7 @@ public enum HCaptchaOrientation: Int, RawRepresentable {
         }
     }
 
-    public init?(rawValue: RawValue) {
+    init?(rawValue: RawValue) {
         switch rawValue {
         case "portrait":
             self = .portrait
@@ -181,7 +181,7 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
      Info.plist.
      - Throws: Rethrows any exceptions thrown by `String(contentsOfFile:)`
      */
-    public init(apiKey: String?,
+    init(apiKey: String?,
                 infoPlistKey: String?,
                 baseURL: URL?,
                 infoPlistURL: URL?,
@@ -238,7 +238,7 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
      The JS API endpoint to be loaded onto the HTML file.
      - parameter url: The URL to be fixed
      */
-    public func getEndpointURL(locale: Locale? = nil) -> URL {
+    func getEndpointURL(locale: Locale? = nil) -> URL {
         var result = URLComponents(url: jsSrc, resolvingAgainstBaseURL: false)!
         var queryItems = [
             URLQueryItem(name: "onload", value: "onloadCallback"),
