@@ -109,7 +109,10 @@ struct PaymentSheetTestPlayground: View {
                                     Spacer()
                                 }
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRedisplay)
+                                SettingPickerView(setting: paymentMethodRedisplayBinding)
+                                if playgroundController.settings.paymentMethodRedisplay == .enabled {
+                                    SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                                }
                             }
                         }
                     }
@@ -181,6 +184,16 @@ struct PaymentSheetTestPlayground: View {
         } set: { newMode in
             PlaygroundController.resetCustomer()
             playgroundController.settings.customerMode = newMode
+        }
+    }
+    var paymentMethodRedisplayBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
+        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
+            return playgroundController.settings.paymentMethodRedisplay
+        } set: { newPaymentMethodRedisplay in
+            if playgroundController.settings.paymentMethodRedisplay.rawValue != newPaymentMethodRedisplay.rawValue {
+                playgroundController.settings.paymentMethodAllowRedisplayFilters = .notSet
+            }
+            playgroundController.settings.paymentMethodRedisplay = newPaymentMethodRedisplay
         }
     }
     var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {

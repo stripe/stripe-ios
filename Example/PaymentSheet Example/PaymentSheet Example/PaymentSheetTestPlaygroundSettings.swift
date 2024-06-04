@@ -169,6 +169,27 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case enabled
         case disabled
     }
+    enum PaymentMethodAllowRedisplayFilters: String, PickerEnum {
+        static var enumName: String { "PaymentMethodRedisplayFilters" }
+
+        case always
+        case limited
+        case unspecified_limited_always
+        case notSet
+
+        func arrayValue() -> [String]? {
+            switch self {
+            case .always:
+                return ["always"]
+            case .limited:
+                return ["limited"]
+            case .unspecified_limited_always:
+                return ["unspecified", "limited", "always"]
+            case .notSet:
+                return nil
+            }
+        }
+    }
 
     enum DefaultBillingAddress: String, PickerEnum {
         static var enumName: String { "Default billing address" }
@@ -363,6 +384,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var allowsDelayedPMs: AllowsDelayedPMs
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodRedisplay: PaymentMethodRedisplay
+    var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
     var linkEnabled: LinkEnabled
@@ -399,6 +421,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             allowsDelayedPMs: .on,
             paymentMethodRemove: .enabled,
             paymentMethodRedisplay: .enabled,
+            paymentMethodAllowRedisplayFilters: .always,
             defaultBillingAddress: .off,
             customEmail: nil,
             linkEnabled: .off,
