@@ -201,7 +201,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             return true
         case let .new(paymentMethodType: paymentMethodType):
             if paymentMethodType == .stripe(.card) {
-                let text = savedPaymentMethods.isEmpty ? String.Localized.add_card : String.Localized.add_a_new_card
+                let text = savedPaymentMethods.isEmpty ? String.Localized.add_card : String.Localized.add_new_card
                 headerView.set(text: text)
             } else {
                 headerView.update(with: paymentMethodType)

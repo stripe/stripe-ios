@@ -305,9 +305,9 @@ extension String.Localized {
         )
     }
 
-    static var add_a_new_card: String {
+    static var add_new_card: String {
         STPLocalizedString(
-            "Add a new card",
+            "Add new card",
             "Title shown above a view allowing the customer to save a card."
         )
     }
