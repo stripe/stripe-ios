@@ -197,7 +197,7 @@ extension PaymentMethodFormViewController {
         let isEnabled: Bool = {
             if paymentMethodType == .stripe(.USBankAccount) && usBankAccountFormElement?.canLinkAccount ?? false {
                 true
-            } else if paymentMethodType == .stripe(.linkInstantDebit) && instantDebitsFormElement?.enableCTA ?? false {
+            } else if paymentMethodType == .stripe(.instantDebits) && instantDebitsFormElement?.enableCTA ?? false {
                 true
             } else {
                 false
