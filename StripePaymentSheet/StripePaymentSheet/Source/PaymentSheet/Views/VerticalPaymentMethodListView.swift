@@ -42,7 +42,7 @@ class VerticalPaymentMethodListView: UIView {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
 
-    init(currentSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, rightAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance) {
+    init(currentSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance) {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 12.0
@@ -54,8 +54,8 @@ class VerticalPaymentMethodListView: UIView {
         // Saved payment methods:
         if let savedPaymentMethod {
             var accessoryButton: RowButton.RightAccessoryButton?
-            if let rightAccessoryType {
-                accessoryButton = RowButton.RightAccessoryButton(accessoryType: rightAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
+            if let savedPaymentMethodAccessoryType {
+                accessoryButton = RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
             }
             let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
                                                                                appearance: appearance,

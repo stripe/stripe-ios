@@ -61,7 +61,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
             shouldShowLink: loadResult.isLinkEnabled && isFlowController, // TODO: Edge case where we show Link as button in FC if Apple Pay not enabled
-            rightAccessoryType: rightAccessoryType,
+            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             appearance: configuration.appearance,
             delegate: self
         )
@@ -73,13 +73,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         return DynamicHeightContainerView()
     }()
 
-    var rightAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
+    var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
         return RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-            paymentMethodRemove: configuration.paymentMethodRemove
+            allowsPaymentMethodRemoval: configuration.paymentMethodRemove
         )
     }
 
@@ -166,7 +166,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
             shouldShowLink: loadResult.isLinkEnabled && isFlowController, // TODO: Edge case where we show Link as button in FC if Apple Pay not enabled
-            rightAccessoryType: rightAccessoryType,
+            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             appearance: configuration.appearance,
             delegate: self
         )
