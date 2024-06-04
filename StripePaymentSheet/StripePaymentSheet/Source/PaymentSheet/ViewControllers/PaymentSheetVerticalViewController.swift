@@ -81,8 +81,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }()
 
     lazy var headerView: VerticalHeaderView = {
-        let headerView = VerticalHeaderView()
-        headerView.set(text: .Localized.select_payment_method)
+        let headerView = VerticalHeaderView(text: .Localized.select_payment_method, appearance: configuration.appearance)
         headerView.isHidden = walletHeaderView != nil // Only show this header view if the wallet header view is empty
         return headerView
     }()

@@ -12,8 +12,7 @@ import UIKit
 final class VerticalHeaderView: UIView {
 
     private lazy var label: UILabel = {
-        let label = PaymentSheetUI.makeHeaderLabel(appearance: .default)
-        return label
+        return PaymentSheetUI.makeHeaderLabel(appearance: appearance)
     }()
 
     private var imageView: PaymentMethodTypeImageView?
@@ -21,13 +20,15 @@ final class VerticalHeaderView: UIView {
     private lazy var stackView: UIStackView = {
        let stackView = UIStackView(arrangedSubviews: [label])
         stackView.spacing = 12
-        stackView.alignment = .center
-        stackView.distribution = .fillProportionally
         return stackView
     }()
 
-    init() {
+    private let appearance: PaymentSheet.Appearance
+
+    init(text: String, appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
         super.init(frame: .zero)
+        label.text = text
         addAndPinSubview(stackView)
     }
 
@@ -39,11 +40,12 @@ final class VerticalHeaderView: UIView {
 
     func update(with paymentMethodType: PaymentSheet.PaymentMethodType) {
         label.text = paymentMethodType.displayName
+
         imageView?.removeFromSuperview()
-        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: .white)
+        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.insertArrangedSubview(imageView, at: 0)
 
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: 20),
             imageView.heightAnchor.constraint(equalToConstant: 20),
