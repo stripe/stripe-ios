@@ -126,6 +126,19 @@ extension PaymentSheet {
                 }
             }
 
+            if
+                recommendedStripePaymentMethodTypes.contains(.link),
+                !recommendedStripePaymentMethodTypes.contains(.USBankAccount),
+                !intent.isDeferredIntent,
+                intent.linkFundingSources?.contains(.bankAccount) == true
+            {
+                // we must add this BEFORE we do filtering via
+                // `PaymentSheet.PaymentMethodType.supportsAdding`
+                // because we want to filter out instant debits
+                // IF the user has not linked Financial Connections
+                recommendedStripePaymentMethodTypes.append(.instantDebits)
+            }
+
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethodType,
@@ -212,6 +225,8 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
+                    case .instantDebits:
+                        return [.financialConnectionsSDK]
                     case .sofort, .iDEAL, .bancontact:
                         // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
@@ -240,6 +255,8 @@ extension PaymentSheet {
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,
                         ]
+                    case .instantDebits:
+                        return [.financialConnectionsSDK]
                     case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini, .multibanco:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit, .sofort:

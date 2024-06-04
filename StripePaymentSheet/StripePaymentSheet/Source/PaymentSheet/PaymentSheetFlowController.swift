@@ -39,6 +39,31 @@ extension PaymentSheet {
                 return paymentMethod.type
             }
         }
+
+        var savedPaymentMethod: STPPaymentMethod? {
+            switch self {
+            case .applePay, .link, .new, .external:
+                return nil
+            case .saved(let paymentMethod, _):
+                return paymentMethod
+            }
+        }
+
+        // Both "Link" and "Instant Debits" use the same payment method type
+        // of "link." To differentiate between the two in metrics, we sometimes
+        // need a "link_context."
+        var linkContext: String? {
+            if case .link = self {
+                return "wallet"
+            } else if
+                case .new(let confirmParams) = self,
+                confirmParams.instantDebitsLinkedBank != nil
+            {
+                return "instant_debits"
+            } else {
+                return nil
+            }
+        }
     }
 
     /// A class that presents the individual steps of a payment flow
@@ -103,7 +128,7 @@ extension PaymentSheet {
         var intent: Intent {
             return viewController.intent
         }
-        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
+        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
@@ -358,7 +383,7 @@ extension PaymentSheet {
                         isCustom: true,
                         paymentMethod: paymentOption.analyticsValue,
                         result: result,
-                        linkEnabled: intent.supportsLink,
+                        linkEnabled: PaymentSheetLoader.isLinkEnabled(intent: intent, configuration: configuration),
                         activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                         linkSessionType: intent.linkPopupWebviewOption,
                         currency: intent.currency,

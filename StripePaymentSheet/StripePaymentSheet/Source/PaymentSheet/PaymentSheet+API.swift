@@ -156,6 +156,12 @@ extension PaymentSheet {
                     paymentIntent: paymentIntent,
                     configuration: configuration
                 )
+                if case .new(let confirmParams) = paymentOption {
+                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
+                        params.paymentMethodId = paymentMethodId
+                        params.paymentMethodParams = nil
+                    }
+                }
                 paymentHandler.confirmPayment(
                     params,
                     with: authenticationContext,
@@ -177,6 +183,20 @@ extension PaymentSheet {
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
+                if case .new(let confirmParams) = paymentOption {
+                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
+                        setupIntentParams.paymentMethodID = paymentMethodId
+                        setupIntentParams.paymentMethodParams = nil
+
+                        let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
+                        let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
+                        // Tell Stripe to infer mandate info from client
+                        onlineParams.inferFromClient = true
+                        mandateCustomerAcceptanceParams.onlineParams = onlineParams
+                        mandateCustomerAcceptanceParams.type = .online
+                        setupIntentParams.mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
+                    }
+                }
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,

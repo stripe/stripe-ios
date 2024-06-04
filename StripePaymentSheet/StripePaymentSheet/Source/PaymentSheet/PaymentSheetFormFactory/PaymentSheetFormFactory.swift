@@ -39,12 +39,6 @@ class PaymentSheetFormFactory {
     let cardBrandChoiceEligible: Bool
     let analyticsClient: STPAnalyticsClient
 
-    var canSaveToLink: Bool {
-        return (supportsLinkCard &&
-                paymentMethod == .stripe(.card) &&
-                !configuration.isUsingBillingAddressCollection)
-    }
-
     var shouldDisplaySaveCheckbox: Bool {
         return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
     }
@@ -52,6 +46,11 @@ class PaymentSheetFormFactory {
     var theme: ElementsUITheme {
         return configuration.appearance.asElementsTheme
     }
+
+    private static let PayByBankDescriptionText = STPLocalizedString(
+        "Pay with your bank account in just a few steps.",
+        "US Bank Account copy title for Mobile payment element form"
+    )
 
     convenience init(
         intent: Intent,
@@ -61,7 +60,6 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        cardBrandChoiceEligible: Bool = false,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.init(configuration: configuration,
@@ -70,7 +68,7 @@ class PaymentSheetFormFactory {
                   addressSpecProvider: addressSpecProvider,
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
-                  cardBrandChoiceEligible: cardBrandChoiceEligible,
+                  cardBrandChoiceEligible: intent.cardBrandChoiceEligible,
                   supportsLinkCard: intent.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
@@ -162,6 +160,8 @@ class PaymentSheetFormFactory {
             return makeBoleto()
         } else if paymentMethod == .swish {
             return makeSwish()
+        } else if paymentMethod == .instantDebits {
+            return makeInstantDebits()
         }
 
         guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -698,6 +698,24 @@ extension PaymentSheetFormFactory {
         return StaticElement(view: label)
     }
 
+    func makeInstantDebits() -> PaymentMethodElement {
+        return InstantDebitsPaymentMethodElement(
+            configuration: configuration,
+            titleElement: {
+                switch configuration {
+                case .customerSheet:
+                    return nil // customer sheet is not supported
+                case .paymentSheet:
+                    return makeSectionTitleLabelWith(
+                        text: Self.PayByBankDescriptionText
+                    )
+                }
+            }(),
+            emailElement: makeEmail(),
+            theme: theme
+        )
+    }
+
     private func makeUSBankAccountCopyLabel() -> StaticElement {
         switch configuration {
         case .customerSheet:
@@ -709,10 +727,7 @@ extension PaymentSheetFormFactory {
             )
         case .paymentSheet:
             return makeSectionTitleLabelWith(
-                text: STPLocalizedString(
-                    "Pay with your bank account in just a few steps.",
-                    "US Bank Account copy title for Mobile payment element form"
-                )
+                text: Self.PayByBankDescriptionText
             )
         }
     }

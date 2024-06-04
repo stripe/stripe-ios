@@ -14,38 +14,34 @@ import UIKit
 protocol PaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
     func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
-    func didSelectEditButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
+    func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
-// TODO: Make this use RowButton internally
 final class PaymentMethodRowButton: UIView {
 
-    struct ViewModel {
-        let appearance: PaymentSheet.Appearance
-        let paymentMethod: STPPaymentMethod
-        // TODO(porter) Add can remove and can update
-    }
-
-    enum State {
+    enum State: Equatable {
         case selected
         case unselected
-        case editing
+        case editing(allowsRemoval: Bool, allowsUpdating: Bool)
     }
 
     // MARK: Internal properties
     var state: State = .unselected {
         didSet {
-            previousState = oldValue
+            if oldValue == .selected || oldValue == .unselected {
+                previousSelectedState = oldValue
+            }
 
-            selectionTapGesture.isEnabled = !isEditing
-            shadowRoundedRect.isSelected = isSelected
+            rowButton.isSelected = isSelected
+            rowButton.isEnabled = !isEditing
             circleView.isHidden = !isSelected
-            editButton.isHidden = !isEditing // TODO(porter) only show if we can edit
-            removeButton.isHidden = !isEditing // TOOD(porter) only show if we can remove
+            updateButton.isHidden = !canUpdate
+            removeButton.isHidden = !canRemove
+            stackView.isUserInteractionEnabled = isEditing
         }
     }
 
-    private(set) var previousState: State = .unselected
+    var previousSelectedState: State = .unselected
 
     var isSelected: Bool {
         switch state {
@@ -56,7 +52,7 @@ final class PaymentMethodRowButton: UIView {
         }
     }
 
-    var isEditing: Bool {
+    private var isEditing: Bool {
         switch state {
         case .selected, .unselected:
             return false
@@ -65,24 +61,31 @@ final class PaymentMethodRowButton: UIView {
         }
     }
 
+    private var canUpdate: Bool {
+        switch state {
+        case .selected, .unselected:
+            return false
+        case .editing(_, let allowsUpdating):
+            return allowsUpdating
+        }
+    }
+
+    private var canRemove: Bool {
+        switch state {
+        case .selected, .unselected:
+            return false
+        case .editing(let allowsRemoval, _):
+            return allowsRemoval
+        }
+    }
+
     weak var delegate: PaymentMethodRowButtonDelegate?
 
-    // MARK: Private properties
-    private let paymentMethod: STPPaymentMethod
+    // MARK: Internal/private properties
+    let paymentMethod: STPPaymentMethod
     private let appearance: PaymentSheet.Appearance
 
     // MARK: Private views
-
-    private lazy var paymentMethodImageView: UIImageView = {
-        let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
-        imageView.contentMode = .scaleAspectFit
-        // TODO(porter) Do we want to round the corners?
-        return imageView
-    }()
-
-    private lazy var label: UILabel = {
-        return .makeVerticalRowButtonLabel(text: paymentMethod.paymentSheetLabel, appearance: appearance)
-    }()
 
     // TODO(porter) Refactor CircleIconView out of SavedPaymentMethodCollectionView once it is deleted
     private lazy var circleView: SavedPaymentMethodCollectionView.CircleIconView = {
@@ -92,7 +95,7 @@ final class PaymentMethodRowButton: UIView {
         return circleView
     }()
 
-    lazy var removeButton: CircularButton = {
+    private lazy var removeButton: CircularButton = {
         let removeButton = CircularButton(style: .remove, iconColor: .white)
         removeButton.backgroundColor = appearance.colors.danger
         removeButton.isHidden = true
@@ -100,27 +103,30 @@ final class PaymentMethodRowButton: UIView {
         return removeButton
     }()
 
-    private lazy var editButton: CircularButton = {
-        let editButton = CircularButton(style: .edit, iconColor: .white)
-        editButton.backgroundColor = appearance.colors.icon
-        editButton.isHidden = true
-        editButton.addTarget(self, action: #selector(handleEditButtonTapped), for: .touchUpInside)
-        return editButton
+    private lazy var updateButton: CircularButton = {
+        let updateButton = CircularButton(style: .edit, iconColor: .white)
+        updateButton.backgroundColor = appearance.colors.icon
+        updateButton.isHidden = true
+        updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
+        return updateButton
     }()
 
     private lazy var stackView: UIStackView = {
-        return UIStackView.makeRowButtonContentStackView(arrangedSubviews: [paymentMethodImageView, label, .makeSpacerView(), circleView, editButton, removeButton])
+        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, updateButton, removeButton])
+        // margins handled by the `RowButton`
+        stackView.directionalLayoutMargins = .zero
+        stackView.isUserInteractionEnabled = isEditing
+        return stackView
     }()
 
-    private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
-        let shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
-        shadowRoundedRect.translatesAutoresizingMaskIntoConstraints = false
-        shadowRoundedRect.addAndPinSubview(stackView)
-        return shadowRoundedRect
-    }()
+    private lazy var rowButton: RowButton = {
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
+            guard let self else { return }
+            state = .selected
+            delegate?.didSelectButton(self, with: paymentMethod)
+        }
 
-    private lazy var selectionTapGesture: UITapGestureRecognizer = {
-        return UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap))
+        return button
     }()
 
     init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
@@ -128,13 +134,8 @@ final class PaymentMethodRowButton: UIView {
         self.appearance = appearance
         super.init(frame: .zero)
 
-        addAndPinSubview(shadowRoundedRect)
-        NSLayoutConstraint.activate([
-            paymentMethodImageView.heightAnchor.constraint(equalToConstant: 20), // Hardcoded from figma
-            paymentMethodImageView.widthAnchor.constraint(equalToConstant: 25),
-        ])
+        addAndPinSubview(rowButton)
         // TODO(porter) accessibility?
-        addGestureRecognizer(selectionTapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -142,28 +143,12 @@ final class PaymentMethodRowButton: UIView {
     }
 
     // MARK: Tap handlers
-    @objc private func handleSelectionTap() {
-        state = .selected
-        delegate?.didSelectButton(self, with: paymentMethod)
-    }
-
-    @objc private func handleEditButtonTapped() {
-        delegate?.didSelectEditButton(self, with: paymentMethod)
+    @objc private func handleUpdateButtonTapped() {
+        delegate?.didSelectUpdateButton(self, with: paymentMethod)
     }
 
     @objc private func handleRemoveButtonTapped() {
         delegate?.didSelectRemoveButton(self, with: paymentMethod)
     }
 
-}
-
-// MARK: Helper extensions
-extension UIView {
-    static var spacerView: UIView {
-        let view = UIView()
-        view.isUserInteractionEnabled = false
-        view.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
-        view.setContentCompressionResistancePriority(.fittingSizeLevel, for: .horizontal)
-        return view
-    }
 }

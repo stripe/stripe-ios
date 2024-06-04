@@ -157,6 +157,15 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             return HTTPStubsResponse(jsonObject: errorResponse, statusCode: 400, headers: nil)
         }
 
+        // Stub the fetch SetupIntent request, which should be called after the failed challenge_complete
+        let fetchedSetupIntentExpectation = expectation(description: "Fetched SetupIntent")
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("setup_intents/seti_123") ?? false
+        } response: { _ in
+            fetchedSetupIntentExpectation.fulfill()
+            return HTTPStubsResponse(jsonObject: STPTestUtils.jsonNamed("SetupIntent")!, statusCode: 400, headers: nil)
+        }
+
         let paymentHandlerExpectation = expectation(
             description: "paymentHandlerFinished"
         )
@@ -219,7 +228,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
         )
         let setupIntent = STPSetupIntent(
             stripeID: "test",
-            clientSecret: "test",
+            clientSecret: "seti_123_secret_123",
             created: Date(),
             customerID: nil,
             stripeDescription: nil,
@@ -257,7 +266,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             checkedStillInProgress.fulfill()
         }
 
-        wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 60)
+        wait(for: [paymentHandlerExpectation, checkedStillInProgress, fetchedSetupIntentExpectation], timeout: 60)
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
     }
 }

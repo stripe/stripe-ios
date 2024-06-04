@@ -149,13 +149,15 @@ class ConsentViewController: UIViewController {
                 if urlHost == "manual-entry" {
                     delegate?.consentViewControllerDidSelectManuallyVerify(self)
                 } else if urlHost == "data-access-notice" {
-                    let dataAccessNoticeViewController = DataAccessNoticeViewController(
-                        dataAccessNotice: dataSource.consent.dataAccessNotice,
-                        didSelectUrl: { [weak self] url in
-                            self?.didSelectURLInTextFromBackend(url)
-                        }
-                    )
-                    dataAccessNoticeViewController.present(on: self)
+                    if let dataAccessNotice = dataSource.consent.dataAccessNotice {
+                        let dataAccessNoticeViewController = DataAccessNoticeViewController(
+                            dataAccessNotice: dataAccessNotice,
+                            didSelectUrl: { [weak self] url in
+                                self?.didSelectURLInTextFromBackend(url)
+                            }
+                        )
+                        dataAccessNoticeViewController.present(on: self)
+                    }
                 } else if urlHost == "legal-details-notice" {
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(

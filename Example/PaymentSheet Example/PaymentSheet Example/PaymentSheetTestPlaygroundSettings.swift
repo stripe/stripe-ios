@@ -349,6 +349,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var currency: Currency
     var merchantCountryCode: MerchantCountry
     var apmsEnabled: APMSEnabled
+    var supportedPaymentMethods: String?
 
     var shippingInfo: ShippingInfo
     var applePayEnabled: ApplePayEnabled
@@ -388,7 +389,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             shippingInfo: .off,
             applePayEnabled: .on,
             applePayButtonType: .buy,
-            allowsDelayedPMs: .off,
+            allowsDelayedPMs: .on,
             paymentMethodRemove: .enabled,
             defaultBillingAddress: .off,
             customEmail: nil,

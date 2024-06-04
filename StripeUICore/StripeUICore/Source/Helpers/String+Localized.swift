@@ -308,6 +308,13 @@ import Foundation
         )
     }
 
+    static var edit: String {
+        STPLocalizedString(
+            "Edit",
+            "Button title to enter editing mode"
+        )
+    }
+
     // MARK: - UPI
 
     static var upi_id: String {

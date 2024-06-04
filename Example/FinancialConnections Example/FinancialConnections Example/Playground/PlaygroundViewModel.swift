@@ -99,6 +99,18 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
+    var phone: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.phone
+            },
+            set: {
+                self.playgroundConfiguration.phone = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     var balancesPermission: Binding<Bool> {
         Binding(
             get: {

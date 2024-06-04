@@ -146,7 +146,7 @@ extension STPPaymentMethodType {
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
         switch self {
-        case .card, .AUBECSDebit, .USBankAccount, .linkInstantDebit, .konbini, .boleto:
+        case .card, .AUBECSDebit, .USBankAccount, .linkInstantDebit, .konbini, .boleto, .instantDebits:
             return true
         default:
             return false
@@ -180,7 +180,7 @@ extension STPPaymentMethodType {
                 return .pm_type_paypal
             case .AUBECSDebit:
                 return .pm_type_aubecsdebit
-            case .USBankAccount, .linkInstantDebit:
+            case .USBankAccount, .linkInstantDebit, .instantDebits:
                 return .pm_type_us_bank
             case .UPI:
                 return .pm_type_upi

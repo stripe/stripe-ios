@@ -15,7 +15,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
         let supportedPaymentMethods: [STPPaymentMethodType] = [.card]
 
         let paymentMethodTypes: [STPPaymentMethodType] = [.card]
-        let sut = paymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithSetupIntent,
+        let sut = paymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: true,
                                                                                     supportedPaymentMethods: supportedPaymentMethods)
 
         XCTAssertEqual(sut, [.card])
@@ -25,7 +25,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
         let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
 
         let paymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]
-        let sut = paymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithSetupIntent,
+        let sut = paymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: true,
                                                                                     supportedPaymentMethods: supportedPaymentMethods)
 
         XCTAssertEqual(sut, [.card, .USBankAccount])
@@ -34,7 +34,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     func testSupportedPaymentMethodTypesForAdd_useStaticDefault() {
 
         let paymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
-        let sut = paymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithSetupIntent)
+        let sut = paymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: true)
 
         XCTAssertEqual(sut, [.card, .USBankAccount, .SEPADebit])
     }
@@ -43,7 +43,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
         let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
 
         let paymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]
-        let sut = paymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithoutSetupIntent,
+        let sut = paymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: false,
                                                                                     supportedPaymentMethods: supportedPaymentMethods)
 
         XCTAssertEqual(sut, [.card])
@@ -118,13 +118,6 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
             return
         }
         XCTAssertNil(result)
-    }
-
-    var mockCustomerAdapterWithSetupIntent: CustomerAdapter {
-        return MockCustomerAdapter(mockedValue: true)
-    }
-    var mockCustomerAdapterWithoutSetupIntent: CustomerAdapter {
-        return MockCustomerAdapter(mockedValue: false)
     }
 }
 

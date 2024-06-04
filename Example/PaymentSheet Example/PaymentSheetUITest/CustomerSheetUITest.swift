@@ -428,6 +428,8 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
+        sleep(1)
+
         // Should be kicked out of edit mode now that we have one saved PM
         XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
@@ -586,11 +588,12 @@ class CustomerSheetUITest: XCTestCase {
         // Go through connections flow
         app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
-        app.staticTexts["Success"].waitForExistenceAndTap(timeout: timeout)
-        app.buttons["connect_accounts_button"].tap()
+        // "Success" institution is automatically selected because its the first
+        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: timeout)
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
+            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
             notNowButton.tap()
         }
 
@@ -608,7 +611,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addUSBankAccount_customerSession() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -630,11 +633,12 @@ class CustomerSheetUITest: XCTestCase {
         // Go through connections flow
         app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
-        app.staticTexts["Success"].waitForExistenceAndTap(timeout: timeout)
-        app.buttons["connect_accounts_button"].tap()
+        // "Success" institution is automatically selected because its the first
+        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: timeout)
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
+            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
             notNowButton.tap()
         }
 
@@ -652,7 +656,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addSepa() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -714,11 +718,12 @@ class CustomerSheetUITest: XCTestCase {
         // Go through connections flow
         app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
-        app.staticTexts["Success"].waitForExistenceAndTap(timeout: timeout)
-        app.buttons["connect_accounts_button"].tap()
+        // "Success" institution is automatically selected because its the first
+        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
+            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
             notNowButton.tap()
         }
 
@@ -736,7 +741,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addUSBankAccount_MicroDeposit() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()

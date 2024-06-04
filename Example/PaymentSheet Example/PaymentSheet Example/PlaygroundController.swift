@@ -437,7 +437,7 @@ extension PlaygroundController {
         isLoading = true
         let settingsToLoad = self.settings
 
-        let body = [
+        var body = [
             "customer": customerIdOrType,
             "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
@@ -447,8 +447,18 @@ extension PlaygroundController {
             "use_link": settings.linkEnabled == .on,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            "customer_session_payment_method_save": "enabled",
+            "customer_session_payment_method_remove": "enabled",
+            "customer_session_payment_method_redisplay": "enabled",
+            "customer_session_payment_method_allow_redisplay_filters": ["unspecified", "limited", "always"],
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
+        if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
+            body["supported_payment_methods"] = supportedPaymentMethods
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .split(separator: ",")
+                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+        }
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, reload again
             if settingsToLoad != self.settings {

@@ -68,6 +68,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         return AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
+            isLinkEnabled: isLinkEnabled,
             delegate: self
         )
     }()
@@ -193,10 +194,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.view.backgroundColor = configuration.appearance.colors.background
     }
 
-    deinit {
-        LinkAccountContext.shared.removeObserver(self)
-    }
-
     // MARK: UIViewController Methods
 
     override func viewDidLoad() {
@@ -244,7 +241,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
             isCustom: false,
             paymentMethod: mode.analyticsValue,
-            linkEnabled: intent.supportsLink,
+            linkEnabled: isLinkEnabled,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
             intentConfig: intent.intentConfig,
@@ -332,14 +329,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         )
 
         // Error
-        switch mode {
-        case .addingNew:
-            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
-                errorLabel.text = error?.nonGenericDescription
-            }
-        case .selectingSaved:
-            errorLabel.text = error?.nonGenericDescription
-        }
+        errorLabel.text = error?.nonGenericDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
@@ -364,12 +354,11 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             showBuyButton = savedPaymentOptionsViewController.selectedPaymentOption != nil
         case .addingNew:
             buyButtonStyle = .stripe
-            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
-                callToAction = overrideCallToAction
-                buyButtonStatus = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+            if let overridePrimaryButtonState = addPaymentMethodViewController.overridePrimaryButtonState {
+                callToAction = overridePrimaryButtonState.ctaType
+                buyButtonStatus = overridePrimaryButtonState.enabled ? .enabled : .disabled
             } else {
-                buyButtonStatus =
-                    addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
+                buyButtonStatus = addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
             }
         }
 
@@ -423,8 +412,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         let paymentOption: PaymentOption
         switch mode {
         case .addingNew:
-            if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
-                addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
+            if addPaymentMethodViewController.overridePrimaryButtonState != nil {
+                addPaymentMethodViewController.didTapCallToActionButton(from: self)
                 return
             } else {
                 guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
@@ -450,7 +439,10 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             }
             paymentOption = selectedPaymentOption
         }
-        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentOption.paymentMethodTypeAnalyticsValue)
+        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(
+            paymentMethodTypeIdentifier: paymentOption.paymentMethodTypeAnalyticsValue,
+            linkContext: paymentOption.linkContext
+        )
         pay(with: paymentOption, animateBuyButton: true)
     }
 
@@ -473,7 +465,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     isCustom: false,
                     paymentMethod: paymentOption.analyticsValue,
                     result: result,
-                    linkEnabled: self.intent.supportsLink,
+                    linkEnabled: self.isLinkEnabled,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                     linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
@@ -481,6 +473,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     deferredIntentConfirmationType: deferredIntentConfirmationType,
                     paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
                     error: result.error,
+                    linkContext: paymentOption.linkContext,
                     apiClient: self.configuration.apiClient
                 )
 
@@ -658,15 +651,6 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()
-    }
-
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled && !intent.disableLinkSignup else {
-            return false
-        }
-
-        let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-        return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
     }
 
     func updateErrorLabel(for error: Error?) {

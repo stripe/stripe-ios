@@ -78,6 +78,9 @@ struct PlaygroundView: View {
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .accessibility(identifier: "playground-email")
+                        TextField("Phone", text: viewModel.phone)
+                            .keyboardType(.phonePad)
+                            .accessibility(identifier: "playground-phone")
                     }
 
                     Section(header: Text("PERMISSIONS")) {

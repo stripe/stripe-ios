@@ -225,7 +225,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
-            previousCustomerInput: previousNewPaymentMethodParams // Restore the customer's previous new payment method input
+            previousCustomerInput: previousNewPaymentMethodParams, // Restore the customer's previous new payment method input
+            isLinkEnabled: isLinkEnabled
         )
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self
@@ -286,7 +287,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
             isCustom: true,
             paymentMethod: mode.analyticsValue,
-            linkEnabled: intent.supportsLink,
+            linkEnabled: isLinkEnabled,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
             intentConfig: intent.intentConfig,
@@ -367,14 +368,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         )
 
         // Error
-        switch mode {
-        case .addingNew:
-            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
-                errorLabel.text = error?.localizedDescription
-            }
-        case .selectingSaved:
-            errorLabel.text = error?.localizedDescription
-        }
+        errorLabel.text = error?.localizedDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
@@ -434,9 +428,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             }()
 
             var callToAction: ConfirmButton.CallToActionType = callToAction
-            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
-                callToAction = overrideCallToAction
-                confirmButtonState = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+            if let overridePrimaryButtonState = addPaymentMethodViewController.overridePrimaryButtonState {
+                callToAction = overridePrimaryButtonState.ctaType
+                confirmButtonState = overridePrimaryButtonState.enabled ? .enabled : .disabled
             }
 
             confirmButton.update(
@@ -471,8 +465,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case .selectingSaved:
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
         case .addingNew:
-            if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
-                addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
+            if addPaymentMethodViewController.overridePrimaryButtonState != nil {
+                addPaymentMethodViewController.didTapCallToActionButton(from: self)
             } else {
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
@@ -613,15 +607,6 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()
-    }
-
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled && !intent.disableLinkSignup else {
-            return false
-        }
-
-        let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-        return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
     }
 
     func updateErrorLabel(for error: Error?) {

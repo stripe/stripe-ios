@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 @_spi(STP) public extension UIButton {
@@ -16,7 +17,7 @@ import UIKit
     }
 
     class var editButtonTitle: String {
-        return STPLocalizedString("Edit", "Button title to enter editing mode")
+        return .Localized.edit
     }
 
     /// A helper method that returns a UIButton that:

@@ -310,17 +310,17 @@ extension PaymentMethodTypeCollectionView {
 
             shadowRoundedRectangle.isSelected = isSelected
             // Set text color
-            label.textColor = isSelected ? appearance.colors.primary : appearance.colors.componentText
+            label.textColor = appearance.colors.componentText
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
             accessibilityIdentifier = paymentMethodType.identifier
         }
         private func updateImage(_ imageParam: UIImage) {
             var image = imageParam
-            // tint icon primary color for a few PMs should be tinted the appearance primary color when selected
+            // tint icon for a few PMs to be a contrasting color to the component background
             if paymentMethodType.iconRequiresTinting  {
                 image = image.withRenderingMode(.alwaysTemplate)
-                paymentMethodLogo.tintColor = isSelected ? appearance.colors.primary : appearance.colors.componentBackground.contrastingColor
+                paymentMethodLogo.tintColor = appearance.colors.componentBackground.contrastingColor
             }
 
             paymentMethodLogo.image = image
