@@ -224,7 +224,7 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
             // If no selection was made, default to the first saved payment method if we were selecting a saved payment method
             self.selectedPaymentOption = .saved(paymentMethod: firstSavedPaymentMethod, confirmParams: nil)
         } else if case .saved = selectedPaymentOption {
-            // If we're selecting a saved payment method when no selection was made reset to nil
+            // If we had a saved payment method selected and we did not make a selection and no saved payment methods remain, reset to nil
             self.selectedPaymentOption = nil
         }
 
