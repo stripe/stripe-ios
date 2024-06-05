@@ -111,6 +111,28 @@ func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElemen
     }
     return nil
 }
+func scrollDown(scrollView: XCUIElement, toFindElement element: XCUIElement, maxTimesToScroll: Int = 1) -> XCUIElement? {
+    guard scrollView.elementType == .scrollView else {
+        fatalError("XCUIElement is not a scrollview.")
+    }
+
+    if element.isHittable {
+        return element
+    }
+
+    var numTimesScrolled = 0
+    while numTimesScrolled < maxTimesToScroll {
+
+        let startCoordinate = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
+        startCoordinate.press(forDuration: 0.01, thenDragTo: scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)))
+        numTimesScrolled += 1
+
+        if element.isHittable {
+            return element
+        }
+    }
+    return nil
+}
 
 extension XCTestCase {
     func fillCardData(_ app: XCUIApplication,
