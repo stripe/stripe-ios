@@ -1049,7 +1049,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
-        
+
         // Finish checkout
         app.buttons["Pay €50.99"].tap()
         let successText = app.staticTexts["Success!"]
@@ -3169,12 +3169,12 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
-        
+
         // toggle save this card on
         let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
-        
+
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
@@ -3380,7 +3380,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
-        if (mode == .payment) {
+        if mode == .payment {
             let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
             XCTAssertFalse(saveThisAccountToggle.isSelected)
             saveThisAccountToggle.tap()
@@ -3484,14 +3484,13 @@ extension PaymentSheetUITestCase {
         // "Success" pane
         XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons["Done"].forceTapWhenHittableInTestCase(self)
-        
-        
-        if (mode == .payment) {
+
+        if mode == .payment {
             let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
             XCTAssertFalse(saveThisAccountToggle.isSelected)
             saveThisAccountToggle.tap()
         }
-        
+
         // Back to Payment Sheet
         app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
