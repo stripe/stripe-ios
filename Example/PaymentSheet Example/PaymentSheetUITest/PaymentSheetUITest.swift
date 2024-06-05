@@ -2275,6 +2275,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Change to CustomerSessions
         app.buttons["customer_session"].waitForExistenceAndTap()
         reload(app, settings: settings)
+
+        // Switch to see all payment methods
+        app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
+        app.buttons["unspecified_limited_always"].waitForExistenceAndTap()
+
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
@@ -2341,6 +2346,10 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Change to CustomerSessions
         app.buttons["customer_session"].waitForExistenceAndTap()
         reload(app, settings: settings)
+
+        // Switch to see all payment methods
+        app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
+        app.buttons["unspecified_limited_always"].waitForExistenceAndTap()
 
         // TODO: Use default payment method from elements/sessions payload
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 10)
@@ -2476,6 +2485,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.customerKeyType = .customerSession
+        settings.paymentMethodRedisplay = .enabled
+        settings.paymentMethodAllowRedisplayFilters = .unspecified_limited_always
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -2526,6 +2537,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.customerKeyType = .customerSession
+        settings.paymentMethodRedisplay = .enabled
+        settings.paymentMethodAllowRedisplayFilters = .unspecified_limited_always
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur

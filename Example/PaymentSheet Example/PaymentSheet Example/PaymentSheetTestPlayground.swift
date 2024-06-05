@@ -29,7 +29,6 @@ struct PaymentSheetTestPlayground: View {
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
             SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
-            SettingView(setting: $playgroundController.settings.paymentMethodRemove)
         }
         Group {
             SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
@@ -99,6 +98,23 @@ struct PaymentSheetTestPlayground: View {
                         TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
                             .autocapitalization(.none)
                     }
+                    Group {
+                        if playgroundController.settings.customerKeyType == .customerSession {
+                            VStack {
+                                HStack {
+                                    Text("Customer Session Settings")
+                                        .font(.subheadline)
+                                        .bold()
+                                    Spacer()
+                                }
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                                SettingPickerView(setting: paymentMethodRedisplayBinding)
+                                if playgroundController.settings.paymentMethodRedisplay == .enabled {
+                                    SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                                }
+                            }
+                        }
+                    }
                     Divider()
                     Group {
                         HStack {
@@ -167,6 +183,16 @@ struct PaymentSheetTestPlayground: View {
         } set: { newMode in
             PlaygroundController.resetCustomer()
             playgroundController.settings.customerMode = newMode
+        }
+    }
+    var paymentMethodRedisplayBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
+        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
+            return playgroundController.settings.paymentMethodRedisplay
+        } set: { newPaymentMethodRedisplay in
+            if playgroundController.settings.paymentMethodRedisplay.rawValue != newPaymentMethodRedisplay.rawValue {
+                playgroundController.settings.paymentMethodAllowRedisplayFilters = .notSet
+            }
+            playgroundController.settings.paymentMethodRedisplay = newPaymentMethodRedisplay
         }
     }
     var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
