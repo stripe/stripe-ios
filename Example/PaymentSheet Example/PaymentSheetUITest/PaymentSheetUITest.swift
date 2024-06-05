@@ -3885,12 +3885,12 @@ extension PaymentSheetUITestCase {
 
         // Switch to see only unspecified payment methods
         if allowRedisplayValue == .always  {
-            reload(app, settings: settings)
             XCTAssertTrue(app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistence(timeout: 10))
         } else {
             app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
             app.buttons[allowRedisplayValue.rawValue].waitForExistenceAndTap()
         }
+        reload(app, settings: settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         switch settings.mode {
