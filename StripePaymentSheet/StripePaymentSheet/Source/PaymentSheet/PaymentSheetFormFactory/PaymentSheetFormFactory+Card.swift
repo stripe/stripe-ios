@@ -43,7 +43,7 @@ extension PaymentSheetFormFactory {
             guard let expiryMonth = previousCardInput?.expMonth?.intValue, let expiryYear = previousCardInput?.expYear?.intValue else {
                 return nil
             }
-            return String(format: "%02d%02d", expiryMonth, expiryYear)
+            return String(format: "%02d%02d", expiryMonth, expiryYear % 100) // Modulo 100 as safeguard to get last 2 digits of the expiry
         }()
         let cardDefaultValues = CardSection.DefaultValues(
             name: defaultBillingDetails().name,

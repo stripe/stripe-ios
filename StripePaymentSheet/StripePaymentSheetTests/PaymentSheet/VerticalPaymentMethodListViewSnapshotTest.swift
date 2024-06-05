@@ -43,17 +43,17 @@ final class VerticalPaymentMethodListViewSnapshotTest: STPSnapshotTestCase {
     }
 
     func testSavedCard_noApplePayLink() {
-        let sut = VerticalPaymentMethodListView(initialSelection: nil, savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: false, shouldShowLink: false, savedPaymentMethodAccessoryType: .edit, appearance: .default)
+        let sut = VerticalPaymentMethodListView(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: false, shouldShowLink: false, savedPaymentMethodAccessoryType: .edit, appearance: .default)
         STPSnapshotVerifyView(sut, autoSizingHeightForWidth: 375)
     }
 
     func testSavedCard_ApplePayLink() {
-        let sut = VerticalPaymentMethodListView(initialSelection: nil, savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, appearance: .default)
+        let sut = VerticalPaymentMethodListView(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, appearance: .default)
         STPSnapshotVerifyView(sut, autoSizingHeightForWidth: 375)
     }
 
     func testDarkMode() {
-        let sut = VerticalPaymentMethodListView(initialSelection: nil, savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, appearance: .default)
+        let sut = VerticalPaymentMethodListView(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, appearance: .default)
         let window = UIWindow()
         window.isHidden = false
         window.addAndPinSubview(sut, insets: .zero)
@@ -62,7 +62,7 @@ final class VerticalPaymentMethodListViewSnapshotTest: STPSnapshotTestCase {
     }
 
     func testAppearance() {
-        let sut = VerticalPaymentMethodListView(initialSelection: nil, savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, appearance: ._testMSPaintTheme)
+        let sut = VerticalPaymentMethodListView(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, appearance: ._testMSPaintTheme)
         let window = UIWindow()
         window.isHidden = false
         window.addAndPinSubview(sut, insets: .zero)

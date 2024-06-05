@@ -11,7 +11,6 @@ import UIKit
 protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
     /// - Returns: Whether or not the payment method row button should appear selected.
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool
-
     /// Called when the accessory button on the saved payment method row is tapped
     func didTapSavedPaymentMethodAccessoryButton()
 }
@@ -19,10 +18,13 @@ protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
 /// A simple container VC for the VerticalPaymentMethodListView, which displays payment options in a vertical list.
 class VerticalPaymentMethodListViewController: UIViewController {
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
-    let listView: VerticalPaymentMethodListView
+    private let listView: VerticalPaymentMethodListView
     /// Returns the number of row buttons in the vertical list
     var rowCount: Int {
         return listView.rowButtons.count
+    }
+    var currentSelection: VerticalPaymentMethodListSelection? {
+        return listView.currentSelection
     }
 
     required init?(coder: NSCoder) {

@@ -99,7 +99,7 @@ extension UIViewController {
                     toVC.view.alpha = 1
                 },
                 completion: { _ in
-                    // Remove the old one
+                    // Finish removing the old one
                     fromVC.view.removeFromSuperview()
                     fromVC.didMove(toParent: nil)
                     UIAccessibility.post(notification: .screenChanged, argument: toVC.view)

@@ -12,7 +12,6 @@ import UIKit
 protocol VerticalPaymentMethodListViewDelegate: AnyObject {
     /// - Returns: Whether or not the payment method row button should appear selected.
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool
-
     /// Called when the accessory button on the saved payment method row is tapped
     func didTapSavedPaymentMethodAccessoryButton()
 }
@@ -23,12 +22,18 @@ enum VerticalPaymentMethodListSelection: Equatable {
     case applePay
     case link
 
-    var paymentMethodType: PaymentSheet.PaymentMethodType? {
-        switch self {
-        case .new(let paymentMethodType):
-            return paymentMethodType
-        case .saved, .applePay, .link:
-            return nil
+    static func == (lhs: VerticalPaymentMethodListSelection, rhs: VerticalPaymentMethodListSelection) -> Bool {
+        switch (lhs, rhs) {
+        case (.link, .link):
+            return true
+        case (.applePay, .applePay):
+            return true
+        case let (.new(lhsPMType), .new(rhsPMType)):
+            return lhsPMType == rhsPMType
+        case let (.saved(lhsPM), .saved(rhsPM)):
+            return lhsPM.stripeId == rhsPM.stripeId
+        default:
+            return false
         }
     }
 }
@@ -37,7 +42,7 @@ class VerticalPaymentMethodListView: UIView {
     let stackView: UIStackView
     weak var delegate: VerticalPaymentMethodListViewDelegate?
     /// Returns the currently selected payment option i.e. the one that appears selected
-    var currentSelection: VerticalPaymentMethodListSelection?
+    private(set) var currentSelection: VerticalPaymentMethodListSelection?
     var rowButtons: [RowButton] {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
@@ -54,26 +59,22 @@ class VerticalPaymentMethodListView: UIView {
         var views = [UIView]()
         // Saved payment methods:
         if let savedPaymentMethod {
-            var accessoryButton: RowButton.RightAccessoryButton?
-            if let savedPaymentMethodAccessoryType {
-                accessoryButton = RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
-            }
-            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
-                                                                               appearance: appearance,
-                                                                               rightAccessoryView: accessoryButton)
-            { [weak self] in
-                self?.didTap(rowButton: $0, selection: .saved(paymentMethod: savedPaymentMethod))
-            }
+            let selection = VerticalPaymentMethodListSelection.saved(paymentMethod: savedPaymentMethod)
+            let accessoryButton: RowButton.RightAccessoryButton? = {
+                if let savedPaymentMethodAccessoryType {
+                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
+                } else {
+                    return nil
+                }
+            }()
 
-            // Select saved payment method button if current selection is a saved payment method or if current selection is nil
-            if case .saved(let savedPaymentMethod) = initialSelection {
-                savedPaymentMethodButton.isSelected = true
-                self.currentSelection = .saved(paymentMethod: savedPaymentMethod)
-            } else if initialSelection == nil {
-                savedPaymentMethodButton.isSelected = true
-                self.currentSelection = .saved(paymentMethod: savedPaymentMethod)
+            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance, rightAccessoryView: accessoryButton) { [weak self] in
+                self?.didTap(rowButton: $0, selection: selection)
             }
-
+            if initialSelection == selection {
+                savedPaymentMethodButton.isSelected = true
+                currentSelection = selection
+            }
             views += [
                 Self.makeSectionLabel(text: .Localized.saved, appearance: appearance),
                 savedPaymentMethodButton,
@@ -84,33 +85,39 @@ class VerticalPaymentMethodListView: UIView {
 
         // Apple Pay and Link:
         if shouldShowApplePay {
-            let button = RowButton.makeForApplePay(appearance: appearance) { [weak self] in
+            let selection = VerticalPaymentMethodListSelection.applePay
+            let rowButton = RowButton.makeForApplePay(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .applePay)
             }
-            if case .applePay = initialSelection {
-                button.isSelected = true
+            views.append(rowButton)
+            if initialSelection == selection {
+                rowButton.isSelected = true
+                currentSelection = selection
             }
-            views.append(button)
         }
         if shouldShowLink {
-            let button = RowButton.makeForLink(appearance: appearance) { [weak self] in
+            let selection = VerticalPaymentMethodListSelection.link
+            let rowButton = RowButton.makeForLink(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
-            if case .link = initialSelection {
-                button.isSelected = true
+            views.append(rowButton)
+            if initialSelection == selection {
+                rowButton.isSelected = true
+                currentSelection = selection
             }
-            views.append(button)
         }
 
         // All other payment methods:
         for paymentMethodType in paymentMethodTypes {
-            let button = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, appearance: appearance) { [weak self] in
-                self?.didTap(rowButton: $0, selection: .new(paymentMethodType: paymentMethodType))
+            let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
+            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, appearance: appearance) { [weak self] in
+                self?.didTap(rowButton: $0, selection: selection)
             }
-            if paymentMethodType == initialSelection?.paymentMethodType {
-                button.isSelected = true
+            views.append(rowButton)
+            if initialSelection == selection {
+                rowButton.isSelected = true
+                currentSelection = selection
             }
-            views.append(button)
         }
 
         for view in views {

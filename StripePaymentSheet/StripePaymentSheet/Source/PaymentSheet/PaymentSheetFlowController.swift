@@ -436,6 +436,7 @@ extension PaymentSheet {
                 switch result {
                 case .success(let loadResult):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,
                         loadResult: loadResult,
@@ -486,7 +487,12 @@ extension PaymentSheet {
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical:
-                return PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult, isFlowController: true)
+                return PaymentSheetVerticalViewController(
+                    configuration: configuration,
+                    loadResult: loadResult,
+                    isFlowController: true,
+                    previousPaymentOption: previousPaymentOption
+                )
             }
         }
     }

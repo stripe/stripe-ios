@@ -70,6 +70,7 @@ class PaymentMethodFormViewController: UIViewController {
             return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
         }()
 
+        // TODO: Inject form cache, make it come from LoadResult
         if let form = Self.formCache[type] {
             self.form = form
         } else {
