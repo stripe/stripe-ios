@@ -21,6 +21,21 @@ enum VerticalPaymentMethodListSelection: Equatable {
     case saved(paymentMethod: STPPaymentMethod)
     case applePay
     case link
+
+    static func == (lhs: VerticalPaymentMethodListSelection, rhs: VerticalPaymentMethodListSelection) -> Bool {
+        switch (lhs, rhs) {
+        case (.link, .link):
+            return true
+        case (.applePay, .applePay):
+            return true
+        case let (.new(lhsPMType), .new(rhsPMType)):
+            return lhsPMType == rhsPMType
+        case let (.saved(lhsPM), .saved(rhsPM)):
+            return lhsPM.stripeId == rhsPM.stripeId
+        default:
+            return false
+        }
+    }
 }
 
 class VerticalPaymentMethodListView: UIView {
