@@ -53,7 +53,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var error: Swift.Error?
     private var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
-    var previousPaymentOption: PaymentOption?
+    private var previousPaymentOption: PaymentOption?
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
 

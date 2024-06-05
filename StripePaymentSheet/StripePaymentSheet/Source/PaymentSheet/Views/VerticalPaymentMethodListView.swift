@@ -21,15 +21,6 @@ enum VerticalPaymentMethodListSelection: Equatable {
     case saved(paymentMethod: STPPaymentMethod)
     case applePay
     case link
-
-//    var paymentMethodType: PaymentSheet.PaymentMethodType? {
-//        switch self {
-//        case .new(let paymentMethodType):
-//            return paymentMethodType
-//        case .saved, .applePay, .link:
-//            return nil
-//        }
-//    }
 }
 
 class VerticalPaymentMethodListView: UIView {

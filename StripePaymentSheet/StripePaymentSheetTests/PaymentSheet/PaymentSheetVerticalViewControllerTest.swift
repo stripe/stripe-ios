@@ -32,6 +32,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             )
 
         }
+        // TODO: Test other things like `selectedPaymentOption`
         // If there are saved PMs, always show the list, even if there's only one other PM
         let savedPMsLoadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
