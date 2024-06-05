@@ -117,7 +117,7 @@ class IntentConfirmParams {
                 // For PI w/out SFU
                 paymentMethodParams.allowRedisplay = .limited
             case .selected:
-                // For PI w/out SFU
+                // For PI, off-session during confirm
                 paymentMethodParams.allowRedisplay = .always
             }
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:

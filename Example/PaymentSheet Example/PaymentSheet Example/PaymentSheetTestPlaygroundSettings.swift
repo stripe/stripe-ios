@@ -180,6 +180,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case always
         case limited
+        case unspecified
         case unspecified_limited_always
         case notSet
 
@@ -189,6 +190,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return ["always"]
             case .limited:
                 return ["limited"]
+            case .unspecified:
+                return ["unspecified"]
             case .unspecified_limited_always:
                 return ["unspecified", "limited", "always"]
             case .notSet:
