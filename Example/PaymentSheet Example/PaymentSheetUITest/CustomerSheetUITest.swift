@@ -93,7 +93,7 @@ class CustomerSheetUITest: XCTestCase {
 
         app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
 
-        app.collectionViews.staticTexts["Apple Pay"].tap()
+        app.collectionViews.staticTexts["Apple Pay"].waitForExistenceAndTap(timeout: timeout)
 
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
@@ -359,6 +359,8 @@ class CustomerSheetUITest: XCTestCase {
         editButton.tap()
 
         removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
+
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
         // ••••4444 is rendered as the PM to remove, as well as the status on the playground
         // Check that it is removed by waiting for there only be one instance
         let elementLabel = "••••4444"
@@ -391,7 +393,7 @@ class CustomerSheetUITest: XCTestCase {
         presentCSAndAddCardFrom(buttonLabel: "••••4242")
 
         // Reload
-        app.buttons["Reload"].tap()
+        app.buttons["Reload"].waitForExistenceAndTap(timeout: timeout)
 
         // Present Sheet
         let selectButton = app.staticTexts["••••4242"]
