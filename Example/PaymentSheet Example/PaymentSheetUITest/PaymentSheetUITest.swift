@@ -1700,7 +1700,10 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         payWithApplePay()
     }
-    // MARK: GDPR Compliance (allow_redisplay tests)
+}
+
+// MARK: GDPR Compliance (allow_redisplay tests)
+class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
     func testAllowRedisplayValue_unspecified_PI_legacy() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
