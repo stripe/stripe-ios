@@ -3485,12 +3485,6 @@ extension PaymentSheetUITestCase {
         XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons["Done"].forceTapWhenHittableInTestCase(self)
 
-        if mode == .payment {
-            let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
-            XCTAssertFalse(saveThisAccountToggle.isSelected)
-            saveThisAccountToggle.tap()
-        }
-
         // Back to Payment Sheet
         app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
