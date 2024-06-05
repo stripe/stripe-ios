@@ -100,7 +100,8 @@ extension UIViewController {
                 },
                 completion: { _ in
                     // Remove the old one
-                    self.remove(childViewController: fromVC)
+                    fromVC.view.removeFromSuperview()
+                    fromVC.didMove(toParent: nil)
                     UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
                 }
             )

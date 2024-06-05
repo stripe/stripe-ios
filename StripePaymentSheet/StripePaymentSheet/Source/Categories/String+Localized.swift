@@ -297,4 +297,18 @@ extension String.Localized {
             "Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods."
         )
     }
+
+    static var add_card: String {
+        STPLocalizedString(
+            "Add card",
+            "Title shown above a view allowing the customer to save their first card."
+        )
+    }
+
+    static var add_new_card: String {
+        STPLocalizedString(
+            "Add new card",
+            "Title shown above a view allowing the customer to save a card."
+        )
+    }
 }

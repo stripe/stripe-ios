@@ -60,7 +60,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: loadResult.isApplePayEnabled && isFlowController,
-            shouldShowLink: loadResult.isLinkEnabled && isFlowController, // TODO: Edge case where we show Link as button in FC if Apple Pay not enabled
+            shouldShowLink: loadResult.isLinkEnabled && walletHeaderView == nil,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             appearance: configuration.appearance,
             delegate: self
@@ -71,6 +71,38 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
+    }()
+
+    lazy var walletHeaderView: PaymentSheetViewController.WalletHeaderView? = {
+        var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
+
+        // Offer Apple Pay in wallet if enabled and not in flow controller
+        if loadResult.isApplePayEnabled, !isFlowController {
+            walletOptions.insert(.applePay)
+        }
+
+        // Offer Link in wallet if we are not in flow controller or if we are in flow controller and Apple Pay is disabled
+        if (!isFlowController && loadResult.isLinkEnabled) || (isFlowController && !loadResult.isApplePayEnabled && loadResult.isLinkEnabled) {
+            walletOptions.insert(.link)
+        }
+
+        // If no wallet options available return nil
+        guard !walletOptions.isEmpty else { return nil }
+
+        let header = PaymentSheetViewController.WalletHeaderView(
+            options: walletOptions,
+            appearance: configuration.appearance,
+            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            isPaymentIntent: intent.isPaymentIntent,
+            delegate: self
+        )
+        return header
+    }()
+
+    lazy var headerView: VerticalHeaderView = {
+        let headerView = VerticalHeaderView(text: .Localized.select_payment_method, appearance: configuration.appearance)
+        headerView.isHidden = walletHeaderView != nil // Only show this header view if the wallet header view is empty
+        return headerView
     }()
 
     var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
@@ -113,12 +145,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         configuration.style.configure(self)
 
         // One stack view contains all our subviews
-        let stackView = UIStackView(arrangedSubviews: [
-            paymentContainerView,
-        ])
+        let views: [UIView] = [headerView, walletHeaderView, paymentContainerView].compactMap { $0 }
+        let stackView = UIStackView(arrangedSubviews: views)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
+        stackView.setCustomSpacing(24, after: headerView)
+        if let walletHeaderView {
+            stackView.setCustomSpacing(24, after: walletHeaderView)
+        }
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
 
@@ -243,6 +278,16 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             // TODO Set payment option
             return true
         case let .new(paymentMethodType: paymentMethodType):
+            // Update the header view, hide wallet if needed and show header label if needed
+            walletHeaderView?.isHidden = true
+            headerView.isHidden = false
+            if paymentMethodType == .stripe(.card) {
+                let text = savedPaymentMethods.isEmpty ? String.Localized.add_card : String.Localized.add_new_card
+                headerView.set(text: text)
+            } else {
+                headerView.update(with: paymentMethodType)
+            }
+
             selectedPaymentOption = .new(confirmParams: .init(type: paymentMethodType))
             // If we can, reuse the existing payment method form so that the customer doesn't have to type their details in again
             if let currentPaymentMethodFormVC = paymentMethodFormViewController, paymentMethodType == currentPaymentMethodFormVC.paymentMethodType {
@@ -292,6 +337,9 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         view.endEditing(true)
         switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
+        headerView.set(text: .Localized.select_payment_method)
+        headerView.isHidden = walletHeaderView != nil
+        walletHeaderView?.isHidden = walletHeaderView == nil
     }
 }
 
@@ -344,6 +392,16 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
     }
 
     func updateErrorLabel(for error: (any Error)?) {
+        // TODO
+    }
+}
+
+extension PaymentSheetVerticalViewController: WalletHeaderViewDelegate {
+    func walletHeaderViewApplePayButtonTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
+        // TODO
+    }
+
+    func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
         // TODO
     }
 }
