@@ -210,20 +210,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
-        if expectDefaultSelectionOn {
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-        } else {
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        }
+        XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
-        if expectDefaultSelectionOn {
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        } else {
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-            saveThisCardToggle.tap()  // toggle back off
-
-        }
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()  // toggle back off
         XCTAssertFalse(saveThisCardToggle.isSelected)
 
         // Complete payment
@@ -263,9 +253,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         try! fillCardData(app)
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        if !expectDefaultSelectionOn {
-            saveThisCardToggle.tap()
-        }
+        saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
         // Complete payment
@@ -796,18 +784,17 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let payButton = app.buttons["Pay $50.99"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 5))
 
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
         let selectedMandate =
         "By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."
         let unselectedMandate = "By continuing, you agree to authorize payments pursuant to these terms."
         XCTAssertTrue(
-            app.textViews[expectDefaultSelectionOn ? selectedMandate : unselectedMandate].waitForExistence(timeout: 5)
+            app.textViews[unselectedMandate].waitForExistence(timeout: 5)
         )
 
         let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
         saveThisAccountToggle.tap()
         XCTAssertTrue(
-            app.textViews[expectDefaultSelectionOn ? unselectedMandate : selectedMandate].waitForExistence(timeout: 5)
+            app.textViews[selectedMandate].waitForExistence(timeout: 5)
         )
 
         // no pay button tap because linked account is stubbed/fake in UI test
@@ -1057,6 +1044,11 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         // We should have selected cartes bancaires
         XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: 5))
+
+        // toggle save this card on
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
 
         // Finish checkout
         app.buttons["Pay €50.99"].tap()
@@ -2096,19 +2088,10 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
-        if expectDefaultSelectionOn {
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-        } else {
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        }
+        XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
-        if expectDefaultSelectionOn {
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        } else {
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-            saveThisCardToggle.tap()  // toggle back off
-        }
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()  // toggle back off
         XCTAssertFalse(saveThisCardToggle.isSelected)
 
         // Complete payment
@@ -2125,9 +2108,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        if !expectDefaultSelectionOn {
-            saveThisCardToggle.tap()
-        }
+        saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
         // Complete payment
@@ -2587,6 +2568,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.buttons["+ Add"].waitForExistenceAndTap()
         try fillCardData(app)
 
+        // toggle save this card on
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
@@ -2621,6 +2607,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.buttons["+ Add"].waitForExistenceAndTap()
 
         try! fillCardData(app)
+
+        // toggle save this card on
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
 
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
@@ -2659,6 +2650,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         try! fillCardData(app)
+
+        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
 
         let payButton = app.buttons["Pay $50.99"]
         XCTAssert(payButton.isEnabled)
@@ -2699,6 +2695,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
+        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
 
@@ -2735,6 +2736,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         try! fillCardData(app)
+
+        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
 
         let payButton = app.buttons["Pay $50.99"]
         XCTAssert(payButton.isEnabled)
@@ -2955,6 +2961,12 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
+
+        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+
         app.buttons["Pay $50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
@@ -2966,6 +2978,12 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
+
+        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+
         fillLinkAndPay(mode: .fieldConsent, cardNumber: "5555555555554444")
 
         // reload w/ same customer
@@ -2989,6 +3007,12 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
+
+        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+
         app.buttons["Pay $50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
@@ -3096,6 +3120,12 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Payment method"].waitForExistenceAndTap()
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
+
+        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
@@ -3108,6 +3138,10 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
+        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
         fillLinkAndPay(mode: .fieldConsent, uiStyle: .flowController, showLinkWalletButton: false)
     }
 
@@ -3156,6 +3190,12 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
+
+        // toggle save this card on
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
@@ -3361,8 +3401,15 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
+        if mode == .payment {
+            let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+        }
+
         // Confirm
         let confirmButtonText = mode == .payment ? "Pay $50.99" : "Set up"
+
         app.buttons[confirmButtonText].waitForExistenceAndTap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))

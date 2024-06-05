@@ -1,6 +1,7 @@
 ## x.x.x xxxx-xx-xx
 ### PaymentSheet
 * [Fixed] Fixed an issue where changing the country of a phone number would not update the UI when the phone number's validity changed.
+* [Changed] The "save this card" checkbox is now unchecked by default. To change this behavior, set your PaymentSheet.Configuration.savePaymentMethodOptInBehavior to `.requiresOptOut`.
 
 ### Payments
 * [Added] Updated support for MobilePay bindings.
