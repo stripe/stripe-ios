@@ -1,6 +1,7 @@
 ## x.x.x xxxx-xx-xx
 ### PaymentSheet
 * [Fixed] Fixed an issue where changing the country of a phone number would not update the UI when the phone number's validity changed.
+* [Changed] The "save this card" checkbox is now unchecked by default. To change this behavior, set your PaymentSheet.Configuration.savePaymentMethodOptInBehavior to `.requiresOptOut`.
 
 ### Payments
 * [Added] Updated support for MobilePay bindings.
@@ -137,7 +138,6 @@
 
 ## 23.18.3 2023-11-28
 ### PaymentSheet
-* [Changed] The "save this card" checkbox is now unchecked by default. To change this behavior, set your PaymentSheet.Configuration.savePaymentMethodOptInBehavior to `.requiresOptOut`.
 * [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.
 * [Added] If PaymentSheet fails to load a deferred intent configuration, we fall back to displaying cards (or the intent configuration payment method types) instead of failing.
 * [Fixed] Fixed an issue where PaymentSheet wouldn't accept valid Mexican phone numbers.
