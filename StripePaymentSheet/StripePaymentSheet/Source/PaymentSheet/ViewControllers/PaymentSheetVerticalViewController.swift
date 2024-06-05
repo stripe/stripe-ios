@@ -336,7 +336,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             } else {
                 headerView.update(with: paymentMethodType)
             }
-            
+
             // If we can, reuse the existing payment method form so that the customer doesn't have to type their details in again
             if let currentPaymentMethodFormVC = paymentMethodFormViewController, paymentMethodType == currentPaymentMethodFormVC.paymentMethodType {
                 // Switch the main content to the form

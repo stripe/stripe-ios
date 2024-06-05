@@ -41,7 +41,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let sut = PaymentSheetVerticalViewController(configuration: .init(), loadResult: loadResult, isFlowController: false, previousPaymentOption: nil)
         verify(sut)
     }
-    
+
     func testDisplaysFormDirectly_withWallet() {
         // Same as above test, but we are showing big Apple Pay and Link buttons
         let loadResult = PaymentSheetLoader.LoadResult(
