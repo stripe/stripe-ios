@@ -148,11 +148,13 @@ public class CustomerSheet {
             switch result {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
+                let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
                 self.present(from: presentingViewController,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                              customerSheetDataSource: customerSheetDataSource,
+                             paymentMethodRemove: paymentMethodRemove,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
                                                                      duration: Date().timeIntervalSince(loadingStartDate))
@@ -175,6 +177,7 @@ public class CustomerSheet {
                  selectedPaymentMethodOption: CustomerPaymentOption?,
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
                  customerSheetDataSource: CustomerSheetDataSource,
+                 paymentMethodRemove: Bool,
                  cbcEligible: Bool) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -190,6 +193,7 @@ public class CustomerSheet {
                                                                                     configuration: self.configuration,
                                                                                     customerSheetDataSource: customerSheetDataSource,
                                                                                     isApplePayEnabled: isApplePayEnabled,
+                                                                                    paymentMethodRemove: paymentMethodRemove,
                                                                                     cbcEligible: cbcEligible,
                                                                                     csCompletion: self.csCompletion,
                                                                                     delegate: self)

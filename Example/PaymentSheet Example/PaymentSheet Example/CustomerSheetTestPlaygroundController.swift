@@ -8,7 +8,8 @@ import Combine
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
-    static let defaultEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+//    static let defaultEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+    static let defaultEndpoint = "http://127.0.0.1:8081"
 
     @Published var settings: CustomerSheetTestPlaygroundSettings
     @Published var currentlyRenderedSettings: CustomerSheetTestPlaygroundSettings
@@ -118,7 +119,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.headerTextForSelectionScreen = settings.headerTextForSelectionScreen
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
-        configuration.paymentMethodRemove = settings.paymentMethodRemove == .enabled
 
         if settings.defaultBillingAddress == .on {
             configuration.defaultBillingDetails.name = "Jane Doe"
@@ -219,8 +219,7 @@ extension CustomerSheetTestPlaygroundController {
 
         // TODO: Refactor this to make the ephemeral key and customerId fetching async
         self.backend.loadBackendCustomerEphemeralKey(customerType: customerType,
-                                                     customerKeyType: self.settings.customerKeyType,
-                                                     merchantCountryCode: settings.merchantCountryCode.rawValue) { result in
+                                                     settings: settings) { result in
             if settingsToLoad != self.settings {
                 DispatchQueue.main.async {
                     self.load()
@@ -313,16 +312,18 @@ class CustomerSheetBackend {
     }
 
     func loadBackendCustomerEphemeralKey(customerType: String,
-                                         customerKeyType: CustomerSheetTestPlaygroundSettings.CustomerKeyType,
-                                         merchantCountryCode: String,
+                                         settings: CustomerSheetTestPlaygroundSettings,
                                          completion: @escaping ([String: String]?) -> Void) {
 
-        let body = [ "customer_type": customerType,
-                     "customer_key_type": customerKeyType.rawValue,
-                     "merchant_country_code": merchantCountryCode,
-                     "customer_session_payment_method_remove": "enabled",
-                     "customer_session_payment_method_allow_redisplay_filters": ["unspecified", "limited", "always"],
+        var body = [ "customer_type": customerType,
+                     "customer_key_type": settings.customerKeyType.rawValue,
+                     "merchant_country_code": settings.merchantCountryCode.rawValue,
+                     "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
         ] as [String: Any]
+
+        if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
+            body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
+        }
 
         let url = URL(string: "\(endpoint)/customer_ephemeral_key")!
         let session = URLSession.shared
