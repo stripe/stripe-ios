@@ -6,14 +6,14 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-import iOSSnapshotTestCase
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import UIKit
+import XCTest
 
 @_spi(STP)@testable import StripeCore
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(STP)@_spi(EarlyAccessCVCRecollectionFeature)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
@@ -37,6 +37,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     var runAgainstLiveService: Bool = false
     override func setUp() {
         super.setUp()
+//        recordMode = true
 
         configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -47,7 +48,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "mockReturnUrl"
 
-        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
 //                self.runAgainstLiveService = true
         if !self.runAgainstLiveService {
             APIStubbedTestCase.stubAllOutgoingRequests()
@@ -426,6 +426,39 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheetCVCRecollection() {
+        stubReturningCustomerResponse()
+
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+                                                            confirmHandler: confirmHandler(_:_:_:),
+                                                            isCVCRecollectionEnabledCallback: {
+            return true
+        })
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            applePayEnabled: false,
+            intentConfig: intentConfig
+        )
+        presentPaymentSheet(darkMode: false)
+        sleepInBackground(numSeconds: 1)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetWithLinkSignupDisabled() {
+        stubSessions(fileMock: .elementsSessions_link_signup_disabled_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(
+            customer: "guest",
+            automaticPaymentMethods: false,
+            useLink: true
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetWithLinkDarkMode() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
@@ -469,6 +502,21 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheetWithLinkExistingCustomer() {
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+        stubConsumerSession()
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            automaticPaymentMethods: false,
+            useLink: true
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetWithLinkHiddenBorders() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
@@ -504,6 +552,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
                                                             confirmHandler: confirmHandler(_:_:_:))
@@ -918,6 +967,18 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         }
     }
 
+    private func stubConsumerSession() {
+        guard !runAgainstLiveService else {
+            return
+        }
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") ?? false
+        } response: { _ in
+            let mockResponseData = try! FileMock.consumers_lookup_200.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
     private func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
         guard !runAgainstLiveService else {
             return
@@ -1103,6 +1164,20 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
     }
 
+    private func sleepInBackground(numSeconds: Int) {
+        let waitExpectation = XCTestExpectation(description: "Waiting in background")
+        let maxCount = numSeconds * 2
+        DispatchQueue.global(qos: .background).async {
+            var count = 0
+            while count < maxCount {
+                count += 1
+                usleep(500000)  // 500ms
+            }
+            waitExpectation.fulfill()
+        }
+        wait(for: [waitExpectation], timeout: 10.0)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -1112,7 +1187,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(
             view,
             identifier: identifier,
-            suffixes: FBSnapshotTestCaseDefaultSuffixes(),
             file: file,
             line: line
         )

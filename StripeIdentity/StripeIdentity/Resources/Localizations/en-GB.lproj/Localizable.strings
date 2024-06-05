@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "A few photos will be taken automatically on the next step to verify it's you";
 
+"Accepted forms of ID include" = "Accepted forms of ID include";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Alternatively, you may manually upload a photo of your identity document.";
 
 "App Settings" = "App Settings";
 
-"Back driver's license photo successfully uploaded" = "Back driving licence photo successfully uploaded";
-
 "Back identity card photo successfully uploaded" = "Back identity card photo successfully uploaded";
-
-"Back of driver's license" = "Back of driving licence";
 
 "Back of identity card" = "Back of identity card";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "Date of birth does not look valid";
 
-"Flip your driver's license over to the other side" = "Flip your driving licence over to the other side";
+"Details not visible" = "Details not visible";
 
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
-"Front driver's license photo successfully uploaded" = "Front driving licence photo successfully uploaded";
-
 "Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
 
-"Front of driver's license" = "Front of driving licence";
-
 "Front of identity card" = "Front of identity card";
+
+"Get ready to scan your photo ID" = "Get ready to scan your photo ID";
 
 "Get ready to take a selfie" = "Get ready to take a selfie";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "Hold still, scanning";
 
+"I'm ready" = "I'm ready";
+
 "ID Number" = "ID Number";
 
-"ID Type" = "ID Type";
-
-"Image of passport" = "Image of passport";
-
 "Individual CPF" = "Individual CPF";
+
+"Keep ID level" = "Keep ID level";
 
 "Last 4 of Social Security number" = "Last 4 of Social Security number";
 
 "Loading" = "Loading";
 
+"Make sure all details are visible and focus" = "Make sure all details are visible and focus";
+
+"Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
+
+"Move closer" = "Move closer";
+
+"Move farther" = "Move further away";
+
+"Move to a darker area" = "Move to a darker area";
+
+"Move to a well-lit area" = "Move to a well-lit area";
+
 "NRIC or FIN" = "NRIC or FIN";
 
-"Passport" = "Passport";
-
-"Passport photo successfully uploaded" = "Passport photo successfully uploaded";
+"No document detected" = "No document detected";
 
 "Personal ID number" = "Personal ID number";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "Photo Library";
 
-"Please upload an image of your passport" = "Please upload an image of your passport";
-
-"Please upload images of the front and back of your driver's license" = "Please upload images of the front and back of your driving licence";
-
 "Please upload images of the front and back of your identity card" = "Please upload images of the front and back of your identity card";
-
-"Position your driver's license in the center of the frame" = "Position your driving licence in the centre of the frame";
 
 "Position your face in the center of the frame." = "Position your face in the centre of the frame.";
 
 "Position your identity card in the center of the frame" = "Position your identity card in the centre of the frame";
-
-"Position your passport in the center of the frame" = "Position your passport in the centre of the frame";
 
 "Retake Photos" = "Retake Photos";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "Select a location to upload the front of your identity document from";
 
-"Select back driver's license photo" = "Select back driving licence photo";
-
 "Select back identity card photo" = "Select back identity card photo";
 
-"Select front driver's license photo" = "Select front driving licence photo";
-
 "Select front identity card photo" = "Select front identity card photo";
-
-"Select passport photo" = "Select passport photo";
 
 "Selfie" = "Selfie";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "Try Again";
 
+"Try reduce glare and make ID visible" = "Try to reduce glare and make ID visible";
+
 "Unable to establish a connection." = "Unable to establish a connection.";
 
 "Unsaved changes" = "Unsaved changes";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "Upload your photo ID";
 
-"Uploading back driver's license photo" = "Uploading back driving licence photo";
-
 "Uploading back identity card photo" = "Uploading back identity card photo";
 
-"Uploading front driver's license photo" = "Uploading front driving licence photo";
-
 "Uploading front identity card photo" = "Uploading front identity card photo";
-
-"Uploading passport photo" = "Uploading passport photo";
 
 "Verify your identity" = "Verify your identity";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
+
+"driver's license" = "driver's license";
+
+"government-issued photo ID" = "government-issued photo ID";
+
+"passport" = "passport";

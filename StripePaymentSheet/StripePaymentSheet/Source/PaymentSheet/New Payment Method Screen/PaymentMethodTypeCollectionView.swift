@@ -19,6 +19,10 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_PaymentMethodTypeCollectionView)
 class PaymentMethodTypeCollectionView: UICollectionView {
+    enum Error: Swift.Error {
+        case unableToDequeueReusableCell
+    }
+
     // MARK: - Constants
     internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
     internal static let cellHeight: CGFloat = 52
@@ -44,7 +48,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         isPaymentSheet: Bool = false,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
-        assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
+        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
 
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
@@ -106,7 +110,10 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
                 as? PaymentMethodTypeCollectionView.PaymentTypeCell,
             let appearance = (collectionView as? PaymentMethodTypeCollectionView)?.appearance
         else {
-            assertionFailure()
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.unableToDequeueReusableCell)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
             return UICollectionViewCell()
         }
         cell.paymentMethodType = paymentMethodTypes[indexPath.item]
@@ -116,23 +123,26 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        selected = paymentMethodTypes[indexPath.item]
-
         // Only log this event when this collection view is being used by PaymentSheet
         if isPaymentSheet {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCarouselPaymentMethodTapped,
                                                                  paymentMethodTypeAnalyticsValue: paymentMethodTypes[indexPath.row].identifier)
         }
+        selected = paymentMethodTypes[indexPath.item]
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var useFixedSizeCells: Bool {
+            #if canImport(CompositorServices)
+            return true
+            #else
             // Prefer fixed size cells for iPads and Mac.
             if #available(iOS 14.0, macCatalyst 14.0, *) {
                 return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
             } else {
                 return UIDevice.current.userInterfaceIdiom == .pad
             }
+            #endif
         }
 
         if useFixedSizeCells {
@@ -181,11 +191,7 @@ extension PaymentMethodTypeCollectionView {
             return paymentMethodLogo
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
-            shadowRoundedRectangle.layer.borderWidth = 1
-            shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
-                top: 15, left: 24, bottom: 15, right: 24)
-            return shadowRoundedRectangle
+            return ShadowedRoundedRectangle(appearance: appearance)
         }()
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
@@ -255,10 +261,12 @@ extension PaymentMethodTypeCollectionView {
             fatalError("init(coder:) has not been implemented")
         }
 
+        #if !canImport(CompositorServices)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             update()
         }
+        #endif
 
         override var isSelected: Bool {
             didSet {
@@ -300,31 +308,19 @@ extension PaymentMethodTypeCollectionView {
             }
             updateImage(image)
 
-            if isSelected {
-                // Set text color
-                label.textColor = appearance.colors.primary
-
-                // Set border
-                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth * 2
-                shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
-            } else {
-                // Set text color
-                label.textColor = appearance.colors.componentText
-
-                // Set border
-                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
-                shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
-            }
+            shadowRoundedRectangle.isSelected = isSelected
+            // Set text color
+            label.textColor = appearance.colors.componentText
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
             accessibilityIdentifier = paymentMethodType.identifier
         }
         private func updateImage(_ imageParam: UIImage) {
             var image = imageParam
-            // tint icon primary color for a few PMs should be tinted the appearance primary color when selected
+            // tint icon for a few PMs to be a contrasting color to the component background
             if paymentMethodType.iconRequiresTinting  {
                 image = image.withRenderingMode(.alwaysTemplate)
-                paymentMethodLogo.tintColor = isSelected ? appearance.colors.primary : appearance.colors.componentBackground.contrastingColor
+                paymentMethodLogo.tintColor = appearance.colors.componentBackground.contrastingColor
             }
 
             paymentMethodLogo.image = image

@@ -74,7 +74,7 @@ public typealias STPRedirectContextPaymentIntentCompletionBlock = (String, Error
 /// @note You must retain this instance for the duration of the redirect flow.
 /// This class dismisses any presented view controller upon deallocation.
 /// See https://stripe.com/docs/sources/best-practices
-public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
+public class STPRedirectContext: NSObject,
     UIViewControllerTransitioningDelegate, STPSafariViewControllerDismissalDelegate
 {
 
@@ -274,7 +274,9 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
             lastKnownSafariVCURL = redirectURL
             let safariVC = SFSafariViewController(url: lastKnownSafariVCURL!)
             safariVC.transitioningDelegate = self
+            #if !canImport(CompositorServices)
             safariVC.delegate = self
+            #endif
             safariVC.modalPresentationStyle = .custom
             self.safariVC = safariVC
             presentingViewController.present(
@@ -343,72 +345,6 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
 
     deinit {
         unsubscribeFromNotificationsAndDismissPresentedViewControllers()
-    }
-
-    // MARK: - SFSafariViewControllerDelegate -
-    /// :nodoc:
-    @objc
-    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        var manuallyClosedError: Error?
-        if returnURL != nil && state == .inProgress && completionError == nil {
-            manuallyClosedError = NSError(
-                domain: STPError.stripeDomain,
-                code: STPErrorCode.cancellationError.rawValue,
-                userInfo: [
-                    STPError.errorMessageKey:
-                        "User manually closed SFSafariViewController before redirect was completed.",
-                ]
-            )
-        }
-        stpDispatchToMainThreadIfNecessary({
-            self.handleRedirectCompletionWithError(
-                manuallyClosedError,
-                shouldDismissViewController: false
-            )
-        })
-    }
-
-    /// :nodoc:
-    @objc
-    public func safariViewController(
-        _ controller: SFSafariViewController,
-        didCompleteInitialLoad didLoadSuccessfully: Bool
-    ) {
-        //     SafariVC is, imo, over-eager to report errors. The way that (for example) girogate.de redirects
-        //     can cause SafariVC to report that the initial load failed, even though it completes successfully.
-        //
-        //     So, only report failures to complete the initial load if the host was a Stripe domain.
-        //     Stripe uses 302 redirects, and this should catch local connection problems as well as
-        //     server-side failures from Stripe.
-        if didLoadSuccessfully == false {
-            stpDispatchToMainThreadIfNecessary({
-                if self.lastKnownSafariVCURL?.host?.contains("stripe.com") ?? false {
-                    self.handleRedirectCompletionWithError(
-                        NSError.stp_genericConnectionError(),
-                        shouldDismissViewController: true
-                    )
-                }
-            })
-        }
-    }
-
-    /// :nodoc:
-    @objc
-    public func safariViewController(
-        _ controller: SFSafariViewController,
-        initialLoadDidRedirectTo URL: URL
-    ) {
-        stpDispatchToMainThreadIfNecessary({
-            // This is only kept up to date during the "initial load", but we only need the value in
-            // `safariViewController:didCompleteInitialLoad:`, so that's fine.
-            self.lastKnownSafariVCURL = URL
-        })
-    }
-
-    // MARK: - STPSafariViewControllerDismissalDelegate -
-    func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController) {
-        completion(completionError)
-        completionError = nil
     }
 
     // MARK: - UIViewControllerTransitioningDelegate
@@ -551,6 +487,12 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
         _dismissPresentedViewControllerCalled = true
     }
 
+    // MARK: - STPSafariViewControllerDismissalDelegate -
+    func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController) {
+        completion(completionError)
+        completionError = nil
+    }
+
     func isSafariVCPresented() -> Bool {
         return safariVC != nil
     }
@@ -618,3 +560,67 @@ extension UIApplication: UIApplicationProtocol {
         open(url, options: options, completionHandler: completion)
     }
 }
+
+#if !canImport(CompositorServices)
+extension STPRedirectContext: SFSafariViewControllerDelegate {
+    // MARK: - SFSafariViewControllerDelegate -
+    /// :nodoc:
+    @objc
+    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        var manuallyClosedError: Error?
+        if returnURL != nil && state == .inProgress && completionError == nil {
+            manuallyClosedError = NSError(
+                domain: STPError.stripeDomain,
+                code: STPErrorCode.cancellationError.rawValue,
+                userInfo: [
+                    STPError.errorMessageKey:
+                        "User manually closed SFSafariViewController before redirect was completed.",
+                ]
+            )
+        }
+        stpDispatchToMainThreadIfNecessary({
+            self.handleRedirectCompletionWithError(
+                manuallyClosedError,
+                shouldDismissViewController: false
+            )
+        })
+    }
+
+    /// :nodoc:
+    @objc
+    public func safariViewController(
+        _ controller: SFSafariViewController,
+        didCompleteInitialLoad didLoadSuccessfully: Bool
+    ) {
+        //     SafariVC is, imo, over-eager to report errors. The way that (for example) girogate.de redirects
+        //     can cause SafariVC to report that the initial load failed, even though it completes successfully.
+        //
+        //     So, only report failures to complete the initial load if the host was a Stripe domain.
+        //     Stripe uses 302 redirects, and this should catch local connection problems as well as
+        //     server-side failures from Stripe.
+        if didLoadSuccessfully == false {
+            stpDispatchToMainThreadIfNecessary({
+                if self.lastKnownSafariVCURL?.host?.contains("stripe.com") ?? false {
+                    self.handleRedirectCompletionWithError(
+                        NSError.stp_genericConnectionError(),
+                        shouldDismissViewController: true
+                    )
+                }
+            })
+        }
+    }
+
+    /// :nodoc:
+    @objc
+    public func safariViewController(
+        _ controller: SFSafariViewController,
+        initialLoadDidRedirectTo URL: URL
+    ) {
+        stpDispatchToMainThreadIfNecessary({
+            // This is only kept up to date during the "initial load", but we only need the value in
+            // `safariViewController:didCompleteInitialLoad:`, so that's fine.
+            self.lastKnownSafariVCURL = URL
+        })
+    }
+}
+#endif

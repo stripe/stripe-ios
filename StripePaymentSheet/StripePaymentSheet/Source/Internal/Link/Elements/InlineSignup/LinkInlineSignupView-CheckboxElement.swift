@@ -13,6 +13,8 @@ import UIKit
 extension LinkInlineSignupView {
 
     final class CheckboxElement: Element {
+        let collectsUserInput: Bool = true
+
         weak var delegate: ElementDelegate?
 
         private let merchantName: String
@@ -37,7 +39,7 @@ extension LinkInlineSignupView {
             appearanceCopy.colors.componentBackground = appearance.colors.background
 
             let text = STPLocalizedString(
-                "Save my info for secure 1-click checkout",
+                "Save your info for secure 1-click checkout with Link",
                 """
                 Label for a checkbox that when checked allows the payment information
                 to be saved and used in future checkout sessions.

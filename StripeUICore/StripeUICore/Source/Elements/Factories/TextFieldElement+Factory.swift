@@ -72,10 +72,16 @@ import UIKit
     struct EmailConfiguration: TextFieldElementConfiguration {
         public let label = String.Localized.email
         public let defaultValue: String?
+        public let isOptional: Bool
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
         let invalidError = Error.invalid(
             localizedDescription: String.Localized.invalid_email
         )
+
+        init(defaultValue: String? = nil, isOptional: Bool = false) {
+            self.defaultValue = defaultValue
+            self.isOptional = isOptional
+        }
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
             if text.isEmpty {
@@ -93,8 +99,9 @@ import UIKit
         }
     }
 
-    static func makeEmail(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
-        return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue), theme: theme)
+    static func makeEmail(defaultValue: String?, isOptional: Bool = false, theme: ElementsUITheme = .default) -> TextFieldElement {
+        return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue,
+                                                                  isOptional: isOptional), theme: theme)
     }
 
     // MARK: VPA
@@ -156,7 +163,7 @@ import UIKit
 
     /// An optional 10 to 11 digit numeric-only string determining the confirmation code at applicable convenience stores. This is typically a phone number, so we label it as such.
     struct KonbiniPhoneNumberConfiguration: TextFieldElementConfiguration {
-        public let label = String.Localized.phone
+        public let label = String.Localized.phoneNumber
         public let disallowedCharacters: CharacterSet = .decimalDigits.inverted
         public let isOptional: Bool = true
         let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
@@ -188,7 +195,7 @@ import UIKit
     struct PhoneNumberConfiguration: TextFieldElementConfiguration {
         static let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
         static let invalidError = Error.invalid(localizedDescription: .Localized.invalid_phone_number)
-        public let label: String = .Localized.phone
+        public let label: String = .Localized.phoneNumber
         /// - Note: Country code helps us format the phone number
         public let countryCodeProvider: () -> String
         public let defaultValue: String?

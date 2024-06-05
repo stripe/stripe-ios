@@ -36,13 +36,25 @@ class LinkLegalTermsViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    func testLocalization() {
+    func testLocalization_de() {
         performLocalizedSnapshotTest(forLanguage: "de")
+    }
+    func testLocalization_es() {
         performLocalizedSnapshotTest(forLanguage: "es")
+    }
+    func testLocalization_el_GR() {
         performLocalizedSnapshotTest(forLanguage: "el-GR")
+    }
+    func testLocalization_it() {
         performLocalizedSnapshotTest(forLanguage: "it")
+    }
+    func testLocalization_ja() {
         performLocalizedSnapshotTest(forLanguage: "ja")
+    }
+    func testLocalization_ko() {
         performLocalizedSnapshotTest(forLanguage: "ko")
+    }
+    func testLocalization_zh_hans() {
         performLocalizedSnapshotTest(forLanguage: "zh-Hans")
     }
 

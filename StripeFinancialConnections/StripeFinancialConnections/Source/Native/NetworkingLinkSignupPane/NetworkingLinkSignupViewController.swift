@@ -19,6 +19,7 @@ protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
         _ viewController: NetworkingLinkSignupViewController,
         // nil == we did not perform saveToLink
         saveToLinkWithStripeSucceeded: Bool?,
+        customSuccessPaneMessage: String?,
         withError error: Error?
     )
     func networkingLinkSignupViewController(
@@ -32,11 +33,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private let dataSource: NetworkingLinkSignupDataSource
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
+    private lazy var loadingView: SpinnerView = {
+        return SpinnerView()
     }()
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
         let formView = NetworkingLinkSignupBodyFormView(
@@ -89,6 +87,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                         self.delegate?.networkingLinkSignupViewControllerDidFinish(
                             self,
                             saveToLinkWithStripeSucceeded: nil,
+                            customSuccessPaneMessage: nil,
                             withError: error
                         )
                     }
@@ -103,7 +102,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             willNavigateToReturningConsumer = false
             // in case a user decides to go back from verification pane,
             // we clear the email so they can re-enter
-            formView.emailElement.emailAddressElement.setText("")
+            formView.emailTextField.text = ""
         }
     }
 
@@ -127,50 +126,63 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
                     saveToLinkWithStripeSucceeded: nil,
+                    customSuccessPaneMessage: nil,
                     withError: nil
                 )
             },
             didSelectURL: { [weak self] url in
-                self?.didSelectURLInTextFromBackend(url)
+                self?.didSelectURLInTextFromBackend(
+                    url,
+                    legalDetailsNotice: networkingLinkSignup.legalDetailsNotice
+                )
             }
         )
         self.footerView = footerView
-        let pane = PaneWithHeaderLayoutView(
-            title: networkingLinkSignup.title,
-            contentView: NetworkingLinkSignupBodyView(
-                bulletPoints: networkingLinkSignup.body.bullets,
-                formView: formView,
-                didSelectURL: { [weak self] url in
-                    self?.didSelectURLInTextFromBackend(url)
-                }
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: nil,
+                title: networkingLinkSignup.title,
+                subtitle: nil,
+                contentView: NetworkingLinkSignupBodyView(
+                    bulletPoints: networkingLinkSignup.body.bullets,
+                    formView: formView,
+                    didSelectURL: { [weak self] url in
+                        self?.didSelectURLInTextFromBackend(
+                            url,
+                            legalDetailsNotice: networkingLinkSignup.legalDetailsNotice
+                        )
+                    }
+                )
             ),
             footerView: footerView
         )
-        pane.addTo(view: view)
+        paneLayoutView.addTo(view: view)
 
+        #if !canImport(CompositorServices)
         // if user drags, dismiss keyboard so the CTA buttons can be shown
-        pane.scrollView.keyboardDismissMode = .onDrag
+        paneLayoutView.scrollView.keyboardDismissMode = .onDrag
+        #endif
 
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
-        if let emailAddress = emailAddress, !emailAddress.isEmpty {
-            formView.prefillEmailAddress(dataSource.manifest.accountholderCustomerEmailAddress)
+        if let emailAddress, !emailAddress.isEmpty {
+            formView.prefillEmailAddress(emailAddress)
+        } else {
+            formView.beginEditingEmailAddressField()
         }
 
         assert(self.footerView != nil, "footer view should be initialized as part of displaying content")
+
+        // disable CTA if needed
+        adjustSaveToLinkButtonDisabledState()
     }
 
     private func showLoadingView(_ show: Bool) {
         if show && loadingView.superview == nil {
             // first-time we are showing this, so add the view to hierarchy
-            view.addAndPinSubview(loadingView)
+            view.addAndPinSubviewToSafeArea(loadingView)
         }
 
         loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
-        }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 
@@ -184,17 +196,18 @@ final class NetworkingLinkSignupViewController: UIViewController {
             )
 
         dataSource.saveToLink(
-            emailAddress: formView.emailElement.emailAddressString ?? "",
-            phoneNumber: formView.phoneNumberElement.phoneNumber?.string(as: .e164) ?? "",
-            countryCode: formView.phoneNumberElement.phoneNumber?.countryCode ?? "US"
+            emailAddress: formView.emailTextField.text,
+            phoneNumber: formView.phoneTextField.phoneNumber?.string(as: .e164) ?? "",
+            countryCode: formView.phoneTextField.phoneNumber?.countryCode ?? "US"
         )
         .observe { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success:
+            case .success(let customSuccessPaneMessage):
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
                     saveToLinkWithStripeSucceeded: true,
+                    customSuccessPaneMessage: customSuccessPaneMessage,
                     withError: nil
                 )
             case .failure(let error):
@@ -203,6 +216,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
                     saveToLinkWithStripeSucceeded: false,
+                    customSuccessPaneMessage: nil,
                     withError: error
                 )
                 self.dataSource.analyticsClient.logUnexpectedError(
@@ -215,20 +229,34 @@ final class NetworkingLinkSignupViewController: UIViewController {
         }
     }
 
-    private func didSelectURLInTextFromBackend(_ url: URL) {
+    private func didSelectURLInTextFromBackend(
+        _ url: URL,
+        legalDetailsNotice: FinancialConnectionsLegalDetailsNotice?
+    ) {
         AuthFlowHelpers.handleURLInTextFromBackend(
             url: url,
             pane: .networkingLinkSignupPane,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { _ in
-                // no custom stripe scheme is handled
+            handleStripeScheme: { urlHost in
+                if urlHost == "legal-details-notice", let legalDetailsNotice {
+                    let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
+                        legalDetailsNotice: legalDetailsNotice,
+                        didSelectUrl: { [weak self] url in
+                            self?.didSelectURLInTextFromBackend(
+                                url,
+                                legalDetailsNotice: legalDetailsNotice
+                            )
+                        }
+                    )
+                    legalDetailsNoticeViewController.present(on: self)
+                }
             }
         )
     }
 
     private func adjustSaveToLinkButtonDisabledState() {
-        let isEmailValid = formView.emailElement.validationState.isValid
-        let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
+        let isEmailValid = formView.emailTextField.isEmailValid
+        let isPhoneNumberValid = formView.phoneTextField.isPhoneNumberValid
         footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
 
@@ -247,7 +275,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
         _ bodyFormView: NetworkingLinkSignupBodyFormView,
         didEnterValidEmailAddress emailAddress: String
     ) {
-        bodyFormView.emailElement.startAnimating()
+        bodyFormView.emailTextField.showLoadingView(true)
         dataSource
             .lookup(emailAddress: emailAddress)
             .observe { [weak self, weak bodyFormView] result in
@@ -266,6 +294,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             self.delegate?.networkingLinkSignupViewControllerDidFinish(
                                 self,
                                 saveToLinkWithStripeSucceeded: nil,
+                                customSuccessPaneMessage: nil,
                                 withError: FinancialConnectionsSheetError.unknown(
                                     debugDescription: "No consumer session returned from lookupConsumerSession for emailAddress: \(emailAddress)"
                                 )
@@ -282,25 +311,12 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         // we want to only jump to the phone number the
                         // first time they enter the e-mail
                         if didShowPhoneNumberFieldForTheFirstTime {
-                            let didPrefillPhoneNumber = (self.formView.phoneNumberElement.phoneNumber?.number ?? "").count > 1
-                            // if the phone number is pre-filled, we don't focus on the phone number field
+                            let didPrefillPhoneNumber = (self.formView.phoneTextField.phoneNumber?.number ?? "").count > 1
                             if !didPrefillPhoneNumber {
-                                let didPrefillEmailAddress = {
-                                    if
-                                        let accountholderCustomerEmailAddress = self.dataSource.manifest.accountholderCustomerEmailAddress,
-                                        !accountholderCustomerEmailAddress.isEmpty
-                                    {
-                                        return true
-                                    } else {
-                                        return false
-                                    }
-                                }()
-                                // we don't want to auto-focus the phone number field if we pre-filled the email
-                                if !didPrefillEmailAddress {
-                                    // this disables the "Phone" label animating (we don't want that animation here)
-                                    UIView.performWithoutAnimation {
-                                        self.formView.beginEditingPhoneNumberField()
-                                    }
+                                // this disables the "Phone" label animating (we don't want that animation here)
+                                UIView.performWithoutAnimation {
+                                    // auto-focus the non-prefilled phone field
+                                    self.formView.beginEditingPhoneNumberField()
                                 }
                             } else {
                                 // user is done with e-mail AND phone number, so dismiss the keyboard
@@ -308,7 +324,6 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                                 self.formView.endEditingEmailAddressField()
                             }
                         }
-                        self.footerView?.showSaveToLinkButtonIfNeeded()
                     }
                 case .failure(let error):
                     self.dataSource.analyticsClient.logUnexpectedError(
@@ -321,7 +336,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         didReceiveTerminalError: error
                     )
                 }
-                bodyFormView?.emailElement.stopAnimating()
+                bodyFormView?.emailTextField.showLoadingView(false)
             }
     }
 

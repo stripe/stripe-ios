@@ -18,6 +18,7 @@ import Foundation
     case sourceCreation = "stripeios.source_creationn"
 
     case paymentMethodCreation = "stripeios.payment_method_creation"
+    case paymentMethodUpdate = "stripeios.payment_method_update"
     case paymentMethodIntentCreation = "stripeios.payment_intent_confirmation"
     case setupIntentConfirmationAttempt = "stripeios.setup_intent_confirmation"
 
@@ -33,6 +34,10 @@ import Foundation
     case _3DS2ChallengeFlowCompleted = "stripeios.3ds2_challenge_flow_completed"
     case _3DS2ChallengeFlowErrored = "stripeios.3ds2_challenge_flow_errored"
     case _3DS2RedirectUserCanceled = "stripeios.3ds2_redirect_canceled"
+    case paymentHandlerConfirmStarted = "stripeios.paymenthandler.confirm.started"
+    case paymentHandlerConfirmFinished = "stripeios.paymenthandler.confirm.finished"
+    case paymentHandlerHandleNextActionStarted = "stripeios.paymenthandler.handle_next_action.started"
+    case paymentHandlerHandleNextActionFinished = "stripeios.paymenthandler.handle_next_action.finished"
 
     // MARK: - Card Metadata
     case cardMetadataLoadedTooSlow = "stripeios.card_metadata_loaded_too_slow"
@@ -113,6 +118,10 @@ import Foundation
     case linkSignupStart = "link.signup.start"
     case linkSignupComplete = "link.signup.complete"
     case linkSignupFailure = "link.signup.failure"
+    case linkCreatePaymentDetailsFailure = "link.payment.failure.create"
+    case linkSharePaymentDetailsFailure = "link.payment.failure.share"
+    case linkSignupFailureInvalidSessionState = "link.signup.failure.invalidSessionState"
+    case linkSignupFailureAccountExists = "link.signup.failure.account_exists"
 
     // MARK: - Link Popup
     case linkPopupShow = "link.popup.show"
@@ -123,16 +132,21 @@ import Foundation
     case linkPopupLogout = "link.popup.logout"
 
     // MARK: - Link Misc
+    case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"
 
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"
-    case luxeUnknownActionsFailure = "luxe_unknown_actions_failure"
     case luxeSpecSerializeFailure = "luxe_spec_serialize_failure"
 
     case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
+
+    // MARK: - CustomerSheet initialization
+    case customerSheetLoadStarted = "cs_load_started"
+    case customerSheetLoadSucceeded = "cs_load_succeeded"
+    case customerSheetLoadFailed = "cs_load_failed"
 
     // MARK: - Customer Sheet
     case cs_add_payment_method_screen_presented = "cs_add_payment_method_screen_presented"
@@ -177,7 +191,79 @@ import Foundation
     // MARK: - PaymentSheet checkout
     case paymentSheetCarouselPaymentMethodTapped = "mc_carousel_payment_method_tapped"
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
+    case paymentSheetFormShown = "mc_form_shown"
+    case paymentSheetFormInteracted = "mc_form_interacted"
+    case paymentSheetCardNumberCompleted = "mc_card_number_completed"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
+    case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
+    case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"
+
+    // MARK: - PaymentSheet card brand choice
+    case paymentSheetDisplayCardBrandDropdownIndicator = "mc_display_cbc_dropdown"
+    case paymentSheetOpenCardBrandDropdown = "mc_open_cbc_dropdown"
+    case paymentSheetCloseCardBrandDropDown = "mc_close_cbc_dropdown"
+    case paymentSheetOpenCardBrandEditScreen = "mc_open_edit_screen"
+    case paymentSheetUpdateCardBrand = "mc_update_card"
+    case paymentSheetUpdateCardBrandFailed = "mc_update_card_failed"
+    case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
+
+    // MARK: - CustomerSheet card brand choice
+    case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
+    case customerSheetOpenCardBrandDropdown = "cs_open_cbc_dropdown"
+    case customerSheetCloseCardBrandDropDown = "cs_close_cbc_dropdown"
+    case customerSheetOpenCardBrandEditScreen = "cs_open_edit_screen"
+    case customerSheetUpdateCardBrand = "cs_update_card"
+    case customerSheetUpdateCardBrandFailed = "cs_update_card_failed"
+    case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
+
+    // MARK: - Basic Integration
+    // Loading
+    case biLoadStarted = "bi_load_started"
+    case biLoadSucceeded = "bi_load_succeeded"
+    case biLoadFailed = "bi_load_failed"
+
+    // Confirmation
+    case biPaymentCompleteNewPMSuccess = "bi_complete_payment_newpm_success"
+    case biPaymentCompleteSavedPMSuccess = "bi_complete_payment_savedpm_success"
+    case biPaymentCompleteApplePaySuccess = "bi_complete_payment_applepay_success"
+    case biPaymentCompleteNewPMFailure = "bi_complete_payment_newpm_failure"
+    case biPaymentCompleteSavedPMFailure = "bi_complete_payment_savedpm_failure"
+    case biPaymentCompleteApplePayFailure = "bi_complete_payment_applepay_failure"
+
+    // UI events
+    case biOptionsShown = "bi_options_shown"
+    case biFormShown = "bi_form_shown"
+    case biFormInteracted = "bi_form_interacted"
+    case biCardNumberCompleted = "bi_card_number_completed"
+    case biDoneButtonTapped = "bi_done_button_tapped"
+
+    // MARK: - STPBankAccountCollector
+    case bankAccountCollectorStarted = "stripeios.bankaccountcollector.started"
+    case bankAccountCollectorFinished = "stripeios.bankaccountcollector.finished"
+
+    // MARK: - Unexpected errors
+    // These errors should _never happen_ and indicate a problem with the SDK or the Stripe backend.
+    case unexpectedPaymentSheetFormFactoryError = "unexpected_error.paymentsheet.formfactory"
+    case unexpectedStripeUICoreAddressSpecProvider = "unexpected_error.stripeuicore.addressspecprovider"
+    case unexpectedStripeUICoreBSBNumberProvider = "unexpected_error.stripeuicore.bsbnumberprovider"
+    case unexpectedApplePayError = "unexpected_error.applepay"
+    case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
+    case unexpectedCustomerSheetError = "unexpected_error.customersheet"
+    case unexpectedPaymentSheetConfirmationError = "unexpected_error.paymentsheet.confirmation"
+    case unexpectedPaymentSheetViewControllerError = "unexpected_error.paymentsheet.paymentsheetviewcontroller"
+    case unexpectedFlowControllerViewControllerError = "unexpected_error.paymentsheet.flowcontrollerviewcontroller"
+    case unexpectedPaymentHandlerError = "unexpected_error.paymenthandler"
+
+    // MARK: - Misc. errors
+    case stripePaymentSheetDownloadManagerError = "stripepaymentsheet.downloadmanager.error"
+
+    // MARK: - Refresh Endpoint
+    case refreshPaymentIntentStarted = "stripeios.refresh_payment_intent_started"
+    case refreshSetupIntentStarted = "stripeios.refresh_setup_intent_started"
+    case refreshPaymentIntentSuccess = "stripeios.refresh_payment_intent_success"
+    case refreshSetupIntentSuccess = "stripeios.refresh_setup_intent_success"
+    case refreshPaymentIntentFailed = "stripeios.refresh_payment_intent_failed"
+    case refreshSetupIntentFailed = "stripeios.refresh_setup_intent_failed"
 }

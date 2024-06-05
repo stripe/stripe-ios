@@ -19,6 +19,8 @@
   "testTargets" : [
     {
       "parallelizable" : true,
+      "skippedTests" : [
+      ],
       "target" : {
         "containerPath" : "container:IntegrationTester.xcodeproj",
         "identifier" : "2545A867715D3A5AC62E65D7",

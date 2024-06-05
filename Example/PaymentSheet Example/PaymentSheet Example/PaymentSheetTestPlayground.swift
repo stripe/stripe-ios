@@ -11,6 +11,7 @@ import SwiftUI
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
+    @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
     @State var showingQRSheet = false
 
     init(settings: PaymentSheetTestPlaygroundSettings) {
@@ -19,16 +20,39 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     var clientSettings: some View {
-        SettingView(setting: $playgroundController.settings.uiStyle)
-        SettingView(setting: $playgroundController.settings.shippingInfo)
-        SettingView(setting: $playgroundController.settings.applePayEnabled)
-        SettingView(setting: $playgroundController.settings.applePayButtonType)
-        SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
-        SettingView(setting: $playgroundController.settings.defaultBillingAddress)
-        SettingView(setting: $playgroundController.settings.linkEnabled)
-        SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
-        SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
-        SettingView(setting: $playgroundController.settings.autoreload)
+        // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
+        //  (each view can hold 10 direct subviews)
+        Group {
+            SettingView(setting: $playgroundController.settings.uiStyle)
+            SettingView(setting: $playgroundController.settings.layout)
+            SettingView(setting: $playgroundController.settings.shippingInfo)
+            SettingView(setting: $playgroundController.settings.applePayEnabled)
+            SettingView(setting: $playgroundController.settings.applePayButtonType)
+            SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+            SettingView(setting: $playgroundController.settings.paymentMethodRemove)
+        }
+        Group {
+            SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
+            if playgroundController.settings.defaultBillingAddress == .customEmail {
+                TextField("Default email", text: customEmailBinding)
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+            }
+        }
+        Group {
+            SettingView(setting: $playgroundController.settings.linkEnabled)
+            SettingView(setting: $playgroundController.settings.userOverrideCountry)
+            SettingView(setting: $playgroundController.settings.externalPaymentMethods)
+            SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+            SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
+        }
+        Group {
+            SettingView(setting: $playgroundController.settings.requireCVCRecollection)
+        }
+        Group {
+            SettingView(setting: $playgroundController.settings.autoreload)
+        }
     }
 
     var body: some View {
@@ -37,6 +61,9 @@ struct PaymentSheetTestPlayground: View {
                 VStack {
                     Group {
                         HStack {
+                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
+                            }
                             Text("Backend")
                                 .font(.headline)
                             Spacer()
@@ -64,12 +91,13 @@ struct PaymentSheetTestPlayground: View {
                         }
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
+                        SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
-                        TextField("CustomerId", text: customerIdBinding)
-                            .disabled(true)
                         SettingPickerView(setting: $playgroundController.settings.currency)
-                        SettingPickerView(setting: $playgroundController.settings.merchantCountryCode)
+                        SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
+                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
+                            .autocapitalization(.none)
                     }
                     Divider()
                     Group {
@@ -86,6 +114,7 @@ struct PaymentSheetTestPlayground: View {
                         }
                         clientSettings
                         TextField("Custom CTA", text: customCTABinding)
+                        TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
                     }
                     Divider()
                     Group {
@@ -116,26 +145,52 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
         }
     }
+
+    var customEmailBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customEmail ?? ""
+        } set: { newString in
+            playgroundController.settings.customEmail = (newString != "") ? newString : nil
+        }
+    }
+
+    var paymentMethodSettingsBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.paymentMethodConfigurationId ?? ""
+        } set: { newString in
+            playgroundController.settings.paymentMethodConfigurationId = (newString != "") ? newString : nil
+        }
+    }
     var customerModeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
         Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
             return playgroundController.settings.customerMode
         } set: { newMode in
-            playgroundController.settings.customerId = nil
+            PlaygroundController.resetCustomer()
             playgroundController.settings.customerMode = newMode
         }
     }
-    var customerIdBinding: Binding<String> {
-        Binding<String> {
-            switch playgroundController.settings.customerMode {
-            case .guest:
-                return ""
-            case .new:
-                return playgroundController.settings.customerId ?? ""
-            case .returning:
-                return playgroundController.settings.customerId ?? ""
+    var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
+        Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
+            return playgroundController.settings.merchantCountryCode
+        } set: { newCountry in
+            // Reset customer id if country changes
+            if playgroundController.settings.merchantCountryCode.rawValue != newCountry.rawValue {
+                playgroundController.settings.customerMode = .guest
             }
+            playgroundController.settings.merchantCountryCode = newCountry
+        }
+    }
+
+    var supportedPaymentMethodsBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.supportedPaymentMethods ?? ""
         } set: { newString in
-            playgroundController.settings.customerId = (newString != "") ? newString : nil
+            playgroundController.settings.supportedPaymentMethods = (newString != "") ? newString : nil
+
+            // for supported payment methods to work, apms must be off
+            if playgroundController.settings.supportedPaymentMethods != nil {
+                playgroundController.settings.apmsEnabled = .off
+            }
         }
     }
 }
@@ -261,6 +316,20 @@ struct PaymentSheetButtons: View {
     }
 }
 
+/// A zero-sized view whose only purpose is to let XCUITests access the analytics sent by the SDK.
+struct AnalyticsLogForTesting: View {
+    @Binding var analyticsLog: [[String: Any]]
+    var analyticsLogString: String {
+        return try! JSONSerialization.data(withJSONObject: analyticsLog).base64EncodedString()
+    }
+    var body: some View {
+        Text(analyticsLogString)
+            .frame(width: 0, height: 0)
+            .accessibility(identifier: "_testAnalyticsLog")
+            .accessibility(label: Text(analyticsLogString))
+    }
+}
+
 struct StaleView: View {
     var body: some View {
         Text("Stale")
@@ -277,20 +346,67 @@ struct PaymentOptionView: View {
     let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
 
     var body: some View {
-        HStack {
-            Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
-                .foregroundColor(.black)
-            Text(paymentOptionDisplayData?.label ?? "None")
+        VStack {
+            HStack {
+                Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
+                    .foregroundColor(.black)
+                Text(paymentOptionDisplayData?.label ?? "None")
                 // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
                 // "Payment method-Payment method". We'll set it on a single View instead.
-                .accessibility(identifier: "Payment method")
+                    .accessibility(identifier: "Payment method")
+                    .foregroundColor(.primary)
+            }
+            if let paymentMethodType = paymentOptionDisplayData?.paymentMethodType {
+                Text(paymentMethodType)
+                    .font(.caption)
+                    .foregroundColor(.primary)
+            }
+            if let billingDetails = paymentOptionDisplayData?.billingDetails {
+                BillingDetailsView(billingDetails: billingDetails)
+                    .font(.caption)
+                    .foregroundColor(.primary)
+
+            }
         }
-        .padding()
-        .foregroundColor(.black)
-        .cornerRadius(6)
+    }
+}
+
+struct BillingDetailsView: View {
+    let billingDetails: PaymentSheet.BillingDetails
+
+    var body: some View {
+        VStack {
+            if let name = billingDetails.name {
+                Text(name)
+            }
+            if let email = billingDetails.email {
+                Text(email)
+            }
+            if let phone = billingDetails.phoneNumberForDisplay {
+                Text(phone)
+            }
+            if let line1 = billingDetails.address.line1 {
+                Text(line1)
+            }
+            if let line2 = billingDetails.address.line2 {
+                Text(line2)
+            }
+            if let city = billingDetails.address.city {
+                Text(city)
+            }
+            if let state = billingDetails.address.state {
+                Text(state)
+            }
+            if let postalCode = billingDetails.address.postalCode {
+                Text(postalCode)
+            }
+            if let country = billingDetails.address.country {
+                Text(country)
+            }
+        }
     }
 }
 

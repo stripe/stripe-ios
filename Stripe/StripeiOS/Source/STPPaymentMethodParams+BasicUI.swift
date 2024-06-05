@@ -34,12 +34,12 @@ extension STPPaymentMethodParams: STPPaymentOption {
 
     @objc public var isReusable: Bool {
         switch type {
-        case .card, .link, .USBankAccount:
+        case .card, .link, .USBankAccount, .instantDebits:
             return true
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
             .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm, .cashApp, .paynow,
-            .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish,
+            .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco,
             .unknown:
             return false
         @unknown default:

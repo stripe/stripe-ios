@@ -166,7 +166,7 @@
         "PE",
         "QC",
         "SK",
-        "YT",
+        "YT"
       ],
       "sub_labels": [
         "Alberta",
@@ -181,8 +181,8 @@
         "Prince Edward Island",
         "Quebec",
         "Saskatchewan",
-        "Yukon",
-      ],
+        "Yukon"
+      ]
    },
    "CD":{
       "fmt":"%C"
@@ -1060,7 +1060,7 @@
         "WA",
         "WV",
         "WI",
-        "WY",
+        "WY"
       ],
       "sub_labels": [
         "Alabama",
@@ -1124,7 +1124,7 @@
         "Washington",
         "West Virginia",
         "Wisconsin",
-        "Wyoming",
+        "Wyoming"
       ]
    },
    "UY":{

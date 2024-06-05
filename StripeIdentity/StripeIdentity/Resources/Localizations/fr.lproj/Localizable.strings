@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "À l'étape suivante, nous prendrons quelques photos de façon automatique afin de vérifier votre identité";
 
+"Accepted forms of ID include" = "Pièces d'identité acceptées";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Vous pouvez également charger manuellement une photo de votre pièce d’identité.";
 
 "App Settings" = "Paramètres de l'application";
 
-"Back driver's license photo successfully uploaded" = "Photo du verso du permis de conduire chargée";
-
 "Back identity card photo successfully uploaded" = "Photo du verso de la carte d'identité chargée";
-
-"Back of driver's license" = "Verso du permis de conduire";
 
 "Back of identity card" = "Verso de la carte d'identité";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "La date de naissance ne semble pas valide";
 
-"Flip your driver's license over to the other side" = "Retournez votre permis de conduire";
+"Details not visible" = "Détails non visibles";
 
 "Flip your identity card over to the other side" = "Retournez votre carte d'identité";
 
-"Front driver's license photo successfully uploaded" = "Photo du recto du permis de conduire chargée";
-
 "Front identity card photo successfully uploaded" = "Photo du recto de la carte d'identité chargée";
 
-"Front of driver's license" = "Recto du permis de conduire";
-
 "Front of identity card" = "Recto de la carte d'identité";
+
+"Get ready to scan your photo ID" = "Préparez-vous à scanner votre pièce d'identité";
 
 "Get ready to take a selfie" = "Préparez-vous à vous prendre en photo";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "Maintenez le document en place, la numérisation est en cours";
 
+"I'm ready" = "Tout est prêt";
+
 "ID Number" = "Numéro d'identification";
 
-"ID Type" = "Type de pièce d'identité";
-
-"Image of passport" = "Photo du passeport";
-
 "Individual CPF" = "Numéro CPF";
+
+"Keep ID level" = "Maintenez votre pièce d'identité horizontale";
 
 "Last 4 of Social Security number" = "4 derniers chiffres du numéro de sécurité sociale";
 
 "Loading" = "Chargement en cours";
 
+"Make sure all details are visible and focus" = "Assurez-vous que tous les détails sont nets et visibles";
+
+"Make sure you're in a well lit space." = "Installez-vous dans un endroit bien éclairé.";
+
+"Move closer" = "Rapprochez le document";
+
+"Move farther" = "Éloignez le document";
+
+"Move to a darker area" = "Prenez votre photo dans un endroit plus sombre";
+
+"Move to a well-lit area" = "Prenez votre photo dans un endroit bien éclairé";
+
 "NRIC or FIN" = "Numéro NRIC ou FIN";
 
-"Passport" = "Passeport";
-
-"Passport photo successfully uploaded" = "Photo du passeport chargée";
+"No document detected" = "Aucun document détecté";
 
 "Personal ID number" = "Numéro d'identification personnel";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "Bibliothèque de photos";
 
-"Please upload an image of your passport" = "Veuillez charger une photo de votre passeport";
-
-"Please upload images of the front and back of your driver's license" = "Veuillez charger une photo du recto et du verso de votre permis de conduire";
-
 "Please upload images of the front and back of your identity card" = "Veuillez charger une photo du recto et du verso de votre carte d'identité";
-
-"Position your driver's license in the center of the frame" = "Placez votre permis de conduire au centre du cadre";
 
 "Position your face in the center of the frame." = "Placez votre visage au centre du cadre.";
 
 "Position your identity card in the center of the frame" = "Placez votre carte d'identité au centre du cadre";
-
-"Position your passport in the center of the frame" = "Placez votre passeport au centre du cadre";
 
 "Retake Photos" = "Reprendre des photos";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "Sélectionnez l'emplacement à partir duquel vous souhaitez charger le recto de votre pièce d'identité";
 
-"Select back driver's license photo" = "Sélectionner la photo du verso du permis de conduire";
-
 "Select back identity card photo" = "Sélectionner la photo du verso de la carte d'identité";
 
-"Select front driver's license photo" = "Sélectionner la photo du recto du permis de conduire";
-
 "Select front identity card photo" = "Sélectionner la photo du recto de la carte d'identité";
-
-"Select passport photo" = "Sélectionner la photo du passeport";
 
 "Selfie" = "Selfie";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "Réessayer";
 
+"Try reduce glare and make ID visible" = "Essayez de réduire la luminosité et assurez-vous que la pièce d'identité est visible";
+
 "Unable to establish a connection." = "Connexion impossible.";
 
 "Unsaved changes" = "Modifications non enregistrées";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "Charger votre document d'identité avec photo";
 
-"Uploading back driver's license photo" = "Chargement de la photo du verso du permis de conduire";
-
 "Uploading back identity card photo" = "Chargement de la photo du verso de la carte d'identité";
 
-"Uploading front driver's license photo" = "Chargement de la photo du recto du permis de conduire";
-
 "Uploading front identity card photo" = "Chargement de la photo du recto de la carte d'identité";
-
-"Uploading passport photo" = "Chargement de la photo du passeport";
 
 "Verify your identity" = "Vérifier votre identité";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "Vous pouvez réessayer ou charger une image à partir de votre appareil.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Vos selfies n'ont pas été enregistrés. Voulez-vous quitter ?";
+
+"driver's license" = "permis de conduire";
+
+"government-issued photo ID" = "pièce d'identité officielle avec photo";
+
+"passport" = "passeport";

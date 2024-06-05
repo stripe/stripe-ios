@@ -295,11 +295,13 @@ import UIKit
         updateColors()
     }
 
+#if !canImport(CompositorServices)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         invalidateIntrinsicContentSize()
         updateColors()
     }
+#endif
 
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         return bounds.contains(point) ? self : nil

@@ -15,16 +15,22 @@ extension UIViewController {
         completion: (() -> Void)? = nil
     ) {
         var presentAsFormSheet: Bool {
+            #if canImport(CompositorServices)
+            return true
+            #else
             // Present as form sheet in larger devices (iPad/Mac).
             if #available(iOS 14.0, macCatalyst 14.0, *) {
                 return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
             } else {
                 return UIDevice.current.userInterfaceIdiom == .pad
             }
+            #endif
         }
 
         if presentAsFormSheet {
             viewControllerToPresent.modalPresentationStyle = .formSheet
+            // Don't allow the pull down to dismiss gesture, it's too easy to trigger accidentally while scrolling
+            viewControllerToPresent.isModalInPresentation = true
             if let vc = viewControllerToPresent as? BottomSheetViewController {
                 viewControllerToPresent.presentationController?.delegate = vc
             }

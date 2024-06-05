@@ -47,7 +47,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     /// SDK is capable of using.
     ///
     /// - Note: Update this value when a new API version is ready for use in production.
-    static let productionApiVersion: Int = 4
+    static let productionApiVersion: Int = 6
 
     var betas: Set<String> {
         return ["identity_client_api=v\(apiVersion)"]
@@ -88,7 +88,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
         return apiClient.get(
             resource: APIEndpointVerificationPage(id: verificationSessionId),
-            parameters: [:]
+            parameters: ["app_identifier": Bundle.main.bundleIdentifier ?? ""]
         )
     }
 

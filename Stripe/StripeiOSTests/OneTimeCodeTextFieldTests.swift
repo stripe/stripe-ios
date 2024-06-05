@@ -295,9 +295,9 @@ class OneTimeCodeTextFieldTests: XCTestCase {
         let sut = makeSUT()
         let frame = sut.caretRect(for: OneTimeCodeTextField.TextPosition(1))
         XCTAssertEqual(frame.minX, 74, accuracy: 0.2)
-        XCTAssertEqual(frame.minY, 18, accuracy: 0.2)
+        XCTAssertEqual(frame.minY, 20.47, accuracy: 0.2)
         XCTAssertEqual(frame.width, 2, accuracy: 0.2)
-        XCTAssertEqual(frame.height, 24, accuracy: 0.2)
+        XCTAssertEqual(frame.height, 19.04, accuracy: 0.2)
     }
 
 }
@@ -307,7 +307,12 @@ class OneTimeCodeTextFieldTests: XCTestCase {
 extension OneTimeCodeTextFieldTests {
 
     fileprivate func makeSUT(numberOfDigits: Int = 6) -> OneTimeCodeTextField {
-        let sut = OneTimeCodeTextField(numberOfDigits: numberOfDigits, theme: LinkUI.appearance.asElementsTheme)
+        let sut = OneTimeCodeTextField(
+            configuration: OneTimeCodeTextField.Configuration(
+                numberOfDigits: numberOfDigits
+            ),
+            theme: .default
+        )
         sut.frame = CGRect(x: 0, y: 0, width: 320, height: 60)
         sut.layoutIfNeeded()
         return sut

@@ -38,6 +38,7 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
 
     override public var inputValue: String? {
         didSet {
+            cbcController.cardNumber = inputValue
             guard let inputValue = inputValue else {
                 validationState = .incomplete(description: nil)
                 return
@@ -77,7 +78,6 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                     validationState = .processing
                 }
             }
-            cbcController.cardNumber = inputValue
         }
     }
 
@@ -86,7 +86,7 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     init(
         inputMode: STPCardNumberInputTextField.InputMode = .standard,
         cardBrand: STPCardBrand? = nil,
-        cbcEnabledOverride: Bool? = false // TODO: For now, we'll always disable CBC. Set this to default to `nil` instead of `false` when we release CBC.
+        cbcEnabledOverride: Bool? = nil
     ) {
         self.inputMode = inputMode
         self.overridenCardBrand = cardBrand

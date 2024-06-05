@@ -82,6 +82,14 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var revolutPay: STPPaymentMethodRevolutPay?
     /// If this is a Swish PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSwish`), this contains additional details.
     @objc private(set) public var swish: STPPaymentMethodSwish?
+    /// If this is a Amazon Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAmazonPay`), this contains additional details.
+    @objc private(set) public var amazonPay: STPPaymentMethodAmazonPay?
+    /// If this is a Alma PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAlma`), this contains additional details.
+    @objc private(set) public var alma: STPPaymentMethodAlma?
+    /// If this is a Multibanco PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMultibanco`), this contains additional details.
+    @objc private(set) public var multibanco: STPPaymentMethodMultibanco?
+    /// If this is a MobilePay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMobilePay`), this contains additional details.
+    @objc private(set) public var mobilePay: STPPaymentMethodMobilePay?
 
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
@@ -141,6 +149,10 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "cashapp = \(String(describing: cashApp))",
             "revolutPay = \(String(describing: revolutPay))",
             "swish = \(String(describing: swish))",
+            "amazon_pay = \(String(describing: amazonPay))",
+            "alma = \(String(describing: alma))",
+            "multibanco = \(String(describing: multibanco))",
+            "mobilePay = \(String(describing: mobilePay))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -182,9 +194,11 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     // MARK: - STPAPIResponseDecodable
     /// :nodoc:
     @objc @_spi(STP) public required init(
-        stripeId: String
+        stripeId: String,
+        type: STPPaymentMethodType
     ) {
         self.stripeId = stripeId
+        self.type = type
         super.init()
     }
 
@@ -200,7 +214,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             return nil
         }
 
-        let paymentMethod = self.init(stripeId: stripeId)
+        let paymentMethod = self.init(stripeId: stripeId,
+                                      type: self.type(from: dict.stp_string(forKey: "type") ?? ""))
         paymentMethod.allResponseFields = response
         paymentMethod.stripeId = stripeId
         paymentMethod.created = dict.stp_date(forKey: "created")
@@ -211,7 +226,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.card = STPPaymentMethodCard.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "card")
         )
-        paymentMethod.type = self.type(from: dict.stp_string(forKey: "type") ?? "")
         paymentMethod.iDEAL = STPPaymentMethodiDEAL.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "ideal")
         )
@@ -298,6 +312,18 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.swish = STPPaymentMethodSwish.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "swish")
+        )
+        paymentMethod.amazonPay = STPPaymentMethodAmazonPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "amazon_pay")
+        )
+        paymentMethod.alma = STPPaymentMethodAlma.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "alma")
+        )
+        paymentMethod.multibanco = STPPaymentMethodMultibanco.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "multibanco")
+        )
+        paymentMethod.mobilePay = STPPaymentMethodMobilePay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "mobilepay")
         )
 
         return paymentMethod

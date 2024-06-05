@@ -15,7 +15,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         // setup
         let analytic = PaymentSheetAnalytic(
             event: .paymentMethodCreation,
-            productUsage: [],
             additionalParams: [:]
         )
         let client = STPAnalyticsClient()

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /**
- A convenience protocol for Elements that contain other Elements.
+ A protocol for Elements that contain other Elements. 
  It offers default implementations for the methods required to participate in the Element hierarchy.
  
  - Note:You still need to set your sub-element's delegates = self!
@@ -21,6 +21,12 @@ import UIKit
 
 extension ContainerElement {
     // MARK: - Element
+    public var collectsUserInput: Bool {
+        // Returns true if any of the child elements collect user input
+        return elements.reduce(false) { partialResult, element in
+            element.collectsUserInput || partialResult
+        }
+    }
 
     public func beginEditing() -> Bool {
         guard !view.isHidden else {
@@ -52,7 +58,8 @@ extension ContainerElement {
             .drop { $0 !== element } // Drop elements (starting from the first) until we find `element`
             .dropFirst() // Drop `element` too
         for next in remainingElements {
-            if next.beginEditing() {
+            // Don't auto select hidden elements
+            if !(next is SectionElement.HiddenElement), next.beginEditing() {
                 UIAccessibility.post(notification: .screenChanged, argument: next.view)
                 return
             }

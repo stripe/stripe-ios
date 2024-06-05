@@ -29,14 +29,13 @@ extension TextFieldElement {
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            // If CBC is enabled...
-            if let cardBrandDropDown = cardBrandDropDown {
+            // If CBC is enabled and the PAN is not empty...
+            if let cardBrandDropDown = cardBrandDropDown, !text.isEmpty {
                 // Show unknown card brand if we have under 9 pan digits and no card brands
-                // CBC dropdown always has one item (a placeholder)
-                if 9 > text.count && cardBrandDropDown.items.count == 1 {
+                if 9 > text.count && cardBrandDropDown.nonPlacerholderItems.isEmpty {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
-                } else if text.count >= 8 && cardBrandDropDown.items.count > 2 {
-                    // Show the dropdown if we have 8 or more digits and more than 2 items (placeholder + at least 2 brands), otherwise fall through and show brand as normal
+                } else if text.count >= 8 && cardBrandDropDown.nonPlacerholderItems.count > 1 {
+                    // Show the dropdown if we have 8 or more digits and at least 2 brands, otherwise fall through and show brand as normal
                     return cardBrandDropDown.view
                 }
             }

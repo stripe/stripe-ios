@@ -24,11 +24,14 @@ class LinkURLGeneratorTests: XCTestCase {
                                    experiments: [:],
                                    flags: [:],
                                    loggerMetadata: [:],
-                                   locale: Locale.init(identifier: "en_US").toLanguageTag())
+                                   locale: Locale.init(identifier: "en_US").toLanguageTag(),
+                                   intentMode: .payment,
+                                   setupFutureUsage: false
+    )
 
     func testURLCreation() {
         let url = try! LinkURLGenerator.url(params: testParams)
-        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJsb2dnZXJNZXRhZGF0YSI6e30sImN1c3RvbWVySW5mbyI6eyJjb3VudHJ5IjoiVVMiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20ifSwicGF5bWVudE9iamVjdCI6ImxpbmtfcGF5bWVudF9tZXRob2QiLCJleHBlcmltZW50cyI6e30sInBheW1lbnRVc2VyQWdlbnQiOiJ0ZXN0IiwibG9jYWxlIjoiZW4tVVMiLCJwYXRoIjoibW9iaWxlX3BheSIsInBheW1lbnRJbmZvIjp7ImN1cnJlbmN5IjoiVVNEIiwiYW1vdW50IjoxMDB9LCJtZXJjaGFudEluZm8iOnsiY291bnRyeSI6IlVTIiwiYnVzaW5lc3NOYW1lIjoiVGVzdCB0ZXN0In0sInB1Ymxpc2hhYmxlS2V5IjoicGtfdGVzdF8xMjMiLCJmbGFncyI6e30sImludGVncmF0aW9uVHlwZSI6Im1vYmlsZSJ9")
+        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJjdXN0b21lckluZm8iOnsiY291bnRyeSI6IlVTIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0sImV4cGVyaW1lbnRzIjp7fSwiZmxhZ3MiOnt9LCJpbnRlZ3JhdGlvblR5cGUiOiJtb2JpbGUiLCJpbnRlbnRNb2RlIjoicGF5bWVudCIsImxvY2FsZSI6ImVuLVVTIiwibG9nZ2VyTWV0YWRhdGEiOnt9LCJtZXJjaGFudEluZm8iOnsiYnVzaW5lc3NOYW1lIjoiVGVzdCB0ZXN0IiwiY291bnRyeSI6IlVTIn0sInBhdGgiOiJtb2JpbGVfcGF5IiwicGF5bWVudEluZm8iOnsiYW1vdW50IjoxMDAsImN1cnJlbmN5IjoiVVNEIn0sInBheW1lbnRPYmplY3QiOiJsaW5rX3BheW1lbnRfbWV0aG9kIiwicGF5bWVudFVzZXJBZ2VudCI6InRlc3QiLCJwdWJsaXNoYWJsZUtleSI6InBrX3Rlc3RfMTIzIiwic2V0dXBGdXR1cmVVc2FnZSI6ZmFsc2V9")
     }
 
     func testURLCreationRegularUnicode() {
@@ -38,17 +41,6 @@ class LinkURLGeneratorTests: XCTestCase {
         // Just make sure it doesn't fail
     }
 
-    func testURLCreationHorribleUnicode() {
-        var params = testParams
-        params.customerInfo.email = String(bytes: [0xD8, 0x00] as [UInt8], encoding: .utf16BigEndian)! // Unpaired UTF-16 surrogates
-        do {
-            _ = try LinkURLGenerator.url(params: params)
-            XCTFail("Encoding should fail for invalid data")
-        } catch {
-            XCTAssertTrue(error is EncodingError)
-        }
-    }
-
     func testURLParamsFromConfig() async {
         let config = PaymentSheet.Configuration()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _, _ in
@@ -56,6 +48,11 @@ class LinkURLGeneratorTests: XCTestCase {
         }
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
+
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+        let sessionID = AnalyticsHelper.shared.sessionID!
+
         let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
@@ -66,8 +63,10 @@ class LinkURLGeneratorTests: XCTestCase {
                                            paymentInfo: LinkURLParams.PaymentInfo(currency: "USD", amount: 100),
                                            experiments: [:],
                                            flags: [:],
-                                           loggerMetadata: [:],
-                                           locale: Locale.init(identifier: "en_US").toLanguageTag())
+                                           loggerMetadata: ["mobile_session_id": sessionID],
+                                           locale: Locale.init(identifier: "en_US").toLanguageTag(),
+                                           intentMode: .payment,
+                                           setupFutureUsage: false)
 
         XCTAssertEqual(params, expectedParams)
     }

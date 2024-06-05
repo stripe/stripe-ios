@@ -112,8 +112,11 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     /// Override return result for testMode
     func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 
-    /// Transition to SelfieCaptureViewController without any API request
+    /// Transition to DocumentCaptureViewController without any API request
     func transitionToSelfieCapture()
+
+    /// Transition to DocumentCaptureViewController without any API request
+    func transitionToDocumentCapture()
 }
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
@@ -213,7 +216,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     func startLoadingMLModels(from verificationPage: StripeAPI.VerificationPage) {
         mlModelLoader.startLoadingDocumentModels(
-            from: verificationPage.documentCapture
+            from: verificationPage.documentCapture,
+            with: self
         )
         if let selfiePageConfig = verificationPage.selfie {
             mlModelLoader.startLoadingFaceModels(from: selfiePageConfig)
@@ -229,7 +233,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     ) {
-        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
         apiClient.updateIdentityVerificationPageData(
             updating: .init(
                 clearData: calculateClearData(dataToBeCollected: collectedData),
@@ -389,7 +393,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 if successData.requirements.missing.contains(.idDocumentBack) {
                     onCompletion(true)
                 } else {
-                    self.analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+                    self.analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
                     self.checkSubmitAndTransition(updateDataResult: result) {
                         onCompletion(false)
                     }
@@ -404,7 +408,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         documentUploader: DocumentUploaderProtocol,
         onCompletion: @escaping () -> Void
     ) {
-        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         documentUploader.backUploadFuture?.chained {
             [weak self, apiClient] back -> Future<StripeAPI.VerificationPageData> in
@@ -514,6 +518,18 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
     }
 
+    func transitionToDocumentCapture() {
+        guard let verificationPageResponse = verificationPageResponse else {
+            assertionFailure("verificationPageResponse is nil")
+            return
+        }
+
+        flowController.transitionToDocumentCaptureScreen(
+            staticContentResult: verificationPageResponse,
+            sheetController: self
+        )
+    }
+
     /// * Assert verificationPageResponse to be correct, then transition with the PageDataResult.
     private func transitionWithVerificaionPageDataResult(
         _ result: Result<StripeAPI.VerificationPageData, Error>?,
@@ -543,7 +559,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         trainingConsent: Bool,
         completion: @escaping () -> Void
     ) {
-        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         selfieUploader.uploadFuture?.chained {
             [weak self, apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
@@ -572,7 +588,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     func saveOtpAndMaybeTransition(from fromScreen: IdentityAnalyticsClient.ScreenName, otp otpValue: String, completion: @escaping () -> Void = {}, invalidOtp: @escaping () -> Void) {
-        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
         let phoneOtpData = StripeAPI.VerificationPageCollectedData(phoneOtp: otpValue)
         apiClient.updateIdentityVerificationPageData(
             updating: .init(

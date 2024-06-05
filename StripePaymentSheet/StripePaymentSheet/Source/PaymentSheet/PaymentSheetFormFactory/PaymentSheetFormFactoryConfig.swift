@@ -35,6 +35,14 @@ enum PaymentSheetFormFactoryConfig {
             return false
         }
     }
+    var overrideCountry: String? {
+        switch self {
+        case .paymentSheet(let config):
+            return config.userOverrideCountry
+        case .customerSheet:
+            return nil
+        }
+    }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
         switch self {
         case .paymentSheet(let config):
@@ -80,9 +88,17 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.preferredNetworks
-        case .customerSheet:
-            // TODO(porter) Support CBC in CustomerSheet
-            return nil
+        case .customerSheet(let config):
+            return config.preferredNetworks
+        }
+    }
+
+    var isUsingBillingAddressCollection: Bool {
+        switch self {
+        case .paymentSheet(let config):
+            return config.requiresBillingDetailCollection()
+        case .customerSheet(let config):
+            return config.isUsingBillingAddressCollection()
         }
     }
 }

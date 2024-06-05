@@ -14,7 +14,7 @@ protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         saveToLinkWithStripeSucceeded: Bool?,
-        error: Error?
+        customSuccessPaneMessage: String?
     )
     func networkingSaveToLinkVerificationViewController(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
@@ -27,18 +27,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     private let dataSource: NetworkingSaveToLinkVerificationDataSource
     weak var delegate: NetworkingSaveToLinkVerificationViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
-    }()
-    private lazy var bodyView: NetworkingSaveToLinkVerificationBodyView = {
-        let bodyView = NetworkingSaveToLinkVerificationBodyView(
-            email: dataSource.consumerSession.emailAddress,
-            otpView: otpView
-        )
-        return bodyView
+    private lazy var loadingView: SpinnerView = {
+        return SpinnerView()
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -63,46 +53,82 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     }
 
     private func showContent(redactedPhoneNumber: String) {
-        let pane = PaneWithHeaderLayoutView(
-            title: STPLocalizedString(
-                "Sign in to Link",
-                "The title of a screen where users are informed that they can sign-in-to Link."
+        // if we automatically moved to this pane due to
+        // prefilled email, we shot the "not now" button
+        let showNotNowButton = (dataSource.manifest.accountholderCustomerEmailAddress != nil)
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: nil,
+                title: STPLocalizedString(
+                    "Confirm it's you",
+                    "The title of a screen where users are informed that they can sign-in-to Link."
+                ),
+                subtitle: String(format: STPLocalizedString(
+                    "Enter the code sent to %@.",
+                    "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
+                ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
+                contentView: otpView
             ),
-            subtitle: String(format: STPLocalizedString(
-                "Enter the code sent to %@.",
-                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
-            ), redactedPhoneNumber),
-            contentView: bodyView,
-            footerView: NetworkingSaveToLinkFooterView(
-                didSelectNotNow: { [weak self] in
-                    guard let self = self else { return }
-                    self.dataSource
-                        .analyticsClient
-                        .log(eventName: "click.not_now", pane: .networkingSaveToLinkVerification)
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
-                        self,
-                        saveToLinkWithStripeSucceeded: nil,
-                        error: nil
-                    )
-                }
-            )
+            footerView: PaneLayoutView.createFooterView(
+                primaryButtonConfiguration: nil,
+                secondaryButtonConfiguration: showNotNowButton ? PaneLayoutView.ButtonConfiguration(
+                    title: STPLocalizedString("Not now", "Title of a button that allows users to skip the current screen."),
+                    action: { [weak self] in
+                        guard let self = self else { return }
+                        self.dataSource
+                            .analyticsClient
+                            .log(eventName: "click.not_now", pane: .networkingSaveToLinkVerification)
+                        self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
+                            self,
+                            saveToLinkWithStripeSucceeded: nil,
+                            customSuccessPaneMessage: nil
+                        )
+                    }
+                ) : nil
+            ).footerView
         )
-        pane.addTo(view: view)
+        paneLayoutView.addTo(view: view)
     }
 
     private func showLoadingView(_ show: Bool) {
         if show && loadingView.superview == nil {
             // first-time we are showing this, so add the view to hierarchy
-            view.addAndPinSubview(loadingView)
+            view.addAndPinSubviewToSafeArea(loadingView)
         }
 
         loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
-        }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
+    }
+
+    private func markLinkVerified(
+        saveToLinkSucceeded: Bool,
+        customSuccessPaneMessage: String?
+    ) {
+        dataSource.markLinkVerified()
+            .observe { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success:
+                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
+                        self,
+                        saveToLinkWithStripeSucceeded: saveToLinkSucceeded,
+                        customSuccessPaneMessage: customSuccessPaneMessage
+                    )
+                case .failure(let error):
+                    self.delegate?.networkingSaveToLinkVerificationViewController(
+                        self,
+                        didReceiveTerminalError: error
+                    )
+                }
+
+                // only hide loading view after animation
+                // to next screen has completed
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 1.0
+                ) { [weak self] in
+                    self?.otpView.showLoadingView(false)
+                }
+            }
     }
 }
 
@@ -116,7 +142,7 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
 
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false)
-        showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)
+        showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
@@ -136,24 +162,29 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
         delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: error)
     }
 
+    func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView) {
+        // no-op
+    }
+
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        view.showLoadingView(true)
         dataSource.saveToLink()
             .observe { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
+                let saveToLinkSucceeded: Bool
+                let customSuccessPaneMessage: String?
                 switch result {
-                case .success:
+                case .success(let _customSuccessPaneMessage):
+                    customSuccessPaneMessage = _customSuccessPaneMessage
                     self.dataSource
                         .analyticsClient
                         .log(
                             eventName: "networking.verification.success",
                             pane: .networkingSaveToLinkVerification
                         )
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
-                        self,
-                        saveToLinkWithStripeSucceeded: true,
-                        error: nil
-                    )
+                    saveToLinkSucceeded = true
                 case .failure(let error):
+                    customSuccessPaneMessage = nil
                     self.dataSource
                         .analyticsClient
                         .log(
@@ -163,25 +194,31 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                     self.dataSource
                         .analyticsClient
                         .logUnexpectedError(
-                            error, errorName: "SaveToLinkError",
+                            error,
+                            errorName: "SaveToLinkError",
                             pane: .networkingSaveToLinkVerification
                         )
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
-                        self,
-                        saveToLinkWithStripeSucceeded: false,
-                        error: error
-                    )
+                    saveToLinkSucceeded = false
                 }
-            }
 
-        dataSource.markLinkVerified()
-            .observe { _ in
-                // we ignore result
+                self.markLinkVerified(
+                    saveToLinkSucceeded: saveToLinkSucceeded,
+                    customSuccessPaneMessage: customSuccessPaneMessage
+                )
             }
     }
 
-    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error) {
-        delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: error)
+    func networkingOTPView(
+        _ view: NetworkingOTPView,
+        didFailToConfirmVerification error: Error,
+        isTerminal: Bool
+    ) {
+        if isTerminal {
+            delegate?.networkingSaveToLinkVerificationViewController(
+                self,
+                didReceiveTerminalError: error
+            )
+        }
     }
 
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {

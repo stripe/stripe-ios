@@ -10,7 +10,7 @@ import OHHTTPStubsSwift
 @_spi(STP) @testable import StripeCore
 @testable import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -67,10 +67,10 @@ class CustomerAdapterTests: APIStubbedTestCase {
                 }
                 """
             var pmList =
-                try! JSONSerialization.jsonObject(
-                    with: paymentMethodsJSON.data(using: .utf8)!,
-                    options: []
-                ) as! [AnyHashable: Any]
+            try! JSONSerialization.jsonObject(
+                with: paymentMethodsJSON.data(using: .utf8)!,
+                options: []
+            ) as! [AnyHashable: Any]
             // Only send the example cards for a card request
             if urlRequest.url?.absoluteString.contains("card") ?? false {
                 pmList["data"] = paymentMethodJSONs
@@ -78,6 +78,44 @@ class CustomerAdapterTests: APIStubbedTestCase {
                 pmList["data"] = paymentMethodJSONs
             }
             return HTTPStubsResponse(jsonObject: pmList, statusCode: 200, headers: nil)
+        }
+    }
+    func stubElementsSession(
+        paymentMethodJSONs: [[AnyHashable: Any]]?
+    ) {
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+        } response: { _ in
+            let elementsSessionJSON = """
+                {
+                  "payment_method_preference": {"ordered_payment_method_types": ["card"],
+                                                "country_code": "US"
+                                               },
+                  "ordered_payment_method_types" : ["card"],
+                  "session_id": "123",
+                  "apple_pay_preference": "enabled",
+                  "customer": {"payment_methods": [
+                               ],
+                               "customer_session": {
+                                  "id": "cuss_654321",
+                                  "livemode": false,
+                                  "api_key": "ek_12345",
+                                  "api_key_expiry": 1899787184,
+                                  "customer": "cus_12345"
+                                }
+                              }
+                }
+                """
+            var elementSession = try! JSONSerialization.jsonObject(
+                with: elementsSessionJSON.data(using: .utf8)!,
+                options: []
+            ) as! [AnyHashable: Any]
+            if var customer = elementSession["customer"] as? [AnyHashable: Any],
+               paymentMethodJSONs != nil {
+                customer["payment_methods"] = paymentMethodJSONs
+                elementSession["customer"] = customer
+            }
+            return HTTPStubsResponse(jsonObject: elementSession, statusCode: 200, headers: nil)
         }
     }
 
@@ -111,6 +149,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
         // Expect 1 call per PM: cards
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethodsJSON, apiClient: apiClient)
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "sepa_debit", paymentMethodJSONs: [], apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey, apiClient: apiClient)
@@ -130,6 +169,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethods_cardJSON, apiClient: apiClient)
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: expectedPaymentMethods_usbankJSON, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "sepa_debit", paymentMethodJSONs: [], apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey,
@@ -147,6 +187,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         // Expect 1 call per PM: cards
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethodsJSON, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "sepa_debit", paymentMethodJSONs: [], apiClient: apiClient)
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
@@ -229,6 +270,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
 
         // ...fetching the customer's payment methods...
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: [savedCardJSON, savedApplePayCardJSON], apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "sepa_debit", paymentMethodJSONs: [], apiClient: apiClient)
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)

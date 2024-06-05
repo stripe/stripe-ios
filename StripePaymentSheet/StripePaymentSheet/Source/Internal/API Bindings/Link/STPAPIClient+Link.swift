@@ -15,7 +15,6 @@ import Foundation
 extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
-        cookieStore: LinkCookieStore,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/lookup"
@@ -24,11 +23,6 @@ extension STPAPIClient {
         ]
         if let email = email {
             parameters["email_address"] = email.lowercased()
-        }
-
-        let cookies = cookieStore.formattedSessionCookies()
-        if let cookies = cookies {
-            parameters["cookies"] = cookies
         }
 
         guard parameters.keys.contains("email_address") || parameters.keys.contains("cookies") else {
@@ -46,18 +40,6 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: publishableKey
         ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
-            if case let .success(lookupResponse) = result {
-                switch lookupResponse.responseType {
-                case .found(let consumerSession):
-                    cookieStore.updateSessionCookie(with: consumerSession.authSessionClientSecret)
-                case .notFound where cookies != nil:
-                    // Delete invalid cookie, if any
-                    cookieStore.delete(key: .session)
-                default:
-                    break
-                }
-            }
-
             completion(result)
         }
     }
@@ -69,7 +51,6 @@ extension STPAPIClient {
         legalName: String?,
         countryCode: String?,
         consentAction: String?,
-        cookieStore: LinkCookieStore,
         completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
         let endpoint: String = "consumers/accounts/sign_up"
@@ -79,6 +60,7 @@ extension STPAPIClient {
             "email_address": email.lowercased(),
             "phone_number": phoneNumber,
             "locale": locale.toLanguageTag(),
+            "country_inferring_method": "PHONE_NUMBER",
         ]
 
         if let legalName = legalName {
@@ -87,10 +69,6 @@ extension STPAPIClient {
 
         if let countryCode = countryCode {
             parameters["country"] = countryCode
-        }
-
-        if let cookies = cookieStore.formattedSessionCookies() {
-            parameters["cookies"] = cookies
         }
 
         if let consentAction = consentAction {
@@ -132,43 +110,16 @@ extension STPAPIClient {
 
         let billingParams = billingDetails.consumersAPIParams
 
-        var card = STPFormEncoder.dictionary(forObject: cardParams)["card"] as? [AnyHashable: Any]
-        card?["cvc"] = nil // payment_details doesn't store cvc
+        let card = cardParams.consumersAPIParams
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
             "type": "card",
-            "card": card as Any,
+            "card": card,
             "billing_email_address": billingEmailAddress,
             "billing_address": billingParams,
-            "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
-        ]
-
-        makePaymentDetailsRequest(
-            endpoint: endpoint,
-            parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion
-        )
-    }
-
-    func createPaymentDetails(
-        for consumerSessionClientSecret: String,
-        linkedAccountId: String,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/payment_details"
-
-        let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
-            "bank_account": [
-                "account": linkedAccountId,
-            ],
-            "type": "bank_account",
-            "is_default": true,
+            "active": true, // card details are created with active true so they can be shared for passthrough mode
         ]
 
         makePaymentDetailsRequest(
@@ -182,24 +133,14 @@ extension STPAPIClient {
     private func makeConsumerSessionRequest(
         endpoint: String,
         parameters: [String: Any],
-        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        var parameters = parameters
-        if let cookies = cookieStore.formattedSessionCookies() {
-            parameters["cookies"] = cookies
-        }
-
         post(
             resource: endpoint,
             parameters: parameters,
             ephemeralKeySecret: consumerAccountPublishableKey
         ) { (result: Result<SessionResponse, Error>) in
-            if case .success(let session) = result {
-                cookieStore.updateSessionCookie(with: session.authSessionClientSecret)
-            }
-
             completion(result.map { $0.consumerSession })
         }
     }
@@ -240,7 +181,7 @@ extension STPAPIClient {
 
         let parameters: [String: Any] = [
             "credentials": [
-                "consumer_session_client_secret": consumerSessionClientSecret
+                "consumer_session_client_secret": consumerSessionClientSecret,
             ],
             "request_surface": "ios_payment_element",
         ]
@@ -254,93 +195,35 @@ extension STPAPIClient {
         )
     }
 
-    func listPaymentDetails(
-        for consumerSessionClientSecret: String,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/payment_details/list"
-
-        let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
-            "types": ["card", "bank_account"],
-        ]
-
-        post(
-            resource: endpoint,
-            parameters: parameters,
-            ephemeralKeySecret: consumerAccountPublishableKey
-        ) { (result: Result<DetailsListResponse, Error>) in
-            completion(result.map { $0.redactedPaymentDetails })
-        }
-    }
-
-    func deletePaymentDetails(
+    func sharePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<Void, Error>) -> Void
+        cvc: String?,
+        completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
-        let endpoint: String = "consumers/payment_details/\(id)"
-
-        let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
-        ]
-
-        APIRequest<STPEmptyStripeResponse>.delete(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { result in
-            completion(result.map { _ in () } )
-        }
-    }
-
-    func updatePaymentDetails(
-        for consumerSessionClientSecret: String,
-        id: String,
-        updateParams: UpdatePaymentDetailsParams,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/payment_details/\(id)"
+        let endpoint: String = "consumers/payment_details/share"
 
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
+            "id": id,
         ]
 
-        if let details = updateParams.details, case .card(let expiryDate, let billingDetails) = details {
-            parameters["exp_month"] = expiryDate.month
-            parameters["exp_year"] = expiryDate.year
-
-            if let billingDetails = billingDetails {
-                parameters["billing_address"] = billingDetails.consumersAPIParams
-            }
-
-            if let billingEmailAddress = billingDetails?.email {
-                parameters["billing_email_address"] = billingEmailAddress
-            }
+        if let cvc = cvc {
+            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
         }
 
-        if let isDefault = updateParams.isDefault {
-            parameters["is_default"] = isDefault
-        }
-
-        makePaymentDetailsRequest(
-            endpoint: endpoint,
+        post(
+            resource: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            ephemeralKeySecret: nil,
             completion: completion
         )
     }
 
     func logout(
         consumerSessionClientSecret: String,
-        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -348,7 +231,7 @@ extension STPAPIClient {
 
         let parameters: [String: Any] = [
             "credentials": [
-                "consumer_session_client_secret": consumerSessionClientSecret
+                "consumer_session_client_secret": consumerSessionClientSecret,
             ],
             "request_surface": "ios_payment_element",
         ]
@@ -356,7 +239,6 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
@@ -447,7 +329,29 @@ extension STPPaymentMethodBillingDetails {
 
 }
 
-// MARK: - /v1/consumers Support
+extension STPPaymentMethodCardParams {
+    var consumersAPIParams: [String: Any] {
+        // The consumer endpoint expects card details in a different format.
+        // It doesn't accept CVC, expiration dates must be 4 digits, and the CBC
+        // network choice is sent in the "preferred_network" field.
+        var card: [String: AnyHashable] = [:]
+        if let number {
+            card["number"] = number
+        }
+        if let expMonth {
+            card["exp_month"] = expMonth
+        }
+        if let expYear {
+            // Consumer endpoint expects a 4-digit card year
+            card["exp_year"] = CardExpiryDate.normalizeYear(expYear.intValue)
+        }
+        if let preferredNetwork = networks?.preferred {
+            card["preferred_network"] = preferredNetwork
+        }
+        return card
+    }
+}
+
 extension STPPaymentMethodAddress {
     // The param naming for consumers API is different so we need to map them.
     static let consumerKeyMap = [

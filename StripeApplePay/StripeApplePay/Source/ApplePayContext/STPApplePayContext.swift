@@ -89,7 +89,9 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// - seealso: ApplePayExampleViewController for an example
 @objc(STPApplePayContext)
 public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
-
+    enum Error: Swift.Error {
+        case invalidFinalState
+    }
     /// A special string that can be passed in place of a intent client secret to force showing success and return a PaymentState of `success`.
     /// - Note: ⚠️ If provided, the SDK performs no action to complete the payment or setup - it doesn't confirm a PaymentIntent or SetupIntent or handle next actions.
     ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful. 
@@ -107,14 +109,27 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
-        if !StripeAPI.canSubmitPaymentRequest(paymentRequest) {
-            return nil
-        }
+        let canMakePayments: Bool = {
+            if #available(iOS 15.0, *) {
+                // On iOS 15+, Apple Pay can be displayed even though there are no cards because Apple added the ability for customers to add cards in the payment sheet (see WWDC '21 "What's new in Wallet and Apple Pay")
+                return PKPaymentAuthorizationController.canMakePayments()
+            } else {
+                return PKPaymentAuthorizationController.canMakePayments(usingNetworks: StripeAPI.supportedPKPaymentNetworks())
+            }
+        }()
 
-        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
-        if authorizationController == nil {
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantIdentifier` on your payment request.")
+        guard
+            canMakePayments,
+            !paymentRequest.merchantIdentifier.isEmpty,
+            // PKPaymentAuthorizationController's docs incorrectly state:
+            // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
+            // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
+            PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil
+        else {
             return nil
         }
+        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
 
         self.delegate = delegate
 
@@ -132,7 +147,16 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @available(macCatalystApplicationExtension, unavailable)
     @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
+        #if os(visionOS)
+        // This isn't great: We should encourage the use of presentApplePay(from window:) instead.
+        let windows = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.windows }
+            .flatMap { $0 }
+            .sorted { firstWindow, _ in firstWindow.isKeyWindow }
+        let window = windows.first
+        #else
         let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        #endif
         self.presentApplePay(from: window, completion: completion)
     }
 
@@ -210,7 +234,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @_spi(STP) public var confirmType: ConfirmType?
     // Internal state
     private var paymentState: PaymentState = .notStarted
-    private var error: Error?
+    private var error: Swift.Error?
     /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) calls our didComplete delegate method
     private var didCancelOrTimeoutWhilePending = false
     private var didPresentApplePay = false
@@ -233,26 +257,14 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     // MARK: - Private Helper
     func _delegateToAppleDelegateMapping() -> [Selector: Selector] {
-        // We need this type to disambiguate from the other PKACDelegate.didSelect:handler: method
-        // HACK: This signature changed in Xcode 14, we need to check the compiler version to choose the right signature.
-        #if compiler(>=5.7)
-            typealias pkDidSelectShippingMethodSignature =
-                (any PKPaymentAuthorizationControllerDelegate) -> (
-                    (
-                        PKPaymentAuthorizationController,
-                        PKShippingMethod,
-                        @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
-                    ) -> Void
-                )?
-        #else
-            typealias pkDidSelectShippingMethodSignature = (
-                (PKPaymentAuthorizationControllerDelegate) -> (
-                    PKPaymentAuthorizationController, PKShippingMethod,
+        typealias pkDidSelectShippingMethodSignature =
+            (any PKPaymentAuthorizationControllerDelegate) -> (
+                (
+                    PKPaymentAuthorizationController,
+                    PKShippingMethod,
                     @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
                 ) -> Void
             )?
-        #endif
-
         let pk_didSelectShippingMethod = #selector(
             (PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
                 _:
@@ -440,10 +452,10 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     // MARK: - Helpers
     func _completePayment(
         with payment: PKPayment,
-        completion: @escaping (PKPaymentAuthorizationStatus, Error?) -> Void
+        completion: @escaping (PKPaymentAuthorizationStatus, Swift.Error?) -> Void
     ) {
         // Helper to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
-        let handleFinalState: ((PaymentState, Error?) -> Void) = { state, error in
+        let handleFinalState: ((PaymentState, Swift.Error?) -> Void) = { state, error in
             switch state {
             case .error:
                 self.paymentState = .error
@@ -473,7 +485,10 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 }
                 return
             case .pending, .notStarted:
-                assert(false, "Invalid final state")
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                  error: Error.invalidFinalState)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                stpAssertionFailure("Invalid final state")
                 return
             }
         }
@@ -669,7 +684,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
     }
 
-    func callDidCompleteDelegate(status: PaymentStatus, error: Error?) {
+    func callDidCompleteDelegate(status: PaymentStatus, error: Swift.Error?) {
         if let delegate = self.delegate {
             if let delegate = delegate as? ApplePayContextDelegate {
                 delegate.applePayContext(self, didCompleteWith: status, error: error)

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 @_spi(STP) public extension Locale {
     /// Returns the given array of country/region codes sorted alphabetically by their localized display names
@@ -19,7 +20,7 @@ import Foundation
         // Pull out the current country if needed
         var prepend: [T] = []
         if thisRegionFirst,
-           let regionCode = self.regionCode,
+           let regionCode = self.stp_regionCode,
            let index = regionCollection.firstIndex(where: { $0.regionCode == regionCode }) {
             prepend = [mutableRegionCollection.remove(at: index)]
         }

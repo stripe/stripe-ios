@@ -81,16 +81,15 @@ class STPCBCController {
         }
     }
 
-    var cbcEnabledOverride: Bool? = {
-        // TODO: Remove the default value of `false` once we release CBC
-        return false
-    }()
+    var cbcEnabledOverride: Bool?
+
+    var onBehalfOf: String?
 
     var cbcEnabled: Bool {
         if let cbcEnabledOverride = cbcEnabledOverride {
             return cbcEnabledOverride
         }
-        return CardElementConfigService.shared.isCBCEligible
+        return CardElementConfigService.shared.isCBCEligible(onBehalfOf: onBehalfOf)
     }
 
     enum BrandState: Equatable {
@@ -136,6 +135,13 @@ class STPCBCController {
             // Otherwise, return the brand for the number
             return .brand(STPCardValidator.brand(forNumber: cardNumber ?? ""))
         }
+    }
+
+    // Instead of validating against the selected brand (for CBC purposes),
+    // validate CVCs against the default brand of the PAN.
+    // We can assume that the CVC length will not change based on the choice of card brand.
+    var brandForCVC: STPCardBrand {
+        return STPCardValidator.brand(forNumber: cardNumber ?? "")
     }
 
     var contextMenuConfiguration: UIContextMenuConfiguration {

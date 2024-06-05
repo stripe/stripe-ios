@@ -1,0 +1,12 @@
+{
+  "exists": true,
+  "publishable_key": "pk_test_abc123",
+  "auth_session_client_secret": null,
+  "consumer_session": {
+      "client_secret": "pscs_abc123",
+      "email_address": "foo@bar.com",
+      "redacted_phone_number": "+1********12",
+      "verification_sessions": [],
+      "support_paymnet_details_types": ["CARD"],
+  }
+}

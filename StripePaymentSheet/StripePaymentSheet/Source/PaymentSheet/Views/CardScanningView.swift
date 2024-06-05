@@ -6,6 +6,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+#if !canImport(CompositorServices)
+
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -256,3 +258,5 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         super.willMove(toWindow: newWindow)
     }
 }
+
+#endif

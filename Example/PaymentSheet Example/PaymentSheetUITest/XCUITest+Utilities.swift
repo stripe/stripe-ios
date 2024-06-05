@@ -64,6 +64,26 @@ extension XCUIApplication {
 
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
 func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) -> XCUIElement? {
+    return scroll(collectionView: collectionView) { collectionView in
+        let cell = collectionView.cells[identifier]
+        if cell.exists {
+            return cell
+        }
+        return nil
+    }
+}
+
+func scroll(collectionView: XCUIElement, toFindButtonWithId identifier: String) -> XCUIElement? {
+    return scroll(collectionView: collectionView) { collectionView in
+        let button = collectionView.buttons[identifier].firstMatch
+        if button.exists {
+            return button
+        }
+        return nil
+    }
+}
+
+func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElementInCollectionView: (XCUIElement) -> XCUIElement?) -> XCUIElement? {
     guard collectionView.elementType == .collectionView else {
         fatalError("XCUIElement is not a collectionView.")
     }
@@ -72,11 +92,9 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) ->
     var allVisibleElements = [String]()
 
     while !reachedTheEnd {
-        let cell = collectionView.cells[identifier]
-
-        // Did we find our cell ?
-        if cell.exists {
-            return cell
+        // Did we find our element ?
+        if let element = getElementInCollectionView(collectionView) {
+           return element
         }
 
         // If not: we store the list of all the elements we've got in the CollectionView
@@ -121,7 +139,7 @@ extension XCTestCase {
 
         let emailField = context.textFields["Email"]
         emailField.forceTapWhenHittableInTestCase(self)
-        app.typeText("test@example.com")
+        app.typeText("test-\(UUID().uuidString)@example.com")
     }
     func fillUSBankData_microdeposits(_ app: XCUIApplication,
                                       container: XCUIElement? = nil) throws {
@@ -136,8 +154,7 @@ extension XCTestCase {
 
         // Dismiss keyboard, otherwise we can not see the next field
         // This is only an artifact in the (test) native version of the flow
-        let hackDismissKeyboardText = context.textViews["Your bank information will be verified with micro-deposits to your account"].firstMatch
-        hackDismissKeyboardText.tap()
+        app.scrollViews.firstMatch.swipeUp()
 
         let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"]
         acctConfirmField.forceTapWhenHittableInTestCase(self)
@@ -145,7 +162,39 @@ extension XCTestCase {
 
         // Dismiss keyboard again otherwise we can not see the continue button
         // This is only an artifact in the (test) native version of the flow
-        hackDismissKeyboardText.tap()
+        app.scrollViews.firstMatch.swipeUp()
+    }
+    func fillSepaData(_ app: XCUIApplication,
+                      container: XCUIElement? = nil) throws {
+        let context = container ?? app
+        let nameField = context.textFields["Full name"]
+        nameField.forceTapWhenHittableInTestCase(self)
+        app.typeText("John Doe")
+
+        let emailField = context.textFields["Email"]
+        emailField.forceTapWhenHittableInTestCase(self)
+        app.typeText("test@example.com")
+
+        let ibanField = context.textFields["IBAN"]
+        ibanField.forceTapWhenHittableInTestCase(self)
+        app.typeText("DE89370400440532013000")
+
+        let addressLine1 = context.textFields["Address line 1"]
+        addressLine1.forceTapWhenHittableInTestCase(self)
+        app.typeText("123 Main")
+        context.buttons["Return"].tap()
+
+        // Skip address 2
+        context.buttons["Return"].tap()
+
+        app.typeText("San Francisco")
+        context.buttons["Return"].tap()
+
+        context.pickerWheels.element.adjust(toPickerWheelValue: "California")
+        context.buttons["Done"].tap()
+
+        app.typeText("94016")
+        context.buttons["Done"].tap()
     }
 
     func waitToDisappear(_ target: Any?) {
@@ -154,8 +203,14 @@ extension XCTestCase {
         waitForExpectations(timeout: 60.0, handler: nil)
     }
 
+    func waitForNItemsExistence(_ target: Any?, count: Int) {
+        let elementExistsPredicate = NSPredicate(format: "count == %d", count)
+        expectation(for: elementExistsPredicate, evaluatedWith: target, handler: nil)
+        waitForExpectations(timeout: 10.0, handler: nil)
+    }
+
     func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        app.buttons["Reload"].tap()
+        app.buttons["Reload"].waitForExistenceAndTap(timeout: 10)
         waitForReload(app, settings: settings)
     }
 
@@ -195,10 +250,10 @@ extension XCTestCase {
         waitForReload(app, settings: settings)
     }
     func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
-        let customerId = app.textFields["CustomerId"]
+        let paymentMethodButton = app.buttons["Payment method"]
         expectation(
-            for: NSPredicate(format: "self BEGINSWITH 'cus_'"),
-            evaluatedWith: customerId.value,
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton,
             handler: nil
         )
         waitForExpectations(timeout: 10, handler: nil)

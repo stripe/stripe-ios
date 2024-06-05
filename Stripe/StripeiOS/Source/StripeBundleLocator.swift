@@ -12,7 +12,7 @@ import Foundation
 /// :nodoc:
 @_spi(STP) public final class StripeBundleLocator: BundleLocatorProtocol {
     public static let internalClass: AnyClass = StripeBundleLocator.self
-    public static let bundleName = "Stripe"
+    public static let bundleName = "StripeBundle"
     #if SWIFT_PACKAGE
         public static let spmResourcesBundle = Bundle.module
     #endif

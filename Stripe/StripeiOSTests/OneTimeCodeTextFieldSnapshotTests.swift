@@ -20,18 +20,33 @@ import UIKit
 class OneTimeCodeTextFieldSnapshotTests: STPSnapshotTestCase {
 
     func testEmpty() {
-        let field = OneTimeCodeTextField(numberOfDigits: 6, theme: LinkUI.appearance.asElementsTheme)
+        let field = OneTimeCodeTextField(
+            configuration: OneTimeCodeTextField.Configuration(
+                numberOfDigits: 6
+            ),
+            theme: .default
+        )
         verify(field)
     }
 
     func testFilled() {
-        let field = OneTimeCodeTextField(numberOfDigits: 6, theme: LinkUI.appearance.asElementsTheme)
+        let field = OneTimeCodeTextField(
+            configuration: OneTimeCodeTextField.Configuration(
+                numberOfDigits: 6
+            ),
+            theme: .default
+        )
         field.value = "123456"
         verify(field)
     }
 
     func testDisabled() {
-        let field = OneTimeCodeTextField(numberOfDigits: 6, theme: LinkUI.appearance.asElementsTheme)
+        let field = OneTimeCodeTextField(
+            configuration: OneTimeCodeTextField.Configuration(
+                numberOfDigits: 6
+            ),
+            theme: .default
+        )
         field.value = "123456"
         field.isEnabled = false
         verify(field)

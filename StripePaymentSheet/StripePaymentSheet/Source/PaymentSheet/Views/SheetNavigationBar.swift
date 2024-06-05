@@ -79,7 +79,9 @@ class SheetNavigationBar: UIView {
         testModeView.isHidden = !isTestMode
         self.appearance = appearance
         super.init(frame: .zero)
+        #if !canImport(CompositorServices)
         backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
+        #endif
         [leftItemsStackView, closeButtonRight, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
@@ -87,17 +89,17 @@ class SheetNavigationBar: UIView {
 
         NSLayoutConstraint.activate([
             leftItemsStackView.leadingAnchor.constraint(
-                equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
+                equalTo: leadingAnchor, constant: PaymentSheetUI.navBarPadding),
             leftItemsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             leftItemsStackView.trailingAnchor.constraint(lessThanOrEqualTo: closeButtonRight.leadingAnchor),
             leftItemsStackView.trailingAnchor.constraint(lessThanOrEqualTo: additionalButton.leadingAnchor),
 
             additionalButton.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
 
             closeButtonRight.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
             closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
@@ -130,16 +132,19 @@ class SheetNavigationBar: UIView {
     // MARK: -
     enum Style {
         case close(showAdditionalButton: Bool)
-        case back
+        case back(showAdditionalButton: Bool)
         case none
     }
 
     func setStyle(_ style: Style) {
         switch style {
-        case .back:
+        case .back(let showAdditionalButton):
             closeButtonLeft.isHidden = true
             closeButtonRight.isHidden = true
-            additionalButton.isHidden = true
+            additionalButton.isHidden = !showAdditionalButton
+            if showAdditionalButton {
+                bringSubviewToFront(additionalButton)
+            }
             backButton.isHidden = false
             bringSubviewToFront(backButton)
         case .close(let showAdditionalButton):
@@ -163,5 +168,14 @@ class SheetNavigationBar: UIView {
         layer.shadowOpacity = isHidden ? 0 : 0.1
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
+    }
+}
+
+extension UIButton {
+    func configureCommonEditButton(isEditingPaymentMethods: Bool) {
+        let title = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
+        setTitle(title, for: .normal)
+        titleLabel?.adjustsFontForContentSizeCategory = true
+        accessibilityIdentifier = "edit_saved_button"
     }
 }

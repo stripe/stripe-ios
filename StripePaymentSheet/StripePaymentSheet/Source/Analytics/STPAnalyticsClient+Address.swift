@@ -17,14 +17,9 @@ extension STPAnalyticsClient {
         apiClient: STPAPIClient
     ) {
         var additionalParams = [:] as [String: Any]
-        if isSimulatorOrTest {
-            additionalParams["is_development"] = true
-        }
-
         additionalParams["address_data_blob"] = addressAnalyticData?.analyticsPayload
 
         let analytic = AddressAnalytic(event: event,
-                                       productUsage: productUsage,
                                        params: additionalParams)
 
         log(analytic: analytic, apiClient: apiClient)
@@ -88,6 +83,5 @@ extension PaymentSheet.Address {
 
 struct AddressAnalytic: Analytic {
     let event: STPAnalyticEvent
-    let productUsage: Set<String>
     let params: [String: Any]
 }

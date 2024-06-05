@@ -36,4 +36,20 @@ public class STPCollectBankAccountParams: NSObject {
         paymentMethodParams.type = .USBankAccount
         return STPCollectBankAccountParams(paymentMethodParams: paymentMethodParams)
     }
+
+    /// Configures and returns an instance of `STPCollectBankAccountParams` for Instant Debits
+    /// - Parameters:
+    ///     - email: The customer's email.
+    @objc(collectInstantDebitsParamsWithEmail:)
+    @_spi(STP) public class func collectInstantDebitsParams(
+        email: String?
+    ) -> STPCollectBankAccountParams {
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.email = email
+
+        let paymentMethodParams = STPPaymentMethodParams()
+        paymentMethodParams.billingDetails = billingDetails
+        paymentMethodParams.type = .link
+        return STPCollectBankAccountParams(paymentMethodParams: paymentMethodParams)
+    }
 }

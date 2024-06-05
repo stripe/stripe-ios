@@ -191,7 +191,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         stub { urlRequest in
             XCTAssertEqual(
                 urlRequest.url?.absoluteString.hasSuffix(
-                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?"
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?app_identifier=\(Bundle.main.bundleIdentifier ?? "")"
                 ),
                 true
             )
@@ -264,7 +264,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v4",
+        "2020-08-27; identity_client_api=v6",
         file: file,
         line: line
     )

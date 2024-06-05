@@ -1,0 +1,640 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0485C4A62D9444E75877E170 /* CameraExifMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76A4D11F53602B77F9F5B2E /* CameraExifMetadata.swift */; };
+		064567ECD2B71E5EB7D3A201 /* MockCameraPermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832A750C892D9D3FC54D9CF3 /* MockCameraPermissionsManager.swift */; };
+		06FEEA450541E2D36D5A10FC /* CameraPermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0F925920743B648B04C949 /* CameraPermissionsManager.swift */; };
+		0F02BB3F9F7936D7BB593226 /* Torch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D750C5508AB271C099351E42 /* Torch.swift */; };
+		10BCE429AA79F7F0D1A9F2D3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7158E127DC7294CDABDEF5B8 /* XCTest.framework */; };
+		1EF9F2AB3E43769AB2BA6D04 /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2720B7BD13954418A8AC52E5 /* StripeCameraCoreTestUtils.framework */; };
+		28F23B4322876ED2BAC8C933 /* StripeCameraCoreTestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DDD1039F321BAF147F162F7D /* StripeCameraCoreTestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2A1AAD8E5A589E4E74B02A35 /* MockSimulatorCameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCCE205F4CCF2D486967BA25 /* MockSimulatorCameraSession.swift */; };
+		2CEF8A27C8864A6198C69A5D /* CVPixelBuffer+StripeCameraCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B9FDC8622F6CDF9F8A4B4 /* CVPixelBuffer+StripeCameraCore.swift */; };
+		48B09ECBED820F3097779208 /* CGRect+StripeCameraCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4106DF455718394E209C00 /* CGRect+StripeCameraCore.swift */; };
+		5F57E0BF10039F7055013066 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7158E127DC7294CDABDEF5B8 /* XCTest.framework */; };
+		6D44C32189C0CB409C9E4712 /* StripeCameraCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E7FB32269B8E36C3CBDB370F /* StripeCameraCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		88A1AF2B173B4055D8F44A8C /* MockAppSettingsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F04D387EEF3A5D07ECD1F7E /* MockAppSettingsHelper.swift */; };
+		8F3073987F30B9B8DDF0D956 /* MockTestCameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8091DB42296B7EC745567AF7 /* MockTestCameraSession.swift */; };
+		9AFBF50F47562CB34903064E /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E7BCD0896ADAFFF5CCA738E /* StripeCore.framework */; };
+		9CE6EE572439AD5B22B77294 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79D46F44C7BC55B9B595AEF /* CameraPreviewView.swift */; };
+		9FC42D068D1719AB28C3068F /* AppSettingsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DFFB1E2F90176D156E315B /* AppSettingsHelper.swift */; };
+		A95255494DF27A7CAE9A70CE /* CameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD8FEBAE0069BE88B75B0C5 /* CameraSession.swift */; };
+		AB24784F49EB99E7C36509BD /* CGRect_StripeCameraCoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5B6BCFF035A9E214EA9EA0 /* CGRect_StripeCameraCoreTest.swift */; };
+		D2186D6E491660D0C2A9D577 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DBC37790A9F68168A89095B /* StripeCameraCore.framework */; };
+		D9687FAD52D1896F28309580 /* UIImage+Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA969E606F5A3829BC9D4445 /* UIImage+Buffer.swift */; };
+		E01A054861E5D82D18C7D224 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DBC37790A9F68168A89095B /* StripeCameraCore.framework */; };
+		F181EEBCE3D2CAD043DAF0F0 /* UIDeviceOrientation+StripeCameraCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9BDABE163D20DF20F2237D /* UIDeviceOrientation+StripeCameraCore.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0321B7B71CC9BDDCF236B375 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B93DF1E4460962AFB28CF144 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B50782C89D54809DFFCF80D0;
+			remoteInfo = StripeCameraCore;
+		};
+		55BD94DFEA7738F26C23A545 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B93DF1E4460962AFB28CF144 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6A948E338F0BF55DBFD83170;
+			remoteInfo = StripeCameraCoreTestUtils;
+		};
+		BA0100EB31091CFA64BF12A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B93DF1E4460962AFB28CF144 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B50782C89D54809DFFCF80D0;
+			remoteInfo = StripeCameraCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2F2CDDE07BFFE88706C6A908 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCA0A45A41520FB95F4E8D10 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F97E2A90DA9F982FC293A4A9 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0A0B9FDC8622F6CDF9F8A4B4 /* CVPixelBuffer+StripeCameraCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+StripeCameraCore.swift"; sourceTree = "<group>"; };
+		0F4174046507759A9668F4EE /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		17E9A614AF4543DB62E7F5B4 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
+		226FED2248EE3F96F217BEE9 /* StripeCameraCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeCameraCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2720B7BD13954418A8AC52E5 /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B5B6BCFF035A9E214EA9EA0 /* CGRect_StripeCameraCoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRect_StripeCameraCoreTest.swift; sourceTree = "<group>"; };
+		3B4106DF455718394E209C00 /* CGRect+StripeCameraCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+StripeCameraCore.swift"; sourceTree = "<group>"; };
+		3D0F925920743B648B04C949 /* CameraPermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionsManager.swift; sourceTree = "<group>"; };
+		44E9A4900C4B8D08A617488C /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		48DFFB1E2F90176D156E315B /* AppSettingsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsHelper.swift; sourceTree = "<group>"; };
+		4E0D85BEF8C269A46D5ECEAC /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		5DFD03E78034CFB59E244199 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		609D9ADB9E9898694A2A67FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6DBC37790A9F68168A89095B /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7158E127DC7294CDABDEF5B8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		7D9BDABE163D20DF20F2237D /* UIDeviceOrientation+StripeCameraCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDeviceOrientation+StripeCameraCore.swift"; sourceTree = "<group>"; };
+		8091DB42296B7EC745567AF7 /* MockTestCameraSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTestCameraSession.swift; sourceTree = "<group>"; };
+		832A750C892D9D3FC54D9CF3 /* MockCameraPermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraPermissionsManager.swift; sourceTree = "<group>"; };
+		83596C8ED3829B17A93490A6 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
+		8E7BCD0896ADAFFF5CCA738E /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F04D387EEF3A5D07ECD1F7E /* MockAppSettingsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAppSettingsHelper.swift; sourceTree = "<group>"; };
+		A79D46F44C7BC55B9B595AEF /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		ABCCADF0E7337301A472E75C /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		B8D39F3EE77B9DF5FFBA4CAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BA969E606F5A3829BC9D4445 /* UIImage+Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Buffer.swift"; sourceTree = "<group>"; };
+		BCCE205F4CCF2D486967BA25 /* MockSimulatorCameraSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSimulatorCameraSession.swift; sourceTree = "<group>"; };
+		D750C5508AB271C099351E42 /* Torch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Torch.swift; sourceTree = "<group>"; };
+		D76A4D11F53602B77F9F5B2E /* CameraExifMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraExifMetadata.swift; sourceTree = "<group>"; };
+		DDD1039F321BAF147F162F7D /* StripeCameraCoreTestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCameraCoreTestUtils.h; sourceTree = "<group>"; };
+		E7FB32269B8E36C3CBDB370F /* StripeCameraCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCameraCore.h; sourceTree = "<group>"; };
+		FBD8FEBAE0069BE88B75B0C5 /* CameraSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSession.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		267776DB1189FACBD4FA2AEA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F57E0BF10039F7055013066 /* XCTest.framework in Frameworks */,
+				E01A054861E5D82D18C7D224 /* StripeCameraCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9CC1AF0A3093D51C5085D503 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				10BCE429AA79F7F0D1A9F2D3 /* XCTest.framework in Frameworks */,
+				D2186D6E491660D0C2A9D577 /* StripeCameraCore.framework in Frameworks */,
+				1EF9F2AB3E43769AB2BA6D04 /* StripeCameraCoreTestUtils.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E3A6C5C1A5D47CEFAFD1853F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AFBF50F47562CB34903064E /* StripeCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00F9BB709FA21D59419FA5AE /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				ABCCADF0E7337301A472E75C /* Project-Debug.xcconfig */,
+				0F4174046507759A9668F4EE /* Project-Release.xcconfig */,
+				44E9A4900C4B8D08A617488C /* StripeiOS Tests-Debug.xcconfig */,
+				17E9A614AF4543DB62E7F5B4 /* StripeiOS Tests-Release.xcconfig */,
+				83596C8ED3829B17A93490A6 /* StripeiOS-Debug.xcconfig */,
+				4E0D85BEF8C269A46D5ECEAC /* StripeiOS-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		03256F1FDB473FE93A57A38A /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				170C84B7FB58FAA15283903E /* Categories */,
+				7E719691677D20AEAEF0C120 /* Coordinators */,
+				72FEB5C092565B365BBC3906 /* Views */,
+				D76A4D11F53602B77F9F5B2E /* CameraExifMetadata.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		0FB9D3D4625E1AEA6EE1CC22 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7158E127DC7294CDABDEF5B8 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		170C84B7FB58FAA15283903E /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				3B4106DF455718394E209C00 /* CGRect+StripeCameraCore.swift */,
+				0A0B9FDC8622F6CDF9F8A4B4 /* CVPixelBuffer+StripeCameraCore.swift */,
+				7D9BDABE163D20DF20F2237D /* UIDeviceOrientation+StripeCameraCore.swift */,
+				BA969E606F5A3829BC9D4445 /* UIImage+Buffer.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		171BE48EE95E66F94D6CCC33 /* StripeCameraCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				CC0771AB4883EEDAB5AA7D1C /* Unit */,
+				5DFD03E78034CFB59E244199 /* Info.plist */,
+			);
+			path = StripeCameraCoreTests;
+			sourceTree = "<group>";
+		};
+		18A8A17329DE3C8891103ECD /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				2B5B6BCFF035A9E214EA9EA0 /* CGRect_StripeCameraCoreTest.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		27E56A8242FD577334930F5B /* StripeCameraCoreTestUtils */ = {
+			isa = PBXGroup;
+			children = (
+				BCB41D804D8A44F6DEEF4B8E /* Mocks */,
+				B8D39F3EE77B9DF5FFBA4CAE /* Info.plist */,
+				DDD1039F321BAF147F162F7D /* StripeCameraCoreTestUtils.h */,
+			);
+			path = StripeCameraCoreTestUtils;
+			sourceTree = "<group>";
+		};
+		5CE9B5F8E73CBC18E22AF375 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				00F9BB709FA21D59419FA5AE /* BuildConfigurations */,
+				E2CD33A048BB3FD49B4D47FD /* StripeCameraCore */,
+				171BE48EE95E66F94D6CCC33 /* StripeCameraCoreTests */,
+				27E56A8242FD577334930F5B /* StripeCameraCoreTestUtils */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		72FEB5C092565B365BBC3906 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A79D46F44C7BC55B9B595AEF /* CameraPreviewView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7E719691677D20AEAEF0C120 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				48DFFB1E2F90176D156E315B /* AppSettingsHelper.swift */,
+				3D0F925920743B648B04C949 /* CameraPermissionsManager.swift */,
+				FBD8FEBAE0069BE88B75B0C5 /* CameraSession.swift */,
+				BCCE205F4CCF2D486967BA25 /* MockSimulatorCameraSession.swift */,
+				D750C5508AB271C099351E42 /* Torch.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		BCB41D804D8A44F6DEEF4B8E /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				9F04D387EEF3A5D07ECD1F7E /* MockAppSettingsHelper.swift */,
+				832A750C892D9D3FC54D9CF3 /* MockCameraPermissionsManager.swift */,
+				8091DB42296B7EC745567AF7 /* MockTestCameraSession.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		CC0771AB4883EEDAB5AA7D1C /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				18A8A17329DE3C8891103ECD /* Categories */,
+			);
+			path = Unit;
+			sourceTree = "<group>";
+		};
+		E2B3561EEB5629A212FD2AB4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6DBC37790A9F68168A89095B /* StripeCameraCore.framework */,
+				226FED2248EE3F96F217BEE9 /* StripeCameraCoreTests.xctest */,
+				2720B7BD13954418A8AC52E5 /* StripeCameraCoreTestUtils.framework */,
+				8E7BCD0896ADAFFF5CCA738E /* StripeCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E2CD33A048BB3FD49B4D47FD /* StripeCameraCore */ = {
+			isa = PBXGroup;
+			children = (
+				03256F1FDB473FE93A57A38A /* Source */,
+				609D9ADB9E9898694A2A67FF /* Info.plist */,
+				E7FB32269B8E36C3CBDB370F /* StripeCameraCore.h */,
+			);
+			path = StripeCameraCore;
+			sourceTree = "<group>";
+		};
+		F72F2AFE9BE5E2CCBE7C6436 = {
+			isa = PBXGroup;
+			children = (
+				5CE9B5F8E73CBC18E22AF375 /* Project */,
+				0FB9D3D4625E1AEA6EE1CC22 /* Frameworks */,
+				E2B3561EEB5629A212FD2AB4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		21D2298D6D8328B46AB437BB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D44C32189C0CB409C9E4712 /* StripeCameraCore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8FED65A79644B7F1CB19619B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28F23B4322876ED2BAC8C933 /* StripeCameraCoreTestUtils.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		6A948E338F0BF55DBFD83170 /* StripeCameraCoreTestUtils */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 12D1B5D975CF0E6EC4956438 /* Build configuration list for PBXNativeTarget "StripeCameraCoreTestUtils" */;
+			buildPhases = (
+				8FED65A79644B7F1CB19619B /* Headers */,
+				F2FB0D7ACB63AFA0A81A5FF6 /* Sources */,
+				83C726705BB615A9940B98CC /* Resources */,
+				BCA0A45A41520FB95F4E8D10 /* Embed Frameworks */,
+				267776DB1189FACBD4FA2AEA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D1513DE143A5DDFAB1AA4069 /* PBXTargetDependency */,
+			);
+			name = StripeCameraCoreTestUtils;
+			productName = StripeCameraCoreTestUtils;
+			productReference = 2720B7BD13954418A8AC52E5 /* StripeCameraCoreTestUtils.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		B50782C89D54809DFFCF80D0 /* StripeCameraCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7056F053793C453C8750F440 /* Build configuration list for PBXNativeTarget "StripeCameraCore" */;
+			buildPhases = (
+				21D2298D6D8328B46AB437BB /* Headers */,
+				62DE5865F3F7B8CB25F62395 /* Sources */,
+				445990B4DBEECCD2FBA8B324 /* Resources */,
+				2F2CDDE07BFFE88706C6A908 /* Embed Frameworks */,
+				E3A6C5C1A5D47CEFAFD1853F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StripeCameraCore;
+			productName = StripeCameraCore;
+			productReference = 6DBC37790A9F68168A89095B /* StripeCameraCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F3DED9AB60FDAB786A737384 /* StripeCameraCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6BB26614346BD154B399D073 /* Build configuration list for PBXNativeTarget "StripeCameraCoreTests" */;
+			buildPhases = (
+				85B8B0A9CAD01C91AD19797A /* Sources */,
+				98362E27FEF7FBD502400444 /* Resources */,
+				F97E2A90DA9F982FC293A4A9 /* Embed Frameworks */,
+				9CC1AF0A3093D51C5085D503 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F102799B90F2BBF57EBDBBDC /* PBXTargetDependency */,
+				24ECB0864CAE52D6ABF4503E /* PBXTargetDependency */,
+			);
+			name = StripeCameraCoreTests;
+			productName = StripeCameraCoreTests;
+			productReference = 226FED2248EE3F96F217BEE9 /* StripeCameraCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B93DF1E4460962AFB28CF144 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = C1216BCDB94950EBFA541D74 /* Build configuration list for PBXProject "StripeCameraCore" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = F72F2AFE9BE5E2CCBE7C6436;
+			productRefGroup = E2B3561EEB5629A212FD2AB4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B50782C89D54809DFFCF80D0 /* StripeCameraCore */,
+				6A948E338F0BF55DBFD83170 /* StripeCameraCoreTestUtils */,
+				F3DED9AB60FDAB786A737384 /* StripeCameraCoreTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		445990B4DBEECCD2FBA8B324 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83C726705BB615A9940B98CC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		98362E27FEF7FBD502400444 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		62DE5865F3F7B8CB25F62395 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0485C4A62D9444E75877E170 /* CameraExifMetadata.swift in Sources */,
+				48B09ECBED820F3097779208 /* CGRect+StripeCameraCore.swift in Sources */,
+				2CEF8A27C8864A6198C69A5D /* CVPixelBuffer+StripeCameraCore.swift in Sources */,
+				F181EEBCE3D2CAD043DAF0F0 /* UIDeviceOrientation+StripeCameraCore.swift in Sources */,
+				D9687FAD52D1896F28309580 /* UIImage+Buffer.swift in Sources */,
+				9FC42D068D1719AB28C3068F /* AppSettingsHelper.swift in Sources */,
+				06FEEA450541E2D36D5A10FC /* CameraPermissionsManager.swift in Sources */,
+				A95255494DF27A7CAE9A70CE /* CameraSession.swift in Sources */,
+				2A1AAD8E5A589E4E74B02A35 /* MockSimulatorCameraSession.swift in Sources */,
+				0F02BB3F9F7936D7BB593226 /* Torch.swift in Sources */,
+				9CE6EE572439AD5B22B77294 /* CameraPreviewView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85B8B0A9CAD01C91AD19797A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB24784F49EB99E7C36509BD /* CGRect_StripeCameraCoreTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2FB0D7ACB63AFA0A81A5FF6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88A1AF2B173B4055D8F44A8C /* MockAppSettingsHelper.swift in Sources */,
+				064567ECD2B71E5EB7D3A201 /* MockCameraPermissionsManager.swift in Sources */,
+				8F3073987F30B9B8DDF0D956 /* MockTestCameraSession.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		24ECB0864CAE52D6ABF4503E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = StripeCameraCoreTestUtils;
+			target = 6A948E338F0BF55DBFD83170 /* StripeCameraCoreTestUtils */;
+			targetProxy = 55BD94DFEA7738F26C23A545 /* PBXContainerItemProxy */;
+		};
+		D1513DE143A5DDFAB1AA4069 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = StripeCameraCore;
+			target = B50782C89D54809DFFCF80D0 /* StripeCameraCore */;
+			targetProxy = 0321B7B71CC9BDDCF236B375 /* PBXContainerItemProxy */;
+		};
+		F102799B90F2BBF57EBDBBDC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = StripeCameraCore;
+			target = B50782C89D54809DFFCF80D0 /* StripeCameraCore */;
+			targetProxy = BA0100EB31091CFA64BF12A6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1555A494851A82726CF41684 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 17E9A614AF4543DB62E7F5B4 /* StripeiOS Tests-Release.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				INFOPLIST_FILE = StripeCameraCoreTestUtils/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCameraCoreTestUtils;
+				PRODUCT_NAME = StripeCameraCoreTestUtils;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		8101CFE889F8AC21AF12FC99 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 83596C8ED3829B17A93490A6 /* StripeiOS-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = StripeCameraCore/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-camera-core";
+				PRODUCT_NAME = StripeCameraCore;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		85DD0786DE8D23550B2113B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ABCCADF0E7337301A472E75C /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		A6D92FFDFE11DCBEC32190D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 44E9A4900C4B8D08A617488C /* StripeiOS Tests-Debug.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				INFOPLIST_FILE = StripeCameraCoreTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCameraCoreTests;
+				PRODUCT_NAME = StripeCameraCoreTests;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		B26CBFD3B42072A398AE6605 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 17E9A614AF4543DB62E7F5B4 /* StripeiOS Tests-Release.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				INFOPLIST_FILE = StripeCameraCoreTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCameraCoreTests;
+				PRODUCT_NAME = StripeCameraCoreTests;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		E1A07E117DC9E8051D871578 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4E0D85BEF8C269A46D5ECEAC /* StripeiOS-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = StripeCameraCore/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-camera-core";
+				PRODUCT_NAME = StripeCameraCore;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		F11D6A5494AA72875ECC53A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0F4174046507759A9668F4EE /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		FD80773E1582BF61724D6EDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 44E9A4900C4B8D08A617488C /* StripeiOS Tests-Debug.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				INFOPLIST_FILE = StripeCameraCoreTestUtils/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCameraCoreTestUtils;
+				PRODUCT_NAME = StripeCameraCoreTestUtils;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		12D1B5D975CF0E6EC4956438 /* Build configuration list for PBXNativeTarget "StripeCameraCoreTestUtils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD80773E1582BF61724D6EDE /* Debug */,
+				1555A494851A82726CF41684 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6BB26614346BD154B399D073 /* Build configuration list for PBXNativeTarget "StripeCameraCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6D92FFDFE11DCBEC32190D4 /* Debug */,
+				B26CBFD3B42072A398AE6605 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7056F053793C453C8750F440 /* Build configuration list for PBXNativeTarget "StripeCameraCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8101CFE889F8AC21AF12FC99 /* Debug */,
+				E1A07E117DC9E8051D871578 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1216BCDB94950EBFA541D74 /* Build configuration list for PBXProject "StripeCameraCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85DD0786DE8D23550B2113B7 /* Debug */,
+				F11D6A5494AA72875ECC53A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B93DF1E4460962AFB28CF144 /* Project object */;
+}

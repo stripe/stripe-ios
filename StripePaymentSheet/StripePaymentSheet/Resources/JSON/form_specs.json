@@ -621,7 +621,7 @@
                         "api_value": "noble_pay"
                     },
                     {
-                        "display_text": "PBac z iPKO (PKO+BP)",
+                        "display_text": "Płać z iPKO (PKO BP)",
                         "api_value": "pbac_z_ipko"
                     },
                     {
@@ -768,23 +768,7 @@
             "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-9e42e4498e0bee515c423ef66010852f.png",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-d3ef2eeefed43cea1f969c3a2a4118d8.svg"
             },
-        "fields": [
-        ],
-        "next_action_spec": {
-            "confirm_response_status_specs": {
-                "requires_action": {
-                    "type": "redirect_to_url"
-                }
-            },
-          "post_confirm_handling_pi_status_specs": {
-                "succeeded": {
-                    "type": "finished"
-                },
-                "requires_action": {
-                    "type": "canceled"
-                }
-            }
-        }
+        "fields": []
     },
     {
         "type": "alma",
@@ -1032,6 +1016,51 @@
           "for": "billing_address"
         }
       ]
+    },
+    {
+      "type": "twint",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint@3x-0d33d2bf7c7037878c2a42232362accb.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint-d86f6ccc22b739319ca4de7c83842de0.svg"
+      },
+      "fields": [
+      ],
+      "next_action_spec": {
+        "confirm_response_status_specs": {
+          "requires_action": {
+            "type": "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs": {
+          "succeeded": {
+            "type": "finished"
+          },
+          "processing": {
+            "type": "finished"
+          },
+          "requires_action": {
+            "type": "canceled"
+          }
+        }
+      }
+    },
+    {
+      "type": "multibanco",
+      "async": true,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco@3x-ac6cc40479db7fa84dbb390ab85789cd.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco-5823a780cf3b97484956dbb93b9ce30e.svg",
+        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark@3x-787e2e370aeae073b45e0e02ad1a9e5c.png",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark-2679e8b2bc32d66da57e66cac769d628.svg"
+      },
+      "fields": [
+        {
+          "type": "email",
+          "api_path": {
+            "v1": "billing_details[email]"
+          }
+        }
+      ]
     }
-
 ]

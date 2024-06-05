@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "次のステップで写真が数枚撮影され、本人確認が行われます。";
 
+"Accepted forms of ID include" = "身分証明書として受け付けられる書式は次のとおりです";
+
 "Alternatively, you may manually upload a photo of your identity document." = "または、身分証明書の写真を手動でアップロードすることもできます。";
 
 "App Settings" = "アプリの設定";
 
-"Back driver's license photo successfully uploaded" = "運転免許証の裏面の写真のアップロードが完了しました";
-
 "Back identity card photo successfully uploaded" = "身分証明書の裏面の写真のアップロードが完了しました";
-
-"Back of driver's license" = "運転免許証の裏面";
 
 "Back of identity card" = "身分証明書の裏面";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "生年月日が無効のようです";
 
-"Flip your driver's license over to the other side" = "運転免許証を裏返してください";
+"Details not visible" = "詳細が見えません";
 
 "Flip your identity card over to the other side" = "身分証明書を裏返してください";
 
-"Front driver's license photo successfully uploaded" = "運転免許証の表面の写真のアップロードが完了しました";
-
 "Front identity card photo successfully uploaded" = "身分証明書の表面の写真のアップロードが完了しました";
 
-"Front of driver's license" = "運転免許証の表面";
-
 "Front of identity card" = "身分証明書の表面";
+
+"Get ready to scan your photo ID" = "写真付き身分証明書の直接撮影を準備する";
 
 "Get ready to take a selfie" = "自撮り写真の撮影準備をする";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "動かさないでください、スキャンしています";
 
+"I'm ready" = "準備完了";
+
 "ID Number" = "ID 番号";
 
-"ID Type" = "ID タイプ";
-
-"Image of passport" = "パスポートの画像";
-
 "Individual CPF" = "個人 CPF";
+
+"Keep ID level" = "身分証明書を水平に保持してください";
 
 "Last 4 of Social Security number" = "社会保障番号の末尾 4 桁";
 
 "Loading" = "読み込み中";
 
+"Make sure all details are visible and focus" = "すべての詳細が表示され、焦点が合っていることを確認してください";
+
+"Make sure you're in a well lit space." = "明るい場所にいることを確認してください。";
+
+"Move closer" = "近付けてください";
+
+"Move farther" = "少し遠ざけてください";
+
+"Move to a darker area" = "もっと暗い場所に移動してください";
+
+"Move to a well-lit area" = "明るい場所に移動してください";
+
 "NRIC or FIN" = "NRIC または FIN";
 
-"Passport" = "パスポート";
-
-"Passport photo successfully uploaded" = "パスポートの写真のアップロードが完了しました";
+"No document detected" = "書類を検出できませんでした";
 
 "Personal ID number" = "身分証明書番号";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "フォトライブラリー";
 
-"Please upload an image of your passport" = "パスポートの画像をアップロードしてください";
-
-"Please upload images of the front and back of your driver's license" = "運転免許証の表裏両面の画像をアップロードしてください";
-
 "Please upload images of the front and back of your identity card" = "身分証明書の表裏両面の画像をアップロードしてください";
-
-"Position your driver's license in the center of the frame" = "運転免許証をフレームの中央に置いてください";
 
 "Position your face in the center of the frame." = "フレームの中央に顔を置いてください。";
 
 "Position your identity card in the center of the frame" = "身分証明書をフレームの中央に置いてください";
-
-"Position your passport in the center of the frame" = "パスポートをフレームの中央に置いてください";
 
 "Retake Photos" = "写真を撮り直す";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "身分証明書の表面をどこからアップロードするのかを選択してください";
 
-"Select back driver's license photo" = "運転免許証の裏面の写真を選択";
-
 "Select back identity card photo" = "身分証明書の裏面の写真を選択";
 
-"Select front driver's license photo" = "運転免許証の表面の写真を選択";
-
 "Select front identity card photo" = "身分証明書の表面の写真を選択";
-
-"Select passport photo" = "パスポートの写真を選択";
 
 "Selfie" = "セルフィ―";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "やり直す";
 
+"Try reduce glare and make ID visible" = "光の反射を抑えて、身分証明書が見えるようにしてください";
+
 "Unable to establish a connection." = "接続を確立できません";
 
 "Unsaved changes" = "保存されていない変更";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "写真付き身分証明書をアップロードする";
 
-"Uploading back driver's license photo" = "運転免許証の裏面をアップロードしています";
-
 "Uploading back identity card photo" = "身分証明書の裏面をアップロードしています";
 
-"Uploading front driver's license photo" = "運転免許証の表面をアップロードしています";
-
 "Uploading front identity card photo" = "身分証明書の表面をアップロードしています";
-
-"Uploading passport photo" = "パスポートの写真をアップロードしています";
 
 "Verify your identity" = "本人確認を行う";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "もう一度お試しいただくか、デバイスから画像をアプロードしてください。";
 
 "Your selfie images have not been saved. Do you want to leave?" = "自撮りの画像が保存されていません。終了しますか？";
+
+"driver's license" = "運転免許証";
+
+"government-issued photo ID" = "政府発行の写真付き身分証明書";
+
+"passport" = "パスポート";

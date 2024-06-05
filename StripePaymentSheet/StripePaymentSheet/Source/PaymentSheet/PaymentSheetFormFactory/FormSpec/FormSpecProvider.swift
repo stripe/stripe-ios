@@ -16,6 +16,10 @@ private let formSpecsURL = StripePaymentSheetBundleLocator.resourcesBundle.url(f
 /// - Note: You must `load(completion:)` to load the specs json file into memory before calling `formSpec(for:)`
 /// - To overwrite any of these specs use load(from:)
 class FormSpecProvider {
+    enum Error: Swift.Error {
+        case failedToLoadSpecs
+        case formSpecsNotReady
+    }
     static var shared: FormSpecProvider = FormSpecProvider()
     fileprivate var formSpecs: [String: FormSpec] = [:]
 
@@ -28,17 +32,27 @@ class FormSpecProvider {
         return !formSpecs.isEmpty
     }
 
+    var hasLoadedFromDisk: Bool = false
+
     /// Loads the JSON form spec from disk into memory
     func load(completion: ((Bool) -> Void)? = nil) {
         formSpecsUpdateQueue.async { [weak self] in
+            if self?.hasLoadedFromDisk == true {
+                completion?(true)
+                return
+            }
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
                 let data = try Data(contentsOf: formSpecsURL)
                 let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
                 self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
+                self?.hasLoadedFromDisk = true
                 completion?(true)
             } catch {
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                                  error: Error.failedToLoadSpecs)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 completion?(false)
                 return
             }
@@ -60,11 +74,6 @@ class FormSpecProvider {
             do {
                 let data = try JSONSerialization.data(withJSONObject: formSpec)
                 let decodedFormSpec = try decoder.decode(FormSpec.self, from: data)
-                guard !containsUnknownNextActions(formSpec: decodedFormSpec) else {
-                    STPAnalyticsClient.sharedClient.logLUXEUnknownActionsFailure()
-                    decodedSuccessfully = false
-                    continue
-                }
                 self.formSpecs[decodedFormSpec.type] = decodedFormSpec
             } catch {
                 STPAnalyticsClient.sharedClient.logLUXESpecSerilizeFailure(error: error)
@@ -75,29 +84,13 @@ class FormSpecProvider {
     }
 
     func formSpec(for paymentMethodType: String) -> FormSpec? {
-        assert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
-        return formSpecs[paymentMethodType]
-    }
-
-    func nextActionSpec(for paymentMethodType: String) -> FormSpec.NextActionSpec? {
-        return formSpecs[paymentMethodType]?.nextActionSpec
-    }
-
-    func containsUnknownNextActions(formSpec: FormSpec) -> Bool {
-        if let nextActionSpec = formSpec.nextActionSpec {
-            for (_, nextActionStatusValue) in nextActionSpec.confirmResponseStatusSpecs {
-                if case .unknown = nextActionStatusValue.type {
-                    return true
-                }
-            }
-            if let postConfirmSpecs = nextActionSpec.postConfirmHandlingPiStatusSpecs {
-                for (_, nextActionStatusValue) in postConfirmSpecs {
-                    if case .unknown = nextActionStatusValue.type {
-                        return true
-                    }
-                }
-            }
+        if formSpecs.isEmpty {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.formSpecsNotReady,
+                                              additionalNonPIIParams: ["payment_method_type": paymentMethodType])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
         }
-        return false
+        stpAssert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
+        return formSpecs[paymentMethodType]
     }
 }

@@ -41,6 +41,11 @@ import UIKit
         return string(as: .national).count >= metadata.pattern.count
     }
 
+    /// Whether the phone number is empty (it may have a country code, but it has no other digits)
+    public var isEmpty: Bool {
+        return number.isEmpty
+    }
+
     /// The phone number without the country prefix and containing only digits
     public let number: String
     private let metadata: Metadata
@@ -101,7 +106,7 @@ import UIKit
         }
 
         // This second filter uses the device's locale to pick a winner out of N candidates.
-        if let winner = candidates.first(where: { $0.regionCode == locale.regionCode }) {
+        if let winner = candidates.first(where: { $0.regionCode == locale.stp_regionCode }) {
             return makePhoneNumber(winner)
         }
 
@@ -431,6 +436,6 @@ import UIKit
 
 extension PhoneNumber: Equatable {
     public static func == (lhs: PhoneNumber, rhs: PhoneNumber) -> Bool {
-        return lhs.number == rhs.number
+        return lhs.string(as: .e164) == rhs.string(as: .e164)
     }
 }

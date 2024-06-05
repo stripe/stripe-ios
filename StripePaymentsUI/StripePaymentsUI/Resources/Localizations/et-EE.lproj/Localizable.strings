@@ -22,6 +22,8 @@
 
 "Card number" = "Kaardinumber";
 
+"Confirm your %@" = "Kinnitage oma %@";
+
 "Invalid data." = "Valed andmed.";
 
 "MM / YY" = "KK / AA";

@@ -116,13 +116,7 @@ public class AddressViewController: UIViewController {
         return button
     }()
 
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        if #available(iOS 13.0, *) {
-            return UIActivityIndicatorView(style: .medium)
-        } else {
-            return UIActivityIndicatorView(style: .gray)
-        }
-    }()
+    private lazy var activityIndicator = UIActivityIndicatorView(style: .medium)
 
     private var hasLoadedSpecs = false
 

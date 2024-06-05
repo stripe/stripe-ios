@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "link_logo_bw.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

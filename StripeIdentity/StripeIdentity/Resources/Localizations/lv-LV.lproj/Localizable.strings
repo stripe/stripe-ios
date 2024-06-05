@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Nākamajā darbībā tiks automātiski uzņemti daži fotoattēli, lai pārbaudītu jūsu identitāti";
 
+"Accepted forms of ID include" = "Apstiprinātās identifikācijas dokumenta formas ietver";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Vai arī varat manuāli augšupielādēt identifikācijas dokumenta fotoattēlu.";
 
 "App Settings" = "Lietotnes iestatījumi";
 
-"Back driver's license photo successfully uploaded" = "Autovadītāja apliecības aizmugurējā puse ir veiksmīgi augšupielādēta";
-
 "Back identity card photo successfully uploaded" = "Identifikācijas kartes aizmugurējā puse ir veiksmīgi augšupielādēta";
-
-"Back of driver's license" = "Autovadītāja apliecības aizmugure";
 
 "Back of identity card" = "Identifikācijas kartes aizmugure";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "Dzimšanas datums neizskatās derīgs";
 
-"Flip your driver's license over to the other side" = "Apgrieziet autovadītāja apliecību uz otru pusi";
+"Details not visible" = "Detaļas nav redzamas";
 
 "Flip your identity card over to the other side" = "Apgrieziet identifikācijas karti uz otru pusi";
 
-"Front driver's license photo successfully uploaded" = "Autovadītāja apliecības priekšpuse ir veiksmīgi augšupielādēta";
-
 "Front identity card photo successfully uploaded" = "Identifikācijas kartes priekšpuse ir veiksmīgi augšupielādēta";
 
-"Front of driver's license" = "Autovadītāja apliecības priekšpuse";
-
 "Front of identity card" = "Identifikācijas kartes priekšpuse";
+
+"Get ready to scan your photo ID" = "Sagatavojieties skenēt savu identifikācijas dokumentu ar fotogrāfiju";
 
 "Get ready to take a selfie" = "Sagatavojieties uzņemt pašportretu";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "Nekustiniet, notiek skenēšana";
 
+"I'm ready" = "Esmu gatavs";
+
 "ID Number" = "ID numurs";
 
-"ID Type" = "ID veids";
-
-"Image of passport" = "Pases attēls";
-
 "Individual CPF" = "Fiziskas personas CPF";
+
+"Keep ID level" = "Paturēt ID līmeni";
 
 "Last 4 of Social Security number" = "Pēdējie 4 cipari no sociālās apdrošināšanas numura";
 
 "Loading" = "Ielādē";
 
+"Make sure all details are visible and focus" = "Pārliecinieties, vai visas detaļas ir redzamas un fokusētas.";
+
+"Make sure you're in a well lit space." = "Pārliecinieties, ka atrodaties labi apgaismotā vietā.";
+
+"Move closer" = "Novietojiet tuvāk";
+
+"Move farther" = "Novietojiet tālāk";
+
+"Move to a darker area" = "Pārvietojiet uz tumšāku vietu";
+
+"Move to a well-lit area" = "Pārvietojieties uz labi apgaismotu vietu";
+
 "NRIC or FIN" = "NRIC vai FIN";
 
-"Passport" = "Pase";
-
-"Passport photo successfully uploaded" = "Pases fotoattēls ir veiksmīgi augšupielādēts";
+"No document detected" = "Nav atpazīts dokuments";
 
 "Personal ID number" = "Personas ID numurs";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "Attēlu bibliotēka";
 
-"Please upload an image of your passport" = "Lūdzu, augšupielādējiet savas pases attēlu.";
-
-"Please upload images of the front and back of your driver's license" = "Lūdzu, augšupielādējiet attēlus no jūsu autovadītāja apliecības priekšpuses un aizmugures";
-
 "Please upload images of the front and back of your identity card" = "Lūdzu, augšupielādējiet attēlus no jūsu identifikācijas kartes priekšpuses un aizmugures";
-
-"Position your driver's license in the center of the frame" = "Gādājiet, lai autovadītāja apliecība būtu kadra centrā";
 
 "Position your face in the center of the frame." = "Gādājiet, lai seja būtu kadra centrā.";
 
 "Position your identity card in the center of the frame" = "Gādājiet, lai identifikācijas karte būtu kadra centrā";
-
-"Position your passport in the center of the frame" = "Gādājiet, lai pase būtu kadra centrā";
 
 "Retake Photos" = "Uzņemt vēlreiz fotogrāfijas";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "Atlasiet atrašanās vietu, kurā augšupielādēt jūsu identifikācijas dokumenta priekšpusi no";
 
-"Select back driver's license photo" = "Atlasīt autovadītāja apliecības aizmugurējo fotoattēlu";
-
 "Select back identity card photo" = "Atlasīt identifikācijas kartes aizmugurējo fotoattēlu";
 
-"Select front driver's license photo" = "Atlasīt autovadītāja apliecības priekšpuses fotoattēlu";
-
 "Select front identity card photo" = "Atlasīt identifikācijas kartes priekšpuses fotoattēlu";
-
-"Select passport photo" = "Atlasīt pases fotoattēlu";
 
 "Selfie" = "Pašportrets";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "Mēģināt vēlreiz";
 
+"Try reduce glare and make ID visible" = "Mēģiniet mazināt atspīdumu un pārliecinieties, ka ID ir redzams";
+
 "Unable to establish a connection." = "Nevar izveidot savienojumu.";
 
 "Unsaved changes" = "Nesaglabātās izmaiņas";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "Augšupielādējiet savu ID dokumentu ar fotogrāfiju";
 
-"Uploading back driver's license photo" = "Augšupielādē autovadītāja apliecības aizmugurējo fotoattēlu";
-
 "Uploading back identity card photo" = "Augšupielādē identifikācijas kartes aizmugurējo fotoattēlu";
 
-"Uploading front driver's license photo" = "Augšupielādē autovadītāja apliecības priekšpuses fotoattēlu";
-
 "Uploading front identity card photo" = "Augšupielādē identifikācijas kartes priekšpuses fotoattēlu";
-
-"Uploading passport photo" = "Augšupielādē pases fotoattēlu";
 
 "Verify your identity" = "Verificējiet savu identitāti";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "Varat mēģināt vēlreiz vai augšupielādēt attēlu no jūsu ierīces.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Jūsu pašportreta attēli nav saglabāti. Vai vēlaties iziet?";
+
+"driver's license" = "autovadītāja apliecība";
+
+"government-issued photo ID" = "valdības izsniegts identifikācijas dokuments ar fotogrāfiju";
+
+"passport" = "pase";

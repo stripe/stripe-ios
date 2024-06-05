@@ -30,8 +30,8 @@ class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
         return label
     }()
 
-    func testFlowView_HeaderView() {
-        verifyView(
+    func testFlowView_HeaderView() throws {
+        try verifyView(
             with: .init(
                 headerViewModel: headerViewModel,
                 contentView: contentView,
@@ -41,8 +41,8 @@ class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
         )
     }
 
-    func testFlowView_NoHeaderView() {
-        verifyView(
+    func testFlowView_NoHeaderView() throws {
+        try verifyView(
             with: .init(
                 headerViewModel: nil,
                 contentView: contentView,
@@ -52,8 +52,8 @@ class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
         )
     }
 
-    func testFlowView_ZeroInset() {
-        verifyView(
+    func testFlowView_ZeroInset() throws {
+        try verifyView(
             with: .init(
                 headerViewModel: nil,
                 contentViewModel: .init(view: contentView, inset: .zero),
@@ -62,7 +62,7 @@ class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
         )
     }
 
-    func testFlowView_Reconfigured() {
+    func testFlowView_Reconfigured() throws {
         let preConfigureContentView: UILabel = {
             let label = UILabel()
             label.numberOfLines = 0
@@ -78,7 +78,7 @@ class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
         }()
 
         // Configure once with the pre-configuration content view
-        idFlowView.configure(
+        try idFlowView.configure(
             with: .init(
                 headerViewModel: nil,
                 contentView: preConfigureContentView,
@@ -88,7 +88,7 @@ class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
         )
 
         // Verify view with reconfigured content view
-        verifyView(
+        try verifyView(
             with: .init(
                 headerViewModel: headerViewModel,
                 contentViewModel: .init(view: postConfigureContentView, inset: nil),
@@ -101,9 +101,9 @@ class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
         with viewModel: IdentityFlowView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line
-    ) {
+    ) throws {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 350, height: 400))
-        idFlowView.configure(with: viewModel)
+        try idFlowView.configure(with: viewModel)
         view.addAndPinSubview(idFlowView)
         STPSnapshotVerifyView(view, file: file, line: line)
     }

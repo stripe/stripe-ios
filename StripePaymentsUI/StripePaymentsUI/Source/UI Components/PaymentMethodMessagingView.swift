@@ -104,6 +104,7 @@ import WebKit
 
     // MARK: Overrides
 
+#if !canImport(CompositorServices)
     // Overriden so we can respond to changing dark mode by updating the image color
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -127,6 +128,7 @@ import WebKit
             label.textColor = configuration.textColor
         }
     }
+#endif
 
     // MARK: Internal
 

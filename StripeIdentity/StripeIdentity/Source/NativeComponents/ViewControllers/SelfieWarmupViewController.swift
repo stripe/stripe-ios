@@ -25,7 +25,7 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
                 sheetController.transitionToSelfieCapture()
             }
         )
-        super.init(sheetController: sheetController, analyticsScreenName: .individual)
+        super.init(sheetController: sheetController, analyticsScreenName: .selfieWarmup)
         configure(
             backButtonTitle: nil,
             viewModel: flowViewModel

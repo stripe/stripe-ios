@@ -5,10 +5,12 @@
 //  Created by Yuki Tokuhiro on 6/24/23.
 //
 
+@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(STP) import StripeUICore
 import XCTest
 
 final class PaymentSheetLoaderTest: XCTestCase {
@@ -16,20 +18,28 @@ final class PaymentSheetLoaderTest: XCTestCase {
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
+        config.applePay = .init(merchantId: "foo", merchantCountryCode: "US")
         return config
     }()
 
+    override func tearDown() {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        super.tearDown()
+    }
+
+    @MainActor
     func testPaymentSheetLoadWithPaymentIntent() async throws {
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
         let types = ["ideal", "card", "bancontact", "sofort"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
+        PaymentMethodFormViewController.formCache = [.stripe(.card): FormElement(elements: [])]
         // Given a PaymentIntent client secret...
-        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration) { result in
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, isFlowController: false) { result in
             expectation.fulfill()
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let loadResult):
                 // ...PaymentSheet should successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = intent else {
+                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
@@ -40,8 +50,10 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 )
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
-                XCTAssertEqual(paymentMethods, [])
-                XCTAssertTrue(intent.isApplePayEnabled)
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                XCTAssertTrue(loadResult.isApplePayEnabled)
+                // Ensure the form cache was cleared
+                XCTAssertTrue(PaymentMethodFormViewController.formCache.isEmpty)
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
@@ -56,16 +68,17 @@ final class PaymentSheetLoaderTest: XCTestCase {
         let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: types)
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret(clientSecret),
-            configuration: self.configuration
+            configuration: self.configuration,
+            isFlowController: false
         ) { result in
             switch result {
-            case .success(let setupIntent, let paymentMethods, _):
+            case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(setupIntent.recommendedPaymentMethodTypes),
+                    Set(loadResult.intent.recommendedPaymentMethodTypes),
                     Set(expected)
                 )
-                XCTAssertEqual(paymentMethods, [])
-                XCTAssertTrue(setupIntent.isApplePayEnabled)
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                XCTAssertTrue(loadResult.isApplePayEnabled)
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail()
@@ -90,7 +103,8 @@ final class PaymentSheetLoaderTest: XCTestCase {
 
             PaymentSheetLoader.load(
                 mode: .setupIntentClientSecret(clientSecret),
-                configuration: self.configuration
+                configuration: self.configuration,
+                isFlowController: false
             ) { result in
                 defer { expectation.fulfill() }
                 guard case .success = result else {
@@ -122,15 +136,15 @@ final class PaymentSheetLoaderTest: XCTestCase {
         ]
         loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration) { result in
+            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, isFlowController: true) { result in
                 loadExpectation.fulfill()
                 switch result {
-                case .success(let intent, _, _):
-                    guard case .deferredIntent = intent else {
+                case .success(let loadResult):
+                    guard case .deferredIntent = loadResult.intent else {
                         XCTFail()
                         return
                     }
-                    XCTAssertTrue(intent.isApplePayEnabled)
+                    XCTAssertTrue(loadResult.isApplePayEnabled)
                 case .failure(let error):
                     XCTFail("Test case at index \(index) failed: \(error)")
                     print(error)
@@ -141,6 +155,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
     }
 
     func testPaymentSheetLoadDeferredIntentFails() {
+        let analyticsClient = STPAnalyticsClient()
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         // Test PaymentSheetLoader.load can load various IntentConfigurations
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
@@ -158,7 +173,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         ]
         loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration) { result in
+            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsClient: analyticsClient, isFlowController: false) { result in
                 loadExpectation.fulfill()
                 switch result {
                 case .success:
@@ -166,6 +181,10 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 case .failure:
                     break
                 }
+                // Should send a load failure analytic
+                let analyticEvent = analyticsClient._testLogHistory.last
+                XCTAssertEqual(analyticEvent?["error_type"] as? String, "invalid_request_error")
+                XCTAssertNotNil(analyticEvent?["error_code"] as? String)
             }
         }
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
@@ -203,18 +222,98 @@ final class PaymentSheetLoaderTest: XCTestCase {
             XCTFail("Confirm handler shouldn't be called.")
         }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
-        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration) { result in
+        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, isFlowController: true) { result in
             loadExpectation.fulfill()
             switch result {
-            case .success(_, let savedPaymentMethods, _):
+            case .success(let loadResult):
                 // ...check that it only loads the one normal saved card
-                XCTAssertEqual(savedPaymentMethods.count, 1)
-                XCTAssertEqual(savedPaymentMethods.first?.stripeId, savedNonApplePayCard)
+                XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
+                XCTAssertEqual(loadResult.savedPaymentMethods.first?.stripeId, savedNonApplePayCard)
             case .failure:
                 XCTFail()
             }
         }
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testPaymentSheetLoadWithExternalPaymentMethods() async throws {
+        // Loading PaymentSheet...
+        let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
+        var configuration = self.configuration
+        // ...with valid external payment methods configured...
+        configuration.externalPaymentMethodConfiguration = .init(
+            externalPaymentMethods: ["external_paypal"],
+            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
+        )
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, isFlowController: false) { result in
+            expectation.fulfill()
+            switch result {
+            case .success(let loadResult):
+                // ...PaymentSheet should successfully load
+                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
+                    XCTFail()
+                    return
+                }
+                // ...and elements sessions response should contain the configured external payment methods
+                XCTAssertEqual(
+                    elementsSession.externalPaymentMethods.map { $0.type },
+                    ["external_paypal"]
+                )
+                XCTAssertEqual(
+                    elementsSession.externalPaymentMethods.first?.label,
+                    "PayPal"
+                )
+                // Sanity check the PI matches the one we fetched
+                XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                XCTAssertTrue(loadResult.isApplePayEnabled)
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testPaymentSheetLoadWithInvalidExternalPaymentMethods() async throws {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        // Loading PaymentSheet...
+        let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
+        var configuration = self.configuration
+        // ...with invalid external payment methods configured...
+        configuration.externalPaymentMethodConfiguration = .init(
+            externalPaymentMethods: ["external_invalid_value"],
+            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
+        )
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, isFlowController: true) { result in
+            expectation.fulfill()
+            switch result {
+            case .success(let loadResult):
+                // ...PaymentSheet should *still* successfully load
+                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
+                    XCTFail()
+                    return
+                }
+                // Sanity check the PI matches the one we fetched
+                XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
+                XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                XCTAssertTrue(loadResult.isApplePayEnabled)
+
+                // ...with an empty `externalPaymentMethods` property
+                XCTAssertTrue(elementsSession.externalPaymentMethods.isEmpty)
+                // ...and shouldn't send a load failure analytic
+                let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
+                XCTAssertFalse(analyticEvents.contains(where: { dict in
+                    (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionEPMLoadFailed.rawValue
+                }))
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testLoadPerformance() {
@@ -230,7 +329,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         // Set it to another number to manually run if you're making changes to load and want to measure its performance.
         measure(options: options) {
             let e = expectation(description: "")
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration) { result in
+            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, isFlowController: true) { result in
                 switch result {
                 case .failure(let error):
                     XCTFail(error.localizedDescription)

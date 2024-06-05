@@ -40,7 +40,7 @@ extension IdentityVerificationSheetError: CustomDebugStringConvertible {
 }
 
 /// :nodoc:
-@_spi(STP) extension IdentityVerificationSheetError: AnalyticLoggableError {
+@_spi(STP) extension IdentityVerificationSheetError: AnalyticLoggableErrorV2 {
 
     /// The error code
     public var errorCode: Int {

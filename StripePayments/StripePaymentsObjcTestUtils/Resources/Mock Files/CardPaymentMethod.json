@@ -20,6 +20,7 @@
     "checks": {
     },
     "country": "US",
+    "display_brand": "cartes_bancaires",
     "description": "Visa Classic",
     "exp_month": 8,
     "exp_year": 2020,
@@ -30,6 +31,10 @@
     "last4": "4242",
     "three_d_secure_usage": {
       "supported": true
+    },
+    "networks": {
+      "available": ["visa", "mastercard"],
+      "preferred": "visa"
     },
     "wallet": {
         "type": "visa_checkout",

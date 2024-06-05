@@ -447,6 +447,37 @@ extension STPAPIClient {
         }
     }
 
+    @_spi(STP) @objc public func refreshPaymentIntent(withClientSecret secret: String,
+                                                      completion: @escaping STPPaymentIntentCompletionBlock) {
+        let endpoint = "\(paymentIntentEndpoint(from: secret))/refresh"
+        var parameters: [String: Any] = [:]
+
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = secret
+        }
+
+        STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshPaymentIntentStarted, params: [:]))
+        let startDate = Date()
+        APIRequest<STPPaymentIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { paymentIntent, _, error in
+
+            if let error = error {
+                let errorAnalytic = ErrorAnalytic(event: .refreshPaymentIntentFailed,
+                                                  error: error,
+                                                  additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            } else {
+                STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshPaymentIntentSuccess,
+                                                                              params: ["duration": Date().timeIntervalSince(startDate)]))
+            }
+
+            completion(paymentIntent, error)
+        }
+    }
+
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
     /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
@@ -493,7 +524,8 @@ extension STPAPIClient {
             ?? paymentIntentParams.sourceParams?.rawTypeString
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
             with: _stored_configuration,
-            paymentMethodType: type
+            paymentMethodType: type,
+            apiClient: self
         )
 
         let endpoint = "\(APIEndpointPaymentIntents)/\(identifier)/confirm"
@@ -552,13 +584,21 @@ extension STPAPIClient {
 extension STPAPIClient {
 
     func setupIntentEndpoint(from secret: String) -> String {
-        assert(
-            STPSetupIntentConfirmParams.isClientSecretValid(secret),
-            "`secret` format does not match expected client secret formatting."
-        )
-        let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? ""
-
-        return "\(APIEndpointSetupIntents)/\(identifier)"
+        if publishableKeyIsUserKey {
+            assert(
+                secret.hasPrefix("seti_"),
+                "`secret` format does not match expected identifier formatting."
+            )
+            let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? secret
+            return "\(APIEndpointSetupIntents)/\(identifier)"
+        } else {
+            assert(
+                STPSetupIntentConfirmParams.isClientSecretValid(secret),
+                "`secret` format does not match expected client secret formatting."
+            )
+            let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? ""
+            return "\(APIEndpointSetupIntents)/\(identifier)"
+        }
     }
 
     /// Retrieves the SetupIntent object using the given secret. - seealso: https://stripe.com/docs/api/setup_intents/retrieve
@@ -590,7 +630,10 @@ extension STPAPIClient {
     ) {
 
         let endpoint = setupIntentEndpoint(from: secret)
-        var parameters: [String: Any] = ["client_secret": secret]
+        var parameters: [String: Any] = [:]
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = secret
+        }
         if let expand = expand,
             !expand.isEmpty
         {
@@ -664,7 +707,8 @@ extension STPAPIClient {
 
         STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
             with: _stored_configuration,
-            paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString
+            paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString,
+            apiClient: self
         )
 
         let endpoint = setupIntentEndpoint(from: setupIntentParams.clientSecret) + "/confirm"
@@ -682,6 +726,9 @@ extension STPAPIClient {
             !expand.isEmpty
         {
             params["expand"] = expand
+        }
+        if publishableKeyIsUserKey {
+            params["client_secret"] = nil
         }
 
         APIRequest<STPSetupIntent>.post(
@@ -708,6 +755,36 @@ extension STPAPIClient {
             ]
         ) { setupIntent, _, responseError in
             completion(setupIntent, responseError)
+        }
+    }
+
+    @_spi(STP) @objc public func refreshSetupIntent(withClientSecret secret: String,
+                                                    completion: @escaping STPSetupIntentCompletionBlock) {
+        let endpoint = "\(setupIntentEndpoint(from: secret))/refresh"
+        var parameters: [String: Any] = [:]
+
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = secret
+        }
+
+        STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshSetupIntentStarted, params: [:]))
+        let startDate = Date()
+        APIRequest<STPSetupIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { setupIntent, _, error in
+            if let error = error {
+                let errorAnalytic = ErrorAnalytic(event: .refreshSetupIntentFailed,
+                                                  error: error,
+                                                  additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            } else {
+                STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshSetupIntentSuccess,
+                                                                              params: ["duration": Date().timeIntervalSince(startDate)]))
+            }
+
+            completion(setupIntent, error)
         }
     }
 }
@@ -737,7 +814,8 @@ extension STPAPIClient {
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
             with: _stored_configuration,
-            paymentMethodType: paymentMethodParams.rawTypeString
+            paymentMethodType: paymentMethodParams.rawTypeString,
+            apiClient: self
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
@@ -760,6 +838,53 @@ extension STPAPIClient {
     public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
             createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
+                if let paymentMethod = paymentMethod {
+                    continuation.resume(with: .success(paymentMethod))
+                } else {
+                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                }
+            }
+        })
+    }
+
+    /// Updates a PaymentMethod object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/update
+    /// - Parameters:
+    ///   - paymentMethodId: Identifier of the payment method to be updated
+    ///   - paymentMethodUpdateParams: The `STPPaymentMethodUpdateParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
+    ///   - ephemeralKeySecret: The Customer Ephemeral Key secret to be used
+    ///   - completion: The callback to run with the returned `STPPaymentMethod` object, or an error.
+    public func updatePaymentMethod(with paymentMethodId: String,
+                                    paymentMethodUpdateParams: STPPaymentMethodUpdateParams,
+                                    ephemeralKeySecret: String,
+                                    completion: @escaping STPPaymentMethodCompletionBlock) {
+        STPAnalyticsClient.sharedClient.logPaymentMethodUpdateAttempt(
+            with: _stored_configuration
+        )
+
+        let parameters = STPFormEncoder.dictionary(forObject: paymentMethodUpdateParams)
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: "\(APIEndpointPaymentMethods)/\(paymentMethodId)",
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: parameters
+        ) { paymentMethod, _, error in
+            completion(paymentMethod, error)
+        }
+    }
+
+    /// Updates a PaymentMethod object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/update
+    /// - Parameters:
+    ///   - paymentMethodId: Identifier of the payment method to be updated
+    ///   - paymentMethodUpdateParams: The `STPPaymentMethodUpdateParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
+    ///   - ephemeralKeySecret: The Customer Ephemeral Key secret to be used
+    /// - Returns: Returns the updated `STPPaymentMethod` or throws an error if the operation failed.
+    public func updatePaymentMethod(with paymentMethodId: String,
+                                    paymentMethodUpdateParams: STPPaymentMethodUpdateParams,
+                                    ephemeralKeySecret: String) async throws -> STPPaymentMethod {
+        return try await withCheckedThrowingContinuation({ continuation in
+            updatePaymentMethod(with: paymentMethodId, paymentMethodUpdateParams: paymentMethodUpdateParams, ephemeralKeySecret: ephemeralKeySecret) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {
@@ -1028,6 +1153,110 @@ extension STPAPIClient {
         }
     }
 
+    // TODO: Remove this logic when we stand up an endpoint to do this
+    @_spi(STP) public func detachPaymentMethodRemoveDuplicates(
+        _ paymentMethodID: String,
+        customerId: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let fetchPaymentMethods: (String) async throws -> [STPPaymentMethod] = { customerId in
+            try await withCheckedThrowingContinuation { continuation in
+                self.listPaymentMethods(forCustomer: customerId,
+                                        using: ephemeralKeySecret,
+                                        types: [.card]) { paymentMethods, error in
+                    guard let paymentMethods, error == nil else {
+                        let error = error ?? NSError.stp_genericFailedToParseResponseError()
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    continuation.resume(returning: paymentMethods)
+                }
+            }
+        }
+        let detachPaymentMethod: (String) async throws -> Void = { paymentMethodID in
+            try await withCheckedThrowingContinuation { continuation in
+                let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+                APIRequest<STPPaymentMethod>.post(
+                    with: self,
+                    endpoint: endpoint,
+                    additionalHeaders: self.authorizationHeader(using: ephemeralKeySecret),
+                    parameters: [:]
+                ) { _, _, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    continuation.resume()
+                }
+            }
+        }
+        let detachMultiplePaymentMethods: ([STPPaymentMethod]) async -> Error? = { allPaymentMethodsToDelete in
+            var errors: [Error] = []
+            await withTaskGroup(of: (Error?).self) { group in
+                for paymentMethod in allPaymentMethodsToDelete {
+                    group.addTask {
+                        do {
+                            try await detachPaymentMethod(paymentMethod.stripeId)
+                        } catch {
+                            return error
+                        }
+                        return nil
+                    }
+                }
+                for await error in group {
+                    if let error {
+                        errors.append(error)
+                    }
+                }
+            }
+            if errors.isEmpty {
+                return nil
+            } else {
+                // There could be more than on errors. For simplicity, throw the first one encoutered
+                return errors.first
+            }
+        }
+
+        Task {
+            do {
+                let allCardPaymentMethods = try await fetchPaymentMethods(customerId)
+                let requestedPMToDelete = allCardPaymentMethods.filter({ $0.stripeId == paymentMethodID }).first
+                guard let requestedPMToDelete else {
+                    // Payment method doesnt exist anymore, nothing to do
+                    completion(nil)
+                    return
+                }
+                let allPaymentMethodsToDelete: [STPPaymentMethod] = allCardPaymentMethods
+                    .filter({ $0.type == .card })
+                    .filter({ $0.card?.fingerprint == requestedPMToDelete.card?.fingerprint })
+                let error = await detachMultiplePaymentMethods(allPaymentMethodsToDelete)
+                completion(error)
+            } catch {
+                completion(error)
+            }
+        }
+    }
+
+    // TODO: Remove this logic when we stand up an endpoint to do this
+    @_spi(STP) public func detachPaymentMethodRemoveDuplicates(
+        _ paymentMethodID: String,
+        customerId: String,
+        fromCustomerUsing ephemeralKeySecret: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+            detachPaymentMethodRemoveDuplicates(paymentMethodID,
+                                                customerId: customerId,
+                                                fromCustomerUsing: ephemeralKeySecret) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
     @_spi(STP) public func detachPaymentMethod(
         _ paymentMethodID: String,
         fromCustomerUsing ephemeralKeySecret: String,
@@ -1041,6 +1270,21 @@ extension STPAPIClient {
             parameters: [:]
         ) { _, _, error in
             completion(error)
+        }
+    }
+
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+            detachPaymentMethod(paymentMethodID, fromCustomerUsing: ephemeralKeySecret) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
         }
     }
 
@@ -1061,6 +1305,21 @@ extension STPAPIClient {
         ) { _, _, error in
             completion(error)
         }
+    }
+
+    @_spi(STP) public func attachPaymentMethod(
+        _ paymentMethodID: String,
+        customerID: String,
+        ephemeralKeySecret: String) async throws {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+                attachPaymentMethod(paymentMethodID, customerID: customerID, ephemeralKeySecret: ephemeralKeySecret) { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
     }
 
     /// Retrieve a customer

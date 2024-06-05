@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// The type of the PaymentMethod.
 @objc public enum STPPaymentMethodType: Int {
@@ -85,11 +86,18 @@ import Foundation
     case promptPay
     /// A Swish payment method
     case swish
+    /// A TWINT payment method
+    case twint
+    /// A Multibanco payment method
+    case multibanco
+    /// A Instant Debits payment method
+    case instantDebits
     /// An unknown type.
     case unknown
 
     /// Localized display name for this payment method type
     @_spi(STP) public var displayName: String {
+        let instantDebitsDisplayName = STPLocalizedString("Bank", "Link Instant Debit payment method display name")
         switch self {
         case .alipay:
             return STPLocalizedString("Alipay", "Payment Method type brand name")
@@ -124,8 +132,8 @@ import Foundation
         case .payPal:
             return STPLocalizedString("PayPal", "Payment Method type brand name")
         case .afterpayClearpay:
-            return Locale.current.regionCode == "GB" || Locale.current.regionCode == "FR"
-                || Locale.current.regionCode == "ES" || Locale.current.regionCode == "IT"
+            return Locale.current.stp_regionCode == "GB" || Locale.current.stp_regionCode == "FR"
+                || Locale.current.stp_regionCode == "ES" || Locale.current.stp_regionCode == "IT"
                 ? STPLocalizedString("Clearpay", "Payment Method type brand name")
                 : STPLocalizedString("Afterpay", "Payment Method type brand name")
         case .blik:
@@ -139,7 +147,7 @@ import Foundation
         case .klarna:
             return STPLocalizedString("Klarna", "Payment Method type brand name")
         case .linkInstantDebit:
-            return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
+            return instantDebitsDisplayName
         case .affirm:
             return STPLocalizedString("Affirm", "Payment Method type brand name")
         case .USBankAccount:
@@ -169,6 +177,12 @@ import Foundation
             return "PromptPay"
         case .swish:
             return STPLocalizedString("Swish", "Payment Method type brand name")
+        case .twint:
+            return "TWINT"
+        case .multibanco:
+            return "Multibanco"
+        case .instantDebits:
+            return instantDebitsDisplayName
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -256,8 +270,40 @@ import Foundation
             return "promptpay"
         case .swish:
             return "swish"
+        case .twint:
+            return "twint"
+        case .multibanco:
+            return "multibanco"
+        case .instantDebits:
+            return "instant_debits"
         }
     }
 }
 
 extension STPPaymentMethodType: CaseIterable { }
+
+extension STPPaymentMethodType {
+    var requiresPolling: Bool {
+        switch self {
+        // Payment methods such as AmazonPay and other app-to-app redirects that bypass the "redirect trampoline" to give a more seamless user experience for app-to-app.
+        // However, when returning to the merchant app in this scenario, the intent often isn't updated instantaneously, requiring polling for intent status updates.
+        case .amazonPay:
+            return true
+        default:
+            return false
+        }
+    }
+
+    var supportsRefreshing: Bool {
+        switch self {
+        // Payment methods such as CashApp implement app-to-app redirects that bypass the "redirect trampoline" too give a more seamless user experience for app-to-app.
+        // However, when returning to the merchant app in this scenario, the intent often isn't updated instantaneously, requiring us to hit the refresh endpoint.
+        // Only a small subset of LPMs support refreshing
+        // TODO(porter) Enable refreshing for Cash App when test mode cancel behavior is fixed
+        case .cashApp:
+            return false
+        default:
+            return false
+        }
+    }
+}

@@ -8,6 +8,7 @@
 
 #import "STDSTextChallengeView.h"
 #import "STDSStackView.h"
+#import "STDSVisionSupport.h"
 #import "UIView+LayoutSupport.h"
 #import "NSString+EmptyChecking.h"
 #import "UIColor+ThirteenSupport.h"
@@ -107,9 +108,11 @@ static const CGFloat kTextChallengeViewBottomPadding = 11;
 - (void)didMoveToWindow {
     [super didMoveToWindow];
     
+#if !STP_TARGET_VISION
     if (self.window.screen.nativeScale > 0) {
         self.borderViewHeightConstraint.constant = kBorderViewHeight / self.window.screen.nativeScale;
     }
+#endif
 }
 
 #pragma mark - UITextFieldDelegate

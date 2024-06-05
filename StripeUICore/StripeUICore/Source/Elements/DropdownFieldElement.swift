@@ -17,7 +17,9 @@ import UIKit
  */
 @objc(STP_Internal_DropdownFieldElement)
 @_spi(STP) public class DropdownFieldElement: NSObject {
+    public typealias DidPresent = () -> Void
     public typealias DidUpdateSelectedIndex = (Int) -> Void
+    public typealias DidTapClose = () -> Void
 
     public struct DropdownItem {
         public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
@@ -57,6 +59,9 @@ import UIKit
     // MARK: - Public properties
     weak public var delegate: ElementDelegate?
     public private(set) var items: [DropdownItem]
+    public var nonPlacerholderItems: [DropdownItem] {
+        return items.filter({ !$0.isPlaceholder })
+    }
     public var selectedItem: DropdownItem {
         return items[selectedIndex]
     }
@@ -65,13 +70,15 @@ import UIKit
             updatePickerField()
         }
     }
+    public var didPresent: DidPresent?
     public var didUpdate: DidUpdateSelectedIndex?
+    public var didTapClose: DidTapClose?
     public let theme: ElementsUITheme
     public let hasPadding: Bool
 
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
-#if targetEnvironment(macCatalyst)
+#if targetEnvironment(macCatalyst) || canImport(CompositorServices)
     private(set) lazy var pickerView: UIButton = {
         let button = UIButton()
         let action = { (action: UIAction) -> Void in
@@ -142,7 +149,9 @@ import UIKit
         hasPadding: Bool = true,
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
-        didUpdate: DidUpdateSelectedIndex? = nil
+        didPresent: DidPresent? = nil,
+        didUpdate: DidUpdateSelectedIndex? = nil,
+        didTapClose: DidTapClose? = nil
     ) {
         assert(!items.isEmpty, "`items` must contain at least one item")
 
@@ -151,7 +160,9 @@ import UIKit
         self.items = items
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
         self.isOptional = isOptional
+        self.didPresent = didPresent
         self.didUpdate = didUpdate
+        self.didTapClose = didTapClose
         self.hasPadding = hasPadding
 
         // Default to defaultIndex, if in bounds
@@ -186,7 +197,7 @@ import UIKit
 private extension DropdownFieldElement {
 
     func updatePickerField() {
-        #if targetEnvironment(macCatalyst)
+        #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
         if #available(macCatalyst 14.0, *) {
             // Mark the enabled menu item as selected
             pickerView.menu?.children.forEach { ($0 as? UIAction)?.state = .off }
@@ -208,6 +219,8 @@ private extension DropdownFieldElement {
 // MARK: Element
 
 extension DropdownFieldElement: Element {
+    public var collectsUserInput: Bool { true }
+
     public var view: UIView {
         return pickerFieldView
     }
@@ -251,7 +264,7 @@ extension DropdownFieldElement: UIPickerViewDataSource {
 
 extension DropdownFieldElement: PickerFieldViewDelegate {
     func didBeginEditing(_ pickerFieldView: PickerFieldView) {
-        // No-op
+        didPresent?()
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
@@ -272,5 +285,6 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     func didCancel(_ pickerFieldView: PickerFieldView) {
         // Reset to previously selected index when canceling
         selectedIndex = previouslySelectedIndex
+        didTapClose?()
     }
 }

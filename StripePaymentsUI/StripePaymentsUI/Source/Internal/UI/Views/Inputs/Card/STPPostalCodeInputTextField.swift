@@ -12,7 +12,7 @@ import UIKit
 
 @_spi(STP) public class STPPostalCodeInputTextField: STPInputTextField {
 
-    var countryCode: String? = Locale.autoupdatingCurrent.regionCode {
+    var countryCode: String? = Locale.autoupdatingCurrent.stp_regionCode {
         didSet {
             updatePlaceholder()
             updateKeyboard()

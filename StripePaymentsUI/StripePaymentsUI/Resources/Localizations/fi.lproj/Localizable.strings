@@ -22,6 +22,8 @@
 
 "Card number" = "Kortin numero";
 
+"Confirm your %@" = "Vahvista %@";
+
 "Invalid data." = "Virheelliset tiedot.";
 
 "MM / YY" = "KK/VV";

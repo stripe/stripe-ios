@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+Magdagdag";
 
 "Add a card" = "Magdagdag ng isang kard";
@@ -22,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagkumpirma sa iyong pagbabayad sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Sa pagpapatuloy sa Amazon Pay, pinahihintulutan mo ang %@ na singilin ang iyong Amazon Pay account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Sa pagpapatuloy sa Klarna, pinahihintulutan mo ang %1$@ na singilin ang iyong Klarna account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin. Maaari mong palitan ito anumang oras sa iyong Klarna app o sa pakikipag-ugnayan sa %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagpapatuloy sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Sa pagpapatuloy sa Revolut Pay, pinapayagan mo ang %@ na singilin ang iyong Revolut Pay account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
@@ -32,7 +38,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagsali sa Link, sumasang-ayon ka sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagbibigay ng iyong email, sumasang-ayon ka na gumawa ng Link account at i-save ang impormasyon ng iyong pagbabayad sa Link, alinsunod sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy> ng Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Sa pagbibigay ng iyong impormasyon ng pagbabayad at pagkukupirma sa bayad na ito, pinapayagan mo ang (A) %@ at ang Stripe, ang ating payment service provider, na magpadala ng mga tagubilin sa iyong bangko para i-debit ang iyong account at (B) ang iyong bangko na i-debit ang iyong account ayon sa mga naturang tuntunin. Bilang bahagi ng iyong mga karapatan, maaari kang makakuha ng refund mula sa iyong bangko sa ilalim ng mga takda at kundisyon ng iyong kasunduan sa iyong bangko. Ang refund ay dapat hingin sa loob ng 8 linggo mula sa petsa na na-debit ang iyong account. Ang iyong mga karapatan ay naipaliwanag sa isang pahayag na maari mong makuha sa iyong bangko. Pumapayag ka na makatanggap ng mga abiso ukol sa mga debit sa hinaharap ng hanggang 2 na araw bago sila maganap.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagbibigay ng iyong numero ng telepono, sumasang-ayon ka na gumawa ng Link account at i-save ang impormasyon ng iyong pagbabayad sa Link, alinsunod sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy> ng Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pag-save ng iyong account sa bangko para sa %@ sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
@@ -50,6 +60,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa app ng iyong bangko sa loob ng %@ para kumpletuhin ang pagbili.";
 
+"Confirm your CVC" = "Kumpirmahin ang iyong CVC";
+
+"Confirm your CVV" = "Kumpirmahin ang iyong CVV";
+
 "Contact information" = "Impormasyon sa pakikipag-ugnayan";
 
 "EPS Bank" = "EPS Bank";
@@ -57,6 +71,8 @@
 "Enter address manually" = "Manwal na ilagay ang address";
 
 "FPX Bank" = "FPX Bank";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Nauunawaan ko na mangongolekta ang Stripe ng Direct Debits sa ngalan ng  %@ at kinukumpirma ko na ako ang may-ari ng account at tanging taong kinakailangan na magpahintulot sa mga debit mula sa account na ito..";
 
 "IBAN" = "IBAN";
 
@@ -72,15 +88,17 @@
 
 "Or pay with a card" = "O magbayad gamit ang kard";
 
+"Or use" = "O gumamit ng";
+
+"Or use a card" = "O gumamit ng kard";
+
 "Pay %@" = "Magbayad ng %@";
 
 "Pay another way" = "Magbayad sa ibang paraan";
 
-"Pay faster at %@ and thousands of merchants." = "Magbayad nang mas mabilis sa %@  at sa libu-libong mangangalakal.";
+"Pay faster at %@ and thousands of businesses." = "Magbayad nang mas mabilis sa %@ at sa libu-libong mga negosyo.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Magbayad ng <num_installments/> na walang interes na pagbabayad ng <installment_price/> gamit ang <img/>";
-
-"Pay later with Klarna." = "Magbayad sa ibang pagkakataon gamit ang Klarna.";
 
 "Pay over time with %@" = "Magbayad ng over time gamit ang %@";
 
@@ -98,9 +116,7 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Alisin ang %1$@na nagtatapos sa %2$@";
-
-"Remove Card" = "Alisin ang Kard";
+"Remove card?" = "Alisin ang kard?";
 
 "Save" = "I-save";
 
@@ -110,13 +126,13 @@
 
 "Save for future payments" = "I-save para sa mga pagbabayad sa hinaharap";
 
-"Save my info for secure 1-click checkout" = "I-save ang aking info para sa tiyak na 1-click na pag-checkout";
-
 "Save this account for future %@ payments" = "I-save ang account na ito para sa mga pagbabayad sa hinaharap sa %@";
 
 "Save this card for future %@ payments" = "I-save ang kard na ito para sa mga hinaharap na pagbabayad sa %@";
 
 "Save your bank account in just a few steps." = "I-save ang iyong account sa bangko sa ilang hakbang lamang.";
+
+"Save your info for secure 1-click checkout with Link" = "I-save ang iyong impormasyon para sa ligtas na 1-click na pag-checkout sa Link";
 
 "Select your payment method" = "Piliin ang iyong paraan ng pagbabayad";
 

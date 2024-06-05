@@ -5,7 +5,9 @@
 //  Created by Nick Porter on 7/5/23.
 //
 
+#if canImport(CoreTelephony)
 import CoreTelephony
+#endif
 import Foundation
 import SystemConfiguration
 
@@ -13,6 +15,7 @@ import SystemConfiguration
 class NetworkDetector {
 
     static func getConnectionType() -> String? {
+#if canImport(CoreTelephony)
         guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.stripe.com") else {
             return nil
         }
@@ -48,7 +51,9 @@ class NetworkDetector {
         default:
             return "5G"
         }
-
+#else
+        return "Wi-Fi"
+#endif
     }
 
 }

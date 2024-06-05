@@ -23,6 +23,7 @@ extension PaymentSheet {
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
+        .instantDebits,
         .AUBECSDebit,
         .UPI,
         .cashApp,
@@ -34,6 +35,8 @@ extension PaymentSheet {
         .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
         .boleto,
         .swish,
+        .twint,
+        .multibanco,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet

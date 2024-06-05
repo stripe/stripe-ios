@@ -7,7 +7,7 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-@testable import StripeFinancialConnections
+@testable @_spi(STP) import StripeFinancialConnections
 import XCTest
 
 class EmptySessionFetcher: FinancialConnectionsSessionFetcher {
@@ -32,7 +32,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
             returnURL: nil,
             analyticsClient: mockAnalyticsClient
         )
-        sheet.present(from: mockViewController) { _ in }
+        sheet.present(from: mockViewController) { (_: FinancialConnectionsSheet.Result) in }
 
         // Verify presented analytic is logged
         XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, 1)

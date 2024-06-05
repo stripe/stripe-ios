@@ -56,21 +56,19 @@ import UIKit
         _ notification: Notification,
         animations: @escaping () -> Void
     ) {
-        let userInfo = notification.userInfo
 
-        guard let duration = userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else {
+        guard let userInfo = notification.userInfo,
+              let animationCurveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+              let animationCurve = UIView.AnimationCurve(rawValue: animationCurveValue) else {
+            // Just run the animation block as a fallback
             animations()
             return
         }
 
-        // Get keyboard animation info
-        // TODO(ramont): extract animation curve from `keyboardAnimationCurveUserInfoKey`
-        // (see: http://www.openradar.me/42609976)
-        let curve = UIView.AnimationCurve.easeOut
-
         // Animate the container above the keyboard
         // Note: We prefer UIViewPropertyAnimator over UIView.animate because it handles consecutive animation calls better. Sometimes this happens when one text field resigns and another immediately becomes first responder.
-        let animator = UIViewPropertyAnimator(duration: duration, curve: curve) {
+        let animator = UIViewPropertyAnimator(duration: animationDuration, curve: animationCurve) {
             animations()
         }
         animator.startAnimation()
@@ -101,5 +99,17 @@ import UIKit
                 }
             }
         }
+    }
+
+    static func makeSpacerView(width: CGFloat? = nil, height: CGFloat? = nil) -> UIView {
+        let spacerView = UIView(frame: .zero)
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        if let width {
+            spacerView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        }
+        if let height {
+            spacerView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+        return spacerView
     }
 }

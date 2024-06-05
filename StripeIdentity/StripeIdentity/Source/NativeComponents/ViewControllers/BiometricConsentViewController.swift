@@ -12,10 +12,16 @@ import UIKit
 
 final class BiometricConsentViewController: IdentityFlowViewController {
 
-    private let htmlView = HTMLViewWithIconLabels()
+    private let multilineContent = MultilineIconLabelHTMLView()
 
     let brandLogo: UIImage
     let consentContent: StripeAPI.VerificationPageStaticContentConsentPage
+
+    struct Style {
+        static let contentHorizontalPadding: CGFloat = 32
+        static let contentTopPadding: CGFloat = 16
+        static let contentBottomPadding: CGFloat = 8
+    }
 
     private var consentSelection: Bool?
 
@@ -75,45 +81,49 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             .init(
                 text: consentContent.declineButtonText,
                 state: declineButtonState,
+                isPrimary: false,
                 didTap: { [weak self] in
                     self?.didTapButton(consentValue: false)
                 }
             )
         )
 
-        if let consentTitle = consentContent.title {
-            return .init(
-                headerViewModel: .init(
-                    backgroundColor: .systemBackground,
-                    headerType: .banner(
-                        iconViewModel: .init(
-                            iconType: .brand,
-                            iconImage: brandLogo,
-                            iconImageContentMode: .scaleToFill
+        return .init(
+            headerViewModel: .init(
+                backgroundColor: .systemBackground,
+                headerType: {
+                    if sheetController?.flowController.visitedIndividualWelcomePage == true {
+                        // If visited individual page, this is a fallback. Don't show icons
+                        return .plain
+                    } else {
+                        // Otherwise this is the first screen, show icons
+                        return .banner(
+                            iconViewModel: .init(
+                                iconType: .brand,
+                                iconImage: brandLogo,
+                                iconImageContentMode: .scaleToFill,
+                                useLargeIcon: true
+                            )
                         )
-                    ),
-                    titleText: consentTitle
-                ),
-                contentViewModel: .init(
-                    view: htmlView,
-                    inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
-                ),
-                buttons: buttons,
-                scrollViewDelegate: self,
-                flowViewDelegate: self
-            )
-        } else {
-            return .init(
-                headerViewModel: nil,
-                contentViewModel: .init(
-                    view: htmlView,
-                    inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
-                ),
-                buttons: buttons,
-                scrollViewDelegate: self,
-                flowViewDelegate: self
-            )
-        }
+                    }
+                }(),
+                titleText: consentContent.title
+            ),
+            contentViewModel: .init(
+                view: multilineContent,
+                inset: .init(top: Style.contentTopPadding, leading: Style.contentHorizontalPadding, bottom: Style.contentBottomPadding, trailing: Style.contentHorizontalPadding)
+            ),
+            buttons: buttons,
+            buttonTopContentViewModel: .init(
+                text: consentContent.privacyPolicy,
+                style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
+                didOpenURL: { [weak self] url in
+                    self?.openInSafariViewController(url: url)
+                }
+            ),
+            scrollViewDelegate: self,
+            flowViewDelegate: self
+        )
     }
 
     init(
@@ -124,36 +134,16 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         self.brandLogo = brandLogo
         self.consentContent = consentContent
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
-
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
-        try htmlView.configure(
+        try multilineContent.configure(
             with: .init(
-                iconText: {
-                    if let timeEstimate = self.consentContent.timeEstimate {
-                        return [
-                            .init(
-                                image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
-                                text: timeEstimate,
-                                isTextHTML: false
-                            ),
-                        ]
-                    } else {
-                        return []
-                    }
-                }(),
-                nonIconText: {
-                    if let privacyPolicy = self.consentContent.privacyPolicy {
-                        return [.init(text: privacyPolicy, isTextHTML: true)]
-                    } else {
-                        return []
-                    }
-                }(),
-                bodyHtmlString: self.consentContent.body,
-                didOpenURL: { [weak self] url in
-                    self?.openInSafariViewController(url: url)
+                lines: consentContent.lines.map {
+                    return ($0.icon, $0.content)
                 }
-            )
+            ) { [weak self] url in
+                self?.presentBottomsheet(withUrl: url)
+            }
         )
 
         updateUI()

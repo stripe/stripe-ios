@@ -11,7 +11,11 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class USBankAccountPaymentMethodElement: Element {
+final class USBankAccountPaymentMethodElement: ContainerElement {
+    var elements: [Element] {
+        return [formElement]
+    }
+
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
     var delegate: ElementDelegate?
@@ -29,7 +33,7 @@ final class USBankAccountPaymentMethodElement: Element {
     private let checkboxElement: PaymentMethodElement?
     private var savingAccount: BoolReference
     private let theme: ElementsUITheme
-    private var linkedBank: LinkedBank? {
+    private var linkedBank: FinancialConnectionsLinkedBank? {
         didSet {
             self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value, configuration: configuration, theme: theme)
         }
@@ -97,6 +101,8 @@ final class USBankAccountPaymentMethodElement: Element {
             && configuration.defaultBillingDetails.name != nil
         let hasDefaultEmail = configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
             && configuration.defaultBillingDetails.email != nil
+
+        // Fail loudly: This is an integration error
         assert(
             (collectingName || hasDefaultName) && (collectingEmail || hasDefaultEmail),
             "If name or email are not collected, they must be provided through defaults"
@@ -139,21 +145,21 @@ final class USBankAccountPaymentMethodElement: Element {
         }
     }
 
-    func setLinkedBank(_ linkedBank: LinkedBank) {
+    func setLinkedBank(_ linkedBank: FinancialConnectionsLinkedBank) {
         self.linkedBank = linkedBank
         if let last4ofBankAccount = linkedBank.last4,
            let bankName = linkedBank.bankName {
             self.bankInfoView.setBankName(text: bankName)
             self.bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
-            formElement.setElements(linkedAccountElements, hidden: false, animated: true)
+            formElement.toggleElements(linkedAccountElements, hidden: false, animated: true)
         }
         self.delegate?.didUpdate(element: self)
     }
-    func getLinkedBank() -> LinkedBank? {
+    func getLinkedBank() -> FinancialConnectionsLinkedBank? {
         return linkedBank
     }
 
-    class func attributedMandateText(for linkedBank: LinkedBank?,
+    class func attributedMandateText(for linkedBank: FinancialConnectionsLinkedBank?,
                                      merchantName: String,
                                      isSaving: Bool,
                                      configuration: PaymentSheetFormFactoryConfig,
@@ -168,34 +174,15 @@ final class USBankAccountPaymentMethodElement: Element {
         } else if case .paymentSheet = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
-        let formattedString = applyLinksToString(template: mandateText, links: links)
+        let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, theme: theme)
         return formattedString
     }
 
     class func attributedMandateTextSavedPaymentMethod(theme: ElementsUITheme = .default) -> NSMutableAttributedString {
         let mandateText = Self.ContinueMandateText
-        let formattedString = applyLinksToString(template: mandateText, links: links)
+        let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, theme: theme)
-        return formattedString
-    }
-
-    // TODO(wooj): Refactor this code to be common across multiple classes
-    private class func applyLinksToString(template: String, links: [String: URL]) -> NSMutableAttributedString {
-        let formattedString = NSMutableAttributedString()
-        STPStringUtils.parseRanges(from: template, withTags: Set<String>(links.keys)) { string, matches in
-            formattedString.append(NSAttributedString(string: string))
-            for (tag, range) in matches {
-                guard range.rangeValue.location != NSNotFound else {
-                    assertionFailure("Tag '<\(tag)>' not found")
-                    continue
-                }
-
-                if let url = links[tag] {
-                    formattedString.addAttributes([.link: url], range: range.rangeValue)
-                }
-            }
-        }
         return formattedString
     }
 
@@ -213,7 +200,7 @@ final class USBankAccountPaymentMethodElement: Element {
 extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
     func didTapXIcon() {
         let completionClosure = {
-            self.formElement.setElements(self.linkedAccountElements, hidden: true, animated: true)
+            self.formElement.toggleElements(self.linkedAccountElements, hidden: true, animated: true)
             self.linkedBank = nil
             self.delegate?.didUpdate(element: self)
         }
@@ -241,10 +228,12 @@ extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
 
 extension USBankAccountPaymentMethodElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        if let updatedParams = self.formElement.updateParams(params: params),
-           let linkedBank = linkedBank {
+        if
+            let updatedParams = self.formElement.updateParams(params: params),
+            let linkedBank = linkedBank
+        {
             updatedParams.paymentMethodParams.usBankAccount?.linkAccountSessionID = linkedBank.sessionId
-            updatedParams.linkedBank = linkedBank
+            updatedParams.financialConnectionsLinkedBank = linkedBank
             return updatedParams
         }
         return nil

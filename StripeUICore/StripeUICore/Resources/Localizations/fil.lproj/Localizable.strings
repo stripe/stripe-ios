@@ -18,6 +18,8 @@
 
 "Cancel" = "Kanselahin";
 
+"Card brand" = "Brand ng card";
+
 "City" = "Siyudad";
 
 "Code field" = "Patlang ng code";
@@ -82,6 +84,8 @@
 
 "Phone" = "Telepono";
 
+"Phone number" = "Numero ng telepono";
+
 "Postal code" = "Postal code";
 
 "Prefecture" = "Prefecture";
@@ -94,9 +98,13 @@
 
 "Remove bank account ending in %@" = "Alisin ang account sa bangko na nagtatapos sa %@";
 
+"Remove card" = "Alisin ang kard";
+
 "Search" = "Maghanap";
 
 "Select card brand (optional)" = "Pumili ng brand ng kard (opsyonal)";
+
+"Sort code" = "Sort code";
 
 "State" = "State";
 
@@ -109,6 +117,8 @@
 "The ID number you entered is incomplete." = "Ang numero ng ID na inilagay mo ay kulang.";
 
 "The account number you entered is incomplete." = "Ang numero ng account na inilagay mo ay kulang.";
+
+"The sort code you entered is invalid." = "Ang sort code na inilagay mo ay hindi valid.";
 
 "Town or city" = "Bayan o siyudad";
 

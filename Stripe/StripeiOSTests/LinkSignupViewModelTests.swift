@@ -23,7 +23,7 @@ class LinkInlineSignupViewModelTests: XCTestCase {
     let accountLookupTimeout: TimeInterval = 4
 
     func test_defaults() {
-        let sut = makeSUT(country: "US")
+        let sut = makeSUT(country: "US", showCheckbox: true)
 
         XCTAssertFalse(sut.shouldShowEmailField)
         XCTAssertFalse(sut.shouldShowPhoneField)
@@ -32,7 +32,7 @@ class LinkInlineSignupViewModelTests: XCTestCase {
     }
 
     func test_shouldShowEmailFieldWhenCheckboxIsChecked() {
-        let sut = makeSUT(country: "US")
+        let sut = makeSUT(country: "US", showCheckbox: true)
 
         sut.saveCheckboxChecked = true
         XCTAssertTrue(sut.shouldShowEmailField)
@@ -42,7 +42,7 @@ class LinkInlineSignupViewModelTests: XCTestCase {
     }
 
     func test_shouldShowRegistrationFieldsWhenEmailIsProvided() {
-        let sut = makeSUT(country: "US")
+        let sut = makeSUT(country: "US", showCheckbox: true)
 
         sut.saveCheckboxChecked = true
         sut.emailAddress = "user@example.com"
@@ -71,17 +71,26 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         )
         wait(for: [hidePhoneFieldExpectation], timeout: accountLookupTimeout)
         XCTAssertFalse(sut.shouldShowNameField)
+        sut.saveCheckboxChecked = false
         XCTAssertFalse(sut.shouldShowLegalTerms)
     }
 
     func test_shouldShowNameField_nonUSCustomers() {
-        let sut = makeSUT(country: "CA", hasAccount: true)
+        let sut = makeSUT(country: "CA", showCheckbox: true, hasAccountObject: true)
         sut.saveCheckboxChecked = true
         XCTAssertTrue(sut.shouldShowNameField, "Should show name field for non-US customers")
     }
 
+    func test_shouldShowLegalText() {
+        let sut = makeSUT(country: "US", showCheckbox: true, hasAccountObject: false)
+        sut.saveCheckboxChecked = false
+        XCTAssertFalse(sut.shouldShowLegalTerms)
+        sut.saveCheckboxChecked = true
+        XCTAssertTrue(sut.shouldShowLegalTerms)
+    }
+
     func test_action_returnsNilUnlessPhoneRequirementIsFulfilled() {
-        let sut = makeSUT(country: "US", hasAccount: true)
+        let sut = makeSUT(country: "US", showCheckbox: true, hasAccountObject: true)
 
         sut.saveCheckboxChecked = true
         XCTAssertNil(sut.action)
@@ -92,7 +101,7 @@ class LinkInlineSignupViewModelTests: XCTestCase {
 
     func test_action_returnsNilUnlessNameRequirementIsFulfilled() {
         // Non-US customers require providing a name
-        let sut = makeSUT(country: "CA", hasAccount: true)
+        let sut = makeSUT(country: "CA", showCheckbox: true, hasAccountObject: true)
 
         sut.saveCheckboxChecked = true
         sut.phoneNumber = PhoneNumber(number: "5555555555", countryCode: "CA")
@@ -103,14 +112,14 @@ class LinkInlineSignupViewModelTests: XCTestCase {
     }
 
     func test_action_returnsContinueWithoutLinkIfCheckboxIsNotChecked() {
-        let sut = makeSUT(country: "US")
+        let sut = makeSUT(country: "US", showCheckbox: true)
 
         sut.saveCheckboxChecked = false
         XCTAssertEqual(sut.action, .continueWithoutLink)
     }
 
     func test_action_returnsContinueWithoutLinkIfLookupFails() {
-        let sut = makeSUT(country: "US", shouldFailLookup: true)
+        let sut = makeSUT(country: "US", showCheckbox: true, shouldFailLookup: true)
 
         sut.saveCheckboxChecked = true
         sut.emailAddress = "user@example.com"
@@ -126,6 +135,32 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         XCTAssertEqual(sut.action, .continueWithoutLink)
     }
 
+    func test_consentAction_checkbox() {
+        let sut = makeSUT(country: "US", showCheckbox: true, hasAccountObject: false)
+        XCTAssertEqual(sut.consentAction, .checkbox_v0)
+    }
+
+    func test_consentAction_checkbox_prefillEmail() {
+        let sut = makeSUT(country: "US", showCheckbox: true, hasAccountObject: true)
+        XCTAssertEqual(sut.consentAction, .checkbox_v0_0)
+    }
+
+    func test_consentAction_checkbox_prefillEmailAndPhone() {
+        let sut = makeSUT(country: "US", showCheckbox: true, hasAccountObject: true)
+        sut.phoneNumber = PhoneNumber(number: "555555555", countryCode: "1")
+        sut.phoneNumberWasPrefilled = true
+        XCTAssertEqual(sut.consentAction, .checkbox_v0_1)
+    }
+
+    func test_consentAction_implied() {
+        let sut = makeSUT(country: "US", showCheckbox: false, hasAccountObject: false)
+        XCTAssertEqual(sut.consentAction, .implied_v0)
+    }
+
+    func test_consentAction_implied_prefillEmail() {
+        let sut = makeSUT(country: "US", showCheckbox: false, hasAccountObject: true)
+        XCTAssertEqual(sut.consentAction, .implied_v0_0)
+    }
 }
 
 extension LinkInlineSignupViewModelTests {
@@ -160,16 +195,17 @@ extension LinkInlineSignupViewModelTests {
 
     func makeSUT(
         country: String,
-        hasAccount: Bool = false,
+        showCheckbox: Bool,
+        hasAccountObject: Bool = false,
         shouldFailLookup: Bool = false
     ) -> LinkInlineSignupViewModel {
-        let linkAccount: PaymentSheetLinkAccount? =
-            hasAccount
+        let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
             ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
             : nil
 
         return LinkInlineSignupViewModel(
             configuration: .init(),
+            showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
             linkAccount: linkAccount,
             country: country

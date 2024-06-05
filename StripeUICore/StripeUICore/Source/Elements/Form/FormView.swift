@@ -36,7 +36,9 @@ import UIKit
             stack.axis = .vertical
             stack.spacing = ElementsUI.formSpacing
         }
-
+        for (view, spacing) in viewModel.customSpacing {
+            self.stackView.setCustomSpacing(spacing, after: view)
+        }
         super.init(frame: .zero)
         addAndPinSubview(self.stackView)
     }

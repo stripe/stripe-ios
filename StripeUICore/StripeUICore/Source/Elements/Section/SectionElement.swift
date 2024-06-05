@@ -109,6 +109,7 @@ extension SectionElement {
     /// A simple container element where the element's view is hidden
     /// Useful when an element is a part of a section but it's view is embeded into another element
     /// E.g. card brand drop down embedded into the PAN textfield
+    /// - Note: `HiddenElement`'s are skipped by the `ContainerElement`'s auto advance logic
     @_spi(STP) public final class HiddenElement: ContainerElement {
         final class HiddenView: UIView {}
 

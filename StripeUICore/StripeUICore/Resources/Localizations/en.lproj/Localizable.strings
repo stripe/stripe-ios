@@ -129,6 +129,9 @@ Label of an address field */
 /* Caption for Phone field on address form */
 "Phone" = "Phone";
 
+/* Caption for Phone number field on address form */
+"Phone number" = "Phone number";
+
 /* Label of an address field
 Short string for postal code (text used in non-US countries) */
 "Postal code" = "Postal code";

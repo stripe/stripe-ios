@@ -3,11 +3,11 @@
 //  StripePaymentSheet
 //
 
-import iOSSnapshotTestCase
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import UIKit
+import XCTest
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) @testable import StripePayments
@@ -43,7 +43,12 @@ class StubCustomerAdapter: CustomerAdapter {
         return "seti_123"
     }
 
+    func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: StripePayments.STPPaymentMethodUpdateParams) async throws -> StripePayments.STPPaymentMethod {
+        throw CustomerSheetError.unknown(debugDescription: "Not implemented")
+    }
+
     var canCreateSetupIntents: Bool = true
+    var paymentMethodTypes: [String]?
 }
 
 class CustomerSheetSnapshotTests: STPSnapshotTestCase {
@@ -58,12 +63,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
         window.isHidden = false
         return window
-    }
-
-    override func setUp() {
-        super.setUp()
-
-        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
     }
 
     public override func tearDown() {
@@ -348,6 +347,119 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
+
+    func testSEPADebit_only() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_card() {
+        stubSessions(paymentMethods: "\"sepa_debit\", \"card\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testCard_SEPADebit() {
+        stubSessions(paymentMethods: "\"card\", \"sepa_debit\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_only_dark() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testSEPADebit_card_dark() {
+        stubSessions(paymentMethods: "\"sepa_debit\", \"card\"")
+
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testCard_SEPADebit_dark() {
+        stubSessions(paymentMethods: "\"card\", \"sepa_debit\"")
+
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+     func testSEPADebit_bdcc_0000() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .automatic)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_bdcc_0200() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .always,
+                                                         email: .automatic,
+                                                         address: .automatic)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_bdcc_0002() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .full)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_bdcc_0202() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .always,
+                                                         email: .automatic,
+                                                         address: .full)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_bdcc_1111() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .never,
+                                                         phone: .never,
+                                                         email: .never,
+                                                         address: .never,
+                                                         attachDefaultsToPaymentMethod: true)
+        let configuration = configuration(defaultBillingDetails: billingDetails(),
+                                          billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
     func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
@@ -495,7 +607,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(
             view,
             identifier: identifier,
-            suffixes: FBSnapshotTestCaseDefaultSuffixes(),
             file: file,
             line: line
         )

@@ -31,8 +31,8 @@ if which swiftlint >/dev/null; then
   CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
   count=0
   if [ "$CURRENT_BRANCH" == "master" ]; then
-    echo "Can't lint on master branch"
-    exit 1
+    echo "Ignoring lint on master branch"
+    exit 0
   else
     while IFS= read -r file; do
       export SCRIPT_INPUT_FILE_$count="$file"

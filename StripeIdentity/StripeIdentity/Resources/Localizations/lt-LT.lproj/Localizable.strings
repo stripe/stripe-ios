@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Sekančiame žingsnyje, siekiant patvirtinti jūsų tapatybę, bus padarytos kelios jūsų nuotraukos";
 
+"Accepted forms of ID include" = "Priimtos asmens tapatybės dokumento formos apima";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Arba galite patys įkelti tapatybės dokumento nuotrauką.";
 
 "App Settings" = "Programos nustatymai";
 
-"Back driver's license photo successfully uploaded" = "Sėkmingai įkelta vairuotojo pažymėjimo galinės pusės nuotrauka";
-
 "Back identity card photo successfully uploaded" = "Sėkmingai įkelta asmens tapatybės kortelės galinės pusės nuotrauka";
-
-"Back of driver's license" = "Vairuotojo pažymėjimo galinė pusė";
 
 "Back of identity card" = "Asmens tapatybės kortelės galinė pusė";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "Gimimo data neatrodo tinkama";
 
-"Flip your driver's license over to the other side" = "Apverskite vairuotojo pažymėjimą kita puse";
+"Details not visible" = "Nematyti detalių";
 
 "Flip your identity card over to the other side" = "Apverskite asmens tapatybės kortelę kita puse";
 
-"Front driver's license photo successfully uploaded" = "Sėkmingai įkelta vairuotojo pažymėjimo priekinės pusės nuotrauka";
-
 "Front identity card photo successfully uploaded" = "Sėkmingai įkelta asmens tapatybės kortelės priekinės pusės nuotrauka";
 
-"Front of driver's license" = "Vairuotojo pažymėjimo priekinė pusė";
-
 "Front of identity card" = "Asmens tapatybės kortelės priekinė pusė";
+
+"Get ready to scan your photo ID" = "Pasiruoškite nuskaityti savo asmens tapatybės dokumento nuotrauką";
 
 "Get ready to take a selfie" = "Pasiruoškite nusifotografuoti";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "Išlaikyti nejudinant, nuskaitoma";
 
+"I'm ready" = "Esu pasiruošęs";
+
 "ID Number" = "Identifikacinis numeris";
 
-"ID Type" = "Tapatybės dokumento tipas";
-
-"Image of passport" = "Paso vaizdas";
-
 "Individual CPF" = "Asmens CPF";
+
+"Keep ID level" = "Sulygiuokite tapatybės dokumentą";
 
 "Last 4 of Social Security number" = "Paskutiniai 4 socialinio draudimo numerio skaitmenys";
 
 "Loading" = "Įkeliama";
 
+"Make sure all details are visible and focus" = "Įsitikinkite, kad visos detalės yra matomos ir sufokusuotos";
+
+"Make sure you're in a well lit space." = "Įsitikinkite, kad esate gerai apšviestoje erdvėje.";
+
+"Move closer" = "Pastumkite arčiau";
+
+"Move farther" = "Patraukite toliau";
+
+"Move to a darker area" = "Pereikite į tamsesnę vietą";
+
+"Move to a well-lit area" = "Padėkite gerai apšviestoje vietoje";
+
 "NRIC or FIN" = "NRIC arba FIN";
 
-"Passport" = "Pasas";
-
-"Passport photo successfully uploaded" = "Sėkmingai įkelta paso nuotrauka";
+"No document detected" = "Neaptiktas joks dokumentas";
 
 "Personal ID number" = "Asmens kodas";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "Nuotraukų biblioteka";
 
-"Please upload an image of your passport" = "Įkelkite paso vaizdą";
-
-"Please upload images of the front and back of your driver's license" = "Įkelkite vairuotojo pažymėjimo priekinės ir galinės pusės vaizdus";
-
 "Please upload images of the front and back of your identity card" = "Įkelkite asmens tapatybės kortelės priekinės ir galinės pusės vaizdus";
-
-"Position your driver's license in the center of the frame" = "Vairuotojo pažymėjimas turi būti rėmelio centre";
 
 "Position your face in the center of the frame." = "Veidas turi būti rėmelio centre.";
 
 "Position your identity card in the center of the frame" = "Asmens tapatybės kortelė turi būti rėmelio centre";
-
-"Position your passport in the center of the frame" = "Pasas turi būti rėmelio centre";
 
 "Retake Photos" = "Perfotografuoti";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "Pasirinkite vietą, iš kur įkelsite asmens tapatybės dokumento priekinės pusės vaizdą";
 
-"Select back driver's license photo" = "Pasirinkite vairuotojo pažymėjimo galinės pusės nuotrauką";
-
 "Select back identity card photo" = "Pasirinkite asmens tapatybės kortelės galinės pusės nuotrauką";
 
-"Select front driver's license photo" = "Pasirinkite vairuotojo pažymėjimo priekinės pusės nuotrauką";
-
 "Select front identity card photo" = "Pasirinkite asmens tapatybės kortelės priekinės pusės nuotrauką";
-
-"Select passport photo" = "Pasirinkite paso nuotrauką";
 
 "Selfie" = "Asmenukė";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "Bandyti dar kartą";
 
+"Try reduce glare and make ID visible" = "Pabandykite sumažinti atsispindėjimą ir padarykite tapatybės dokumentą matomą";
+
 "Unable to establish a connection." = "Nepavyko prisijungti.";
 
 "Unsaved changes" = "Neįrašyti keitimai";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "Įkelkite savo asmens dokumento nuotrauką";
 
-"Uploading back driver's license photo" = "Įkeliama vairuotojo pažymėjimo galinės pusės nuotrauka";
-
 "Uploading back identity card photo" = "Įkeliama asmens tapatybės kortelės galinės pusės nuotrauka";
 
-"Uploading front driver's license photo" = "Įkeliama vairuotojo pažymėjimo priekinės pusės nuotrauka";
-
 "Uploading front identity card photo" = "Įkeliama asmens tapatybės kortelės priekinės pusės nuotrauka";
-
-"Uploading passport photo" = "Įkeliama paso nuotrauka";
 
 "Verify your identity" = "Patvirtinkite tapatybę";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "Galite bandyti dar kartą arba įkelti vaizdą iš savo įrenginio.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Jūsų asmenukės vaizdai neįrašyti. Ar norite išeiti?";
+
+"driver's license" = "vairuotojo pažymėjimas";
+
+"government-issued photo ID" = "vyriausybės išduotas asmens tapatybės dokumentas su nuotrauka";
+
+"passport" = "pasas";

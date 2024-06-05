@@ -19,6 +19,9 @@ extension UIButton {
         _ spacing: CGFloat,
         withEdgeInsets edgeInsets: NSDirectionalEdgeInsets
     ) {
+// TODO: Rewrite this for visionOS & iOS 17.
+        #if canImport(CompositorServices)
+        #else
         // UIButton doesn't have support for directional edge insets. We should
         // apply insets depending on the layout direction.
         if self.effectiveUserInterfaceLayoutDirection == .leftToRight {
@@ -38,6 +41,7 @@ extension UIButton {
                 right: edgeInsets.leading + spacing
             )
         }
+#endif
     }
 
 }

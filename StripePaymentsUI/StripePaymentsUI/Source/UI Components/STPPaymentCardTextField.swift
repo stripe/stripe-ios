@@ -228,6 +228,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
+#if !canImport(CompositorServices)
     private var _inputAccessoryView: UIView?
     /// This behaves identically to setting the inputAccessoryView for each child text field.
     @objc open override var inputAccessoryView: UIView? {
@@ -242,6 +243,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
         }
     }
+#endif
+
     /// The curent brand image displayed in the receiver.
     @objc open private(set) var brandImage: UIImage?
     /// Whether or not the form currently contains a valid card number,
@@ -357,7 +360,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             if viewModel.postalCodeCountryCode == cCode {
                 return
             }
-            let countryCode = (cCode ?? Locale.autoupdatingCurrent.regionCode)
+            let countryCode = (cCode ?? Locale.autoupdatingCurrent.stp_regionCode)
             viewModel.postalCodeCountryCode = countryCode
             updatePostalFieldPlaceholder()
 
@@ -420,7 +423,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 billingDetails = billingDetails ?? STPPaymentMethodBillingDetails()
                 let address = STPPaymentMethodAddress()
                 address.postalCode = postalCode
-                address.country = countryCode ?? Locale.autoupdatingCurrent.regionCode
+                address.country = countryCode ?? Locale.autoupdatingCurrent.stp_regionCode
                 billingDetails!.address = address  // billingDetails will always be non-nil
             }
 
@@ -879,7 +882,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         resetSubviewEditingTransitionState()
 
         viewModel.postalCodeRequested = true
-        countryCode = Locale.autoupdatingCurrent.regionCode
+        countryCode = Locale.autoupdatingCurrent.stp_regionCode
 
         sizingField.formDelegate = nil
 
@@ -964,6 +967,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     static let placeholderGrayColor: UIColor = .systemGray2
 
+#if !canImport(CompositorServices)
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.preferredContentSizeCategory
@@ -973,6 +977,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             setNeedsLayout()
         }
     }
+#endif
 
     /// :nodoc:
     @objc open override var backgroundColor: UIColor? {
@@ -1172,7 +1177,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         } else {
             // Otherwise size to fit our placeholder or what is likely to be the
             // largest possible string enterable (whichever is larger)
-            let maxCvcLength = Int(STPCardValidator.maxCVCLength(for: viewModel.brand))
+            let maxCvcLength = Int(STPCardValidator.maxCVCLength(for: viewModel.cbcController.brandForCVC))
             var longestCvc = "888"
             if maxCvcLength == 4 {
                 longestCvc = "8888"
@@ -1822,7 +1827,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 let sanitizedCvc = STPCardValidator.sanitizedNumericString(
                     for: formTextField.text ?? ""
                 )
-                if sanitizedCvc.count >= STPCardValidator.maxCVCLength(for: viewModel.brand) {
+                if sanitizedCvc.count >= STPCardValidator.maxCVCLength(for: viewModel.cbcController.brandForCVC) {
                     // auto-advance
                     nextFirstResponderField().becomeFirstResponder()
                     UIAccessibility.post(notification: .screenChanged, argument: nil)
@@ -2396,6 +2401,17 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             return
         }
         self.preferredNetworks = preferredNetworks.map { STPCardBrand(rawValue: $0.intValue) ?? .unknown }
+    }
+
+    /// The account (if any) for which the funds of the intent are intended.
+    /// The Stripe account ID (if any) which is the business of record.
+    /// See [use cases](https://docs.stripe.com/connect/charges#on_behalf_of) to determine if this option is relevant for your integration.
+    /// This should match the [on_behalf_of](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-on_behalf_of)
+    /// provided on the Intent used when confirming payment.
+    public var onBehalfOf: String? {
+        didSet {
+            viewModel.cbcController.onBehalfOf = onBehalfOf
+        }
     }
 }
 

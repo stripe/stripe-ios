@@ -11,9 +11,9 @@ import Foundation
 /// the card image verification flow
 public struct ScannedCard: Equatable {
     public let pan: String
-    @_spi(STP) public let expiryMonth: String?
-    @_spi(STP) public let expiryYear: String?
-    @_spi(STP) public let name: String?
+    public let expiryMonth: String?
+    public let expiryYear: String?
+    public let name: String?
 
     init(
         pan: String,
@@ -24,7 +24,7 @@ public struct ScannedCard: Equatable {
         self.pan = pan
         self.expiryMonth = expiryMonth
         self.expiryYear = expiryYear
-        self.name = expiryYear
+        self.name = name
     }
 }
 

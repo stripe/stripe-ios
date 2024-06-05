@@ -2,9 +2,11 @@
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
 [![License](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
+
+> [!TIP]
+> Want to chat live with Stripe engineers? Join us on our [Discord server](https://stripe.com/go/developer-chat).
 
 The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details. We also expose the low-level APIs that power those UIs so that you can build fully custom experiences.
 
@@ -98,7 +100,7 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 ## Requirements
 
-The Stripe iOS SDK requires Xcode 14.1 or later and is compatible with apps targeting iOS 13 or above. We support Catalyst on macOS 11 or later.
+The Stripe iOS SDK requires Xcode 15 or later and is compatible with apps targeting iOS 13 or above. We support Catalyst on macOS 11 or later.
 
 For iOS 12 support, please use [v22.8.4](https://github.com/stripe/stripe-ios/tree/v22.8.4). For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
 
@@ -115,20 +117,6 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 
 - [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
-
-### Building from source
-
-We use [Tuist](https://tuist.io) to generate Xcode projects, and all Xcode related files have been removed from the master branch of the repository. Note that project files are still available on tagged releases.
-
-If you want to build from the master branch you need to follow these steps:
-
-- Clone the repository and `cd` into its directory.
-- Install Tuist by following the instructions at [tuist.io](https://docs.tuist.io/tutorial/get-started/).
-- Run `tuist generate`, optionally pass the `-n` option if you don't want to open Xcode automatically.
-
-You can build any of the generated targets as you normally would.
-
-For more information about Tuist, visit https://tuist.io.
 
 ## Card scanning
 

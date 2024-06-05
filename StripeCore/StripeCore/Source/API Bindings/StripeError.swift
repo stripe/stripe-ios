@@ -22,6 +22,29 @@ import Foundation
     }
 }
 
+extension StripeError: AnalyticLoggableError {
+    public var additionalNonPIIErrorDetails: [String: Any] {
+        [:]
+    }
+    public var analyticsErrorCode: String {
+        switch self {
+        case .invalidRequest:
+            "invalidRequest"
+        case .apiError(let stripeAPIError):
+            stripeAPIError.code ?? ""
+        }
+    }
+
+    public var analyticsErrorType: String {
+        switch self {
+        case .invalidRequest:
+            return String(reflecting: type(of: self))
+        case .apiError(let stripeAPIError):
+            return stripeAPIError.type.rawValue
+        }
+    }
+}
+
 // MARK: - LocalizedError
 
 extension StripeError: LocalizedError {
@@ -59,22 +82,5 @@ extension StripeError: LocalizedError {
         case .invalidRequest:
             return nil
         }
-    }
-}
-
-extension StripeError: AnalyticLoggableError {
-    public func analyticLoggableSerializeForLogging() -> [String: Any] {
-        var code: Int
-        switch self {
-        case .apiError:
-            code = 0
-        case .invalidRequest:
-            code = 1
-        }
-
-        return [
-            "domain": (self as NSError).domain,
-            "code": code,
-        ]
     }
 }

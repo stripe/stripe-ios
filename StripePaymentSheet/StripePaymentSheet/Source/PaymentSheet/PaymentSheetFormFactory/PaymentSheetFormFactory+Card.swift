@@ -14,13 +14,12 @@ import UIKit
 
 extension PaymentSheetFormFactory {
     func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
-        let isLinkEnabled = offerSaveToLinkWhenSupported && canSaveToLink
+        let isLinkEnabled = offerSaveToLinkWhenSupported && supportsLinkCard
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_this_card_for_future_$merchant_payments(
                 merchantDisplayName: configuration.merchantDisplayName
             )
         )
-        let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
 
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {
@@ -44,7 +43,7 @@ extension PaymentSheetFormFactory {
             guard let expiryMonth = previousCardInput?.expMonth?.intValue, let expiryYear = previousCardInput?.expYear?.intValue else {
                 return nil
             }
-            return String(format: "%02d%02d", expiryMonth, expiryYear)
+            return String(format: "%02d%02d", expiryMonth, expiryYear % 100) // Modulo 100 as safeguard to get last 2 digits of the expiry
         }()
         let cardDefaultValues = CardSection.DefaultValues(
             name: defaultBillingDetails().name,
@@ -58,6 +57,7 @@ extension PaymentSheetFormFactory {
             defaultValues: cardDefaultValues,
             preferredNetworks: configuration.preferredNetworks,
             cardBrandChoiceEligible: cardBrandChoiceEligible,
+            hostedSurface: .init(config: configuration),
             theme: theme
         )
 
@@ -96,10 +96,16 @@ extension PaymentSheetFormFactory {
                 paymentMethodElement: cardFormElement,
                 configuration: configuration,
                 linkAccount: linkAccount,
-                country: countryCode
+                country: countryCode,
+                showCheckbox: !shouldDisplaySaveCheckbox
             )
         } else {
             return cardFormElement
         }
+    }
+    func makeCardCVCCollection(paymentMethod: STPPaymentMethod,
+                               mode: CVCRecollectionElement.Mode,
+                               appearance: PaymentSheet.Appearance) -> CVCRecollectionElement {
+        return CVCRecollectionElement(paymentMethod: paymentMethod, mode: mode, appearance: appearance)
     }
 }

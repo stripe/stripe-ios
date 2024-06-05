@@ -6,8 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+
 import UIKit
 
 protocol LinkLegalTermsViewDelegate: AnyObject {
@@ -27,7 +29,7 @@ protocol LinkLegalTermsViewDelegate: AnyObject {
 @objc(STP_Internal_LinkLegalTermsView)
 final class LinkLegalTermsView: UIView {
     struct Constants {
-        static let lineHeight: CGFloat = 1.5
+        static let lineHeight: CGFloat = 1.0
     }
 
     private let links: [String: URL] = [
@@ -36,6 +38,8 @@ final class LinkLegalTermsView: UIView {
     ]
 
     weak var delegate: LinkLegalTermsViewDelegate?
+    private let mode: LinkInlineSignupViewModel.Mode
+    private let emailWasPrefilled: Bool
 
     var textColor: UIColor? {
         get {
@@ -71,7 +75,12 @@ final class LinkLegalTermsView: UIView {
         return textView
     }()
 
-    init(textAlignment: NSTextAlignment = .left, delegate: LinkLegalTermsViewDelegate? = nil) {
+    init(textAlignment: NSTextAlignment = .left,
+         mode: LinkInlineSignupViewModel.Mode = .checkbox,
+         emailWasPrefilled: Bool = false,
+         delegate: LinkLegalTermsViewDelegate? = nil) {
+        self.mode = mode
+        self.emailWasPrefilled = emailWasPrefilled
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
         self.delegate = delegate
@@ -83,28 +92,26 @@ final class LinkLegalTermsView: UIView {
     }
 
     private func formattedLegalText() -> NSAttributedString {
-        let string = STPLocalizedString(
-            "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-            "Legal text shown when creating a Link account."
-        )
-
-        let formattedString = NSMutableAttributedString()
-
-        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) { string, matches in
-            formattedString.append(NSAttributedString(string: string))
-
-            for (tag, range) in matches {
-                guard range.rangeValue.location != NSNotFound else {
-                    assertionFailure("Tag '<\(tag)>' not found")
-                    continue
-                }
-
-                if let url = links[tag] {
-                    formattedString.addAttributes([.link: url], range: range.rangeValue)
-                }
+        let string: String = {
+            switch mode {
+            case .checkbox:
+                return STPLocalizedString(
+                    "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
+            case .textFieldsOnlyEmailFirst:
+                return STPLocalizedString(
+                    "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
+            case .textFieldsOnlyPhoneFirst:
+                return STPLocalizedString(
+                    "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
             }
-        }
-
+        }()
+        let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(
             fromRelativeHeight: Constants.lineHeight,
@@ -119,7 +126,11 @@ final class LinkLegalTermsView: UIView {
 }
 
 extension LinkLegalTermsView: UITextViewDelegate {
+    enum Error: Swift.Error {
+        case linkLegalTermsViewUITextViewDelegate
+    }
 
+#if !canImport(CompositorServices)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,
@@ -132,10 +143,17 @@ extension LinkLegalTermsView: UITextViewDelegate {
         }
 
         let handled = delegate?.legalTermsView(self, didTapOnLinkWithURL: URL) ?? false
-        assert(handled, "Link not handled by delegate")
+
+        if !handled {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.linkLegalTermsViewUITextViewDelegate)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure("Link not handled by delegate")
+        }
 
         // If not handled by the delegate, let the system handle the link.
         return !handled
     }
+#endif
 
 }

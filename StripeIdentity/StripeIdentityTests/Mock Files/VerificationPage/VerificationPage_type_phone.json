@@ -2,13 +2,27 @@
   "id": "vs_1MOrKBEGkPhabJTjBA2ohFAW",
   "object": "identity.verification_page",
   "biometric_consent": {
-    "accept_button_text": "Accept and continue",
-    "body": "<p><b>How Stripe will verify your identity</b></p><p><a href='https://stripe.com/about'>Stripe</a> will use biometric technology (on images of you and your IDs), as well as other data sources and our service providers, to confirm your identity and for fraud and security purposes. Stripe will store these images and the results of this check and share them with Tora's catfood. You can subsequently opt-out by contacting Stripe. <a href='https://stripe.com/privacy-center/legal#stripe-identity'>Learn more</a></p>",
-    "decline_button_text": "No, don't verify",
-    "privacy_policy": "Data will be stored and may be used according to the <a href='https://stripe.com/privacy'>Stripe Privacy Policy</a> and Tora's catfood Privacy Policy.",
+    "accept_button_text": "Agree and continue",
+    "body": null,
+    "decline_button_text": "Decline",
+    "lines": [
+      {
+        "content": "You'll scan a valid <a href='stripe_bottomsheet://open/consent_photo_id'>photo ID</a>.",
+        "icon": "camera"
+      },
+      {
+        "content": "The information you provide Stripe will help us <a href='stripe_bottomsheet://open/consent_identity'>confirm your identity</a>.",
+        "icon": "dispute_protection"
+      },
+      {
+        "content": "Andrew's Audio will only have access to this <a href='stripe_bottomsheet://open/consent_verification_data'>verification data</a>.",
+        "icon": "lock"
+      }
+    ],
+    "privacy_policy": "<a href='https://stripe.com/privacy'>Stripe Privacy Policy</a> • <a href='https://aywang.me'>Andrew's Audio Privacy Policy</a>",
     "scroll_to_continue_button_text": "Scroll to continue",
-    "time_estimate": "Takes about 1–2 minutes.",
-    "title": "Tora's catfood uses Stripe to verify your identity"
+    "time_estimate": null,
+    "title": "Continue Document Verification"
   },
   "country_not_listed": {
     "address_from_other_country_text_button_text": "Have an Address from another country?",
@@ -100,12 +114,81 @@
       "US": "United States"
     }
   },
+  "bottomsheet": {
+    "consent_identity": {
+      "bottomsheet_id": "consent_identity",
+      "lines": [
+        {
+          "content": "We leverage Stripe's own verification service to verify your identity through your document and selfie.",
+          "icon": "cloud",
+          "title": "Stripe technology"
+        },
+        {
+          "content": "We also work with trusted partners, including document issuers and authorized record holders, to help us verify your identity.",
+          "icon": "moved",
+          "title": "Third party partners"
+        }
+      ],
+      "title": "How we verify you"
+    },
+    "consent_photo_id": {
+      "bottomsheet_id": "consent_photo_id",
+      "lines": [
+        {
+          "content": "<ul><li>Passport</li><li>Drivers license</li><li>National ID</li><li>Valid government-issued identification that clearly shows your face</li></ul>",
+          "icon": "wallet",
+          "title": "Accepted forms of identification"
+        }
+      ],
+      "title": "Types of photo ID"
+    },
+    "consent_verification_data": {
+      "bottomsheet_id": "consent_verification_data",
+      "lines": [
+        {
+          "content": "Stripe handles billions of dollars in payments annually. The same infrastructure keeps identity verification data safe as well.",
+          "icon": "lock",
+          "title": "Your data is encrypted"
+        },
+        {
+          "content": "Stripe will use and store your data under Stripe’s privacy policy, including to manage loss and for legal compliance.  <a href='https://stripe.com/privacy-center/legal#stripe-identity'>Learn more</a>.",
+          "icon": "lock",
+          "title": "Stripe data use"
+        },
+        {
+          "content": "Andrew's Audio will have access to the information you submit and the status of your verification, and may use your information under its privacy policy.",
+          "icon": "moved",
+          "title": "Andrew's Audio access"
+        },
+        {
+          "content": "You can delete your data by contacting Andrew's Audio.",
+          "icon": "document",
+          "title": "Manage your data"
+        }
+      ],
+      "title": "Your data"
+    }
+  },
   "individual_welcome": {
-    "body": "You’ll need to share some personal information to complete the verification. <a href='https://stripe.com/privacy-center/legal#stripe-identity'>Learn more</a>",
+    "body": null,
     "get_started_button_text": "Get started",
-    "privacy_policy": "Data will be stored and may be used according to the <a href ='https://stripe.com/privacy'>Stripe Privacy Policy</a> and Tora's catfood Privacy Policy.",
-    "time_estimate": "Takes less than 1 minute.",
-    "title": "Tora's catfood partners with Stripe for secure Identity verification"
+    "lines": [
+      {
+        "content": "You'll provide personal information including name, date of birth, and ID number.",
+        "icon": "document"
+      },
+      {
+        "content": "The information you provide Stripe will help us <a href='stripe_bottomsheet://open/consent_identity'>confirm your identity</a>.",
+        "icon": "dispute_protection"
+      },
+      {
+        "content": "Andrew's Audio will only have access to this <a href='stripe_bottomsheet://open/consent_verification_data'>verification data</a>.",
+        "icon": "lock"
+      }
+    ],
+    "privacy_policy": "<a href='https://stripe.com/privacy'>Stripe Privacy Policy</a> • <a href='https://aywang.me'>Andrew's Audio Privacy Policy</a>",
+    "time_estimate": null,
+    "title": "Andrew's Audio works with Stripe to verify your identity"
   },
   "livemode": true,
   "requirements": {
@@ -123,5 +206,16 @@
     "button_text": "Complete",
     "title": "Verification submitted"
   },
-  "unsupported_client": false
+  "unsupported_client": false,
+  "user_session_id": "testUserSession",
+  "experiments": [
+    {
+        "experiment_name": "experiment1",
+        "event_name": "eventName1",
+        "event_metadata": {
+            "metadata1": "value1",
+            "metadata2": "value2"
+        }
+    }
+  ]
 }

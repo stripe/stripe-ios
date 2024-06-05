@@ -81,6 +81,10 @@ import Foundation
         STPLocalizedString("Phone", "Caption for Phone field on address form")
     }
 
+    static var phoneNumber: String {
+        STPLocalizedString("Phone number", "Caption for Phone number field on address form")
+    }
+
     static var incomplete_phone_number: String {
         STPLocalizedString("Incomplete phone number", "Error description for incomplete phone number")
     }
@@ -301,6 +305,13 @@ import Foundation
         STPLocalizedString(
             "Use rotor to access links",
             "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783"
+        )
+    }
+
+    static var edit: String {
+        STPLocalizedString(
+            "Edit",
+            "Button title to enter editing mode"
         )
     }
 

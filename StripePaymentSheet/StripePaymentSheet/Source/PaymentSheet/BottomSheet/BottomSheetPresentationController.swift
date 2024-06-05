@@ -78,7 +78,9 @@ class BottomSheetPresentationController: UIPresentationController {
 
         coordinator.animate(alongsideTransition: { [weak self] _ in
             self?.backgroundView.alpha = 1
+            #if !canImport(CompositorServices)
             self?.presentedViewController.setNeedsStatusBarAppearanceUpdate()
+            #endif
         })
     }
 
@@ -96,7 +98,9 @@ class BottomSheetPresentationController: UIPresentationController {
 
         coordinator.animate(alongsideTransition: { [weak self] _ in
             self?.backgroundView.alpha = 0
+            #if !canImport(CompositorServices)
             self?.presentingViewController.setNeedsStatusBarAppearanceUpdate()
+            #endif
         })
     }
 
@@ -118,7 +122,11 @@ class BottomSheetPresentationController: UIPresentationController {
     }
 
     @objc func didTapBackgroundView() {
-        presentable?.didTapOrSwipeToDismiss()
+        // This animation isn't cleanly interruptable, don't allow dismissal until it completes.
+        // We're not aware of the animation state ourselves, so we'll check the presentedView for any attached animations.
+        if presentedView.layer.animationKeys()?.count ?? 0 == 0 {
+            presentable?.didTapOrSwipeToDismiss()
+        }
     }
 }
 
@@ -137,34 +145,20 @@ extension BottomSheetPresentationController {
         containerView.addSubview(presentedView)
 
         // We'll use this constraint to handle the keyboard
-        let bottomAnchor = presentedView.bottomAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.bottomAnchor)
+        let bottomAnchor = presentedView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        bottomAnchor.priority = .required
         self.bottomAnchor = bottomAnchor
-
-        // Add a view between the bottom of the VC and the bottom of the screen for 2 reasons
-        // 1. The keyboard animation is sometimes erroneous and results in the bottom of the presented view decoupling from the top of the keyboard, exposing the view behind it.
-        // 2. The presented view (BottomSheetVC) does not inherit safeAreaLayoutGuide.bottom
-        let coverUpBottomView = UIView()
-        containerView.addSubview(coverUpBottomView)
-        coverUpBottomView.backgroundColor = presentedView.backgroundColor
-        coverUpBottomView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             presentedView.topAnchor.constraint(greaterThanOrEqualTo: containerView.safeAreaLayoutGuide.topAnchor),
             presentedView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
             presentedView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
             bottomAnchor,
-
-            coverUpBottomView.topAnchor.constraint(equalTo: presentedView.bottomAnchor),
-            coverUpBottomView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
-            coverUpBottomView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
-            coverUpBottomView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
         ])
 
         fullHeightConstraint.isActive = forceFullHeight
 
         addRoundedCorners(to: presentedView)
-
-        registerForKeyboardNotifications()
     }
 
     // MARK: - Helpers
@@ -173,40 +167,5 @@ extension BottomSheetPresentationController {
         view.layer.maskedCorners =  [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 12
         view.layer.masksToBounds = true
-    }
-
-    private func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(adjustForKeyboard),
-            name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(adjustForKeyboard),
-            name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-    }
-
-    @objc
-    private func adjustForKeyboard(notification: Notification) {
-        guard
-            let keyboardScreenEndFrame =
-                (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?
-                .cgRectValue,
-            let containerView = containerView,
-            let bottomAnchor = bottomAnchor
-        else {
-            return
-        }
-
-        let keyboardViewEndFrame = containerView.convert(keyboardScreenEndFrame, from: containerView.window)
-        let keyboardInViewHeight = containerView.bounds.intersection(keyboardViewEndFrame).height - containerView.safeAreaInsets.bottom
-        if notification.name == UIResponder.keyboardWillHideNotification {
-            bottomAnchor.constant = 0
-        } else {
-            bottomAnchor.constant = -keyboardInViewHeight
-        }
-
-        containerView.setNeedsLayout()
-        UIView.animateAlongsideKeyboard(notification) {
-            containerView.layoutIfNeeded()
-        }
     }
 }

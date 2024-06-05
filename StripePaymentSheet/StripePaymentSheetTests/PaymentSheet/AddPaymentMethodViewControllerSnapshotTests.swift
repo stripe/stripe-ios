@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 3/22/23.
 //
 
+#if !canImport(CompositorServices)
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
@@ -37,8 +38,8 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         // ...and a "Save this card" checkbox...
         config.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
-        let sut = AddPaymentMethodViewController(intent: intent, configuration: config, previousCustomerInput: previousCustomerInput)
-        sut.view.autosizeHeight(width: 375)
-        STPSnapshotVerifyView(sut.view)
+        let sut = AddPaymentMethodViewController(intent: intent, configuration: config, previousCustomerInput: previousCustomerInput, isLinkEnabled: false)
+        STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
     }
 }
+#endif

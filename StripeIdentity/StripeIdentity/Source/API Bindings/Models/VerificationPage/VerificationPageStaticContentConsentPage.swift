@@ -12,12 +12,11 @@ extension StripeAPI {
 
     struct VerificationPageStaticContentConsentPage: Decodable, Equatable {
         let acceptButtonText: String
-        let body: String
         let declineButtonText: String
-        let privacyPolicy: String?
-        let timeEstimate: String?
+        let privacyPolicy: String
         let title: String?
         let scrollToContinueButtonText: String
+        let lines: [VerificationPageStaticConsentLineContent]
     }
 
 }

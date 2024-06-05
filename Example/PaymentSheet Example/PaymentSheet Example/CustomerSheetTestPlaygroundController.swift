@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -35,6 +35,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     var customerSheet: CustomerSheet?
+    var _customerAdapter: CustomerAdapter?
     var backend: CustomerSheetBackend!
     var currentEndpoint: String = defaultEndpoint
     var appearance = PaymentSheet.Appearance.default
@@ -57,6 +58,17 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func didTapResetConfig() {
         self.settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         self.appearance = PaymentSheet.Appearance.default
+        load()
+    }
+    func didTapSetToUnsupported() {
+        Task {
+            do {
+                try await _customerAdapter?.setSelectedPaymentOption(paymentOption: .link)
+                self.load()
+            } catch {
+                // no-op
+            }
+        }
     }
 
     func appearanceButtonTapped() {
@@ -100,15 +112,17 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         })
     }
 
-    func customerSheetConfiguration(customerId: String, ephemeralKey: String) -> CustomerSheet.Configuration {
+    func customerSheetConfiguration() -> CustomerSheet.Configuration {
         var configuration = CustomerSheet.Configuration()
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.headerTextForSelectionScreen = settings.headerTextForSelectionScreen
+        configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
+        configuration.paymentMethodRemove = settings.paymentMethodRemove == .enabled
 
         if settings.defaultBillingAddress == .on {
             configuration.defaultBillingDetails.name = "Jane Doe"
-            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.email = "foo-\(UUID().uuidString)@bar.com"
             configuration.defaultBillingDetails.phone = "+13105551234"
             configuration.defaultBillingDetails.address = .init(
                 city: "San Francisco",
@@ -124,27 +138,45 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
-        configuration.cbcEnabled = true // TODO(porter) Remove this for CBC GA
+        configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
+        configuration.applePayEnabled = self.applePayEnabled()
         return configuration
     }
 
-    func customerAdapter(customerId: String, ephemeralKey: String, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
-        let customerAdapter: StripeCustomerAdapter
+    func createCustomerSheet(configuration: CustomerSheet.Configuration,
+                             customerAdapter: CustomerAdapter) -> CustomerSheet {
+
+        return CustomerSheet(configuration: configuration, customer: customerAdapter)
+    }
+
+    func createCustomerSheet(configuration: CustomerSheet.Configuration,
+                             customerId: String,
+                             customerSessionClientSecret: String?) -> CustomerSheet {
+        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: {
+            return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+        })
+        return CustomerSheet(configuration: configuration,
+                             intentConfiguration: intentConfiguration,
+                             customerSessionClientSecretProvider: {
+            .init(customerId: customerId, clientSecret: customerSessionClientSecret!)
+        })
+    }
+
+    func customerAdapter(customerId: String, ephemeralKey: String) -> StripeCustomerAdapter {
         switch settings.paymentMethodMode {
         case .setupIntent:
-            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+            return StripeCustomerAdapter(customerEphemeralKeyProvider: {
                 // This should be a block that fetches this from your server
-                .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+                return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: {
                 return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
             })
         case .createAndAttach:
-            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+            return StripeCustomerAdapter(customerEphemeralKeyProvider: {
                 // This should be a block that fetches this from your server
-                .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+                return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: nil)
         }
-        return customerAdapter
     }
 
     func applePayEnabled() -> Bool {
@@ -161,7 +193,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             return "returning"
         case .new:
             return "new"
-        case .id:
+        case .customID:
             return self.settings.customerId ?? ""
         }
     }
@@ -187,6 +219,7 @@ extension CustomerSheetTestPlaygroundController {
 
         // TODO: Refactor this to make the ephemeral key and customerId fetching async
         self.backend.loadBackendCustomerEphemeralKey(customerType: customerType,
+                                                     customerKeyType: self.settings.customerKeyType,
                                                      merchantCountryCode: settings.merchantCountryCode.rawValue) { result in
             if settingsToLoad != self.settings {
                 DispatchQueue.main.async {
@@ -195,7 +228,6 @@ extension CustomerSheetTestPlaygroundController {
                 return
             }
             guard let json = result,
-                  let ephemeralKey = json["customerEphemeralKeySecret"], !ephemeralKey.isEmpty,
                   let customerId = json["customerId"], !customerId.isEmpty,
                   let publishableKey = json["publishableKey"] else {
                 DispatchQueue.main.async {
@@ -204,37 +236,49 @@ extension CustomerSheetTestPlaygroundController {
                 }
                 return
             }
+            let ephemeralKey = json["customerEphemeralKeySecret"]
+            let customerSessionClientSecret = json["customerSessionClientSecret"]
+            guard ephemeralKey != nil || customerSessionClientSecret != nil else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
+                    print("Error: Backend did not return a customerSessionClientSecret or customerEphemeralKeySecret")
+                }
+                return
+            }
 
             STPAPIClient.shared.publishableKey = publishableKey
 
-            Task {
-                // Create Customer Sheet
-                var configuration = self.customerSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
-                configuration.applePayEnabled = self.applePayEnabled()
-                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey, configuration: configuration)
-                self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
-
-                // Retrieve selected PM
-                do {
-                    let selection = try await customerAdapter.retrievePaymentOptionSelection()
-                    DispatchQueue.main.async {
-                        self.paymentOptionSelection = selection
-                        self.settings.customerId = customerId
-                        self.settings.customerMode = .id
-                        self.currentlyRenderedSettings = self.settings
-                        self.serializeSettingsToNSUserDefaults()
-                        self.isLoading = false
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        self.settings.customerId = customerId
-                        self.settings.customerMode = .id
-                        self.currentlyRenderedSettings = self.settings
-                        self.serializeSettingsToNSUserDefaults()
-                        self.isLoading = false
-                    }
-                    throw error
+            let configuration = self.customerSheetConfiguration()
+            if let ephemeralKey {
+                // Create Customer Sheet using CustomerAdapter w/ legacy ephemeral key
+                let customerAdapter = self.customerAdapter(customerId: customerId,
+                                                           ephemeralKey: ephemeralKey)
+                self._customerAdapter = customerAdapter
+                self.customerSheet = self.createCustomerSheet(configuration: configuration, customerAdapter: customerAdapter)
+                Task { @MainActor in
+                    do {
+                        self.paymentOptionSelection = try await customerAdapter.retrievePaymentOptionSelection()
+                    } catch {}
                 }
+            } else {
+                // Create Customer Sheet using CustomerSession
+                let customerSheet = self.createCustomerSheet(configuration: configuration,
+                                                             customerId: customerId,
+                                                             customerSessionClientSecret: customerSessionClientSecret)
+                self.customerSheet = customerSheet
+                Task { @MainActor in
+                    do {
+                        self.paymentOptionSelection = try await customerSheet.retrievePaymentOptionSelection()
+                    } catch {}
+                }
+            }
+            DispatchQueue.main.async {
+                self.settings.customerId = customerId
+                self.settings.customerMode = .customID
+                self.currentlyRenderedSettings = self.settings
+                self.serializeSettingsToNSUserDefaults()
+                self.isLoading = false
             }
         }
     }
@@ -268,9 +312,13 @@ class CustomerSheetBackend {
         self.endpoint = endpoint
     }
 
-    func loadBackendCustomerEphemeralKey(customerType: String, merchantCountryCode: String, completion: @escaping ([String: String]?) -> Void) {
+    func loadBackendCustomerEphemeralKey(customerType: String,
+                                         customerKeyType: CustomerSheetTestPlaygroundSettings.CustomerKeyType,
+                                         merchantCountryCode: String,
+                                         completion: @escaping ([String: String]?) -> Void) {
 
         let body = [ "customer_type": customerType,
+                     "customer_key_type": customerKeyType.rawValue,
                      "merchant_country_code": merchantCountryCode,
         ] as [String: Any]
 

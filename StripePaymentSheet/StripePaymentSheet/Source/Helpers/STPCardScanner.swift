@@ -5,6 +5,7 @@
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
+#if !canImport(CompositorServices)
 
 import AVFoundation
 import Foundation
@@ -486,3 +487,5 @@ let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 extension STPCardScanner: STPAnalyticsProtocol {
     static var stp_analyticsIdentifier = "STPCardScanner"
 }
+
+#endif

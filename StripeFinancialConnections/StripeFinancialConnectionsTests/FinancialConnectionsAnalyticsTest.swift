@@ -8,7 +8,7 @@
 import XCTest
 
 @_spi(STP) import StripeCore
-@testable import StripeFinancialConnections
+@testable @_spi(STP) import StripeFinancialConnections
 
 final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
 
@@ -19,7 +19,7 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
         )
         XCTAssertNotNil(analytic.error)
 
-        let errorDict = analytic.error.serializeForLogging()
+        let errorDict = analytic.error.serializeForV2Logging()
         XCTAssertNil(errorDict["user_info"])
         XCTAssertEqual(errorDict["code"] as? Int, 0)
         XCTAssertEqual(errorDict["domain"] as? String, "Stripe.FinancialConnectionsSheetError")
@@ -39,7 +39,7 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
         )
         let analytic = FinancialConnectionsSheetCompletionAnalytic.make(
             clientSecret: "secret",
-            result: .completed(session: session)
+            result: .completed(.financialConnections(session))
         )
         guard let closedAnalytic = analytic as? FinancialConnectionsSheetClosedAnalytic else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")

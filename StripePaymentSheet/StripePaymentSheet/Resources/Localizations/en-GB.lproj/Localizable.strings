@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Add";
 
 "Add a card" = "Add a card";
@@ -22,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "By continuing to Klarna, you allow %1$@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
@@ -32,7 +38,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
@@ -50,6 +60,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
 
+"Confirm your CVC" = "Confirm your CVC";
+
+"Confirm your CVV" = "Confirm your CVV";
+
 "Contact information" = "Contact information";
 
 "EPS Bank" = "EPS Bank";
@@ -57,6 +71,8 @@
 "Enter address manually" = "Enter address manually";
 
 "FPX Bank" = "FPX Bank";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
 "IBAN" = "IBAN";
 
@@ -72,15 +88,17 @@
 
 "Or pay with a card" = "Or pay with a card";
 
+"Or use" = "Or use";
+
+"Or use a card" = "Or use a card";
+
 "Pay %@" = "Pay %@";
 
 "Pay another way" = "Pay another way";
 
-"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
+"Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
-
-"Pay later with Klarna." = "Pay later with Klarna.";
 
 "Pay over time with %@" = "Pay over time with %@";
 
@@ -98,9 +116,7 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
-
-"Remove Card" = "Remove Card";
+"Remove card?" = "Remove card?";
 
 "Save" = "Save";
 
@@ -110,13 +126,13 @@
 
 "Save for future payments" = "Save for future payments";
 
-"Save my info for secure 1-click checkout" = "Save my info for secure 1-click checkout";
-
 "Save this account for future %@ payments" = "Save this account for future %@ payments";
 
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
 "Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
+
+"Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
 
 "Select your payment method" = "Select your payment method";
 

@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Seuraavassa vaiheessa otetaan automaattisesti muutama kuva sen vahvistamiseksi, että kyseessä olet sinä";
 
+"Accepted forms of ID include" = "Hyväksyttyjä henkilöllisyystodistusmuotoja ovat";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Voit vaihtoehtoisesti ladata henkilöllisyysasiakirjan kuvan manuaalisesti.";
 
 "App Settings" = "Sovelluksen asetukset";
 
-"Back driver's license photo successfully uploaded" = "Ajokortin takapuolen kuva ladattu onnistuneesti";
-
 "Back identity card photo successfully uploaded" = "Henkilökortin takapuolen kuva ladattu onnistuneesti";
-
-"Back of driver's license" = "Ajokortin takapuoli";
 
 "Back of identity card" = "Henkilökortin takapuoli";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "Syntymäaika ei näytä kelvolliselta";
 
-"Flip your driver's license over to the other side" = "Käännä ajokortti toisinpäin";
+"Details not visible" = "Tiedot eivät ole näkyvillä";
 
 "Flip your identity card over to the other side" = "Käännä henkilökortti toisinpäin";
 
-"Front driver's license photo successfully uploaded" = "Ajokortin etupuolen kuva ladattu onnistuneesti";
-
 "Front identity card photo successfully uploaded" = "Henkilökortin etupuolen kuva ladattu onnistuneesti";
 
-"Front of driver's license" = "Ajokortin etupuoli";
-
 "Front of identity card" = "Henkilökortin etupuoli";
+
+"Get ready to scan your photo ID" = "Valmistaudu skannaamaan kuvallinen henkilöllisyystodistus";
 
 "Get ready to take a selfie" = "Valmistaudu selfien ottoon";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "Odota, skannaus kesken";
 
+"I'm ready" = "Olen valmis";
+
 "ID Number" = "Tunnusnumero";
 
-"ID Type" = "Henkilökortin tyyppi";
-
-"Image of passport" = "Passin kuva";
-
 "Individual CPF" = "Yksityishenkilön CPF";
+
+"Keep ID level" = "Pidä henkilöllisyystodistus tasaisena";
 
 "Last 4 of Social Security number" = "Sosiaaliturvatunnuksen 4 viimeistä merkkiä";
 
 "Loading" = "Ladataan";
 
+"Make sure all details are visible and focus" = "Varmista, että kaikki tiedot ovat näkyvissä ja tarkennettuja";
+
+"Make sure you're in a well lit space." = "Varmista, että olet hyvin valaistussa tilassa.";
+
+"Move closer" = "Siirry lähemmäs";
+
+"Move farther" = "Siirrä kauemmas";
+
+"Move to a darker area" = "Siirry hämärämpään tilaan";
+
+"Move to a well-lit area" = "Siirry hyvin valaistuun tilaan";
+
 "NRIC or FIN" = "NRIC tai FIN";
 
-"Passport" = "Passi";
-
-"Passport photo successfully uploaded" = "Passikuva ladattu onnistuneesti";
+"No document detected" = "Ei havaittuja asiakirjoja";
 
 "Personal ID number" = "Henkilötunnus";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "Kuvakirjasto";
 
-"Please upload an image of your passport" = "Lataa kuva passista";
-
-"Please upload images of the front and back of your driver's license" = "Lataa ajokortin etu- ja takapuolen kuvat";
-
 "Please upload images of the front and back of your identity card" = "Lataa henkilökortin etu- ja takapuolen kuvat";
-
-"Position your driver's license in the center of the frame" = "Aseta ajokortti kehyksen keskelle";
 
 "Position your face in the center of the frame." = "Aseta kasvosi kuvan keskelle.";
 
 "Position your identity card in the center of the frame" = "Aseta henkilökortti kehyksen keskelle";
-
-"Position your passport in the center of the frame" = "Aseta passi kehyksen keskelle";
 
 "Retake Photos" = "Ota kuvat uudelleen";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan etupuolen";
 
-"Select back driver's license photo" = "Valitse ajokortin takapuolen kuva";
-
 "Select back identity card photo" = "Valitse henkilökortin takapuolen kuva";
 
-"Select front driver's license photo" = "Valitse ajokortin etupuolen kuva";
-
 "Select front identity card photo" = "Valitse henkilökortin etupuolen kuva";
-
-"Select passport photo" = "Valitse passikuva";
 
 "Selfie" = "Selfie";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "Yritä uudelleen";
 
+"Try reduce glare and make ID visible" = "Yritä vähentää häikäisyä niin että henkilöllisyystodistus näkyy";
+
 "Unable to establish a connection." = "Yhteyttä ei voida muodostaa.";
 
 "Unsaved changes" = "Tallentamattomat muutokset";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "Lataa kuvallinen henkilöllisyystodistus";
 
-"Uploading back driver's license photo" = "Ladataan ajokortin takapuolen kuvaa";
-
 "Uploading back identity card photo" = "Ladataan henkilökortin takapuolen kuvaa";
 
-"Uploading front driver's license photo" = "Ladataan ajokortin etupuolen kuvaa";
-
 "Uploading front identity card photo" = "Ladataan henkilökortin etupuolen kuvaa";
-
-"Uploading passport photo" = "Ladataan passikuvaa";
 
 "Verify your identity" = "Vahvista henkilöllisyytesi";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "Voit joko yrittää uudelleen tai ladata kuvan laitteestasi.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Selfiekuviasi ei ole tallennettu. Haluatko poistua?";
+
+"driver's license" = "ajokortti";
+
+"government-issued photo ID" = "valtion myöntämä kuvallinen henkilöllisyystodistus";
+
+"passport" = "passi";

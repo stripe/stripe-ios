@@ -113,12 +113,16 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     private var osVersion = UIDevice.current.systemVersion
 
     private var screenSize: String {
+        #if canImport(CompositorServices)
+        return "visionOS"
+        #else
         let screen = UIScreen.main
         let screenRect = screen.bounds
         let width = screenRect.size.width
         let height = screenRect.size.height
         let scale = screen.scale
         return String(format: "%.0fw_%.0fh_%.0fr", width, height, scale)
+        #endif
     }
 
     private var timeZoneOffset: String {

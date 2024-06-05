@@ -18,6 +18,8 @@
 
 "Cancel" = "Cancel·la";
 
+"Card brand" = "Marca de la targeta";
+
 "City" = "Ciutat";
 
 "Code field" = "Camp pel codi";
@@ -82,6 +84,8 @@
 
 "Phone" = "Telèfon";
 
+"Phone number" = "Número de telèfon";
+
 "Postal code" = "Codi postal";
 
 "Prefecture" = "Prefectura";
@@ -94,9 +98,13 @@
 
 "Remove bank account ending in %@" = "Elimina el compte bancari que acaba en %@";
 
+"Remove card" = "Elimina la targeta";
+
 "Search" = "Cerca";
 
 "Select card brand (optional)" = "Seleccioneu la marca de la targeta (opcional)";
+
+"Sort code" = "Codi de classificació";
 
 "State" = "País";
 
@@ -109,6 +117,8 @@
 "The ID number you entered is incomplete." = "El número d'identificació que has introduït és incomplet.";
 
 "The account number you entered is incomplete." = "El número de compte que heu introduït és incomplet.";
+
+"The sort code you entered is invalid." = "El codi d'ordenació que heu introduït no és vàlid.";
 
 "Town or city" = "Municipi o ciutat";
 

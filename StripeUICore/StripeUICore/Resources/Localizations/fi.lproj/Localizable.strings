@@ -18,6 +18,8 @@
 
 "Cancel" = "Peruuta";
 
+"Card brand" = "Kortin merkki";
+
 "City" = "Paikkakunta";
 
 "Code field" = "Koodikenttä";
@@ -82,6 +84,8 @@
 
 "Phone" = "Puhelin";
 
+"Phone number" = "Puhelinnumero";
+
 "Postal code" = "Postinumero";
 
 "Prefecture" = "Prefektuuri";
@@ -94,9 +98,13 @@
 
 "Remove bank account ending in %@" = "Poista pankkitili, joka päättyy numeroihin %@";
 
+"Remove card" = "Poista kortti";
+
 "Search" = "Etsi";
 
 "Select card brand (optional)" = "Valitse korttimerkki (valinnainen)";
+
+"Sort code" = "Pankin tunnusnumero";
 
 "State" = "Osavaltio";
 
@@ -109,6 +117,8 @@
 "The ID number you entered is incomplete." = "Antamasi tunnusnumero on puutteellinen.";
 
 "The account number you entered is incomplete." = "Antamasi tilinumero on puutteellinen.";
+
+"The sort code you entered is invalid." = "Antamasi pankin tunnusnumero on virheellinen.";
 
 "Town or city" = "Kaupunki tai kunta";
 

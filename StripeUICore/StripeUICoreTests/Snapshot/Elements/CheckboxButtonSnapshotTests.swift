@@ -35,7 +35,7 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
     func testMultiline() {
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
-            description: "Pay faster at [Merchant] and thousands of merchants."
+            description: "Pay faster at [Merchant] and thousands of businesses."
         )
 
         verify(checkbox)
@@ -48,22 +48,26 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
 
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
-            description: "Pay faster at [Merchant] and thousands of merchants.",
+            description: "Pay faster at [Merchant] and thousands of businesses.",
             theme: theme
         )
 
         verify(checkbox)
     }
 
-    func testLocalization() {
+    func testLocalization_greek() {
         let greekCheckbox = CheckboxButton(text: "Αποθηκεύστε αυτή την κάρτα για μελλοντικές [Merchant] πληρωμές")
         verify(greekCheckbox, identifier: "Greek")
+    }
 
+    func testLocalization_chinese() {
         let chineseCheckbox = CheckboxButton(
             text: "保存我的信息以便一键结账",
             description: "在[Merchant]及千万商家使用快捷支付")
         verify(chineseCheckbox, identifier: "Chinese")
+    }
 
+    func testLocalization_hindi() {
         let hindiCheckbox = CheckboxButton(
             text: "सुरक्षित 1-क्लिक चेकआउट के लिए मेरी जानकारी सहेजें",
             description: "[Merchant] और हज़ारों व्यापारियों पर तेज़ी से भुगतान करें।")

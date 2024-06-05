@@ -11,4 +11,5 @@ enum LinkCookieKey: String {
     case lastLogoutEmail = "com.stripe.link_account"
     case lastPMLast4 = "com.stripe.link.last_pm_last4"
     case lastPMBrand = "com.stripe.link.last_pm_brand"
+    case hasUsedLink = "com.stripe.link.has_used_link"
 }

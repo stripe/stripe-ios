@@ -115,6 +115,11 @@ extension STPTestingAPIClient {
         let customer: String
     }
 
+    struct CreateCustomerSessionResponse: Decodable {
+        let customerSessionClientSecret: String
+        let customer: String
+    }
+
     func fetchCustomerAndEphemeralKey(
         customerID: String? = nil,
         merchantCountry: String? = "us"
@@ -126,6 +131,16 @@ extension STPTestingAPIClient {
         return try await makeRequest(endpoint: "create_ephemeral_key", params: params)
     }
 
+    func fetchCustomerAndCustomerSessionClientSecret(
+        customerID: String? = nil,
+        merchantCountry: String? = "us"
+    ) async throws -> CreateCustomerSessionResponse {
+        let params = [
+            "customer_id": customerID,
+            "account": merchantCountry,
+        ]
+        return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
+    }
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(

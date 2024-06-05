@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Một vài ảnh sẽ được chụp tự động ở bước tiếp theo để xác minh đó là bạn";
 
+"Accepted forms of ID include" = "Các loại ID được chấp nhận bao gồm";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Ngoài ra, bạn có thể tự tải lên ảnh giấy tờ tùy thân của mình.";
 
 "App Settings" = "Cài đặt Ứng dụng";
 
-"Back driver's license photo successfully uploaded" = "Đã thành công tải lên ảnh mặt sau bằng lái xe";
-
 "Back identity card photo successfully uploaded" = "Đã thành công tải lên ảnh mặt sau thẻ căn cước";
-
-"Back of driver's license" = "Mặt sau bằng lái xe";
 
 "Back of identity card" = "Mặt sau thẻ căn cước";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "Ngày sinh có vẻ không hợp lệ";
 
-"Flip your driver's license over to the other side" = "Lật bằng lái xe của bạn sang mặt khác";
+"Details not visible" = "Không thấy rõ thông tin chi tiết";
 
 "Flip your identity card over to the other side" = "Lật thẻ căn cước của bạn sang mặt khác";
 
-"Front driver's license photo successfully uploaded" = "Đã thành công tải lên ảnh mặt trước bằng lái xe";
-
 "Front identity card photo successfully uploaded" = "Đã thành công tải lên ảnh mặt trước thẻ căn cước";
 
-"Front of driver's license" = "Mặt trước bằng lái xe";
-
 "Front of identity card" = "Mặt trước thẻ căn cước";
+
+"Get ready to scan your photo ID" = "Chuẩn bị quét ID có ảnh";
 
 "Get ready to take a selfie" = "Sẵn sàng để tự chụp ảnh";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "Giữ yên, đang quét";
 
+"I'm ready" = "Đã sẵn sàng";
+
 "ID Number" = "Số ID";
 
-"ID Type" = "Loại ID";
-
-"Image of passport" = "Ảnh hộ chiếu";
-
 "Individual CPF" = "CPF cá nhân";
+
+"Keep ID level" = "Giữ ID cân bằng";
 
 "Last 4 of Social Security number" = "4 số cuối của số An Sinh Xã Hội";
 
 "Loading" = "Đang tải";
 
+"Make sure all details are visible and focus" = "Đảm bảo tất cả các thông tin nhìn rõ và được lấy nét";
+
+"Make sure you're in a well lit space." = "Hãy đảm bảo bạn đang ở trong không gian đủ ánh sáng.";
+
+"Move closer" = "Đến gần hơn";
+
+"Move farther" = "Lùi xa hơn";
+
+"Move to a darker area" = "Di chuyển đến khu vực tối hơn";
+
+"Move to a well-lit area" = "Di chuyển đến không gian đủ ánh sáng";
+
 "NRIC or FIN" = "NRIC hoặc FIN";
 
-"Passport" = "Hộ chiếu";
-
-"Passport photo successfully uploaded" = "Đã thành công tải lên ảnh hộ chiếu";
+"No document detected" = "Không phát hiện tài liệu";
 
 "Personal ID number" = "Số ID Cá nhân";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "Thư viện ảnh";
 
-"Please upload an image of your passport" = "Vui lòng tải lên hình ảnh hộ chiếu";
-
-"Please upload images of the front and back of your driver's license" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau của bằng lái xe";
-
 "Please upload images of the front and back of your identity card" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau của thẻ căn cước";
-
-"Position your driver's license in the center of the frame" = "Đặt bằng lái xe của bạn ở giữa khung hình";
 
 "Position your face in the center of the frame." = "Đặt khuôn mặt của bạn ở giữa khung hình.";
 
 "Position your identity card in the center of the frame" = "Đặt thẻ căn cước của bạn ở giữa khung hình";
-
-"Position your passport in the center of the frame" = "Đặt hộ chiếu của bạn ở giữa khung hình";
 
 "Retake Photos" = "Chụp lại ảnh";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "Chọn một vị trí để tải lên mặt trước giấy tờ tùy thân của bạn";
 
-"Select back driver's license photo" = "Chọn ảnh mặt sau bằng lái xe";
-
 "Select back identity card photo" = "Chọn ảnh mặt sau thẻ căn cước";
 
-"Select front driver's license photo" = "Chọn ảnh mặt trước bằng lái xe";
-
 "Select front identity card photo" = "Chọn ảnh mặt trước thẻ căn cước";
-
-"Select passport photo" = "Chọn ảnh hộ chiếu";
 
 "Selfie" = "Selfie";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "Hãy thử lại";
 
+"Try reduce glare and make ID visible" = "Hãy thử giảm độ chói và đảm bảo ID được nhìn rõ";
+
 "Unable to establish a connection." = "Không thể thiết lập kết nối.";
 
 "Unsaved changes" = "Thay đổi chưa lưu";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "Tải lên ID có ảnh của bạn";
 
-"Uploading back driver's license photo" = "Đang tải lên ảnh mặt sau bằng lái xe";
-
 "Uploading back identity card photo" = "Đang tải lên ảnh mặt sau thẻ căn cước";
 
-"Uploading front driver's license photo" = "Đang tải lên ảnh mặt trước bằng lái xe";
-
 "Uploading front identity card photo" = "Đang tải lên ảnh mặt trước thẻ căn cước";
-
-"Uploading passport photo" = "Đang tải lên ảnh hộ chiếu";
 
 "Verify your identity" = "Xác minh danh tính của bạn";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "Bạn có thể thử lại hoặc tải lên hình ảnh từ thiết bị của mình.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Ảnh selfie của bạn chưa được lưu. Bạn có muốn rời khỏi?";
+
+"driver's license" = "bằng lái xe";
+
+"government-issued photo ID" = "giấy tờ tùy thân có ảnh do chính phủ cấp";
+
+"passport" = "hộ chiếu";

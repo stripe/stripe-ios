@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '23.18.2'
+  s.version                        = '23.27.2'
 
   s.summary                        = 'UI elements and API bindings for building a custom payment flow using Stripe.'
   s.license                        = { type: 'MIT', file: 'LICENSE' }
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
   s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'StripePaymentsUI/StripePaymentsUI/Source/**/*.swift'
-  s.ios.resource_bundle            = { 'StripePaymentsUI' => 'StripePaymentsUI/StripePaymentsUI/Resources/**/*.{lproj,png,json,xcassets}' }
+  s.ios.resource_bundle            = { 'StripePaymentsUIBundle' => 'StripePaymentsUI/StripePaymentsUI/Resources/**/*.{lproj,png,json,xcassets}' }
   s.dependency                       'StripeCore', s.version.to_s
   s.dependency                       'StripeUICore', s.version.to_s
   s.dependency                       'StripePayments', s.version.to_s

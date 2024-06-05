@@ -7,13 +7,14 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension CustomerSheet {
-    static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
+    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
 }
 
 extension Array where Element == STPPaymentMethodType {
-    func customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: CustomerAdapter) -> [STPPaymentMethodType] {
+    func customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: Bool,
+                                                        supportedPaymentMethods: [STPPaymentMethodType] = CustomerSheet.supportedPaymentMethods) -> [STPPaymentMethodType] {
         return self.filter { type in
-            var isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
+            var isSupported = supportedPaymentMethods.contains(type)
             if type == .USBankAccount {
                 if !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
                     #if DEBUG
@@ -21,7 +22,7 @@ extension Array where Element == STPPaymentMethodType {
                     #endif
                     isSupported = false
                 }
-                if !customerAdapter.canCreateSetupIntents {
+                if !canCreateSetupIntents {
                     #if DEBUG
                     print("[Stripe SDK]: CustomerSheet - customerAdapater must be able to create setupIntents")
                     #endif
@@ -51,5 +52,38 @@ extension Array where Element == STPPaymentMethodType {
             }
         }
         return pmTypes
+    }
+}
+
+extension CustomerSheet {
+    /// Given a list of paymentMethodTypes, return an array of corresponding deduped list of STPPaymentMethodType that are supported
+    /// within customer sheet.  If any unsupported payment method types are passed in, return an error.
+    static func customerSheetSupportedPaymentMethodTypes(_ paymentMethodTypes: [String]) -> Result<[STPPaymentMethodType]?, Error> {
+        guard !paymentMethodTypes.isEmpty else {
+            return .success(nil)
+        }
+        var unsupportedPMs: [String] = []
+        var unsupportedPMsSet: Set<String> = []
+        var validPMs: [STPPaymentMethodType] = []
+        var validPMsSet: Set<STPPaymentMethodType> = []
+
+        for paymentMethodType in paymentMethodTypes {
+            let stpPaymentMethodType = STPPaymentMethod.type(from: paymentMethodType)
+            if !CustomerSheet.supportedPaymentMethods.contains(where: { $0 == stpPaymentMethodType }) {
+                if !unsupportedPMsSet.contains(paymentMethodType) {
+                    unsupportedPMsSet.insert(paymentMethodType)
+                    unsupportedPMs.append(paymentMethodType)
+                }
+            } else {
+                if !validPMsSet.contains(stpPaymentMethodType) {
+                    validPMsSet.insert(stpPaymentMethodType)
+                    validPMs.append(stpPaymentMethodType)
+                }
+            }
+        }
+        guard unsupportedPMs.isEmpty else {
+            return .failure(CustomerSheetError.unsupportedPaymentMethodType(paymentMethodTypes: unsupportedPMs))
+        }
+        return .success(validPMs)
     }
 }

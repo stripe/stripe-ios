@@ -14,7 +14,7 @@ protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
 
     func webFlowViewController(
         _ viewController: FinancialConnectionsWebFlowViewController,
-        didFinish result: FinancialConnectionsSheet.Result
+        didFinish result: HostControllerResult
     )
 
     func webFlowViewController(
@@ -35,15 +35,22 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
-        let view = ContinueStateView(institutionImageUrl: nil) { [weak self] in
-            guard let self = self else { return }
-            if let url = self.lastOpenedNativeURL {
-                self.redirect(to: url)
-            } else {
-                self.startAuthenticationSession(manifest: self.manifest)
-            }
-        }
-        return view
+        let continueStateViews = ContinueStateViews(
+            institutionImageUrl: nil,
+            didSelectContinue: { [weak self] in
+                guard let self else { return }
+                if let url = self.lastOpenedNativeURL {
+                    self.redirect(to: url)
+                } else {
+                    self.startAuthenticationSession(manifest: self.manifest)
+                }
+            },
+            didSelectCancel: nil
+        )
+        return PaneLayoutView(
+            contentView: continueStateViews.contentView,
+            footerView: continueStateViews.footerView
+        ).createView()
     }()
 
     /**
@@ -71,7 +78,8 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .textDisabled
+        item.tintColor = .iconDefault
+        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
 
@@ -128,7 +136,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 
 extension FinancialConnectionsWebFlowViewController {
 
-    private func notifyDelegate(result: FinancialConnectionsSheet.Result) {
+    private func notifyDelegate(result: HostControllerResult) {
         delegate?.webFlowViewController(self, didFinish: result)
         delegate = nil  // prevent the delegate from being called again
     }
@@ -138,20 +146,53 @@ extension FinancialConnectionsWebFlowViewController {
         additionalQueryParameters: String? = nil
     ) {
         guard authSessionManager == nil else { return }
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.showLoading(true)
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
+        var additionalQueryParameters = additionalQueryParameters
+        if manifest.isProductInstantDebits {
+            additionalQueryParameters = (additionalQueryParameters ?? "") + "&return_payment_method=true"
+        }
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
             .observe(using: { [weak self] (result) in
                 guard let self = self else { return }
-                self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
+                self.loadingView.showLoading(false)
                 switch result {
-                case .success(.success):
-                    self.fetchSession()
+                case .success(.success(let returnUrl)):
+                    if manifest.isProductInstantDebits {
+                        if
+                            let paymentMethodId = Self.extractValue(from: returnUrl, key: "payment_method_id")
+                        {
+                            let instantDebitsLinkedBank = InstantDebitsLinkedBankImplementation(
+                                paymentMethodId: paymentMethodId,
+                                bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
+                                // backend can return "+" instead of a more-common encoding of "%20" for spaces
+                                    .replacingOccurrences(of: "+", with: " "),
+                                last4: Self.extractValue(from: returnUrl, key: "last4")
+                            )
+                            self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
+                        } else {
+                            self.notifyDelegateOfFailure(
+                                error: FinancialConnectionsSheetError.unknown(
+                                    debugDescription: "payment_method_id was not returned"
+                                )
+                            )
+                        }
+                    } else {
+                        self.fetchSession()
+                    }
                 case .success(.webCancelled):
-                    self.fetchSession(webCancelled: true)
+                    if manifest.isProductInstantDebits {
+                        self.notifyDelegateOfCancel()
+                    } else {
+                        self.fetchSession(webCancelled: true)
+                    }
                 case .success(.nativeCancelled):
-                    self.fetchSession(userDidCancelInNative: true)
+                    if manifest.isProductInstantDebits {
+                        self.notifyDelegateOfCancel()
+                    } else {
+                        self.fetchSession(userDidCancelInNative: true)
+                    }
                 case .failure(let error):
                     self.notifyDelegateOfFailure(error: error)
                 case .success(.redirect(url: let url)):
@@ -171,13 +212,13 @@ extension FinancialConnectionsWebFlowViewController {
     }
 
     private func fetchSession(userDidCancelInNative: Bool = false, webCancelled: Bool = false) {
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.showLoading(true)
         loadingView.errorView.isHidden = true
         sessionFetcher
             .fetchSession()
             .observe { [weak self] (result) in
                 guard let self = self else { return }
-                self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
+                self.loadingView.showLoading(false)
                 switch result {
                 case .success(let session):
                     if userDidCancelInNative {
@@ -187,22 +228,18 @@ extension FinancialConnectionsWebFlowViewController {
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
                         {
-                            self.notifyDelegateOfSuccess(session: session)
+                            self.notifyDelegateOfSuccess(result: .financialConnections(session))
                         } else {
-                            self.delegate?.webFlowViewController(
-                                self,
-                                didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
-                            )
-                            self.notifyDelegate(result: .canceled)
+                            self.notifyDelegateOfCancel()
                         }
                     } else if webCancelled {
                         if session.status == .cancelled && session.statusDetails?.cancelled?.reason == .customManualEntry {
                             self.notifyDelegate(result: .failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
                         } else {
-                            self.notifyDelegate(result: .canceled)
+                            self.notifyDelegateOfCancel()
                         }
                     } else {
-                        self.notifyDelegateOfSuccess(session: session)
+                        self.notifyDelegateOfSuccess(result: .financialConnections(session))
                     }
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
@@ -211,17 +248,31 @@ extension FinancialConnectionsWebFlowViewController {
             }
     }
 
-    private func notifyDelegateOfSuccess(session: StripeAPI.FinancialConnectionsSession) {
+    private func notifyDelegateOfSuccess(result: HostControllerResult.Completed) {
+        let session: StripeAPI.FinancialConnectionsSession?
+        if case .financialConnections(let wrappedSession) = result {
+            session = wrappedSession
+        } else {
+            session = nil
+        }
         delegate?.webFlowViewController(
             self,
             didReceiveEvent: FinancialConnectionsEvent(
                 name: .success,
                 metadata: FinancialConnectionsEvent.Metadata(
-                    manualEntry: session.paymentAccount?.isManualEntry ?? false
+                    manualEntry: session?.paymentAccount?.isManualEntry ?? false
                 )
             )
         )
-        notifyDelegate(result: .completed(session: session))
+        notifyDelegate(result: .completed(result))
+    }
+
+    private func notifyDelegateOfCancel() {
+        delegate?.webFlowViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+        )
+        notifyDelegate(result: .canceled)
     }
 
     // all failures except custom manual entry failure
@@ -233,6 +284,18 @@ extension FinancialConnectionsWebFlowViewController {
             }
 
         notifyDelegate(result: .failed(error: error))
+    }
+
+    private static func extractValue(from url: URL, key: String) -> String? {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            assertionFailure("Invalid URL")
+            return nil
+        }
+        return components
+            .queryItems?
+            .first(where: { $0.name == key })?
+            .value?
+            .removingPercentEncoding
     }
 }
 

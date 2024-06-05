@@ -267,7 +267,7 @@ final class ImageScanningSession<
 
             // Configure camera session
             // Tell the camera to automatically adjust focus to the center of
-            // the image
+            // the image and restrict autofocus range to .near.
             self.cameraSession.configureSession(
                 configuration: .init(
                     initialCameraPosition: self.initialCameraPosition,
@@ -276,9 +276,10 @@ final class ImageScanningSession<
                     focusPointOfInterest: CGPoint(x: 0.5, y: 0.5),
                     outputSettings: [
                         (kCVPixelBufferPixelFormatTypeKey as String): Int(
-                            IDDetectorConstants.requiredPixelFormat
+                            IDDetectorConstants.mbRequiredPixelFormat
                         ),
-                    ]
+                    ],
+                    autoFocusRangeRestriction: .near
                 ),
                 delegate: self,
                 completeOn: .main
@@ -324,6 +325,7 @@ final class ImageScanningSession<
         concurrencyManager.scanImage(
             with: scanner,
             pixelBuffer: pixelBuffer,
+            sampleBuffer: sampleBuffer,
             cameraSession: cameraSession,
             completeOn: .main
         ) { [weak self] scannerOutput in

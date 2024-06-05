@@ -8,6 +8,8 @@
 
 "BLIK" = "BLIK";
 
+"Bacs Direct Debit" = "Bacs 直接借記";
+
 "Bancontact" = "Bancontact";
 
 "Bank" = "銀行";
@@ -46,11 +48,11 @@
 
 "Swish" = "Swish";
 
-"Timed out authenticating your payment method -- try again" = "驗證您的支付方式時超時 -- 請重試";
+"Timed out authenticating your payment method -- try again" = "驗證您的支付方式時超時——請重試";
 
 "UPI" = "UPI";
 
-"US Bank Account" = "美國銀行帳戶";
+"US Bank Account" = "美國銀行賬戶";
 
 "Unknown" = "未知";
 

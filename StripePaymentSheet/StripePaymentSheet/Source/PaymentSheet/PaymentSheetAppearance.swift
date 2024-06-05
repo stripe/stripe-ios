@@ -74,10 +74,18 @@ public extension PaymentSheet {
             public init() {}
 
             /// The primary color used throughout PaymentSheet
+            #if canImport(CompositorServices)
+            public var primary: UIColor = .label
+            #else
             public var primary: UIColor = .systemBlue
+            #endif
 
             /// The color used for the background of PaymentSheet
+            #if canImport(CompositorServices)
+            public var background: UIColor = .clear
+            #else
             public var background: UIColor = .systemBackground
+            #endif
 
             /// The color used for the background of inputs, tabs, and other components
             public var componentBackground: UIColor = UIColor.dynamic(light: .systemBackground,
@@ -161,11 +169,24 @@ public extension PaymentSheet {
 
             /// The background color of the primary button
             /// - Note: If `nil`, `appearance.colors.primary` will be used as the primary button background color
+            #if canImport(CompositorServices)
+            public var backgroundColor: UIColor? = .systemBlue
+            #else
             public var backgroundColor: UIColor?
+            #endif
 
             /// The text color of the primary button
             /// - Note: If `nil`, defaults to either white or black depending on the color of the button
             public var textColor: UIColor?
+
+            /// The background color of the primary button when in a success state.
+            /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
+            public var successBackgroundColor: UIColor = .systemGreen
+
+            /// The text color of the primary button when in a success state.
+            /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
+            /// - Note: If `nil`, defaults to `textColor`
+            public var successTextColor: UIColor?
 
             /// The corner radius of the primary button
             /// - Note: If `nil`, `appearance.cornerRadius` will be used as the primary button corner radius
@@ -190,5 +211,4 @@ public extension PaymentSheet {
             public var shadow: Shadow?
         }
     }
-
 }

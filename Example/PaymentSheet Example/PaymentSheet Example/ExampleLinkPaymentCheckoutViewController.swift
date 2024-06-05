@@ -15,21 +15,27 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     @IBOutlet weak var paymentMethodImage: UIImageView!
     @IBOutlet weak var deferredSwitch: UISwitch!
     var linkPaymentController: LinkPaymentController!
-    let backendCheckoutUrl = "https://abundant-elderly-universe.glitch.me/checkout"  // An example backend endpoint
-    let confirmEndpoint = "https://abundant-elderly-universe.glitch.me/confirm_intent"
+    static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+    var backendCheckoutUrl: String {
+        "\(ExampleLinkPaymentCheckoutViewController.baseEndpoint)/checkout"
+    }
+    var confirmEndpoint: String {
+        "\(ExampleLinkPaymentCheckoutViewController.baseEndpoint)/confirm_intent"
+    }
     private var token = 0
 
     let billingDetails: PaymentSheet.BillingDetails = {
         var billingDetails = PaymentSheet.BillingDetails()
-        billingDetails.email = "test@example.com"
-        billingDetails.phone = "+15551232414567"
+        // uncomment to test prefilled email
+        // billingDetails.email = "test@example.com"
+        // billingDetails.phone = "+15551232414567"
         return billingDetails
     }()
 
     private func loadBackend() {
         token += 1
         let thisToken = token
-        makeRequest(with: backendCheckoutUrl, body: ["mode": "payment"]) {
+        makeRequest(with: backendCheckoutUrl, body: ["mode": "payment", "use_link": true]) {
             [weak self] (data, _, _) in
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data, options: [])
@@ -50,8 +56,11 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                     let intentConfiguration = PaymentSheet
                         .IntentConfiguration(
                             mode: .payment(amount: 100, currency: "usd"),
-                            paymentMethodTypes: ["link"]) { [weak self] _, _, intentCreationCallback in
-                                self?.handleDeferredIntent(intentCreationCallback: intentCreationCallback)
+                            paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+                                self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
+                                                           paymentMethod: paymentMethod,
+                                                           shouldSavePaymentMethod: shouldSavePaymentMethod,
+                                                           intentCreationCallback: intentCreationCallback)
                             }
 
                     self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
@@ -140,7 +149,10 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    func handleDeferredIntent(intentCreationCallback: @escaping ((Result<String, Error>) -> Void) ) {
+    func handleDeferredIntent(clientSecret: String,
+                              paymentMethod: STPPaymentMethod,
+                              shouldSavePaymentMethod: Bool,
+                              intentCreationCallback: @escaping ((Result<String, Error>) -> Void) ) {
         enum ConfirmHandlerError: Error, LocalizedError {
             case clientSecretNotFound
             case confirmError(String)
@@ -150,14 +162,19 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                 switch self {
                 case .clientSecretNotFound:
                     return "Client secret not found in response from server."
-                case .confirmError(let errorMesssage):
-                    return errorMesssage
+                case .confirmError(let errorMessage):
+                    return errorMessage
                 case .unknown:
                     return "An unknown error occurred."
                 }
             }
         }
-        makeRequest(with: confirmEndpoint, body: ["mode": "payment"], completionHandler: { data, response, error in
+        makeRequest(with: confirmEndpoint, body: ["mode": "payment",
+                                                  "client_secret": clientSecret,
+                                                  "payment_method_id": paymentMethod.stripeId,
+                                                  "should_save_payment_method": shouldSavePaymentMethod,
+                                                  "merchant_country_code": "US",
+                                                  "return_url": "payments-example://stripe-redirect", ], completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,

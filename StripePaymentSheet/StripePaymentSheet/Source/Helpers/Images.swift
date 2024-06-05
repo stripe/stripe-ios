@@ -34,7 +34,6 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_p24 = "icon-pm-p24"
     case pm_type_sepa = "icon-pm-sepa"
     case pm_type_paypal = "icon-pm-paypal"
-    case pm_type_link = "icon-pm-link"
     case pm_type_upi = "icon-pm-upi"
     case pm_type_cashapp = "icon-pm-cashapp"
     case pm_type_revolutpay = "icon-pm-revolutpay"
@@ -48,6 +47,7 @@ enum Image: String, CaseIterable, ImageMaker {
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"
     case icon_chevron_left = "icon_chevron_left"
+    case icon_chevron_right = "icon_chevron_right"
     case icon_lock = "icon_lock"
     case icon_plus = "icon_plus"
     case icon_x = "icon_x"
@@ -57,7 +57,9 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // Link
     case link_logo = "link_logo"
-    case link_arrow = "link_arrow"
+    case link_logo_bw = "link_logo_bw"
+    case link_logo_knockout = "link_logo_knockout"
+    case link_icon = "link_icon"
 
     // Carousel
     case carousel_applepay
@@ -70,7 +72,6 @@ enum Image: String, CaseIterable, ImageMaker {
     case carousel_card_unionpay
     case carousel_card_unknown
     case carousel_card_visa
-    case carousel_link
     case carousel_sepa
 
     // Affirm Images

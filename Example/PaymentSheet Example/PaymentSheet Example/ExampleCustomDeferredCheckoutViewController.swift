@@ -6,7 +6,7 @@
 //
 // This is an example of an integration using PaymentSheet.FlowController where you collect payment details before creating an Intent.
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
@@ -267,7 +267,9 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 var configuration = PaymentSheet.Configuration()
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
-                    merchantId: "com.foo.example", merchantCountryCode: "US")
+                    merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
+                    merchantCountryCode: "US"
+                )
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"

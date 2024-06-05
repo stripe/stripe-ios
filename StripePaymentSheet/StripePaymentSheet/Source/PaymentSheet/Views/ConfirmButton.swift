@@ -59,15 +59,6 @@ class ConfirmButton: UIView {
         }
     }
 
-    var succeededBackgroundColor: UIColor {
-        get {
-            return buyButton.succeededBackgroundColor
-        }
-        set {
-            buyButton.succeededBackgroundColor = newValue
-        }
-    }
-
     private(set) var state: Status = .enabled
     private(set) var style: Style
     private(set) var callToAction: CallToActionType
@@ -133,10 +124,12 @@ class ConfirmButton: UIView {
         super.layoutSubviews()
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.buyButton.update(status: state, callToAction: callToAction, animated: false)
     }
+#endif
 
     @objc private func didBecomeActive() {
         self.buyButton.update(status: self.state, callToAction: self.callToAction, animated: false)
@@ -230,7 +223,9 @@ class ConfirmButton: UIView {
         }
 
         /// Background color for the `.succeeded` state.
-        var succeededBackgroundColor: UIColor = .systemGreen
+        var succeededBackgroundColor: UIColor {
+            return appearance.primaryButton.successBackgroundColor
+        }
 
         private static let minimumLabelHeight: CGFloat = 24
         private static let minimumButtonHeight: CGFloat = 44
@@ -359,10 +354,12 @@ class ConfirmButton: UIView {
             overriddenForegroundColor = appearance.primaryButton.textColor
         }
 
+#if !canImport(CompositorServices)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
         }
+#endif
 
         override func tintColorDidChange() {
             super.tintColorDidChange()
@@ -532,9 +529,9 @@ class ConfirmButton: UIView {
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
-            if status == .succeeded {
-                // always use hardcoded color for foreground color when in success state
-                return .white
+            // Use successTextColor if in succeeded state and provided, otherwise fallback to foreground color
+            if status == .succeeded, let successTextColor = appearance.primaryButton.successTextColor {
+                return successTextColor
             }
 
             // if foreground is set prefer that over a dynamic constrasting color in all othe states
@@ -559,14 +556,15 @@ class ConfirmButton: UIView {
     class CheckProgressView: UIView {
         let circleLayer = CAShapeLayer()
         let checkmarkLayer = CAShapeLayer()
-
+        let baseLineWidth: CGFloat
         var color: UIColor = .white {
             didSet {
                 colorDidChange()
             }
         }
 
-        override init(frame: CGRect) {
+        init(frame: CGRect, baseLineWidth: CGFloat = 1.0) {
+            self.baseLineWidth = baseLineWidth
             // Circle
             let circlePath = UIBezierPath(
                 arcCenter: CGPoint(
@@ -581,7 +579,7 @@ class ConfirmButton: UIView {
             circleLayer.path = circlePath.cgPath
             circleLayer.fillColor = UIColor.clear.cgColor
             circleLayer.lineCap = .round
-            circleLayer.lineWidth = 1.0
+            circleLayer.lineWidth = baseLineWidth
             circleLayer.strokeEnd = 0.0
 
             // Checkmark
@@ -598,7 +596,7 @@ class ConfirmButton: UIView {
             checkmarkLayer.path = checkmarkPath.cgPath
             checkmarkLayer.lineCap = .round
             checkmarkLayer.fillColor = UIColor.clear.cgColor
-            checkmarkLayer.lineWidth = 1.5
+            checkmarkLayer.lineWidth = baseLineWidth + 0.5
             checkmarkLayer.strokeEnd = 0.0
 
             checkmarkLayer.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
@@ -634,7 +632,14 @@ class ConfirmButton: UIView {
             circleLayer.add(rotationAnimation, forKey: "animateRotate")
         }
 
-        func completeProgress() {
+        func completeProgress(completion: (() -> Void)? = nil) {
+            CATransaction.begin()
+            // Note: Make sure the completion block is set before adding any animations
+            CATransaction.setCompletionBlock {
+                if let completion {
+                    completion()
+                }
+            }
             circleLayer.removeAnimation(forKey: "animateCircle")
 
             // Close the circle
@@ -657,6 +662,7 @@ class ConfirmButton: UIView {
             animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
             checkmarkLayer.strokeEnd = 1.0
             checkmarkLayer.add(animation, forKey: "animateFinishCircle")
+            CATransaction.commit()
         }
 
         private func colorDidChange() {

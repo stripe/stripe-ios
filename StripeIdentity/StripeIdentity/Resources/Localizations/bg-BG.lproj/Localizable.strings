@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "На следващата стъпка автоматично ще бъдат направени няколко снимки, за да се потвърди, че това сте вие.";
 
+"Accepted forms of ID include" = "Приемат се следните форми на документи за самоличност";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Като алтернатива можете да качите ръчно снимка на документа си за самоличност.";
 
 "App Settings" = "Настройки на приложението";
 
-"Back driver's license photo successfully uploaded" = "Успешно качена снимка на задната страна на шофьорска книжка";
-
 "Back identity card photo successfully uploaded" = "Успешно качена снимка на задната страна на лична карта";
-
-"Back of driver's license" = "Задна страна на свидетелство за управление на МПС";
 
 "Back of identity card" = "Задна страна на лична карта";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "Датата на раждане не изглежда валидна";
 
-"Flip your driver's license over to the other side" = "Обърнете шофьорската си книжка от другата страна";
+"Details not visible" = "Подробностите не се виждат";
 
 "Flip your identity card over to the other side" = "Обърнете личната си карта от другата страна.";
 
-"Front driver's license photo successfully uploaded" = "Успешно качена снимка на предната страна на шофьорска книжка";
-
 "Front identity card photo successfully uploaded" = "Успешно качена снимка на предната страна на лична карта";
 
-"Front of driver's license" = "Предна страна на свидетелство за управление на МПС";
-
 "Front of identity card" = "Предна страна на лична карта";
+
+"Get ready to scan your photo ID" = "Подгответе се за сканиране на Вашия документ за самоличност със снимка";
 
 "Get ready to take a selfie" = "Пригответе се да си направите селфи";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "Застанете неподвижно, сканира се";
 
+"I'm ready" = "Готов съм";
+
 "ID Number" = "Идентификационен номер";
 
-"ID Type" = "Тип идентификация";
-
-"Image of passport" = "Изображение на паспорт";
-
 "Individual CPF" = "CPF на физическо лице";
+
+"Keep ID level" = "Подравнете документа за самоличност";
 
 "Last 4 of Social Security number" = "Последните 4 цифри от социалноосигурителния номер";
 
 "Loading" = "Зареждане";
 
+"Make sure all details are visible and focus" = "Уверете се, че всички данни са видими и на фокус.";
+
+"Make sure you're in a well lit space." = "Уверете се, че сте на добре осветено място.";
+
+"Move closer" = "Приближете";
+
+"Move farther" = "Отдалечете";
+
+"Move to a darker area" = "Преместете се на по-тъмно място";
+
+"Move to a well-lit area" = "Преместете се на добре осветено място";
+
 "NRIC or FIN" = "NRIC или FIN";
 
-"Passport" = "Паспорт";
-
-"Passport photo successfully uploaded" = "Успешно качена снимка на паспорт";
+"No document detected" = "Не е открит документ";
 
 "Personal ID number" = "Личен идентификационен номер";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "Библиотека със снимки";
 
-"Please upload an image of your passport" = "Моля, качете изображение на Вашия паспорт.";
-
-"Please upload images of the front and back of your driver's license" = "Моля, качете изображение на предната и задната част от Вашето свидетелство за управление на МПС.";
-
 "Please upload images of the front and back of your identity card" = "Моля, качете изображение на предната и задната част на Вашата лична карта.";
-
-"Position your driver's license in the center of the frame" = "Позиционирайте шофьорската си книжка в центъра на рамката";
 
 "Position your face in the center of the frame." = "Позиционирайте лицето си в центъра на рамката.";
 
 "Position your identity card in the center of the frame" = "Позиционирайте личната си карта в центъра на рамката";
-
-"Position your passport in the center of the frame" = "Позиционирайте паспорта си в центъра на рамката";
 
 "Retake Photos" = "Повторно заснемане на снимки";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "Изберете местоположение за качване на изображение на предната страна на Вашия документ за самоличност от";
 
-"Select back driver's license photo" = "Изберете снимка на задната част на шофьорска книжка";
-
 "Select back identity card photo" = "Изберете снимка на задната страна на лична карта";
 
-"Select front driver's license photo" = "Изберете снимка на предната страна на шофьорска книжка";
-
 "Select front identity card photo" = "Изберете снимка на предната страна на лична карта";
-
-"Select passport photo" = "Изберете снимка на паспорт";
 
 "Selfie" = "Селфи";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "Опитайте отново";
 
+"Try reduce glare and make ID visible" = "Опитайте да намалите отблясъците и се уверете, че документът за самоличност е видим.";
+
 "Unable to establish a connection." = "Не може да бъде осъществена връзка.";
 
 "Unsaved changes" = "Незапазени промени";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "Качете документ за самоличност със снимка";
 
-"Uploading back driver's license photo" = "Качване на снимка на задната страна на шофьорска книжка";
-
 "Uploading back identity card photo" = "Качване на снимка на задната страна на лична карта";
 
-"Uploading front driver's license photo" = "Качване на снимка на предната страна на шофьорска книжка";
-
 "Uploading front identity card photo" = "Качване на снимка на предната страна на лична карта";
-
-"Uploading passport photo" = "Качване на снимка на паспорт";
 
 "Verify your identity" = "Удостоверете Вашата самоличност";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "Можете да опитате отново или да качите изображение от устройството си.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Вашите селфи изображения не са запазени. Искате ли да излезете?";
+
+"driver's license" = "свидетелство за управление на МПС";
+
+"government-issued photo ID" = "документ за самоличност със снимка, издаден от държавен орган";
+
+"passport" = "паспорт";

@@ -20,7 +20,6 @@ class STPAnalyticsClientApplePayTest: XCTestCase {
         // setup
         let analytic = PaymentAPIAnalytic(
             event: .paymentMethodCreation,
-            productUsage: [],
             additionalParams: [:]
         )
         let client = STPAnalyticsClient()

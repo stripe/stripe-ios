@@ -68,9 +68,10 @@ import PassKit
             }
         }
     }
+
     /// The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
     ///
-    /// Set this property to enable other card networks in addition to these.
+    /// Set this property to enable other card networks in addition to these, such as .JCB or .cartesBancaires.
     /// For example, `additionalEnabledApplePayNetworks = [.JCB]` enables JCB (note this requires onboarding from JCB and Stripe).
     @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = [] {
         didSet {
@@ -99,14 +100,14 @@ import PassKit
         return paymentRequest.paymentSummaryItems.last?.amount.floatValue ?? 0.0 >= 0
     }
 
-    class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
-        return [
+    @_spi(STP) public class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
+        return additionalEnabledApplePayNetworks + [
             .amex,
             .masterCard,
             .maestro,
             .visa,
             .discover,
-        ] + additionalEnabledApplePayNetworks
+        ]
     }
 
     /// Whether or not this can make Apple Pay payments via a card network supported
@@ -116,6 +117,8 @@ import PassKit
     /// American Express, Visa, Mastercard, Discover, Maestro.
     /// Japanese users can enable JCB by setting `JCBPaymentNetworkSupported` to YES,
     /// after they have been approved by JCB.
+    /// Users that have the Payment Method Cartes Bancaires set to Active, can enable it
+    /// by adding `.cartesBancaires` to the `additionalEnabledApplePayNetworks` list.
     /// - Returns: YES if the device is currently able to make Apple Pay payments via one
     /// of the supported networks. NO if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
@@ -160,7 +163,11 @@ import PassKit
         let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = merchantIdentifier
         paymentRequest.supportedNetworks = self.supportedPKPaymentNetworks()
+        #if canImport(CompositorServices)
+        paymentRequest.merchantCapabilities = .threeDSecure
+        #else
         paymentRequest.merchantCapabilities = .capability3DS
+        #endif
         paymentRequest.countryCode = countryCode.uppercased()
         paymentRequest.currencyCode = currencyCode.uppercased()
         paymentRequest.requiredBillingContactFields = Set([.postalAddress])

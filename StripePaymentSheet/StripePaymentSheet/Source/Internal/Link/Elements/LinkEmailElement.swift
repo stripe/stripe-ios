@@ -10,6 +10,8 @@
 import UIKit
 
 class LinkEmailElement: Element {
+    let collectsUserInput: Bool = true
+
     weak var delegate: ElementDelegate?
 
     private let emailAddressElement: TextFieldElement
@@ -21,8 +23,13 @@ class LinkEmailElement: Element {
         return activityIndicator
     }()
 
+    private var infoView: LinkMoreInfoView?
+
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
+        if let infoView = infoView {
+            stackView.addArrangedSubview(infoView)
+        }
         stackView.spacing = 0
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -33,6 +40,12 @@ class LinkEmailElement: Element {
             bottom: 0,
             trailing: ElementsUI.contentViewInsets.trailing
         )
+        if let infoView = infoView {
+            NSLayoutConstraint.activate([
+                activityIndicator.trailingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: -ElementsUI.contentViewInsets.trailing),
+                infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth),
+            ])
+        }
         return stackView
     }()
 
@@ -74,8 +87,13 @@ class LinkEmailElement: Element {
         }
     }
 
-    public init(defaultValue: String? = nil, theme: ElementsUITheme = .default) {
-        emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue, theme: theme)
+    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsUITheme = .default) {
+        if showLogo {
+            self.infoView = LinkMoreInfoView(theme: theme)
+        }
+        emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue,
+                                                         isOptional: isOptional,
+                                                         theme: theme)
         emailAddressElement.delegate = self
     }
 

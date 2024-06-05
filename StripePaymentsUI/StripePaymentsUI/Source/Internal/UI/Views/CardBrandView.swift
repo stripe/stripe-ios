@@ -101,7 +101,11 @@ import UIKit
             targetSize.height
             / (Self.legacyIconSize.height - Self.iconPadding.top - Self.iconPadding.bottom)
         // We could adapt this for multiple screens, but probably not worth it (better solution is to remove padding from images)
+        #if canImport(CompositorServices)
+        let screenScale = 1.0
+        #else
         let screenScale = UIScreen.main.scale
+        #endif
         let extraWidth = isShowingCBCIndicator ? 9.0 : 0
         return CGSize(
             width: (round(Self.legacyIconSize.width * scaleX * screenScale) / screenScale)
@@ -238,11 +242,12 @@ import UIKit
     }
 
     // MARK: - Callbacks
-
+#if !canImport(CompositorServices)
     @_spi(STP) public override func traitCollectionDidChange(
         _ previousTraitCollection: UITraitCollection?
     ) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateIcon()
     }
+#endif
 }

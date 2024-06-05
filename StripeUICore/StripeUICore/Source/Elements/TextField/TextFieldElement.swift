@@ -41,6 +41,7 @@ import UIKit
 
     private let theme: ElementsUITheme
 
+#if !canImport(CompositorServices)
     public var inputAccessoryView: UIView? {
         get {
             return textFieldView.textField.inputAccessoryView
@@ -50,6 +51,7 @@ import UIKit
             textFieldView.textField.inputAccessoryView = newValue
         }
     }
+#endif
 
     // MARK: - ViewModel
     public struct KeyboardProperties {
@@ -128,6 +130,7 @@ import UIKit
 // MARK: - Element
 
 extension TextFieldElement: Element {
+    public var collectsUserInput: Bool { true }
     public var view: UIView {
         return textFieldView
     }

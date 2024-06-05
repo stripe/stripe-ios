@@ -62,7 +62,7 @@ extension STPPaymentMethod: STPPaymentOption {
 
     @objc public var isReusable: Bool {
         switch type {
-        case .card, .link, .USBankAccount:
+        case .card, .link, .USBankAccount, .instantDebits:
             return true
         case .alipay,  // Careful! Revisit this if/when we support recurring Alipay
             .AUBECSDebit,
@@ -70,7 +70,7 @@ extension STPPaymentMethod: STPPaymentOption {
             .przelewy24, .bancontact,
             .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik,
             .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm, .cashApp, .paynow, .zip, .revolutPay, .amazonPay,
-            .alma, .mobilePay, .konbini, .promptPay, .swish,
+            .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco,
             .unknown:
             return false
 

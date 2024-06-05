@@ -10,15 +10,23 @@
 
 extension Intent {
     var supportsLink: Bool {
-        return recommendedPaymentMethodTypes.contains(.link)
+        // Either Link is an allowed Payment Method in the elements/sessions response, or passthrough mode (Link as a Card PM) is allowed
+        return recommendedPaymentMethodTypes.contains(.link) || linkPassthroughModeEnabled
     }
 
     var supportsLinkCard: Bool {
-        return supportsLink && (linkFundingSources?.contains(.card) ?? false)
+        return supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
-    var onlySupportsLinkBank: Bool {
-        return supportsLink && (linkFundingSources == [.bankAccount])
+    var linkFlags: [String: Bool] {
+        switch self {
+        case .paymentIntent(let paymentIntent, _):
+            return paymentIntent.linkSettings?.linkFlags ?? [:]
+        case .setupIntent(let setupIntent, _):
+            return setupIntent.linkSettings?.linkFlags ?? [:]
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.linkFlags ?? [:]
+        }
     }
 
     var callToAction: ConfirmButton.CallToActionType {
@@ -37,6 +45,28 @@ extension Intent {
         }
     }
 
+    var linkPassthroughModeEnabled: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent, _):
+            return paymentIntent.linkSettings?.passthroughModeEnabled ?? false
+        case .setupIntent(let setupIntent, _):
+            return setupIntent.linkSettings?.passthroughModeEnabled ?? false
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.passthroughModeEnabled ?? false
+        }
+    }
+
+    var disableLinkSignup: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent, _):
+            return paymentIntent.linkSettings?.disableSignup ?? false
+        case .setupIntent(let setupIntent, _):
+            return setupIntent.linkSettings?.disableSignup ?? false
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.disableSignup ?? false
+        }
+    }
+
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
         return elementsSession.linkSettings?.fundingSources
     }
@@ -45,7 +75,12 @@ extension Intent {
         return elementsSession.linkSettings?.popupWebviewOption ?? .shared
     }
 
-    var countryCode: String? {
+    func countryCode(overrideCountry: String?) -> String? {
+#if DEBUG
+        if let overrideCountry {
+            return overrideCountry
+        }
+#endif
         return elementsSession.countryCode
     }
 

@@ -196,7 +196,9 @@ class TextFieldView: UIView {
         textField.textContentType = viewModel.keyboardProperties.textContentType
         if viewModel.keyboardProperties.type != textField.keyboardType {
             textField.keyboardType = viewModel.keyboardProperties.type
+#if !canImport(CompositorServices)
             textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
+#endif
             textField.reloadInputViews()
         }
 
@@ -226,10 +228,12 @@ class TextFieldView: UIView {
         layoutIfNeeded()
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI(with: viewModel)
     }
+#endif
 }
 
 // MARK: - UITextFieldDelegate

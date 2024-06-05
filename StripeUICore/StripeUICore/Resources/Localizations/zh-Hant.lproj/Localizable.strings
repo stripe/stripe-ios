@@ -18,6 +18,8 @@
 
 "Cancel" = "取消";
 
+"Card brand" = "金融卡品牌";
+
 "City" = "城市";
 
 "Code field" = "驗證碼欄位";
@@ -82,6 +84,8 @@
 
 "Phone" = "電話";
 
+"Phone number" = "手機號碼";
+
 "Postal code" = "郵遞區號";
 
 "Prefecture" = "轄區";
@@ -94,9 +98,13 @@
 
 "Remove bank account ending in %@" = "移除尾號為 %@ 的銀行帳戶";
 
+"Remove card" = "解除綁定";
+
 "Search" = "搜尋";
 
 "Select card brand (optional)" = "選擇金融卡品牌（可選）";
+
+"Sort code" = "分類代碼";
 
 "State" = "州";
 
@@ -109,6 +117,8 @@
 "The ID number you entered is incomplete." = "您輸入的證件號碼不完整。";
 
 "The account number you entered is incomplete." = "您輸入的帳號不完整。";
+
+"The sort code you entered is invalid." = "您輸入的分類代碼無效。";
 
 "Town or city" = "城鎮或城市";
 

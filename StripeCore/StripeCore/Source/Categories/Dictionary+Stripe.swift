@@ -44,6 +44,20 @@ extension Dictionary {
         }
         return newDict
     }
+
+    public mutating func mergeAssertingOnOverwrites(_ other: [Key: Value]) {
+        merge(other) { a, b in
+            stpAssertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
+            return a
+        }
+    }
+
+    public func mergingAssertingOnOverwrites<S>(_ other: S) -> [Key: Value] where S: Sequence, S.Element == (Key, Value) {
+        merging(other) { a, b in
+            stpAssertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
+            return a
+        }
+    }
 }
 
 extension Dictionary where Value == Any {

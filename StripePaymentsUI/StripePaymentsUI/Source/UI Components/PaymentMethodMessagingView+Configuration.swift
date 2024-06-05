@@ -21,7 +21,7 @@ import UIKit
             currency: String,
             amount: Int,
             locale: Locale = Locale.current,
-            countryCode: String = Locale.current.regionCode ?? "",
+            countryCode: String = Locale.current.stp_regionCode ?? "",
             font: UIFont = .preferredFont(forTextStyle: .footnote),
             textColor: UIColor = .label,
             imageColor: (
@@ -56,7 +56,7 @@ import UIKit
         /// The customer's locale. Defaults to the device locale.
         public var locale: Locale = Locale.current
         /// The customer's country as a two-letter string. Defaults to their device's country.
-        public var countryCode: String = Locale.current.regionCode ?? ""
+        public var countryCode: String = Locale.current.stp_regionCode ?? ""
         /// The font of text displayed in the view. Defaults to the system font.
         public var font: UIFont = .preferredFont(forTextStyle: .footnote)
         /// The color of text displayed in the view. Defaults to `UIColor.labelColor`.

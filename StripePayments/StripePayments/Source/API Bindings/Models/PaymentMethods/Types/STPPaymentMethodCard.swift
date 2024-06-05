@@ -34,6 +34,8 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
     @objc public private(set) var fingerprint: String?
     /// Contains information about card networks that can be used to process the payment.
     @objc public private(set) var networks: STPPaymentMethodCardNetworks?
+    /// Contains information about the card's display brand
+    @objc @_spi(STP) public private(set) var displayBrand: String?
     /// Contains details on how this Card maybe be used for 3D Secure authentication.
     @objc public private(set) var threeDSecureUsage: STPPaymentMethodThreeDSecureUsage?
     /// If this Card is part of a Card Wallet, this contains the details of the Card Wallet.
@@ -62,6 +64,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
             "last4 = \(last4 ?? "")",
             "fingerprint = \(fingerprint ?? "")",
             "networks = \(networks?.description ?? "")",
+            "displayBrand = \(displayBrand?.description ?? "")",
             "threeDSecureUsage = \(threeDSecureUsage?.description ?? "")",
             "wallet = \(wallet?.description ?? "")",
         ]
@@ -90,6 +93,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
         card.networks = STPPaymentMethodCardNetworks.decodedObject(
             fromAPIResponse: dict["networks"] as? [AnyHashable: Any]
         )
+        card.displayBrand = dict.stp_string(forKey: "display_brand")
         card.threeDSecureUsage = STPPaymentMethodThreeDSecureUsage.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "three_d_secure_usage"))
         card.wallet = STPPaymentMethodCardWallet.decodedObject(

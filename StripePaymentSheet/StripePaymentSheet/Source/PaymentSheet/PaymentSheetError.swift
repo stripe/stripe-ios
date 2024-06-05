@@ -53,6 +53,9 @@ public enum PaymentSheetError: Error, LocalizedError {
     case failedToCreateLinkSession
     case linkNotAuthorized
 
+    // MARK: - Confirmation errors
+    case unexpectedNewPaymentMethod
+
     public var errorDescription: String? {
         return NSError.stp_unexpectedErrorMessage()
     }
@@ -120,6 +123,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "failedToCreateLinkSession"
         case .linkNotAuthorized:
             return "linkNotAuthorized"
+        case .unexpectedNewPaymentMethod:
+            return "unexpectedNewPaymentMethod"
         }
     }
 
@@ -163,7 +168,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             case .linkSignUpNotRequired:
                 return "Don't call sign up if not needed"
             case .noPaymentMethodTypesAvailable(intentPaymentMethods: let intentPaymentMethods):
-                return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `allowsPaymentMethodsRequiringShippingAddress` in your PaymentSheet.Configuration object."
+                return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `allowsPaymentMethodsRequiringShippingAddress` or set `returnURL` in your PaymentSheet.Configuration object."
             case .linkCallVerifyNotRequired:
                 return "Don't call verify if not needed"
             case .linkingWithoutValidSession:
@@ -182,6 +187,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "confirm called without authorizing Link"
             case .setupIntentClientSecretProviderNil:
                 return "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil"
+            case .unexpectedNewPaymentMethod:
+                return "New payment method should not have been created yet"
             }
         }()
 

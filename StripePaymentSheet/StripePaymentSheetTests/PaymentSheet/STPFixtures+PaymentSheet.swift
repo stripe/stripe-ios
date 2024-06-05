@@ -32,11 +32,18 @@ extension STPElementsSession {
 
     static func _testValue(
         paymentMethodTypes: [String],
-        flags: [String: Bool] = [:]
+        externalPaymentMethodTypes: [String] = []
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
-        json["flags"] = flags
+        json["external_payment_method_data"] = externalPaymentMethodTypes.map {
+            [
+                "type": $0,
+                "label": $0,
+                "light_image_url": "https://test.com",
+                "dark_image_url": "https://test.com",
+            ]
+        }
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
@@ -76,6 +83,29 @@ extension STPPaymentMethod {
             "card": [
                 "last4": "4242",
                 "brand": "visa",
+            ],
+        ])!
+    }
+
+    static func _testCardAmex() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "0005",
+                "brand": "amex",
+            ],
+        ])!
+    }
+
+    static func _testCardCoBranded() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+                "networks": ["available": ["visa", "amex"]],
             ],
         ])!
     }

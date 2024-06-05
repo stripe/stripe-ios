@@ -1,0 +1,31 @@
+{
+  "id": "pm_123456789",
+  "object": "payment_method",
+  "us_bank_account": {
+    "country": "US",
+    "bank_name": "TD BANK",
+    "fingerprint": "Ec5gh5t1Ord8i7DYa",
+    "last4": "6789",
+    "routing_number": "123456789",
+    "account_holder_name": "John Doe",
+    "account_holder_type": "individual",
+    "account_type": "checking"
+  },
+  "billing_details": {
+    "address": {
+      "city": "New York",
+      "country": "US",
+      "line1": "123 Main St",
+      "line2": "",
+      "postal_code": "10001",
+      "state": "NY"
+    },
+    "email": "test@test.com",
+    "name": "John Doe",
+    "phone": "1231231234"
+  },
+  "created": 1599420912,
+  "customer": "cus_123456789",
+  "livemode": true,
+  "type": "us_bank_account"
+}

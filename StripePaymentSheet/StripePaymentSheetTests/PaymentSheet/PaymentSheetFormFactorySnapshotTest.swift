@@ -5,7 +5,6 @@
 //  Created by Eduardo Urias on 2/23/23.
 //
 
-import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils

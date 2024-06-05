@@ -106,10 +106,12 @@ class SectionContainerView: UIView {
         )
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI()
     }
+#endif
 
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {

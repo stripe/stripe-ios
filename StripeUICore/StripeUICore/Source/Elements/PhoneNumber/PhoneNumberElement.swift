@@ -13,19 +13,32 @@ import UIKit
     A simple hstack of  [🇺🇸 + 1] `DropdownElement` and [ Phone number ] `TextFieldElement`
  */
 @_spi(STP) public class PhoneNumberElement: ContainerElement {
-
     // MARK: - ContainerElement protocol
     public lazy var elements: [Element] = { [countryDropdownElement, textFieldElement] }()
     public var delegate: ElementDelegate?
     public lazy var view: UIView = {
         countryDropdownElement.view.directionalLayoutMargins.trailing = 0
-        let hStackView = UIStackView(arrangedSubviews: [countryDropdownElement.view, textFieldElement.view])
+        let hStackView = UIStackView(arrangedSubviews: elements.map { $0.view })
+        if let infoView = infoView {
+            infoView.translatesAutoresizingMaskIntoConstraints = false
+            hStackView.addArrangedSubview(infoView)
+            // Add some extra padding to the right side
+            hStackView.isLayoutMarginsRelativeArrangement = true
+            hStackView.directionalLayoutMargins = .insets(
+                top: 0,
+                leading: 0,
+                bottom: 0,
+                trailing: ElementsUI.contentViewInsets.trailing
+            )
+        }
         return hStackView
     }()
 
     // MARK: - sub-Elements
     let countryDropdownElement: DropdownFieldElement
     let textFieldElement: TextFieldElement
+
+    var infoView: UIView?
 
     // MARK: - Public properties
     public var phoneNumber: PhoneNumber? {
@@ -62,9 +75,11 @@ import UIKit
         defaultCountryCode: String? = nil,
         defaultPhoneNumber: String? = nil,
         isOptional: Bool = false,
+        infoView: UIView? = nil,
         locale: Locale = .current,
         theme: ElementsUITheme = .default
     ) {
+        self.infoView = infoView
         let defaults = Self.deriveDefaults(countryCode: defaultCountryCode, phoneNumber: defaultPhoneNumber)
         let allowedCountryCodes = allowedCountryCodes ?? PhoneNumber.Metadata.allMetadata.map { $0.regionCode }
         let countryDropdownElement = DropdownFieldElement.makeCountryCode(
@@ -98,6 +113,7 @@ import UIKit
     }
 
     // MARK: - Element protocol
+    public let collectsUserInput: Bool = true
     public func beginEditing() -> Bool {
         return textFieldElement.beginEditing()
     }
@@ -162,7 +178,7 @@ extension DropdownFieldElement {
                 rawData: $0
             )
         }
-        let defaultCountry = defaultCountry ?? locale.regionCode ?? ""
+        let defaultCountry = defaultCountry ?? locale.stp_regionCode ?? ""
         let defaultCountryIndex = countryCodes.firstIndex(of: defaultCountry) ?? 0
         return DropdownFieldElement(
             items: countryDisplayStrings,

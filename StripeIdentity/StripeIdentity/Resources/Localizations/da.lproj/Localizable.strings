@@ -1,14 +1,12 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Der tages automatisk nogle få billeder i det næste trin for at bekræfte, at det er dig";
 
+"Accepted forms of ID include" = "Godkendte former for ID inkluderer";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Alternativt kan du manuelt uploade et foto af dit identifikationsdokument.";
 
 "App Settings" = "Appindstillinger";
 
-"Back driver's license photo successfully uploaded" = "Foto af bagside af kørekort blev uploadet";
-
 "Back identity card photo successfully uploaded" = "Foto af bagside af identitetskort blev uploadet";
-
-"Back of driver's license" = "Bagside af kørekort";
 
 "Back of identity card" = "Bagside af identitetskort";
 
@@ -28,17 +26,15 @@
 
 "Date of birth does not look valid" = "Fødselsdatoen ser ikke ud til at være gyldig.";
 
-"Flip your driver's license over to the other side" = "Vend dit kørekort om på bagsiden";
+"Details not visible" = "Detaljer ikke synlige";
 
 "Flip your identity card over to the other side" = "Vend dit identitetskort om på bagsiden";
 
-"Front driver's license photo successfully uploaded" = "Foto af forside af kørekort blev uploadet";
-
 "Front identity card photo successfully uploaded" = "Foto af forside af identitetskort blev uploadet";
 
-"Front of driver's license" = "Forside af kørekort";
-
 "Front of identity card" = "Forside af identitetskort";
+
+"Get ready to scan your photo ID" = "Gør dig klar til at scanne dit foto-ID";
 
 "Get ready to take a selfie" = "Gør klar til at tage en selfie";
 
@@ -46,23 +42,33 @@
 
 "Hold still, scanning" = "Hold stille, scanner";
 
+"I'm ready" = "Jeg er klar";
+
 "ID Number" = "ID-nummer";
 
-"ID Type" = "ID-type";
-
-"Image of passport" = "Billede af pas";
-
 "Individual CPF" = "Individuel CPF";
+
+"Keep ID level" = "Hold id'et vandret";
 
 "Last 4 of Social Security number" = "Sidste 4 cifre af personnummer";
 
 "Loading" = "Indlæser";
 
+"Make sure all details are visible and focus" = "Kontrollér, at alle detaljer er synlige og i fokus";
+
+"Make sure you're in a well lit space." = "Sørg for, at du er et sted, der er ordentligt oplyst.";
+
+"Move closer" = "Flyt tættere på";
+
+"Move farther" = "Flyt længere væk";
+
+"Move to a darker area" = "Gå til et mørkere område";
+
+"Move to a well-lit area" = "Gå til et område med god belysning";
+
 "NRIC or FIN" = "NRIC eller FIN";
 
-"Passport" = "Pas";
-
-"Passport photo successfully uploaded" = "Foto af pas blev uploadet";
+"No document detected" = "Intet dokument registreret";
 
 "Personal ID number" = "Personligt id-nummer";
 
@@ -74,19 +80,11 @@
 
 "Photo Library" = "Fotobibliotek";
 
-"Please upload an image of your passport" = "Upload et billede af dit pas";
-
-"Please upload images of the front and back of your driver's license" = "Upload billede af forsiden og bagsiden af dit kørekort";
-
 "Please upload images of the front and back of your identity card" = "Upload billeder af forsiden og bagsiden af dit identitetskort";
-
-"Position your driver's license in the center of the frame" = "Placer dit kørekort midt i rammen";
 
 "Position your face in the center of the frame." = "Placer dit ansigt i midten af rammen.";
 
 "Position your identity card in the center of the frame" = "Placer dit identitetskort midt i rammen";
-
-"Position your passport in the center of the frame" = "Placer dit pas midt i rammen";
 
 "Retake Photos" = "Tag billeder igen";
 
@@ -100,15 +98,9 @@
 
 "Select a location to upload the front of your identity document from" = "Vælg en placering, som forsiden af dit identitetsdokument skal uploades fra";
 
-"Select back driver's license photo" = "Vælg foto af bagside af kørekort";
-
 "Select back identity card photo" = "Vælg foto af bagside af identitetskort";
 
-"Select front driver's license photo" = "Vælg foto af forside af kørekort";
-
 "Select front identity card photo" = "Vælg foto af forside af identitetskort";
-
-"Select passport photo" = "Vælg foto af pas";
 
 "Selfie" = "Selfie";
 
@@ -124,6 +116,8 @@
 
 "Try Again" = "Prøv igen";
 
+"Try reduce glare and make ID visible" = "Prøv at reducere genskin, og sørg for, at id'et er synligt";
+
 "Unable to establish a connection." = "Kunne ikke oprette forbindelse.";
 
 "Unsaved changes" = "Ikke-gemte ændringer";
@@ -134,15 +128,9 @@
 
 "Upload your photo ID" = "Upload dit foto-id";
 
-"Uploading back driver's license photo" = "Uploader foto af bagside af kørekort";
-
 "Uploading back identity card photo" = "Uploader foto af bagside af identitetskort";
 
-"Uploading front driver's license photo" = "Uploader foto af forside af kørekort";
-
 "Uploading front identity card photo" = "Uploader foto af forside af identitetskort";
-
-"Uploading passport photo" = "Uploader foto af pas";
 
 "Verify your identity" = "Bekræft din identitet";
 
@@ -155,3 +143,9 @@
 "You can either try again or upload an image from your device." = "Du kan enten prøve igen eller uploade et billede fra din enhed.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Dine selfie-billeder er ikke blevet gemt. Ønsker du at forlade denne session?";
+
+"driver's license" = "kørekort";
+
+"government-issued photo ID" = "myndighedsudstedt foto-ID";
+
+"passport" = "pas";

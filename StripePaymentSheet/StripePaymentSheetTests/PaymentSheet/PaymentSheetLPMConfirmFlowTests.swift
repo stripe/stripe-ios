@@ -11,7 +11,7 @@ import XCTest
 import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
@@ -297,6 +297,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         }
     }
 
+    func testTwintConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "CHF",
+                               paymentMethodType: .stripe(.twint),
+                               merchantCountry: .GB) { form in
+            // Twint has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
     func testSavedSEPA() async throws {
         let customer = "cus_OaMPphpKbeixCz"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
         let savedSepaPM = STPPaymentMethod.decodedObject(fromAPIResponse: [
@@ -319,12 +329,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .stripe(.SEPADebit), merchantCountry: .US, customer: customer, apiClient: apiClient) {
                 let e = expectation(description: "")
                 // Confirm the intent with the form details
+                let paymentHandler = STPPaymentHandler(apiClient: apiClient)
                 PaymentSheet.confirm(
                     configuration: configuration,
                     authenticationContext: self,
                     intent: intent,
-                    paymentOption: .saved(paymentMethod: savedSepaPM),
-                    paymentHandler: STPPaymentHandler(apiClient: apiClient)
+                    paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
+                    paymentHandler: paymentHandler
                 ) { result, _  in
                     e.fulfill()
                     switch result {
@@ -338,6 +349,32 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 }
                 await fulfillment(of: [e], timeout: 10)
             }
+        }
+    }
+
+    func testKlarnaConfirmFlows() async throws {
+        for intentKind in IntentKind.allCases {
+            try await _testConfirm(intentKinds: [intentKind],
+                                   currency: "USD",
+                                   paymentMethodType: .stripe(.klarna),
+                                   merchantCountry: .US) { form in
+                form.getTextFieldElement("Email")?.setText("foo@bar.com")
+                switch intentKind {
+                case .paymentIntent:
+                    XCTAssertNil(form.getMandateElement())
+                case .paymentIntentWithSetupFutureUsage, .setupIntent:
+                    XCTAssertNotNil(form.getMandateElement())
+                }
+            }
+        }
+    }
+
+    func testMultibancoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .stripe(.multibanco),
+                               merchantCountry: .US) { form in
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
         }
     }
 }
@@ -409,7 +446,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 return
             }
             let e = expectation(description: "Confirm")
-            let paymentHandler = STPPaymentHandler(apiClient: apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
+            let paymentHandler = STPPaymentHandler(apiClient: apiClient)
             var redirectShimCalled = false
             paymentHandler._redirectShim = { _, _, _ in
                 // This gets called instead of the PaymentSheet.confirm callback if the Intent is successfully confirmed and requires next actions.
@@ -436,7 +473,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 }
                 e.fulfill()
             }
-            await fulfillment(of: [e], timeout: 10)
+            await fulfillment(of: [e], timeout: 25)
         }
     }
 
@@ -583,7 +620,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
         completion?()
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         guard let currentAction = action as? STPPaymentHandlerPaymentIntentActionParams else { return }
         // Simulate that the intent transitioned to succeeded
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state

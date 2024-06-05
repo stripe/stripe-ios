@@ -37,13 +37,13 @@ struct FinancialConnectionsSheetClosedAnalytic: FinancialConnectionsSheetAnalyti
 
     var additionalParams: [String: Any] {
         return [
-            "session_result": result
+            "session_result": result,
         ]
     }
 }
 
 /// Logged if there's an error presenting the sheet
-struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalytic, ErrorAnalytic {
+struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalytic {
     let event = STPAnalyticEvent.financialConnectionsSheetFailed
     let clientSecret: String
     let additionalParams: [String: Any] = [:]
@@ -55,7 +55,7 @@ struct FinancialConnectionsSheetCompletionAnalytic {
     /// Returns either a `FinancialConnectionsSheetClosedAnalytic` or `FinancialConnectionsSheetFailedAnalytic` depending on the result
     static func make(
         clientSecret: String,
-        result: FinancialConnectionsSheet.Result
+        result: HostControllerResult
     ) -> FinancialConnectionsSheetAnalytic {
         switch result {
         case .completed:

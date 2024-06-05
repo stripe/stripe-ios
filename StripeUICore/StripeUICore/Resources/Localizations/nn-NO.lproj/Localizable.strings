@@ -18,6 +18,8 @@
 
 "Cancel" = "Avbryt";
 
+"Card brand" = "Kortmerke";
+
 "City" = "Stad";
 
 "Code field" = "Kodefelt";
@@ -82,6 +84,8 @@
 
 "Phone" = "Telefonnr.";
 
+"Phone number" = "Telefonnummer";
+
 "Postal code" = "Postnummer";
 
 "Prefecture" = "Prefektur";
@@ -94,9 +98,13 @@
 
 "Remove bank account ending in %@" = "Fjern bankkonto som sluttar på %@";
 
+"Remove card" = "Fjern kort";
+
 "Search" = "Søk";
 
 "Select card brand (optional)" = "Vel kortmerkje (valfritt)";
+
+"Sort code" = "Sorteringskode";
 
 "State" = "Stat";
 
@@ -109,6 +117,8 @@
 "The ID number you entered is incomplete." = "ID-nummeret du skrev inn, er ufullstendig.";
 
 "The account number you entered is incomplete." = "Kontonummeret du skrev inn, er ufullstendig.";
+
+"The sort code you entered is invalid." = "Sorteringskoden du angjev, er ugyldig.";
 
 "Town or city" = "Stad";
 

@@ -10,9 +10,12 @@ import XCTest
 
 extension XCUIApplication {
 
-    static func fc_launch() -> XCUIApplication {
+    static func fc_launch(playgroundConfigurationString: String? = nil) -> XCUIApplication {
+        var launchEnvironment: [String: String] = ["UITesting": "true"]
+        launchEnvironment["UITesting_playground_configuration_string"] = playgroundConfigurationString
+
         let app = XCUIApplication()
-        app.launchEnvironment = ["UITesting": "true"]
+        app.launchEnvironment = launchEnvironment
         app.launch()
         return app
     }
@@ -77,12 +80,37 @@ extension XCUIApplication {
     var fc_nativePrepaneContinueButton: XCUIElement {
         let prepaneContinueButton = fc_nativePrepaneContinueButton_noWait
         XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "Failed to open Partner Auth Prepane - \(#function) waiting failed")
+        // sometimes the prepane cancel button could be
+        // in a loading state
+        XCTAssertTrue(prepaneContinueButton.wait(
+            until: {
+                $0.isHittable == true
+                && $0.isEnabled == true
+            },
+            timeout: 60
+        ), "Prepane continue button failed to be hittable")
         return prepaneContinueButton
     }
 
-    var fc_nativeAccountPickerLinkAccountsButton: XCUIElement {
-        let accountPickerLinkAccountsButton = buttons["account_picker_link_accounts_button"]
+    var fc_nativePrepaneCancelButton: XCUIElement {
+        let prepaneCancelButton = buttons["prepane_cancel_button"]
+        XCTAssertTrue(prepaneCancelButton.waitForExistence(timeout: 5), "Failed to press/open Partner Auth Prepane cancel button - \(#function) waiting failed")
+        // sometimes the prepane cancel button could be
+        // in a loading state
+        XCTAssertTrue(prepaneCancelButton.wait(
+            until: {
+                $0.isHittable == true
+                && $0.isEnabled == true
+            },
+            timeout: 60
+        ), "Prepane cancel button failed to be hittable")
+        return prepaneCancelButton
+    }
+
+    var fc_nativeConnectAccountsButton: XCUIElement {
+        let accountPickerLinkAccountsButton = buttons["connect_accounts_button"]
         XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
+        XCTAssert(accountPickerLinkAccountsButton.isEnabled, "no account selected")
         return accountPickerLinkAccountsButton
     }
 
@@ -92,7 +120,37 @@ extension XCUIApplication {
         return successDoneButton
     }
 
-    func dismissKeyboard() {
+    var fc_secureWebViewCancelButton: XCUIElement {
+        let secureWebViewCancelButton = otherElements["TopBrowserBar"].buttons["Cancel"]
+        XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 5.0), "Failed to close secure browser - \(#function) waiting failed")  // wait for accounts to link
+        return secureWebViewCancelButton
+    }
+
+    var fc_searchBarTextField: XCUIElement {
+        let searchBarTextField = tables
+            .otherElements
+            .textFields["search_bar_text_field"]
+        XCTAssertTrue(searchBarTextField.waitForExistence(timeout: 120.0))
+        return searchBarTextField
+    }
+
+    func fc_nativeFeaturedInstitution(name: String) -> XCUIElement {
+        let featuredTestInstitution = tables.cells.staticTexts[name]
+        XCTAssertTrue(featuredTestInstitution.waitForExistence(timeout: 60.0))
+        return featuredTestInstitution
+    }
+
+    func fc_nativeBankAccount(name: String) -> XCUIElement {
+        let bankAccount = scrollViews.staticTexts[name]
+        XCTAssertTrue(bankAccount.waitForExistence(timeout: 120.0))
+        return bankAccount
+    }
+
+    func fc_scrollDown() {
+        swipeUp(velocity: .verySlow)
+    }
+
+    func fc_dismissKeyboard() {
         let returnKey = keyboards.buttons["return"]
         if returnKey.exists && returnKey.isHittable {
             returnKey.tap()
