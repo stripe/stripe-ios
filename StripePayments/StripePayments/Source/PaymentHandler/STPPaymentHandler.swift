@@ -1707,7 +1707,6 @@ public class STPPaymentHandler: NSObject {
                     ["http", "https"].contains(fallbackURL.scheme)
                 {
                     if useWebAuthSession {
-//                      TODO: Add analytics here to compare ASWebAuthSession vs SFSafariViewController, monitor dropoff
                         if self._redirectShim != nil {
                             // No-op if the redirect shim is active, as we don't want to open the consent dialog. We'll call the completion block automatically.
                             return
