@@ -362,21 +362,12 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         case .applePay, .link:
             return true
         case let .new(paymentMethodType: paymentMethodType):
-            // Update the header view, hide wallet if needed and show header label if needed
-            walletHeaderView?.isHidden = true
-            headerView.isHidden = false
-            if paymentMethodType == .stripe(.card) {
-                let text = savedPaymentMethods.isEmpty ? String.Localized.add_card : String.Localized.add_new_card
-                headerView.set(text: text)
-            } else {
-                headerView.update(with: paymentMethodType)
-            }
-
             // If we can, reuse the existing payment method form so that the customer doesn't have to type their details in again
             if let currentPaymentMethodFormVC = paymentMethodFormViewController, paymentMethodType == currentPaymentMethodFormVC.paymentMethodType {
                 // Switch the main content to the form
                 switchContentIfNecessary(to: currentPaymentMethodFormVC, containerView: paymentContainerView)
                 navigationBar.setStyle(.back(showAdditionalButton: false))
+                updateHeaderView(with: paymentMethodType)
                 // Return false so the payment method isn't selected in the list; this implicitly keeps the most recently selected payment method as selected.
                 return false
             } else {
@@ -387,6 +378,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     self.paymentMethodFormViewController = pmFormVC
                     switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView)
                     navigationBar.setStyle(.back(showAdditionalButton: false))
+                    updateHeaderView(with: paymentMethodType)
                     return false
                 } else {
                     // Otherwise, return true so the payment method appears selected in the list
@@ -400,6 +392,18 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 
     func didTapSavedPaymentMethodAccessoryButton() {
         presentManageScreen()
+    }
+    
+    private func updateHeaderView(with paymentMethodType: PaymentSheet.PaymentMethodType) {
+        // Update the header view, hide wallet if needed and show header label if needed
+        walletHeaderView?.isHidden = true
+        headerView.isHidden = false
+        if paymentMethodType == .stripe(.card) {
+            let text = savedPaymentMethods.isEmpty ? String.Localized.add_card : String.Localized.add_new_card
+            headerView.set(text: text)
+        } else {
+            headerView.update(with: paymentMethodType)
+        }
     }
 
     private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
