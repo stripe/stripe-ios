@@ -6,52 +6,50 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
 final class VerticalHeaderView: UIView {
 
     private lazy var label: UILabel = {
-        return PaymentSheetUI.makeHeaderLabel(appearance: appearance)
+        let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
+        if paymentMethodType == .stripe(.card) {
+            label.text = hasASavedCard ? String.Localized.add_card : String.Localized.add_new_card
+        } else {
+            label.text = paymentMethodType.displayName
+        }
+        return label
     }()
 
-    private var imageView: PaymentMethodTypeImageView?
+    private lazy var imageView: PaymentMethodTypeImageView? = {
+        guard paymentMethodType != .stripe(.card) else { return nil }
+        return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
+    }()
 
     private lazy var stackView: UIStackView = {
-       let stackView = UIStackView(arrangedSubviews: [label])
+        let views = [imageView, label].compactMap { $0 }
+        let stackView = UIStackView(arrangedSubviews: views)
         stackView.spacing = 12
         return stackView
     }()
 
+    private let paymentMethodType: PaymentSheet.PaymentMethodType
+    private let hasASavedCard: Bool // true if the customer has a saved payment method that is type card
     private let appearance: PaymentSheet.Appearance
 
-    init(text: String, appearance: PaymentSheet.Appearance) {
+    init(paymentMethodType: PaymentSheet.PaymentMethodType, hasASavedCard: Bool, appearance: PaymentSheet.Appearance) {
+        self.paymentMethodType = paymentMethodType
+        self.hasASavedCard = hasASavedCard
         self.appearance = appearance
         super.init(frame: .zero)
-        label.text = text
         addAndPinSubview(stackView)
-    }
-
-    func set(text: String) {
-        label.text = text
-        imageView?.removeFromSuperview()
-        imageView = nil
-    }
-
-    func update(with paymentMethodType: PaymentSheet.PaymentMethodType) {
-        label.text = paymentMethodType.displayName
-
-        imageView?.removeFromSuperview()
-        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.insertArrangedSubview(imageView, at: 0)
-
-        NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: 20),
-            imageView.heightAnchor.constraint(equalToConstant: 20),
-        ])
-
-        self.imageView = imageView
+        if let imageView {
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(equalToConstant: 20),
+                imageView.heightAnchor.constraint(equalToConstant: 20),
+            ])
+        }
     }
 
     required init?(coder: NSCoder) {

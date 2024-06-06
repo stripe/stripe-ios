@@ -105,10 +105,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         return header
     }()
 
-    lazy var headerView: VerticalHeaderView = {
-        let headerView = VerticalHeaderView(text: .Localized.select_payment_method, appearance: configuration.appearance)
-        headerView.isHidden = walletHeaderView != nil // Only show this header view if the wallet header view is empty
-        return headerView
+    lazy var headerLabel: UILabel = {
+        let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
+        label.text = .Localized.select_payment_method
+        label.isHidden = walletHeaderView != nil // Only show this header label if the wallet header view is empty
+        return label
     }()
 
     var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
@@ -237,12 +238,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         configuration.style.configure(self)
 
         // One stack view contains all our subviews
-        let views: [UIView] = [headerView, walletHeaderView, paymentContainerView].compactMap { $0 }
+        let views: [UIView] = [headerLabel, walletHeaderView, paymentContainerView].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.setCustomSpacing(24, after: headerView)
+        stackView.setCustomSpacing(24, after: headerLabel)
         if let walletHeaderView {
             stackView.setCustomSpacing(24, after: walletHeaderView)
         }
@@ -367,7 +368,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 // Switch the main content to the form
                 switchContentIfNecessary(to: currentPaymentMethodFormVC, containerView: paymentContainerView)
                 navigationBar.setStyle(.back(showAdditionalButton: false))
-                updateHeaderView(with: paymentMethodType)
+                walletHeaderView?.isHidden = true
+                headerLabel.isHidden = true
                 // Return false so the payment method isn't selected in the list; this implicitly keeps the most recently selected payment method as selected.
                 return false
             } else {
@@ -378,7 +380,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     self.paymentMethodFormViewController = pmFormVC
                     switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView)
                     navigationBar.setStyle(.back(showAdditionalButton: false))
-                    updateHeaderView(with: paymentMethodType)
+                    walletHeaderView?.isHidden = true
+                    headerLabel.isHidden = true
                     return false
                 } else {
                     // Otherwise, return true so the payment method appears selected in the list
@@ -392,18 +395,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 
     func didTapSavedPaymentMethodAccessoryButton() {
         presentManageScreen()
-    }
-    
-    private func updateHeaderView(with paymentMethodType: PaymentSheet.PaymentMethodType) {
-        // Update the header view, hide wallet if needed and show header label if needed
-        walletHeaderView?.isHidden = true
-        headerView.isHidden = false
-        if paymentMethodType == .stripe(.card) {
-            let text = savedPaymentMethods.isEmpty ? String.Localized.add_card : String.Localized.add_new_card
-            headerView.set(text: text)
-        } else {
-            headerView.update(with: paymentMethodType)
-        }
     }
 
     private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
@@ -420,6 +411,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: previousCustomerInput,
             configuration: configuration,
             isLinkEnabled: false, // TODO: isLinkEnabled
+            shouldShowHeader: true,
+            hasASavedCard: !savedPaymentMethods.filter({ $0.type == .card }).isEmpty,
             delegate: self
         )
     }
@@ -444,8 +437,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         view.endEditing(true)
         switchContentIfNecessary(to: paymentMethodListViewController!, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
-        headerView.set(text: .Localized.select_payment_method)
-        headerView.isHidden = walletHeaderView != nil
+        headerLabel.isHidden = walletHeaderView != nil
         walletHeaderView?.isHidden = walletHeaderView == nil
     }
 }
