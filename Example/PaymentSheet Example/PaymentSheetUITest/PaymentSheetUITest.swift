@@ -1710,6 +1710,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         try! fillCardData(app)
+        _ensureStateOfCheckbox(app, .checked)
 
         // Complete payment
         app.buttons["Pay $50.99"].tap()
