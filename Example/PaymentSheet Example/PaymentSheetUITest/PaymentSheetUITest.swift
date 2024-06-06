@@ -2618,11 +2618,14 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         // Change to CustomerSessions
         app.buttons["customer_session"].waitForExistenceAndTap()
-        reload(app, settings: settings)
 
         // Switch to see all payment methods
-        app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
+        let paymentMethodRedisplayFilters = app.buttons["PaymentMethodRedisplayFilters, always"]
+        XCTAssertNotNil(scrollDown(scrollView: app.scrollViews.firstMatch, toFindElement: paymentMethodRedisplayFilters))
+        paymentMethodRedisplayFilters.waitForExistenceAndTap()
         app.buttons["unspecified_limited_always"].waitForExistenceAndTap()
+
+        reload(app, settings: settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
@@ -2689,11 +2692,14 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         // Change to CustomerSessions
         app.buttons["customer_session"].waitForExistenceAndTap()
-        reload(app, settings: settings)
 
         // Switch to see all payment methods
-        app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
+        let paymentMethodRedisplayFilters = app.buttons["PaymentMethodRedisplayFilters, always"]
+        XCTAssertNotNil(scrollDown(scrollView: app.scrollViews.firstMatch, toFindElement: paymentMethodRedisplayFilters))
+        paymentMethodRedisplayFilters.waitForExistenceAndTap()
         app.buttons["unspecified_limited_always"].waitForExistenceAndTap()
+
+        reload(app, settings: settings)
 
         // TODO: Use default payment method from elements/sessions payload
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 10)
