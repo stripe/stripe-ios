@@ -126,6 +126,19 @@ extension PaymentSheet {
                 }
             }
 
+            if
+                recommendedStripePaymentMethodTypes.contains(.link),
+                !recommendedStripePaymentMethodTypes.contains(.USBankAccount),
+                !intent.isDeferredIntent,
+                intent.linkFundingSources?.contains(.bankAccount) == true
+            {
+                // we must add this BEFORE we do filtering via
+                // `PaymentSheet.PaymentMethodType.supportsAdding`
+                // because we want to filter out instant debits
+                // IF the user has not linked Financial Connections
+                recommendedStripePaymentMethodTypes.append(.instantDebits)
+            }
+
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethodType,
@@ -150,15 +163,6 @@ extension PaymentSheet {
                 .subtracting(Set(intent.elementsSession.externalPaymentMethods.map { $0.type }))
             if logAvailability && !missingExternalPaymentMethods.isEmpty {
                 print("[Stripe SDK]: PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
-            }
-
-            if
-                intent.supportsLink,
-                !recommendedStripePaymentMethodTypes.contains(.USBankAccount),
-                !intent.isDeferredIntent,
-                intent.linkFundingSources?.contains(.bankAccount) == true
-            {
-                recommendedStripePaymentMethodTypes.append(.instantDebits)
             }
 
             // The full ordered list of recommended payment method types:
@@ -221,6 +225,8 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
+                    case .instantDebits:
+                        return [.financialConnectionsSDK]
                     case .sofort, .iDEAL, .bancontact:
                         // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
@@ -230,7 +236,7 @@ extension PaymentSheet {
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .linkInstantDebit,
-                        .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco, .instantDebits:
+                        .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -249,13 +255,15 @@ extension PaymentSheet {
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,
                         ]
+                    case .instantDebits:
+                        return [.financialConnectionsSDK]
                     case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini, .multibanco:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit, .sofort:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .afterpayClearpay:
                         return [.returnURL, .shippingAddress]
-                    case .link, .unknown, .instantDebits:
+                    case .link, .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]

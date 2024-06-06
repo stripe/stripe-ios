@@ -1,11 +1,12 @@
 ## x.x.x xxxx-xx-xx
 ### PaymentSheet
-* [Changed] Improved reliability and UX when paying with Cash App Pay.
+* [Fixed] Fixed an issue where changing the country of a phone number would not update the UI when the phone number's validity changed.
+* [Changed] The "save this card" checkbox is now unchecked by default. To change this behavior, set your PaymentSheet.Configuration.savePaymentMethodOptInBehavior to `.requiresOptOut`.
 
 ### Payments
 * [Added] Updated support for MobilePay bindings.
-* [Changed] Improved reliability and UX when paying with Cash App Pay.
 * [Changed] Some Payment Methods (including Klarna and PayPal) may now authenticate using ASWebAuthenticationSession, enabling these payment methods to share session storage across apps.
+* [Fixed] Fixed printing spurious STPAssertionFailure warnings.
 
 ## 23.27.2 2024-05-06
 ### CardScan

@@ -1982,53 +1982,61 @@ public class STPPaymentHandler: NSObject {
         withCompletion completion: @escaping STPBooleanSuccessBlock,
         retryCount: Int = maxChallengeRetries
     ) {
-        guard let currentAction = currentAction,
-            let useStripeSDK = currentAction.nextAction()?.useStripeSDK,
-            let threeDSSourceID = useStripeSDK.threeDSSourceID
+        guard let currentAction,
+              let useStripeSDK = currentAction.nextAction()?.useStripeSDK,
+              let threeDSSourceID = useStripeSDK.threeDSSourceID
         else {
-            completion(false, nil)
+            let errorMessage: String = {
+                if currentAction == nil {
+                    return "Attempted to mark challenge completed, but currentAction is nil"
+                } else if currentAction?.nextAction()?.useStripeSDK == nil {
+                    return "Attempted to mark challenge completed, but useStripeSDK is nil"
+                } else {
+                    return "Attempted to mark challenge completed, but threeDSSourceID is nil"
+                }
+            }()
+            stpAssertionFailure(errorMessage)
+            completion(false, self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: errorMessage))
             return
+        }
+
+        func retrieveIntent(action: STPPaymentHandlerActionParams, completion: @escaping STPBooleanSuccessBlock) {
+            if let paymentIntentAction = action as? STPPaymentHandlerPaymentIntentActionParams {
+                currentAction.apiClient.retrievePaymentIntent(
+                    withClientSecret: paymentIntentAction.paymentIntent.clientSecret,
+                    expand: ["payment_method"]
+                ) { paymentIntent, retrieveError in
+                    if let paymentIntent {
+                        paymentIntentAction.paymentIntent = paymentIntent
+                    }
+                    completion(paymentIntent != nil, retrieveError)
+                }
+            } else if let setupIntentAction = action as? STPPaymentHandlerSetupIntentActionParams {
+                currentAction.apiClient.retrieveSetupIntent(
+                    withClientSecret: setupIntentAction.setupIntent.clientSecret,
+                    expand: ["payment_method"]
+                ) { retrievedSetupIntent, retrieveError in
+                    if let retrievedSetupIntent {
+                        setupIntentAction.setupIntent = retrievedSetupIntent
+                    }
+                    completion(retrievedSetupIntent != nil, retrieveError)
+                }
+            } else {
+                // TODO: Make currentAction an enum, stop optionally casting it
+                stpAssert(false, "currentAction is an unknown type or nil intent.")
+                currentAction.complete(
+                    with: .failed,
+                    error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "currentAction is an unknown type or nil intent.")
+                )
+            }
         }
 
         currentAction.apiClient.complete3DS2Authentication(
             forSource: threeDSSourceID,
             publishableKeyOverride: useStripeSDK.publishableKeyOverride
-        ) {
-            success,
-            error in
+        ) { success, error in
             if success {
-                if let paymentIntentAction = currentAction
-                    as? STPPaymentHandlerPaymentIntentActionParams
-                {
-                    currentAction.apiClient.retrievePaymentIntent(
-                        withClientSecret: paymentIntentAction.paymentIntent.clientSecret,
-                        expand: ["payment_method"]
-                    ) { paymentIntent, retrieveError in
-                        if let paymentIntent {
-                            paymentIntentAction.paymentIntent = paymentIntent
-                        }
-                        completion(paymentIntent != nil, retrieveError)
-                    }
-                } else if let setupIntentAction = currentAction
-                    as? STPPaymentHandlerSetupIntentActionParams
-                {
-                    currentAction.apiClient.retrieveSetupIntent(
-                        withClientSecret: setupIntentAction.setupIntent.clientSecret,
-                        expand: ["payment_method"]
-                    ) { retrievedSetupIntent, retrieveError in
-                        if let retrievedSetupIntent {
-                            setupIntentAction.setupIntent = retrievedSetupIntent
-                        }
-                        completion(retrievedSetupIntent != nil, retrieveError)
-                    }
-                } else {
-                    // TODO: Make currentAction an enum, stop optionally casting it
-                    stpAssert(false, "currentAction is an unknown type or nil intent.")
-                    currentAction.complete(
-                        with: .failed,
-                        error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "currentAction is an unknown type or nil intent.")
-                    )
-                }
+               retrieveIntent(action: currentAction, completion: completion)
             } else {
                 // This isn't guaranteed to succeed if the ACS isn't ready yet.
                 // Try it a few more times if it fails with a 400. (RUN_MOBILESDK-126)
@@ -2045,7 +2053,8 @@ public class STPPaymentHandler: NSObject {
                         }
                     )
                 } else {
-                    completion(success, error)
+                    // Completing the 3DS2 action failed, try to retrieve the intent anyways:
+                    retrieveIntent(action: currentAction, completion: completion)
                 }
             }
         }

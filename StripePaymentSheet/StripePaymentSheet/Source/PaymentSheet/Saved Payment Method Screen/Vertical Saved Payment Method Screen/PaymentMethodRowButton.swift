@@ -33,13 +33,15 @@ final class PaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
+            rowButton.isEnabled = !isEditing
             circleView.isHidden = !isSelected
             updateButton.isHidden = !canUpdate
             removeButton.isHidden = !canRemove
+            stackView.isUserInteractionEnabled = isEditing
         }
     }
 
-    private(set) var previousSelectedState: State = .unselected
+    var previousSelectedState: State = .unselected
 
     var isSelected: Bool {
         switch state {
@@ -110,12 +112,16 @@ final class PaymentMethodRowButton: UIView {
     }()
 
     private lazy var stackView: UIStackView = {
-        return UIStackView.makeRowButtonContentStackView(arrangedSubviews: [.makeSpacerView(), circleView, updateButton, removeButton])
+        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, updateButton, removeButton])
+        // margins handled by the `RowButton`
+        stackView.directionalLayoutMargins = .zero
+        stackView.isUserInteractionEnabled = isEditing
+        return stackView
     }()
 
     private lazy var rowButton: RowButton = {
         let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
-            guard let self, !isEditing else { return }
+            guard let self else { return }
             state = .selected
             delegate?.didSelectButton(self, with: paymentMethod)
         }

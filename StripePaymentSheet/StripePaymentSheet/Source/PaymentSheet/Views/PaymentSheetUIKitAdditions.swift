@@ -99,23 +99,30 @@ extension UIViewController {
                     toVC.view.alpha = 1
                 },
                 completion: { _ in
-                    // Remove the old one
-                    self.remove(childViewController: fromVC)
+                    // Finish removing the old one
+                    fromVC.view.removeFromSuperview()
+                    fromVC.didMove(toParent: nil)
                     UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
                 }
             )
         } else {
-            addChild(toVC)
-            containerView.addPinnedSubview(toVC.view)
-            containerView.updateHeight()
-            toVC.didMove(toParent: self)
+            add(childViewController: toVC, containerView: containerView)
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
             UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
         }
     }
 
+    func add(childViewController: UIViewController, containerView: DynamicHeightContainerView) {
+        addChild(childViewController)
+        containerView.addPinnedSubview(childViewController.view)
+        containerView.updateHeight()
+        childViewController.didMove(toParent: self)
+    }
+
     func remove(childViewController: UIViewController) {
+        childViewController.willMove(toParent: nil)
+        childViewController.removeFromParent()
         childViewController.view.removeFromSuperview()
         childViewController.didMove(toParent: nil)
     }

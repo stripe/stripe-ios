@@ -28,7 +28,9 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     func testCanRemovePaymentMethods_multiplePaymentMethods_returnsTrue() {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
-                                                                       paymentMethods: paymentMethods)
+                                                                       paymentMethods: paymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
@@ -36,7 +38,9 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         configuration.allowsRemovalOfLastSavedPaymentMethod = false
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
-                                                                       paymentMethods: paymentMethods)
+                                                                       paymentMethods: paymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
@@ -44,7 +48,9 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
-                                                                       paymentMethods: singlePaymentMethods)
+                                                                       paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
@@ -53,7 +59,9 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
-                                                                       paymentMethods: singlePaymentMethods)
+                                                                       paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
         XCTAssertFalse(viewController.canRemovePaymentMethods)
     }
 
@@ -61,23 +69,31 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     func testCanEdit_multiplePaymentMethods_returnsTrue() {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
-                                                                       paymentMethods: paymentMethods)
+                                                                       paymentMethods: paymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
         XCTAssertTrue(viewController.canEdit)
     }
 
-    func testCanEdit_singlePaymentMethod_returnsTrue() {
+    func testCanEdit_singlePaymentMethod_returnsFalse() {
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
-                                                                       paymentMethods: singlePaymentMethods)
-        XCTAssertTrue(viewController.canEdit)
+                                                                       paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
+        XCTAssertFalse(viewController.canEdit)
+        // Should be in remove only mode
+        XCTAssertTrue(viewController.isRemoveOnlyMode)
     }
 
     func testCanEdit_singleRemovableAndEditablePaymentMethod_returnsTrue() {
         let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
-                                                                       paymentMethods: singlePaymentMethods)
+                                                                       paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
         XCTAssertTrue(viewController.canEdit)
     }
 
@@ -86,16 +102,31 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
-                                                                       paymentMethods: singlePaymentMethods)
+                                                                       paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
         XCTAssertFalse(viewController.canEdit)
     }
 
-    func testCanEdit_oneEditablePaymentMethod_disallowsLastRemoval_returnsTrue() {
+    func testCanEdit_oneEditablePaymentMethod_disallowsLastRemoval_notCBCEligible_returnsFalse() {
         configuration.allowsRemovalOfLastSavedPaymentMethod = false
         let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
-                                                                       paymentMethods: singlePaymentMethods)
+                                                                       paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: false)
+        XCTAssertFalse(viewController.canEdit)
+    }
+
+    func testCanEdit_oneEditablePaymentMethod_disallowsLastRemoval_isCBCEligible_returnsFalse() {
+        configuration.allowsRemovalOfLastSavedPaymentMethod = false
+        let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
+        let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+                                                                       selectedPaymentMethod: singlePaymentMethods.first,
+                                                                       paymentMethods: singlePaymentMethods,
+                                                                       paymentMethodRemove: true,
+                                                                       isCBCEligible: true)
         XCTAssertTrue(viewController.canEdit)
     }
 }

@@ -36,6 +36,7 @@ extension STPAnalyticsClient {
         deferredIntentConfirmationType: DeferredIntentConfirmationType?,
         paymentMethodTypeAnalyticsValue: String? = nil,
         error: Error? = nil,
+        linkContext: String? = nil,
         apiClient: STPAPIClient
     ) {
         var success = false
@@ -64,6 +65,7 @@ extension STPAnalyticsClient {
             error: error,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
             paymentMethodTypeAnalyticsValue: paymentMethodTypeAnalyticsValue,
+            linkContext: linkContext,
             apiClient: apiClient
         )
     }
@@ -143,9 +145,16 @@ extension STPAnalyticsClient {
         }
     }
 
-    func logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: String) {
+    func logPaymentSheetConfirmButtonTapped(
+        paymentMethodTypeIdentifier: String,
+        linkContext: String? = nil
+    ) {
         let duration = AnalyticsHelper.shared.getDuration(for: .formShown)
-        logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped, duration: duration, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
+        logPaymentSheetEvent(
+            event: .paymentSheetConfirmButtonTapped,
+            duration: duration, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier,
+            linkContext: linkContext
+        )
     }
 
     enum DeferredIntentConfirmationType: String {
@@ -300,6 +309,7 @@ extension STPAnalyticsClient {
         error: Error? = nil,
         deferredIntentConfirmationType: DeferredIntentConfirmationType? = nil,
         paymentMethodTypeAnalyticsValue: String? = nil,
+        linkContext: String? = nil,
         params: [String: Any] = [:],
         apiClient: STPAPIClient = .shared
     ) {
@@ -316,6 +326,7 @@ extension STPAnalyticsClient {
         additionalParams["is_decoupled"] = intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["selected_lpm"] = paymentMethodTypeAnalyticsValue
+        additionalParams["link_context"] = linkContext
 
         if let error {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())

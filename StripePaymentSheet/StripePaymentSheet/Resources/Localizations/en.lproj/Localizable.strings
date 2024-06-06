@@ -13,6 +13,12 @@
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Add bank account";
 
+/* Title shown above a view allowing the customer to save their first card. */
+"Add card" = "Add card";
+
+/* Title shown above a view allowing the customer to save a card. */
+"Add new card" = "Add new card";
+
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Add new payment method";
 
@@ -193,6 +199,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for confirmation alert to remove a card */
 "Remove card?" = "Remove card?";
 
+/* Title shown above a view containing a customer's payment method that they can delete */
+"Remove payment method" = "Remove payment method";
+
 /* A button used for saving a new payment method */
 "Save" = "Save";
 
@@ -260,6 +269,9 @@ is not supported by the merchant */
 
 /* Title for a screen for updating a card brand. */
 "Update card brand" = "Update card brand";
+
+/* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
+"View more" = "View more";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";

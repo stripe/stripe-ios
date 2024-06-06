@@ -47,7 +47,7 @@ extension PaymentSheet {
     public enum SavePaymentMethodOptInBehavior {
 
         /// (Default) The SDK will apply opt-out behavior for supported countries.
-        /// Currently, this behavior is supported in the US.
+        /// Currently, we use requiresOptIn for all countries.
         case automatic
 
         /// The control will always default to unselected and users
@@ -61,8 +61,7 @@ extension PaymentSheet {
         var isSelectedByDefault: Bool {
             switch self {
             case .automatic:
-                // only enable the save checkbox by default for US
-                return Locale.current.stp_regionCode == "US"
+                return false
             case .requiresOptIn:
                 return false
             case .requiresOptOut:
@@ -178,9 +177,6 @@ extension PaymentSheet {
 
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String?
-
-        /// Prototype: To be added to customer session configuration
-        @_spi(STP) public var paymentMethodRemove = true
 
         /// Configuration for external payment methods.
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?

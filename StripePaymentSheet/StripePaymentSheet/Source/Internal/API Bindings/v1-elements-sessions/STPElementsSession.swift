@@ -181,3 +181,18 @@ extension STPElementsSession: STPAPIResponseDecodable {
         )
     }
 }
+extension STPElementsSession {
+    func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
+        var allowsRemovalOfPaymentMethods = false
+        if let customerSession = customer?.customerSession {
+            if let paymentSheetComponent = customerSession.paymentSheetComponent,
+               paymentSheetComponent.enabled,
+               let features = paymentSheetComponent.features {
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+            }
+        } else {
+            allowsRemovalOfPaymentMethods = true
+        }
+        return allowsRemovalOfPaymentMethods
+    }
+}

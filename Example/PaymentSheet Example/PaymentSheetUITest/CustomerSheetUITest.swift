@@ -93,7 +93,7 @@ class CustomerSheetUITest: XCTestCase {
 
         app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
 
-        app.collectionViews.staticTexts["Apple Pay"].tap()
+        app.collectionViews.staticTexts["Apple Pay"].waitForExistenceAndTap(timeout: timeout)
 
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
@@ -359,6 +359,8 @@ class CustomerSheetUITest: XCTestCase {
         editButton.tap()
 
         removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
+
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
         // ••••4444 is rendered as the PM to remove, as well as the status on the playground
         // Check that it is removed by waiting for there only be one instance
         let elementLabel = "••••4444"
@@ -391,7 +393,7 @@ class CustomerSheetUITest: XCTestCase {
         presentCSAndAddCardFrom(buttonLabel: "••••4242")
 
         // Reload
-        app.buttons["Reload"].tap()
+        app.buttons["Reload"].waitForExistenceAndTap(timeout: timeout)
 
         // Present Sheet
         let selectButton = app.staticTexts["••••4242"]
@@ -427,6 +429,8 @@ class CustomerSheetUITest: XCTestCase {
         // Remove one saved PM, which should remove both PMs
         XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        sleep(1)
 
         // Should be kicked out of edit mode now that we have one saved PM
         XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
@@ -591,6 +595,7 @@ class CustomerSheetUITest: XCTestCase {
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
+            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
             notNowButton.tap()
         }
 
@@ -635,6 +640,7 @@ class CustomerSheetUITest: XCTestCase {
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
+            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
             notNowButton.tap()
         }
 
@@ -719,6 +725,7 @@ class CustomerSheetUITest: XCTestCase {
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
+            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
             notNowButton.tap()
         }
 

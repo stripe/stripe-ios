@@ -74,6 +74,10 @@ final class EmailTextField: UIView {
         }
     }
 
+    override func becomeFirstResponder() -> Bool {
+        return textField.becomeFirstResponder()
+    }
+
     override func endEditing(_ force: Bool) -> Bool {
         return textField.endEditing(force)
     }

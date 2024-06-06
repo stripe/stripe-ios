@@ -39,12 +39,6 @@ class PaymentSheetFormFactory {
     let cardBrandChoiceEligible: Bool
     let analyticsClient: STPAnalyticsClient
 
-    var canSaveToLink: Bool {
-        return (supportsLinkCard &&
-                paymentMethod == .stripe(.card) &&
-                !configuration.isUsingBillingAddressCollection)
-    }
-
     var shouldDisplaySaveCheckbox: Bool {
         return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
     }
@@ -52,6 +46,11 @@ class PaymentSheetFormFactory {
     var theme: ElementsUITheme {
         return configuration.appearance.asElementsTheme
     }
+
+    private static let PayByBankDescriptionText = STPLocalizedString(
+        "Pay with your bank account in just a few steps.",
+        "US Bank Account copy title for Mobile payment element form"
+    )
 
     convenience init(
         intent: Intent,
@@ -61,7 +60,6 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        cardBrandChoiceEligible: Bool = false,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.init(configuration: configuration,
@@ -70,7 +68,7 @@ class PaymentSheetFormFactory {
                   addressSpecProvider: addressSpecProvider,
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
-                  cardBrandChoiceEligible: cardBrandChoiceEligible,
+                  cardBrandChoiceEligible: intent.cardBrandChoiceEligible,
                   supportsLinkCard: intent.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
@@ -709,7 +707,7 @@ extension PaymentSheetFormFactory {
                     return nil // customer sheet is not supported
                 case .paymentSheet:
                     return makeSectionTitleLabelWith(
-                        text: "Pay with your bank account in just a few steps." // TODO(kgaidis): localize string
+                        text: Self.PayByBankDescriptionText
                     )
                 }
             }(),
@@ -729,10 +727,7 @@ extension PaymentSheetFormFactory {
             )
         case .paymentSheet:
             return makeSectionTitleLabelWith(
-                text: STPLocalizedString(
-                    "Pay with your bank account in just a few steps.",
-                    "US Bank Account copy title for Mobile payment element form"
-                )
+                text: Self.PayByBankDescriptionText
             )
         }
     }

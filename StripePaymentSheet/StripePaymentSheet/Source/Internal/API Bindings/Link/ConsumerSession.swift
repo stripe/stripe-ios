@@ -102,7 +102,6 @@ extension ConsumerSession {
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard paymentMethodParams.type == .card,
-              let billingDetails = paymentMethodParams.billingDetails,
               let cardParams = paymentMethodParams.card else {
             DispatchQueue.main.async {
                 completion(.failure(NSError.stp_genericConnectionError()))
@@ -110,11 +109,17 @@ extension ConsumerSession {
             return
         }
 
+        let country = paymentMethodParams.nonnil_billingDetails.nonnil_address.country
+        if country?.isBlank ?? true {
+            // Country is the only required billing detail. If it's empty, fall back to the locale country
+            paymentMethodParams.nonnil_billingDetails.nonnil_address.country = Locale.current.stp_regionCode
+        }
+
         apiClient.createPaymentDetails(
             for: clientSecret,
             cardParams: cardParams,
-            billingEmailAddress: billingDetails.email ?? emailAddress,
-            billingDetails: billingDetails,
+            billingEmailAddress: paymentMethodParams.nonnil_billingDetails.email ?? emailAddress,
+            billingDetails: paymentMethodParams.nonnil_billingDetails,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
