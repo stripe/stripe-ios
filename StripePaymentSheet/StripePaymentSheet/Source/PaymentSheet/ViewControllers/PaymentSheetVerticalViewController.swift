@@ -272,7 +272,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 // TODO
                 print(error)
                 paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: result)
-                break
             }
         }
     }
