@@ -1278,9 +1278,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card],
-                                        customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
-                                                                                "payment_method_remove": "enabled",
-                                                                               ])),
+                                        customerSessionData: [
+                                            "payment_sheet": [
+                                                "enabled": true,
+                                                "features": ["payment_method_save": "enabled",
+                                                             "payment_method_remove": "enabled",
+                                                            ],
+                                            ],
+                                            "customer_sheet": [
+                                                "enabled": false
+                                            ],
+                                        ]),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.card)
         )
@@ -1295,9 +1303,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card],
                                         setupFutureUsage: .offSession,
-                                        customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
-                                                                                "payment_method_remove": "enabled",
-                                                                               ])),
+                                        customerSessionData: [
+                                            "payment_sheet": [
+                                                "enabled": true,
+                                                "features": ["payment_method_save": "enabled",
+                                                             "payment_method_remove": "enabled",
+                                                            ],
+                                            ],
+                                            "customer_sheet": [
+                                                "enabled": false
+                                            ],
+                                        ]),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.card)
         )
@@ -1312,9 +1328,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card],
                                         setupFutureUsage: .offSession,
-                                        customerSessionData: ("payment_sheet", ["payment_method_save": "disabled",
-                                                                                "payment_method_remove": "enabled",
-                                                                               ])),
+                                        customerSessionData: [
+                                            "payment_sheet": [
+                                                "enabled": true,
+                                                "features": ["payment_method_save": "disabled",
+                                                             "payment_method_remove": "enabled",
+                                                            ],
+                                            ],
+                                            "customer_sheet": [
+                                                "enabled": false
+                                            ],
+                                        ]),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.card)
         )
@@ -1328,9 +1352,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         let factory = PaymentSheetFormFactory(
             intent: ._testSetupIntent(paymentMethodTypes: [.card],
-                                      customerSessionData: ("payment_sheet", ["payment_method_save": "disabled",
-                                                                              "payment_method_remove": "enabled",
-                                                                             ])),
+                                      customerSessionData: [
+                                        "payment_sheet": [
+                                            "enabled": true,
+                                            "features": ["payment_method_save": "disabled",
+                                                         "payment_method_remove": "enabled",
+                                                        ],
+                                        ],
+                                        "customer_sheet": [
+                                            "enabled": false
+                                        ],
+                                      ]),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.card)
         )
@@ -1344,9 +1376,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         let factory = PaymentSheetFormFactory(
             intent: ._testSetupIntent(paymentMethodTypes: [.card],
-                                      customerSessionData: ("payment_sheet", ["payment_method_save": "enabled",
-                                                                              "payment_method_remove": "enabled",
-                                                                             ])),
+                                      customerSessionData: [
+                                        "payment_sheet": [
+                                            "enabled": true,
+                                            "features": ["payment_method_save": "enabled",
+                                                         "payment_method_remove": "enabled",
+                                                        ],
+                                        ],
+                                        "customer_sheet": [
+                                            "enabled": false
+                                        ],
+                                      ]),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.card)
         )
