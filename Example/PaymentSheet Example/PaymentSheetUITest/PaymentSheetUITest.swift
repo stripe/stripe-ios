@@ -1718,7 +1718,6 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
 
         // Change to CustomerSessions
         app.buttons["customer_session"].waitForExistenceAndTap()
-        reload(app, settings: settings)
 
         // Switch to see only unspecified payment methods
         app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
@@ -1752,7 +1751,6 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
 
         // Change to CustomerSessions
         app.buttons["customer_session"].waitForExistenceAndTap()
-        reload(app, settings: settings)
 
         // Switch to see only unspecified payment methods
         app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
@@ -1999,8 +1997,10 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         if allowRedisplayValue != .always  {
             app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
             app.buttons[allowRedisplayValue.rawValue].waitForExistenceAndTap()
+            // Implicitly reloads here
+        } else {
+            reload(app, settings: settings)
         }
-        reload(app, settings: settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         switch settings.mode {
@@ -2606,8 +2606,6 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertNotNil(scrollDown(scrollView: app.scrollViews.firstMatch, toFindElement: paymentMethodRedisplayFilters))
         paymentMethodRedisplayFilters.waitForExistenceAndTap()
         app.buttons["unspecified_limited_always"].waitForExistenceAndTap()
-
-        reload(app, settings: settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
