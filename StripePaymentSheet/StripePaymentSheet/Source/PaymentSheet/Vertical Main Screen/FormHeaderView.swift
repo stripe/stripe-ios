@@ -1,5 +1,5 @@
 //
-//  VerticalHeaderView.swift
+//  FormHeaderView.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 6/4/24.
@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class VerticalHeaderView: UIView {
+final class FormHeaderView: UIView {
 
     private lazy var label: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)

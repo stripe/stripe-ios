@@ -55,7 +55,9 @@ class PaymentMethodFormViewController: UIViewController {
     }
 
     lazy var formStackView: UIStackView = {
-        let headerView = VerticalHeaderView(paymentMethodType: paymentMethodType, hasASavedCard: hasASavedCard, appearance: configuration.appearance)
+        let headerView = FormHeaderView(paymentMethodType: paymentMethodType,
+                                        hasASavedCard: hasASavedCard,
+                                        appearance: configuration.appearance)
         headerView.isHidden = !shouldShowHeader
         let stackView = UIStackView(arrangedSubviews: [headerView, form.view])
         stackView.spacing = 24
