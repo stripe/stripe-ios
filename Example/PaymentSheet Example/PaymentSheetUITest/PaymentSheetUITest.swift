@@ -3576,6 +3576,45 @@ extension PaymentSheetUITestCase {
 
 // MARK: Vertical mode saved payment method management
 extension PaymentSheetUITestCase {
+    func testCanPayWithApplePayWallet_verticalMode() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .payment
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["vertical"].waitForExistenceAndTap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["apple_pay_button"].waitForExistenceAndTap())
+        payWithApplePay()
+    }
+
+    func testCanPayWithLinkWallet_verticalMode() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .payment
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["vertical"].waitForExistenceAndTap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        let expectation = XCTestExpectation(description: "Link sign in dialog")
+        // Listen for the system login dialog
+        addUIInterruptionMonitor(withDescription: "Link sign in system dialog") { alert in
+            // Cancel the payment
+            alert.buttons["Cancel"].waitForExistenceAndTap()
+            expectation.fulfill()
+            return true
+        }
+
+        XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistenceAndTap())
+        app.tap() // required to trigger the UI interruption monitor
+        wait(for: [expectation], timeout: 5.0)
+    }
+
     func testRemovalOfSavedPaymentMethods_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer

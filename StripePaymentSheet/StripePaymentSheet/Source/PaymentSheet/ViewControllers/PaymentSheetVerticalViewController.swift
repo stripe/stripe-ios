@@ -16,8 +16,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         case missingPaymentMethodFormViewController
     }
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        // If we're showing the list, use its selection:
-        if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
+        if let walletPaymentOption {
+            return walletPaymentOption
+        } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
+            // If we're showing the list, use its selection:
             switch paymentMethodListViewController.currentSelection {
             case nil:
                 return nil
@@ -43,6 +45,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         }
     }
+    // Edge-case, only populated when Link is selected via wallet in flow controller
+    var walletPaymentOption: PaymentSheet.PaymentOption?
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
@@ -244,6 +248,37 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        walletPaymentOption = nil
+    }
+
+    // MARK: - PaymentSheetViewControllerProtocol
+
+    func pay(with paymentOption: PaymentOption, animateBuyButton: Bool) {
+        paymentSheetDelegate?.paymentSheetViewControllerShouldConfirm(self, with: paymentOption) { [weak self] result, _ in
+            guard let self = self else { return }
+
+            switch result {
+            case .completed:
+                // TODO
+                paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: result)
+            case .canceled:
+                // TODO
+                self.paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)
+            case .failed(let error):
+                // TODO
+                print(error)
+                paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: result)
+                break
+            }
+        }
+    }
+
+    func clearTextFields() {
+        paymentMethodFormViewController?.clearTextFields()
     }
 
     // MARK: - Helpers
@@ -458,10 +493,18 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
 
 extension PaymentSheetVerticalViewController: WalletHeaderViewDelegate {
     func walletHeaderViewApplePayButtonTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        // TODO
+        pay(with: .applePay, animateBuyButton: true)
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        // TODO
+        // If flow controller set payment option to Link and dismiss
+        guard !isFlowController else {
+            // Set payment option to Link
+            walletPaymentOption = .link(option: .wallet)
+            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            return
+        }
+
+        paymentSheetDelegate?.paymentSheetViewControllerDidSelectPayWithLink(self)
     }
 }

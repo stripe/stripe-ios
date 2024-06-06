@@ -349,9 +349,9 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
     }
 
-    private func findPaymentSheetViewController() -> PaymentSheetViewController? {
+    private func findPaymentSheetViewController() -> PaymentSheetViewControllerProtocol? {
         for vc in bottomSheetViewController.contentStack {
-            if let paymentSheetVC = vc as? PaymentSheetViewController {
+            if let paymentSheetVC = vc as? PaymentSheetViewControllerProtocol {
                 return paymentSheetVC
             }
         }
@@ -384,6 +384,9 @@ private extension PaymentSheet {
 
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
+
+    func pay(with paymentOption: PaymentOption, animateBuyButton: Bool)
+    func clearTextFields()
 }
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
