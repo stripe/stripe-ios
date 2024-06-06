@@ -211,7 +211,7 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_CustomerSession() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessions_200)
+        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheet_200)
         var configuration = CustomerSheet.Configuration()
         configuration.apiClient = stubbedAPIClient
 
@@ -234,7 +234,7 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_CustomerSessionWithSavedPM() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsWithSavedPM_200)
+        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheetWithSavedPM_200)
         var configuration = CustomerSheet.Configuration()
         configuration.apiClient = stubbedAPIClient
 

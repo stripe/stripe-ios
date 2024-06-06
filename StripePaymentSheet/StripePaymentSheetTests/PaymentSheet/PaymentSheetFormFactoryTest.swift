@@ -1514,8 +1514,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.card?.expMonth, cardValues.expMonth)
         XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
         XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
-        // ...and the checkbox state should be enabled (the default)
-        XCTAssertEqual(params.saveForFutureUseCheckboxState, .selected)
+        // ...and the checkbox state should be disabled (the default)
+        XCTAssertEqual(params.saveForFutureUseCheckboxState, .deselected)
     }
 
     func testAppliesPreviousCustomerInput_checkbox() {
@@ -1552,9 +1552,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         // Making another card form for payment using the previous card form's input...
         let cardForm_payment = makeCardForm(isSettingUp: false, previousCustomerInput: cardForm_setup_params)
-        // ...should have the checkbox selected (the default)
+        // ...should have the checkbox deselected (the default)
         let cardForm_payment_params = cardForm_payment.updateParams(params: .init(type: .stripe(.card)))
-        XCTAssertEqual(cardForm_payment_params?.saveForFutureUseCheckboxState, .selected)
+        XCTAssertEqual(cardForm_payment_params?.saveForFutureUseCheckboxState, .deselected)
 
         // Deselecting the checkbox...
         let saveCheckbox = cardForm_payment.getAllUnwrappedSubElements().compactMap({ $0 as? CheckboxElement }).first(where: { $0.label.hasPrefix("Save") })
