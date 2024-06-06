@@ -55,6 +55,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
+            savePaymentMethodConsentBehavior: customerSheetDataSource.savePaymentMethodConsentBehavior(),
             delegate: self)
     }()
     private var cachedClientSecret: String?
@@ -637,6 +638,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
+            savePaymentMethodConsentBehavior: customerSheetDataSource.savePaymentMethodConsentBehavior(),
             delegate: self)
         cachedClientSecret = nil
     }

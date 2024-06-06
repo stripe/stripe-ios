@@ -161,4 +161,13 @@ extension CustomerSheetDataSource {
             return try await customerSessionAdapter.updatePaymentMethod(paymentMethodId: paymentMethodId, paymentMethodUpdateParams: paymentMethodUpdateParams)
         }
     }
+
+    func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        switch dataSource {
+        case .customerAdapter:
+            return .legacy
+        case .customerSession:
+            return .customerSheetWithCustomerSession
+        }
+    }
 }
