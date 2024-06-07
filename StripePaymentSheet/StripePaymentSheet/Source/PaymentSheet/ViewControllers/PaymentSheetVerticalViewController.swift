@@ -138,7 +138,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     /// Regenerates the main content - either the PM list or the PM form
-    func regenerateUI() {
+    func regenerateUI(selection: VerticalPaymentMethodListSelection? = nil) {
         // Determine whether to show the form only or the payment method list
         if let paymentMethodListViewController {
             remove(childViewController: paymentMethodListViewController)
@@ -160,7 +160,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                shouldDisplayForm(for: confirmParams.paymentMethodType)
             {
                 // If the previous customer input was for a PM form and it collects user input, display the form
-                self.paymentMethodListViewController = makePaymentMethodListViewController()
+                self.paymentMethodListViewController = makePaymentMethodListViewController(selection: selection)
                 let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
                 self.paymentMethodFormViewController = formVC
                 add(childViewController: formVC, containerView: paymentContainerView)
@@ -169,14 +169,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 // Otherwise, show the list of PMs
                 // Create the PM List VC
                 // Determine the initial selection - either the previous payment option or the last VC's selection
-                let paymentMethodListViewController = makePaymentMethodListViewController()
+                let paymentMethodListViewController = makePaymentMethodListViewController(selection: selection)
                 self.paymentMethodListViewController = paymentMethodListViewController
                 add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
             }
         }
     }
 
-    func makePaymentMethodListViewController() -> VerticalPaymentMethodListViewController {
+    func makePaymentMethodListViewController(selection: VerticalPaymentMethodListSelection?) -> VerticalPaymentMethodListViewController {
         let initialSelection: VerticalPaymentMethodListSelection? = {
             switch previousPaymentOption {
             case .applePay:
@@ -195,7 +195,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 }
             case nil:
                 // If there's no previous customer input...
-                if let paymentMethodListViewController, let lastSelection = paymentMethodListViewController.currentSelection {
+                if let paymentMethodListViewController, let lastSelection = selection ?? paymentMethodListViewController.currentSelection {
                     // ...use the previous paymentMethodListViewController's selection
                     if case let .saved(paymentMethod: paymentMethod) = lastSelection {
                         // If the previous selection was a saved PM, only use it if it still exists:
@@ -311,11 +311,11 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
                      latestPaymentMethods: [STPPaymentMethod]) {
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
+        var selection: VerticalPaymentMethodListSelection?
         if let selectedPaymentMethod {
-            // Set the previousPaymentOption before regenerating the UI to reflect the newly selected payment method
-            previousPaymentOption = .saved(paymentMethod: selectedPaymentMethod, confirmParams: nil)
+            selection = .saved(paymentMethod: selectedPaymentMethod)
         }
-        regenerateUI()
+        regenerateUI(selection: selection)
 
         _ = viewController.bottomSheetController?.popContentViewController()
     }
