@@ -159,6 +159,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             let formVC = makeFormVC(paymentMethodType: firstPaymentMethodType)
             self.paymentMethodFormViewController = formVC
             add(childViewController: formVC, containerView: paymentContainerView)
+            headerLabel.isHidden = true
         } else {
             if case let .new(confirmParams: confirmParams) = previousPaymentOption,
                paymentMethodTypes.contains(confirmParams.paymentMethodType),
@@ -170,6 +171,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 self.paymentMethodFormViewController = formVC
                 add(childViewController: formVC, containerView: paymentContainerView)
                 navigationBar.setStyle(.back(showAdditionalButton: false))
+                headerLabel.isHidden = true
             } else {
                 // Otherwise, show the list of PMs
                 // Create the PM List VC
@@ -405,13 +407,16 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 return nil
             }
         }()
+
+        // Hide the header label if: the only payment method type available is card and the wallet is hidden and no saved payment methods
+        let shouldHideHeader = paymentMethodTypes.count == 1 && paymentMethodType == .stripe(.card) && walletHeaderView != nil && savedPaymentMethods.isEmpty
         return PaymentMethodFormViewController(
             type: paymentMethodType,
             intent: intent,
             previousCustomerInput: previousCustomerInput,
             configuration: configuration,
             isLinkEnabled: false, // TODO: isLinkEnabled
-            shouldShowHeader: true,
+            shouldShowHeader: !shouldHideHeader,
             hasASavedCard: !savedPaymentMethods.filter({ $0.type == .card }).isEmpty,
             delegate: self
         )
