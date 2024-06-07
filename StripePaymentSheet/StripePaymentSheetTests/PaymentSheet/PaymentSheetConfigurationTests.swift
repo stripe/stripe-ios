@@ -132,6 +132,9 @@ extension STPElementsSession {
                                                                                         "payment_method_remove": "enabled",
                                                                                     ],
                                                                                 ],
+                                                                                "customer_sheet": [
+                                                                                    "enabled": false,
+                                                                                ],
                                                                             ],
                                                                            ],
                                                       ],
