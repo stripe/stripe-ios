@@ -181,7 +181,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             if let selection {
                 return selection
             }
-            
+
             switch previousPaymentOption {
             case .applePay:
                 return .applePay
