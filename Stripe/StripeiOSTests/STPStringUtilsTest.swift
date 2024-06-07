@@ -92,6 +92,38 @@ class STPStringUtilsTest: XCTestCase {
         }
         waitForExpectations(timeout: 1)
     }
+    func testParseRangeWithOverlappingRanges() {
+        let exp = self.expectation(description: "Parsed")
+        STPStringUtils.parseRanges(
+            from: "<a>Test <b>string</b></a>",
+            withTags: Set(["a", "b"])
+        ) { string, tagMap in
+            XCTAssertEqual(string, "Test string")
+            XCTAssertTrue(tagMap.isEmpty)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+    }
+    func testHasOverlappingRanges_singleItem() {
+        let ranges: [NSValue: String] = [
+            NSValue(range: NSRange(location: 0, length: 2)): "a",
+        ]
+        XCTAssertFalse(STPStringUtils.hasOverlappingRanges(ranges: ranges))
+    }
+    func testHasOverlappingRanges_nonOverlapping() {
+        let ranges: [NSValue: String] = [
+            NSValue(range: NSRange(location: 0, length: 2)): "a",
+            NSValue(range: NSRange(location: 2, length: 1)): "b",
+        ]
+        XCTAssertFalse(STPStringUtils.hasOverlappingRanges(ranges: ranges))
+    }
+    func testHasOverlappingRanges_overlapping() {
+        let ranges: [NSValue: String] = [
+            NSValue(range: NSRange(location: 0, length: 2)): "a",
+            NSValue(range: NSRange(location: 1, length: 1)): "b",
+        ]
+        XCTAssert(STPStringUtils.hasOverlappingRanges(ranges: ranges))
+    }
 
     func testExpirationDateStrings() {
         XCTAssertEqual(STPStringUtils.expirationDateString(from: "12/1995"), "12/95")
