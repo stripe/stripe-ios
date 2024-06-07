@@ -311,6 +311,10 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
                      latestPaymentMethods: [STPPaymentMethod]) {
         // Update our list of saved payment methods to be the latest from the manage screen incase of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
+        if let selectedPaymentMethod {
+            // Set the previousPaymentOption before regenerating the UI to reflect the newly selected payment method
+            previousPaymentOption = .saved(paymentMethod: selectedPaymentMethod, confirmParams: nil)
+        }
         regenerateUI()
 
         _ = viewController.bottomSheetController?.popContentViewController()
