@@ -509,7 +509,7 @@ extension PlaygroundController {
                 self.addressDetails = nil
                 // Persist customerId / customerMode
                 self.serializeSettingsToNSUserDefaults()
-                let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") // Avoid logging client secrets as a matter of best practice even though this is testmode
+                let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")// Avoid logging client secrets as a matter of best practice even though this is testmode
                 print("✅ Test playground finished loading with intent id: \(intentID ?? "")) and customer id: \(self.customerId ?? "") ")
 
                 if self.settings.uiStyle == .paymentSheet {
