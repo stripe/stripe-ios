@@ -178,6 +178,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makePaymentMethodListViewController(selection: VerticalPaymentMethodListSelection?) -> VerticalPaymentMethodListViewController {
         let initialSelection: VerticalPaymentMethodListSelection? = {
+            if let selection {
+                return selection
+            }
+            
             switch previousPaymentOption {
             case .applePay:
                 return .applePay
@@ -195,7 +199,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 }
             case nil:
                 // If there's no previous customer input...
-                if let paymentMethodListViewController, let lastSelection = selection ?? paymentMethodListViewController.currentSelection {
+                if let paymentMethodListViewController, let lastSelection =  paymentMethodListViewController.currentSelection {
                     // ...use the previous paymentMethodListViewController's selection
                     if case let .saved(paymentMethod: paymentMethod) = lastSelection {
                         // If the previous selection was a saved PM, only use it if it still exists:
