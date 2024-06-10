@@ -156,7 +156,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         let displayApplePayInList = loadResult.isApplePayEnabled && isFlowController
         if savedPaymentMethods.isEmpty && paymentMethodTypes.count == 1 && !displayLinkInList && !displayApplePayInList && shouldDisplayForm(for: firstPaymentMethodType) {
             // If we'd only show one PM in the vertical list and it collects user input, display the form instead of the payment method list.
-            let formVC = makeFormVC(paymentMethodType: firstPaymentMethodType)
+            let formVC = makeFormVC(paymentMethodType: firstPaymentMethodType, shouldShowHeader: walletHeaderView == nil)
             self.paymentMethodFormViewController = formVC
             add(childViewController: formVC, containerView: paymentContainerView)
             headerLabel.isHidden = true
@@ -399,7 +399,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         presentManageScreen()
     }
 
-    private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
+    private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType, shouldShowHeader: Bool = true) -> PaymentMethodFormViewController {
         let previousCustomerInput: IntentConfirmParams? = {
             if case let .new(confirmParams: confirmParams) = previousPaymentOption {
                 return confirmParams
@@ -408,15 +408,13 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             }
         }()
 
-        // Hide the header label if: the only payment method type available is card and the wallet is hidden and no saved payment methods
-        let shouldHideHeader = paymentMethodTypes.count == 1 && paymentMethodType == .stripe(.card) && walletHeaderView != nil && savedPaymentMethods.isEmpty
         return PaymentMethodFormViewController(
             type: paymentMethodType,
             intent: intent,
             previousCustomerInput: previousCustomerInput,
             configuration: configuration,
             isLinkEnabled: false, // TODO: isLinkEnabled
-            shouldShowHeader: !shouldHideHeader,
+            shouldShowHeader: shouldShowHeader,
             hasASavedCard: !savedPaymentMethods.filter({ $0.type == .card }).isEmpty,
             delegate: self
         )
