@@ -45,7 +45,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         }
     }
-    // Edge-case, only populated when Link is selected via wallet in flow controller
+    // Edge-case, only set to true when Link is selected via wallet in flow controller
     var isLinkWalletButtonSelected: Bool = false
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
     let loadResult: PaymentSheetLoader.LoadResult
