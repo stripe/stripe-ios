@@ -187,6 +187,7 @@ public class STPBankAccountCollector: NSObject {
     @_spi(STP) public func collectBankAccountForPayment(
         clientSecret: String,
         returnURL: String?,
+        additionalParameters: [String: Any] = [:],
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -204,6 +205,7 @@ public class STPBankAccountCollector: NSObject {
         _collectBankAccountForPayment(
             clientSecret: clientSecret,
             returnURL: returnURL,
+            additionalParameters: additionalParameters,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -214,6 +216,7 @@ public class STPBankAccountCollector: NSObject {
     private func _collectBankAccountForPayment(
         clientSecret: String,
         returnURL: String?,
+        additionalParameters: [String: Any] = [:],
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -264,6 +267,7 @@ public class STPBankAccountCollector: NSObject {
             paymentMethodType: params.paymentMethodParams.type,
             customerName: params.paymentMethodParams.billingDetails?.name,
             customerEmailAddress: params.paymentMethodParams.billingDetails?.email,
+            additionalParameteres: additionalParameters,
             completion: linkAccountSessionCallback
         )
     }
@@ -437,6 +441,7 @@ public class STPBankAccountCollector: NSObject {
     @_spi(STP) public func collectBankAccountForSetup(
         clientSecret: String,
         returnURL: String?,
+        additionalParameters: [String: Any] = [:],
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -454,6 +459,7 @@ public class STPBankAccountCollector: NSObject {
         _collectBankAccountForSetup(
             clientSecret: clientSecret,
             returnURL: returnURL,
+            additionalParameters: additionalParameters,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -464,6 +470,7 @@ public class STPBankAccountCollector: NSObject {
     private func _collectBankAccountForSetup(
         clientSecret: String,
         returnURL: String?,
+        additionalParameters: [String: Any] = [:],
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -512,6 +519,7 @@ public class STPBankAccountCollector: NSObject {
             paymentMethodType: params.paymentMethodParams.type,
             customerName: params.paymentMethodParams.billingDetails?.name,
             customerEmailAddress: params.paymentMethodParams.billingDetails?.email,
+            additionalParameteres: additionalParameters,
             completion: linkAccountSessionCallback
         )
     }
@@ -548,6 +556,7 @@ public class STPBankAccountCollector: NSObject {
         amount: Int?,
         currency: String?,
         onBehalfOf: String?,
+        additionalParameters: [String: Any] = [:],
         from viewController: UIViewController,
         financialConnectionsCompletion: @escaping (
             FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?
@@ -572,7 +581,8 @@ public class STPBankAccountCollector: NSObject {
             sessionId: sessionId,
             amount: amount,
             currency: currency,
-            onBehalfOf: onBehalfOf
+            onBehalfOf: onBehalfOf,
+            additionalParameters: additionalParameters
         ) { linkAccountSession, error in
             if let error {
                 financialConnectionsCompletion(nil, nil, error as NSError)

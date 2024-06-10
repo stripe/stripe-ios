@@ -288,11 +288,15 @@ extension PaymentMethodFormViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
+        let additionalParameters: [String: Any] = [
+            "hosted_surface": "payment_element",
+        ]
         switch intent {
         case .paymentIntent(_, let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -302,6 +306,7 @@ extension PaymentMethodFormViewController {
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -325,6 +330,7 @@ extension PaymentMethodFormViewController {
                 amount: amount,
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
+                additionalParameters: additionalParameters,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
@@ -373,11 +379,17 @@ extension PaymentMethodFormViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
+        let additionalParameters: [String: Any] = [
+            "product": "instant_debits",
+            "attach_required": true,
+            "hosted_surface": "payment_element",
+        ]
         switch intent {
         case .paymentIntent(_, let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -387,6 +399,7 @@ extension PaymentMethodFormViewController {
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
                 onEvent: nil,
                 params: params,
                 from: viewController,
