@@ -43,19 +43,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? {
         switch mode {
         case .selectingSaved:
-            guard let selectedPaymentOption else {
-                return nil
-            }
-            switch selectedPaymentOption {
-            case let .saved(paymentMethod: paymentMethod, _):
-                return .stripe(paymentMethod.type)
-            case let .new(confirmParams: intentConfirmParams):
-                return intentConfirmParams.paymentMethodType
-            case .applePay, .link:
-                return nil
-            case let .external(paymentMethod: paymentMethod, _):
-                return .external(paymentMethod)
-            }
+            return selectedPaymentOption?.paymentMethodType
         case .addingNew:
             return addPaymentMethodViewController.selectedPaymentMethodType
         }
@@ -89,8 +77,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case addingNew
     }
     private var mode: Mode
-    private var isSavingInProgress: Bool = false
-    private var isVerificationInProgress: Bool = false
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
     private var isHackyLinkButtonSelected: Bool = false
@@ -320,18 +306,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     // state -> view
     private func updateUI() {
-        // Disable interaction if necessary
-        let shouldEnableUserInteraction = !isSavingInProgress && !isVerificationInProgress
-        if shouldEnableUserInteraction != view.isUserInteractionEnabled {
-            sendEventToSubviews(
-                shouldEnableUserInteraction ?
-                    .shouldEnableUserInteraction : .shouldDisableUserInteraction,
-                from: view
-            )
-        }
-        view.isUserInteractionEnabled = shouldEnableUserInteraction
-        isDismissable = !isSavingInProgress && !isVerificationInProgress
-
         configureNavBar()
 
         // Content header
@@ -389,8 +363,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                         self.view.layoutIfNeeded()
                     }
                 }
-                confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled,
-                                     callToAction: callToAction, animated: true)
+                confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled, callToAction: callToAction, animated: true)
             } else {
                 if !confirmButton.isHidden {
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -413,10 +386,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 }
             }
             var confirmButtonState: ConfirmButton.Status = {
-                if isSavingInProgress || isVerificationInProgress {
-                    // We're in the middle of adding the PM
-                    return .processing
-                } else if addPaymentMethodViewController.paymentOption == nil {
+                if addPaymentMethodViewController.paymentOption == nil {
                     // We don't have valid payment method params yet
                     return .disabled
                 } else {
@@ -468,7 +438,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
-
     }
 
     func didDismiss(didCancel: Bool) {

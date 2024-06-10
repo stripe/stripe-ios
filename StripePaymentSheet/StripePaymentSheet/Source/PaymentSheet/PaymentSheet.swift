@@ -342,7 +342,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
             self.bottomSheetViewController.startSpinner()
             let psvc = self.findPaymentSheetViewController()
             psvc?.clearTextFields()
-            psvc?.pay(with: paymentOption, animateBuyButton: true)
+            psvc?.pay(with: paymentOption)
         }
     }
 
@@ -385,7 +385,7 @@ private extension PaymentSheet {
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
 
-    func pay(with paymentOption: PaymentOption, animateBuyButton: Bool)
+    func pay(with paymentOption: PaymentOption)
     func clearTextFields()
 }
 

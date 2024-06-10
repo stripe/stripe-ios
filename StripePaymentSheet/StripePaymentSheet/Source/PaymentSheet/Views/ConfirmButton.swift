@@ -42,6 +42,21 @@ class ConfirmButton: UIView {
         case custom(title: String)
         case customWithLock(title: String)
 
+        static func makeDefaultTypeForPaymentSheet(intent: Intent) -> CallToActionType {
+            switch intent {
+            case .paymentIntent(_, let paymentIntent):
+                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
+            case .setupIntent:
+                return .setup
+            case .deferredIntent(_, let intentConfig):
+                switch intentConfig.mode {
+                case .payment(let amount, let currency, _, _):
+                    return .pay(amount: amount, currency: currency)
+                case .setup:
+                    return .setup
+                }
+            }
+        }
     }
 
     lazy var cornerRadius: CGFloat = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius {

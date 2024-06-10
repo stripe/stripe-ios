@@ -139,14 +139,6 @@ class PaymentMethodFormViewController: UIViewController {
     func clearTextFields() {
         form.clearTextFields()
     }
-
-    // MARK: - Methods that override the primary button behavior
-
-//    var overrideCallToAction: ConfirmButton.CallToActionType? {
-//        return overrideBuyButtonBehavior != nil
-//        ? ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
-//        : nil
-//    }
 }
 
 // MARK: - ElementDelegate

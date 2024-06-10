@@ -49,6 +49,19 @@ extension PaymentSheet {
             }
         }
 
+        var paymentMethodType: PaymentMethodType? {
+            switch self {
+            case let .saved(paymentMethod: paymentMethod, _):
+                return .stripe(paymentMethod.type)
+            case let .new(confirmParams: intentConfirmParams):
+                return intentConfirmParams.paymentMethodType
+            case .applePay, .link:
+                return nil
+            case let .external(paymentMethod: paymentMethod, _):
+                return .external(paymentMethod)
+            }
+        }
+
         // Both "Link" and "Instant Debits" use the same payment method type
         // of "link." To differentiate between the two in metrics, we sometimes
         // need a "link_context."
