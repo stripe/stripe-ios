@@ -5,6 +5,7 @@
 
 ### Payments
 * [Added] Updated support for MobilePay bindings.
+* [Changed] Some Payment Methods (including Klarna and PayPal) may now authenticate using ASWebAuthenticationSession, enabling these payment methods to share session storage across apps.
 * [Fixed] Fixed printing spurious STPAssertionFailure warnings.
 
 ## 23.27.2 2024-05-06

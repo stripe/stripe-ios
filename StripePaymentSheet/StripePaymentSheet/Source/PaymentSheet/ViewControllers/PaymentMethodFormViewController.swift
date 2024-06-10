@@ -26,7 +26,7 @@ class PaymentMethodFormViewController: UIViewController {
     var paymentOption: PaymentOption? {
         // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have such divergent paths for link and instant debits. Where is the setDefaultBillingDetailsIfNecessary call, for example?
         if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
-            return linkEnabledElement.makePaymentOption()
+            return linkEnabledElement.makePaymentOption(intent: intent)
         } else if let instantDebitsFormElement = form as? InstantDebitsPaymentMethodElement {
             // we use `.instantDebits` payment method locally to display a
             // new button, but the actual payment method is `.link`, so
@@ -46,6 +46,7 @@ class PaymentMethodFormViewController: UIViewController {
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = form.updateParams(params: params) {
+            params.setAllowRedisplay(for: intent.elementsSession.savePaymentMethodConsentBehavior())
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }

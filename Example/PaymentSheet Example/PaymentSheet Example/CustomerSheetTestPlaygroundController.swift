@@ -320,6 +320,8 @@ class CustomerSheetBackend {
         let body = [ "customer_type": customerType,
                      "customer_key_type": customerKeyType.rawValue,
                      "merchant_country_code": merchantCountryCode,
+                     "customer_session_payment_method_remove": "enabled",
+                     "customer_session_payment_method_allow_redisplay_filters": ["unspecified", "limited", "always"],
         ] as [String: Any]
 
         let url = URL(string: "\(endpoint)/customer_ephemeral_key")!

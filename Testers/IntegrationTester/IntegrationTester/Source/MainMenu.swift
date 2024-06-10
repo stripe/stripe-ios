@@ -29,7 +29,9 @@ struct IntegrationView: View {
              .iDEAL,
              .alipay,
              .bacsDebit,
-             .weChatPay:
+             .weChatPay,
+             .klarna,
+             .paypal:
             PaymentMethodView(integrationMethod: integrationMethod)
         case .oxxo,
              .giropay,
