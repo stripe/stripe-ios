@@ -152,19 +152,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             remove(childViewController: paymentMethodFormViewController)
         }
         let firstPaymentMethodType = paymentMethodTypes[0]
-<<<<<<< porter/vert-wallet-pay
-        let displayLinkInList = loadResult.isLinkEnabled && isFlowController
-        let displayApplePayInList = loadResult.isApplePayEnabled && isFlowController
-        if savedPaymentMethods.isEmpty && paymentMethodTypes.count == 1 && !displayLinkInList && !displayApplePayInList && shouldDisplayForm(for: firstPaymentMethodType) {
-            // If we'd only show one PM in the vertical list and it collects user input, display the form instead of the payment method list.
-            let formVC = makeFormVC(paymentMethodType: firstPaymentMethodType, shouldShowHeader: walletHeaderView == nil)
-=======
         // Create the PM List VC so that we can see how many rows it displays
         let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
         if paymentMethodListViewController.rowCount == 1 && firstPaymentMethodType == .stripe(.card) {
             // If we'd only show one PM in the vertical list and it's `card`, display the form instead of the payment method list.
-            let formVC = makeFormVC(paymentMethodType: firstPaymentMethodType)
->>>>>>> master
+            let formVC = makeFormVC(paymentMethodType: firstPaymentMethodType, shouldShowHeader: walletHeaderView == nil)
             self.paymentMethodFormViewController = formVC
             add(childViewController: formVC, containerView: paymentContainerView)
             headerLabel.isHidden = true
