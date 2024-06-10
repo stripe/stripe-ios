@@ -10,9 +10,6 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
 "Add a payment method" = "Add a payment method";
 
-/* Button prompt to add a bank account as a payment method. */
-"Add bank account" = "Add bank account";
-
 /* Title shown above a view allowing the customer to save their first card. */
 "Add card" = "Add card";
 
