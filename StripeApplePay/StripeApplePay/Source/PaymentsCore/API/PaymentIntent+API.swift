@@ -78,7 +78,13 @@ extension StripeAPI.PaymentIntent {
                 .paramsByAddingTelemetryFields(toParams: pmAdditionalParams)
         }
 
-        apiClient.post(resource: endpoint, object: paramsWithTelemetry, completion: completion)
+         let parameters: [String: String] = [
+            "use_stripe_sdk": "true",
+            "payment_method": params.paymentMethod ?? "",
+            "return_url":params.returnURL ?? ""
+        ]
+        
+        apiClient.post(resource: endpoint, parameters: parameters, completion: completion)
     }
 
     static let Resource = "payment_intents"
