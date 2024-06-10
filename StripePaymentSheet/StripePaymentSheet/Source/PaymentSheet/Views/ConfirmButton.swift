@@ -37,7 +37,7 @@ class ConfirmButton: UIView {
     }
     enum CallToActionType {
         case pay(amount: Int, currency: String)
-        case add(paymentMethodType: PaymentSheet.PaymentMethodType)
+        case `continue`
         case setup
         case custom(title: String)
         case customWithLock(title: String)
@@ -292,13 +292,6 @@ class ConfirmButton: UIView {
         lazy var spinner: CheckProgressView = {
             return CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize))
         }()
-        lazy var addIcon: UIImageView = {
-            let image = Image.icon_plus.makeImage(template: true)
-            let icon = UIImageView(image: image)
-            icon.setContentCompressionResistancePriority(.required, for: .horizontal)
-            return icon
-        }()
-
         var foregroundColor: UIColor = .white {
             didSet {
                 foregroundColorDidChange()
@@ -317,7 +310,7 @@ class ConfirmButton: UIView {
             isAccessibilityElement = true
 
             // Add views
-            let views = ["titleLabel": titleLabel, "lockIcon": lockIcon, "spinnyView": spinner, "addIcon": addIcon]
+            let views = ["titleLabel": titleLabel, "lockIcon": lockIcon, "spinnyView": spinner]
             views.values.forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 addSubview($0)
@@ -330,14 +323,10 @@ class ConfirmButton: UIView {
                 equalTo: centerXAnchor)
             titleLabelCenterXConstraint.priority = .defaultLow
             NSLayoutConstraint.activate([
-                // Add icon
-                addIcon.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-                addIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-
                 // Label
                 titleLabelCenterXConstraint,
                 titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-                titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: addIcon.trailingAnchor),
+                titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor),
 
                 // Lock icon
                 lockIcon.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: 8),
@@ -378,7 +367,7 @@ class ConfirmButton: UIView {
                 switch status {
                 case .enabled, .disabled, .spinnerWithInteractionDisabled:
                     switch callToAction {
-                    case .add:
+                    case .continue:
                         return String.Localized.continue
                     case let .pay(amount, currency):
                         let localizedAmount = String.localizedAmountDisplayString(
@@ -410,18 +399,14 @@ class ConfirmButton: UIView {
 
             // Show/hide lock and add icons
             switch callToAction {
-            case .add:
+            case .continue:
                 lockIcon.isHidden = true
-                addIcon.isHidden = true
             case .custom:
                 lockIcon.isHidden = true
-                addIcon.isHidden = true
             case .customWithLock:
                 lockIcon.isHidden = false
-                addIcon.isHidden = true
             case .pay, .setup:
                 lockIcon.isHidden = false
-                addIcon.isHidden = true
             }
 
             // Update accessibility information
@@ -481,11 +466,9 @@ class ConfirmButton: UIView {
                 switch status {
                 case .disabled, .enabled:
                     self.lockIcon.alpha = self.titleLabel.alpha
-                    self.addIcon.alpha = self.titleLabel.alpha
                     self.spinner.alpha = 0
                 case .processing, .spinnerWithInteractionDisabled:
                     self.lockIcon.alpha = 0
-                    self.addIcon.alpha = 0
                     self.spinner.alpha = 1
                     self.spinnerCenteredToLockConstraint.isActive = true
                     self.spinnerCenteredConstraint.isActive = false
@@ -542,7 +525,6 @@ class ConfirmButton: UIView {
         private func foregroundColorDidChange() {
             titleLabel.textColor = foregroundColor
             lockIcon.tintColor = foregroundColor
-            addIcon.tintColor = foregroundColor
             spinner.color = foregroundColor
         }
     }

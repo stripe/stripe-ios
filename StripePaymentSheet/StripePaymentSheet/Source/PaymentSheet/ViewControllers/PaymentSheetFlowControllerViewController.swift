@@ -136,7 +136,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case .selectingSaved:
             return .customWithLock(title: String.Localized.continue)
         case .addingNew:
-            return .add(paymentMethodType: selectedPaymentMethodType ?? .stripe(.unknown))
+            return .continue
         }
     }
 
