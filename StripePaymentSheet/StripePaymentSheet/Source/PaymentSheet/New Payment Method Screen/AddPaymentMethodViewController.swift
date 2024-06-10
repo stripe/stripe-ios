@@ -89,8 +89,7 @@ class AddPaymentMethodViewController: UIViewController {
         return view
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
-        // when displaying link, we aren't in the bottom/payment sheet so pin to top for height changes
-        let view = DynamicHeightContainerView(pinnedDirection: configuration.linkPaymentMethodsOnly ? .top : .bottom)
+        let view = DynamicHeightContainerView(pinnedDirection: .bottom)
         view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         return view
     }()

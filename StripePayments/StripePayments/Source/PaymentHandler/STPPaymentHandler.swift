@@ -720,7 +720,6 @@ public class STPPaymentHandler: NSObject {
             .link,
             .klarna,
             .affirm,
-            .linkInstantDebit,
             .cashApp,
             .paynow,
             .zip,

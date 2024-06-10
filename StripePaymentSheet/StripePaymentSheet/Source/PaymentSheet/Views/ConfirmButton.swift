@@ -378,12 +378,8 @@ class ConfirmButton: UIView {
                 switch status {
                 case .enabled, .disabled, .spinnerWithInteractionDisabled:
                     switch callToAction {
-                    case .add(let paymentMethodType):
-                        if paymentMethodType == .stripe(.linkInstantDebit) {
-                            return STPLocalizedString("Add bank account", "Button prompt to add a bank account as a payment method.")
-                        } else {
-                            return String.Localized.continue
-                        }
+                    case .add:
+                        return String.Localized.continue
                     case let .pay(amount, currency):
                         let localizedAmount = String.localizedAmountDisplayString(
                             for: amount, currency: currency)
@@ -414,9 +410,9 @@ class ConfirmButton: UIView {
 
             // Show/hide lock and add icons
             switch callToAction {
-            case .add(let paymentMethodType):
+            case .add:
                 lockIcon.isHidden = true
-                addIcon.isHidden = paymentMethodType != .stripe(.linkInstantDebit)
+                addIcon.isHidden = true
             case .custom:
                 lockIcon.isHidden = true
                 addIcon.isHidden = true

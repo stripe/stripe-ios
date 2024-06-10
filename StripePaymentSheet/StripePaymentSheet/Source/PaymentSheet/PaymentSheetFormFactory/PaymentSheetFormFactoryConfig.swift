@@ -27,14 +27,6 @@ enum PaymentSheetFormFactoryConfig {
             return config.merchantDisplayName
         }
     }
-    var linkPaymentMethodsOnly: Bool {
-        switch self {
-        case .paymentSheet(let config):
-            return config.linkPaymentMethodsOnly
-        case .customerSheet:
-            return false
-        }
-    }
     var overrideCountry: String? {
         switch self {
         case .paymentSheet(let config):

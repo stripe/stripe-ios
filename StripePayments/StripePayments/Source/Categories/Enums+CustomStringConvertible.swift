@@ -505,8 +505,6 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "klarna"
         case .link:
             return "link"
-        case .linkInstantDebit:
-            return "linkInstantDebit"
         case .netBanking:
             return "netBanking"
         case .payPal:
