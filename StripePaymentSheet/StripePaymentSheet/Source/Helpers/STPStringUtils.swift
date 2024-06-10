@@ -15,6 +15,7 @@ typealias STPTaggedSubstringsCompletionBlock = (String, [String: NSValue]) -> Vo
 extension STPStringUtils {
     enum Error: Swift.Error {
         case tagMissing
+        case tagsNotApplied
     }
     /// Takes a string with the named html-style tags, removes the tags,
     /// and then calls the completion block with the modified string and the range
@@ -98,6 +99,11 @@ extension STPStringUtils {
                 }
             }
         }
+        guard !hasOverlappingRanges(ranges: interiorRangesToTags) else {
+            let strippedString = string.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
+            completion(strippedString, [:])
+            return
+        }
 
         let sortedRanges = interiorRangesToTags.keys.sorted { (obj1, obj2) -> Bool in
             let range1 = obj1.rangeValue
@@ -141,8 +147,31 @@ extension STPStringUtils {
         completion(modifiedString, tagsToRange)
     }
 
+    class func hasOverlappingRanges(ranges: [NSValue: String]) -> Bool {
+        let allRanges = ranges.keys
+        var map: Set<Int> = []
+        for range in allRanges {
+            let rangeValue = range.rangeValue
+
+            guard rangeValue.location != NSNotFound else {
+                continue
+            }
+
+            for i in 0..<rangeValue.length {
+                let markedIndex = rangeValue.location+i
+                if map.contains(markedIndex) {
+                    return true
+                } else {
+                    map.insert(markedIndex)
+                }
+            }
+        }
+        return false
+    }
+
     class func applyLinksToString(template: String, links: [String: URL]) -> NSMutableAttributedString {
         let formattedString = NSMutableAttributedString()
+        var numberOfLinksApplied = 0
         STPStringUtils.parseRanges(from: template, withTags: Set<String>(links.keys)) { string, matches in
             formattedString.append(NSAttributedString(string: string))
             for (tag, range) in matches {
@@ -158,9 +187,19 @@ extension STPStringUtils {
                 }
 
                 if let url = links[tag] {
+                    numberOfLinksApplied += 1
                     formattedString.addAttributes([.link: url], range: range.rangeValue)
                 }
             }
+        }
+        if numberOfLinksApplied != links.count {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.tagsNotApplied,
+                                              additionalNonPIIParams: ["template": template,
+                                                                       "links": links,
+                                                                      ])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure("Failed to apply links '\(links)' to '\(template)'")
         }
         return formattedString
     }
