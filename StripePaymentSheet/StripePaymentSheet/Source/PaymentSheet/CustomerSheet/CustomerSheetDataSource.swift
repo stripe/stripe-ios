@@ -40,7 +40,8 @@ class CustomerSheetDataSource {
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
-                let paymentOption = CustomerPaymentOption.defaultPaymentMethod(for: try await customerSessionClientSecret.customerId)
+                let customerId = try await customerSessionClientSecret.customerId
+                let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId)
                 let elementSession = try await elementsSessionResult
 
                 // Override with specs from elementSession
@@ -59,7 +60,9 @@ class CustomerSheetDataSource {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try customerAdapter.fetchSelectedPaymentOption()
-                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes, customerSessionClientSecret: nil)
+                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes,
+                                                                                                                           clientDefaultPaymentMethod: nil,
+                                                                                                                           customerSessionClientSecret: nil)
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
