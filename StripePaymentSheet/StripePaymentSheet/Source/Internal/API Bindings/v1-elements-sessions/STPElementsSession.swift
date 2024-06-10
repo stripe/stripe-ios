@@ -185,9 +185,21 @@ extension STPElementsSession {
     func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {
-            if let paymentSheetComponent = customerSession.paymentSheetComponent,
-               paymentSheetComponent.enabled,
-               let features = paymentSheetComponent.features {
+            if customerSession.paymentSheetComponent.enabled,
+               let features = customerSession.paymentSheetComponent.features {
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+            }
+        } else {
+            allowsRemovalOfPaymentMethods = true
+        }
+        return allowsRemovalOfPaymentMethods
+    }
+
+    func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
+        var allowsRemovalOfPaymentMethods = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.customerSheetComponent.enabled,
+               let features = customerSession.customerSheetComponent.features {
                 allowsRemovalOfPaymentMethods = features.paymentMethodRemove
             }
         } else {
@@ -200,9 +212,8 @@ extension STPElementsSession {
 extension STPElementsSession {
     func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
         if let customerSession = customer?.customerSession {
-            if let paymentSheetComponent = customerSession.paymentSheetComponent,
-               paymentSheetComponent.enabled,
-               let features = paymentSheetComponent.features {
+            if customerSession.paymentSheetComponent.enabled,
+               let features = customerSession.paymentSheetComponent.features {
                 return features.paymentMethodSave ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
                                                   : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
             } else {

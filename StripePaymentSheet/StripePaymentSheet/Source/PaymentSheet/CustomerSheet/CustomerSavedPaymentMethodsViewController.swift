@@ -32,6 +32,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let isApplePayEnabled: Bool
     let configuration: CustomerSheet.Configuration
     let customerSheetDataSource: CustomerSheetDataSource
+    let paymentMethodRemove: Bool
     let cbcEligible: Bool
 
     // MARK: - Writable Properties
@@ -100,6 +101,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: .init(
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+                paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
@@ -141,6 +143,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         configuration: CustomerSheet.Configuration,
         customerSheetDataSource: CustomerSheetDataSource,
         isApplePayEnabled: Bool,
+        paymentMethodRemove: Bool,
         cbcEligible: Bool,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
@@ -151,6 +154,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.configuration = configuration
         self.customerSheetDataSource = customerSheetDataSource
         self.isApplePayEnabled = isApplePayEnabled
+        self.paymentMethodRemove = paymentMethodRemove
         self.cbcEligible = cbcEligible
         self.csCompletion = csCompletion
         self.delegate = delegate
@@ -651,6 +655,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: .init(
                 showApplePay: isApplePayEnabled,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+                paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,

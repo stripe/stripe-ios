@@ -42,6 +42,20 @@ struct CustomerSheetTestPlayground: View {
                         TextField("CustomerId", text: customerIdBinding)
                     }
                     Group {
+                        if playgroundController.settings.customerKeyType == .customerSession {
+                            VStack {
+                                HStack {
+                                    Text("Customer Session Settings")
+                                        .font(.subheadline)
+                                        .bold()
+                                    Spacer()
+                                }
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                            }
+                        }
+                    }
+                    Group {
                         HStack {
                             Text("Client Configuration").font(.headline)
                             Spacer()
@@ -59,7 +73,6 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
-                        SettingView(setting: $playgroundController.settings.paymentMethodRemove)
                         HStack {
                             Text("Macros").font(.headline)
                             Spacer()

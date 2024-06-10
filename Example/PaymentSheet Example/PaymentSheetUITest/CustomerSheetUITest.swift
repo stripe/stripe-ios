@@ -412,6 +412,12 @@ class CustomerSheetUITest: XCTestCase {
         // Switch to use customer session
         app.buttons["customer_session"].tap()
 
+        // Switch to see all payment methods
+        let paymentMethodRedisplayFilters = app.buttons["PaymentMethodRedisplayFilters, always"]
+        XCTAssertNotNil(scrollDown(scrollView: app.scrollViews.firstMatch, toFindElement: paymentMethodRedisplayFilters))
+        paymentMethodRedisplayFilters.waitForExistenceAndTap()
+        app.buttons["unspecified"].waitForExistenceAndTap()
+
         // TODO: Use default payment method from elements/sessions payload
         let selectButton2 = app.staticTexts["None"]
         XCTAssertTrue(selectButton2.waitForExistence(timeout: timeout))
@@ -1024,6 +1030,7 @@ class CustomerSheetUITest: XCTestCase {
         settings.merchantCountryCode = .FR
         settings.customerMode = .new
         settings.applePay = .on
+        settings.customerKeyType = .customerSession
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
         loadPlayground(
@@ -1067,6 +1074,7 @@ class CustomerSheetUITest: XCTestCase {
         settings.merchantCountryCode = .FR
         settings.customerMode = .new
         settings.applePay = .on
+        settings.customerKeyType = .customerSession
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(

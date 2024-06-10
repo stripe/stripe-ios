@@ -110,6 +110,30 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case enabled
         case disabled
     }
+    enum PaymentMethodAllowRedisplayFilters: String, PickerEnum {
+        static var enumName: String { "PaymentMethodRedisplayFilters" }
+
+        case always
+        case limited
+        case unspecified
+        case unspecified_limited_always
+        case notSet
+
+        func arrayValue() -> [String]? {
+            switch self {
+            case .always:
+                return ["always"]
+            case .limited:
+                return ["limited"]
+            case .unspecified:
+                return ["unspecified"]
+            case .unspecified_limited_always:
+                return ["unspecified", "limited", "always"]
+            case .notSet:
+                return nil
+            }
+        }
+    }
 
     var customerMode: CustomerMode
     var customerId: String?
@@ -129,6 +153,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethod
     var paymentMethodRemove: PaymentMethodRemove
+    var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -147,7 +172,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    merchantCountryCode: .US,
                                                    preferredNetworksEnabled: .off,
                                                    allowsRemovalOfLastSavedPaymentMethod: .on,
-                                                   paymentMethodRemove: .enabled)
+                                                   paymentMethodRemove: .enabled,
+                                                   paymentMethodAllowRedisplayFilters: .always)
     }
 
     var base64Data: String {

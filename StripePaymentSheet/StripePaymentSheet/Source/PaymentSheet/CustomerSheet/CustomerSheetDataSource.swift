@@ -170,4 +170,13 @@ extension CustomerSheetDataSource {
             return .customerSheetWithCustomerSession
         }
     }
+
+    func paymentMethodRemove(elementsSession: STPElementsSession) -> Bool {
+        switch dataSource {
+        case .customerAdapter:
+            return true
+        case .customerSession:
+            return elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
+        }
+    }
 }

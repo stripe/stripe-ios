@@ -33,7 +33,7 @@ extension STPElementsSession {
     static func _testValue(
         paymentMethodTypes: [String],
         externalPaymentMethodTypes: [String] = [],
-        customerSessionData: (String, [String: String])? = nil
+        customerSessionData: [String: Any]? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -45,7 +45,7 @@ extension STPElementsSession {
                 "dark_image_url": "https://test.com",
             ]
         }
-        if let (componentName, featureData) = customerSessionData {
+        if let customerSessionData {
             json["customer"] = ["payment_methods": [],
                                 "customer_session": [
                                     "id": "id123",
@@ -53,17 +53,11 @@ extension STPElementsSession {
                                     "api_key": "ek_12345",
                                     "api_key_expiry": 12345,
                                     "customer": "cus_123",
-                                    "components": [
-                                        componentName: [
-                                            "enabled": true,
-                                            "features": [
-                                            ],
-                                        ],
+                                    "components": customerSessionData,
                                     ],
-                                ],
-            ]
-            json[jsonDict: "customer"]?[jsonDict: "customer_session"]?[jsonDict: "components"]?[jsonDict: componentName]?[jsonDict: "features"] = featureData
+                                ]
         }
+
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
@@ -73,7 +67,7 @@ extension Intent {
     static func _testPaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
-        customerSessionData: (String, [String: String])? = nil,
+        customerSessionData: [String: Any]? = nil,
         currency: String = "usd"
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
@@ -88,7 +82,7 @@ extension Intent {
 
     static func _testSetupIntent(
         paymentMethodTypes: [STPPaymentMethodType] = [.card],
-        customerSessionData: (String, [String: String])? = nil
+        customerSessionData: [String: Any]? = nil
     ) -> Intent {
         let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: paymentMethodTypes)
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
