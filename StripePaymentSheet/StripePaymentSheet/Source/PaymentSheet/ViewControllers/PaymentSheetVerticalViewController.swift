@@ -16,8 +16,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         case missingPaymentMethodFormViewController
     }
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        if let walletPaymentOption {
-            return walletPaymentOption
+        if isLinkWalletButtonSelected {
+            return .link(option: .wallet)
         } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
             // If we're showing the list, use its selection:
             switch paymentMethodListViewController.currentSelection {
@@ -46,7 +46,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
     }
     // Edge-case, only populated when Link is selected via wallet in flow controller
-    var walletPaymentOption: PaymentSheet.PaymentOption?
+    var isLinkWalletButtonSelected: Bool = false
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
@@ -255,7 +255,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        walletPaymentOption = nil
+        isLinkWalletButtonSelected = false
     }
 
     // MARK: - PaymentSheetViewControllerProtocol
@@ -501,7 +501,7 @@ extension PaymentSheetVerticalViewController: WalletHeaderViewDelegate {
         // If flow controller set payment option to Link and dismiss
         guard !isFlowController else {
             // Set payment option to Link
-            walletPaymentOption = .link(option: .wallet)
+            isLinkWalletButtonSelected = true
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
         }
