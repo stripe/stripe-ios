@@ -95,7 +95,6 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             return PaymentSheetVerticalViewController(configuration: .init(), loadResult: loadResult, isFlowController: isFlowController, previousPaymentOption: nil)
         }
         // 1. No saved payment methods, only one payment method and it's card
-        // TODO: Fix this - header is wrong
         verify(makeSUT(isLinkEnabled: false, isApplePayEnabled: false, isFlowController: false))
 
         // 2. #1 + Apple Pay
