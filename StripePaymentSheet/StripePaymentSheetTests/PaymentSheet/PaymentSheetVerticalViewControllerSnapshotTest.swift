@@ -181,10 +181,33 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             isLinkEnabled: false,
             isApplePayEnabled: false
         )
-        // ...and previous customer input is cash app - a PM without a form
+        // ...and previous customer input is cash app - a PM without a form...
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(type: .stripe(.cashApp)))
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: previousPaymentOption)
         // ...should display list with cash app selected and mandate displayed
         verify(sut)
+    }
+
+    func testDisplaysError() {
+        struct MockError: LocalizedError {
+            var errorDescription: String?{
+                "Mock error description"
+            }
+        }
+        // When loaded with US Bank (an example PM)...
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testDeferredIntent(paymentMethodTypes: [.USBankAccount]),
+            savedPaymentMethods: [],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
+        // ...and an error is sent...
+        sut.updateErrorLabel(for: MockError())
+        // ...we should display the error
+        verify(sut)
+        // Take another snapshot displaying the form
+        sut.didTapPaymentMethod(.new(paymentMethodType: .stripe(.USBankAccount)))
+        verify(sut, identifier: "form")
     }
 }

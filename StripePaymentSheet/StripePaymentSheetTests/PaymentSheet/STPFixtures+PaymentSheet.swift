@@ -89,6 +89,12 @@ extension Intent {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData)
         return .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
     }
+
+    static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType]) -> Intent {
+        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: nil)
+        return .deferredIntent(elementsSession: elementsSession, intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in }))
+    }
 }
 
 extension STPPaymentMethod {
