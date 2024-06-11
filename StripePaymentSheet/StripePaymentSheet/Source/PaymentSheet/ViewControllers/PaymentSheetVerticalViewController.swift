@@ -146,9 +146,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         )
         return button
     }()
-    
+
     private lazy var mandateView: VerticalMandateView = {
-        return VerticalMandateView(configuration: configuration)
+        return VerticalMandateView(formProvider: { [weak self] paymentMethodType in
+            return self?.makeFormVC(paymentMethodType: paymentMethodType).form
+        })
     }()
 
     // MARK: - Initializers
@@ -170,6 +172,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Only use the previous customer input for the first form shown
         self.previousPaymentOption = nil
         updatePrimaryButton()
+        updateMandate(animated: false)
     }
 
     /// Regenerates the main content - either the PM list or the PM form
@@ -248,15 +251,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             animated: true
         )
     }
-    
-    func updateMandate() {
-        // If we're showing form, hide the mandate
-        guard paymentMethodFormViewController?.parent == nil else {
-            mandateView.setHiddenIfNecessary(true)
-            return
-        }
-        animateHeightChange {
-            self.mandateView.paymentMethodType = self.selectedPaymentMethodType
+
+    func updateMandate(animated: Bool = true) {
+        self.mandateView.paymentMethodType = self.selectedPaymentMethodType
+        self.mandateView.layoutIfNeeded()
+        if animated {
+            animateHeightChange {
+                self.mandateView.isHidden = !self.mandateView.isDisplayingMandate
+            }
+        } else {
+            self.mandateView.isHidden = !self.mandateView.isDisplayingMandate
         }
     }
 
@@ -322,7 +326,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         configuration.style.configure(self)
 
         // One stack view contains all our subviews
-        let views: [UIView] = [headerLabel, walletHeaderView, paymentContainerView, mandateView, primaryButton].compactMap { $0 }
+        let spacerView = UIView.makeSpacerView(height: 0)
+        let views: [UIView] = [headerLabel, walletHeaderView, paymentContainerView, mandateView, spacerView, primaryButton].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -332,7 +337,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stackView.setCustomSpacing(24, after: walletHeaderView)
         }
         stackView.setCustomSpacing(12, after: paymentContainerView)
-        stackView.setCustomSpacing(20, after: mandateView)
+        stackView.setCustomSpacing(20, after: spacerView)
+        stackView.sendSubviewToBack(mandateView)
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
     }
@@ -614,7 +620,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         navigationBar.setStyle(.close(showAdditionalButton: false))
         headerLabel.isHidden = walletHeaderView != nil
         walletHeaderView?.isHidden = walletHeaderView == nil
-        updatePrimaryButton()        
+        updatePrimaryButton()
         updateMandate()
     }
 }
