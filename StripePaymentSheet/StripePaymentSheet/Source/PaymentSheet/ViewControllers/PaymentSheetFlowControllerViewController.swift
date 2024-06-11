@@ -40,6 +40,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         }
     }
 
+    /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
+    /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? {
         switch mode {
         case .selectingSaved:

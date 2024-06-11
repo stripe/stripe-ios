@@ -47,8 +47,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
     // Edge-case, only set to true when Link is selected via wallet in flow controller
     var isLinkWalletButtonSelected: Bool = false
+    /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
+    /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? {
-        if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
+        if isLinkWalletButtonSelected {
+            // If the Link wallet button was tapped, that is our selection until the sheet re-appears
+            return nil
+        } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
             return selectedPaymentOption?.paymentMethodType
         } else {
             // Otherwise, we must be showing the form - use its payment option
@@ -647,9 +652,8 @@ extension PaymentSheetVerticalViewController: WalletHeaderViewDelegate {
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        // If flow controller set payment option to Link and dismiss
         guard !isFlowController else {
-            // Set payment option to Link
+            // If flow controller, note that the button was tapped and dismiss
             isLinkWalletButtonSelected = true
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return

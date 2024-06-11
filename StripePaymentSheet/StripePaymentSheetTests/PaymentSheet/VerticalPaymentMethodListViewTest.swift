@@ -49,11 +49,11 @@ extension VerticalPaymentMethodListViewTest: VerticalPaymentMethodListViewDelega
     func didTapSavedPaymentMethodAccessoryButton() {
         // no-op
     }
-    
+
     func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) -> Bool {
         return shouldSelectPaymentMethodReturnValue
     }
-    
+
     func didTapPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) {
         // no-op
     }
