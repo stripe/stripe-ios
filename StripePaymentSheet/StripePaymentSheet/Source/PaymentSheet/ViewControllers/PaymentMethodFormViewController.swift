@@ -20,6 +20,8 @@ class PaymentMethodFormViewController: UIViewController {
     let intent: Intent
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheet.Configuration
+    let hasASavedCard: Bool
+    let shouldShowHeader: Bool
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
         // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have such divergent paths for link and instant debits. Where is the setDefaultBillingDetailsIfNecessary call, for example?
@@ -53,15 +55,28 @@ class PaymentMethodFormViewController: UIViewController {
         return nil
     }
 
+    lazy var formStackView: UIStackView = {
+        let headerView = FormHeaderView(paymentMethodType: paymentMethodType,
+                                        hasASavedCard: hasASavedCard,
+                                        appearance: configuration.appearance)
+        headerView.isHidden = !shouldShowHeader
+        let stackView = UIStackView(arrangedSubviews: [headerView, form.view])
+        stackView.spacing = 24
+        stackView.axis = .vertical
+        return stackView
+    }()
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(type: PaymentSheet.PaymentMethodType, intent: Intent, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, delegate: PaymentMethodFormViewControllerDelegate) {
+    init(type: PaymentSheet.PaymentMethodType, intent: Intent, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, shouldShowHeader: Bool = false, hasASavedCard: Bool = false, delegate: PaymentMethodFormViewControllerDelegate) {
         self.paymentMethodType = type
         self.intent = intent
         self.delegate = delegate
         self.configuration = configuration
+        self.hasASavedCard = hasASavedCard
+        self.shouldShowHeader = shouldShowHeader
         let shouldOfferLinkSignup: Bool = {
             guard isLinkEnabled && !intent.disableLinkSignup else {
                 return false
@@ -91,7 +106,7 @@ class PaymentMethodFormViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addAndPinSubview(form.view)
+        view.addAndPinSubview(formStackView)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -118,6 +133,11 @@ class PaymentMethodFormViewController: UIViewController {
             }
             addressSection.delegate = delegate
         }
+    }
+
+    // MARK: - Helpers
+    func clearTextFields() {
+        form.clearTextFields()
     }
 
     // MARK: - Methods that override the primary button behavior
