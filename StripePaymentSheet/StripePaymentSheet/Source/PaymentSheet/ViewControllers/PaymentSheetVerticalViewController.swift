@@ -365,7 +365,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     isCustom: false,
                     paymentMethod: paymentOption.analyticsValue,
                     result: result,
-                    linkEnabled: true, // TODO: Set isLinkEnabled
+                    linkEnabled: loadResult.isLinkEnabled,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                     linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
@@ -567,7 +567,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDeleg
             intent: intent,
             previousCustomerInput: previousCustomerInput,
             configuration: configuration,
-            isLinkEnabled: false, // TODO: isLinkEnabled
+            isLinkEnabled: loadResult.isLinkEnabled,
             shouldShowHeader: shouldShowHeader,
             hasASavedCard: !savedPaymentMethods.filter({ $0.type == .card }).isEmpty,
             delegate: self
