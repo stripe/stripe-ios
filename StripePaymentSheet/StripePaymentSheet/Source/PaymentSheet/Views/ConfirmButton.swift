@@ -116,6 +116,7 @@ class ConfirmButton: UIView {
         // primaryButton.backgroundColor takes priority over appearance.colors.primary
         tintColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
         layer.applyShadow(shadow: appearance.primaryButton.shadow?.asElementThemeShadow ?? appearance.shadow.asElementThemeShadow)
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
         font = appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         buyButton.titleLabel.sizeToFit()
         addAndPinSubview(applePayButton)
