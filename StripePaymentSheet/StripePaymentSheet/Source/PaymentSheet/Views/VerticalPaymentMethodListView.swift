@@ -10,8 +10,13 @@
 import UIKit
 
 protocol VerticalPaymentMethodListViewDelegate: AnyObject {
+    /// Called when a row is tapped, before `didTapPaymentMethod` is called.
     /// - Returns: Whether or not the payment method row button should appear selected.
-    func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool
+    func shouldSelectPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool
+
+    /// Called after a row is tapped and after `shouldSelectPaymentMethod` is called
+    func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection)
+
     /// Called when the accessory button on the saved payment method row is tapped
     func didTapSavedPaymentMethodAccessoryButton()
 }
@@ -129,7 +134,7 @@ class VerticalPaymentMethodListView: UIView {
 
     func didTap(rowButton: RowButton, selection: VerticalPaymentMethodListSelection) {
         guard let delegate else { return }
-        let shouldSelect = delegate.didTapPaymentMethod(selection)
+        let shouldSelect = delegate.shouldSelectPaymentMethod(selection)
         if shouldSelect {
             // Deselect previous row
             rowButtons.forEach {
@@ -139,6 +144,7 @@ class VerticalPaymentMethodListView: UIView {
             rowButton.isSelected = shouldSelect
             currentSelection = selection
         }
+        delegate.didTapPaymentMethod(selection)
     }
 
     @objc func didTapAccessoryButton() {

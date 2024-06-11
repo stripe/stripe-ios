@@ -55,7 +55,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private var mode: Mode
     private(set) var error: Error?
     private var isPaymentInFlight: Bool = false
-    private var shouldAnimateBuyButton: Bool = true
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
@@ -120,19 +119,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 return .customWithLock(title: customCtaLabel)
             }
 
-            switch intent {
-            case .paymentIntent(_, let paymentIntent):
-                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
-            case .setupIntent:
-                return .setup
-            case .deferredIntent(_, let intentConfig):
-                switch intentConfig.mode {
-                case .payment(let amount, let currency, _, _):
-                    return .pay(amount: amount, currency: currency)
-                case .setup:
-                    return .setup
-                }
-            }
+            return .makeDefaultTypeForPaymentSheet(intent: intent)
         }()
 
         let button = ConfirmButton(
@@ -366,7 +353,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         // Notice
         updateBottomNotice()
 
-        if isPaymentInFlight && shouldAnimateBuyButton {
+        if isPaymentInFlight {
             buyButtonStatus = .processing
         }
         self.buyButton.update(
@@ -444,13 +431,12 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             paymentMethodTypeIdentifier: paymentOption.paymentMethodTypeAnalyticsValue,
             linkContext: paymentOption.linkContext
         )
-        pay(with: paymentOption, animateBuyButton: true)
+        pay(with: paymentOption)
     }
 
-    func pay(with paymentOption: PaymentOption, animateBuyButton: Bool) {
+    func pay(with paymentOption: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
-        shouldAnimateBuyButton = animateBuyButton
         // Clear any errors
         error = nil
         updateUI()
@@ -504,12 +490,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 #if !canImport(CompositorServices)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
-                        if animateBuyButton {
-                            self.buyButton.update(state: .succeeded, animated: true) {
-                                // Wait a bit before closing the sheet
-                                self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
-                            }
-                        } else {
+                        self.buyButton.update(state: .succeeded, animated: true) {
+                            // Wait a bit before closing the sheet
                             self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
                     }
@@ -525,7 +507,7 @@ extension PaymentSheetViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewApplePayButtonTapped(_ header: WalletHeaderView) {
         set(error: nil)
-        pay(with: .applePay, animateBuyButton: true)
+        pay(with: .applePay)
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: WalletHeaderView) {

@@ -49,6 +49,19 @@ extension PaymentSheet {
             }
         }
 
+        var paymentMethodType: PaymentMethodType? {
+            switch self {
+            case let .saved(paymentMethod: paymentMethod, _):
+                return .stripe(paymentMethod.type)
+            case let .new(confirmParams: intentConfirmParams):
+                return intentConfirmParams.paymentMethodType
+            case .applePay, .link:
+                return nil
+            case let .external(paymentMethod: paymentMethod, _):
+                return .external(paymentMethod)
+            }
+        }
+
         // Both "Link" and "Instant Debits" use the same payment method type
         // of "link." To differentiate between the two in metrics, we sometimes
         // need a "link_context."
@@ -565,7 +578,8 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var error: Error? { get }
     var intent: Intent { get }
     var selectedPaymentOption: PaymentOption? { get }
-    /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil for Link and Apple Pay.
+    /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
+    /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
 }
