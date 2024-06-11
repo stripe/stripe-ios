@@ -25,6 +25,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
 
     func verify(_ sut: PaymentSheetVerticalViewController, identifier: String? = nil) {
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: .default, isTestMode: false, didCancelNative3DS2: {})
+        bottomSheet.view.setNeedsLayout()
+        bottomSheet.view.layoutIfNeeded()
         let height = bottomSheet.view.systemLayoutSizeFitting(.init(width: 375, height: UIView.noIntrinsicMetric)).height
         bottomSheet.view.frame = .init(origin: .zero, size: .init(width: 375, height: height))
         STPSnapshotVerifyView(bottomSheet.view, identifier: identifier)
@@ -95,7 +97,6 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             return PaymentSheetVerticalViewController(configuration: .init(), loadResult: loadResult, isFlowController: isFlowController, previousPaymentOption: nil)
         }
         // 1. No saved payment methods, only one payment method and it's card
-        // TODO: Fix this - header is wrong
         verify(makeSUT(isLinkEnabled: false, isApplePayEnabled: false, isFlowController: false))
 
         // 2. #1 + Apple Pay
@@ -169,6 +170,21 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(type: .stripe(.SEPADebit)))
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: previousPaymentOption)
         // ...should display list without anything selected
+        verify(sut)
+    }
+
+    func testDisplaysMandateBelowList() {
+        // When loaded with cash app + sfu = off_session...
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp], setupFutureUsage: .offSession),
+            savedPaymentMethods: [],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        // ...and previous customer input is cash app - a PM without a form
+        let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(type: .stripe(.cashApp)))
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: previousPaymentOption)
+        // ...should display list with cash app selected and mandate displayed
         verify(sut)
     }
 }

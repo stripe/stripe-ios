@@ -86,7 +86,7 @@ class PaymentMethodFormViewController: UIViewController {
             return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
         }()
 
-        // TODO: Inject form cache, make it come from LoadResult
+        // TODO: Inject form cache, make it come from LoadResult, maybe move cache to FormFactory so that shouldDisplayForm checks don't initialize this vc and set the form delegate
         if let form = Self.formCache[type] {
             self.form = form
         } else {
@@ -101,7 +101,6 @@ class PaymentMethodFormViewController: UIViewController {
             Self.formCache[type] = form
         }
         super.init(nibName: nil, bundle: nil)
-        form.delegate = self
     }
 
     override func viewDidLoad() {
@@ -113,6 +112,8 @@ class PaymentMethodFormViewController: UIViewController {
         super.viewDidAppear(animated)
         STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: paymentMethodType.identifier, apiClient: configuration.apiClient)
         sendEventToSubviews(.viewDidAppear, from: view)
+        // The form is cached and could have been shared across other instance of PaymentMethodFormViewController after this instance was initialized, so we set the delegate in viewDidAppear to ensure that the form's delegate is up to date.
+        form.delegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {

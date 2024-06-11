@@ -89,7 +89,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var paymentMethodFormViewController: PaymentMethodFormViewController?
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
-        return DynamicHeightContainerView()
+        DynamicHeightContainerView()
     }()
 
     lazy var walletHeaderView: PaymentSheetViewController.WalletHeaderView? = {
@@ -126,7 +126,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }()
 
     var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
-        return RowButton.RightAccessoryButton.getAccessoryButtonType(
+        RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
@@ -136,7 +136,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     lazy var primaryButton: ConfirmButton = {
-        let button = ConfirmButton(
+        ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
@@ -144,7 +144,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 self?.didTapPrimaryButton()
             }
         )
-        return button
+    }()
+
+    private lazy var mandateView: VerticalMandateView = {
+        return VerticalMandateView(formProvider: { [weak self] paymentMethodType in
+            return self?.makeFormVC(paymentMethodType: paymentMethodType).form
+        })
     }()
 
     // MARK: - Initializers
@@ -166,6 +171,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Only use the previous customer input for the first form shown
         self.previousPaymentOption = nil
         updatePrimaryButton()
+        updateMandate(animated: false)
     }
 
     /// Regenerates the main content - either the PM list or the PM form
@@ -245,6 +251,18 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         )
     }
 
+    func updateMandate(animated: Bool = true) {
+        self.mandateView.paymentMethodType = self.selectedPaymentMethodType
+        self.mandateView.layoutIfNeeded()
+        if animated {
+            animateHeightChange {
+                self.mandateView.isHidden = !self.mandateView.isDisplayingMandate
+            }
+        } else {
+            self.mandateView.isHidden = !self.mandateView.isDisplayingMandate
+        }
+    }
+
     func makePaymentMethodListViewController(selection: VerticalPaymentMethodListSelection?) -> VerticalPaymentMethodListViewController {
         // Determine the initial selection - either the previous payment option or the last VC's selection
         let initialSelection: VerticalPaymentMethodListSelection? = {
@@ -305,9 +323,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
+        paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        let views: [UIView] = [headerLabel, walletHeaderView, paymentContainerView, primaryButton].compactMap { $0 }
+        let spacerView = UIView.makeSpacerView(height: 0)
+        let views: [UIView] = [headerLabel, walletHeaderView, paymentContainerView, mandateView, spacerView, primaryButton].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -316,7 +336,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if let walletHeaderView {
             stackView.setCustomSpacing(24, after: walletHeaderView)
         }
-        stackView.setCustomSpacing(32, after: paymentContainerView)
+        stackView.setCustomSpacing(12, after: paymentContainerView)
+        stackView.setCustomSpacing(20, after: spacerView)
+        stackView.sendSubviewToBack(mandateView)
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
     }
@@ -365,7 +387,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     isCustom: false,
                     paymentMethod: paymentOption.analyticsValue,
                     result: result,
-                    linkEnabled: true, // TODO: Set isLinkEnabled
+                    linkEnabled: loadResult.isLinkEnabled,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                     linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
@@ -547,6 +569,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDeleg
             }
         }
         updatePrimaryButton()
+        updateMandate()
     }
 
     func didTapSavedPaymentMethodAccessoryButton() {
@@ -567,7 +590,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDeleg
             intent: intent,
             previousCustomerInput: previousCustomerInput,
             configuration: configuration,
-            isLinkEnabled: false, // TODO: isLinkEnabled
+            isLinkEnabled: loadResult.isLinkEnabled,
             shouldShowHeader: shouldShowHeader,
             hasASavedCard: !savedPaymentMethods.filter({ $0.type == .card }).isEmpty,
             delegate: self
@@ -598,6 +621,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         headerLabel.isHidden = walletHeaderView != nil
         walletHeaderView?.isHidden = walletHeaderView == nil
         updatePrimaryButton()
+        updateMandate()
     }
 }
 

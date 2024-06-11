@@ -19,7 +19,6 @@ class SimpleMandateTextView: UIView {
         label.font = theme.fonts.caption
         label.textColor = theme.colors.secondaryText
         label.numberOfLines = 0
-        label.textAlignment = .center
         return label
     }()
 
