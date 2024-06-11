@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 import XCTest
 
 final class VerticalPaymentMethodListViewTest: XCTestCase {
-    var didTapPaymentMethodReturnValue: Bool = false
+    var shouldSelectPaymentMethodReturnValue: Bool = false
 
     func testCurrentSelection() {
         let savedPaymentMethod = STPPaymentMethod._testCard()
@@ -24,7 +24,7 @@ final class VerticalPaymentMethodListViewTest: XCTestCase {
         XCTAssertTrue(savedPMButton.isSelected)
 
         // Selecting Apple Pay...
-        didTapPaymentMethodReturnValue = true // (and mocking `didTapPaymentMethod` to return true)
+        shouldSelectPaymentMethodReturnValue = true // (and mocking `didTapPaymentMethod` to return true)
         let applePayRowButton = sut.getRowButton(accessibilityIdentifier: "Apple Pay")
         sut.didTap(rowButton: applePayRowButton, selection: .applePay)
         // ...should change the current selection from the saved PM...
@@ -34,7 +34,7 @@ final class VerticalPaymentMethodListViewTest: XCTestCase {
         XCTAssertTrue(applePayRowButton.isSelected)
 
         // Selecting card...
-        didTapPaymentMethodReturnValue = false // (and mocking `didTapPaymentMethod` to return false)
+        shouldSelectPaymentMethodReturnValue = false // (and mocking `didTapPaymentMethod` to return false)
         let cardButton = sut.getRowButton(accessibilityIdentifier: "Card")
         sut.didTap(rowButton: cardButton, selection: .new(paymentMethodType: .stripe(.card)))
         // ...should not change the current selection...
@@ -43,15 +43,18 @@ final class VerticalPaymentMethodListViewTest: XCTestCase {
         XCTAssertEqual(sut.currentSelection, .applePay)
         XCTAssertTrue(applePayRowButton.isSelected)
     }
-
 }
 
 extension VerticalPaymentMethodListViewTest: VerticalPaymentMethodListViewDelegate {
-    func didTapPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) -> Bool {
-        return didTapPaymentMethodReturnValue
-    }
-
     func didTapSavedPaymentMethodAccessoryButton() {
+        // no-op
+    }
+    
+    func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) -> Bool {
+        return shouldSelectPaymentMethodReturnValue
+    }
+    
+    func didTapPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) {
         // no-op
     }
 }
