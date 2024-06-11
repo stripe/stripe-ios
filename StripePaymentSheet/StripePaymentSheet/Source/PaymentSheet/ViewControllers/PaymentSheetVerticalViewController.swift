@@ -324,6 +324,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
+        paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
         let spacerView = UIView.makeSpacerView(height: 0)
