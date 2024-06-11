@@ -89,7 +89,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var paymentMethodFormViewController: PaymentMethodFormViewController?
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
-        return DynamicHeightContainerView()
+        DynamicHeightContainerView()
     }()
 
     lazy var walletHeaderView: PaymentSheetViewController.WalletHeaderView? = {
@@ -126,7 +126,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }()
 
     var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
-        return RowButton.RightAccessoryButton.getAccessoryButtonType(
+        RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
@@ -136,7 +136,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     lazy var primaryButton: ConfirmButton = {
-        let button = ConfirmButton(
+        ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
@@ -144,7 +144,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 self?.didTapPrimaryButton()
             }
         )
-        return button
     }()
 
     private lazy var mandateView: VerticalMandateView = {
