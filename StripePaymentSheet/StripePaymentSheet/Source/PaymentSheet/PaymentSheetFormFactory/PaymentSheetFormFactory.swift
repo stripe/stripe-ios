@@ -265,12 +265,6 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeMandate(mandateText: String) -> PaymentMethodElement {
-        // If there was previous customer input, check if it displayed the mandate for this payment method
-        let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
-        return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, theme: theme)
-    }
-
     func makeBSB(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? previousCustomerInput?.paymentMethodParams.auBECSDebit?.bsbNumber
         let element = TextFieldElement.Account.makeBSB(defaultValue: defaultValue, theme: theme)
@@ -298,10 +292,6 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeAUBECSMandate() -> StaticElement {
-        return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
-    }
-
     func makeSortCode() -> PaymentMethodElementWrapper<TextFieldElement> {
         let defaultValue = previousCustomerInput?.paymentMethodParams.bacsDebit?.sortCode
         let element = TextFieldElement.Account.makeSortCode(defaultValue: defaultValue, theme: theme)
@@ -319,57 +309,6 @@ extension PaymentSheetFormFactory {
             params.paymentMethodParams.nonnil_bacsDebit.accountNumber = textField.text
             return params
         }
-    }
-
-    func makeBacsMandate() -> PaymentMethodElementWrapper<CheckboxElement> {
-        let mandateText = String(format: String.Localized.bacs_mandate_text, configuration.merchantDisplayName)
-        let element = CheckboxElement(
-            theme: configuration.appearance.asElementsTheme,
-            label: mandateText,
-            isSelectedByDefault: false
-        )
-        return PaymentMethodElementWrapper(element) { checkbox, params in
-            // Only return params if the mandate has been accepted
-            return checkbox.isSelected ? params : nil
-        }
-    }
-
-    func makeSepaMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makeCashAppMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makeRevolutPayMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.revolut_pay_mandate_text, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makeKlarnaMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.klarna_mandate_text,
-                                 configuration.merchantDisplayName,
-                                 configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makeAmazonPayMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.amazon_pay_mandate_text, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makePaypalMandate() -> PaymentMethodElement {
-        let mandateText: String = {
-            if isPaymentIntent {
-                return String(format: String.Localized.paypal_mandate_text_payment, configuration.merchantDisplayName)
-            } else {
-                return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
-            }
-        }()
-        return makeMandate(mandateText: mandateText)
     }
 
     func makeSaveCheckbox(
