@@ -475,10 +475,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     #endif
                     // Update state
                     self.error = error
-                    // Handle error
-                    if PaymentSheetError.isUnrecoverable(error: error) {
-                        self.delegate?.paymentSheetViewControllerDidFinish(self, result: result)
-                    }
                     self.updateUI()
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                 case .completed:
