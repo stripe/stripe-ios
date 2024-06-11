@@ -52,8 +52,6 @@ final class VerticalMandateView: UIView {
             return
         }
         // Display the mandate
-        // Slight hack - get the mandate text to be naturally justified instead of centered for vertical mode
-        mandateElement.mandateTextView.label.textAlignment = .natural
         addAndPinSubview(mandateElement.view)
         mandateView = mandateElement.view
     }
