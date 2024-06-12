@@ -4102,6 +4102,43 @@ extension PaymentSheetUITestCase {
             XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         }
     }
+
+    func testCVCRecollection_verticalMode() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .vertical
+        settings.uiStyle = .paymentSheet
+        settings.customerMode = .new
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.requireCVCRecollection = .on
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.switches["Save this card for future Example, Inc. payments"].waitForExistenceAndTap()
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        XCTAssertFalse(successText.exists)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.staticTexts["Confirm your CVC"].waitForExistence(timeout: 1))
+        // CVC field should already be selected
+        app.typeText("123")
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
 }
 
 extension XCUIElement {
