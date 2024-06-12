@@ -26,7 +26,7 @@ final class FormHeaderView: UIView {
     }()
 
     private lazy var imageView: PaymentMethodTypeImageView? = {
-        guard paymentMethodType != .stripe(.card) else { return nil }
+        guard ![.stripe(.card), .stripe(.USBankAccount)].contains(paymentMethodType) else { return nil }
         return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
     }()
 
