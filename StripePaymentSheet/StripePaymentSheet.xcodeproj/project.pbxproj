@@ -915,13 +915,6 @@
 			path = Link;
 			sourceTree = "<group>";
 		};
-		6A5997172BC88E0F002A44CB /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		6A663AB17CD17C68D7329B6B /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1186,7 +1179,6 @@
 				3C8E4153CAFF4EC9AC960182 /* AddPaymentMethodViewController.swift */,
 				6B9A346A7A4290BAA7BCA1A2 /* PaymentMethodTypeCollectionView.swift */,
 				E32B3AC4CC1C4F2DEEC5F292 /* WalletHeaderView.swift */,
-				6A5997172BC88E0F002A44CB /* New Group */,
 			);
 			path = "New Payment Method Screen";
 			sourceTree = "<group>";

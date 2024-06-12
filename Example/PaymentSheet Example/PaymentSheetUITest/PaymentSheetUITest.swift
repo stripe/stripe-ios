@@ -188,10 +188,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.customerMode = .new
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         XCTAssertEqual(
@@ -330,10 +327,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.currency = .eur
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay €50.99"]
@@ -367,10 +361,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
                 settings.merchantCountryCode = .IN
         settings.currency = .inr
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -404,10 +395,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
                 settings.merchantCountryCode = .FR
         settings.currency = .pln
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -463,10 +451,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.currency = .eur
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay €50.99"]
@@ -500,10 +485,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.currency = .eur
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay €50.99"]
@@ -532,10 +514,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.currency = .eur
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -575,10 +554,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
         settings.apmsEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay $50.99"]
@@ -616,10 +592,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay $50.99"]
 
@@ -640,10 +613,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay $50.99"]
 
@@ -666,10 +636,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .FR
         settings.customerMode = .new
         settings.apmsEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay €50.99"]
 
@@ -692,10 +659,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.currency = .aud
         settings.merchantCountryCode = .AU
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay A$50.99"]
@@ -721,10 +685,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay $50.99"]
@@ -752,10 +713,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
         // Select US Bank Account
@@ -811,10 +769,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .on
         settings.currency = .sgd
         settings.merchantCountryCode = .SG
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay SGD 50.99"]
@@ -857,10 +812,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
@@ -886,10 +838,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
@@ -918,10 +867,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.preferredNetworksEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         _testCardBrandChoice(settings: settings)
     }
@@ -934,10 +880,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.preferredNetworksEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         _testCardBrandChoice(isSetup: true, settings: settings)
     }
@@ -950,10 +893,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.currency = .eur
         settings.preferredNetworksEnabled = .off
         settings.integrationType = .deferred_csc
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         _testCardBrandChoice(settings: settings)
     }
@@ -965,10 +905,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.preferredNetworksEnabled = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -1023,10 +960,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
         let numberField = app.textFields["Card number"]
@@ -1125,10 +1059,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.currency = .eur
         settings.allowsDelayedPMs = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
         guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else { XCTFail("Couldn't find SEPA"); return; }
@@ -1155,10 +1086,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .US
         settings.currency = .usd
         settings.apmsEnabled = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -1185,10 +1113,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.currency = .mxn
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -1227,10 +1152,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.currency = .brl
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -1276,10 +1198,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .on
         settings.currency = .sgd
         settings.merchantCountryCode = .SG
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay SGD 50.99"]
@@ -1307,10 +1226,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .on
         settings.currency = .thb
         settings.merchantCountryCode = .TH
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -1343,10 +1259,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.currency = .sek
         settings.merchantCountryCode = .FR
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -1437,10 +1350,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.currency = .eur
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
 
@@ -1475,13 +1385,10 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
-        app.buttons["Pay $50.99"].waitForExistence(timeout: 10)
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
 
         XCTAssertEqual(
             // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
@@ -1514,10 +1421,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ClientSideConfirmation_LostCardDecline() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil, cardNumber: "4000000000009987")
@@ -1532,10 +1436,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
         settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil)
@@ -1550,10 +1451,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
         settings.uiStyle = .flowController
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         let selectButton = app.buttons["Payment method"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
@@ -1579,10 +1477,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         settings.integrationType = .deferred_csc
         settings.uiStyle = .flowController
         settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         let selectButton = app.buttons["Payment method"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
@@ -1660,10 +1555,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let applePayButton = app.buttons["apple_pay_button"]
@@ -1680,10 +1572,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
         settings.linkEnabled = .on
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         let paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
@@ -1708,10 +1597,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .US
         settings.mode = .payment
         settings.customerKeyType = .legacy
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         try! fillCardData(app)
@@ -1743,10 +1629,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .US
         settings.mode = .setup
         settings.customerKeyType = .legacy
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         try! fillCardData(app)
@@ -1779,10 +1662,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .disabled // .disabled == hides checkbox when SI or PI+SFU
         let checkboxBehavior: CheckboxBehavior = .hidden
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .limited,
@@ -1799,10 +1679,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .disabled // hidden checkbox when SI or PI+SFU
         let checkboxBehavior: CheckboxBehavior = .hidden
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .limited,
@@ -1819,10 +1696,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.mode = .payment
         settings.paymentMethodSave = .disabled // checkbox is shown, when PI
         let checkboxBehavior: CheckboxBehavior = .unchecked
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .unspecified_limited_always,
@@ -1840,10 +1714,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .disabled // checkbox is shown, when PI
         let checkboxBehavior: CheckboxBehavior = .checked
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .always,
@@ -1861,10 +1732,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .enabled
         let checkboxBehavior: CheckboxBehavior = .checked
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .always,
@@ -1881,10 +1749,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .enabled
         let checkboxBehavior: CheckboxBehavior = .unchecked
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .unspecified_limited_always,
@@ -1901,10 +1766,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .enabled
         let checkboxBehavior: CheckboxBehavior = .checked
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .always,
@@ -1921,10 +1783,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .enabled
         let checkboxBehavior: CheckboxBehavior = .unchecked
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .limited,
@@ -1941,10 +1800,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .enabled
         let checkboxBehavior: CheckboxBehavior = .checked
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .always,
@@ -1961,10 +1817,7 @@ class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .enabled
         let checkboxBehavior: CheckboxBehavior = .unchecked
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         _testAllowRedisplayByAddingSingleCard(settings: settings,
                                               checkboxBehavior: checkboxBehavior,
                                               allowRedisplayValue: .limited,
@@ -2153,10 +2006,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ServerSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_ssc
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil)
@@ -2171,10 +2021,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_mp
         settings.apmsEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil)
@@ -2188,10 +2035,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_SeverSideConfirmation_LostCardDecline() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_ssc
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil, cardNumber: "4000000000009987")
@@ -2206,10 +2050,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_ssc
         settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil)
@@ -2224,10 +2065,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_ssc
         settings.uiStyle = .flowController
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         let selectButton = app.buttons["Payment method"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
@@ -2253,10 +2091,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.integrationType = .deferred_mc
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         let selectButton = app.buttons["Payment method"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
@@ -2282,10 +2117,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.integrationType = .deferred_ssc
         settings.uiStyle = .flowController
         settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         let selectButton = app.buttons["Payment method"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
@@ -2365,10 +2197,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_ssc
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let applePayButton = app.buttons["apple_pay_button"]
@@ -2383,10 +2212,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_mc
         settings.apmsEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let applePayButton = app.buttons["apple_pay_button"]
@@ -2401,10 +2227,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_mp
         settings.apmsEnabled = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
         let applePayButton = app.buttons["apple_pay_button"]
@@ -2425,10 +2248,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.integrationType = .deferred_ssc
         settings.uiStyle = .flowController
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         var paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
@@ -2564,10 +2384,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkEnabled = .on
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
@@ -2631,10 +2448,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkEnabled = .on
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to None
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -2706,10 +2520,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkEnabled = .on
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
@@ -2762,10 +2573,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkEnabled = .on
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -2830,10 +2638,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
@@ -2882,10 +2687,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
@@ -3005,7 +2807,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -3049,7 +2851,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -3091,7 +2893,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -3362,7 +3164,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
 
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -3710,26 +3512,26 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
 // MARK: Helpers
 extension PaymentSheetUITestCase {
-    func _testUSBankAccount(mode: PaymentSheetTestPlaygroundSettings.Mode, integrationType: PaymentSheetTestPlaygroundSettings.IntegrationType) {
+    func _testUSBankAccount(mode: PaymentSheetTestPlaygroundSettings.Mode, integrationType: PaymentSheetTestPlaygroundSettings.IntegrationType, vertical: Bool = false) {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
         settings.mode = mode
         settings.integrationType = integrationType
+        if vertical {
+            settings.layout = .vertical
+        }
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
         // Select US Bank Account
-        guard let usBankAccount = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account") else {
-            XCTFail()
-            return
+        if vertical {
+            XCTAssertTrue(app.buttons["US Bank Account"].waitForExistenceAndTap())
+        } else {
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account")?.waitForExistenceAndTap() ?? false)
         }
-        usBankAccount.tap()
 
         // Fill out name and email fields
         let continueButton = app.buttons["Continue"]
@@ -3782,10 +3584,7 @@ extension PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.supportedPaymentMethods = "card,link"
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
         // Select "Bank Account"
@@ -3988,15 +3787,111 @@ extension PaymentSheetUITestCase {
     }
 }
 
-// MARK: Vertical mode saved payment method management
+// MARK: Vertical mode tests
 extension PaymentSheetUITestCase {
+    func testFlowController_verticalMode() {
+        // Sets the right paymentOption values
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .setup
+        settings.customerMode = .new
+        settings.uiStyle = .flowController
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+        let paymentMethodButton = app.buttons["Payment method"]
+        XCTAssertEqual(paymentMethodButton.label, "None")
+        paymentMethodButton.waitForExistenceAndTap()
+
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.isEnabled)
+        app.buttons["Apple Pay"].tap()
+        continueButton.tap()
+        XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
+
+        // Go back in, select Link
+        paymentMethodButton.tap()
+        app.buttons["Link"].tap()
+        continueButton.tap()
+        XCTAssertEqual(paymentMethodButton.label, "Link, link")
+
+        // Go back in, select Card
+        paymentMethodButton.tap()
+        app.buttons["Card"].tap()
+        XCTAssertFalse(continueButton.isEnabled)
+        // Enter some details
+        app.textFields["Card number"].tap()
+        app.textFields["Card number"].typeText("1")
+        XCTAssertFalse(continueButton.isEnabled)
+        app.tapCoordinate(at: .init(x: 200, y: 100))
+        // Tap out of FlowController
+        app.tapCoordinate(at: .init(x: 200, y: 100))
+        XCTAssertEqual(paymentMethodButton.label, "None")
+
+        // Go back in
+        paymentMethodButton.tap()
+        XCTAssertFalse(continueButton.isEnabled)
+        // Back out of card form
+        app.buttons["Back"].tap()
+        // Link should be selected
+        XCTAssertTrue(app.buttons["Link"].isSelected)
+        XCTAssertTrue(continueButton.isEnabled)
+
+        // Go back to card
+        app.buttons["Card"].waitForExistenceAndTap()
+        // Make sure the card form retained previously entered details
+        XCTAssertEqual(app.textFields["Card number"].value as? String, "1, Your card number is invalid.")
+        app.textFields["Card number"].clearText()
+        // Finish the card payment
+        try! fillCardData(app, cardNumber: "4242424242424242")
+        continueButton.tap()
+        XCTAssertEqual(paymentMethodButton.label, "••••4242, card, 12345, US")
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+
+        // Reload
+        reload(app, settings: settings)
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10))
+        XCTAssertEqual(paymentMethodButton.label, "••••4242, card, 12345, US")
+        paymentMethodButton.tap()
+
+        XCTAssertTrue(app.buttons["••••4242"].isSelected)
+        XCTAssertTrue(continueButton.isEnabled)
+    }
+
+    func testUSBankAccount_verticalmode() {
+        _testUSBankAccount(mode: .payment, integrationType: .normal, vertical: true)
+    }
+
+    func testPayingWithNoFormPMs_verticalmode() {
+        // We choose Cash App as a representative PM that does not require form details
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .payment
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+
+        // Try Cash App
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        app.buttons["Pay $50.99"].tap()
+        // Cancel
+        XCTAssertTrue(app.webViews.staticTexts["Cash App Pay test payment page"].waitForExistence(timeout: 10))
+        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
+        // Fail payment
+        app.buttons["Pay $50.99"].tap()
+        app.waitForButtonOrStaticText("FAIL TEST PAYMENT").tap()
+        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 10))
+
+        // Try Alipay
+        app.buttons["Alipay"].waitForExistenceAndTap()
+        app.buttons["Pay $50.99"].tap()
+        app.waitForButtonOrStaticText("AUTHORIZE TEST PAYMENT").tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+
     func testCanPayWithApplePayWallet_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .payment
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["vertical"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -4007,10 +3902,7 @@ extension PaymentSheetUITestCase {
     func testCanPayWithLinkWallet_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .payment
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         app.buttons["vertical"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -4035,10 +3927,7 @@ extension PaymentSheetUITestCase {
         settings.currency = .eur
         settings.merchantCountryCode = .FR
         settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
         // Save some test cards to the customer
         setupCards(cards: ["4000002500001001", "4242424242424242"], settings: settings)
