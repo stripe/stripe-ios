@@ -223,7 +223,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
 
             if isFlowController {
-                return .add(paymentMethodType: selectedPaymentMethodType ?? .stripe(.unknown))
+                return .continue
             }
             return .makeDefaultTypeForPaymentSheet(intent: intent)
         }()
