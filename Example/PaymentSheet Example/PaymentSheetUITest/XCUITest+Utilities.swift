@@ -60,6 +60,13 @@ extension XCUIApplication {
             self.keys[String(key)].tap()
         }
     }
+
+    func waitForButtonOrStaticText(_ identifier: String, timeout: TimeInterval = 10.0) -> XCUIElement {
+        if buttons[identifier].waitForExistence(timeout: timeout) {
+            return buttons[identifier]
+        }
+        return staticTexts[identifier]
+    }
 }
 
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
