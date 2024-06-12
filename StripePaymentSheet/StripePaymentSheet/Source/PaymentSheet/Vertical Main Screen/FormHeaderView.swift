@@ -21,7 +21,7 @@ final class FormHeaderView: UIView {
         } else {
             label.text = paymentMethodType.displayName
         }
-        
+
         return label
     }()
 
