@@ -147,9 +147,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }()
 
     private lazy var mandateView: VerticalMandateView = {
-        return VerticalMandateView(formProvider: { [weak self] paymentMethodType in
+        VerticalMandateView(formProvider: { [weak self] paymentMethodType in
             return self?.makeFormVC(paymentMethodType: paymentMethodType).form
         })
+    }()
+
+    private lazy var errorLabel: UILabel = {
+        ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
 
     // MARK: - Initializers
@@ -172,6 +176,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.previousPaymentOption = nil
         updatePrimaryButton()
         updateMandate(animated: false)
+        updateError()
     }
 
     /// Regenerates the main content - either the PM list or the PM form
@@ -223,7 +228,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
 
             if isFlowController {
-                return .add(paymentMethodType: selectedPaymentMethodType ?? .stripe(.unknown))
+                return .continue
             }
             return .makeDefaultTypeForPaymentSheet(intent: intent)
         }()
@@ -260,6 +265,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         } else {
             self.mandateView.isHidden = !self.mandateView.isDisplayingMandate
+        }
+    }
+
+    func updateError() {
+        errorLabel.text = error?.nonGenericDescription
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
     }
 
@@ -327,7 +339,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // One stack view contains all our subviews
         let spacerView = UIView.makeSpacerView(height: 0)
-        let views: [UIView] = [headerLabel, walletHeaderView, paymentContainerView, mandateView, spacerView, primaryButton].compactMap { $0 }
+        let views: [UIView] = [headerLabel, walletHeaderView, paymentContainerView, mandateView, spacerView, errorLabel, primaryButton].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -338,6 +350,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
         stackView.setCustomSpacing(12, after: paymentContainerView)
         stackView.setCustomSpacing(20, after: spacerView)
+        stackView.setCustomSpacing(20, after: errorLabel)
         stackView.sendSubviewToBack(mandateView)
 
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
@@ -373,6 +386,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         view.endEditing(true)
         isPaymentInFlight = true
         error = nil
+        updateError()
         updatePrimaryButton()
         isUserInteractionEnabled = false
 
@@ -410,10 +424,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
                     #endif
                     // Update state
-                    self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
-                    // TODO: Handle error.
-                    print(error)
+                    self.error = error
+                    self.updateError()
+                    self.updatePrimaryButton()
+                    UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                 case .completed:
                     // We're done!
                     let delay: TimeInterval =
@@ -615,6 +630,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
         // Hide the keyboard if it appeared and switch back to the vertical list
         view.endEditing(true)
+        error = nil
         paymentMethodFormViewController = nil
         switchContentIfNecessary(to: paymentMethodListViewController!, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
@@ -622,6 +638,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         walletHeaderView?.isHidden = walletHeaderView == nil
         updatePrimaryButton()
         updateMandate()
+        updateError()
     }
 }
 
@@ -666,7 +683,8 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
     }
 
     func updateErrorLabel(for error: Swift.Error?) {
-        // TODO
+        self.error = error
+        updateError()
     }
 }
 
