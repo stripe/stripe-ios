@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -52,7 +53,7 @@ class VerticalPaymentMethodListView: UIView {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
 
-    init(initialSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance) {
+    init(initialSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance, currency: String?, amount: Int?) {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 12.0
@@ -115,7 +116,9 @@ class VerticalPaymentMethodListView: UIView {
         // All other payment methods:
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
-            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, appearance: appearance) { [weak self] in
+            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType,
+                                                               subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount),
+                                                               appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
             views.append(rowButton)
@@ -162,5 +165,24 @@ class VerticalPaymentMethodListView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension VerticalPaymentMethodListView {
+    func subtitleText(for paymentMethodType: PaymentSheet.PaymentMethodType, currency: String?, amount: Int?) -> String? {
+        switch paymentMethodType {
+        case .stripe(.klarna):
+            return String.Localized.buy_now_or_pay_later_with_klarna
+        case .stripe(.afterpayClearpay):
+            guard let currency, let amount else { return nil }
+            let numInstallments = AfterpayPriceBreakdownView.numberOfInstallments(currency: currency)
+            let installmentAmount = amount / numInstallments
+            let installmentAmountDisplayString = String.localizedAmountDisplayString(for: installmentAmount, currency: currency)
+            return String(format: .Localized.after_pay_subtitle_text,
+                          numInstallments,
+                          installmentAmountDisplayString)
+        default:
+            return nil
+        }
     }
 }
