@@ -16,9 +16,12 @@ final class FormHeaderView: UIView {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
         if paymentMethodType == .stripe(.card) {
             label.text = hasASavedCard ? String.Localized.add_card : String.Localized.add_new_card
+        } else if paymentMethodType == .stripe(.USBankAccount) {
+            label.text = String.Localized.add_us_bank_account
         } else {
             label.text = paymentMethodType.displayName
         }
+        
         return label
     }()
 
