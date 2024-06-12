@@ -68,7 +68,8 @@ extension PaymentSheet {
         } else if case let .saved(paymentMethod, _) = paymentOption,
                   paymentMethod.type == .card,
                   intent.cvcRecollectionEnabled,
-                  isFlowController {
+                  (isFlowController || configuration.paymentMethodLayout == .vertical) {
+            // MARK: - CVC Recollection
             let presentingViewController = authenticationContext.authenticationPresentingViewController()
 
             guard presentingViewController.presentedViewController == nil else {
@@ -89,21 +90,18 @@ extension PaymentSheet {
                     DispatchQueue.main.async {
                         completion(.canceled, nil)
                     }
-                })
+                }
+            )
 
-            let presentPreConfirmationViewController: () -> Void = {
-                // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = FlowController.makeBottomSheetViewController(
-                    preConfirmationViewController,
-                    configuration: configuration,
-                    didCancelNative3DS2: {
-                        paymentHandler.cancel3DS2ChallengeFlow()
-                    }
-                )
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
-            }
-            presentPreConfirmationViewController()
-
+            // Set the preConfirmationViewController as the content of our bottom sheet
+            let bottomSheetVC = FlowController.makeBottomSheetViewController(
+                preConfirmationViewController,
+                configuration: configuration,
+                didCancelNative3DS2: {
+                    paymentHandler.cancel3DS2ChallengeFlow()
+                }
+            )
+            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
         } else {
             // MARK: - No local actions
             confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, completion: completion)
