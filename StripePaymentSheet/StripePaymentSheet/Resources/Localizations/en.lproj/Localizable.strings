@@ -1,6 +1,9 @@
 /* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
+"%d interest-free payments of %@" = "%1$d interest-free payments of %2$@";
+
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
@@ -245,6 +248,9 @@ is not supported by the merchant */
 
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";
+
+/* Subtitle shown on a button allowing a user to select to pay with Link. */
+"Simple, secure one-click payments" = "Simple, secure one-click payments";
 
 /* Error message when an error case happens when linking your account */
 "Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
