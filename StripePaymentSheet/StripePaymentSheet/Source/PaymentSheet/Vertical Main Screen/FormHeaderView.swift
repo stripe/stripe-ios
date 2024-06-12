@@ -26,8 +26,13 @@ final class FormHeaderView: UIView {
     }()
 
     private lazy var imageView: PaymentMethodTypeImageView? = {
-        guard ![.stripe(.card), .stripe(.USBankAccount)].contains(paymentMethodType) else { return nil }
-        return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
+        switch paymentMethodType {
+        case .stripe(.card), .stripe(.USBankAccount):
+            // Don't show an image on the form header for card and US bank account
+            return nil
+        default:
+            return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
+        }
     }()
 
     private lazy var stackView: UIStackView = {
