@@ -196,9 +196,6 @@ extension PaymentSheet {
         /// The layout of payment methods in PaymentSheet. Defaults to `.horizontal`.
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         @_spi(STP) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
-
-        // MARK: Internal
-        internal var linkPaymentMethodsOnly: Bool = false
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.

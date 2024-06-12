@@ -24,8 +24,7 @@ extension PaymentSheetFormFactory {
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {
             let emailElement: Element? = configuration.billingDetailsCollectionConfiguration.email == .always ? makeEmail() : nil
-            // Link can't collect phone.
-            let shouldIncludePhone = !configuration.linkPaymentMethodsOnly && configuration.billingDetailsCollectionConfiguration.phone == .always
+            let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
             let phoneElement: Element? = shouldIncludePhone ? makePhone() : nil
             let contactInformationElements = [emailElement, phoneElement].compactMap { $0 }
             guard !contactInformationElements.isEmpty else {

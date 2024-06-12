@@ -741,7 +741,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             .blik,
             .weChatPay,
             .link,
-            .linkInstantDebit,
             .USBankAccount,
             .cashApp,
             .revolutPay,
@@ -1262,7 +1261,7 @@ extension STPPaymentMethodParams {
             alma = STPPaymentMethodAlmaParams()
         case .multibanco:
             multibanco = STPPaymentMethodMultibancoParams()
-        case .cardPresent, .linkInstantDebit, .paynow, .zip, .konbini, .promptPay, .twint, .instantDebits:
+        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint, .instantDebits:
             // These payment methods don't have any params
             break
         case .unknown:
@@ -1330,8 +1329,6 @@ extension STPPaymentMethodParams {
             return "Link"
         case .klarna:
             return "Klarna"
-        case .linkInstantDebit:
-            return "Bank"
         case .affirm:
             return "Affirm"
         case .USBankAccount:

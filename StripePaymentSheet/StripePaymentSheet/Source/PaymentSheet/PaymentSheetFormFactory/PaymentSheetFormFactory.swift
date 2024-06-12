@@ -136,8 +136,6 @@ class PaymentSheetFormFactory {
         // 1. Custom, one-off forms
         if paymentMethod == .card {
             return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
-        } else if paymentMethod == .linkInstantDebit {
-            return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
