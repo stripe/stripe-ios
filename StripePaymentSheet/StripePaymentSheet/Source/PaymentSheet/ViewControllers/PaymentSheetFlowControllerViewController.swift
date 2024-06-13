@@ -197,7 +197,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 showLink: isLinkEnabled,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
-                isCVCRecollectionEnabled: loadResult.intent.cvcRecollectionEnabled,
+                isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
                 allowsRemovalOfPaymentMethods: self.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
