@@ -9,8 +9,23 @@
 import StripePaymentSheet
 import SwiftUI
 
+@available(iOS 14.0, *)
+struct HostView: View {
+    @StateObject var paymentModel = MyBackendModel()
+    var body: some View {
+        NavigationView {
+            VStack {
+                ExampleSwiftUIPaymentSheet(model: paymentModel)
+                NavigationLink(destination: ExampleSwiftUIPaymentSheet(model: paymentModel)) {
+                    Text("next flow")
+                }
+            }
+        }.onAppear { paymentModel.preparePaymentSheet() }
+    }
+}
+
 struct ExampleSwiftUIPaymentSheet: View {
-    @ObservedObject var model = MyBackendModel()
+    @ObservedObject var model: MyBackendModel
 
     var body: some View {
         VStack {
@@ -27,9 +42,8 @@ struct ExampleSwiftUIPaymentSheet: View {
             if let result = model.paymentResult {
                 ExamplePaymentStatusView(result: result)
             }
-        }.onAppear { model.preparePaymentSheet() }
+        }
     }
-
 }
 
 class MyBackendModel: ObservableObject {
@@ -91,8 +105,8 @@ class MyBackendModel: ObservableObject {
     }
 }
 
-struct ExampleSwiftUIPaymentSheet_Preview: PreviewProvider {
-    static var previews: some View {
-        ExampleSwiftUIPaymentSheet()
-    }
-}
+//struct ExampleSwiftUIPaymentSheet_Preview: PreviewProvider {
+//    static var previews: some View {
+//        ExampleSwiftUIPaymentSheet()
+//    }
+//}

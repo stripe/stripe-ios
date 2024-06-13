@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     }
 
     @IBSegueAction func showSwiftUIExample(_ coder: NSCoder) -> UIViewController? {
-        return UIHostingController(coder: coder, rootView: ExampleSwiftUIPaymentSheet())
+        return UIHostingController(coder: coder, rootView: HostView())
     }
 
     @IBSegueAction func showSwiftUICustomExample(_ coder: NSCoder) -> UIViewController? {
