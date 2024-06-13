@@ -76,15 +76,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var shouldShowApplePayInList: Bool {
         loadResult.isApplePayEnabled && isFlowController
     }
-    var shouldShowApplePayWalletButton: Bool {
-        loadResult.isApplePayEnabled && !shouldShowApplePayInList
-    }
     var shouldShowLinkInList: Bool {
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
         loadResult.isLinkEnabled && isFlowController && shouldShowApplePayInList
-    }
-    var shouldShowLinkWalletButton: Bool {
-        loadResult.isLinkEnabled && !shouldShowLinkInList
     }
     // Whether or not we are in the special case where we don't show the list and show the card form directly
     var shouldDisplayCardFormOnly: Bool {
@@ -110,9 +104,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
         DynamicHeightContainerView()
-    }()
-    lazy var headerView: UIView? = {
-        makeHeaderView()
     }()
 
     var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
@@ -180,7 +171,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
         if shouldDisplayCardFormOnly {
             // If we'd only show one PM in the vertical list and it's `card`, display the form instead of the payment method list.
-            let formVC = makeFormVC(paymentMethodType: .stripe(.card), shouldShowHeader: !shouldShowApplePayWalletButton && !shouldShowLinkWalletButton)
+            let formVC = makeFormVC(paymentMethodType: .stripe(.card))
             self.paymentMethodFormViewController = formVC
             add(childViewController: formVC, containerView: paymentContainerView)
         } else {
@@ -201,9 +192,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
             }
         }
-
-        // Update header
-        headerView?.isHidden = paymentMethodFormViewController?.shouldShowHeader ?? false
     }
 
     func updatePrimaryButton() {
@@ -309,6 +297,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             shouldShowApplePay: shouldShowApplePayInList,
             shouldShowLink: shouldShowLinkInList,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
+            overrideHeaderView: makeWalletHeaderView(),
             appearance: configuration.appearance,
             currency: loadResult.intent.currency,
             amount: loadResult.intent.amount,
@@ -316,31 +305,24 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         )
     }
 
-    func makeHeaderView() -> UIView? {
+    func makeWalletHeaderView() -> UIView? {
         var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
-        if shouldShowApplePayWalletButton {
+        if loadResult.isApplePayEnabled && !shouldShowApplePayInList {
             walletOptions.insert(.applePay)
         }
-        if shouldShowLinkWalletButton {
+        if loadResult.isLinkEnabled && !shouldShowLinkInList {
             walletOptions.insert(.link)
         }
-        if !walletOptions.isEmpty {
-            // If wallet options are available, use WalletHeaderView
-            return PaymentSheetViewController.WalletHeaderView(
-                options: walletOptions,
-                appearance: configuration.appearance,
-                applePayButtonType: configuration.applePay?.buttonType ?? .plain,
-                isPaymentIntent: intent.isPaymentIntent,
-                delegate: self
-            )
-        } else if shouldDisplayCardFormOnly {
-            // If we're in card-form mode and we're not showing wallets, don't show a header - PaymentMethodFormVC will show one
+        guard !walletOptions.isEmpty else {
             return nil
-        } else {
-            let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-            label.text = .Localized.select_payment_method
-            return label
         }
+        return PaymentSheetViewController.WalletHeaderView(
+            options: walletOptions,
+            appearance: configuration.appearance,
+            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            isPaymentIntent: intent.isPaymentIntent,
+            delegate: self
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -356,14 +338,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // One stack view contains all our subviews
         let spacerView = UIView.makeSpacerView(height: 0)
-        let views: [UIView] = [headerView, paymentContainerView, mandateView, spacerView, errorLabel, primaryButton].compactMap { $0 }
+        let views: [UIView] = [paymentContainerView, mandateView, spacerView, errorLabel, primaryButton].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        if let headerView {
-            stackView.setCustomSpacing(24, after: headerView)
-        }
         stackView.setCustomSpacing(12, after: paymentContainerView)
         stackView.setCustomSpacing(20, after: spacerView)
         stackView.setCustomSpacing(20, after: errorLabel)
@@ -595,10 +574,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDeleg
                 self.paymentMethodFormViewController = pmFormVC
                 switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView)
                 navigationBar.setStyle(.back(showAdditionalButton: false))
-                animateHeightChange() {
-                    self.headerView?.alpha = 0
-                    self.headerView?.isHidden = true
-                }
             }
         }
         updatePrimaryButton()
@@ -609,7 +584,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDeleg
         presentManageScreen()
     }
 
-    private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType, shouldShowHeader: Bool = true) -> PaymentMethodFormViewController {
+    private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
         let previousCustomerInput: IntentConfirmParams? = {
             if case let .new(confirmParams: confirmParams) = previousPaymentOption {
                 return confirmParams
@@ -617,15 +592,24 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDeleg
                 return nil
             }
         }()
-
+        let headerView: UIView = {
+            if shouldDisplayCardFormOnly, let wallet = makeWalletHeaderView() {
+                return wallet
+            } else {
+                return FormHeaderView(
+                    paymentMethodType: paymentMethodType,
+                    hasASavedCard: !savedPaymentMethods.filter({ $0.type == .card }).isEmpty,
+                    appearance: configuration.appearance
+                )
+            }
+        }()
         return PaymentMethodFormViewController(
             type: paymentMethodType,
             intent: intent,
             previousCustomerInput: previousCustomerInput,
             configuration: configuration,
             isLinkEnabled: loadResult.isLinkEnabled,
-            shouldShowHeader: shouldShowHeader,
-            hasASavedCard: !savedPaymentMethods.filter({ $0.type == .card }).isEmpty,
+            headerView: headerView,
             delegate: self
         )
     }
@@ -652,10 +636,6 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         paymentMethodFormViewController = nil
         switchContentIfNecessary(to: paymentMethodListViewController!, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
-        animateHeightChange() {
-            self.headerView?.alpha = 1
-            self.headerView?.isHidden = false
-        }
         updatePrimaryButton()
         updateMandate()
         updateError()

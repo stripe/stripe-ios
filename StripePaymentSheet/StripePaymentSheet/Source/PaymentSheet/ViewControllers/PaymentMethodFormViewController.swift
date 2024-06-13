@@ -20,8 +20,6 @@ class PaymentMethodFormViewController: UIViewController {
     let intent: Intent
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheet.Configuration
-    let hasASavedCard: Bool
-    let shouldShowHeader: Bool
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
         // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have such divergent paths for link and instant debits. Where is the setDefaultBillingDetailsIfNecessary call, for example?
@@ -56,27 +54,23 @@ class PaymentMethodFormViewController: UIViewController {
     }
 
     lazy var formStackView: UIStackView = {
-        let headerView = FormHeaderView(paymentMethodType: paymentMethodType,
-                                        hasASavedCard: hasASavedCard,
-                                        appearance: configuration.appearance)
-        headerView.isHidden = !shouldShowHeader
-        let stackView = UIStackView(arrangedSubviews: [headerView, form.view])
+        let stackView = UIStackView(arrangedSubviews: [headerView, form.view].compactMap { $0 })
         stackView.spacing = 24
         stackView.axis = .vertical
         return stackView
     }()
+    let headerView: UIView?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(type: PaymentSheet.PaymentMethodType, intent: Intent, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, shouldShowHeader: Bool = false, hasASavedCard: Bool = false, delegate: PaymentMethodFormViewControllerDelegate) {
+    init(type: PaymentSheet.PaymentMethodType, intent: Intent, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, headerView: UIView?, delegate: PaymentMethodFormViewControllerDelegate) {
         self.paymentMethodType = type
         self.intent = intent
         self.delegate = delegate
         self.configuration = configuration
-        self.hasASavedCard = hasASavedCard
-        self.shouldShowHeader = shouldShowHeader
+        self.headerView = headerView
         let shouldOfferLinkSignup: Bool = {
             guard isLinkEnabled && !intent.disableLinkSignup else {
                 return false
@@ -100,6 +94,7 @@ class PaymentMethodFormViewController: UIViewController {
             ).make()
             Self.formCache[type] = form
         }
+
         super.init(nibName: nil, bundle: nil)
     }
 

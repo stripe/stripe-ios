@@ -53,13 +53,18 @@ class VerticalPaymentMethodListView: UIView {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
 
-    init(initialSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance, currency: String?, amount: Int?) {
+    init(initialSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, overrideHeaderView: UIView?, appearance: PaymentSheet.Appearance, currency: String?, amount: Int?) {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 12.0
         self.stackView = stackView
         self.currentSelection = initialSelection
         super.init(frame: .zero)
+
+        // Add the header - either the passed in `header` or "Select payment method"
+        let header = overrideHeaderView ?? PaymentSheetUI.makeHeaderLabel(title: .Localized.select_payment_method, appearance: appearance)
+        stackView.addArrangedSubview(header)
+        stackView.setCustomSpacing(24, after: header)
 
         // Create stack view views after super.init so that we can reference `self`
         var views = [UIView]()

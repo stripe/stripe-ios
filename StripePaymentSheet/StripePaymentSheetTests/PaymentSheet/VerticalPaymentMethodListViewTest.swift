@@ -16,7 +16,7 @@ final class VerticalPaymentMethodListViewTest: XCTestCase {
     func testCurrentSelection() {
         let savedPaymentMethod = STPPaymentMethod._testCard()
         // Given a list view with a saved card...
-        let sut = VerticalPaymentMethodListView(initialSelection: .saved(paymentMethod: savedPaymentMethod), savedPaymentMethod: savedPaymentMethod, paymentMethodTypes: [.stripe(.card)], shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, appearance: .default, currency: "USD", amount: 1099)
+        let sut = VerticalPaymentMethodListView(initialSelection: .saved(paymentMethod: savedPaymentMethod), savedPaymentMethod: savedPaymentMethod, paymentMethodTypes: [.stripe(.card)], shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099)
         sut.delegate = self
         // ...the current selection should be the saved PM
         let savedPMButton = sut.getRowButton(accessibilityIdentifier: "••••4242")
