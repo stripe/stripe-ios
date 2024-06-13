@@ -312,6 +312,13 @@ extension String.Localized {
         )
     }
 
+    static var add_us_bank_account: String {
+        STPLocalizedString(
+            "Add US bank account",
+            "Title shown above a view allowing the customer to add a US bank account."
+        )
+    }
+
     static var after_pay_subtitle_text: String {
         STPLocalizedString(
             "%1$d interest-free payments of %2$@",

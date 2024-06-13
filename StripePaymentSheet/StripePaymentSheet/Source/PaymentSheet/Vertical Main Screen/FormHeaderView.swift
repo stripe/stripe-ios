@@ -16,15 +16,23 @@ final class FormHeaderView: UIView {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
         if paymentMethodType == .stripe(.card) {
             label.text = hasASavedCard ? String.Localized.add_card : String.Localized.add_new_card
+        } else if paymentMethodType == .stripe(.USBankAccount) {
+            label.text = String.Localized.add_us_bank_account
         } else {
             label.text = paymentMethodType.displayName
         }
+
         return label
     }()
 
     private lazy var imageView: PaymentMethodTypeImageView? = {
-        guard paymentMethodType != .stripe(.card) else { return nil }
-        return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
+        switch paymentMethodType {
+        case .stripe(.card), .stripe(.USBankAccount):
+            // Don't show an image on the form header for card and US bank account
+            return nil
+        default:
+            return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
+        }
     }()
 
     private lazy var stackView: UIStackView = {
