@@ -31,7 +31,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             case .new(paymentMethodType: let paymentMethodType):
                 return .new(confirmParams: IntentConfirmParams(type: paymentMethodType))
             case .saved(paymentMethod: let paymentMethod):
-                // TODO: Handle confirmParams - look at SavedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams & CVC
                 return .saved(paymentMethod: paymentMethod, confirmParams: nil)
             }
         } else {
@@ -514,7 +513,6 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
     }
 
     var requiresFullScreen: Bool {
-        // TODO
         return false
     }
 
@@ -618,7 +616,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 
 extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        // TODO:
         if isFlowController {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
         } else {
