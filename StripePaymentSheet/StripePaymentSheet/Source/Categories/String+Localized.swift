@@ -318,7 +318,7 @@ extension String.Localized {
             "Title shown above a view allowing the customer to add a US bank account."
         )
     }
-  
+
     static var after_pay_subtitle_text: String {
         STPLocalizedString(
             "%1$d interest-free payments of %2$@",
