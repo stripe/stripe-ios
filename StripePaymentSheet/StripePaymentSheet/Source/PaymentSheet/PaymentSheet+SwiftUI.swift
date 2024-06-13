@@ -202,54 +202,33 @@ extension PaymentSheet.FlowController {
 }
 
 extension PaymentSheet {
-    struct PaymentSheetPresenter: UIViewRepresentable {
+    struct PaymentSheetPresenter: UIViewControllerRepresentable {
+        func makeCoordinator() -> Coordinator {
+            return Coordinator(parent: self)
+        }
+        
         @Binding var presented: Bool
         weak var paymentSheet: PaymentSheet?
         let onCompletion: (PaymentSheetResult) -> Void
 
-        func makeCoordinator() -> Coordinator {
-            return Coordinator(parent: self)
+        func makeUIViewController(context: Context) -> UIViewController {
+             return UIViewController()
         }
 
-        func makeUIView(context: Context) -> UIView {
-            return context.coordinator.view
-        }
-
-        func updateUIView(_ uiView: UIView, context: Context) {
-            context.coordinator.parent = self
-            context.coordinator.presented = presented
+        func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+            if presented {
+                context.coordinator.presentPaymentSheet(on: uiViewController)
+            } else {
+                context.coordinator.forciblyDismissPaymentSheet(from: uiViewController)
+            }
         }
 
         class Coordinator {
 
             var parent: PaymentSheetPresenter
-            let view = UIView()
-            var presented: Bool {
-                didSet {
-                    switch (oldValue, presented) {
-                    case (false, false):
-                        break
-                    case (false, true):
-                        guard let viewController = findViewController(for: view) else {
-                            parent.presented = false
-                            return
-                        }
-                        presentPaymentSheet(on: viewController)
-                    case (true, false):
-                        guard let viewController = findViewController(for: view) else {
-                            parent.presented = true
-                            return
-                        }
-                        forciblyDismissPaymentSheet(from: viewController)
-                    case (true, true):
-                        break
-                    }
-                }
-            }
 
             init(parent: PaymentSheetPresenter) {
                 self.parent = parent
-                self.presented = parent.presented
             }
 
             func presentPaymentSheet(on controller: UIViewController) {
