@@ -16,7 +16,11 @@ class ViewController: UIViewController {
     }
 
     @IBSegueAction func showSwiftUIExample(_ coder: NSCoder) -> UIViewController? {
-        return UIHostingController(coder: coder, rootView: HostView())
+        if #available(iOS 14.0, *) {
+            return UIHostingController(coder: coder, rootView: HostView())
+        } else {
+           return nil
+        }
     }
 
     @IBSegueAction func showSwiftUICustomExample(_ coder: NSCoder) -> UIViewController? {
