@@ -22,7 +22,8 @@ extension View {
         paymentSheet: PaymentSheet,
         onCompletion: @escaping (PaymentSheetResult) -> Void
     ) -> some View {
-        self.modifier(
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+        return self.modifier(
             PaymentSheet.PaymentSheetPresentationModifier(
                 isPresented: isPresented,
                 paymentSheet: paymentSheet,
@@ -40,7 +41,8 @@ extension View {
         paymentSheetFlowController: PaymentSheet.FlowController,
         onSheetDismissed: (() -> Void)?
     ) -> some View {
-        self.modifier(
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+        return self.modifier(
             PaymentSheet.PaymentSheetFlowControllerPresentationModifier(
                 isPresented: isPresented,
                 paymentSheetFlowController: paymentSheetFlowController,
@@ -111,7 +113,6 @@ extension PaymentSheet {
             self.paymentSheet = paymentSheet
             self.onCompletion = onCompletion
             self.content = content()
-            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
         }
 
         public var body: some View {
@@ -149,7 +150,6 @@ extension PaymentSheet.FlowController {
             self.paymentSheetFlowController = paymentSheetFlowController
             self.onSheetDismissed = onSheetDismissed
             self.content = content()
-            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
         }
 
         public var body: some View {
