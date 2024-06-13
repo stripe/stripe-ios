@@ -16,11 +16,11 @@ struct HostView: View {
         NavigationView {
             VStack {
                 ExampleSwiftUIPaymentSheet(model: paymentModel)
-                NavigationLink(destination: ExampleSwiftUIPaymentSheet(model: paymentModel)) {
-                    Text("next flow")
+                NavigationLink("next flow") {
+                    ExampleSwiftUIPaymentSheet(model: paymentModel)
                 }
             }
-        }.onAppear { paymentModel.preparePaymentSheet() }
+        }
     }
 }
 
@@ -34,7 +34,7 @@ struct ExampleSwiftUIPaymentSheet: View {
                     paymentSheet: paymentSheet,
                     onCompletion: model.onCompletion
                 ) {
-                    ExamplePaymentButtonView()
+                    ExamplePaymentButtonView() // just the UI for this button
                 }
             } else {
                 ExampleLoadingView()
@@ -42,7 +42,7 @@ struct ExampleSwiftUIPaymentSheet: View {
             if let result = model.paymentResult {
                 ExamplePaymentStatusView(result: result)
             }
-        }
+        }.onAppear { model.preparePaymentSheet() }
     }
 }
 
