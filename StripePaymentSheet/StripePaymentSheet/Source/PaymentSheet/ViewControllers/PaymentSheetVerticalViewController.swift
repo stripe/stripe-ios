@@ -544,9 +544,9 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
     }
 }
 
-// MARK: - VerticalPaymentMethodListViewDelegate
+// MARK: - VerticalPaymentMethodListViewControllerDelegate
 
-extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDelegate {
+extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewControllerDelegate {
 
     func shouldSelectPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool {
         switch selection {
