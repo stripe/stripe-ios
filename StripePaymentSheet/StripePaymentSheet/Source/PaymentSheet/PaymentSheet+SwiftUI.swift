@@ -423,17 +423,16 @@ func findViewController(for uiView: UIView) -> UIViewController? {
 func topMostViewController() -> UIViewController? {
     guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return nil }
     guard let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return nil }
-    
+
     var topController: UIViewController? = window.rootViewController
-    
+
     // Traverse presented view controllers to find the top most view controller
     while let presentedViewController = topController?.presentedViewController {
         topController = presentedViewController
     }
-    
+
     return topController
 }
-
 
 // Helper class to track SwiftUI usage
 final class SwiftUIProduct: STPAnalyticsProtocol {
