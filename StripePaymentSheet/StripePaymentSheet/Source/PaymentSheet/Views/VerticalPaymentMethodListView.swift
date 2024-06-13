@@ -120,7 +120,7 @@ class VerticalPaymentMethodListView: UIView {
         // All other payment methods:
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
-            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, appearance: appearance) { [weak self] in
+            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
             views.append(rowButton)

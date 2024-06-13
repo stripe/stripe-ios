@@ -51,7 +51,7 @@ class RowButton: UIView {
         let label = UILabel.makeVerticalRowButtonLabel(text: text, appearance: appearance)
         label.isAccessibilityElement = false
         let labelsStackView = UIStackView(arrangedSubviews: [
-            label
+            label,
         ])
         if let subtext {
             let sublabel = UILabel()
@@ -132,7 +132,7 @@ class RowButton: UIView {
 
 // MARK: - Helpers
 extension RowButton {
-    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
+    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethodType: STPPaymentMethodType?, appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
         let subtext: String? = {
@@ -144,7 +144,13 @@ extension RowButton {
                 return nil
             }
         }()
-        return RowButton(appearance: appearance, imageView: imageView, text: paymentMethodType.displayName, subtext: subtext, didTap: didTap)
+        let text: String = {
+            if savedPaymentMethodType == .card && paymentMethodType == .stripe(.card) {
+                return .Localized.new_card
+            }
+            return paymentMethodType.displayName
+        }()
+        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtext, didTap: didTap)
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
