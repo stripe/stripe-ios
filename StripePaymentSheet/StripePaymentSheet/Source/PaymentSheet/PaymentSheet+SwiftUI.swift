@@ -10,6 +10,7 @@
 //
 
 import SwiftUI
+@_spi(STP) import StripeCore
 
 extension View {
     /// Presents a sheet for a customer to complete their payment.
@@ -110,6 +111,7 @@ extension PaymentSheet {
             self.paymentSheet = paymentSheet
             self.onCompletion = onCompletion
             self.content = content()
+            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
         }
 
         public var body: some View {
@@ -147,6 +149,7 @@ extension PaymentSheet.FlowController {
             self.paymentSheetFlowController = paymentSheetFlowController
             self.onSheetDismissed = onSheetDismissed
             self.content = content()
+            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
         }
 
         public var body: some View {
@@ -413,15 +416,24 @@ func findViewController(for uiView: UIView) -> UIViewController? {
         return findViewController(for: nextResponder)
     } else {
         // Can't find a view, attempt to grab the top most view controller
-        let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-        if var topController = keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
+        return topMostViewController()
+    }
+}
 
-            return topController
-        }
-        
+func topMostViewController() -> UIViewController? {
+    guard let rootController = UIApplication.shared.windows.first?.rootViewController else {
         return nil
+    }
+    var topController: UIViewController = rootController
+    while let newTopController = topController.presentedViewController {
+        topController = newTopController
+    }
+    return topController
+}
+
+// Helper class to track SwiftUI usage
+final class SwiftUIProduct: STPAnalyticsProtocol {
+    public static var stp_analyticsIdentifier: String {
+        return "SwiftUI"
     }
 }
