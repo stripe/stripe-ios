@@ -3881,7 +3881,8 @@ extension PaymentSheetUITestCase {
         app.waitForButtonOrStaticText("FAIL TEST PAYMENT").tap()
         XCTAssertTrue(app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."].waitForExistence(timeout: 10))
 
-        // Succeed
+        // Try Cash App Pay
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].tap()
         app.waitForButtonOrStaticText("AUTHORIZE TEST PAYMENT").tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
