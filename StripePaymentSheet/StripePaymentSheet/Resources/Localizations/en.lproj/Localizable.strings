@@ -19,7 +19,7 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Add new payment method";
 
-/* Title shown above a view allowing the customer to save a US bank account. */
+/* Title shown above a view allowing the customer to add a US bank account. */
 "Add US bank account" = "Add US bank account";
 
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
