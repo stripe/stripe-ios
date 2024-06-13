@@ -414,7 +414,7 @@ extension PaymentSheet.Configuration {
         payload["appearance"] = appearance.analyticPayload
         payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
-        payload["ui_mode"] = paymentMethodLayout.description
+        payload["payment_method_layout"] = paymentMethodLayout.description
 
         return payload
     }
