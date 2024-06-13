@@ -9,6 +9,7 @@
 //  https://github.com/stleamist/BetterSafariView
 //
 
+@_spi(STP) import StripeCore
 import SwiftUI
 
 extension View {
@@ -21,7 +22,8 @@ extension View {
         paymentSheet: PaymentSheet,
         onCompletion: @escaping (PaymentSheetResult) -> Void
     ) -> some View {
-        self.modifier(
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+        return self.modifier(
             PaymentSheet.PaymentSheetPresentationModifier(
                 isPresented: isPresented,
                 paymentSheet: paymentSheet,
@@ -39,7 +41,8 @@ extension View {
         paymentSheetFlowController: PaymentSheet.FlowController,
         onSheetDismissed: (() -> Void)?
     ) -> some View {
-        self.modifier(
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+        return self.modifier(
             PaymentSheet.PaymentSheetFlowControllerPresentationModifier(
                 isPresented: isPresented,
                 paymentSheetFlowController: paymentSheetFlowController,
@@ -412,6 +415,28 @@ func findViewController(for uiView: UIView) -> UIViewController? {
     } else if let nextResponder = uiView.next as? UIView {
         return findViewController(for: nextResponder)
     } else {
-        return nil
+        // Can't find a view, attempt to grab the top most view controller
+        return topMostViewController()
+    }
+}
+
+func topMostViewController() -> UIViewController? {
+    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return nil }
+
+    var topController: UIViewController? = window.rootViewController
+
+    // Traverse presented view controllers to find the top most view controller
+    while let presentedViewController = topController?.presentedViewController {
+        topController = presentedViewController
+    }
+
+    return topController
+}
+
+// Helper class to track SwiftUI usage
+final class SwiftUIProduct: STPAnalyticsProtocol {
+    public static var stp_analyticsIdentifier: String {
+        return "SwiftUI"
     }
 }
