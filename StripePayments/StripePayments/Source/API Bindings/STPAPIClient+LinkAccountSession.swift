@@ -106,12 +106,6 @@ public extension STPAPIClient {
         if let customerEmailAddress = customerEmailAddress {
             parameters["payment_method_data[billing_details][email]"] = customerEmailAddress
         }
-        // handle instant debits
-        if paymentMethodType == .link {
-            parameters["hosted_surface"] = "payment_element"
-            parameters["product"] = "instant_debits"
-            parameters["attach_required"] = true
-        }
 
         APIRequest<LinkAccountSession>.post(
             with: self,
