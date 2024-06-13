@@ -132,19 +132,10 @@ class RowButton: UIView {
 
 // MARK: - Helpers
 extension RowButton {
-    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
+    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
-        let subtext: String? = {
-            switch paymentMethodType {
-            case .stripe(.klarna):
-                return String.Localized.buy_now_or_pay_later_with_klarna
-            default:
-                // TODO: Add Afterpay
-                return nil
-            }
-        }()
-        return RowButton(appearance: appearance, imageView: imageView, text: paymentMethodType.displayName, subtext: subtext, didTap: didTap)
+        return RowButton(appearance: appearance, imageView: imageView, text: paymentMethodType.displayName, subtext: subtitle, didTap: didTap)
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
@@ -159,7 +150,7 @@ extension RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
         // TODO: Add Link subtext
-        let button = RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, didTap: didTap)
+        let button = RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = String.Localized.pay_with_link
         return button
     }
