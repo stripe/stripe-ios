@@ -315,7 +315,7 @@ extension String.Localized {
     static var add_us_bank_account: String {
         STPLocalizedString(
             "Add US bank account",
-            "Title shown above a view allowing the customer to save a US bank account."
+            "Title shown above a view allowing the customer to add a US bank account."
         )
     }
 }
