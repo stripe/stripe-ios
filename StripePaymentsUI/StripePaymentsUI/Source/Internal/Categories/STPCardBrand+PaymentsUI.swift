@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension STPCardBrand: @retroactive Comparable {
+extension STPCardBrand: Comparable {
     public static func < (lhs: StripePayments.STPCardBrand, rhs: StripePayments.STPCardBrand) -> Bool {
         return (STPCardBrandUtilities.stringFrom(lhs) ?? "") < (STPCardBrandUtilities.stringFrom(rhs) ?? "")
     }
