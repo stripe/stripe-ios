@@ -116,6 +116,7 @@ class PlaygroundController: ObservableObject {
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
+        configuration.allowRedisplayValueOverride = .always
         configuration.appearance = appearance
         if settings.userOverrideCountry != .off {
             configuration.userOverrideCountry = settings.userOverrideCountry.rawValue

@@ -103,7 +103,14 @@ class IntentConfirmParams {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
         }
     }
-    func setAllowRedisplay(for savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior) {
+    func setAllowRedisplay(for savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior,
+                           userOverride: STPPaymentMethodAllowRedisplay?) {
+
+        if let userOverride {
+            paymentMethodParams.allowRedisplay = userOverride
+            return
+        }
+
         switch savePaymentMethodConsentBehavior {
         case .legacy:
             // Always send unspecified

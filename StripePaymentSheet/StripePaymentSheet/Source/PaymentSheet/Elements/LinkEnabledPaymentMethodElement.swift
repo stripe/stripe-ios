@@ -36,6 +36,7 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
     }()
 
     let paymentMethodType: STPPaymentMethodType
+    let configuration: PaymentSheet.Configuration
 
     let paymentMethodElement: PaymentMethodElement
 
@@ -51,6 +52,7 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
     ) {
         self.paymentMethodType = type
         self.paymentMethodElement = paymentMethodElement
+        self.configuration = configuration
         self.inlineSignupElement = LinkInlineSignupElement(
             configuration: configuration,
             linkAccount: linkAccount,
@@ -66,7 +68,8 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         guard let params = updateParams(params: .init(type: .stripe(paymentMethodType))) else {
             return nil
         }
-        params.setAllowRedisplay(for: intent.elementsSession.savePaymentMethodConsentBehavior())
+        params.setAllowRedisplay(for: intent.elementsSession.savePaymentMethodConsentBehavior(),
+                                 userOverride: configuration.allowRedisplayValueOverride)
 
         switch inlineSignupElement.action {
         case .signupAndPay(let account, let phoneNumber, let legalName):
