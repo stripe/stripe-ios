@@ -81,6 +81,20 @@ class VerticalPaymentMethodListViewController: UIViewController {
             ]
         }
 
+        // Special case - order "New Card" immediately after saved card:
+        let shouldReorderNewCard: Bool = paymentMethodTypes.contains(.stripe(.card)) && savedPaymentMethod?.type == .card
+        if shouldReorderNewCard {
+            let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.card))
+            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card), savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance) { [weak self] in
+                self?.didTap(rowButton: $0, selection: selection)
+            }
+            views.append(rowButton)
+            if initialSelection == selection {
+                rowButton.isSelected = true
+                currentSelection = selection
+            }
+        }
+
         // Apple Pay and Link:
         if shouldShowApplePay {
             let selection = VerticalPaymentMethodListSelection.applePay
@@ -105,11 +119,12 @@ class VerticalPaymentMethodListViewController: UIViewController {
             }
         }
 
-        // All other payment methods:
+        // All other payment methods (excluding card, if it was already added above):
+        let paymentMethodTypes = shouldReorderNewCard ? paymentMethodTypes.filter({ $0 != .stripe(.card) }) : paymentMethodTypes
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType,
-                                                               subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount), 
+                                                               subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount),
                                                                savedPaymentMethodType: savedPaymentMethod?.type,
                                                                appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)

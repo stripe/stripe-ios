@@ -93,6 +93,19 @@ class VerticalPaymentMethodListView: UIView {
             ]
         }
 
+        // Special case - order "New Card" immediately after saved card:
+        if paymentMethodTypes.contains(.stripe(.card)) {
+            let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.card))
+            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card), savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance) { [weak self] in
+                self?.didTap(rowButton: $0, selection: selection)
+            }
+            views.append(rowButton)
+            if initialSelection == selection {
+                rowButton.isSelected = true
+                currentSelection = selection
+            }
+        }
+
         // Apple Pay and Link:
         if shouldShowApplePay {
             let selection = VerticalPaymentMethodListSelection.applePay
@@ -117,8 +130,8 @@ class VerticalPaymentMethodListView: UIView {
             }
         }
 
-        // All other payment methods:
-        for paymentMethodType in paymentMethodTypes {
+        // All other payment methods (excluding card, which was handled above):
+        for paymentMethodType in paymentMethodTypes.filter({ $0 != .stripe(.card) }) {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType, savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
