@@ -37,7 +37,7 @@ enum PaymentSheetUI {
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
     static let minimumHitArea = CGSize(width: 44, height: 44)
 
-    static func makeHeaderLabel(appearance: PaymentSheet.Appearance) -> UILabel {
+    static func makeHeaderLabel(title: String? = nil, appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()
         header.textColor = appearance.colors.text
         header.numberOfLines = 2
@@ -45,6 +45,7 @@ enum PaymentSheetUI {
         header.accessibilityTraits = [.header]
         header.adjustsFontSizeToFitWidth = true
         header.adjustsFontForContentSizeCategory = true
+        header.text = title
         return header
     }
 }

@@ -23,7 +23,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(initialSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, appearance: PaymentSheet.Appearance, delegate: VerticalPaymentMethodListViewDelegate) {
+    init(initialSelection: VerticalPaymentMethodListSelection?, savedPaymentMethod: STPPaymentMethod?, paymentMethodTypes: [PaymentSheet.PaymentMethodType], shouldShowApplePay: Bool, shouldShowLink: Bool, savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?, overrideHeaderView: UIView?, appearance: PaymentSheet.Appearance, delegate: VerticalPaymentMethodListViewDelegate) {
         self.listView = VerticalPaymentMethodListView(
             initialSelection: initialSelection,
             savedPaymentMethod: savedPaymentMethod,
@@ -31,6 +31,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
+            overrideHeaderView: overrideHeaderView,
             appearance: appearance
         )
         super.init(nibName: nil, bundle: nil)
