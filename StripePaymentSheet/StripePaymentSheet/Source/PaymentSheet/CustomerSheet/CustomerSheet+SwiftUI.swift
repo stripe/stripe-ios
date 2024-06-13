@@ -4,8 +4,8 @@
 //
 //
 
-import SwiftUI
 @_spi(STP) import StripeCore
+import SwiftUI
 
 extension View {
     /// Presents the customer sheet to select saved payment methods

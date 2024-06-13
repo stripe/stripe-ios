@@ -9,8 +9,8 @@
 //  https://github.com/stleamist/BetterSafariView
 //
 
-import SwiftUI
 @_spi(STP) import StripeCore
+import SwiftUI
 
 extension View {
     /// Presents a sheet for a customer to complete their payment.
