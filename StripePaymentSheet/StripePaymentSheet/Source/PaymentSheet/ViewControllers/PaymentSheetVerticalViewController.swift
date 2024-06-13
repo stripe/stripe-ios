@@ -106,16 +106,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         DynamicHeightContainerView()
     }()
 
-    var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
-        RowButton.RightAccessoryButton.getAccessoryButtonType(
-            savedPaymentMethodsCount: savedPaymentMethods.count,
-            isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
-            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
-            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-            allowsPaymentMethodRemoval: loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
-        )
-    }
-
     lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
@@ -290,6 +280,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 return savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
             }
         }()
+        let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
+            savedPaymentMethodsCount: savedPaymentMethods.count,
+            isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
+            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
+            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+            allowsPaymentMethodRemoval: loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        )
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
             savedPaymentMethod: savedPaymentMethods.first,
