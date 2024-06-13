@@ -322,6 +322,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             shouldShowLink: loadResult.isLinkEnabled && walletHeaderView == nil,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             appearance: configuration.appearance,
+            currency: loadResult.intent.currency,
+            amount: loadResult.intent.amount,
             delegate: self
         )
     }
