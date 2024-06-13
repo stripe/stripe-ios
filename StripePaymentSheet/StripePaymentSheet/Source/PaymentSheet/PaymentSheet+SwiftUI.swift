@@ -421,8 +421,8 @@ func findViewController(for uiView: UIView) -> UIViewController? {
 }
 
 func topMostViewController() -> UIViewController? {
-    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return nil }
-    guard let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return nil }
+    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return nil }
 
     var topController: UIViewController? = window.rootViewController
 
