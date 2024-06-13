@@ -314,7 +314,7 @@ extension String.Localized {
 
     static var after_pay_subtitle_text: String {
         STPLocalizedString(
-            "%d interest-free payments of %@",
+            "%1$d interest-free payments of %2$@",
             "Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99"
         )
     }
