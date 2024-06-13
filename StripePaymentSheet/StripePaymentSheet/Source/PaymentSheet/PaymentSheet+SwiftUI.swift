@@ -412,6 +412,16 @@ func findViewController(for uiView: UIView) -> UIViewController? {
     } else if let nextResponder = uiView.next as? UIView {
         return findViewController(for: nextResponder)
     } else {
+        // Can't find a view, attempt to grab the top most view controller
+        let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+        if var topController = keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+
+            return topController
+        }
+        
         return nil
     }
 }
