@@ -129,6 +129,19 @@ extension STPAPIClient {
     func retrieveElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
                                                  clientDefaultPaymentMethod: String?,
                                                  customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
+
+        let parameters = makeElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
+                                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                    customerSessionClientSecret: customerSessionClientSecret)
+        return try await APIRequest<STPElementsSession>.getWith(
+            self,
+            endpoint: APIEndpointElementsSessions,
+            parameters: parameters
+        )
+    }
+    func makeElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
+                                                    clientDefaultPaymentMethod: String?,
+                                                    customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
@@ -147,12 +160,7 @@ extension STPAPIClient {
             deferredIntent["payment_method_types"] = paymentMethodTypes
         }
         parameters["deferred_intent"] = deferredIntent
-
-        return try await APIRequest<STPElementsSession>.getWith(
-            self,
-            endpoint: APIEndpointElementsSessions,
-            parameters: parameters
-        )
+        return parameters
     }
 }
 
