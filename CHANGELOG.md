@@ -3,6 +3,7 @@
 * [Fixed] Fixed an issue where changing the country of a phone number would not update the UI when the phone number's validity changed.
 * [Changed] The "save this card" checkbox is now unchecked by default. To change this behavior, set your PaymentSheet.Configuration.savePaymentMethodOptInBehavior to `.requiresOptOut`.
 * [Fixed] Fixed an issue where PaymentSheet would not present in the iOS 18 beta when using SwiftUI.
+* [Fixed] Fixed an issue in PaymentSheet.FlowController that could lead to the CVC recollection form being shown on presentPaymentOptions()
 
 ### CustomerSheet
 * [Fixed] Fixed an issue where CustomerSheet would not present in the iOS 18 beta when using SwiftUI.
