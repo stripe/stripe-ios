@@ -213,7 +213,7 @@
 		B63B2CF72BFC116A003810F3 /* PaymentSheetVerticalViewControllerSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63B2CF62BFC116A003810F3 /* PaymentSheetVerticalViewControllerSnapshotTest.swift */; };
 		B64FEF122C0FAC1E00F7CA26 /* PaymentSheetVerticalViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FEF112C0FAC1E00F7CA26 /* PaymentSheetVerticalViewControllerTest.swift */; };
 		B65B42972C013DED00EC565D /* PaymentMethodFormViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65B42962C013DED00EC565D /* PaymentMethodFormViewControllerTest.swift */; };
-		B65FE7092BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift */; };
+		B65FE7092BED33EA009A73FC /* VerticalPaymentMethodListViewControllerSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewControllerSnapshotTest.swift */; };
 		B667BF0B2BF2B7C60050EFD8 /* RowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B667BF0A2BF2B7C60050EFD8 /* RowButton.swift */; };
 		B6859A882BE54CD30018E06C /* PaymentSheetVerticalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */; };
 		B68CB9632B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CB9622B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift */; };
@@ -563,7 +563,7 @@
 		B63B2CF62BFC116A003810F3 /* PaymentSheetVerticalViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetVerticalViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
 		B64FEF112C0FAC1E00F7CA26 /* PaymentSheetVerticalViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetVerticalViewControllerTest.swift; sourceTree = "<group>"; };
 		B65B42962C013DED00EC565D /* PaymentMethodFormViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodFormViewControllerTest.swift; sourceTree = "<group>"; };
-		B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPaymentMethodListViewSnapshotTest.swift; sourceTree = "<group>"; };
+		B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPaymentMethodListViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
 		B667BF0A2BF2B7C60050EFD8 /* RowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowButton.swift; sourceTree = "<group>"; };
 		B667E074D30964FABC64B552 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaymentSheetVerticalViewController.swift; path = ../ViewControllers/PaymentSheetVerticalViewController.swift; sourceTree = "<group>"; };
@@ -1398,7 +1398,7 @@
 				D926018024823367971A8907 /* PaymentSheetPaymentMethodTypeTest.swift */,
 				7E2803AA0D975AF78D787757 /* PaymentSheetSnapshotTests.swift */,
 				E0838F23622121FEF4A15136 /* PaymentSheetViewControllerSnapshotTests.swift */,
-				B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift */,
+				B65FE7082BED33EA009A73FC /* VerticalPaymentMethodListViewControllerSnapshotTest.swift */,
 				B63B2CF62BFC116A003810F3 /* PaymentSheetVerticalViewControllerSnapshotTest.swift */,
 				B64FEF112C0FAC1E00F7CA26 /* PaymentSheetVerticalViewControllerTest.swift */,
 				1ADE49E72DD5EDA448D12D88 /* PollingViewTests.swift */,
@@ -1645,7 +1645,7 @@
 				B63B2CF12BF8313D003810F3 /* VerticalPaymentMethodListViewControllerTest.swift in Sources */,
 				61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */,
 				8180BC3615767F896E2F9355 /* AddressViewControllerSnapshotTests.swift in Sources */,
-				B65FE7092BED33EA009A73FC /* VerticalPaymentMethodListViewSnapshotTest.swift in Sources */,
+				B65FE7092BED33EA009A73FC /* VerticalPaymentMethodListViewControllerSnapshotTest.swift in Sources */,
 				37F750E1C99D6257E845A66E /* BacsDDMandateViewSnapshotTests.swift in Sources */,
 				694A3B36AC19FC1F87EF0CB1 /* CustomerSheetPaymentMethodAvailabilityTests.swift in Sources */,
 				9F750611C4E8EAABE9F0B460 /* CustomerSheetTests.swift in Sources */,
