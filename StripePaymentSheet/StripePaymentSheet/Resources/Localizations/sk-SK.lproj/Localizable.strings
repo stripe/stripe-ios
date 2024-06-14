@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Pridať spôsob platby";
 
-"Add bank account" = "Pridať bankový účet";
+"Add card" = "Pridať kartu";
+
+"Add new card" = "Pridať novú kartu";
 
 "Add new payment method" = "Pridajte nový spôsob platby";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Spravovať spôsoby platby";
+
 "Manage your payment methods" = "Spravovať spôsoby platby";
 
 "Name on card" = "Meno na karte";
+
+"New payment method" = "Nový spôsob platby";
 
 "Open your UPI app to approve your payment within %@" = "Otvorte si aplikáciu UPI za účelom schválenia platby v rámci %@";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Odstrániť kartu?";
 
+"Remove payment method" = "Odstrániť spôsob platby";
+
 "Save" = "Uložiť";
 
 "Save a new payment method" = "Uložiť nový spôsob platby";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Uložte svoje údaje pre bezpečnú platbu jedným kliknutím pomocou služby Link";
 
+"Saved" = "Uložené";
+
+"Select card" = "Vybrať kartu";
+
+"Select payment method" = "Vybrať spôsob platby";
+
 "Select your payment method" = "Vyberte svoj spôsob platby";
 
 "Set up" = "Nastaviť";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
 
-"Update card" = "Aktualizovať kartu";
+"Update" = "Aktualizovať";
+
+"Update card brand" = "Aktualizovať značku karty";
+
+"View more" = "Zobraziť viac";
 
 "Your IBAN should start with a two-letter country code." = "Váš IBAN by mal začínať dvojpísmenovým kódom krajiny.";
 

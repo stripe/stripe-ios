@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Tilføj en betalingsmetode";
 
-"Add bank account" = "Tilføj bankkonto";
+"Add card" = "Tilføj kort";
+
+"Add new card" = "Tilføj nyt kort";
 
 "Add new payment method" = "Tilføj ny betalingsmetode";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Administrer betalingsmetoder";
+
 "Manage your payment methods" = "Administrer dine betalingsmetoder";
 
 "Name on card" = "Kortholderens navn";
+
+"New payment method" = "Ny betalingsmetode";
 
 "Open your UPI app to approve your payment within %@" = "Åbn din UPI-app for at godkende din betaling i %@";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Vil du fjerne kortet?";
 
+"Remove payment method" = "Fjern betalingsmetode";
+
 "Save" = "Gem";
 
 "Save a new payment method" = "Gem en ny betalingsmetode";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Gem dine oplysninger om sikker betaling med 1 klik med Link";
 
+"Saved" = "Gemt";
+
+"Select card" = "Vælg kort";
+
+"Select payment method" = "Vælg betalingsmetode";
+
 "Select your payment method" = "Vælg din betalingsmetode";
 
 "Set up" = "Opsætning";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
 
-"Update card" = "Opdater kort";
+"Update" = "Opdater";
+
+"Update card brand" = "Opdater kortbrand";
+
+"View more" = "Vis mere";
 
 "Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
 

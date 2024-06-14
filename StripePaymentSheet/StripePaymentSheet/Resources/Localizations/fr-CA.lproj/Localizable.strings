@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Ajouter un moyen de paiement";
 
-"Add bank account" = "Ajouter un compte bancaire";
+"Add card" = "Ajouter une carte";
+
+"Add new card" = "Ajouter une carte";
 
 "Add new payment method" = "Ajouter un moyen de paiement";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Gérer vos moyens de paiement";
+
 "Manage your payment methods" = "Gérer vos moyens de paiement";
 
 "Name on card" = "Nom du titulaire de la carte";
+
+"New payment method" = "Nouveau moyen de paiement";
 
 "Open your UPI app to approve your payment within %@" = "Ouvrez votre application d'UPI pour autoriser votre paiement dans %@";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Voulez-vous retirer la carte?";
 
+"Remove payment method" = "Supprimer le moyen de paiement";
+
 "Save" = "Enregistrer";
 
 "Save a new payment method" = "Enregistrer un nouveau moyen de paiement";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Enregistrer mes informations pour payer en un clic de façon sécurisée avec Link";
 
+"Saved" = "Enregistré";
+
+"Select card" = "Choisir une carte";
+
+"Select payment method" = "Choisir un moyen de paiement";
+
 "Select your payment method" = "Sélectionnez votre moyen de paiement";
 
 "Set up" = "Configurer";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "L'IBAN que vous avez saisi est incomplet.";
 
-"Update card" = "Mettre à jour la carte";
+"Update" = "Mettre à jour";
+
+"Update card brand" = "Mettre à jour la marque de la carte";
+
+"View more" = "Voir plus";
 
 "Your IBAN should start with a two-letter country code." = "Votre IBAN doit commencer par un code pays à deux lettres.";
 

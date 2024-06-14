@@ -6,7 +6,9 @@
 
 "Add a payment method" = "결제 방식 추가";
 
-"Add bank account" = "은행 계좌 추가";
+"Add card" = "카드 추가";
+
+"Add new card" = "새 카드 추가";
 
 "Add new payment method" = "새 결제 방식 추가";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "결제 방식 관리";
+
 "Manage your payment methods" = "내 결제 방식 관리";
 
 "Name on card" = "카드 명의자";
+
+"New payment method" = "새 결제 방식";
 
 "Open your UPI app to approve your payment within %@" = "결제를 승인하려면 %@ 안에 UPI 앱을 여십시오.";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "카드를 삭제하시겠습니까?";
 
+"Remove payment method" = "결제 방식 삭제";
+
 "Save" = "저장";
 
 "Save a new payment method" = "새 결제 방식 저장";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Link로 안전한 원클릭 결제를 위해 사용자 정보 저장";
 
+"Saved" = "저장함";
+
+"Select card" = "카드 선택";
+
+"Select payment method" = "결제 방식 선택";
+
 "Select your payment method" = "결제 수단을 선택하세요.";
 
 "Set up" = "설정";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 
-"Update card" = "카드 업데이트";
+"Update" = "업데이트";
+
+"Update card brand" = "카드 브랜드 업데이트";
+
+"View more" = "자세히 보기";
 
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
 

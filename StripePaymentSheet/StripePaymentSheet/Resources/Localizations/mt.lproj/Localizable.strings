@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Żid metodu tal-pagament";
 
-"Add bank account" = "Żid kont tal-bank";
+"Add card" = "Żid kard";
+
+"Add new card" = "Żid karta ġdida";
 
 "Add new payment method" = "Żid metodu tal-ħlas ġdid";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Ħu ħsieb il-metodi tal-pagament";
+
 "Manage your payment methods" = "Ħu ħsieb il-metodi tal-pagament tiegħek";
 
 "Name on card" = "L-isem fuq il-karta";
+
+"New payment method" = "Metodu tal-pagament ġdid";
 
 "Open your UPI app to approve your payment within %@" = "Iftaħ l-app ta' UPI biex tapprova l-pagamenti tiegħek fi żmien %@";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Tixtieq tneħħi l-karta?";
 
+"Remove payment method" = "Neħħi l-metodu tal-pagament";
+
 "Save" = "Erfa'";
 
 "Save a new payment method" = "Erfa' metodu tal-pagament ġdid";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Erfa' l-informazzjoni tiegħek biex tkun tista' tħallas f'pass wieħed grazzi għal Link";
 
+"Saved" = "Merfugħ";
+
+"Select card" = "Agħżel karta";
+
+"Select payment method" = "Agħżel metodu tal-pagament";
+
 "Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
 
 "Set up" = "Stabilixxi";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
 
-"Update card" = "Aġġorna l-karta";
+"Update" = "Ibdel";
+
+"Update card brand" = "Ibdel id-ditta tal-karta";
+
+"View more" = "Uri iktar";
 
 "Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
 

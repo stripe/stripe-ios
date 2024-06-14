@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Lisa makseviis";
 
-"Add bank account" = "Lisa pangakonto";
+"Add card" = "Kaardi lisamine";
+
+"Add new card" = "Uue kaardi lisamine";
 
 "Add new payment method" = "Lisage uus makseviis";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Halda makseviise";
+
 "Manage your payment methods" = "Makseviiside haldamine";
 
 "Name on card" = "Nimi kaardil";
+
+"New payment method" = "Uus makseviis";
 
 "Open your UPI app to approve your payment within %@" = "Makse kinnitamiseks avage oma UPI rakendus %@ jooksul";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Kas soovite kaardi eemaldada?";
 
+"Remove payment method" = "Makseviisi eemaldamine";
+
 "Save" = "Salvesta";
 
 "Save a new payment method" = "Uue makseviisi salvestamine";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Salvesta oma teave, et võimaldada turvaline ühe klõpsuga makse lõpuleviimine Linkiga";
 
+"Saved" = "Salvestatud";
+
+"Select card" = "Vali kaart";
+
+"Select payment method" = "Vali makseviis";
+
 "Select your payment method" = "Valige makseviis";
 
 "Set up" = "Seadista";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
 
-"Update card" = "Uuenda kaarti";
+"Update" = "Värskenda";
+
+"Update card brand" = "Uuenda kaardi kaubamärki";
+
+"View more" = "Kuva rohkem";
 
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
 
