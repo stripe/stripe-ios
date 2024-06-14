@@ -14,15 +14,14 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
     func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) -> Bool {
         return true
     }
-    
+
     func didTapPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) {
-            
+
     }
-    
+
     func didTapSavedPaymentMethodAccessoryButton() {
-        
+
     }
-    
 
     // A list of PMs that have hardcoded image assets
     let paymentMethods: [STPPaymentMethodType] = [
