@@ -418,16 +418,16 @@ class CustomerSheetUITest: XCTestCase {
         paymentMethodRedisplayFilters.waitForExistenceAndTap()
         app.buttons["unspecified"].waitForExistenceAndTap()
 
-        // TODO: Use default payment method from elements/sessions payload
-        let selectButton2 = app.staticTexts["None"]
+        let selectButton2 = app.staticTexts["••••4242"]
         XCTAssertTrue(selectButton2.waitForExistence(timeout: timeout))
         selectButton2.tap()
 
         // Wait for sheet to present
         XCTAssertTrue(editButton.waitForExistence(timeout: timeout))
 
-        // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
-        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
+        // Requires FF: elements_enable_read_allow_redisplay, to return "2", otherwise 0
+        // value == 2, 1 value on playground + 1 payment method
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 2)
 
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
