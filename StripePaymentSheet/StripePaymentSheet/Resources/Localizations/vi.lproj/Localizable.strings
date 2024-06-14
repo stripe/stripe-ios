@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Thêm phương thức thanh toán";
 
-"Add bank account" = "Thêm tài khoản ngân hàng";
+"Add card" = "Thêm thẻ";
+
+"Add new card" = "Thêm thẻ mới";
 
 "Add new payment method" = "Thêm phương thức thanh toán mới";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Quản lý các phương thức thanh toán";
+
 "Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
 
 "Name on card" = "Tên trên thẻ";
+
+"New payment method" = "Phương thức thanh toán mới";
 
 "Open your UPI app to approve your payment within %@" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Xóa thẻ?";
 
+"Remove payment method" = "Gỡ bỏ phương thức thanh toán";
+
 "Save" = "Lưu";
 
 "Save a new payment method" = "Lưu một phương thức thanh toán mới";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Lưu thông tin của bạn để thanh toán an toàn bằng 1 cú nhấp chuột với Link";
 
+"Saved" = "Đã lưu";
+
+"Select card" = "Chọn thẻ";
+
+"Select payment method" = "Chọn phương thức thanh toán";
+
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
 
 "Set up" = "Cài đặt";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
-"Update card" = "Cập nhật thẻ";
+"Update" = "Cập nhật";
+
+"Update card brand" = "Cập nhật thương hiệu thẻ";
+
+"View more" = "Xem thêm";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 

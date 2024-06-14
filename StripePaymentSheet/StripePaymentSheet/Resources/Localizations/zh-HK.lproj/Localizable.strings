@@ -6,7 +6,9 @@
 
 "Add a payment method" = "添加支付方式";
 
-"Add bank account" = "添加銀行賬戶";
+"Add card" = "添加卡";
+
+"Add new card" = "添加新卡";
 
 "Add new payment method" = "添加新支付方式";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "管理支付方式";
+
 "Manage your payment methods" = "管理您的支付方式";
 
 "Name on card" = "持卡人姓名";
+
+"New payment method" = "新支付方式";
 
 "Open your UPI app to approve your payment within %@" = "請在 %@ 內打開您的 UPI 應用程式來批准付款";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "移除卡？";
 
+"Remove payment method" = "移除支付方式";
+
 "Save" = "保存";
 
 "Save a new payment method" = "保存新的支付方式";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "保存您的資訊，用 Link 安全地一鍵結賬";
 
+"Saved" = "已保存";
+
+"Select card" = "選擇銀行卡";
+
+"Select payment method" = "選擇支付方式";
+
 "Select your payment method" = "選擇您的支付方式";
 
 "Set up" = "設置";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
 
-"Update card" = "更新銀行卡";
+"Update" = "更新";
+
+"Update card brand" = "更新銀行卡品牌";
+
+"View more" = "查看更多";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
 

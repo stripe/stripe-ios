@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Tambahkan metode pembayaran";
 
-"Add bank account" = "Tambahkan rekening bank";
+"Add card" = "Tambahkan kartu";
+
+"Add new card" = "Tambahkan kartu baru";
 
 "Add new payment method" = "Tambahkan metode pembayaran baru";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Kelola metode pembayaran";
+
 "Manage your payment methods" = "Kelola metode pembayaran Anda";
 
 "Name on card" = "Nama pada kartu";
+
+"New payment method" = "Metode pembayaran baru";
 
 "Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI Anda untuk menyetujui pembayaran di dalam %@";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Hapus kartu?";
 
+"Remove payment method" = "Hapus metode pembayaran";
+
 "Save" = "Simpan";
 
 "Save a new payment method" = "Simpan metode pembayaran baru";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Simpan info Anda untuk checkout aman dengan 1 klik dengan Link";
 
+"Saved" = "Disimpan";
+
+"Select card" = "Pilih kartu";
+
+"Select payment method" = "Pilih metode pembayaran";
+
 "Select your payment method" = "Pilih metode pembayaran Anda";
 
 "Set up" = "Siapkan";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
 
-"Update card" = "Perbarui kartu";
+"Update" = "Perbarui";
+
+"Update card brand" = "Perbarui brand kartu";
+
+"View more" = "Lihat selengkapnya";
 
 "Your IBAN should start with a two-letter country code." = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
 
