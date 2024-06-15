@@ -85,7 +85,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         title = "Stripe UI Examples"
         tableView.tableFooterView = UIView()
         tableView.rowHeight = 60
-        navigationController?.navigationBar.isTranslucent = false
     }
 
     // MARK: UITableViewDelegate
