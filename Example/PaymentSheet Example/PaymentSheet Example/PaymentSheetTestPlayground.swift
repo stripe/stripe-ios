@@ -256,7 +256,10 @@ struct PaymentSheetButtons: View {
                             .frame(alignment: .topLeading)
                         }
                     }.padding(.horizontal)
-                    if let ps = playgroundController.paymentSheet {
+
+                    if let ps = playgroundController.paymentSheet,
+                       (playgroundController.lastPaymentResult == nil ||
+                        playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false) {
                         HStack {
                             Button {
                                 psIsPresented = true
@@ -304,7 +307,8 @@ struct PaymentSheetButtons: View {
                         }
                     }.padding(.horizontal)
                     HStack {
-                        if let psfc = playgroundController.paymentSheetFlowController {
+                        if let psfc = playgroundController.paymentSheetFlowController,
+                           (playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false) {
                             Button {
                                 psFCOptionsIsPresented = true
                             } label: {
@@ -339,6 +343,17 @@ struct PaymentSheetButtons: View {
                     }
                 }
             }
+        }
+    }
+}
+
+extension PaymentSheetResult {
+    func shouldAllowPresentingPaymentSheet() -> Bool {
+        switch self {
+        case .canceled:
+            return true
+        case .completed, .failed:
+            return false
         }
     }
 }
