@@ -446,6 +446,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .automatic
         settings.collectPhone = .automatic
         settings.collectAddress = .automatic
+        settings.apmsEnabled = .off
         loadPlayground(
             app,
             settings
@@ -491,6 +492,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .always
         settings.collectPhone = .always
         settings.collectAddress = .full
+        settings.apmsEnabled = .off
         loadPlayground(
             app,
             settings
@@ -570,6 +572,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .always
         settings.collectPhone = .always
         settings.collectAddress = .full
+        settings.apmsEnabled = .off
         loadPlayground(
             app,
             settings
@@ -616,6 +619,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .always
         settings.collectPhone = .never
         settings.collectAddress = .never
+        settings.apmsEnabled = .off
         loadPlayground(
             app,
             settings

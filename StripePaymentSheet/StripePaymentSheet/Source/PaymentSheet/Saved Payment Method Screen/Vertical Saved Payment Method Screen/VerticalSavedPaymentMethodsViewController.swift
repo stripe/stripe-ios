@@ -47,6 +47,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                 // If we are exiting edit mode restore previous selected states
                 paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
                 navigationBar.setStyle(.back(showAdditionalButton: canEdit)) // Hide edit button if needed
+
+                // If we are exiting edit mode and there is only one payment method left which can't be removed, select it and dismiss
+                if paymentMethodRows.count == 1, let firstButton = paymentMethodRows.first {
+                    firstButton.state = .selected
+                    completeSelection(afterDelay: 0.3)
+                }
             }
         }
     }
@@ -192,17 +198,20 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    private func completeSelection() {
-        // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `completeSelection` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
-        _ = updateViewController?.bottomSheetController?.popContentViewController()
+    private func completeSelection(afterDelay: TimeInterval = 0.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + afterDelay) { [weak self] in
+            guard let self = self else { return }
+            // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `completeSelection` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
+            _ = self.updateViewController?.bottomSheetController?.popContentViewController()
 
-        var latestPaymentMethods = paymentMethods
-        // Move selected payment method to the front of `latestPaymentMethods`
-        if let selectedPaymentMethod {
-            latestPaymentMethods.remove(selectedPaymentMethod)
-            latestPaymentMethods.insert(selectedPaymentMethod, at: 0)
+            var latestPaymentMethods = self.paymentMethods
+            // Move selected payment method to the front of `latestPaymentMethods`
+            if let selectedPaymentMethod = self.selectedPaymentMethod {
+                latestPaymentMethods.remove(selectedPaymentMethod)
+                latestPaymentMethods.insert(selectedPaymentMethod, at: 0)
+            }
+            self.delegate?.didComplete(viewController: self, with: self.selectedPaymentMethod, latestPaymentMethods: latestPaymentMethods)
         }
-        self.delegate?.didComplete(viewController: self, with: selectedPaymentMethod, latestPaymentMethods: latestPaymentMethods)
     }
 }
 
@@ -249,9 +258,7 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
 
         // Give time for new selected row to show it has been selected before dismissing
         // Makes UX feel a little nicer
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?.completeSelection()
-        }
+        self.completeSelection(afterDelay: 0.3)
     }
 
     func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {

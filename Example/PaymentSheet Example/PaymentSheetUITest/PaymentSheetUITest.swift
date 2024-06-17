@@ -361,6 +361,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
                 settings.merchantCountryCode = .IN
         settings.currency = .inr
+        settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
@@ -812,6 +813,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
+        settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -838,6 +840,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
+        settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -3904,20 +3907,22 @@ extension PaymentSheetUITestCase {
         settings.mode = .payment
         loadPlayground(app, settings)
 
-        app.buttons["vertical"].waitForExistenceAndTap()
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["vertical"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Present PaymentSheet"].waitForExistenceAndTap())
 
         let expectation = XCTestExpectation(description: "Link sign in dialog")
         // Listen for the system login dialog
         addUIInterruptionMonitor(withDescription: "Link sign in system dialog") { alert in
             // Cancel the payment
-            alert.buttons["Cancel"].waitForExistenceAndTap()
+            XCTAssertTrue(alert.buttons["Cancel"].waitForExistenceAndTap())
             expectation.fulfill()
             return true
         }
 
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistenceAndTap())
-        app.tap() // required to trigger the UI interruption monitor
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.app.tap() // required to trigger the UI interruption monitor
+        }
         wait(for: [expectation], timeout: 5.0)
     }
 
@@ -3971,7 +3976,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.images["stp_card_unpadded_visa"].waitForExistence(timeout: 5))
 
         // Reselect edit icon and delete the card from the update view controller
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Edit"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove card"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
