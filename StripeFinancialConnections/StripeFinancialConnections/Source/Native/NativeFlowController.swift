@@ -1127,24 +1127,19 @@ private func CreatePaneViewController(
         manualEntryViewController.delegate = nativeFlowController
         viewController = manualEntryViewController
     case .networkingLinkSignupPane:
-        if let selectedAccounts = dataManager.linkedAccounts {
-            let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
-                manifest: dataManager.manifest,
-                selectedAccounts: selectedAccounts,
-                returnURL: dataManager.returnURL,
-                apiClient: dataManager.apiClient,
-                clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient
-            )
-            let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
-                dataSource: networkingLinkSignupDataSource
-            )
-            networkingLinkSignupViewController.delegate = nativeFlowController
-            viewController = networkingLinkSignupViewController
-        } else {
-            assertionFailure("Code logic error. Missing parameters for \(pane).")
-            viewController = nil
-        }
+        let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
+            manifest: dataManager.manifest,
+            selectedAccounts: dataManager.linkedAccounts,
+            returnURL: dataManager.returnURL,
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
+        )
+        let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
+            dataSource: networkingLinkSignupDataSource
+        )
+        networkingLinkSignupViewController.delegate = nativeFlowController
+        viewController = networkingLinkSignupViewController
     case .networkingLinkVerification:
         if let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress {
             let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
@@ -1163,13 +1158,12 @@ private func CreatePaneViewController(
         }
     case .networkingSaveToLinkVerification:
         if
-            let consumerSession = dataManager.consumerSession,
-            let selectedAccounts = dataManager.linkedAccounts
+            let consumerSession = dataManager.consumerSession
         {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
                 manifest: dataManager.manifest,
                 consumerSession: consumerSession,
-                selectedAccounts: selectedAccounts,
+                selectedAccounts: dataManager.linkedAccounts,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient
