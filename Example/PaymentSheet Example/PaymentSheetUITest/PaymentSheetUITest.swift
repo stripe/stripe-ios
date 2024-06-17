@@ -361,6 +361,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
                 settings.merchantCountryCode = .IN
         settings.currency = .inr
+        settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
@@ -812,6 +813,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
+        settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -838,6 +840,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
+        settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
