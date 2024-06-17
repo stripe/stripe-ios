@@ -3917,7 +3917,9 @@ extension PaymentSheetUITestCase {
         }
 
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistenceAndTap())
-        app.tap() // required to trigger the UI interruption monitor
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.app.tap() // required to trigger the UI interruption monitor
+        }
         wait(for: [expectation], timeout: 5.0)
     }
 
