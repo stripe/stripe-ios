@@ -3971,7 +3971,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.images["stp_card_unpadded_visa"].waitForExistence(timeout: 5))
 
         // Reselect edit icon and delete the card from the update view controller
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Edit"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove card"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
