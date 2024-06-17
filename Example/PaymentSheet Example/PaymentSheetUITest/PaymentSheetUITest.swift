@@ -3904,14 +3904,14 @@ extension PaymentSheetUITestCase {
         settings.mode = .payment
         loadPlayground(app, settings)
 
-        app.buttons["vertical"].waitForExistenceAndTap()
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["vertical"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Present PaymentSheet"].waitForExistenceAndTap())
 
         let expectation = XCTestExpectation(description: "Link sign in dialog")
         // Listen for the system login dialog
         addUIInterruptionMonitor(withDescription: "Link sign in system dialog") { alert in
             // Cancel the payment
-            alert.buttons["Cancel"].waitForExistenceAndTap()
+            XCTAssertTrue(alert.buttons["Cancel"].waitForExistenceAndTap())
             expectation.fulfill()
             return true
         }
