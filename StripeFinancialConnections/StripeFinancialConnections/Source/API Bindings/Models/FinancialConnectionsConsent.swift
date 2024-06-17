@@ -14,7 +14,7 @@ struct FinancialConnectionsConsent: Decodable {
     let cta: String
     let belowCta: String?
 
-    let dataAccessNotice: FinancialConnectionsDataAccessNotice
+    let dataAccessNotice: FinancialConnectionsDataAccessNotice?
     let legalDetailsNotice: FinancialConnectionsLegalDetailsNotice
 
     struct Body: Decodable {

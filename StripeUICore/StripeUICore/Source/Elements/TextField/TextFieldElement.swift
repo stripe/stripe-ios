@@ -130,6 +130,7 @@ import UIKit
 // MARK: - Element
 
 extension TextFieldElement: Element {
+    public var collectsUserInput: Bool { true }
     public var view: UIView {
         return textFieldView
     }

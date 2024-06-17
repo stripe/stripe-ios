@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Fizetési mód hozzáadása";
 
-"Add bank account" = "Bankszámla hozzáadása";
+"Add card" = "Kártya hozzáadása";
+
+"Add new card" = "Új kártya hozzáadása";
 
 "Add new payment method" = "Új fizetési mód hozzáadása";
 
@@ -42,7 +44,7 @@
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Fizetési adatainak megadásával és a fizetés megerősítésével Ön felhatalmazza (A) a(z) %@ céget és a Stripe-ot, fizetési szolgáltatónkat, hogy utasításokat küldjön a bankjának, hogy megterhelje a számláját, és (B) bankját, hogy az utasításoknak megfelelően megterhelje a számláját. A jogai részeként Ön jogosult a bankjától a velük kötött megállapodás feltételei szerinti visszatérítésre. A visszatérítést a számla megterhelésének napjától számított 8 héten belül kell igényelni. Jogait egy, a bankjától beszerezhető nyilatkozat tartalmazza. Beleegyezik abba, hogy a jövőbeni terhelésekről értesítést kap, legfeljebb 2 nappal azok bekövetkezése előtt.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A telefonszáma megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei és <privacy>adatvédelmi szabályzata</privacy> szerint.</terms>";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A telefonszáma megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Fizetési módok kezelése";
+
 "Manage your payment methods" = "Fizetési módok kezelése";
 
 "Name on card" = "A kártyán szereplő név";
+
+"New payment method" = "Új fizetési mód";
 
 "Open your UPI app to approve your payment within %@" = "Nyissa meg az UPI-alkalmazását a fizetés jóváhagyásához %@ belül";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Kártya eltávolítása?";
 
+"Remove payment method" = "Fizetés mód eltávolítása";
+
 "Save" = "Mentés";
 
 "Save a new payment method" = "Új fizetési mód mentése";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Mentse el az adatait a biztonságos egykattintásos fizetéshez a Linkkel";
 
+"Saved" = "Mentett";
+
+"Select card" = "Kártya kiválasztása";
+
+"Select payment method" = "Fizetési mód választása";
+
 "Select your payment method" = "Fizetési mód kiválasztása";
 
 "Set up" = "Beállítás";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 
-"Update card" = "Kártya módosítása";
+"Update" = "Frissítés";
+
+"Update card brand" = "Kártya márkájának frissítése";
+
+"View more" = "Továbbiak megjelenítése";
 
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 

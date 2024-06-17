@@ -15,7 +15,7 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
-@testable @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import SwiftUI
 import UIKit
@@ -150,6 +150,7 @@ class PlaygroundController: ObservableObject {
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
         }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -168,9 +169,9 @@ class PlaygroundController: ObservableObject {
 
         switch settings.layout {
         case .horizontal:
-            configuration.appearance.layout = .horizontal
+            configuration.paymentMethodLayout = .horizontal
         case .vertical:
-            configuration.appearance.layout = .vertical
+            configuration.paymentMethodLayout = .vertical
         }
         return configuration
     }
@@ -435,7 +436,7 @@ extension PlaygroundController {
         isLoading = true
         let settingsToLoad = self.settings
 
-        let body = [
+        var body = [
             "customer": customerIdOrType,
             "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
@@ -445,8 +446,20 @@ extension PlaygroundController {
             "use_link": settings.linkEnabled == .on,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
+            "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
+            "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
+        if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
+            body["supported_payment_methods"] = supportedPaymentMethods
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .split(separator: ",")
+                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+        }
+        if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
+            body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
+        }
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, reload again
             if settingsToLoad != self.settings {
@@ -496,7 +509,7 @@ extension PlaygroundController {
                 self.addressDetails = nil
                 // Persist customerId / customerMode
                 self.serializeSettingsToNSUserDefaults()
-                let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") // Avoid logging client secrets as a matter of best practice even though this is testmode
+                let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")// Avoid logging client secrets as a matter of best practice even though this is testmode
                 print("✅ Test playground finished loading with intent id: \(intentID ?? "")) and customer id: \(self.customerId ?? "") ")
 
                 if self.settings.uiStyle == .paymentSheet {

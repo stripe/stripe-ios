@@ -240,6 +240,20 @@ final class PlaygroundConfiguration {
         }
     }
 
+    private static let phoneKey = "phone"
+    var phone: String {
+        get {
+            if let phone = configurationStore[Self.phoneKey] as? String {
+                return phone
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationStore[Self.phoneKey] = newValue
+        }
+    }
+
     // MARK: - Permissions
 
     private static let balancesPermissionKey = "balances_permission"
@@ -320,6 +334,7 @@ final class PlaygroundConfiguration {
             let dictionary = jsonObject as? [String: Any]
         else {
             // this prevents anyone from overriding the configuration with something wrong
+            assertionFailure("failed to update configuration string")
             return
         }
 
@@ -373,6 +388,12 @@ final class PlaygroundConfiguration {
             self.email = email
         } else {
             self.email = ""
+        }
+
+        if let phone = dictionary[Self.phoneKey] as? String {
+            self.phone = phone
+        } else {
+            self.phone = ""
         }
 
         if let balancesPermission = dictionary[Self.balancesPermissionKey] as? Bool {

@@ -36,7 +36,7 @@
 
 "Get ready to scan your photo ID" = "写真付き身分証明書の直接撮影を準備する";
 
-"Get ready to take a selfie" = "自撮り写真の撮影準備をする";
+"Get ready to take a selfie" = "顔写真の撮影準備をする";
 
 "Go Back" = "戻る";
 
@@ -102,11 +102,11 @@
 
 "Select front identity card photo" = "身分証明書の表面の写真を選択";
 
-"Selfie" = "セルフィ―";
+"Selfie" = "顔写真";
 
-"Selfie captures" = "セルフィ―のキャプチャー";
+"Selfie captures" = "顔写真の記録";
 
-"Selfie captures are complete" = "セルフィ―のキャプチャーが完了しました";
+"Selfie captures are complete" = "顔写真の記録が完了しました";
 
 "Take Photo" = "写真を撮る";
 
@@ -142,7 +142,7 @@
 
 "You can either try again or upload an image from your device." = "もう一度お試しいただくか、デバイスから画像をアプロードしてください。";
 
-"Your selfie images have not been saved. Do you want to leave?" = "自撮りの画像が保存されていません。終了しますか？";
+"Your selfie images have not been saved. Do you want to leave?" = "顔写真の画像が保存されていません。終了しますか？";
 
 "driver's license" = "運転免許証";
 

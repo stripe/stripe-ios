@@ -181,3 +181,50 @@ extension STPElementsSession: STPAPIResponseDecodable {
         )
     }
 }
+extension STPElementsSession {
+    func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
+        var allowsRemovalOfPaymentMethods = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.paymentSheetComponent.enabled,
+               let features = customerSession.paymentSheetComponent.features {
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+            }
+        } else {
+            allowsRemovalOfPaymentMethods = true
+        }
+        return allowsRemovalOfPaymentMethods
+    }
+
+    func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
+        var allowsRemovalOfPaymentMethods = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.customerSheetComponent.enabled,
+               let features = customerSession.customerSheetComponent.features {
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+            }
+        } else {
+            allowsRemovalOfPaymentMethods = true
+        }
+        return allowsRemovalOfPaymentMethods
+    }
+}
+
+extension STPElementsSession {
+    func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        if let customerSession = customer?.customerSession {
+            if customerSession.paymentSheetComponent.enabled,
+               let features = customerSession.paymentSheetComponent.features {
+                return features.paymentMethodSave ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+                                                  : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
+            } else {
+                // CustomerSession exists, but payment_sheet component is not available. This can happen
+                // if a merchant creates a CustomerSession with the wrong component. This is effectively
+                // an integration error. Defaulting to .legacy and sending 'unspecified' seems like the
+                // most appropriate thing to do.
+                return .legacy
+            }
+        } else {
+            return .legacy
+        }
+    }
+}

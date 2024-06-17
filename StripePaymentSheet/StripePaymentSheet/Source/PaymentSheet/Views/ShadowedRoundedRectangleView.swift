@@ -45,6 +45,7 @@ class ShadowedRoundedRectangle: UIView {
 
         // Shadow
         layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
 
         // Border
         if isSelected {
@@ -63,12 +64,6 @@ class ShadowedRoundedRectangle: UIView {
         super.init(frame: .zero)
         addAndPinSubview(roundedRectangle)
         update()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        // Update shadow paths based on current frame
-        roundedRectangle.frame = bounds
     }
 
     #if !canImport(CompositorServices)

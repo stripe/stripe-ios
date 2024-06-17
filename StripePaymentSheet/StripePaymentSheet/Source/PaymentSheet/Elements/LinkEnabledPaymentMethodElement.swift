@@ -62,10 +62,11 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         inlineSignupElement.delegate = self
     }
 
-    func makePaymentOption() -> PaymentOption? {
+    func makePaymentOption(intent: Intent) -> PaymentOption? {
         guard let params = updateParams(params: .init(type: .stripe(paymentMethodType))) else {
             return nil
         }
+        params.setAllowRedisplay(for: intent.elementsSession.savePaymentMethodConsentBehavior())
 
         switch inlineSignupElement.action {
         case .signupAndPay(let account, let phoneNumber, let legalName):

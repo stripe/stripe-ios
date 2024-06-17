@@ -42,6 +42,20 @@ struct CustomerSheetTestPlayground: View {
                         TextField("CustomerId", text: customerIdBinding)
                     }
                     Group {
+                        if playgroundController.settings.customerKeyType == .customerSession {
+                            VStack {
+                                HStack {
+                                    Text("Customer Session Settings")
+                                        .font(.subheadline)
+                                        .bold()
+                                    Spacer()
+                                }
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                            }
+                        }
+                    }
+                    Group {
                         HStack {
                             Text("Client Configuration").font(.headline)
                             Spacer()

@@ -52,6 +52,7 @@ extension PaymentSheet {
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
         func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+            // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
             case .external(let paymentMethod):
@@ -116,13 +117,17 @@ extension PaymentSheet {
         {
             var recommendedStripePaymentMethodTypes = intent.recommendedPaymentMethodTypes
 
-            if configuration.linkPaymentMethodsOnly {
-                // If we're in the Link modal, manually add Link payment methods
-                // and let the support calls decide if they're allowed
-                let allLinkPaymentMethods: [STPPaymentMethodType] = [.card, .linkInstantDebit]
-                for method in allLinkPaymentMethods where !recommendedStripePaymentMethodTypes.contains(method) {
-                    recommendedStripePaymentMethodTypes.append(method)
-                }
+            if
+                recommendedStripePaymentMethodTypes.contains(.link),
+                !recommendedStripePaymentMethodTypes.contains(.USBankAccount),
+                !intent.isDeferredIntent,
+                intent.linkFundingSources?.contains(.bankAccount) == true
+            {
+                // we must add this BEFORE we do filtering via
+                // `PaymentSheet.PaymentMethodType.supportsAdding`
+                // because we want to filter out instant debits
+                // IF the user has not linked Financial Connections
+                recommendedStripePaymentMethodTypes.append(.instantDebits)
             }
 
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
@@ -130,8 +135,7 @@ extension PaymentSheet {
                     paymentMethod: paymentMethodType,
                     configuration: configuration,
                     intent: intent,
-                    supportedPaymentMethods: configuration.linkPaymentMethodsOnly
-                        ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
+                    supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
                 )
 
                 if logAvailability && availabilityStatus != .supported {
@@ -211,6 +215,8 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
+                    case .instantDebits:
+                        return [.financialConnectionsSDK]
                     case .sofort, .iDEAL, .bancontact:
                         // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
@@ -219,8 +225,7 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .linkInstantDebit,
-                        .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco:
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -232,13 +237,15 @@ extension PaymentSheet {
                     case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .swish, .twint:
+                            .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .swish, .twint:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,
                         ]
+                    case .instantDebits:
+                        return [.financialConnectionsSDK]
                     case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini, .multibanco:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit, .sofort:

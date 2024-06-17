@@ -95,6 +95,26 @@ struct PaymentSheetTestPlayground: View {
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
+                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
+                            .autocapitalization(.none)
+                    }
+                    Group {
+                        if playgroundController.settings.customerKeyType == .customerSession {
+                            VStack {
+                                HStack {
+                                    Text("Customer Session Settings")
+                                        .font(.subheadline)
+                                        .bold()
+                                    Spacer()
+                                }
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodSave)
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                                SettingPickerView(setting: paymentMethodRedisplayBinding)
+                                if playgroundController.settings.paymentMethodRedisplay == .enabled {
+                                    SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                                }
+                            }
+                        }
                     }
                     Divider()
                     Group {
@@ -166,6 +186,16 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customerMode = newMode
         }
     }
+    var paymentMethodRedisplayBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
+        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
+            return playgroundController.settings.paymentMethodRedisplay
+        } set: { newPaymentMethodRedisplay in
+            if playgroundController.settings.paymentMethodRedisplay.rawValue != newPaymentMethodRedisplay.rawValue {
+                playgroundController.settings.paymentMethodAllowRedisplayFilters = .notSet
+            }
+            playgroundController.settings.paymentMethodRedisplay = newPaymentMethodRedisplay
+        }
+    }
     var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
         Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
             return playgroundController.settings.merchantCountryCode
@@ -178,6 +208,18 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
+    var supportedPaymentMethodsBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.supportedPaymentMethods ?? ""
+        } set: { newString in
+            playgroundController.settings.supportedPaymentMethods = (newString != "") ? newString : nil
+
+            // for supported payment methods to work, apms must be off
+            if playgroundController.settings.supportedPaymentMethods != nil {
+                playgroundController.settings.apmsEnabled = .off
+            }
+        }
+    }
 }
 
 @available(iOS 14.0, *)

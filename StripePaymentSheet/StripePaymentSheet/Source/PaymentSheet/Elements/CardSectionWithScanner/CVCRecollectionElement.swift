@@ -11,6 +11,8 @@ import Foundation
 import UIKit
 
 final class CVCRecollectionElement: Element {
+    let collectsUserInput: Bool = true
+
     enum Mode {
         case inputOnly
         case detailedWithInput

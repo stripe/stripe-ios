@@ -105,4 +105,8 @@ struct FinancialConnectionsSessionManifest: Decodable {
     var shouldAttachLinkedPaymentMethod: Bool {
         return (paymentMethodType != nil)
     }
+
+    var isProductInstantDebits: Bool {
+        return (product == "instant_debits")
+    }
 }

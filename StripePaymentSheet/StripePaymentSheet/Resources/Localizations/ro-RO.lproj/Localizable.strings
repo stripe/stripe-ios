@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Adăugați o metodă de plată";
 
-"Add bank account" = "Adăugare cont bancar";
+"Add card" = "Adăugare card";
+
+"Add new card" = "Adăugare card nou";
 
 "Add new payment method" = "Adăugare metodă de plată nouă";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Gestionare metode de plată";
+
 "Manage your payment methods" = "Gestionați metodele de plată";
 
 "Name on card" = "Numele titularului";
+
+"New payment method" = "Metodă de plată nouă";
 
 "Open your UPI app to approve your payment within %@" = "Deschideți aplicația UPI pentru a aproba plata în termen de %@";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Eliminați cardul?";
 
+"Remove payment method" = "Eliminare metodă de plată";
+
 "Save" = "Salvare";
 
 "Save a new payment method" = "Salvați o metodă de plată nouă";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Salvați-vă informațiile pentru o finalizare securizată a comenzii cu un singur clic cu Link";
 
+"Saved" = "Salvare efectuată";
+
+"Select card" = "Selectare card";
+
+"Select payment method" = "Selectare metodă de plată";
+
 "Select your payment method" = "Selectați metoda de plată";
 
 "Set up" = "Configurare";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "Codul IBAN pe care l-ați introdus nu este complet.";
 
-"Update card" = "Actualizare card";
+"Update" = "Actualizare";
+
+"Update card brand" = "Actualizarea mărcii de card";
+
+"View more" = "Vizualizați mai multe";
 
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
 

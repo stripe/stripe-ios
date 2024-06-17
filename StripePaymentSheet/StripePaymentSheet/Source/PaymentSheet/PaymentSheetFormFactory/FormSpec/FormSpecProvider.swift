@@ -74,11 +74,6 @@ class FormSpecProvider {
             do {
                 let data = try JSONSerialization.data(withJSONObject: formSpec)
                 let decodedFormSpec = try decoder.decode(FormSpec.self, from: data)
-                guard !containsUnknownNextActions(formSpec: decodedFormSpec) else {
-                    STPAnalyticsClient.sharedClient.logLUXEUnknownActionsFailure()
-                    decodedSuccessfully = false
-                    continue
-                }
                 self.formSpecs[decodedFormSpec.type] = decodedFormSpec
             } catch {
                 STPAnalyticsClient.sharedClient.logLUXESpecSerilizeFailure(error: error)
@@ -97,27 +92,5 @@ class FormSpecProvider {
         }
         stpAssert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
         return formSpecs[paymentMethodType]
-    }
-
-    func nextActionSpec(for paymentMethodType: String) -> FormSpec.NextActionSpec? {
-        return formSpecs[paymentMethodType]?.nextActionSpec
-    }
-
-    func containsUnknownNextActions(formSpec: FormSpec) -> Bool {
-        if let nextActionSpec = formSpec.nextActionSpec {
-            for (_, nextActionStatusValue) in nextActionSpec.confirmResponseStatusSpecs {
-                if case .unknown = nextActionStatusValue.type {
-                    return true
-                }
-            }
-            if let postConfirmSpecs = nextActionSpec.postConfirmHandlingPiStatusSpecs {
-                for (_, nextActionStatusValue) in postConfirmSpecs {
-                    if case .unknown = nextActionStatusValue.type {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
     }
 }

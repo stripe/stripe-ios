@@ -23,6 +23,7 @@ extension PaymentSheet {
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
+        .instantDebits,
         .AUBECSDebit,
         .UPI,
         .cashApp,
@@ -37,12 +38,6 @@ extension PaymentSheet {
         .twint,
         .multibanco,
     ]
-
-    /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
-    /// - Note: This is a var because it depends on the authenticated Link user
-    ///
-    /// :nodoc:
-    internal static var supportedLinkPaymentMethods: [STPPaymentMethodType] = []
 }
 
 // MARK: - PaymentMethodRequirementProvider

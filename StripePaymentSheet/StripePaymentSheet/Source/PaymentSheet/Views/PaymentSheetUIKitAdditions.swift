@@ -37,7 +37,7 @@ enum PaymentSheetUI {
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
     static let minimumHitArea = CGSize(width: 44, height: 44)
 
-    static func makeHeaderLabel(appearance: PaymentSheet.Appearance) -> UILabel {
+    static func makeHeaderLabel(title: String? = nil, appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()
         header.textColor = appearance.colors.text
         header.numberOfLines = 2
@@ -45,6 +45,7 @@ enum PaymentSheetUI {
         header.accessibilityTraits = [.header]
         header.adjustsFontSizeToFitWidth = true
         header.adjustsFontForContentSizeCategory = true
+        header.text = title
         return header
     }
 }
@@ -99,23 +100,30 @@ extension UIViewController {
                     toVC.view.alpha = 1
                 },
                 completion: { _ in
-                    // Remove the old one
-                    self.remove(childViewController: fromVC)
+                    // Finish removing the old one
+                    fromVC.view.removeFromSuperview()
+                    fromVC.didMove(toParent: nil)
                     UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
                 }
             )
         } else {
-            addChild(toVC)
-            containerView.addPinnedSubview(toVC.view)
-            containerView.updateHeight()
-            toVC.didMove(toParent: self)
+            add(childViewController: toVC, containerView: containerView)
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
             UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
         }
     }
 
+    func add(childViewController: UIViewController, containerView: DynamicHeightContainerView) {
+        addChild(childViewController)
+        containerView.addPinnedSubview(childViewController.view)
+        containerView.updateHeight()
+        childViewController.didMove(toParent: self)
+    }
+
     func remove(childViewController: UIViewController) {
+        childViewController.willMove(toParent: nil)
+        childViewController.removeFromParent()
         childViewController.view.removeFromSuperview()
         childViewController.didMove(toParent: nil)
     }
@@ -139,5 +147,32 @@ extension UIFont {
         let descriptor = UIFontDescriptor(fontAttributes: attributes)
 
         return UIFont(descriptor: descriptor, size: pointSize)
+    }
+}
+
+extension UILabel {
+    static func makeVerticalRowButtonLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
+        let label = UILabel()
+        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
+        label.adjustsFontSizeToFitWidth = true
+        label.adjustsFontForContentSizeCategory = true
+        label.text = text
+        label.numberOfLines = 1
+        label.textColor = appearance.colors.componentText
+        return label
+    }
+}
+
+extension UIStackView {
+    /// Convenience DRY method that creates a stackview for use in horizontal "row button" content
+    static func makeRowButtonContentStackView(arrangedSubviews: [UIView]) -> UIStackView {
+        let margin = 12.0
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.directionalLayoutMargins = .init(top: margin, leading: margin, bottom: margin, trailing: margin)
+        stackView.spacing = margin
+        stackView.isLayoutMarginsRelativeArrangement = true
+        return stackView
     }
 }

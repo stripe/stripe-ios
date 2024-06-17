@@ -60,6 +60,13 @@ extension XCUIApplication {
             self.keys[String(key)].tap()
         }
     }
+
+    func waitForButtonOrStaticText(_ identifier: String, timeout: TimeInterval = 10.0) -> XCUIElement {
+        if buttons[identifier].waitForExistence(timeout: timeout) {
+            return buttons[identifier]
+        }
+        return staticTexts[identifier]
+    }
 }
 
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
@@ -108,6 +115,28 @@ func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElemen
         // Then, we do a scroll right on the scrollview
         let startCoordinate = collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
         startCoordinate.press(forDuration: 0.01, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
+    }
+    return nil
+}
+func scrollDown(scrollView: XCUIElement, toFindElement element: XCUIElement, maxTimesToScroll: Int = 1) -> XCUIElement? {
+    guard scrollView.elementType == .scrollView else {
+        fatalError("XCUIElement is not a scrollview.")
+    }
+
+    if element.isHittable {
+        return element
+    }
+
+    var numTimesScrolled = 0
+    while numTimesScrolled < maxTimesToScroll {
+
+        let startCoordinate = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
+        startCoordinate.press(forDuration: 0.01, thenDragTo: scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)))
+        numTimesScrolled += 1
+
+        if element.isHittable {
+            return element
+        }
     }
     return nil
 }

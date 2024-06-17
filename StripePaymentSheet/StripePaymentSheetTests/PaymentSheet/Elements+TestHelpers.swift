@@ -9,30 +9,6 @@
 @testable@_spi(STP) import StripeUICore
 
 extension Element {
-
-    /// A convenience method that nwraps any Elements wrapped in `PaymentMethodElementWrapper`
-    /// and returns all Elements underneath this Element, including this Element.
-    public func getAllUnwrappedSubElements() -> [Element] {
-        switch self {
-        case let container as ContainerElement:
-            return [container] + container.elements.flatMap { $0.getAllUnwrappedSubElements() }
-        case let wrappedElement as PaymentMethodElementWrapper<FormElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        case let wrappedElement as PaymentMethodElementWrapper<CheckboxElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        case let wrappedElement as PaymentMethodElementWrapper<TextFieldElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        case let wrappedElement as PaymentMethodElementWrapper<DropdownFieldElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        case let wrappedElement as PaymentMethodElementWrapper<AddressSectionElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        case let wrappedElement as PaymentMethodElementWrapper<PhoneNumberElement>:
-            return [wrappedElement.element]
-        default:
-            return [self]
-        }
-    }
-
     func getTextFieldElement(_ label: String) -> TextFieldElement? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? TextFieldElement }

@@ -60,8 +60,6 @@ import Foundation
     case link
     /// A Klarna payment method.
     case klarna
-    /// A Link Instant Debit payment method
-    case linkInstantDebit
     /// An Affirm payment method
     case affirm
     /// A US Bank Account payment method (ACH)
@@ -90,11 +88,14 @@ import Foundation
     case twint
     /// A Multibanco payment method
     case multibanco
+    /// A Instant Debits payment method
+    case instantDebits
     /// An unknown type.
     case unknown
 
     /// Localized display name for this payment method type
     @_spi(STP) public var displayName: String {
+        let instantDebitsDisplayName = STPLocalizedString("Bank", "Link Instant Debit payment method display name")
         switch self {
         case .alipay:
             return STPLocalizedString("Alipay", "Payment Method type brand name")
@@ -143,8 +144,6 @@ import Foundation
             return STPLocalizedString("Link", "Link Payment Method type brand name")
         case .klarna:
             return STPLocalizedString("Klarna", "Payment Method type brand name")
-        case .linkInstantDebit:
-            return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
         case .affirm:
             return STPLocalizedString("Affirm", "Payment Method type brand name")
         case .USBankAccount:
@@ -178,6 +177,8 @@ import Foundation
             return "TWINT"
         case .multibanco:
             return "Multibanco"
+        case .instantDebits:
+            return instantDebitsDisplayName
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -237,8 +238,6 @@ import Foundation
             return "link"
         case .klarna:
             return "klarna"
-        case .linkInstantDebit:
-            return "link_instant_debits"
         case .affirm:
             return "affirm"
         case .USBankAccount:
@@ -269,6 +268,8 @@ import Foundation
             return "twint"
         case .multibanco:
             return "multibanco"
+        case .instantDebits:
+            return "instant_debits"
         }
     }
 }
@@ -278,10 +279,23 @@ extension STPPaymentMethodType: CaseIterable { }
 extension STPPaymentMethodType {
     var requiresPolling: Bool {
         switch self {
-        // Payment methods such as AmazonPay and CashApp implement app-to-app redirects that bypass the "redirect trampoline" too give a more seamless user experience for app-to-app.
+        // Payment methods such as AmazonPay and other app-to-app redirects that bypass the "redirect trampoline" to give a more seamless user experience for app-to-app.
         // However, when returning to the merchant app in this scenario, the intent often isn't updated instantaneously, requiring polling for intent status updates.
         case .amazonPay, .cashApp:
             return true
+        default:
+            return false
+        }
+    }
+
+    var supportsRefreshing: Bool {
+        switch self {
+        // Payment methods such as CashApp implement app-to-app redirects that bypass the "redirect trampoline" too give a more seamless user experience for app-to-app.
+        // However, when returning to the merchant app in this scenario, the intent often isn't updated instantaneously, requiring us to hit the refresh endpoint.
+        // Only a small subset of LPMs support refreshing
+        // TODO(porter) Enable refreshing for Cash App when test mode cancel behavior is fixed
+        case .cashApp:
+            return false
         default:
             return false
         }

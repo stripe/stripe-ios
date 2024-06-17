@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Добавьте способ оплаты";
 
-"Add bank account" = "Добавить банковский счет";
+"Add card" = "Добавить карту";
+
+"Add new card" = "Добавить новую карту";
 
 "Add new payment method" = "Добавить новый метод оплаты";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Управление способами оплаты";
+
 "Manage your payment methods" = "Управление способами оплаты";
 
 "Name on card" = "Имя и фамилия, указанные на карте";
+
+"New payment method" = "Новый способ оплаты";
 
 "Open your UPI app to approve your payment within %@" = "Откройте приложение UPI, чтобы подтвердить платеж, не позднее чем через %@";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Удалить карту?";
 
+"Remove payment method" = "Удалить способ оплаты";
+
 "Save" = "Сохранить";
 
 "Save a new payment method" = "Сохраните новый способ оплаты";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Сохраните свои данные в Link для безопасного оформления покупок нажатием одной кнопки";
 
+"Saved" = "Сохранено";
+
+"Select card" = "Выберите карту";
+
+"Select payment method" = "Выберите способ оплаты";
+
 "Select your payment method" = "Выберите способ оплаты";
 
 "Set up" = "Настроить";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
-"Update card" = "Обновить реквизиты карты";
+"Update" = "Обновить";
+
+"Update card brand" = "Изменить бренд карты";
+
+"View more" = "Показать ещё";
 
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
 

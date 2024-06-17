@@ -36,6 +36,7 @@ extension STPAnalyticsClient {
         deferredIntentConfirmationType: DeferredIntentConfirmationType?,
         paymentMethodTypeAnalyticsValue: String? = nil,
         error: Error? = nil,
+        linkContext: String? = nil,
         apiClient: STPAPIClient
     ) {
         var success = false
@@ -64,6 +65,7 @@ extension STPAnalyticsClient {
             error: error,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
             paymentMethodTypeAnalyticsValue: paymentMethodTypeAnalyticsValue,
+            linkContext: linkContext,
             apiClient: apiClient
         )
     }
@@ -143,9 +145,16 @@ extension STPAnalyticsClient {
         }
     }
 
-    func logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: String) {
+    func logPaymentSheetConfirmButtonTapped(
+        paymentMethodTypeIdentifier: String,
+        linkContext: String? = nil
+    ) {
         let duration = AnalyticsHelper.shared.getDuration(for: .formShown)
-        logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped, duration: duration, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
+        logPaymentSheetEvent(
+            event: .paymentSheetConfirmButtonTapped,
+            duration: duration, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier,
+            linkContext: linkContext
+        )
     }
 
     enum DeferredIntentConfirmationType: String {
@@ -300,6 +309,7 @@ extension STPAnalyticsClient {
         error: Error? = nil,
         deferredIntentConfirmationType: DeferredIntentConfirmationType? = nil,
         paymentMethodTypeAnalyticsValue: String? = nil,
+        linkContext: String? = nil,
         params: [String: Any] = [:],
         apiClient: STPAPIClient = .shared
     ) {
@@ -316,6 +326,7 @@ extension STPAnalyticsClient {
         additionalParams["is_decoupled"] = intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["selected_lpm"] = paymentMethodTypeAnalyticsValue
+        additionalParams["link_context"] = linkContext
 
         if let error {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
@@ -403,6 +414,8 @@ extension PaymentSheet.Configuration {
         payload["appearance"] = appearance.analyticPayload
         payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
+        payload["payment_method_layout"] = paymentMethodLayout.description
+
         return payload
     }
 }
@@ -445,5 +458,16 @@ extension PaymentSheet.BillingDetailsCollectionConfiguration {
             "phone": phone.rawValue,
             "address": address.rawValue,
         ]
+    }
+}
+
+extension PaymentSheet.PaymentMethodLayout {
+    var description: String {
+        switch self {
+        case .horizontal:
+            return "horizontal"
+        case .vertical:
+            return "vertical"
+        }
     }
 }

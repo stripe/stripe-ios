@@ -130,6 +130,8 @@ import UIKit
 // MARK: Element
 
 extension DateFieldElement: Element {
+    public var collectsUserInput: Bool { true }
+
     public var view: UIView {
         return pickerFieldView
     }

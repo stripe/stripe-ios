@@ -39,6 +39,44 @@ extension PaymentSheet {
                 return paymentMethod.type
             }
         }
+
+        var savedPaymentMethod: STPPaymentMethod? {
+            switch self {
+            case .applePay, .link, .new, .external:
+                return nil
+            case .saved(let paymentMethod, _):
+                return paymentMethod
+            }
+        }
+
+        var paymentMethodType: PaymentMethodType? {
+            switch self {
+            case let .saved(paymentMethod: paymentMethod, _):
+                return .stripe(paymentMethod.type)
+            case let .new(confirmParams: intentConfirmParams):
+                return intentConfirmParams.paymentMethodType
+            case .applePay, .link:
+                return nil
+            case let .external(paymentMethod: paymentMethod, _):
+                return .external(paymentMethod)
+            }
+        }
+
+        // Both "Link" and "Instant Debits" use the same payment method type
+        // of "link." To differentiate between the two in metrics, we sometimes
+        // need a "link_context."
+        var linkContext: String? {
+            if case .link = self {
+                return "wallet"
+            } else if
+                case .new(let confirmParams) = self,
+                confirmParams.instantDebitsLinkedBank != nil
+            {
+                return "instant_debits"
+            } else {
+                return nil
+            }
+        }
     }
 
     /// A class that presents the individual steps of a payment flow
@@ -103,7 +141,7 @@ extension PaymentSheet {
         var intent: Intent {
             return viewController.intent
         }
-        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
+        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
@@ -358,7 +396,7 @@ extension PaymentSheet {
                         isCustom: true,
                         paymentMethod: paymentOption.analyticsValue,
                         result: result,
-                        linkEnabled: intent.supportsLink,
+                        linkEnabled: PaymentSheetLoader.isLinkEnabled(intent: intent, configuration: configuration),
                         activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                         linkSessionType: intent.linkPopupWebviewOption,
                         currency: intent.currency,
@@ -411,6 +449,7 @@ extension PaymentSheet {
                 switch result {
                 case .success(let loadResult):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,
                         loadResult: loadResult,
@@ -453,7 +492,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
-            switch configuration.appearance.layout {
+            switch configuration.paymentMethodLayout {
             case .horizontal:
                 return PaymentSheetFlowControllerViewController(
                     configuration: configuration,
@@ -461,7 +500,12 @@ extension PaymentSheet {
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical:
-                return PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult, isFlowController: true)
+                return PaymentSheetVerticalViewController(
+                    configuration: configuration,
+                    loadResult: loadResult,
+                    isFlowController: true,
+                    previousPaymentOption: previousPaymentOption
+                )
             }
         }
     }
@@ -534,7 +578,8 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var error: Error? { get }
     var intent: Intent { get }
     var selectedPaymentOption: PaymentOption? { get }
-    /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil for Link and Apple Pay.
+    /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
+    /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
 }

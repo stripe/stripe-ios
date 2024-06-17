@@ -37,21 +37,28 @@ class PaymentSheetFormFactory {
     let amount: Int?
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
+    let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let analyticsClient: STPAnalyticsClient
 
-    var canSaveToLink: Bool {
-        return (supportsLinkCard &&
-                paymentMethod == .stripe(.card) &&
-                !configuration.isUsingBillingAddressCollection)
-    }
-
     var shouldDisplaySaveCheckbox: Bool {
-        return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        switch savePaymentMethodConsentBehavior {
+        case .legacy, .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+            return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
+            return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .customerSheetWithCustomerSession:
+            return false
+        }
     }
 
     var theme: ElementsUITheme {
         return configuration.appearance.asElementsTheme
     }
+
+    private static let PayByBankDescriptionText = STPLocalizedString(
+        "Pay with your bank account in just a few steps.",
+        "US Bank Account copy title for Mobile payment element form"
+    )
 
     convenience init(
         intent: Intent,
@@ -61,7 +68,6 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        cardBrandChoiceEligible: Bool = false,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.init(configuration: configuration,
@@ -70,13 +76,14 @@ class PaymentSheetFormFactory {
                   addressSpecProvider: addressSpecProvider,
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
-                  cardBrandChoiceEligible: cardBrandChoiceEligible,
+                  cardBrandChoiceEligible: intent.cardBrandChoiceEligible,
                   supportsLinkCard: intent.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
                   currency: intent.currency,
                   amount: intent.amount,
                   countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
+                  savePaymentMethodConsentBehavior: intent.elementsSession.savePaymentMethodConsentBehavior(),
                   analyticsClient: analyticsClient)
     }
 
@@ -94,6 +101,7 @@ class PaymentSheetFormFactory {
         currency: String?,
         amount: Int?,
         countryCode: String?,
+        savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.configuration = configuration
@@ -114,6 +122,7 @@ class PaymentSheetFormFactory {
         self.amount = amount
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
+        self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.analyticsClient = analyticsClient
     }
 
@@ -127,8 +136,6 @@ class PaymentSheetFormFactory {
         // 1. Custom, one-off forms
         if paymentMethod == .card {
             return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
-        } else if paymentMethod == .linkInstantDebit {
-            return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
@@ -162,6 +169,8 @@ class PaymentSheetFormFactory {
             return makeBoleto()
         } else if paymentMethod == .swish {
             return makeSwish()
+        } else if paymentMethod == .instantDebits {
+            return makeInstantDebits()
         }
 
         guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -254,12 +263,6 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeMandate(mandateText: String) -> PaymentMethodElement {
-        // If there was previous customer input, check if it displayed the mandate for this payment method
-        let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
-        return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, theme: theme)
-    }
-
     func makeBSB(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? previousCustomerInput?.paymentMethodParams.auBECSDebit?.bsbNumber
         let element = TextFieldElement.Account.makeBSB(defaultValue: defaultValue, theme: theme)
@@ -287,10 +290,6 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeAUBECSMandate() -> StaticElement {
-        return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
-    }
-
     func makeSortCode() -> PaymentMethodElementWrapper<TextFieldElement> {
         let defaultValue = previousCustomerInput?.paymentMethodParams.bacsDebit?.sortCode
         let element = TextFieldElement.Account.makeSortCode(defaultValue: defaultValue, theme: theme)
@@ -308,57 +307,6 @@ extension PaymentSheetFormFactory {
             params.paymentMethodParams.nonnil_bacsDebit.accountNumber = textField.text
             return params
         }
-    }
-
-    func makeBacsMandate() -> PaymentMethodElementWrapper<CheckboxElement> {
-        let mandateText = String(format: String.Localized.bacs_mandate_text, configuration.merchantDisplayName)
-        let element = CheckboxElement(
-            theme: configuration.appearance.asElementsTheme,
-            label: mandateText,
-            isSelectedByDefault: false
-        )
-        return PaymentMethodElementWrapper(element) { checkbox, params in
-            // Only return params if the mandate has been accepted
-            return checkbox.isSelected ? params : nil
-        }
-    }
-
-    func makeSepaMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makeCashAppMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makeRevolutPayMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.revolut_pay_mandate_text, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makeKlarnaMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.klarna_mandate_text,
-                                 configuration.merchantDisplayName,
-                                 configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makeAmazonPayMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.amazon_pay_mandate_text, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
-    func makePaypalMandate() -> PaymentMethodElement {
-        let mandateText: String = {
-            if isPaymentIntent {
-                return String(format: String.Localized.paypal_mandate_text_payment, configuration.merchantDisplayName)
-            } else {
-                return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
-            }
-        }()
-        return makeMandate(mandateText: mandateText)
     }
 
     func makeSaveCheckbox(
@@ -688,7 +636,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaCopyLabel() -> StaticElement {
-        let text = STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
+        let text = String.Localized.buy_now_or_pay_later_with_klarna
 
         let label = UILabel()
         label.text = text
@@ -696,6 +644,24 @@ extension PaymentSheetFormFactory {
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
         return StaticElement(view: label)
+    }
+
+    func makeInstantDebits() -> PaymentMethodElement {
+        return InstantDebitsPaymentMethodElement(
+            configuration: configuration,
+            titleElement: {
+                switch configuration {
+                case .customerSheet:
+                    return nil // customer sheet is not supported
+                case .paymentSheet:
+                    return makeSectionTitleLabelWith(
+                        text: Self.PayByBankDescriptionText
+                    )
+                }
+            }(),
+            emailElement: makeEmail(),
+            theme: theme
+        )
     }
 
     private func makeUSBankAccountCopyLabel() -> StaticElement {
@@ -709,10 +675,7 @@ extension PaymentSheetFormFactory {
             )
         case .paymentSheet:
             return makeSectionTitleLabelWith(
-                text: STPLocalizedString(
-                    "Pay with your bank account in just a few steps.",
-                    "US Bank Account copy title for Mobile payment element form"
-                )
+                text: Self.PayByBankDescriptionText
             )
         }
     }
@@ -835,6 +798,14 @@ extension PaymentSheetFormFactory {
                 }
             }
         }
+    }
+}
+extension PaymentSheetFormFactory {
+    enum SavePaymentMethodConsentBehavior: Equatable {
+        case legacy
+        case paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
+        case paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+        case customerSheetWithCustomerSession
     }
 }
 

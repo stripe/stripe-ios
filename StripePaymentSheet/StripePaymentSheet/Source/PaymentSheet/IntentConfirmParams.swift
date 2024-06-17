@@ -33,12 +33,11 @@ class IntentConfirmParams {
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
 
-    var linkedBank: LinkedBank?
+    var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
+    var instantDebitsLinkedBank: InstantDebitsLinkedBank?
 
     var paymentSheetLabel: String {
-        if let linkedBank = linkedBank,
-            let last4 = linkedBank.last4
-        {
+        if let last4 = (financialConnectionsLinkedBank?.last4 ?? instantDebitsLinkedBank?.last4) {
             return "••••\(last4)"
         } else {
             return paymentMethodParams.paymentSheetLabel
@@ -46,9 +45,7 @@ class IntentConfirmParams {
     }
 
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
-        if let linkedBank = linkedBank,
-            let bankName = linkedBank.bankName
-        {
+        if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {
             return paymentMethodParams.makeIcon(updateHandler: updateImageHandler)
@@ -91,7 +88,7 @@ class IntentConfirmParams {
 
     private func setDefaultBillingDetailsIfNecessary(defaultBillingDetails: PaymentSheet.BillingDetails, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration) {
         guard billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-           return
+            return
         }
         if let name = defaultBillingDetails.name {
             paymentMethodParams.nonnil_billingDetails.name = name
@@ -104,6 +101,35 @@ class IntentConfirmParams {
         }
         if defaultBillingDetails.address != .init() {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
+        }
+    }
+    func setAllowRedisplay(for savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior) {
+        switch savePaymentMethodConsentBehavior {
+        case .legacy:
+            // Always send unspecified
+            paymentMethodParams.allowRedisplay = .unspecified
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+            switch saveForFutureUseCheckboxState {
+            case .hidden:
+                // For PI+SFU & SI:
+                paymentMethodParams.allowRedisplay = .limited
+            case .deselected:
+                // For PI w/out SFU
+                paymentMethodParams.allowRedisplay = .limited
+            case .selected:
+                // For PI, off-session during confirm
+                paymentMethodParams.allowRedisplay = .always
+            }
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
+            // Checkbox is shown for all cases: PI, PI+SFU, SI
+            if saveForFutureUseCheckboxState == .selected {
+                paymentMethodParams.allowRedisplay = .always
+            } else if saveForFutureUseCheckboxState == .deselected {
+                paymentMethodParams.allowRedisplay = .limited
+            }
+        case .customerSheetWithCustomerSession:
+            // UX (CustomerSheet) implies consent based on the UX
+            paymentMethodParams.allowRedisplay = .always
         }
     }
 }

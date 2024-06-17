@@ -6,7 +6,9 @@
 
 "Add a payment method" = "Ödeme yöntemi ekle";
 
-"Add bank account" = "Banka hesabı ekle";
+"Add card" = "Kart ekle";
+
+"Add new card" = "Yeni kart ekle";
 
 "Add new payment method" = "Yeni ödeme yöntemi ekle";
 
@@ -76,9 +78,13 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment methods" = "Ödeme yöntemlerini yönetin";
+
 "Manage your payment methods" = "Ödeme yöntemlerinizi yönetin";
 
 "Name on card" = "Karttaki isim";
+
+"New payment method" = "Yeni ödeme yöntemi";
 
 "Open your UPI app to approve your payment within %@" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
 
@@ -118,6 +124,8 @@
 
 "Remove card?" = "Kart kaldırılsın mı?";
 
+"Remove payment method" = "Ödeme yöntemini kaldır";
+
 "Save" = "Kaydet";
 
 "Save a new payment method" = "Yeni bir ödeme yöntemi kaydedin";
@@ -134,6 +142,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Link ile tek tıklamayla güvenli ödeme yapmak için bilgilerinizi kaydedin";
 
+"Saved" = "Kaydedildi";
+
+"Select card" = "Kart seçin";
+
+"Select payment method" = "Ödeme yöntemini seçin";
+
 "Select your payment method" = "Ödeme yönteminizi seçin";
 
 "Set up" = "Ayarla";
@@ -148,7 +162,11 @@
 
 "The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
 
-"Update card" = "Kartı güncelle";
+"Update" = "Güncelle";
+
+"Update card brand" = "Kart markasını güncelle";
+
+"View more" = "Daha fazla göster";
 
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
 

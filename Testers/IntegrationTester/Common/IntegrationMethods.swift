@@ -27,6 +27,8 @@ public enum IntegrationMethod: String, CaseIterable {
     case oxxo = "OXXO"
     case afterpay = "Afterpay Clearpay"
     case weChatPay = "WeChat Pay"
+    case klarna = "Klarna"
+    case paypal = "PayPal"
 }
 
 // MARK: IntegrationMethod PaymentMethod/Sources Params
@@ -98,6 +100,12 @@ extension IntegrationMethod {
       case .applePay:
           assertionFailure("Not supported by PaymentMethods")
           return STPPaymentMethodParams()
+      case .klarna:
+          let klarna = STPPaymentMethodKlarnaParams()
+          return STPPaymentMethodParams(klarna: klarna, billingDetails: Self.defaultBillingDetails, metadata: nil)
+      case .paypal:
+          let paypal = STPPaymentMethodPayPalParams()
+          return STPPaymentMethodParams(payPal: paypal, billingDetails: nil, metadata: nil)
       }
   }
 

@@ -154,7 +154,7 @@ public class PaymentSheet {
             case .success(let loadResult):
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let paymentSheetVC: PaymentSheetViewControllerProtocol = {
-                    switch self.configuration.appearance.layout {
+                    switch self.configuration.paymentMethodLayout {
                     case .horizontal:
                         return PaymentSheetViewController(
                             configuration: self.configuration,
@@ -218,7 +218,7 @@ public class PaymentSheet {
     )
 
     /// The STPPaymentHandler instance
-    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
+    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
@@ -342,16 +342,16 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
             self.bottomSheetViewController.startSpinner()
             let psvc = self.findPaymentSheetViewController()
             psvc?.clearTextFields()
-            psvc?.pay(with: paymentOption, animateBuyButton: true)
+            psvc?.pay(with: paymentOption)
         }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
     }
 
-    private func findPaymentSheetViewController() -> PaymentSheetViewController? {
+    private func findPaymentSheetViewController() -> PaymentSheetViewControllerProtocol? {
         for vc in bottomSheetViewController.contentStack {
-            if let paymentSheetVC = vc as? PaymentSheetViewController {
+            if let paymentSheetVC = vc as? PaymentSheetViewControllerProtocol {
                 return paymentSheetVC
             }
         }
@@ -384,6 +384,9 @@ private extension PaymentSheet {
 
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
+
+    func pay(with paymentOption: PaymentOption)
+    func clearTextFields()
 }
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {

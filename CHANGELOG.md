@@ -1,3 +1,18 @@
+## 23.27.3 2024-06-14
+### PaymentSheet
+* [Fixed] Fixed an issue where changing the country of a phone number would not update the UI when the phone number's validity changed.
+* [Changed] The "save this card" checkbox is now unchecked by default. To change this behavior, set your PaymentSheet.Configuration.savePaymentMethodOptInBehavior to `.requiresOptOut`.
+* [Fixed] Fixed an issue where PaymentSheet would not present in the iOS 18 beta when using SwiftUI.
+* [Fixed] Fixed an issue in PaymentSheet.FlowController that could lead to the CVC recollection form being shown on presentPaymentOptions()
+
+### CustomerSheet
+* [Fixed] Fixed an issue where CustomerSheet would not present in the iOS 18 beta when using SwiftUI.
+
+### Payments
+* [Added] Updated support for MobilePay bindings.
+* [Changed] Some Payment Methods (including Klarna and PayPal) may now authenticate using ASWebAuthenticationSession, enabling these payment methods to share session storage across apps.
+* [Fixed] Fixed printing spurious STPAssertionFailure warnings.
+
 ## 23.27.2 2024-05-06
 ### CardScan
 * [Changed] ScannedCard to allow access for expiryMonth, expiryYear and name.
@@ -18,6 +33,9 @@
 
 ### Apple Pay
 * [Changed] Apple Pay additionalEnabledApplePayNetworks are now in front of the supported network list.
+
+### PaymentsUI
+* [Added] Added support for `onBehalfOf` to STPPaymentCardTextField and STPCardFormView. This parameter may be required when setting a connected account as the merchant of record for a payment. For more information, see the [Connect docs](https://docs.stripe.com/connect/charges#on_behalf_of).
 
 ## 23.27.0 2024-04-08
 ### Payments

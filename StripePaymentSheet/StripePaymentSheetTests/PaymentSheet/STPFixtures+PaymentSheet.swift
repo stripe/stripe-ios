@@ -32,7 +32,8 @@ extension STPElementsSession {
 
     static func _testValue(
         paymentMethodTypes: [String],
-        externalPaymentMethodTypes: [String] = []
+        externalPaymentMethodTypes: [String] = [],
+        customerSessionData: [String: Any]? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -44,6 +45,19 @@ extension STPElementsSession {
                 "dark_image_url": "https://test.com",
             ]
         }
+        if let customerSessionData {
+            json["customer"] = ["payment_methods": [],
+                                "customer_session": [
+                                    "id": "id123",
+                                    "livemode": false,
+                                    "api_key": "ek_12345",
+                                    "api_key_expiry": 12345,
+                                    "customer": "cus_123",
+                                    "components": customerSessionData,
+                                    ],
+                                ]
+        }
+
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
@@ -53,11 +67,12 @@ extension Intent {
     static func _testPaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
+        customerSessionData: [String: Any]? = nil,
         currency: String = "usd"
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes)
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData)
         return .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
     }
 
@@ -66,12 +81,19 @@ extension Intent {
     }
 
     static func _testSetupIntent(
-        paymentMethodTypes: [STPPaymentMethodType] = [.card]
+        paymentMethodTypes: [STPPaymentMethodType] = [.card],
+        customerSessionData: [String: Any]? = nil
     ) -> Intent {
         let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: paymentMethodTypes)
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes)
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData)
         return .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
+    }
+
+    static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType]) -> Intent {
+        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: nil)
+        return .deferredIntent(elementsSession: elementsSession, intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in }))
     }
 }
 
@@ -94,6 +116,18 @@ extension STPPaymentMethod {
             "card": [
                 "last4": "0005",
                 "brand": "amex",
+            ],
+        ])!
+    }
+
+    static func _testCardCoBranded() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+                "networks": ["available": ["visa", "amex"]],
             ],
         ])!
     }

@@ -73,13 +73,17 @@ extension String.Localized {
         STPLocalizedString("Back", "Text for back button")
     }
 
-    static var update_card: String {
+    static var update_card_brand: String {
         STPLocalizedString(
-            "Update card",
-            """
-            Title for a button that when tapped, presents a screen for updating a card. Also
-            the heading the screen itself.
-            """
+            "Update card brand",
+            "Title for a screen for updating a card brand."
+        )
+    }
+
+    static var update: String {
+        STPLocalizedString(
+            "Update",
+            "Title for a button that when tapped, updates a card brand."
         )
     }
 
@@ -221,6 +225,9 @@ extension String.Localized {
         STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
     }
 
+    static var buy_now_or_pay_later_with_klarna: String {
+        STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
+    }
     static var klarna_mandate_text: String {
         STPLocalizedString(
             "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@.",
@@ -251,7 +258,78 @@ extension String.Localized {
 
     static var select_your_payment_method: String {
         STPLocalizedString(
-                       "Select your payment method",
-                       "Title shown above a carousel containing the customer's payment methods")
+            "Select your payment method",
+            "Title shown above a carousel containing the customer's payment methods"
+        )
+    }
+
+    static var saved: String {
+        STPLocalizedString(
+            "Saved",
+            "Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account."
+        )
+    }
+
+    static var new_payment_method: String {
+        STPLocalizedString(
+            "New payment method",
+            "Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc."
+        )
+    }
+
+    static var manage_payment_methods: String {
+        STPLocalizedString(
+            "Manage payment methods",
+            "Title shown above a view containing the customer's payment methods that they can delete or update"
+        )
+    }
+
+    static var remove_payment_method: String {
+        STPLocalizedString(
+            "Remove payment method",
+            "Title shown above a view containing a customer's payment method that they can delete"
+        )
+    }
+
+    static var view_more: String {
+        STPLocalizedString(
+            "View more",
+            "Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods."
+        )
+    }
+
+    static var add_card: String {
+        STPLocalizedString(
+            "Add card",
+            "Title shown above a view allowing the customer to save their first card."
+        )
+    }
+
+    static var add_new_card: String {
+        STPLocalizedString(
+            "Add new card",
+            "Title shown above a view allowing the customer to save a card."
+        )
+    }
+
+    static var add_us_bank_account: String {
+        STPLocalizedString(
+            "Add US bank account",
+            "Title shown above a view allowing the customer to add a US bank account."
+        )
+    }
+
+    static var after_pay_subtitle_text: String {
+        STPLocalizedString(
+            "%1$d interest-free payments of %2$@",
+            "Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99"
+        )
+    }
+
+    static var link_subtitle_text: String {
+        STPLocalizedString(
+            "Simple, secure one-click payments",
+            "Subtitle shown on a button allowing a user to select to pay with Link."
+        )
     }
 }

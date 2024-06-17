@@ -16,6 +16,8 @@ import XCTest
 @testable@_spi(STP) import StripeUICore
 
 class MockElement: Element {
+    var collectsUserInput: Bool = false
+
     var paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams?
 
     init(
@@ -135,8 +137,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "grabpay",
             async: false,
             fields: [.name(nameSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -165,8 +166,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "grabpay",
             async: false,
             fields: [.name(nameSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -257,8 +257,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "mock_pm",
             async: false,
             fields: [.email(emailSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -317,8 +316,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "mock_pm",
             async: false,
             fields: [.email(emailSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -350,8 +348,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "sepa_debit",
             async: false,
             fields: [.selector(selectorSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.SEPADebit))
@@ -398,8 +395,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "klarna",
             async: false,
             fields: [.klarna_country(.init(apiPath: nil))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.klarna))
@@ -427,8 +423,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "klarna",
             async: false,
             fields: [.klarna_country(.init(apiPath: ["v1": "billing_details[address][country]"]))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.klarna))
@@ -527,8 +522,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "au_becs_debit",
             async: false,
             fields: [.au_becs_bsb_number(.init(apiPath: nil))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
@@ -571,8 +565,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "au_becs_debit",
             async: false,
             fields: [.au_becs_bsb_number(.init(apiPath: ["v1": "au_becs_debit[bsb_number]"]))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
@@ -605,8 +598,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "au_becs_debit",
             async: false,
             fields: [.au_becs_account_number(.init(apiPath: nil))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
@@ -653,8 +645,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             fields: [
                 .au_becs_account_number(.init(apiPath: ["v1": "au_becs_debit[account_number]"])),
             ],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
@@ -752,8 +743,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "sofort",
             async: false,
             fields: [.country(.init(apiPath: nil, allowedCountryCodes: ["AT", "BE"]))],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.sofort))
@@ -781,8 +771,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     .init(apiPath: ["v1": "sofort[country]"], allowedCountryCodes: ["AT", "BE"])
                 ),
             ],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.sofort))
@@ -881,8 +870,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 type: "sepa_debit",
                 async: false,
                 fields: [.iban(.init(apiPath: nil))],
-                selectorIcon: nil,
-                nextActionSpec: nil
+                selectorIcon: nil
             )
             return factory.makeFormElementFromSpec(spec: spec)
         }
@@ -920,8 +908,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 type: "sepa_debit",
                 async: false,
                 fields: [.iban(.init(apiPath: ["v1": "SEPADebit[iban]"]))],
-                selectorIcon: nil,
-                nextActionSpec: nil
+                selectorIcon: nil
             )
             return factory.makeFormElementFromSpec(spec: spec)
         }
@@ -1010,8 +997,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 .email(.init(apiPath: nil)),
                 .unknown("some_unknownField2"),
             ],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.grabPay))
@@ -1092,8 +1078,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "grabpay",
             async: false,
             fields: [.billing_address(billingAddressSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
@@ -1122,8 +1107,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "grabpay",
             async: false,
             fields: [.billing_address(billingAddressSpec)],
-            selectorIcon: nil,
-            nextActionSpec: nil
+            selectorIcon: nil
         )
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
@@ -1170,6 +1154,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             var form = factory.make()
             if let wrapper = form as? PaymentMethodElementWrapper<FormElement> {
                 form = wrapper.element
+            } else if
+                let wrapper = form as? ContainerElement,
+                let _form = wrapper.elements.first as? FormElement
+            {
+                form = _form
             }
 
             guard let form = form as? FormElement else {
@@ -1284,6 +1273,127 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
     }
 
+    func testShowsCheckbox_PI_save_enabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                        customerSessionData: [
+                                            "payment_sheet": [
+                                                "enabled": true,
+                                                "features": ["payment_method_save": "enabled",
+                                                             "payment_method_remove": "enabled",
+                                                            ],
+                                            ],
+                                            "customer_sheet": [
+                                                "enabled": false
+                                            ],
+                                        ]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testShowsCheckbox_PISFU_save_enabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                        setupFutureUsage: .offSession,
+                                        customerSessionData: [
+                                            "payment_sheet": [
+                                                "enabled": true,
+                                                "features": ["payment_method_save": "enabled",
+                                                             "payment_method_remove": "enabled",
+                                                            ],
+                                            ],
+                                            "customer_sheet": [
+                                                "enabled": false
+                                            ],
+                                        ]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testShowsCheckbox_PISFU_save_disabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                        setupFutureUsage: .offSession,
+                                        customerSessionData: [
+                                            "payment_sheet": [
+                                                "enabled": true,
+                                                "features": ["payment_method_save": "disabled",
+                                                             "payment_method_remove": "enabled",
+                                                            ],
+                                            ],
+                                            "customer_sheet": [
+                                                "enabled": false
+                                            ],
+                                        ]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testShowsCheckbox_SI_save_disabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testSetupIntent(paymentMethodTypes: [.card],
+                                      customerSessionData: [
+                                        "payment_sheet": [
+                                            "enabled": true,
+                                            "features": ["payment_method_save": "disabled",
+                                                         "payment_method_remove": "enabled",
+                                                        ],
+                                        ],
+                                        "customer_sheet": [
+                                            "enabled": false
+                                        ],
+                                      ]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertTrue(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testShowsCheckbox_SI_save_enabled() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let factory = PaymentSheetFormFactory(
+            intent: ._testSetupIntent(paymentMethodTypes: [.card],
+                                      customerSessionData: [
+                                        "payment_sheet": [
+                                            "enabled": true,
+                                            "features": ["payment_method_save": "enabled",
+                                                         "payment_method_remove": "enabled",
+                                                        ],
+                                        ],
+                                        "customer_sheet": [
+                                            "enabled": false
+                                        ],
+                                      ]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertTrue(factory.isSettingUp)
+        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
+    }
     func testBillingAddressSection() {
         let defaultAddress = PaymentSheet.Address(
             city: "San Francisco",
@@ -1525,8 +1635,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.card?.expMonth, cardValues.expMonth)
         XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
         XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
-        // ...and the checkbox state should be enabled (the default)
-        XCTAssertEqual(params.saveForFutureUseCheckboxState, .selected)
+        // ...and the checkbox state should be disabled (the default)
+        XCTAssertEqual(params.saveForFutureUseCheckboxState, .deselected)
     }
 
     func testAppliesPreviousCustomerInput_checkbox() {
@@ -1563,9 +1673,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         // Making another card form for payment using the previous card form's input...
         let cardForm_payment = makeCardForm(isSettingUp: false, previousCustomerInput: cardForm_setup_params)
-        // ...should have the checkbox selected (the default)
+        // ...should have the checkbox deselected (the default)
         let cardForm_payment_params = cardForm_payment.updateParams(params: .init(type: .stripe(.card)))
-        XCTAssertEqual(cardForm_payment_params?.saveForFutureUseCheckboxState, .selected)
+        XCTAssertEqual(cardForm_payment_params?.saveForFutureUseCheckboxState, .deselected)
 
         // Deselecting the checkbox...
         let saveCheckbox = cardForm_payment.getAllUnwrappedSubElements().compactMap({ $0 as? CheckboxElement }).first(where: { $0.label.hasPrefix("Save") })
