@@ -144,19 +144,25 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
                                                                                                merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        let elementSession = try await client.retrieveElementsSession(withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic), confirmHandler: { _, _, _ in
-            // no-op
-        }), configuration: configuration)
+        let elementSession = try await client.retrieveElementsSession(
+            withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
+                                    confirmHandler: { _, _, _ in
+                                        // no-op
+                                    }),
+            clientDefaultPaymentMethod: paymentMethod2.stripeId,
+            configuration: configuration)
 
         // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
         XCTAssertEqual(elementSession.customer?.paymentMethods.count, 1)
+        XCTAssertEqual(elementSession.customer?.paymentMethods.first?.stripeId, paymentMethod2.stripeId)
+        XCTAssertEqual(elementSession.customer?.defaultPaymentMethod, paymentMethod2.stripeId)
 
         // Official endpoint should have two payment methods
         let fetchedPaymentMethods = try await fetchPaymentMethods(client: client, customerAndEphemeralKey: customerAndEphemeralKey)
         XCTAssertEqual(fetchedPaymentMethods.count, 2)
 
         // Clean up, detach both payment methods
-        try await client.detachPaymentMethodRemoveDuplicates(paymentMethod1.stripeId,
+        try await client.detachPaymentMethodRemoveDuplicates(paymentMethod2.stripeId,
                                              customerId: customerAndEphemeralKey.customer,
                                              fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret)
 

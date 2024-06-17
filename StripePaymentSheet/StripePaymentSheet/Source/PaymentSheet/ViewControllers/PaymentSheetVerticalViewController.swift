@@ -31,7 +31,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             case .new(paymentMethodType: let paymentMethodType):
                 return .new(confirmParams: IntentConfirmParams(type: paymentMethodType))
             case .saved(paymentMethod: let paymentMethod):
-                // TODO: Handle confirmParams - look at SavedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams & CVC
                 return .saved(paymentMethod: paymentMethod, confirmParams: nil)
             }
         } else {
@@ -105,16 +104,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     lazy var paymentContainerView: DynamicHeightContainerView = {
         DynamicHeightContainerView()
     }()
-
-    var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? {
-        RowButton.RightAccessoryButton.getAccessoryButtonType(
-            savedPaymentMethodsCount: savedPaymentMethods.count,
-            isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
-            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
-            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-            allowsPaymentMethodRemoval: loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
-        )
-    }
 
     lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
@@ -290,6 +279,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 return savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
             }
         }()
+        let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
+            savedPaymentMethodsCount: savedPaymentMethods.count,
+            isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
+            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
+            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+            allowsPaymentMethodRemoval: loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        )
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
             savedPaymentMethod: savedPaymentMethods.first,
@@ -517,7 +513,6 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
     }
 
     var requiresFullScreen: Bool {
-        // TODO
         return false
     }
 
@@ -544,9 +539,9 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
     }
 }
 
-// MARK: - VerticalPaymentMethodListViewDelegate
+// MARK: - VerticalPaymentMethodListViewControllerDelegate
 
-extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDelegate {
+extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewControllerDelegate {
 
     func shouldSelectPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool {
         switch selection {
@@ -621,7 +616,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewDeleg
 
 extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        // TODO:
         if isFlowController {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
         } else {

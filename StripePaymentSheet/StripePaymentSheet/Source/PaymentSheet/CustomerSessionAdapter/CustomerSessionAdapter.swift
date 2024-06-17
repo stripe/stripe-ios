@@ -75,12 +75,25 @@ class CustomerSessionAdapter {
         }
     }
 
-    private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret) async throws -> STPElementsSession{
+    private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret) async throws -> STPElementsSession {
+        let clientDefaultPaymentMethod = fetchClientDefaultPaymentMethod(for: customerSessionClientSecret.customerId)
         return try await self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: intentConfiguration.paymentMethodTypes,
+                                                                                              clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                               customerSessionClientSecret: customerSessionClientSecret)
     }
 }
 extension CustomerSessionAdapter {
+    func fetchClientDefaultPaymentMethod(for customerId: String) -> String? {
+        guard let defaultPaymentMethod = fetchSelectedPaymentOption(for: customerId),
+           case .stripeId(let stripePaymentMethodId) = defaultPaymentMethod else {
+            return nil
+        }
+        return stripePaymentMethodId
+    }
+
+    func fetchSelectedPaymentOption(for customerId: String) -> CustomerPaymentOption? {
+        return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
+    }
 
     func detachPaymentMethod(paymentMethodId: String) async throws {
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()

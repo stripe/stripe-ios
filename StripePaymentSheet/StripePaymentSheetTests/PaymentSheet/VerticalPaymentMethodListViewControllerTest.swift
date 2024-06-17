@@ -1,5 +1,5 @@
 //
-//  VerticalPaymentMethodListViewTest.swift
+//  VerticalPaymentMethodListViewControllerTest.swift
 //  StripePaymentSheetTests
 //
 //  Created by Yuki Tokuhiro on 5/17/24.
@@ -10,14 +10,27 @@ import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import XCTest
 
-final class VerticalPaymentMethodListViewTest: XCTestCase {
+final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
     var shouldSelectPaymentMethodReturnValue: Bool = false
 
     func testCurrentSelection() {
         let savedPaymentMethod = STPPaymentMethod._testCard()
         // Given a list view with a saved card...
-        let sut = VerticalPaymentMethodListView(initialSelection: .saved(paymentMethod: savedPaymentMethod), savedPaymentMethod: savedPaymentMethod, paymentMethodTypes: [.stripe(.card)], shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099)
-        sut.delegate = self
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: .saved(
+                paymentMethod: savedPaymentMethod
+            ),
+            savedPaymentMethod: savedPaymentMethod,
+            paymentMethodTypes: [.stripe(.card)],
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            delegate: self
+        )
         // ...the current selection should be the saved PM
         let savedPMButton = sut.getRowButton(accessibilityIdentifier: "••••4242")
         XCTAssertEqual(sut.currentSelection, .saved(paymentMethod: savedPaymentMethod))
@@ -45,7 +58,7 @@ final class VerticalPaymentMethodListViewTest: XCTestCase {
     }
 }
 
-extension VerticalPaymentMethodListViewTest: VerticalPaymentMethodListViewDelegate {
+extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodListViewControllerDelegate {
     func didTapSavedPaymentMethodAccessoryButton() {
         // no-op
     }
@@ -59,7 +72,7 @@ extension VerticalPaymentMethodListViewTest: VerticalPaymentMethodListViewDelega
     }
 }
 
-extension VerticalPaymentMethodListView {
+extension VerticalPaymentMethodListViewController {
     func getRowButton(accessibilityIdentifier: String) -> RowButton {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
     }
