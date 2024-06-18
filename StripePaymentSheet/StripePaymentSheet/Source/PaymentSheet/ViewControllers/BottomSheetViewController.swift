@@ -78,18 +78,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             guard self.contentViewController !== oldContentViewController else {
                 return
             }
-
-            // This is a hack to get the animation right.
-            // Instead of allowing the height change to implicitly occur within
-            // the animation block's layoutIfNeeded, we force a layout pass,
-            // calculate the old and new heights, and then only animate the height
-            // constraint change.
-            // Without this, the inner ScrollView tends to animate from the center
-            // instead of remaining pinned to the top.
-
-            // First, get the old height of the content + navigation bar + safe area.
-            manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
-
             // Remove the old VC
             oldContentViewController.view.removeFromSuperview()
             oldContentViewController.removeFromParent()
@@ -104,32 +92,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 presentationController.forceFullHeight =
                     contentViewController.requiresFullScreen
             }
-
-            scrollView.contentInsetAdjustmentBehavior = .never
             self.contentContainerView.layoutIfNeeded()
-            self.scrollView.layoutIfNeeded()
-            self.scrollView.updateConstraintsIfNeeded()
+
+            animateHeightChange(forceAnimation: true)
+            // Add its navigation bar if necessary
             oldContentViewController.navigationBar.removeFromSuperview()
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
-            navigationBarContainerView.layoutIfNeeded()
-            // Layout is mostly completed at this point. The new height is the navigation bar + content + the unsafe area at the bottom.
-            let newHeight = self.contentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
-
-            // Force the old height, then force a layout pass
-            if self.modalPresentationStyle == .custom { // Only if we're using the custom presentation style (e.g. pinned to the bottom)
-                manualHeightConstraint.isActive = true
-            }
-            self.rootParent.presentationController?.containerView?.layoutIfNeeded()
-            self.contentViewController.view.alpha = 0
-            // Now animate to the correct height.
-            animateHeightChange(forceAnimation: true, {
-                self.contentViewController.view.alpha = 1
-                self.manualHeightConstraint.constant = newHeight
-            }, completion: {_ in
-                // We shouldn't need this constraint anymore.
-                self.manualHeightConstraint.isActive = false
-                self.contentViewController.didFinishAnimatingHeight()
-            })
         }
     }
 

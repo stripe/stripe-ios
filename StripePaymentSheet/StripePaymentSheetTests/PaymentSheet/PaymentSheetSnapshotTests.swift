@@ -667,6 +667,32 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheet_LPM_cashapp_only_applePayDisabled() {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"cashapp\"",
+                        "<currency>": "\"usd\"",
+                    ]
+                )
+            }
+        )
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(
+            override_payment_methods_types: ["cashapp"],
+            automaticPaymentMethods: false,
+            useLink: false,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheet_LPM_iDeal_only() {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
