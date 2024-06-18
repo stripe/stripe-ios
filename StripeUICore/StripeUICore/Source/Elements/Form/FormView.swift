@@ -41,6 +41,13 @@ import UIKit
         }
         super.init(frame: .zero)
         addAndPinSubview(self.stackView)
+        
+        // Edge case, hard code zero height for an empty form
+        if viewModel.elements.isEmpty {
+            NSLayoutConstraint.activate([
+                self.heightAnchor.constraint(equalToConstant: 0)
+            ])
+        }
     }
 
     required init?(coder: NSCoder) {
