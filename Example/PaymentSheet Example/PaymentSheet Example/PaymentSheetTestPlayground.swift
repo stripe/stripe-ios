@@ -349,9 +349,9 @@ struct PaymentSheetButtons: View {
 extension PaymentSheetResult {
     func shouldAllowPresentingPaymentSheet() -> Bool {
         switch self {
-        case .canceled:
+        case .canceled, .failed:
             return true
-        case .completed, .failed:
+        case .completed:
             return false
         }
     }
