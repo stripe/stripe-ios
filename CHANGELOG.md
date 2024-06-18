@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.27.4 2024-06-18
 ### PaymentSheet
 * [Fixed] Fixed an issue where when displaying an LPM with no input fields, the sheet would take up the entire height of the screen.
 
