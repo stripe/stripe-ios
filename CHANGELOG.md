@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### PaymentSheet
+* [Fixed] Fixed an issue where when displaying an LPM with no input fields, the sheet would take up the entire height of the screen.
+
 ## 23.27.3 2024-06-14
 ### PaymentSheet
 * [Fixed] Fixed an issue where changing the country of a phone number would not update the UI when the phone number's validity changed.
