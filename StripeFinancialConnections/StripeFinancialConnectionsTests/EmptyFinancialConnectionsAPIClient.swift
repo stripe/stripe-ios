@@ -120,7 +120,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func saveAccountsToNetworkAndLink(
         shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
