@@ -13,9 +13,11 @@
 /* Accessibility label when back identity card photo has successfully uploaded */
 "Back identity card photo successfully uploaded" = "Back identity card photo successfully uploaded";
 
-/* Description of back of identity card image
-   Title of ID document scanning screen when scanning the back of an identity card */
+/* Description of back of identity card image */
 "Back of identity card" = "Back of identity card";
+
+/* Title of ID document scanning screen when scanning the back of an identity card */
+"Back of identity document" = "Back of identity document";
 
 /* Error title displayed to the user when camera permissions have been denied
    Title displayed when requesting camera permissions */
@@ -56,9 +58,11 @@
 /* Accessibility label when front identity card photo has successfully uploaded */
 "Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
 
-/* Description of front of identity card image
-   Title of ID document scanning screen when scanning the front of an identity card */
+/* Description of front of identity card image */
 "Front of identity card" = "Front of identity card";
+
+/* Title of ID document scanning screen when scanning the front of an identity card */
+"Front of identity document" = "Front of identity document";
 
 /* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Get ready to scan your photo ID";
