@@ -708,6 +708,242 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewCloseButton.tap()
     }
 
+    func testCashAppPaymentMethod_setup() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.mode = .setup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let setupButton = app.buttons["Set up"]
+
+        // Select Cash App
+        guard let cashApp = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Cash App Pay")
+        else {
+            XCTFail()
+            return
+        }
+        cashApp.tap()
+
+        // Attempt set up
+        setupButton.tap()
+
+        // Close the webview, no need to see the successful set up
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
+    func testCashAppPaymentMethod_setupFutureUsage() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.mode = .paymentWithSetup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay $50.99"]
+
+        // Select Cash App
+        guard let cashApp = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Cash App Pay")
+        else {
+            XCTFail()
+            return
+        }
+        cashApp.tap()
+
+        // Attempt to pay
+        payButton.tap()
+
+        // Close the webview, no need to see the successful set up
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
+    func testAmazonPayPaymentMethod_setup() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.mode = .setup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let setupButton = app.buttons["Set up"]
+
+        // Select Amazon Pay
+        guard let amazonPay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Amazon Pay")
+        else {
+            XCTFail()
+            return
+        }
+        amazonPay.tap()
+
+        // Attempt set up
+        setupButton.tap()
+
+        // Close the webview, no need to see the successful set up
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
+    func testAmazonPayPaymentMethod_setupFutureUsage() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.mode = .paymentWithSetup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay $50.99"]
+
+        // Select Amazon Pay
+        guard let amazonPay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Amazon Pay")
+        else {
+            XCTFail()
+            return
+        }
+        amazonPay.tap()
+
+        // Attempt to pay
+        payButton.tap()
+
+        // Close the webview, no need to see the successful set up
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
+    func testPayPalPaymentMethod_setup() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.mode = .setup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let setupButton = app.buttons["Set up"]
+
+        // Select PayPal
+        guard let payPal = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayPal")
+        else {
+            XCTFail()
+            return
+        }
+        payPal.tap()
+
+        XCTAssertTrue(setupButton.isEnabled)
+    }
+
+    func testPayPalPaymentMethod_setupFutureUsage() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.mode = .paymentWithSetup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay €50.99"]
+
+        // Select PayPal
+        guard let payPal = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayPal")
+        else {
+            XCTFail()
+            return
+        }
+        payPal.tap()
+
+        XCTAssertTrue(payButton.isEnabled)
+    }
+
+    func testRevolutPayPaymentMethod_setup() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.merchantCountryCode = .GB
+        settings.currency = .gbp
+        settings.mode = .setup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let setupButton = app.buttons["Set up"]
+
+        // Select Revolut Pay
+        guard let revolut = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Revolut Pay")
+        else {
+            XCTFail()
+            return
+        }
+        revolut.tap()
+
+        // Attempt set up
+        setupButton.tap()
+
+        // Close the webview, no need to see the successful set up
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
+    func testRvolutPayPaymentMethod_setupFutureUsage() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.merchantCountryCode = .GB
+        settings.currency = .gbp
+        settings.mode = .paymentWithSetup
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay £50.99"]
+
+        // Select Revolut Pay
+        guard let revolut = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Revolut Pay")
+        else {
+            XCTFail()
+            return
+        }
+        revolut.tap()
+
+        // Attempt to pay
+        payButton.tap()
+
+        // Close the webview, no need to see the successful set up
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
     func testUSBankAccountPaymentMethod() throws {
         app.launchEnvironment = app.launchEnvironment.merging(["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "false"]) { (_, new) in new }
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()

@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### PaymentSheet
+* [Fixed] An issue that was preventing users from completing checkout with SetupIntents and PaymentIntents using `setup_future_usage` for the following payment method types: Amazon Pay, Cash App Pay, PayPal, and Revolut Pay.
+
 ## 23.27.4 2024-06-18
 ### PaymentSheet
 * [Fixed] Fixed an issue where when displaying an LPM with no input fields, the sheet would take up the entire height of the screen.
