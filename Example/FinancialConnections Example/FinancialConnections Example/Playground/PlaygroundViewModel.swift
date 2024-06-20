@@ -201,11 +201,13 @@ final class PlaygroundViewModel: ObservableObject {
         SetupPlayground(
             configurationDictionary: playgroundConfiguration.configurationDictionary
         ) { [weak self] setupPlaygroundResponse in
+            guard let self else { return }
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
+                    useCase: self.playgroundConfiguration.useCase,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
                     onEvent: { event in
-                        if self?.liveEvents.wrappedValue == true {
+                        if self.liveEvents.wrappedValue == true {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
                             BannerHelper.shared.showBanner(with: message, for: 3.0)
                         }
@@ -250,7 +252,7 @@ account_ids=\(session.accounts.data.map({ $0.id }))
                     message: "Try clearing 'Custom Keys' or delete & re-install the app."
                 )
             }
-            self?.isLoading = false
+            self.isLoading = false
         }
     }
 
@@ -264,7 +266,7 @@ private func SetupPlayground(
     completionHandler: @escaping ([String: String]?) -> Void
 ) {
     if
-        (configurationDictionary["test_mode"] as? Bool) == true,
+        (configurationDictionary["test_mode"] as? Bool) != true,
         (configurationDictionary["email"] as? String) == "test@test.com"
     {
         assertionFailure("test@test.com will not work with livemode, it will return rate limit exceeded")
@@ -320,6 +322,7 @@ private func SetupPlayground(
 }
 
 private func PresentFinancialConnectionsSheet(
+    useCase: PlaygroundConfiguration.UseCase,
     setupPlaygroundResponseJSON: [String: String],
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
@@ -366,11 +369,31 @@ private func PresentFinancialConnectionsSheet(
         returnURL: isUITest ? nil : "financial-connections-example://redirect"
     )
     financialConnectionsSheet.onEvent = onEvent
-    financialConnectionsSheet.present(
-        from: UIViewController.topMostViewController()!,
-        completion: { result in
-            completionHandler(result)
-            _ = financialConnectionsSheet  // retain the sheet
-        }
-    )
+    let topMostViewController = UIViewController.topMostViewController()!
+    if useCase == .token {
+        financialConnectionsSheet.presentForToken(
+            from: topMostViewController,
+            completion: { result in
+                completionHandler({
+                    switch result {
+                    case .completed(result: let tuple):
+                        return .completed(session: tuple.session)
+                    case .canceled:
+                        return .canceled
+                    case .failed(error: let error):
+                        return .failed(error: error)
+                    }
+                }())
+                _ = financialConnectionsSheet  // retain the sheet
+            }
+        )
+    } else {
+        financialConnectionsSheet.present(
+            from: topMostViewController,
+            completion: { result in
+                completionHandler(result)
+                _ = financialConnectionsSheet  // retain the sheet
+            }
+        )
+    }
 }

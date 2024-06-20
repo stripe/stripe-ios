@@ -73,14 +73,17 @@ struct PlaygroundView: View {
                         }
                     }
 
-                    Section(header: Text("Customer")) {
+                    Section(header: Text(viewModel.useCase.wrappedValue == .token ? "Account" : "Customer")) {
                         TextField("Email (ex. existing Link consumer)", text: viewModel.email)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .accessibility(identifier: "playground-email")
-                        TextField("Phone", text: viewModel.phone)
-                            .keyboardType(.phonePad)
-                            .accessibility(identifier: "playground-phone")
+
+                        if viewModel.useCase.wrappedValue != .token {
+                            TextField("Phone", text: viewModel.phone)
+                                .keyboardType(.phonePad)
+                                .accessibility(identifier: "playground-phone")
+                        }
                     }
 
                     Section(header: Text("PERMISSIONS")) {

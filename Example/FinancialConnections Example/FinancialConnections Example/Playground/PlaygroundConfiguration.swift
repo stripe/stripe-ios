@@ -202,6 +202,7 @@ final class PlaygroundConfiguration {
     enum UseCase: String, CaseIterable, Identifiable, Hashable {
         case data = "data"
         case paymentIntent = "payment_intent"
+        case token = "token"
 
         var id: String {
             return rawValue
