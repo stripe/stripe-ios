@@ -89,7 +89,7 @@ protocol FinancialConnectionsAPIClient {
 
     func saveAccountsToNetworkAndLink(
         shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
@@ -499,7 +499,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func saveAccountsToNetworkAndLink(
         shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
@@ -517,7 +517,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 emailAddress: emailAddress,
                 phoneNumber: phoneNumber,
                 country: country,
-                selectedAccountIds: selectedAccounts.map({ $0.id }),
+                selectedAccountIds: selectedAccounts?.map({ $0.id }),
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 clientSecret: clientSecret
             )
@@ -530,8 +530,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 )
             }
         }
-        let linkedAccountIds = selectedAccounts.compactMap({ $0.linkedAccountId })
         if
+            let linkedAccountIds = selectedAccounts?.compactMap({ $0.linkedAccountId }),
             shouldPollAccounts,
             !linkedAccountIds.isEmpty
         {
@@ -596,15 +596,15 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
-        selectedAccountIds: [String],
+        selectedAccountIds: [String]?,
         consumerSessionClientSecret: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         var body: [String: Any] = [
             "client_secret": clientSecret,
-            "selected_accounts": selectedAccountIds,
             "expand": ["active_auth_session"],
         ]
+        body["selected_accounts"] = selectedAccountIds // null for manual entry
         body["email_address"] = emailAddress?
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
