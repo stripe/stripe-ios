@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.27.5 2024-06-20
 ### PaymentSheet
 * [Fixed] An issue that was preventing users from completing checkout with SetupIntents and PaymentIntents using `setup_future_usage` for the following payment method types: Amazon Pay, Cash App Pay, PayPal, and Revolut Pay.
 
