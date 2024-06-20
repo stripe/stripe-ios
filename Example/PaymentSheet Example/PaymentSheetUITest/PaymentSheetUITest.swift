@@ -925,7 +925,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         )
 
         app.buttons["Present PaymentSheet"].tap()
-        let payButton = app.buttons["Pay $50.99"]
+        let payButton = app.buttons["Pay £50.99"]
 
         // Select Revolut Pay
         guard let revolut = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Revolut Pay")
