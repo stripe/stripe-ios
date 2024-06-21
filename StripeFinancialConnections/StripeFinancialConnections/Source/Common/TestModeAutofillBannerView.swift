@@ -38,7 +38,7 @@ class TestModeAutofillBannerView: UIView {
     
     private lazy var messageLabel: UILabel = {
         // Create icon as a text attachement.
-        let icon = Image.warning_triangle
+        let icon = Image.info
             .makeImage(template: true)
             .withTintColor(.attention300)
         let textAttachment = NSTextAttachment(image: icon)
