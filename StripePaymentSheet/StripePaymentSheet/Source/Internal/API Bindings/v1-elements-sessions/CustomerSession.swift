@@ -43,7 +43,9 @@ struct CustomerSession: Equatable, Hashable {
             }
             paymentSheetComponent = PaymentSheetComponent(enabled: true,
                                                           features: PaymentSheetComponentFeature(paymentMethodSave: paymentMethodSave == "enabled",
-                                                                                                 paymentMethodRemove: paymentMethodRemove == "enabled"))
+                                                                                                 paymentMethodRemove: paymentMethodRemove == "enabled",
+                                                                                                 // TODO: Parse value instead of hardcoding if API is approved
+                                                                                                 paymentMethodSaveAllowRedisplayValue: .always))
         } else {
             paymentSheetComponent = PaymentSheetComponent(enabled: false, features: nil)
         }
@@ -78,6 +80,7 @@ struct PaymentSheetComponent: Equatable, Hashable {
 struct PaymentSheetComponentFeature: Equatable, Hashable {
     let paymentMethodSave: Bool
     let paymentMethodRemove: Bool
+    let paymentMethodSaveAllowRedisplayValue: STPPaymentMethodAllowRedisplay?
 }
 
 struct CustomerSheetComponent: Equatable, Hashable {

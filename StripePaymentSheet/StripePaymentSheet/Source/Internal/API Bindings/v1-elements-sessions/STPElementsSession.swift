@@ -227,4 +227,13 @@ extension STPElementsSession {
             return .legacy
         }
     }
+    func allowRedisplayAllowRedisplayOverride() -> STPPaymentMethodAllowRedisplay? {
+        if let customerSession = customer?.customerSession,
+           customerSession.paymentSheetComponent.enabled,
+           let features = customerSession.paymentSheetComponent.features,
+           let overrideValue = features.paymentMethodSaveAllowRedisplayValue {
+            return overrideValue
+        }
+        return nil
+    }
 }
