@@ -15,7 +15,7 @@ protocol ManualEntryFormViewDelegate: AnyObject {
 }
 
 final class ManualEntryFormView: UIView {
-    
+
     enum TestModeValues {
         static let routingNumber = "110000000"
         static let accountNumber = "000123456789"
@@ -94,7 +94,7 @@ final class ManualEntryFormView: UIView {
                 textFieldStackView,
             ]
         )
-        
+
         if isTestMode {
             let testModeBanner = TestModeAutofillBannerView(
                 context: .account,
@@ -102,7 +102,7 @@ final class ManualEntryFormView: UIView {
             )
             contentVerticalStackView.insertArrangedSubview(testModeBanner, at: 0)
         }
-        
+
         contentVerticalStackView.axis = .vertical
         contentVerticalStackView.spacing = 16
         addAndPinSubview(contentVerticalStackView)
@@ -166,12 +166,12 @@ final class ManualEntryFormView: UIView {
             errorView = nil
         }
     }
-    
+
     private func applyTestModeValues() {
         routingNumberTextField.text = TestModeValues.routingNumber
         accountNumberTextField.text = TestModeValues.accountNumber
         accountNumberConfirmationTextField.text = TestModeValues.accountNumber
-        
+
         textFieldTextDidChange()
     }
 }
