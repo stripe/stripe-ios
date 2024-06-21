@@ -157,7 +157,8 @@ extension NativeFlowController {
                         merchantLogo: self.dataManager.merchantLogo
                     ),
                     shouldLeftAlignStripeLogo: viewControllers.first == viewController
-                        && viewController is ConsentViewController
+                        && viewController is ConsentViewController,
+                    isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
             self.navigationController.setViewControllers(viewControllers, animated: animated)
@@ -203,7 +204,8 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    shouldLeftAlignStripeLogo: false  // if we `push`, this is not the first VC
+                    shouldLeftAlignStripeLogo: false,  // if we `push`, this is not the first VC
+                    isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
             } else {
