@@ -109,4 +109,8 @@ struct FinancialConnectionsSessionManifest: Decodable {
     var isProductInstantDebits: Bool {
         return (product == "instant_debits")
     }
+    
+    var isTestMode: Bool {
+        !livemode
+    }
 }

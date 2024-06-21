@@ -15,6 +15,11 @@ protocol ManualEntryFormViewDelegate: AnyObject {
 }
 
 final class ManualEntryFormView: UIView {
+    
+    enum TestModeValues {
+        static let routingNumber = "110000000"
+        static let accountNumber = "000123456789"
+    }
 
     weak var delegate: ManualEntryFormViewDelegate?
     private lazy var textFieldStackView: UIStackView = {
@@ -82,15 +87,24 @@ final class ManualEntryFormView: UIView {
         return (routingNumberTextField.text, accountNumberTextField.text)
     }
 
-    init() {
+    init(isTestMode: Bool) {
         super.init(frame: .zero)
         let contentVerticalStackView = UIStackView(
             arrangedSubviews: [
                 textFieldStackView,
             ]
         )
+        
+        if isTestMode {
+            let testModeBanner = TestModeAutofillBannerView(
+                context: .account,
+                didTapAutofill: applyTestModeValues
+            )
+            contentVerticalStackView.insertArrangedSubview(testModeBanner, at: 0)
+        }
+        
         contentVerticalStackView.axis = .vertical
-        contentVerticalStackView.spacing = 2
+        contentVerticalStackView.spacing = 16
         addAndPinSubview(contentVerticalStackView)
     }
 
@@ -151,6 +165,14 @@ final class ManualEntryFormView: UIView {
             errorView?.removeFromSuperview()
             errorView = nil
         }
+    }
+    
+    private func applyTestModeValues() {
+        routingNumberTextField.text = TestModeValues.routingNumber
+        accountNumberTextField.text = TestModeValues.accountNumber
+        accountNumberConfirmationTextField.text = TestModeValues.accountNumber
+        
+        textFieldTextDidChange()
     }
 }
 
