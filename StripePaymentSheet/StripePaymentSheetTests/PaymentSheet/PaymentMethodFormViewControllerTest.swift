@@ -7,11 +7,11 @@
 
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(STP) @testable import StripeUICore
 import XCTest
 
 final class PaymentMethodFormViewControllerTest: XCTestCase {
-
+    var didUpdateDelegateMethodCalled: Bool = false
     override func setUp() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -52,11 +52,34 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...should update its address fields with the shipping address
         XCTAssertEqual(sut.form.getTextFieldElement("Address line 1")?.text, "Updated line1")
     }
+
+    func testHandlesViewDidAppear() {
+        // Given a PaymentMethodFormViewController...
+        let sut = PaymentMethodFormViewController(
+            // ..using cash app as an example b/c it contains a SimpleMandateTextView that we can inspect to test behavior below...
+            type: .stripe(.cashApp),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.cashApp], setupFutureUsage: .offSession),
+            previousCustomerInput: nil,
+            configuration: ._testValue_MostPermissive(),
+            isLinkEnabled: false,
+            headerView: nil,
+            delegate: self
+        )
+        // ...when viewDidAppear is called...
+        let mandate = sut.form.getMandateElement()!
+        XCTAssertFalse(mandate.mandateTextView.viewDidAppear)
+        XCTAssertFalse(didUpdateDelegateMethodCalled)
+        sut.viewDidAppear(true)
+        // ...sut should notify the form...
+        XCTAssertTrue(mandate.mandateTextView.viewDidAppear)
+        // ...and notify the delegate
+        XCTAssertTrue(didUpdateDelegateMethodCalled)
+    }
 }
 
 extension PaymentMethodFormViewControllerTest: PaymentMethodFormViewControllerDelegate {
     func didUpdate(_ viewController: StripePaymentSheet.PaymentMethodFormViewController) {
-
+        didUpdateDelegateMethodCalled = true
     }
 
     func updateErrorLabel(for error: (any Error)?) {
