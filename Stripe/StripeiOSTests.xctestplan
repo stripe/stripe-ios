@@ -16,6 +16,11 @@
         "value" : "$(SOURCE_ROOT)\/..\/Tests\/ReferenceImages"
       }
     ],
+    "locationScenario" : {
+      "identifier" : "San Francisco, CA, USA",
+      "referenceType" : "built-in"
+    },
+    "region" : "US",
     "targetForVariableExpansion" : {
       "containerPath" : "container:Stripe.xcodeproj",
       "identifier" : "ADF894AA8F6022D9BED17346",

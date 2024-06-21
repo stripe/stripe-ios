@@ -95,13 +95,13 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
-        var cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"]
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+        let amexButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"]
+        XCTAssertTrue(amexButton.waitForExistence(timeout: 10.0))
+        amexButton.forceTapElement()
 
-        cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+        let mastercardButton = applePay.buttons["Simulated Card - MasterCard, ‪•••• 1234‬"].firstMatch
+        XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
+        mastercardButton.forceTapElement()
 
         let payButton = applePay.buttons["Pay with Passcode"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
@@ -341,6 +341,7 @@ class IntegrationTesterUITests: XCTestCase {
         if integrationMethod == .paypal {
             // PayPal uses ASWebAuthenticationSession, tap continue:
             let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            XCTAssertTrue(springboard.waitForExistence(timeout: 10.0))
             springboard.buttons["Continue"].tap()
         }
 
