@@ -42,5 +42,6 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
         // trailing icon on the account row
         let icon: FinancialConnectionsImage?
         let selectionCtaIcon: FinancialConnectionsImage?
+        let drawerOnSelection: FinancialConnectionsGenericInfoScreen?
     }
 }

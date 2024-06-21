@@ -354,6 +354,17 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
         let selectedPartnerAccount = selectedAccountTuple.partnerAccount
 
+        if let drawerOnSelection = selectedAccountTuple.accountPickerAccount.drawerOnSelection {
+
+            // TODO: show the drawer
+            print(drawerOnSelection)
+
+            if !selectedAccountTuple.accountPickerAccount.allowSelection {
+                // if the account is not selectable, then we return early
+                return
+            }
+        }
+
         // unselecting
         if
             // unselecting in single account flow is not allowed
