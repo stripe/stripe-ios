@@ -142,6 +142,10 @@ import UIKit
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: countryCode == "US" ? .numberPad : .default, textContentType: .postalCode, autocapitalization: .allCharacters)
             }
+
+            var shouldScrollToFocus: Bool {
+                return true
+            }
         }
     }
 }

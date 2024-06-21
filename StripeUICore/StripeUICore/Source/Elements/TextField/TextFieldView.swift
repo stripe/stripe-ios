@@ -236,11 +236,31 @@ class TextFieldView: UIView {
 #endif
 }
 
+// MARK: - UIView
+extension UIView {
+    func attachedScrollView() -> UIScrollView? {
+        var parentView: UIView? = self.superview
+
+        while parentView != nil {
+            if let scrollView = parentView as? UIScrollView {
+                return scrollView
+            }
+            parentView = parentView?.superview
+        }
+        return nil
+    }
+}
 // MARK: - UITextFieldDelegate
 
 extension TextFieldView: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if viewModel.shouldScrollToFocus,
+           let scrollView = self.attachedScrollView() {
+            let viewOffsetInScrollView = scrollView.convert(self.frame, from: self.superview)
+            let yOffset = max(viewOffsetInScrollView.origin.y - 150, 0)
+            scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+        }
         return viewModel.isEditable
     }
 

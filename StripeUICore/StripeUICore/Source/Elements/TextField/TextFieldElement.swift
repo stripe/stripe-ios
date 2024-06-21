@@ -75,6 +75,7 @@ import UIKit
         let accessoryView: UIView?
         let shouldShowClearButton: Bool
         let isEditable: Bool
+        let shouldScrollToFocus: Bool
         let theme: ElementsUITheme
     }
 
@@ -96,6 +97,7 @@ import UIKit
             accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
             isEditable: configuration.isEditable,
+            shouldScrollToFocus: configuration.shouldScrollToFocus,
             theme: theme
         )
     }

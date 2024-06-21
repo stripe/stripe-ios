@@ -41,6 +41,11 @@ import UIKit
     var isEditable: Bool { get }
 
     /**
+     - Note: If true, will attempt to change the content offset of the containing scrollview to scroll leaving 150 pixels above
+     */
+    var shouldScrollToFocus: Bool { get }
+
+    /**
      Validate the text.
      
      - Parameter isOptional: Whether or not the text field's value is optional.
@@ -109,6 +114,10 @@ public extension TextFieldElementConfiguration {
 
     var isEditable: Bool {
         return true
+    }
+
+    var shouldScrollToFocus: Bool {
+        return false
     }
 
     func makeDisplayText(for text: String) -> NSAttributedString {
