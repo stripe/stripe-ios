@@ -160,4 +160,9 @@ extension ManualEntryViewController: ManualEntryFormViewDelegate {
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView) {
         adjustContinueButtonStateIfNeeded()
     }
+
+    func manualEntryFormViewShouldSubmit(_ view: ManualEntryFormView) {
+        adjustContinueButtonStateIfNeeded()
+        didSelectContinue()
+    }
 }

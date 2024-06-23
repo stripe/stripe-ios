@@ -12,6 +12,7 @@ import UIKit
 
 protocol ManualEntryFormViewDelegate: AnyObject {
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView)
+    func manualEntryFormViewShouldSubmit(_ view: ManualEntryFormView)
 }
 
 final class ManualEntryFormView: UIView {
@@ -89,19 +90,18 @@ final class ManualEntryFormView: UIView {
 
     init(isTestMode: Bool) {
         super.init(frame: .zero)
-        let contentVerticalStackView = UIStackView(
-            arrangedSubviews: [
-                textFieldStackView,
-            ]
-        )
+
+        let contentVerticalStackView = UIStackView()
 
         if isTestMode {
-            let testModeBanner = TestModeAutofillBannerView(
+            let testModeBannerView = TestModeAutofillBannerView(
                 context: .account,
                 didTapAutofill: applyTestModeValues
             )
-            contentVerticalStackView.insertArrangedSubview(testModeBanner, at: 0)
+            contentVerticalStackView.addArrangedSubview(testModeBannerView)
         }
+
+        contentVerticalStackView.addArrangedSubview(textFieldStackView)
 
         contentVerticalStackView.axis = .vertical
         contentVerticalStackView.spacing = 16
@@ -172,7 +172,7 @@ final class ManualEntryFormView: UIView {
         accountNumberTextField.text = TestModeValues.accountNumber
         accountNumberConfirmationTextField.text = TestModeValues.accountNumber
 
-        textFieldTextDidChange()
+        delegate?.manualEntryFormViewShouldSubmit(self)
     }
 }
 

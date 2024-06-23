@@ -45,32 +45,35 @@ class TestModeAutofillBannerView: UIView {
 
         textAttachment.bounds = CGRect(
             x: 0,
-            y: -2,
+            y: -3,
             width: icon.size.width,
             height: icon.size.height
         )
 
         let attributedString = NSMutableAttributedString()
         attributedString.append(NSAttributedString(attachment: textAttachment))
+        // Add a spacer between the icon and the label in the form of a space.
+        attributedString.append(NSAttributedString(string: " "))
         attributedString.append(NSAttributedString(string: STPLocalizedString(
-            " You're in test mode.",
-            "Message shown to a user who is in test mode, which will give them the option to autofill mock credentials. There is intentionally a leading space here to provide a bit of spacing between the text and the icon."
+            "You're in test mode.",
+            "Message shown to a user who is in test mode, which will give them the option to autofill mock credentials."
         )))
 
         let label = UILabel()
         label.attributedText = attributedString
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = FinancialConnectionsFont.body(.small).uiFont
         label.textColor = .textDefault
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
 
     private lazy var autofillDataButton: UIButton = {
         let button = UIButton()
-        let title = context.buttonLabel
-        button.setTitle(title, for: .normal)
+        button.setTitle(context.buttonLabel, for: .normal)
         button.setTitleColor(.textActionPrimary, for: .normal)
         button.titleLabel?.textAlignment = .right
-        button.titleLabel?.font = .preferredFont(forTextStyle: .body, weight: .semibold)
+        button.titleLabel?.font = FinancialConnectionsFont.label(.mediumEmphasized).uiFont
         button.addTarget(self, action: #selector(autofillTapped), for: .touchUpInside)
         return button
     }()
@@ -82,27 +85,32 @@ class TestModeAutofillBannerView: UIView {
         return stackView
     }()
 
-    // MARK: - Init
+    // MARK: - Init and setup
 
     init(context: Context, didTapAutofill: @escaping () -> Void) {
         self.context = context
         self.didTapAutofill = didTapAutofill
         super.init(frame: .zero)
+        setupLayout()
+    }
 
+    private func setupLayout() {
         backgroundColor = .attention50
         layer.cornerRadius = 12
         clipsToBounds = true
 
-        autofillDataButton.setContentCompressionResistancePriority(.required, for: .horizontal)
-
         stackView.addArrangedSubview(messageLabel)
         stackView.addArrangedSubview(autofillDataButton)
+
+        messageLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        autofillDataButton.setContentHuggingPriority(.required, for: .horizontal)
+        autofillDataButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 38),
+            heightAnchor.constraint(equalTo: stackView.heightAnchor, constant: 12),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             stackView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, constant: -24),
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
