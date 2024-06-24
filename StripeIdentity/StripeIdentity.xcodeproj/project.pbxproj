@@ -172,7 +172,6 @@
 		CFA141490408B4644A4F0375 /* IdentityMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738A5EB6B7F1C5621F190A72 /* IdentityMockData.swift */; };
 		D19E35C5D5263F212071AE75 /* IDDetectorConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14ED7B7A9CC6DE447C14B5CB /* IDDetectorConstants.swift */; };
 		D2309DFF2EDABB6C1A139513 /* VerificationPageDataIdNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A49996D90714452E6A533A /* VerificationPageDataIdNumber.swift */; };
-		D44AE4E92B9A66ED00446682 /* CaptureCore in Frameworks */ = {isa = PBXBuildFile; productRef = D44AE4E82B9A66ED00446682 /* CaptureCore */; };
 		D467B7222B9BF270001EFE99 /* VerificationPageStaticContentExperiment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D467B7212B9BF270001EFE99 /* VerificationPageStaticContentExperiment.swift */; };
 		D467B7252B9C3008001EFE99 /* IdentityAnalyticsClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D467B7242B9C3008001EFE99 /* IdentityAnalyticsClientTest.swift */; };
 		D467B7272B9CD929001EFE99 /* VerificationPage_200_no_exp.json in Resources */ = {isa = PBXBuildFile; fileRef = D467B7262B9CD929001EFE99 /* VerificationPage_200_no_exp.json */; };
@@ -635,7 +634,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D44AE4E92B9A66ED00446682 /* CaptureCore in Frameworks */,
 				695E12945F47ED3060B8AE19 /* StripeCameraCore.framework in Frameworks */,
 				10B606812179D64E67BFFFCF /* StripeCore.framework in Frameworks */,
 				A7AC2D0D9FDCF8AC5298708D /* StripeUICore.framework in Frameworks */,
@@ -1419,7 +1417,6 @@
 			);
 			name = StripeIdentity;
 			packageProductDependencies = (
-				D44AE4E82B9A66ED00446682 /* CaptureCore */,
 			);
 			productName = StripeIdentity;
 			productReference = D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */;
@@ -1986,11 +1983,6 @@
 		960247DC321CBDB422FE713D /* iOSSnapshotTestCase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = iOSSnapshotTestCase;
-		};
-		D44AE4E82B9A66ED00446682 /* CaptureCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D44AE4E72B9A66ED00446682 /* XCRemoteSwiftPackageReference "capture-core-sp" */;
-			productName = CaptureCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
