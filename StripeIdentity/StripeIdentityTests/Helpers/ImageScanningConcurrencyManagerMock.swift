@@ -6,7 +6,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import CaptureCore
 import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore

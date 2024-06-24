@@ -22,5 +22,4 @@ Pod::Spec.new do |s|
   s.dependency                       'StripeUICore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"
-  s.dependency                       'MBCaptureCore', "1.2.3"
 end
