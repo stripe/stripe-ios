@@ -122,7 +122,33 @@ struct PlaygroundView: View {
                             }
                         }
                     }
+
+                    Section(header: Text("Session output")) {
+                        if let output = viewModel.outputTextfieldText {
+                            TextEditor(text: .constant(output))
+                                .accessibility(identifier: "playground-session-output-textfield")
+                        }
+
+                        Button(action: viewModel.copySessionId) {
+                            Text("Copy Session ID")
+                        }
+                        .disabled(viewModel.outputSessionId == nil)
+                        .accessibility(identifier: "playground-session-output-copy-session-id")
+
+                        Button(action: viewModel.copyAccountNames) {
+                            Text("Copy Account Names")
+                        }
+                        .disabled(viewModel.outputAccountName == nil)
+                        .accessibility(identifier: "playground-session-output-copy-account-names")
+
+                        Button(action: viewModel.copyAccountIds) {
+                            Text("Copy Account IDs")
+                        }
+                        .disabled(viewModel.outputAccountIds == nil)
+                        .accessibility(identifier: "playground-session-output-copy-account-ids")
+                    }
                 }
+
                 VStack {
                     Button(action: viewModel.didSelectShow) {
                         VStack {
