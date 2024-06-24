@@ -827,37 +827,6 @@ extension DocumentCaptureViewControllerTest {
         )
     }
 
-    fileprivate func makeDocumentScannerOutputModernWithDetectorOutput(
-        _ idDetectorOutput: IDDetectorOutput
-    ) -> DocumentScannerOutput {
-        return .modern(
-            idDetectorOutput,
-            .init(
-                hasBarcode: true,
-                isTimedOut: false,
-                symbology: .pdf417,
-                timeTryingToFindBarcode: 1
-            ),
-            .init(
-                hasMotionBlur: false,
-                iou: nil,
-                frameCount: 0,
-                duration: 0
-            ),
-            .init(
-                .init(
-                    exposureDuration: CMTime(),
-                    cameraDeviceType: .builtInDualCamera,
-                    isVirtualDevice: nil,
-                    lensPosition: 0,
-                    exposureISO: 0,
-                    isAdjustingFocus: false
-                )
-            ),
-            .init(isBlurry: false, variance: 0.1)
-        )
-    }
-
     fileprivate func makeDocumentScannerOutputLegacy(
         with classification: IDDetectorOutput.Classification,
         isBlurry: Bool = true,

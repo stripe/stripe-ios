@@ -15,14 +15,10 @@ import Foundation
 enum DocumentScannerOutput: Equatable {
     // Result with legacy detectors
     case legacy(IDDetectorOutput, BarcodeDetectorOutput?, MotionBlurDetector.Output, CameraSession.DeviceProperties?, LaplacianBlurDetector.Output)
-    // Result with IDDetector
-    case modern(IDDetectorOutput, BarcodeDetectorOutput?, MotionBlurDetector.Output, CameraSession.DeviceProperties?, LaplacianBlurDetector.Output)
 
     var idDetectorOutput: IDDetectorOutput {
         switch self {
         case .legacy(let detectorOutput, _, _, _, _):
-            return detectorOutput
-        case .modern(let detectorOutput, _, _, _, _):
             return detectorOutput
         }
     }
@@ -31,16 +27,12 @@ enum DocumentScannerOutput: Equatable {
         switch self {
         case .legacy(_, _, _, let cameraProperties, _):
             return cameraProperties
-        case .modern(_, _, _, let cameraProperties, _):
-            return cameraProperties
         }
     }
 
     var barcode: BarcodeDetectorOutput? {
         switch self {
         case .legacy(_, let barcode, _, _, _):
-            return barcode
-        case .modern(_, let barcode, _, _, _):
             return barcode
         }
     }
@@ -54,8 +46,6 @@ enum DocumentScannerOutput: Equatable {
     ) -> Bool {
         switch self {
         case let .legacy(idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult):
-            return checkWithDetectorResults(side, idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult)
-        case let .modern(idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult):
             return checkWithDetectorResults(side, idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult)
         }
 

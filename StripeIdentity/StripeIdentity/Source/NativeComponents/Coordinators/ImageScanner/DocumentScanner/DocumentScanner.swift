@@ -164,25 +164,6 @@ extension DocumentScanner: ImageScanner {
         }
     }
 
-    fileprivate func scanImageModern(
-        pixelBuffer: CVPixelBuffer,
-        idDetectorOutput: IDDetectorOutput,
-        cameraProperties: CameraSession.DeviceProperties?
-    ) -> Future<DocumentScannerOutput?> {
-        do {
-            let commonOutputs = try processCommonResults(pixelBuffer: pixelBuffer, idDetectorOutput: idDetectorOutput, cameraProperties: cameraProperties)
-            return Promise(value: DocumentScannerOutput.modern(
-                idDetectorOutput,
-                commonOutputs.barcodeOutput,
-                commonOutputs.motionBlurOutput,
-                cameraProperties,
-                commonOutputs.blurResult
-            ))
-        } catch {
-            return Promise(error: error)
-        }
-    }
-
     func reset() {
         motionBlurDetector.reset()
         barcodeDetector?.reset()

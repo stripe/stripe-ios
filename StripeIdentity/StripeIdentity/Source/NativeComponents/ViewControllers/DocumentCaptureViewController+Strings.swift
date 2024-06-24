@@ -52,12 +52,6 @@ extension DocumentCaptureViewController {
             case (_, true, .tooFar):
                 return String.Localized.move_closer
             }
-        case .some(.modern):
-            if side == .front {
-                return String.Localized.position_in_center
-            } else {
-                return String.Localized.flip_to_other_side
-            }
         }
     }
 

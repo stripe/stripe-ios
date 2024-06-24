@@ -566,20 +566,6 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
                 expectedClassification: documentSide,
                 capturedData: UIImage(cgImage: image)
             )
-        case .modern(_, _, _, _, let blurResult):
-            sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
-            documentUploader.uploadImages(
-                for: documentSide,
-                originalImage: image,
-                documentScannerOutput: scannerOutput,
-                exifMetadata: exifMetadata,
-                method: .autoCapture
-            )
-
-            imageScanningSession.setStateScanned(
-                expectedClassification: documentSide,
-                capturedData: UIImage(cgImage: image)
-            )
         }
     }
 }
