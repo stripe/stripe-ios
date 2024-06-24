@@ -57,6 +57,8 @@ jobs:
             - Do these changes require API review?
 
             If you confirm these APIs need to be added/updated and have undergone necessary review, add the label `modifies public API` to this PR to acknowledge and bypass this check.
+
+            ℹ️ If this comment appears to be left in error, make sure your branch is up-to-date with `master`.
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
