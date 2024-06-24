@@ -25,7 +25,6 @@ final class DocumentScanner {
     private let blurDetector: LaplacianBlurDetector
     private let highResImageCropPadding: CGFloat
     private let analyticsClient: IdentityAnalyticsClient
-    private var hasSeenMBRunnerError: Bool = false
     private let sheetController: VerificationSheetControllerProtocol
 
     /// Initializes a DocumentScanner with detectors.

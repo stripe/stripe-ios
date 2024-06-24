@@ -12,6 +12,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import XCTest
 
+import CoreMedia
 @testable import StripeIdentity
 
 final class ImageScannerMock<Output>: ImageScanner {
