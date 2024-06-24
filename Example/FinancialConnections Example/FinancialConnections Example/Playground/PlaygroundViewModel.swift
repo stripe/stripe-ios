@@ -14,6 +14,13 @@ import UIKit
 
 final class PlaygroundViewModel: ObservableObject {
 
+    enum SessionOutputField {
+        case message
+        case sessionId
+        case accountIds
+        case accountNames
+    }
+
     let playgroundConfiguration = PlaygroundConfiguration.shared
 
     var sdkType: Binding<PlaygroundConfiguration.SDKType> {
@@ -179,11 +186,7 @@ final class PlaygroundViewModel: ObservableObject {
     }()
 
     @Published var isLoading: Bool = false
-
-    @Published var outputTextfieldText: String?
-    @Published var outputSessionId: String?
-    @Published var outputAccountName: String?
-    @Published var outputAccountIds: String?
+    @Published var sessionOutput: [SessionOutputField: String] = [:]
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -235,10 +238,10 @@ account_ids=\(accountIds)
 """
 
                             let message = "\(accountInfos)\n\n\(sessionInfo)"
-                            self?.outputTextfieldText = message
-                            self?.outputSessionId = sessionId
-                            self?.outputAccountName = accountNames.joinedUnlessEmpty
-                            self?.outputAccountIds = accountIds.joinedUnlessEmpty
+                            self?.sessionOutput[.message] = message
+                            self?.sessionOutput[.sessionId] = sessionId
+                            self?.sessionOutput[.accountNames] = accountNames.joinedUnlessEmpty
+                            self?.sessionOutput[.accountIds] = accountIds.joinedUnlessEmpty
 
                             UIAlertController.showAlert(
                                 title: "Success",
@@ -277,18 +280,18 @@ account_ids=\(accountIds)
     }
 
     func copySessionId() {
-        print("Copied session ID to clipboard: \(outputSessionId ?? "n/a")")
-        UIPasteboard.general.string = outputSessionId
+        guard let sessionId = sessionOutput[.sessionId] else { return }
+        UIPasteboard.general.string = sessionId
     }
 
     func copyAccountNames() {
-        print("Copied account names to clipboard: \(outputAccountName ?? "n/a")")
-        UIPasteboard.general.string = outputAccountName
+        guard let accountNames = sessionOutput[.accountNames] else { return }
+        UIPasteboard.general.string = accountNames
     }
 
     func copyAccountIds() {
-        print("Copied account IDs to clipboard: \(outputAccountIds ?? "n/a")")
-        UIPasteboard.general.string = outputAccountIds
+        guard let accountIds = sessionOutput[.accountIds] else { return }
+        UIPasteboard.general.string = accountIds
     }
 }
 
