@@ -125,6 +125,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private lazy var errorLabel: UILabel = {
         ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
+    let stackView: UIStackView = UIStackView()
 
     // MARK: - Initializers
 
@@ -333,23 +334,32 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        let spacerView = UIView.makeSpacerView(height: 0)
-        let views: [UIView] = [paymentContainerView, mandateView, spacerView, errorLabel, primaryButton].compactMap { $0 }
-        let stackView = UIStackView(arrangedSubviews: views)
+        let views: [UIView] = [paymentContainerView, mandateView, errorLabel, primaryButton].compactMap { $0 }
+        for view in views {
+            stackView.addArrangedSubview(view)
+        }
+        stackView.spacing = 20
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.setCustomSpacing(12, after: paymentContainerView)
-        stackView.setCustomSpacing(20, after: spacerView)
-        stackView.setCustomSpacing(20, after: errorLabel)
         stackView.sendSubviewToBack(mandateView)
-
         view.addAndPinSubview(stackView, insets: .init(top: 0, leading: 0, bottom: PaymentSheetUI.defaultSheetMargins.bottom, trailing: 0))
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isLinkWalletButtonSelected = false
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+        // Handle layout edge case - when there is no mandate or error, the primary button should be 32 points below the form/list
+        if mandateView.isHidden && errorLabel.isHidden {
+            stackView.setCustomSpacing(32, after: paymentContainerView)
+        } else {
+            stackView.setCustomSpacing(20, after: paymentContainerView)
+        }
     }
 
     // MARK: - PaymentSheetViewControllerProtocol
