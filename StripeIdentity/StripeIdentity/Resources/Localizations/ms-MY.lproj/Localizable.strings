@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Bahagian belakang kad pengenalan";
 
+"Back of identity document" = "Bahagian belakang dokumen pengenalan";
+
 "Camera permission" = "Keizinan kamera";
 
 "Camera unavailable" = "Kamera tidak tersedia";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Foto bahagian hadapan kad pengenalan berjaya dimuat naik";
 
 "Front of identity card" = "Bahagian hadapan kad pengenalan";
+
+"Front of identity document" = "Bahagian hadapan dokumen pengenalan";
 
 "Get ready to scan your photo ID" = "Bersedia untuk mengimbas ID berfoto anda";
 

@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li rentefri betalinger på %2$@";
+
 "+ Add" = "+ Legg til";
+
+"Add US bank account" = "Legg til bankkonto i USA";
 
 "Add a card" = "Legg til et kort";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Levering til %@ støttes ikke.";
 
 "Show menu" = "Vis meny";
+
+"Simple, secure one-click payments" = "Enkle, trygge betalinger med ett klikk";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe setter inn $0,01 på kontoen din i løpet av 1–2 virkedager. Deretter får du en e-post med instruksjoner for å fullføre lagringen av bankkontoen din med %@.";
 

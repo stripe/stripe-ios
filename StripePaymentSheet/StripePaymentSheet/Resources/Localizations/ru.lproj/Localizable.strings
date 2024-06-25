@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li беспроцентных платежей по %2$@";
+
 "+ Add" = "+ Добавить";
+
+"Add US bank account" = "Добавить банковский счет в США";
 
 "Add a card" = "Добавьте карту";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Доставка в страну «%@» не поддерживается.";
 
 "Show menu" = "Показать меню";
+
+"Simple, secure one-click payments" = "Защищенные безопасные платежи одним нажатием";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Через 1-2 рабочих дня Stripe зачислит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями, которые помогут вам закончить сохранение реквизитов своего банковского счета у %@.";
 

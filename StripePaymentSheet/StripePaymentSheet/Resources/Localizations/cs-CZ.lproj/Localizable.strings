@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li  bezúročné platby ve výši %2$@";
+
 "+ Add" = "+ Přidat";
+
+"Add US bank account" = "Přidat bankovní účet v USA";
 
 "Add a card" = "Přidat kartu";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Dodání do zemí jako %@ není podporováno.";
 
 "Show menu" = "Zobrazit nabídku";
+
+"Simple, secure one-click payments" = "Jednoduché a bezpečné platby jedním kliknutím";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe vloží 0,01 USD na váš účet během 1 až 2 pracovních dnů. Poté obdržíte e-mail s pokyny k dokončení ukládání na bankovní účet u %@.";
 

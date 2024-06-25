@@ -10,6 +10,8 @@
 
 "Back of identity card" = "身分證背面";
 
+"Back of identity document" = "身分證件背面";
+
 "Camera permission" = "攝像機許可";
 
 "Camera unavailable" = "相機不可用";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "身份證正面照片已成功上傳";
 
 "Front of identity card" = "身分證正面";
+
+"Front of identity document" = "身分證件正面";
 
 "Get ready to scan your photo ID" = "準備好掃描您帶照片的身分證件";
 

@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li khoản thanh toán không lãi suất %2$@";
+
 "+ Add" = "+ Thêm";
+
+"Add US bank account" = "Thêm tài khoản ngân hàng Hoa Kỳ";
 
 "Add a card" = "Thêm một thẻ";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
 
 "Show menu" = "Hiển thị trình đơn";
+
+"Simple, secure one-click payments" = "Thanh toán đơn giản, an toàn chỉ bằng một cú nhấp chuột";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe sẽ gửi 0,01 đô la vào tài khoản của bạn sau 1-2 ngày làm việc. Sau đó, bạn sẽ nhận được email kèm theo hướng dẫn để hoàn tất quá trình lưu tài khoản ngân hàng với %@.";
 

@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li korotonta maksua %2$@";
+
 "+ Add" = "+ Lisää";
+
+"Add US bank account" = "Lisää yhdysvaltalainen pankkitili";
 
 "Add a card" = "Lisää kortti";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
 
 "Show menu" = "Näytä valikko";
+
+"Simple, secure one-click payments" = "Yksinkertaiset turvalliset kerran napsautettavat maksut";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe tallettaa 0,01 dollaria tilillesi 1–2 arkipäivän kuluessa. Saat myös ohjeet pankkitilisi ja kauppiaan yrityksen %@ tallentamisen suorittamiseksi.";
 

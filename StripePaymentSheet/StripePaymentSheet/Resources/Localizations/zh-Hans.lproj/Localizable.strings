@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li%2$@的无息付款";
+
 "+ Add" = "+ 添加";
+
+"Add US bank account" = "添加美国银行账户";
 
 "Add a card" = "添加卡";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "不支持向 %@ 配送。";
 
 "Show menu" = "显示菜单";
+
+"Simple, secure one-click payments" = "简单、安全的一键支付";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 会在 1-2 个工作日向您的账户存入 0.01 美元。然后您会收到一封包含说明的邮件，指导您用 %@ 保存您的银行账户。";
 

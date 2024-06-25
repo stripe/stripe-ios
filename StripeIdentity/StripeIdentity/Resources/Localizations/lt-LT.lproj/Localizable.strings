@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Asmens tapatybės kortelės galinė pusė";
 
+"Back of identity document" = "Tapatybės dokumento galinė pusė";
+
 "Camera permission" = "Fotoaparato leidimas";
 
 "Camera unavailable" = "Fotoaparatas nepasiekiamas";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Sėkmingai įkelta asmens tapatybės kortelės priekinės pusės nuotrauka";
 
 "Front of identity card" = "Asmens tapatybės kortelės priekinė pusė";
+
+"Front of identity document" = "Tapatybės dokumento priekinė pusė";
 
 "Get ready to scan your photo ID" = "Pasiruoškite nuskaityti savo asmens tapatybės dokumento nuotrauką";
 

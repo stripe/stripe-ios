@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Stražnja strana osobne iskaznice";
 
+"Back of identity document" = "Stražnja strana identifikacijskog dokumenta";
+
 "Camera permission" = "Dozvole kamere";
 
 "Camera unavailable" = "Kamera nije dostupna";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Fotografija prednje strane osobne iskaznice uspješno je učitana";
 
 "Front of identity card" = "Prednja strana osobne iskaznice";
+
+"Front of identity document" = "Prednja strana identifikacijskog dokumenta";
 
 "Get ready to scan your photo ID" = "Pripremite se za skeniranje svog osobnog dokumenta s fotografijom";
 

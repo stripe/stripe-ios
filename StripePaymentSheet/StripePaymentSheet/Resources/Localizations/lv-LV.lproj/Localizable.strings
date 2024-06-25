@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li %2$@ bezprocentu maksājumi";
+
 "+ Add" = "+ Pievienot";
+
+"Add US bank account" = "Pievienot ASV bankas kontu";
 
 "Add a card" = "Pievienot karti";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Piegāde uz %@ netiek atbalstīts.";
 
 "Show menu" = "Rādīt izvēlni";
+
+"Simple, secure one-click payments" = "Vienkārši, droši 1 klikšķa maksājumi";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe uz jūsu kontu 1–2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt bankas konta saglabāšanu ar %@.";
 

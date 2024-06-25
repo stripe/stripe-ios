@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li intressivaba makset summas %2$@";
+
 "+ Add" = "+ lisa";
+
+"Add US bank account" = "Lisa Ameerika Ühendriikide pangakonto";
 
 "Add a card" = "Kaardi lisamine";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
 
 "Show menu" = "Kuva menüü";
+
+"Simple, secure one-click payments" = "Lihtsad turvalised maksed ühe hiireklõpsuga";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega oma pangakonto %@ salvestamiseks.";
 
