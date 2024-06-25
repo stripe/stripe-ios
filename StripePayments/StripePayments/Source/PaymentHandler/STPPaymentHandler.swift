@@ -1407,10 +1407,7 @@ public class STPPaymentHandler: NSObject {
         return resultingUrl
     }
 
-    func _retryAfterDelay(retryCount: Int, block: @escaping STPVoidBlock) {
-        // Add some backoff time:
-        let delayTime = TimeInterval(3)
-
+    func _retryAfterDelay(retryCount: Int, delayTime: TimeInterval = 3, block: @escaping STPVoidBlock) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
             block()
         }
@@ -1497,11 +1494,8 @@ public class STPPaymentHandler: NSObject {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                     let shouldRetryForCard = paymentMethod.type == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    let shouldRetryForAppRedirect = paymentMethod.type.requiresPolling
-                                    if retryCount > 0
-                                        && (shouldRetryForCard || shouldRetryForAppRedirect)
-                                    {
-                                        self._retryAfterDelay(retryCount: retryCount) {
+                                    if retryCount > 0, paymentMethod.type != .card || shouldRetryForCard, let pollingRequirement = paymentMethod.type.pollingRequirement {
+                                        self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.pollingInterval) {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 retryCount: retryCount - 1
                                             )
@@ -1563,10 +1557,8 @@ public class STPPaymentHandler: NSObject {
                             // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
                             // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
-                            let shouldRetryForAppRedirect = paymentMethod.type.requiresPolling
-                            if retryCount > 0
-                                && (shouldRetryForCard || shouldRetryForAppRedirect) {
-                                self._retryAfterDelay(retryCount: retryCount) {
+                            if retryCount > 0, paymentMethod.type != .card || shouldRetryForCard, let pollingRequirement = paymentMethod.type.pollingRequirement {
+                                self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.pollingInterval) {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         retryCount: retryCount - 1
                                     )
