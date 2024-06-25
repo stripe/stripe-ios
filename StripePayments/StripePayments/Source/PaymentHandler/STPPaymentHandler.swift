@@ -1407,10 +1407,7 @@ public class STPPaymentHandler: NSObject {
         return resultingUrl
     }
 
-    func _retryAfterDelay(retryCount: Int, block: @escaping STPVoidBlock) {
-        // Add some backoff time:
-        let delayTime = TimeInterval(3)
-
+    func _retryAfterDelay(retryCount: Int, delayTime: TimeInterval = 3, block: @escaping STPVoidBlock) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
             block()
         }
@@ -1501,7 +1498,7 @@ public class STPPaymentHandler: NSObject {
                                     if retryCount > 0
                                         && (shouldRetryForCard || shouldRetryForAppRedirect)
                                     {
-                                        self._retryAfterDelay(retryCount: retryCount) {
+                                        self._retryAfterDelay(retryCount: retryCount, delayTime: paymentMethod.type.pollingInterval) {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 retryCount: retryCount - 1
                                             )
@@ -1566,7 +1563,7 @@ public class STPPaymentHandler: NSObject {
                             let shouldRetryForAppRedirect = paymentMethod.type.requiresPolling
                             if retryCount > 0
                                 && (shouldRetryForCard || shouldRetryForAppRedirect) {
-                                self._retryAfterDelay(retryCount: retryCount) {
+                                self._retryAfterDelay(retryCount: retryCount, delayTime: paymentMethod.type.pollingInterval) {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         retryCount: retryCount - 1
                                     )

@@ -288,6 +288,17 @@ extension STPPaymentMethodType {
         }
     }
 
+    var pollingInterval: TimeInterval {
+        switch self {
+        case .amazonPay, .cashApp:
+            return 3
+        case .swish:
+            return 1
+        default:
+            return 0
+        }
+    }
+
     var supportsRefreshing: Bool {
         switch self {
         // Payment methods such as CashApp implement app-to-app redirects that bypass the "redirect trampoline" too give a more seamless user experience for app-to-app.
