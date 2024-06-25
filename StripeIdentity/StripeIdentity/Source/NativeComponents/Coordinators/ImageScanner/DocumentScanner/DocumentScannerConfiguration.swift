@@ -39,8 +39,5 @@ extension DocumentScanner {
 
         /// Padding value for the captured document image
         let highResImageCorpPadding: CGFloat
-
-        // MARK: MB Detector
-        let mbSettings: StripeAPI.VerificationPageStaticContentDocumentCaptureMBSettings?
     }
 }

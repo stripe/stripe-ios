@@ -30,7 +30,7 @@ let package = Package(
         ),
         .library(
             name: "StripeIdentity",
-            targets: ["StripeIdentity", "CaptureCore"]
+            targets: ["StripeIdentity"]
         ),
         .library(
             name: "StripeCardScan",
@@ -152,10 +152,6 @@ let package = Package(
                 .process("Resources/Images"),
                 .process("PrivacyInfo.xcprivacy")
             ]
-        ),
-        .binaryTarget(
-            name: "CaptureCore",
-            url: "https://b.stripecdn.com/content/CaptureCore.xcframework.zip",
-            checksum: "9416daa35d71624865469250357a7d039e3ec40b0344522f1429773ac075f919")
+        )
     ]
 )
