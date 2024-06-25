@@ -50,7 +50,8 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
             consumerSession: nil,
             apiClient: apiClient,
             clientSecret: clientSecret,
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            isTestmode: manifest.isTestMode
         )
         self.networkingOTPDataSource = networkingOTPDataSource
         networkingOTPDataSource.delegate = self
