@@ -75,6 +75,7 @@ class TestModeAutofillBannerView: UIView {
         button.titleLabel?.textAlignment = .right
         button.titleLabel?.font = FinancialConnectionsFont.label(.mediumEmphasized).uiFont
         button.addTarget(self, action: #selector(autofillTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "test_mode_autofill_button"
         return button
     }()
 
