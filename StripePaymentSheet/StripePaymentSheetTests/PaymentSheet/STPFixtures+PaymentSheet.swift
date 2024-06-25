@@ -90,10 +90,10 @@ extension Intent {
         return .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
     }
 
-    static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType]) -> Intent {
+    static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType], setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: nil)
-        return .deferredIntent(elementsSession: elementsSession, intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in }))
+        return .deferredIntent(elementsSession: elementsSession, intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage), confirmHandler: { _, _, _ in }))
     }
 }
 

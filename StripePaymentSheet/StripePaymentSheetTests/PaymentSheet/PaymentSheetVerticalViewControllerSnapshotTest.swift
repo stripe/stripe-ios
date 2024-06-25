@@ -196,18 +196,24 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         }
         // When loaded with US Bank (an example PM)...
         let loadResult = PaymentSheetLoader.LoadResult(
-            intent: ._testDeferredIntent(paymentMethodTypes: [.USBankAccount]),
+            intent: ._testDeferredIntent(paymentMethodTypes: [.USBankAccount, .cashApp], setupFutureUsage: .offSession),
             savedPaymentMethods: [],
             isLinkEnabled: false,
             isApplePayEnabled: false
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
-        // ...and an error is sent...
+        // ...and an error is set...
         sut.updateErrorLabel(for: MockError())
         // ...we should display the error
-        verify(sut)
+        verify(sut, identifier: "under_list")
+
+        // Take another snapshot displaying the mandate
+        let listVC = sut.paymentMethodListViewController!
+        listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "Cash App Pay"), selection: .new(paymentMethodType: .stripe(.cashApp)))
+        verify(sut, identifier: "under_list_with_mandate")
+
         // Take another snapshot displaying the form
         sut.didTapPaymentMethod(.new(paymentMethodType: .stripe(.USBankAccount)))
-        verify(sut, identifier: "form")
+        verify(sut, identifier: "under_form")
     }
 }
