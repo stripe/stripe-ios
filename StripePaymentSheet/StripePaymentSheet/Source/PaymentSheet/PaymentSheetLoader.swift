@@ -95,7 +95,8 @@ final class PaymentSheetLoader {
                 analyticsClient.logPaymentSheetLoadSucceeded(
                     loadingStartDate: loadingStartDate,
                     linkEnabled: isLinkEnabled,
-                    defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
+                    defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
+                    intentAnalyticsValue: intent.analyticsValue
                 )
                 if isFlowController {
                     AnalyticsHelper.shared.startTimeMeasurement(.checkout)
