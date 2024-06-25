@@ -24,7 +24,7 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
-    private let selectedAccounts: [FinancialConnectionsPartnerAccount]
+    private let selectedAccounts: [FinancialConnectionsPartnerAccount]?
     private let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
@@ -32,7 +32,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
