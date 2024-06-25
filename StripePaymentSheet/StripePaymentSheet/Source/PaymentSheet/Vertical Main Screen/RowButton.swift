@@ -17,28 +17,26 @@ class RowButton: UIView {
     var isSelected: Bool = false {
         didSet {
             shadowRoundedRect.isSelected = isSelected
-            shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
+            updateAccessibilityTraits()
         }
     }
 
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
     var isEnabled: Bool = true {
         didSet {
-            shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
+            updateAccessibilityTraits()
         }
     }
 
-    private var computedAccessibilityTraits: UIAccessibilityTraits {
+    func updateAccessibilityTraits() {
         var traits: UIAccessibilityTraits = [.button]
         if isSelected {
             traits.insert(.selected)
         }
-
         if !isEnabled {
             traits.insert(.notEnabled)
         }
-
-        return traits
+        shadowRoundedRect.accessibilityTraits = traits
     }
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) {
@@ -51,7 +49,7 @@ class RowButton: UIView {
         let label = UILabel.makeVerticalRowButtonLabel(text: text, appearance: appearance)
         label.isAccessibilityElement = false
         let labelsStackView = UIStackView(arrangedSubviews: [
-            label
+            label,
         ])
         if let subtext {
             let sublabel = UILabel()
@@ -114,10 +112,11 @@ class RowButton: UIView {
         // Accessibility
         // Subviews of an accessibility element are ignored
         isAccessibilityElement = false
+        accessibilityElements = [shadowRoundedRect, rightAccessoryView].compactMap { $0 }
         shadowRoundedRect.accessibilityIdentifier = text
         shadowRoundedRect.accessibilityLabel = text
         shadowRoundedRect.isAccessibilityElement = true
-        shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
+        updateAccessibilityTraits()
     }
 
     required init?(coder: NSCoder) {
