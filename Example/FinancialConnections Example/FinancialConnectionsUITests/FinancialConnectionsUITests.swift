@@ -120,6 +120,33 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssert(app.fc_playgroundSuccessAlertView.exists)
     }
 
+    func testPaymentTestModeManualEntryAutofill() throws {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        let manuallyVerifyLabel = app
+            .otherElements["consent_manually_verify_label"]
+            .links
+            .firstMatch
+        XCTAssertTrue(manuallyVerifyLabel.waitForExistence(timeout: 10.0))
+        manuallyVerifyLabel.tap()
+
+        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
+        XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
+        testModeAutofillButton.tap()
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+    }
+
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthNativeAuthFlow() throws {

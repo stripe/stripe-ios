@@ -56,6 +56,8 @@
 		460C7685096AA6C693309647 /* FinancialConnectionsAuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C837C27C2577391B91FF0E5 /* FinancialConnectionsAuthSession.swift */; };
 		465AE8A58AD2183E1E2042FE /* ConsentDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81304AD5BE5CCA10D1A866E0 /* ConsentDataSource.swift */; };
 		486E50E6CB90208AB98C031E /* UIImageView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC3AC48492FAB61E5B66D94 /* UIImageView+Extensions.swift */; };
+		492651662C24C9E7001DDBCA /* TestModeAutofillBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */; };
+		492651682C25C0C2001DDBCA /* info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 492651672C25C0C2001DDBCA /* info@3x.png */; };
 		4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */; };
 		4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */; };
 		4DC8EB63806434ABF4C9CC43 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782A419DCF59BE6AB6439D04 /* add@3x.png */; };
@@ -307,6 +309,8 @@
 		452989E2D269784006EFD18C /* FinancialConnectionsPartnerAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPartnerAccount.swift; sourceTree = "<group>"; };
 		463549CECD379484842033E3 /* AccountPickerAccountLoadErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerAccountLoadErrorView.swift; sourceTree = "<group>"; };
 		4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSynchronize.swift; sourceTree = "<group>"; };
+		492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeAutofillBannerView.swift; sourceTree = "<group>"; };
+		492651672C25C0C2001DDBCA /* info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@3x.png"; sourceTree = "<group>"; };
 		4A7B146AA6BF44921A249DB8 /* EmptyFinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyFinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_accounts.json; sourceTree = "<group>"; };
 		4BFCD9C339634B71FC8F85E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -545,6 +549,7 @@
 				EC561AF0993C02AD68472D11 /* chevron_down@3x.png */,
 				F1C7A2FE53419CB29CBB6C08 /* close@3x.png */,
 				6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */,
+				492651672C25C0C2001DDBCA /* info@3x.png */,
 				6A732C9F2B6871E900828CB1 /* panel_arrow_right@3x.png */,
 				6A13B9FB2B58545F00FFA327 /* person@3x.png */,
 				EF0111A8932418631FFA1663 /* search@3x.png */,
@@ -655,6 +660,7 @@
 				A0863AF9E2F9BD7C026FE59E /* HostViewController.swift */,
 				60B7CFC14964440E8AA670A9 /* LoadingView.swift */,
 				587CD174831344F15ADB538D /* ModalPresentationWrapperViewController.swift */,
+				492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1210,6 +1216,7 @@
 				6A732CA02B6871EA00828CB1 /* panel_arrow_right@3x.png in Resources */,
 				16F2968DC3B2FC4558821970 /* chevron_down@3x.png in Resources */,
 				31CDFC342BA8E61F00B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
+				492651682C25C0C2001DDBCA /* info@3x.png in Resources */,
 				6A13B9FC2B58545F00FFA327 /* person@3x.png in Resources */,
 				C747113C75AC92643B283CBD /* close@3x.png in Resources */,
 				CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */,
@@ -1298,6 +1305,7 @@
 				1889ECB24D40EF331974C288 /* AccountPickerNoAccountEligibleErrorView.swift in Sources */,
 				A10B5A3E5E8AE8767CF09C15 /* AccountPickerSelectionListView.swift in Sources */,
 				163E387D567068E4A64A4C13 /* AccountPickerSelectionView.swift in Sources */,
+				492651662C24C9E7001DDBCA /* TestModeAutofillBannerView.swift in Sources */,
 				23DBA4240ED1727C47937A6B /* AccountPickerViewController.swift in Sources */,
 				E4D00DB842047E595DD85BEF /* CheckboxView.swift in Sources */,
 				6A1D43032B16B3DC005A1EB0 /* InstitutionCellView.swift in Sources */,
