@@ -277,25 +277,20 @@ import Foundation
 extension STPPaymentMethodType: CaseIterable { }
 
 extension STPPaymentMethodType {
-    var requiresPolling: Bool {
-        switch self {
-        // Payment methods such as AmazonPay and other app-to-app redirects that bypass the "redirect trampoline" to give a more seamless user experience for app-to-app.
-        // However, when returning to the merchant app in this scenario, the intent often isn't updated instantaneously, requiring polling for intent status updates.
-        case .amazonPay, .cashApp, .swish:
-            return true
-        default:
-            return false
-        }
+    struct PollingRequirement {
+      var pollingInterval: TimeInterval
     }
 
-    var pollingInterval: TimeInterval {
+    /// If non-nil, Intents with this PM type do not update immediately after the next action is handled and require us to poll and this property contains the information needed to poll.
+    var pollingRequirement: PollingRequirement? {
         switch self {
-        case .amazonPay, .cashApp:
-            return 3
+        // Note: Card only requires polling for 3DS2 web-based transactions
+        case .card, .amazonPay, .cashApp:
+            return PollingRequirement(pollingInterval: 3)
         case .swish:
-            return 1
+            return PollingRequirement(pollingInterval: 1)
         default:
-            return 0
+            return nil
         }
     }
 
