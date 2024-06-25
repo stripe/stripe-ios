@@ -236,6 +236,11 @@ extension PaymentSheet {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
             self.ephemeralKeySecret = ""
+
+            stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
+                      "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+            stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
+                      "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
         }
     }
 

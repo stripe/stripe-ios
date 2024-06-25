@@ -66,7 +66,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
     func testDetachPaymentMethod_withCustomerSession() {
         var configuration = configuration
-        configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "session_123")
+        configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "cuss_secret_238742")
 
         let listPaymentMethodsExpectation = stubListPaymentMethods(customerId: configuration.customer!.id,
                                                                    ephemeralKey: ephemeralKey)
