@@ -1494,7 +1494,7 @@ public class STPPaymentHandler: NSObject {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                     let shouldRetryForCard = paymentMethod.type == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    let shouldRetryForAppRedirect = paymentMethod.type.pollingRequirement != nil
+                                    let shouldRetryForAppRedirect = paymentMethod.type.pollingRequirement != nil && paymentMethod.type != .card
                                     if retryCount > 0
                                         && (shouldRetryForCard || shouldRetryForAppRedirect)
                                     {
@@ -1564,7 +1564,7 @@ public class STPPaymentHandler: NSObject {
                             // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
                             // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
-                            let shouldRetryForAppRedirect = paymentMethod.type.pollingRequirement != nil
+                            let shouldRetryForAppRedirect = paymentMethod.type.pollingRequirement != nil && paymentMethod.type != .card
                             if retryCount > 0
                                 && (shouldRetryForCard || shouldRetryForAppRedirect) {
                                 guard let pollingRequirement = paymentMethod.type.pollingRequirement else {
