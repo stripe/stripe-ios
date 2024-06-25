@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Retro del documento di identità";
 
+"Back of identity document" = "Retro documento di identità";
+
 "Camera permission" = "Autorizzazione fotocamera";
 
 "Camera unavailable" = "Fotocamera non disponibile";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Foto del fronte della carta di identità caricata";
 
 "Front of identity card" = "Fronte della carta di identità";
+
+"Front of identity document" = "Fronte documento di identità";
 
 "Get ready to scan your photo ID" = "Preparati a scansionare il tuo documento di identità con foto";
 

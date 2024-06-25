@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li kamatmentes kifizetés %2$@ értékben";
+
 "+ Add" = "+ Hozzáadás";
+
+"Add US bank account" = "Amerikai bankszámla hozzáadása";
 
 "Add a card" = "Kártya hozzáadása";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
 
 "Show menu" = "Menü megjelenítése";
+
+"Simple, secure one-click payments" = "Egyszerű, biztonságos, egykattintásos fizetés";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe 1-2 munkanapon belül egy 0,01 dollár összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a bankszámlája mentéséről a(z) %@ vállalkozáshoz.";
 

@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Identifikācijas kartes aizmugure";
 
+"Back of identity document" = "Identifikācijas dokumenta aizmugure";
+
 "Camera permission" = "Kameras atļauja";
 
 "Camera unavailable" = "Kamera nav pieejama";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Identifikācijas kartes priekšpuse ir veiksmīgi augšupielādēta";
 
 "Front of identity card" = "Identifikācijas kartes priekšpuse";
+
+"Front of identity document" = "Identifikācijas dokumenta priekšpuse";
 
 "Get ready to scan your photo ID" = "Sagatavojieties skenēt savu identifikācijas dokumentu ar fotogrāfiju";
 

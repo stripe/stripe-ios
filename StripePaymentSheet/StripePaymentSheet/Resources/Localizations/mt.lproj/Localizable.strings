@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li pagamenti bla imgħax  ta' %2$@";
+
 "+ Add" = "+ Żid";
+
+"Add US bank account" = "Żid kont tal-bank ibbażat ġewwa l-Istati Uniti tal-Amerka";
 
 "Add a card" = "Żid kard";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Ma nistgħux nibagħtu l-affarijiet lejn: %@";
 
 "Show menu" = "Uri l-menù";
+
+"Simple, secure one-click payments" = "Pagamenti sempliċi u siguri b'mossa waħda";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tlesti l-proċess li terfa' l-kont tiegħek ma' %@.";
 

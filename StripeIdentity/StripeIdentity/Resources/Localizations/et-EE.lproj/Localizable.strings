@@ -10,6 +10,8 @@
 
 "Back of identity card" = "ID-kaardi tagakülg";
 
+"Back of identity document" = "Isikut tõendava dokumendi tagakülg";
+
 "Camera permission" = "Kaamera luba";
 
 "Camera unavailable" = "Kaamera pole saadaval";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "ID-kaardi esikülje foto üleslaadimine õnnestus";
 
 "Front of identity card" = "ID-kaardi esikülg";
+
+"Front of identity document" = "Isikut tõendava dokumendi esikülg";
 
 "Get ready to scan your photo ID" = "Valmistuge oma fotoga isikut tõendava dokumendi skannimiseks";
 

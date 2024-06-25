@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Zadná strana preukazu totožnosti";
 
+"Back of identity document" = "Zadná strana dokladu totožnosti";
+
 "Camera permission" = "Povolenie fotoaparátu";
 
 "Camera unavailable" = "Fotoaparát je nedostupný";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Fotografia prednej strany preukazu totožnosti bola úspešne nahraná";
 
 "Front of identity card" = "Predná strana preukazu totožnosti";
+
+"Front of identity document" = "Predná strana dokladu totožnosti";
 
 "Get ready to scan your photo ID" = "Pripravte sa na naskenovanie dokladu totožnosti s fotografiou";
 

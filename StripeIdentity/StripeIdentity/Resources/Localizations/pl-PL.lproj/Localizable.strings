@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Tylna strona dokumentu tożsamości";
 
+"Back of identity document" = "Tylna strona dokumentu tożsamości";
+
 "Camera permission" = "Zezwolenie dla aparatu";
 
 "Camera unavailable" = "Aparat niedostępny";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Przesłano zdjęcie przedniej strony dowodu tożsamości";
 
 "Front of identity card" = "Przednia strona dokumentu tożsamości";
+
+"Front of identity document" = "Przednia strona dokumentu tożsamości";
 
 "Get ready to scan your photo ID" = "Przygotuj się na skanowanie dokumentu tożsamości ze zdjęciem";
 

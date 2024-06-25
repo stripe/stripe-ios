@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@••••%2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li безлихвени плащания на стойност %2$@";
+
 "+ Add" = "+ Добавяне";
+
+"Add US bank account" = "Добавяне на банкова сметка в САЩ";
 
 "Add a card" = "Добавяне на карта";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Доставки до %@ не се поддържат.";
 
 "Show menu" = "Показване на менюто";
+
+"Simple, secure one-click payments" = "Лесни и сигурни плащания с едно щракане";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0,01 USD. След това ще получите имейл с инструкции за завършване на запазването на банковата ви сметка с %@.";
 

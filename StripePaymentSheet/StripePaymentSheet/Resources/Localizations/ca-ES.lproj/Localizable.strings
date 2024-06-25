@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li pagaments sense interessos de %2$@";
+
 "+ Add" = "+ Afegir";
+
+"Add US bank account" = "Afegeix un compte bancari dels EUA";
 
 "Add a card" = "Afegir una targeta";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "L'enviament a %@ no s'admet.";
 
 "Show menu" = "Mostra el menú";
+
+"Simple, secure one-click payments" = "Pagaments senzills i segurs amb un toc";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per acabar de desar el vostre compte bancari amb %@.";
 

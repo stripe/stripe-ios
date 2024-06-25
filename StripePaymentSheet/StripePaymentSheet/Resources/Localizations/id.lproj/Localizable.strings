@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li pembayaran bebas bunga sebesar %2$@";
+
 "+ Add" = "+ Tambahkan";
+
+"Add US bank account" = "Tambahkan rekening bank AS";
 
 "Add a card" = "Tambahkan sebuah kartu";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Pengiriman ke %@ tidak didukung.";
 
 "Show menu" = "Tampilkan menu";
+
+"Simple, secure one-click payments" = "Pembayaran sekali klik yang mudah dan aman";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe akan menyetorkan $0,01 ke rekening Anda dalam waktu 1–2 hari kerja. Kemudian Anda akan mendapatkan email yang berisi instruksi untuk menyelesaikan penyimpanan rekening bank pada %@.";
 

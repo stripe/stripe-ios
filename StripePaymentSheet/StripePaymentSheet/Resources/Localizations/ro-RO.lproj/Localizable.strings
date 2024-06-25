@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li plăți fără dobândă de %2$@";
+
 "+ Add" = "+ Adăugare";
+
+"Add US bank account" = "Adăugați un cont bancar din SUA";
 
 "Add a card" = "Adăugare card";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Expedierea către %@ nu este acceptată.";
 
 "Show menu" = "Afișare meniu";
+
+"Simple, secure one-click payments" = "Plăți simple și securizate cu un singur clic";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe va depune 0,01 USD în contul dvs. în 1-2 zile lucrătoare. Apoi veți primi un e-mail cu instrucțiuni pentru a finaliza salvarea contului dvs. bancar cu %@.";
 

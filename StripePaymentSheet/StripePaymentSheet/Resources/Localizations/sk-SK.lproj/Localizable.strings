@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li platby/platieb bez úrokov vo výške %2$@";
+
 "+ Add" = "+ Pridať";
+
+"Add US bank account" = "Pridať americký bankový účet";
 
 "Add a card" = "Pridať kartu";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Dodanie na/do %@ sa nepodporuje.";
 
 "Show menu" = "Zobraziť ponuku";
+
+"Simple, secure one-click payments" = "Jednoduché, bezpečné platby jedným kliknutím";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie uloženia svojho účtu prostredníctvom %@.";
 

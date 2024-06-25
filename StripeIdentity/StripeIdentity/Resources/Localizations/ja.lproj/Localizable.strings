@@ -10,6 +10,8 @@
 
 "Back of identity card" = "身分証明書の裏面";
 
+"Back of identity document" = "本人確認書類の裏面";
+
 "Camera permission" = "カメラの使用許可";
 
 "Camera unavailable" = "カメラを利用できません";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "身分証明書の表面の写真のアップロードが完了しました";
 
 "Front of identity card" = "身分証明書の表面";
+
+"Front of identity document" = "本人確認書類の表面";
 
 "Get ready to scan your photo ID" = "写真付き身分証明書の直接撮影を準備する";
 

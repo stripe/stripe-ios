@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.27.6 2024-06-25
 ### All
 * [Fixed] Improved reliability when paying with Swish.
 

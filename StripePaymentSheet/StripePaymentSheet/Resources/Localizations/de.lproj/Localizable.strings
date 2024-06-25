@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li zinslose Zahlungen in Höhe von %2$@";
+
 "+ Add" = "+ Hinzufügen";
+
+"Add US bank account" = "Konto einer US-Bank hinzufügen";
 
 "Add a card" = "Karte hinzufügen";
 
@@ -155,6 +159,8 @@
 "Shipping to %@ is not supported." = "Der Versandort %@ wird nicht unterstützt.";
 
 "Show menu" = "Menü anzeigen";
+
+"Simple, secure one-click payments" = "Einfach und sicher bezahlen – mit nur einem Klick";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "In ein bis zwei Werktagen wird Stripe Ihrem Konto einen Betrag von 0,01 USD gutschreiben. Danach erhalten Sie eine E-Mail mit weiteren Anweisungen, damit Sie Ihr Bankkonto bei %@ speichern können.";
 
