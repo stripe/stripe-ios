@@ -14,6 +14,13 @@ import UIKit
 
 final class PlaygroundViewModel: ObservableObject {
 
+    enum SessionOutputField {
+        case message
+        case sessionId
+        case accountIds
+        case accountNames
+    }
+
     let playgroundConfiguration = PlaygroundConfiguration.shared
 
     var sdkType: Binding<PlaygroundConfiguration.SDKType> {
@@ -179,6 +186,7 @@ final class PlaygroundViewModel: ObservableObject {
     }()
 
     @Published var isLoading: Bool = false
+    @Published var sessionOutput: [SessionOutputField: String] = [:]
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -212,21 +220,32 @@ final class PlaygroundViewModel: ObservableObject {
                             BannerHelper.shared.showBanner(with: message, for: 3.0)
                         }
                     },
-                    completionHandler: { result in
+                    completionHandler: { [weak self] result in
                         switch result {
                         case .completed(let session):
                             let accounts = session.accounts.data.filter { $0.last4 != nil }
                             let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+
+                            let sessionId = session.id
+                            let accountNames = session.accounts.data.map({ $0.displayName ?? "N/A" })
+                            let accountIds = session.accounts.data.map({ $0.id })
+
                             let sessionInfo =
 """
-session_id=\(session.id)
-account_names=\(session.accounts.data.map({ $0.displayName ?? "N/A" }))
-account_ids=\(session.accounts.data.map({ $0.id }))
+session_id=\(sessionId)
+account_names=\(accountNames)
+account_ids=\(accountIds)
 """
+
+                            let message = "\(accountInfos)\n\n\(sessionInfo)"
+                            self?.sessionOutput[.message] = message
+                            self?.sessionOutput[.sessionId] = sessionId
+                            self?.sessionOutput[.accountNames] = accountNames.joinedUnlessEmpty
+                            self?.sessionOutput[.accountIds] = accountIds.joinedUnlessEmpty
 
                             UIAlertController.showAlert(
                                 title: "Success",
-                                message: "\(accountInfos)\n\n\(sessionInfo)"
+                                message: message
                             )
                         case .canceled:
                             UIAlertController.showAlert(
@@ -258,6 +277,21 @@ account_ids=\(session.accounts.data.map({ $0.id }))
 
     func didSelectClearCaches() {
         URLSession.shared.reset(completionHandler: {})
+    }
+
+    func copySessionId() {
+        guard let sessionId = sessionOutput[.sessionId] else { return }
+        UIPasteboard.general.string = sessionId
+    }
+
+    func copyAccountNames() {
+        guard let accountNames = sessionOutput[.accountNames] else { return }
+        UIPasteboard.general.string = accountNames
+    }
+
+    func copyAccountIds() {
+        guard let accountIds = sessionOutput[.accountIds] else { return }
+        UIPasteboard.general.string = accountIds
     }
 }
 
@@ -395,5 +429,12 @@ private func PresentFinancialConnectionsSheet(
                 _ = financialConnectionsSheet  // retain the sheet
             }
         )
+    }
+}
+
+private extension [String] {
+    /// Returns nil if the array is empty, otherwise joins the array values with a new line.
+    var joinedUnlessEmpty: String? {
+        isEmpty ? nil : joined(separator: "\n")
     }
 }
