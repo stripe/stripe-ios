@@ -38,7 +38,8 @@
         "PaymentSheetSnapshotTests",
         "PaymentSheetStandardLPMUITests",
         "PaymentSheetStandardUITests",
-        "PaymentSheetUITestCase"
+        "PaymentSheetUITestCase",
+        "PaymentSheetVerticalUITests"
       ],
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",
