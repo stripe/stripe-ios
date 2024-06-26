@@ -111,6 +111,7 @@ class RowButton: UIView {
         // Accessibility
         // Subviews of an accessibility element are ignored
         isAccessibilityElement = false
+        accessibilityIdentifier = text // Just for test purposes
         accessibilityElements = [shadowRoundedRect, rightAccessoryView].compactMap { $0 }
         shadowRoundedRect.accessibilityIdentifier = text
         shadowRoundedRect.accessibilityLabel = text
