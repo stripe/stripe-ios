@@ -53,7 +53,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
-        isTestmode: Bool
+        isTestMode: Bool
     ) {
         self.otpType = otpType
         self.emailAddress = emailAddress
@@ -64,7 +64,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-        self.isTestMode = isTestmode
+        self.isTestMode = isTestMode
     }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
