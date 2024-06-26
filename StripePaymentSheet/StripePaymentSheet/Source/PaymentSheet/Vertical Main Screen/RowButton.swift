@@ -17,41 +17,38 @@ class RowButton: UIView {
     var isSelected: Bool = false {
         didSet {
             shadowRoundedRect.isSelected = isSelected
-            shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
+            updateAccessibilityTraits()
         }
     }
 
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
     var isEnabled: Bool = true {
         didSet {
-            shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
+            updateAccessibilityTraits()
         }
     }
 
-    private var computedAccessibilityTraits: UIAccessibilityTraits {
+    func updateAccessibilityTraits() {
         var traits: UIAccessibilityTraits = [.button]
         if isSelected {
             traits.insert(.selected)
         }
-
         if !isEnabled {
             traits.insert(.notEnabled)
         }
-
-        return traits
+        shadowRoundedRect.accessibilityTraits = traits
     }
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) {
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         super.init(frame: .zero)
-        accessibilityIdentifier = text
 
         // Label and sublabel
         let label = UILabel.makeVerticalRowButtonLabel(text: text, appearance: appearance)
         label.isAccessibilityElement = false
         let labelsStackView = UIStackView(arrangedSubviews: [
-            label
+            label,
         ])
         if let subtext {
             let sublabel = UILabel()
@@ -114,10 +111,12 @@ class RowButton: UIView {
         // Accessibility
         // Subviews of an accessibility element are ignored
         isAccessibilityElement = false
+        accessibilityIdentifier = text // Just for test purposes
+        accessibilityElements = [shadowRoundedRect, rightAccessoryView].compactMap { $0 }
         shadowRoundedRect.accessibilityIdentifier = text
         shadowRoundedRect.accessibilityLabel = text
         shadowRoundedRect.isAccessibilityElement = true
-        shadowRoundedRect.accessibilityTraits = computedAccessibilityTraits
+        updateAccessibilityTraits()
     }
 
     required init?(coder: NSCoder) {
@@ -149,7 +148,6 @@ extension RowButton {
     static func makeForLink(appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        // TODO: Add Link subtext
         let button = RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = String.Localized.pay_with_link
         return button

@@ -77,6 +77,7 @@ extension RowButton {
             accessibilityLabel = accessoryType.text
             accessibilityIdentifier = accessoryType.text
             accessibilityTraits = [.button]
+            isAccessibilityElement = true
 
             addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
         }
