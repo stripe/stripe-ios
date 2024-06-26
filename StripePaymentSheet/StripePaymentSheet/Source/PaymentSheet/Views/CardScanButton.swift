@@ -20,6 +20,7 @@ extension UIButton {
         )
 
         let scanButton = UIButton(type: .system)
+        scanButton.titleLabel?.adjustsFontSizeToFitWidth = true
         scanButton.setTitle(String.Localized.scan_card, for: .normal)
         scanButton.setImage(UIImage(systemName: "camera.fill", withConfiguration: iconConfig), for: .normal)
         scanButton.setContentSpacing(4, withEdgeInsets: .zero)

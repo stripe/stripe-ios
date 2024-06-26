@@ -29,7 +29,7 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
-    
+
     var heightConstraint: NSLayoutConstraint?
 
     func updateAccessibilityTraits() {
@@ -139,7 +139,7 @@ class RowButton: UIView {
         guard isEnabled else { return }
         didTap(self)
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         // Update the height so that RowButtons heights w/o subtext match those with subtext
         heightConstraint?.isActive = false
