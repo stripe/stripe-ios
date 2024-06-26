@@ -11,6 +11,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+/// A selectable button used in vertical mode to display payment methods.
 class RowButton: UIView {
     private let shadowRoundedRect: ShadowedRoundedRectangle
     let didTap: (RowButton) -> Void
@@ -88,6 +89,12 @@ class RowButton: UIView {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12)
         imageViewBottomConstraint.priority = .defaultLow
 
+        // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
+        // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
+        if subtext == nil {
+            heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance)).isActive = true
+        }
+
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -126,6 +133,14 @@ class RowButton: UIView {
     @objc private func handleTap() {
         guard isEnabled else { return }
         didTap(self)
+    }
+
+    static func calculateTallestHeight(appearance: PaymentSheet.Appearance) -> CGFloat {
+        let imageView = UIImageView(image: Image.link_icon.makeImage())
+        imageView.contentMode = .scaleAspectFit
+        let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext") { _ in }
+        let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
+        return size.height
     }
 }
 
