@@ -43,7 +43,6 @@ class RowButton: UIView {
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         super.init(frame: .zero)
-        accessibilityIdentifier = text
 
         // Label and sublabel
         let label = UILabel.makeVerticalRowButtonLabel(text: text, appearance: appearance)
@@ -148,7 +147,6 @@ extension RowButton {
     static func makeForLink(appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        // TODO: Add Link subtext
         let button = RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = String.Localized.pay_with_link
         return button

@@ -4188,7 +4188,7 @@ extension PaymentSheetUITestCase {
         XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
 
         // Update the card brand on the last card
-        XCTAssertTrue(app.images["stp_card_unpadded_cartes_bancaires"].waitForExistence(timeout: 2.0)) // Cartes Bancaires should be the current brand
+        XCTAssertTrue(app.buttons["Cartes Bancaires ending in 1 0 0 1"].waitForExistence(timeout: 1.0)) // Cartes Bancaires card should be selected now that 4242 card is removed
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
         app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
 
@@ -4209,7 +4209,7 @@ extension PaymentSheetUITestCase {
         app.buttons["Update"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Visa
-        XCTAssertTrue(app.images["stp_card_unpadded_visa"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Visa ending in 1 0 0 1"].waitForExistence(timeout: 1.0))
 
         // Reselect edit icon and delete the card from the update view controller
         app.buttons["Edit"].firstMatch.waitForExistenceAndTap()
@@ -4217,7 +4217,9 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Verify we are kicked out to the main screen after removing all saved payment methods
-        XCTAssertTrue(app.staticTexts["Card"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 5.0))
+        // Verify there's no more Saved section
+        XCTAssertFalse(app.staticTexts["Saved"].waitForExistence(timeout: 0.1))
     }
 
     private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {
