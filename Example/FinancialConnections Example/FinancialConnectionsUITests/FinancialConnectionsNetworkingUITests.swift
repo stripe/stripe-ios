@@ -14,6 +14,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
+        executeNativeNetworkingTestModeAutofillSignInFlowTest(emailAddress: emailAddresss)
         let bankAccountName = "Insufficient Funds"
         executeNativeNetworkingTestModeAddBankAccount(
             emailAddress: emailAddresss,
@@ -116,6 +117,54 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(stepUpVerificationOTPTextView.waitForExistence(timeout: 60.0))
         stepUpVerificationOTPTextView.tap()
         stepUpVerificationOTPTextView.typeText("111111")
+
+        let successPaneDoneButton = app.fc_nativeSuccessDoneButton
+
+        // ensure that there wasn't a Link failure
+        //
+        // unexpected text: "Your account was connected, but couldn't be saved to Link"
+        XCTAssert(!app.textViews.containing(NSPredicate(format: "label CONTAINS 'but'")).firstMatch.exists)
+
+        successPaneDoneButton.tap()
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
+
+    private func executeNativeNetworkingTestModeAutofillSignInFlowTest(emailAddress: String) {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let linkContinueButton = app.buttons["link_continue_button"]
+        XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
+        linkContinueButton.tap()
+
+        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
+        XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
+        testModeAutofillButton.tap()
+
+        let successInstitution = app.scrollViews.staticTexts["Success"]
+        XCTAssertTrue(successInstitution.waitForExistence(timeout: 120.0)) // need to wait for various API calls to appear
+        successInstitution.tap()
+
+        let connectAccountButton = app.buttons["Connect account"]
+        XCTAssertTrue(connectAccountButton.waitForExistence(timeout: 60.0))
+        connectAccountButton.tap()
+
+        XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
+        testModeAutofillButton.tap()
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
 

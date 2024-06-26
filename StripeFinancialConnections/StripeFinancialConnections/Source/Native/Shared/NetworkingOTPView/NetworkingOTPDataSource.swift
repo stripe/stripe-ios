@@ -15,6 +15,7 @@ protocol NetworkingOTPDataSourceDelegate: AnyObject {
 protocol NetworkingOTPDataSource: AnyObject {
     var otpType: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var isTestMode: Bool { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
@@ -39,6 +40,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let isTestMode: Bool
     weak var delegate: NetworkingOTPDataSourceDelegate?
 
     init(
@@ -50,7 +52,8 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         consumerSession: ConsumerSessionData?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        isTestMode: Bool
     ) {
         self.otpType = otpType
         self.emailAddress = emailAddress
@@ -61,6 +64,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.isTestMode = isTestMode
     }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
