@@ -148,7 +148,8 @@ extension FinancialConnectionsNavigationController {
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
         shouldHideStripeLogo: Bool,
-        shouldLeftAlignStripeLogo: Bool
+        shouldLeftAlignStripeLogo: Bool,
+        isTestMode: Bool
     ) {
         if !shouldHideStripeLogo {
             let stripeLogoView: UIView = {
@@ -169,20 +170,54 @@ extension FinancialConnectionsNavigationController {
                 stripeLogoImageView.tintColor = UIColor.textActionPrimary
                 stripeLogoImageView.contentMode = .scaleAspectFit
                 stripeLogoImageView.sizeToFit()
+
+                let height: CGFloat = 20
+                let stripeLogoImageViewWidth = stripeLogoImageView.bounds.width * (height / max(1, stripeLogoImageView.bounds.height))
                 stripeLogoImageView.frame = CGRect(
                     x: 0,
                     y: 0,
-                    width: stripeLogoImageView.bounds.width * (20 / max(1, stripeLogoImageView.bounds.height)),
-                    height: 20
+                    width: stripeLogoImageViewWidth,
+                    height: height
                 )
-                // If `titleView` is directly set to the `UIImageView`
-                // we can't control the sizing...so we create a `containerView`
-                // so we can control `UIImageView` sizing.
-                let containerView = UIView()
-                containerView.frame = stripeLogoImageView.bounds
-                containerView.addSubview(stripeLogoImageView)
 
-                stripeLogoImageView.center = containerView.center
+                let logoView: UIView
+                if isTestMode {
+                    let testModeImageView = UIImageView(image: Image.testmode.makeImage())
+                    testModeImageView.contentMode = .scaleAspectFit
+                    testModeImageView.sizeToFit()
+                    let testModeImageViewWidth = testModeImageView.bounds.width * (height / max(1, stripeLogoImageView.bounds.height))
+                    testModeImageView.frame = CGRect(
+                        x: 0,
+                        y: 0,
+                        width: testModeImageViewWidth,
+                        height: height
+                    )
+
+                    let spacing: CGFloat = 6
+                    let stackView = UIStackView(arrangedSubviews: [stripeLogoImageView, testModeImageView])
+                    stackView.axis = .horizontal
+                    stackView.alignment = .center
+                    stackView.spacing = spacing
+                    stackView.frame = CGRect(
+                        x: 0,
+                        y: 0,
+                        width: stripeLogoImageViewWidth + testModeImageViewWidth + spacing,
+                        height: height
+                    )
+
+                    logoView = stackView
+                } else {
+                    logoView = stripeLogoImageView
+                }
+
+                // If `titleView` is directly set to the custom view
+                // we can't control the sizing...so we create a `containerView`
+                // so we can control its sizing.
+                let containerView = UIView()
+                containerView.frame = logoView.bounds
+                containerView.addSubview(logoView)
+
+                logoView.center = containerView.center
                 return containerView
             }()
 
