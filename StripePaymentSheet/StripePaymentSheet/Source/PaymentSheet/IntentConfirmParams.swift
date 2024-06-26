@@ -112,18 +112,11 @@ class IntentConfirmParams {
         case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
             switch saveForFutureUseCheckboxState {
             case .hidden:
-                if isSettingUp {
-                    // For PI+SFU & SI:
-                    paymentMethodParams.allowRedisplay = .limited
-                }
+                // For PI+SFU & SI:
+                paymentMethodParams.allowRedisplay = .limited
             case .deselected:
-                if isSettingUp {
-                    // For PI+SFU & SI:
-                    paymentMethodParams.allowRedisplay = .limited
-                } else {
-                    // For PI w/out SFU
-                    paymentMethodParams.allowRedisplay = .unspecified
-                }
+                // For PI w/out SFU
+                paymentMethodParams.allowRedisplay = .unspecified
             case .selected:
                 // For PI, off-session during confirm
                 paymentMethodParams.allowRedisplay = .always

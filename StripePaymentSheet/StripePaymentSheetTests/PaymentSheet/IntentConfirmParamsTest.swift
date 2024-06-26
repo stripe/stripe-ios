@@ -23,7 +23,7 @@ class IntentConfirmParamsTest: XCTestCase {
 
         intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, isSettingUp: true)
 
-        XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
     func testSetAllowRedisplay_saveDisabled_pi_selected_settingUp() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
@@ -96,7 +96,7 @@ class IntentConfirmParamsTest: XCTestCase {
         // This isn't a real use case. If payment_method_save == disabled, and checkbox is hidden, then settingUp should be true
         intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, isSettingUp: false)
 
-        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
+        XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
     func testSetAllowRedisplay_saveEnabled_pi_deselected_notSettingUp() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
