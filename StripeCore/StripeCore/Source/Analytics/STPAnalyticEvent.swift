@@ -197,6 +197,7 @@ import Foundation
     case paymentSheetCardNumberCompleted = "mc_card_number_completed"
 
     // MARK: - v1/elements/session
+    case paymentSheetElementsSessionLoadSuccess = "mc_elements_session_load_success"
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
     case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
     case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"

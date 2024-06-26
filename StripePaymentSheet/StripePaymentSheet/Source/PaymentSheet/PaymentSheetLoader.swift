@@ -192,6 +192,8 @@ final class PaymentSheetLoader {
                 (paymentIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(paymentIntentClientSecret: clientSecret,
                                                                                                              clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                              configuration: configuration)
+                analyticsClient.logPaymentSheetElementsSessionLoadSuccess(intent: .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent),
+                                          configuration: configuration)
             } catch let error {
                 analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
@@ -210,6 +212,8 @@ final class PaymentSheetLoader {
                 (setupIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret,
                                                                                                            clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                            configuration: configuration)
+                analyticsClient.logPaymentSheetElementsSessionLoadSuccess(intent: .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent),
+                                          configuration: configuration)
             } catch let error {
                 analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
@@ -227,6 +231,8 @@ final class PaymentSheetLoader {
                                                                                                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                 configuration: configuration)
                 intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+                analyticsClient.logPaymentSheetElementsSessionLoadSuccess(intent: intent,
+                                          configuration: configuration)
             } catch let error as NSError where error == NSError.stp_genericFailedToParseResponseError() {
                 // Most errors are useful and should be reported back to the merchant to help them debug their integration (e.g. bad connection, unknown parameter, invalid api key).
                 // If we get `stp_genericFailedToParseResponseError`, it means the request succeeded but we couldn't parse the response.

@@ -157,6 +157,11 @@ extension STPAnalyticsClient {
             linkContext: linkContext
         )
     }
+    
+    func logPaymentSheetElementsSessionLoadSuccess(intent: Intent, configuration: PaymentSheet.Configuration) {
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration, logAvailability: false)
+        logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadSuccess, params: ["filtered_lpms": paymentMethodTypes.map({$0.identifier})])
+    }
 
     enum DeferredIntentConfirmationType: String {
         case server = "server"
