@@ -57,7 +57,7 @@ jobs:
             
             For this PR, add the label `ship without translations` to acknowledge that there are missing translations. Alternativley, you can wait until translations are available in Lokalise to prevent regressions, then re-run this job.
             
-            For more details on how to localize a string, you can refer to [this link](https://trailhead.corp.stripe.com/docs/mobile-sdk/shared-infrastructure/mobile-sdk-localizations) which entails specific steps like using STPLocalizedString and updating the Localizeable.string.
+            For more details on how to localize a string, you can refer to [this link](https://trailhead.corp.stripe.com/docs/mobile-sdk/shared-infrastructure/mobile-sdk-localizations).
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
