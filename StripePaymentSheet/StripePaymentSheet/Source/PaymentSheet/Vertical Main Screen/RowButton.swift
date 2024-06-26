@@ -14,6 +14,7 @@ import UIKit
 /// A selectable button used in vertical mode to display payment methods.
 class RowButton: UIView {
     private let shadowRoundedRect: ShadowedRoundedRectangle
+    let appearance: PaymentSheet.Appearance
     let didTap: (RowButton) -> Void
     var isSelected: Bool = false {
         didSet {
@@ -28,6 +29,8 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
+    
+    var heightConstraint: NSLayoutConstraint?
 
     func updateAccessibilityTraits() {
         var traits: UIAccessibilityTraits = [.button]
@@ -41,6 +44,7 @@ class RowButton: UIView {
     }
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) {
+        self.appearance = appearance
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         super.init(frame: .zero)
@@ -92,7 +96,8 @@ class RowButton: UIView {
         // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
         if subtext == nil {
-            heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance)).isActive = true
+            heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance))
+            heightConstraint?.isActive = true
         }
 
         NSLayoutConstraint.activate([
@@ -133,6 +138,14 @@ class RowButton: UIView {
     @objc private func handleTap() {
         guard isEnabled else { return }
         didTap(self)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        // Update the height so that RowButtons heights w/o subtext match those with subtext
+        heightConstraint?.isActive = false
+        heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance))
+        heightConstraint?.isActive = true
+        super.traitCollectionDidChange(previousTraitCollection)
     }
 
     static func calculateTallestHeight(appearance: PaymentSheet.Appearance) -> CGFloat {
