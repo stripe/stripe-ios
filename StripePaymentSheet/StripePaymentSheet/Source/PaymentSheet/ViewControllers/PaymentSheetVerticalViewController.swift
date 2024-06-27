@@ -606,7 +606,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             } else {
                 return FormHeaderView(
                     paymentMethodType: paymentMethodType,
-                    hasASavedCard: !savedPaymentMethods.filter({ $0.type == .card }).isEmpty,
+                    // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
+                    shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                     appearance: configuration.appearance
                 )
             }
