@@ -249,7 +249,12 @@ extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
 extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDelegate {
 
     func didSelectButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        // Deselect previous button        
+        // Set payment method as default
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            .stripeId(paymentMethod.stripeId),
+            forCustomer: configuration.customer?.id
+        )
+        // Deselect previous button
         paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
 
         // Disable interaction to prevent double selecting or entering edit mode since we will be dismissing soon
