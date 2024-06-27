@@ -928,7 +928,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         guard
             let usBankAccount = scroll(
                 collectionView: app.collectionViews.firstMatch,
-                toFindCellWithId: "US Bank Account"
+                toFindCellWithId: "US bank account"
             )
         else {
             XCTFail()
@@ -3738,9 +3738,9 @@ extension PaymentSheetUITestCase {
 
         // Select US Bank Account
         if vertical {
-            XCTAssertTrue(app.buttons["US Bank Account"].waitForExistenceAndTap())
+            XCTAssertTrue(app.buttons["US bank account"].waitForExistenceAndTap())
         } else {
-            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account")?.waitForExistenceAndTap() ?? false)
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US bank account")?.waitForExistenceAndTap() ?? false)
         }
 
         // Fill out name and email fields

@@ -255,7 +255,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         )
         checkoutButton.tap()
 
-        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account"))
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US bank account"))
         cell.tap()
 
         let continueButton = app.buttons["Continue"]
@@ -313,7 +313,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         )
         checkoutButton.tap()
 
-        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account"))
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US bank account"))
         cell.tap()
 
         let continueButton = app.buttons["Continue"]
@@ -361,7 +361,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         )
         checkoutButton.tap()
 
-        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account"))
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US bank account"))
         cell.tap()
 
         let continueButton = app.buttons["Continue"]
@@ -408,7 +408,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         )
         checkoutButton.tap()
 
-        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account"))
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US bank account"))
         cell.tap()
 
         let continueButton = app.buttons["Continue"]
