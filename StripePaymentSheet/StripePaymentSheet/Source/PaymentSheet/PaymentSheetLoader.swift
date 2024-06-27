@@ -269,7 +269,7 @@ final class PaymentSheetLoader {
         } else {
             savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration)
         }
-        
+
         // Move default PM to front
         if let customerID = configuration.customer?.id {
             let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
