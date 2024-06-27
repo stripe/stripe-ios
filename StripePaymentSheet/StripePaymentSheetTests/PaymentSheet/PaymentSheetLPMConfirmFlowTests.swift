@@ -12,7 +12,6 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -203,6 +202,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                paymentMethodType: .stripe(.alma),
                                merchantCountry: .FR) { form in
             // Alma has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
+    func testSunbitConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "USD",
+                               paymentMethodType: .stripe(.sunbit),
+                               merchantCountry: .US) { form in
+            // Sunbit has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }

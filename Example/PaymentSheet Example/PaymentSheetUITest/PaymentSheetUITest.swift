@@ -625,6 +625,29 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         payButton.tap()
     }
 
+    func testSunbitPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.customerMode = .new
+        settings.apmsEnabled = .off
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay $50.99"]
+
+        // Select Sunbit
+        guard let sunbit = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Sunbit") else {
+            XCTFail()
+            return
+        }
+        sunbit.tap()
+
+        XCTAssertTrue(payButton.isEnabled)
+
+        // Attempt payment, should succeed
+        payButton.tap()
+    }
+
     func testZipPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
