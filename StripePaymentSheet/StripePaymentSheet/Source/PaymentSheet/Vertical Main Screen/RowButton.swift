@@ -140,6 +140,7 @@ class RowButton: UIView {
         didTap(self)
     }
 
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         // Update the height so that RowButtons heights w/o subtext match those with subtext
         heightConstraint?.isActive = false
@@ -147,6 +148,7 @@ class RowButton: UIView {
         heightConstraint?.isActive = true
         super.traitCollectionDidChange(previousTraitCollection)
     }
+#endif
 
     static func calculateTallestHeight(appearance: PaymentSheet.Appearance) -> CGFloat {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
