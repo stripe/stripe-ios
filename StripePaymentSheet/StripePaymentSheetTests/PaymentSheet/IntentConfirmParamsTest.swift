@@ -10,115 +10,285 @@ import StripePaymentsTestUtils
 import XCTest
 
 class IntentConfirmParamsTest: XCTestCase {
-    func testSetAllowRedisplay_legacy_settingUp() {
+    // MARK: Legacy
+    func testSetAllowRedisplay_legacySI() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
 
-        intentConfirmParams.setAllowRedisplay(for: .legacy, isSettingUp: true)
+        let elementsSession = STPElementsSession.emptyElementsSession
+
+        let intent = Intent.setupIntent(elementsSession: elementsSession, setupIntent: STPFixtures.setupIntent())
+        intentConfirmParams.saveForFutureUseCheckboxState = .hidden
+        intentConfirmParams.setAllowRedisplay(for: intent)
 
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_saveDisabled_pi_deselected_settingUp() {
+    func testSetAllowRedisplay_legacyPI_selected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+
+        let elementsSession = STPElementsSession.emptyElementsSession
+
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: STPFixtures.paymentIntent())
+        intentConfirmParams.saveForFutureUseCheckboxState = .selected
+        intentConfirmParams.setAllowRedisplay(for: intent)
+
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+    func testSetAllowRedisplay_legacyPI_deselected() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+
+        let elementsSession = STPElementsSession.emptyElementsSession
+
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: STPFixtures.paymentIntent())
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
-
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, isSettingUp: true)
+        intentConfirmParams.setAllowRedisplay(for: intent)
 
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_saveDisabled_pi_selected_settingUp() {
+    func testSetAllowRedisplay_legacyPISFU_deselected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+
+        let elementsSession = STPElementsSession.emptyElementsSession
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["card"], setupFutureUsage: .offSession)
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
+        intentConfirmParams.saveForFutureUseCheckboxState = .hidden
+        intentConfirmParams.setAllowRedisplay(for: intent)
+
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
+    // MARK: CustomerSession, SetupIntent
+    func testSetAllowRedisplay_SI_saveEnabled_selected() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+
+        let intent = Intent.setupIntent(elementsSession: elementsSession, setupIntent: STPFixtures.setupIntent())
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
 
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, isSettingUp: true)
+        intentConfirmParams.setAllowRedisplay(for: intent)
 
         XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_saveDisabled_hidden_settingUp() {
+    func testSetAllowRedisplay_SI_saveEnabled_deselected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let intent = Intent.setupIntent(elementsSession: elementsSession, setupIntent: STPFixtures.setupIntent())
+        intentConfirmParams.saveForFutureUseCheckboxState = .deselected
+
+        intentConfirmParams.setAllowRedisplay(for: intent)
+
+        XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
+    func testSetAllowRedisplay_SI_saveDisabled() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "disabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let intent = Intent.setupIntent(elementsSession: elementsSession, setupIntent: STPFixtures.setupIntent())
         intentConfirmParams.saveForFutureUseCheckboxState = .hidden
 
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, isSettingUp: true)
+        intentConfirmParams.setAllowRedisplay(for: intent)
 
         XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_saveEnabled_pi_deselected_settingUp() {
+
+    // MARK: CustomerSession, PISFU
+    func testSetAllowRedisplay_PISFU_saveEnabled_selected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["card"], setupFutureUsage: .offSession)
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
+        intentConfirmParams.saveForFutureUseCheckboxState = .selected
+
+        intentConfirmParams.setAllowRedisplay(for: intent)
+
+        XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+    func testSetAllowRedisplay_PISFU_saveEnabled_deselected() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["card"], setupFutureUsage: .offSession)
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
 
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, isSettingUp: true)
+        intentConfirmParams.setAllowRedisplay(for: intent)
 
         XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_saveEnabled_pi_selected_settingUp() {
+    func testSetAllowRedisplay_PISFU_saveDisabled() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
-        intentConfirmParams.saveForFutureUseCheckboxState = .selected
-
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, isSettingUp: true)
-
-        XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
-    }
-    func testSetAllowRedisplay_customerSession_settingUp() {
-        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
-
-        intentConfirmParams.setAllowRedisplay(for: .customerSheetWithCustomerSession, isSettingUp: true)
-
-        XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
-    }
-
-    // MARK: Not setting up
-    func testSetAllowRedisplay_legacy_notSettingUp() {
-        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
-
-        intentConfirmParams.setAllowRedisplay(for: .legacy, isSettingUp: false)
-
-        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
-    }
-    func testSetAllowRedisplay_saveDisabled_pi_deselected_notSettingUp() {
-        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
-        intentConfirmParams.saveForFutureUseCheckboxState = .deselected
-
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, isSettingUp: false)
-
-        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
-    }
-    func testSetAllowRedisplay_saveDisabled_pi_selected_notSettingUp() {
-        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
-        intentConfirmParams.saveForFutureUseCheckboxState = .selected
-
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, isSettingUp: false)
-
-        XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
-    }
-    func testSetAllowRedisplay_saveDisabled_hidden_notSettingUp() {
-        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "disabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["card"], setupFutureUsage: .offSession)
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
         intentConfirmParams.saveForFutureUseCheckboxState = .hidden
 
-        // This isn't a real use case. If payment_method_save == disabled, and checkbox is hidden, then settingUp should be true
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(for: intent)
 
         XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_saveEnabled_pi_deselected_notSettingUp() {
+
+    // MARK: CustomerSession, Payment Intents
+    func testSetAllowRedisplay_PI_saveEnabled_deselected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: STPFixtures.paymentIntent())
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
 
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(for: intent)
 
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_saveEnabled_pi_selected_notSettingUp() {
+    func testSetAllowRedisplay_PI_saveEnabled_selected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: STPFixtures.paymentIntent())
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
 
-        intentConfirmParams.setAllowRedisplay(for: .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(for: intent)
 
         XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_customerSession_notSettingUp() {
+    func testSetAllowRedisplay_PI_saveDisabled_deselected() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "disabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: STPFixtures.paymentIntent())
+        intentConfirmParams.saveForFutureUseCheckboxState = .deselected
+
+        intentConfirmParams.setAllowRedisplay(for: intent)
+
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+    func testSetAllowRedisplay_PI_saveDisabled_selected() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "payment_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "disabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false
+                                                                ],
+                                                            ])
+        let intent = Intent.paymentIntent(elementsSession: elementsSession, paymentIntent: STPFixtures.paymentIntent())
+        intentConfirmParams.saveForFutureUseCheckboxState = .selected
+
+        intentConfirmParams.setAllowRedisplay(for: intent)
+
+        XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
+    // MARK: CustomerSheet
+    func testSetAllowRedisplayForCustomerSheet_legacy() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
 
-        // This isn't a real use case. customerSheetWithCustomerSession is always setting up. Nonetheless, we should default to .always.
-        intentConfirmParams.setAllowRedisplay(for: .customerSheetWithCustomerSession, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplayForCustomerSheet(.legacy)
+
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+    func testSetAllowRedisplayForCustomerSheet_customerSession() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+
+        intentConfirmParams.setAllowRedisplayForCustomerSheet(.customerSheetWithCustomerSession)
 
         XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
