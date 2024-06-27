@@ -67,6 +67,10 @@ class ConsentViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
@@ -110,6 +114,19 @@ class ConsentViewController: UIViewController {
         super.viewWillAppear(animated)
         // this fixes an issue where presenting a UIViewController
         // on top of ConsentViewController would stop the dot animation
+        consentLogoView?.animateDots()
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+    }
+
+    @objc private func appWillEnterForeground() {
+        // Fixes an issue where the dot animation was stopped when the app
+        // was backgrounded, then reopened.
         consentLogoView?.animateDots()
     }
 
