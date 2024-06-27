@@ -13,7 +13,6 @@ import Foundation
 @testable import StripeApplePay
 import OHHTTPStubs
 
-@available(iOS 13.0, *)
 class STPApplePayContextFunctionalTestAPIClient: _stpobjc_STPAPIClient {
     @objc var applePayContext: _stpobjc_APContext
     @objc var shouldSimulateCancelAfterConfirmBegins: Bool = false

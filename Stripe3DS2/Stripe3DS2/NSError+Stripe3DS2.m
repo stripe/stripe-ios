@@ -36,5 +36,3 @@
 }
 
 @end
-
-void _stds_import_nserror_stripe3ds2() {}

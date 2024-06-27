@@ -37,5 +37,3 @@
 }
 
 @end
-
-void _stds_import_uiview_layoutsupport() {}

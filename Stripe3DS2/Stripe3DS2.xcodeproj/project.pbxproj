@@ -16,8 +16,6 @@
 		3135271A25A55A0200DDBA74 /* amex-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135271325A55A0200DDBA74 /* amex-logo@3x.png */; };
 		31580102230DCA8100244FFB /* UIColor+ThirteenSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31580100230DCA8100244FFB /* UIColor+ThirteenSupport.h */; };
 		31580103230DCA8100244FFB /* UIColor+ThirteenSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31580101230DCA8100244FFB /* UIColor+ThirteenSupport.m */; };
-		31D5DDCD2565A8A900F4FC03 /* STDSCategoryLinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D5DDCB2565A8A900F4FC03 /* STDSCategoryLinker.h */; };
-		31D5DDCE2565A8A900F4FC03 /* STDSCategoryLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5DDCC2565A8A900F4FC03 /* STDSCategoryLinker.m */; };
 		31EFEE3A258AE53F0069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */; };
 		3604008322C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */; };
 		3604008422C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */; };
@@ -290,8 +288,6 @@
 		3135271325A55A0200DDBA74 /* amex-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "amex-logo@3x.png"; sourceTree = "<group>"; };
 		31580100230DCA8100244FFB /* UIColor+ThirteenSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+ThirteenSupport.h"; sourceTree = "<group>"; };
 		31580101230DCA8100244FFB /* UIColor+ThirteenSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ThirteenSupport.m"; sourceTree = "<group>"; };
-		31D5DDCB2565A8A900F4FC03 /* STDSCategoryLinker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSCategoryLinker.h; sourceTree = "<group>"; };
-		31D5DDCC2565A8A900F4FC03 /* STDSCategoryLinker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSCategoryLinker.m; sourceTree = "<group>"; };
 		31EFEDEF258AE3310069BC5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSThreeDSProtocolVersion.m; sourceTree = "<group>"; };
 		3604008722C57878004CF80B /* STDSThreeDSProtocolVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSThreeDSProtocolVersion.h; path = include/STDSThreeDSProtocolVersion.h; sourceTree = "<group>"; };
@@ -769,8 +765,6 @@
 				366A316822557496005705D7 /* STDSACSNetworkingManager.m */,
 				36546BF8229358E800D392BF /* STDSAuthenticationResponseObject.h */,
 				36546BF9229358E800D392BF /* STDSAuthenticationResponseObject.m */,
-				31D5DDCB2565A8A900F4FC03 /* STDSCategoryLinker.h */,
-				31D5DDCC2565A8A900F4FC03 /* STDSCategoryLinker.m */,
 				B679006B2252905C00DD9F18 /* STDSChallengeRequestParameters.h */,
 				B679006C2252905C00DD9F18 /* STDSChallengeRequestParameters.m */,
 				7B05BA23225BB59F00071A59 /* STDSDebuggerChecker.h */,
@@ -1182,7 +1176,6 @@
 				7BECCAE5222D8E77003852FF /* UIView+LayoutSupport.h in Headers */,
 				7BECCB1122301325003852FF /* STDSChallengeSelectionView.h in Headers */,
 				B616CE6E22430005003FC60C /* STDSRuntimeErrorEvent.h in Headers */,
-				31D5DDCD2565A8A900F4FC03 /* STDSCategoryLinker.h in Headers */,
 				B633076622AF006F006169E5 /* STDSFooterCustomization.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1489,7 +1482,6 @@
 				36EE22092214E8E800CD4A78 /* STDSChallengeParameters.m in Sources */,
 				7BF9D849223A9BEA001EA73F /* STDSUICustomization.m in Sources */,
 				7BECCAE2222D8E77003852FF /* UIView+LayoutSupport.m in Sources */,
-				31D5DDCE2565A8A900F4FC03 /* STDSCategoryLinker.m in Sources */,
 				7BF9D8402236B65B001EA73F /* STDSExpandableInformationView.m in Sources */,
 				B6C9BCE32242D7DB00409475 /* STDSCompletionEvent.m in Sources */,
 				7BF9D85D223AD453001EA73F /* STDSTextFieldCustomization.m in Sources */,

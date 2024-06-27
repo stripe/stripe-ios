@@ -11,7 +11,6 @@ import FBSnapshotTestCase
 @testable import Stripe
 @_spi(STP) import StripeUICore
 
-@available(iOS 13.0, *)
 class CircularButtonSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {

@@ -29,5 +29,3 @@
 }
 
 @end
-
-void _stds_import_uicolor_defaultcolors() { }

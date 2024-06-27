@@ -22,7 +22,7 @@ extension STPAPIClient {
                 "certificates": params.certificatesBase64,
                 "nonce": params.nonceHex,
                 "nonce_signature": params.nonceSignatureHex,
-            ]
+            ] as [String: Any],
         ]
 
         APIRequest<STPPushProvisioningDetails>.getWith(

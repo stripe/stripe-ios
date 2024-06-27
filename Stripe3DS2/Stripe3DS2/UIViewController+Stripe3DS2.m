@@ -47,5 +47,3 @@
 }
 
 @end
-
-void _stds_import_uiviewcontroller_stripe3ds2() {}
