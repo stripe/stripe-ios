@@ -226,7 +226,7 @@ extension String.Localized {
     }
 
     static var buy_now_or_pay_later_with_klarna: String {
-        STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
+        STPLocalizedString("Buy now or pay later with Klarna", "Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna")
     }
     static var klarna_mandate_text: String {
         STPLocalizedString(
