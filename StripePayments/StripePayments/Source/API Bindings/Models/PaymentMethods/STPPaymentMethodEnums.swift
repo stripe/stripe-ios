@@ -288,6 +288,9 @@ extension STPPaymentMethodType {
         case .card, .amazonPay, .cashApp:
             return PollingRequirement(pollingInterval: 3)
         case .swish:
+            // We are intentionally polling for Swish even though it uses the redirect trampoline. 
+            // About 50% of the time, the intent is still in `requires_action` status after redirecting following a successful payment. 
+            // This allows time for the intent to transition to its terminal state.
             return PollingRequirement(pollingInterval: 1)
         default:
             return nil
