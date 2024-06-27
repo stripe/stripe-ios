@@ -15,7 +15,6 @@ protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
     var networkingOTPDataSource: NetworkingOTPDataSource { get }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse>
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
     func saveToLink() -> Future<String?>
 }
@@ -81,14 +80,6 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
                     return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid consumerSessionLookup response: no consumerSession.clientSecret"))
                 }
             }
-    }
-
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
-        return apiClient.consumerSessionConfirmVerification(
-            otpCode: otpCode,
-            otpType: "SMS",
-            consumerSessionClientSecret: consumerSession.clientSecret
-        )
     }
 
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest> {
