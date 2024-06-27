@@ -580,7 +580,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             if pmFormVC.form.collectsUserInput {
                 // The payment method form collects user input, display it
                 self.paymentMethodFormViewController = pmFormVC
-                switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView)
+                switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView, resettingContentOffset: true)
                 navigationBar.setStyle(.back(showAdditionalButton: false))
             }
         }
