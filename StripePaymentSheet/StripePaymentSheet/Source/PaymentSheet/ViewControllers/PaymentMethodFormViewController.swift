@@ -44,7 +44,7 @@ class PaymentMethodFormViewController: UIViewController {
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = form.updateParams(params: params) {
-            params.setAllowRedisplay(paymentMethodSave: intent.elementsSession.paymentSheetPaymentMethodSave(),
+            params.setAllowRedisplay(paymentMethodSave: intent.elementsSession.customerSessionPaymentSheetPaymentMethodSave(),
                                      isSettingUp: intent.isSettingUp)
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)

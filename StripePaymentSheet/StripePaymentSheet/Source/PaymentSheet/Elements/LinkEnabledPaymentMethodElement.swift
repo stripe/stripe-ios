@@ -66,7 +66,7 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         guard let params = updateParams(params: .init(type: .stripe(paymentMethodType))) else {
             return nil
         }
-        params.setAllowRedisplay(paymentMethodSave: intent.elementsSession.paymentSheetPaymentMethodSave(),
+        params.setAllowRedisplay(paymentMethodSave: intent.elementsSession.customerSessionPaymentSheetPaymentMethodSave(),
                                  isSettingUp: intent.isSettingUp)
 
         switch inlineSignupElement.action {
