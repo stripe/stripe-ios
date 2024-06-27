@@ -1,3 +1,10 @@
+## xx.xx.x xxxx-xx-xx
+### PaymentSheet
+* [Added] Support for Sunbit (Private Beta) with PaymentIntents.
+
+### Payments
+* [Added] Support for Sunbit bindings.
+
 ## 23.27.6 2024-06-25
 ### All
 * [Fixed] Improved reliability when paying with Swish.

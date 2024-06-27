@@ -796,7 +796,34 @@
                 }
             }
         }
-    },   
+    },
+    {
+        "type": "sunbit",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-942781207fa04c8c6244490ed648c86d.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-5c93adf3d043d1510fcdd449afa032de.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-2ebac8e19b555f2081c16591e8fe4d4a.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-031a417a99538497bc892f11a15dd1cb.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
     {
         "type": "mobilepay",
         "async": false,

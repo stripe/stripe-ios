@@ -282,6 +282,19 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
+    func testCreateSunbitPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let params = STPPaymentMethodParams(sunbit: STPPaymentMethodSunbitParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .sunbit)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
     func testCreateMultibancoPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let billingDetails = STPPaymentMethodBillingDetails()

@@ -1076,4 +1076,44 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         var payButton: XCUIElement { app.buttons["Pay €50.99"] }
         XCTAssertTrue(payButton.isEnabled)
     }
+
+    func testLpm_Sunbit_AutomaticFields() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
+        loadPlayground(
+            app,
+            settings
+        )
+
+        checkoutButton.tap()
+
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "sunbit"))
+        cell.tap()
+
+        XCTAssertFalse(emailField.exists)
+        XCTAssertFalse(fullNameField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(billingAddressField.exists)
+        XCTAssertFalse(app.textFields["Country"].exists)
+        XCTAssertFalse(line1Field.exists)
+        XCTAssertFalse(line2Field.exists)
+        XCTAssertFalse(cityField.exists)
+        XCTAssertFalse(stateField.exists)
+        XCTAssertFalse(zipField.exists)
+
+        // Just check the button is enabled
+        var payButton: XCUIElement { app.buttons["Pay $50.99"] }
+        XCTAssertTrue(payButton.isEnabled)
+    }
 }

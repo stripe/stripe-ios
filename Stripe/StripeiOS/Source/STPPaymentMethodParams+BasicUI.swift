@@ -39,7 +39,8 @@ extension STPPaymentMethodParams: STPPaymentOption {
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
             .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .affirm, .cashApp, .paynow,
-            .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco,
+            .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .twint,
+            .multibanco, .sunbit,
             .unknown:
             return false
         @unknown default:
