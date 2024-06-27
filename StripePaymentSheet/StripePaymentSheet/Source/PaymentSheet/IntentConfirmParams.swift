@@ -103,19 +103,17 @@ class IntentConfirmParams {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
         }
     }
-    func setAllowRedisplay(for intent: Intent) {
-        guard let customer = intent.elementsSession.customer,
-              customer.customerSession.paymentSheetComponent.enabled,
-        let features = customer.customerSession.paymentSheetComponent.features else {
+    func setAllowRedisplay(paymentMethodSave: Bool?,
+                           isSettingUp: Bool) {
+        guard let paymentMethodSave else {
             // Legacy Ephemeral Key
             paymentMethodParams.allowRedisplay = .unspecified
             return
         }
 
         // Customer Session is enabled
-        let paymentMethodSaveEnabled = features.paymentMethodSave
-        if paymentMethodSaveEnabled {
-            if intent.isSettingUp {
+        if paymentMethodSave {
+            if isSettingUp {
                 if saveForFutureUseCheckboxState == .selected {
                     paymentMethodParams.allowRedisplay = .always
                 } else if saveForFutureUseCheckboxState == .deselected {
@@ -129,7 +127,7 @@ class IntentConfirmParams {
                 }
             }
         } else {
-            if intent.isSettingUp {
+            if isSettingUp {
                 // Checkbox is hidden
                 paymentMethodParams.allowRedisplay = .limited
             } else {

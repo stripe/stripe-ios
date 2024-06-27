@@ -211,20 +211,20 @@ extension STPElementsSession {
 
 extension STPElementsSession {
     func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
-        if let customerSession = customer?.customerSession {
-            if customerSession.paymentSheetComponent.enabled,
-               let features = customerSession.paymentSheetComponent.features {
-                return features.paymentMethodSave ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
-                                                  : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
-            } else {
-                // CustomerSession exists, but payment_sheet component is not available. This can happen
-                // if a merchant creates a CustomerSession with the wrong component. This is effectively
-                // an integration error. Defaulting to .legacy and sending 'unspecified' seems like the
-                // most appropriate thing to do.
-                return .legacy
-            }
-        } else {
+        guard let paymentMethodSave = paymentSheetPaymentMethodSave() else {
             return .legacy
         }
+        return paymentMethodSave
+        ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+        : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
+
+    }
+    func paymentSheetPaymentMethodSave() -> Bool? {
+        guard let customerSession = customer?.customerSession,
+              customerSession.paymentSheetComponent.enabled,
+              let features = customerSession.paymentSheetComponent.features else {
+            return nil
+        }
+        return features.paymentMethodSave
     }
 }
