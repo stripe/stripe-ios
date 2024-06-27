@@ -40,7 +40,7 @@ let package = Package(
                 .process("Resources/Images"),
                 .process("Resources/au_becs_bsb.json"),
                 .process("Resources/form_specs.json")
-                .process("PrivacyInfo.xcprivacy")
+                .process("StripeiOS/PrivacyInfo.xcprivacy")
             ]
         ),
         .target(
