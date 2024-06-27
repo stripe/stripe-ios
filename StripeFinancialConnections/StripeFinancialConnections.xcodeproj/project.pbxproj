@@ -129,7 +129,6 @@
 		87198EFD873751CA4E4B5005 /* FinancialConnectionsOAuthPrepane.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC5894A5EB74F6157C7DE95 /* FinancialConnectionsOAuthPrepane.swift */; };
 		87E22AF1E35FB63C20AEE9DF /* warning_triangle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D555DB0657A602274596428 /* warning_triangle@3x.png */; };
 		8927328EE28A0C94B5AB69DB /* ConsentLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0281E0221BDE01D0845DC0F9 /* ConsentLogoView.swift */; };
-		8C985491C17431278097D0FF /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2710EA52082B4A983294567 /* Placeholder.swift */; };
 		8DC6C2A239456994091BF3EE /* NetworkingLinkSignupFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A74B9F667A3BF48253045E /* NetworkingLinkSignupFooterView.swift */; };
 		91A3583A0BDE0F8F0C4AD3E2 /* InstitutionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */; };
 		933F9DFE970FAB4715369086 /* HostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C4ECB724BD75320A999C42 /* HostController.swift */; };
@@ -453,7 +452,6 @@
 		BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		C0430E0E195DD128FA2D5F86 /* NetworkingOTPDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingOTPDataSource.swift; sourceTree = "<group>"; };
 		C0467CE507A92557C72885DF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C2710EA52082B4A983294567 /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryFooterView.swift; sourceTree = "<group>"; };
 		C3BDFEB5860F73D4CD90907A /* NetworkingSaveToLinkVerificationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingSaveToLinkVerificationDataSource.swift; sourceTree = "<group>"; };
 		C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_arrow@3x.png"; sourceTree = "<group>"; };
@@ -803,7 +801,6 @@
 				541D32C4B0F1635A97F4FE11 /* Web */,
 				51D8397DB43DEC09BDF66E8A /* FinancialConnectionsSheet.swift */,
 				5C0737DE86515E172909366F /* FinancialConnectionsSheetError.swift */,
-				C2710EA52082B4A983294567 /* Placeholder.swift */,
 				54CF67A1F497E6CC73029CF0 /* StripeCore+Import.swift */,
 			);
 			path = Source;
@@ -1397,7 +1394,6 @@
 				6A1D42FF2B1686FC005A1EB0 /* InstitutionTableView.swift in Sources */,
 				B45B8DC3DAACDD5F04B1B1BE /* SuccessViewController.swift in Sources */,
 				3BFED24B6DF835A0F2FB4939 /* TerminalErrorViewController.swift in Sources */,
-				8C985491C17431278097D0FF /* Placeholder.swift in Sources */,
 				7AE7474B7AFF416B6072721C /* StripeCore+Import.swift in Sources */,
 				DC4DFC847378AC9E9112B443 /* AuthenticationSessionManager.swift in Sources */,
 				B5EEF34D158C08A1745FA150 /* ContinueStateView.swift in Sources */,
