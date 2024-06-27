@@ -350,6 +350,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     @objc
     private func adjustForKeyboard(notification: Notification, animations: @escaping () -> Void) {
+        guard presentedViewController == nil else {
+            // The presentedVC handles the keyboard, not us.
+            return
+        }
         let adjustForKeyboard = {
             self.view.superview?.setNeedsLayout()
             UIView.animateAlongsideKeyboard(notification) {
