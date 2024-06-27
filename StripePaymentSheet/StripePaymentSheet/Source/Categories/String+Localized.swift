@@ -332,4 +332,11 @@ extension String.Localized {
             "Subtitle shown on a button allowing a user to select to pay with Link."
         )
     }
+
+    static var new_card: String {
+        STPLocalizedString(
+            "New card",
+            "Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button."
+        )
+    }
 }

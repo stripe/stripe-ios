@@ -30,15 +30,26 @@ protocol NetworkingOTPViewDelegate: AnyObject {
 
 final class NetworkingOTPView: UIView {
 
+    enum TestModeValues {
+        static let otp = "000000"
+    }
+
     private let dataSource: NetworkingOTPDataSource
     weak var delegate: NetworkingOTPViewDelegate?
 
     private lazy var verticalStackView: UIStackView = {
-        let otpVerticalStackView = UIStackView(
-            arrangedSubviews: [
-                otpTextField,
-            ]
-        )
+        let otpVerticalStackView = UIStackView()
+
+        if dataSource.isTestMode {
+            let testModeBanner = TestModeAutofillBannerView(
+                context: .otp,
+                didTapAutofill: applyTestModeValue
+            )
+            otpVerticalStackView.addArrangedSubview(testModeBanner)
+        }
+
+        otpVerticalStackView.addArrangedSubview(otpTextField)
+
         otpVerticalStackView.axis = .vertical
         otpVerticalStackView.spacing = 16
         return otpVerticalStackView
@@ -223,5 +234,10 @@ final class NetworkingOTPView: UIView {
                     )
                 }
             }
+    }
+
+    private func applyTestModeValue() {
+        otpTextField.value = TestModeValues.otp
+        otpTextFieldDidChange()
     }
 }

@@ -21,5 +21,4 @@ struct LookupConsumerSessionResponse: Decodable {
 
 struct ConsumerSessionResponse: Decodable {
     let consumerSession: ConsumerSessionData
-    let authSessionClientSecret: String?
 }

@@ -161,10 +161,17 @@ class RowButton: UIView {
 
 // MARK: - Helpers
 extension RowButton {
-    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
+    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, savedPaymentMethodType: STPPaymentMethodType?, appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
-        return RowButton(appearance: appearance, imageView: imageView, text: paymentMethodType.displayName, subtext: subtitle, didTap: didTap)
+        // Special case "New card" vs "Card" title
+        let text: String = {
+            if savedPaymentMethodType == .card && paymentMethodType == .stripe(.card) {
+                return .Localized.new_card
+            }
+            return paymentMethodType.displayName
+        }()
+        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtitle, didTap: didTap)
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, didTap: @escaping (RowButton) -> Void) -> RowButton {

@@ -51,12 +51,13 @@ jobs:
         with:
           body: |
             ⚠️ Missing Translations
-             
-            The following translations are missing in Lokalise. While they don't need to be downloaded into the codebase as part of this PR, they do need to exist in Lokalise so that they can be downloaded as part of the release process.
-            
+            The following strings have been uploaded to Lokalise but are not yet translated.
+
             ${{ steps.missing.outputs.translations }}
             
-            By adding the label `ship without translations` to this PR, I acknowledge that there are missing translations.
+            If it's okay for these strings to be unlocalized in master (e.g. this is for an unshipped feature), add the label `ship without translations` to acknowledge that there are missing translations. Otherwise, wait until translations are available in Lokalise and re-run this job.
+            
+            New strings are localized on a weekly basis and are downloaded as part of the release process. For more details on how to localize a string, you can refer to [this link](https://trailhead.corp.stripe.com/docs/mobile-sdk/shared-infrastructure/mobile-sdk-localizations).
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
