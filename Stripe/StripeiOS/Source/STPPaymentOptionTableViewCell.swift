@@ -232,7 +232,7 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         -> NSAttributedString
     {
         return buildAttributedString(
-            with: paymentMethod.card?.brand ?? .unknown,
+            with: paymentMethod.card?.preferredDisplayBrand ?? .unknown,
             last4: paymentMethod.card?.last4 ?? "",
             selected: selected
         )
