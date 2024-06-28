@@ -279,7 +279,8 @@ final class PaymentSheetLoader {
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
                 using: ephemeralKey,
-                types: savedPaymentMethodTypes
+                types: savedPaymentMethodTypes,
+                limit: 100
             ) { paymentMethods, error in
                 guard var paymentMethods, error == nil else {
                     let error = error ?? PaymentSheetError.fetchPaymentMethodsFailure
