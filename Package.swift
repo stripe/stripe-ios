@@ -39,7 +39,7 @@ let package = Package(
                 .process("Info.plist"),
                 .process("Resources/Images"),
                 .process("Resources/au_becs_bsb.json"),
-                .process("Resources/form_specs.json")
+                .process("Resources/form_specs.json"),
                 .process("StripeiOS/PrivacyInfo.xcprivacy")
             ]
         ),
@@ -49,7 +49,7 @@ let package = Package(
             exclude: ["Info.plist", "Resources/CertificateFiles", "include/Stripe3DS2-Prefix.pch"],
             resources: [
                 .process("Info.plist"),
-                .process("Resources")
+                .process("Resources"),
                 .process("PrivacyInfo.xcprivacy")
             ]
         ),
@@ -67,7 +67,7 @@ let package = Package(
             path: "StripeCore/StripeCore",
             exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist")
+                .process("Info.plist"),
                 .process("PrivacyInfo.xcprivacy")
             ]
         ),
