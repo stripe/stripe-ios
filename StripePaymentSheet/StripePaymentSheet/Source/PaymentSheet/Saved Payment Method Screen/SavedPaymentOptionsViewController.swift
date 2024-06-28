@@ -428,18 +428,8 @@ class SavedPaymentOptionsViewController: UIViewController {
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
     static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
-
-        var savedPaymentMethods = savedPaymentMethods
         // Get the default
         let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
-
-        // Move default to front
-        if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
-            $0.stripeId == defaultPaymentMethod?.value
-        }) {
-            let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
-            savedPaymentMethods.insert(defaultPM, at: 0)
-        }
 
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in

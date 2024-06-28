@@ -413,6 +413,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
     }
 
+    func resetContentOffset(animated: Bool = false) {
+        scrollView.setContentOffset(.zero, animated: animated)
+    }
+
     // MARK: - BottomSheetPresentable
 
     var panScrollable: UIScrollView? {
