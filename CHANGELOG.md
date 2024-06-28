@@ -1,9 +1,10 @@
 ## xx.xx.x xxxx-xx-xx
 ### PaymentSheet
 * [Added] Support for Sunbit (Private Beta) with PaymentIntents.
+* [Added] Support for Billie (Private Beta) with PaymentIntents.
 
 ### Payments
-* [Added] Support for Sunbit bindings.
+* [Added] Support for Billie bindings.
 
 ## 23.27.6 2024-06-25
 ### All

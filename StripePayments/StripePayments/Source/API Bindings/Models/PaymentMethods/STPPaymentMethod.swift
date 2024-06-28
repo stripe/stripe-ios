@@ -88,6 +88,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var alma: STPPaymentMethodAlma?
     /// If this is a Sunbit PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSunibt`), this contains additional details.
     @objc private(set) public var sunbit: STPPaymentMethodSunbit?
+    /// If this is a Billie PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBillie`), this contains additional details.
+    @objc private(set) public var billie: STPPaymentMethodBillie?
     /// If this is a Multibanco PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMultibanco`), this contains additional details.
     @objc private(set) public var multibanco: STPPaymentMethodMultibanco?
     /// If this is a MobilePay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMobilePay`), this contains additional details.
@@ -154,6 +156,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "amazon_pay = \(String(describing: amazonPay))",
             "alma = \(String(describing: alma))",
             "sunbit = \(String(describing: sunbit))",
+            "billie = \(String(describing: billie))",
             "multibanco = \(String(describing: multibanco))",
             "mobilePay = \(String(describing: mobilePay))",
             "liveMode = \(liveMode ? "YES" : "NO")",
@@ -324,6 +327,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.sunbit = STPPaymentMethodSunbit.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "sunbit")
+        )
+        paymentMethod.billie = STPPaymentMethodBillie.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "billie")
         )
         paymentMethod.multibanco = STPPaymentMethodMultibanco.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "multibanco")

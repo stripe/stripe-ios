@@ -40,7 +40,7 @@ extension STPPaymentMethodParams: STPPaymentOption {
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
             .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .affirm, .cashApp, .paynow,
             .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .twint,
-            .multibanco, .sunbit,
+            .multibanco, .sunbit, .billie,
             .unknown:
             return false
         @unknown default:

@@ -34,6 +34,7 @@ extension PaymentSheet {
         .alipay,
         .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
         .sunbit,
+        .billie,
         .boleto,
         .swish,
         .twint,
