@@ -58,7 +58,7 @@ extension XCUIElement {
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: stringValue.count)
         self.typeText(deleteString)
     }
-    
+
     /// Scrolls a picker wheel up by one option.
     func selectNextOption() {
         let startCoord = self.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
@@ -72,7 +72,6 @@ extension Dictionary {
         return self[key] as? String
     }
 }
-
 
 // MARK: - XCUIApplication
 
@@ -94,7 +93,7 @@ extension XCUIApplication {
         }
         return staticTexts[identifier]
     }
-    
+
     func tapCoordinate(at point: CGPoint) {
         let normalized = coordinate(withNormalizedOffset: .zero)
         let offset = CGVector(dx: point.x, dy: point.y)
