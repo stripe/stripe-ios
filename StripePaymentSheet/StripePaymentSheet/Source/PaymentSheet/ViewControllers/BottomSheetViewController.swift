@@ -366,6 +366,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     @objc
     private func adjustForKeyboard(notification: Notification, animations: @escaping () -> Void) {
+        guard presentedViewController == nil else {
+            // The presentedVC handles the keyboard, not us.
+            return
+        }
         let adjustForKeyboard = {
             self.view.superview?.setNeedsLayout()
             UIView.animateAlongsideKeyboard(notification) {
@@ -407,6 +411,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             // But usually we can do this immediately, as we control the presentation and know we'll always be pinned to the bottom of the screen.
             adjustForKeyboard()
         }
+    }
+
+    func resetContentOffset(animated: Bool = false) {
+        scrollView.setContentOffset(.zero, animated: animated)
     }
 
     // MARK: - BottomSheetPresentable
