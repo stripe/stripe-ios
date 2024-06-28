@@ -242,7 +242,7 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         withCardPaymentMethodParams paymentMethodParams: STPPaymentMethodParams,
         selected: Bool
     ) -> NSAttributedString {
-        let brand = STPCardValidator.brand(forNumber: paymentMethodParams.card?.number ?? "")
+        let brand = paymentMethodParams.card?.preferredDisplayBrand ?? .unknown
         return buildAttributedString(
             with: brand,
             last4: paymentMethodParams.card?.last4 ?? "",
