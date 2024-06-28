@@ -1,6 +1,6 @@
 ## x.x.x x-x-x
 
-### STPPaymentOptionsViewController
+### STPPaymentOptionsViewController and STPPaymentContext
 * [Fixed] An issue where the correct card brand was not being displayed for card brand choice.
 
 ## 23.27.6 2024-06-25
