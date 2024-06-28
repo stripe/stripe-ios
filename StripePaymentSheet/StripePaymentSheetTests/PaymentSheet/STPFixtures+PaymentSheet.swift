@@ -120,16 +120,20 @@ extension STPPaymentMethod {
         ])!
     }
 
-    static func _testCardCoBranded() -> STPPaymentMethod {
-        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+    static func _testCardCoBranded(brand: String = "visa", displayBrand: String? = nil, networks: [String] = ["visa", "amex"]) -> STPPaymentMethod {
+        var apiResponse: [String: Any] = [
             "id": "pm_123card",
             "type": "card",
             "card": [
                 "last4": "4242",
-                "brand": "visa",
-                "networks": ["available": ["visa", "amex"]],
+                "brand": brand,
+                "networks": ["available": networks],
             ],
-        ])!
+        ]
+        if let displayBrand {
+            apiResponse[jsonDict: "card"]?["display_brand"] = displayBrand
+        }
+        return STPPaymentMethod.decodedObject(fromAPIResponse: apiResponse)!
     }
 
     static func _testUSBankAccount() -> STPPaymentMethod {

@@ -55,14 +55,20 @@ extension PaymentOption {
 }
 
 extension STPPaymentMethod {
+    /// Returns the first non-unknown card brand, prioritizing the card's preferred network brand > display brand > brand
+    func calculateCardBrandToDisplay() -> STPCardBrand {
+        guard let card else { return .unknown }
+        let preferredDisplayBrand = card.networks?.preferred?.toCardBrand
+        let displayBrand = card.displayBrand?.toCardBrand
+        return [preferredDisplayBrand, displayBrand, card.brand].compactMap { $0 }.first {
+            $0 != .unknown
+        } ?? .unknown
+    }
+
     func makeIcon() -> UIImage {
         switch type {
         case .card:
-            guard let card = card else {
-                return STPImageLibrary.unknownCardCardImage()
-            }
-
-            return STPImageLibrary.cardBrandImage(for: card.preferredDisplayBrand)
+            return STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
@@ -82,8 +88,7 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodCellImage() -> UIImage {
         switch type {
         case .card:
-            let cardBrand = card?.preferredDisplayBrand ?? .unknown
-            return cardBrand.makeSavedPaymentMethodCellImage()
+            return calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage()
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
@@ -102,8 +107,7 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodRowImage() -> UIImage {
         switch type {
         case .card:
-            let cardBrand = card?.preferredDisplayBrand ?? .unknown
-            return STPImageLibrary.unpaddedCardBrandImage(for: cardBrand)
+            return STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
@@ -117,7 +121,7 @@ extension STPPaymentMethod {
     }
 }
 
-extension STPPaymentMethodParams {
+ extension STPPaymentMethodParams {
     func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
@@ -138,7 +142,7 @@ extension STPPaymentMethodParams {
             return PaymentSheet.PaymentMethodType.stripe(type).makeImage(updateHandler: updateHandler)
         }
     }
-}
+ }
 
 extension STPPaymentMethodType {
 
