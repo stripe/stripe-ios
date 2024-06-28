@@ -14,7 +14,7 @@ extension STPPaymentMethodParams: STPPaymentOption {
     // MARK: - STPPaymentOption
     @objc public var image: UIImage {
         if type == .card && card != nil {
-            let brand = STPCardValidator.brand(forNumber: card?.number ?? "")
+            let brand = card?.preferredDisplayBrand ?? .unknown
             return STPImageLibrary.cardBrandImage(for: brand)
         } else {
             return STPImageLibrary.cardBrandImage(for: .unknown)
@@ -23,7 +23,7 @@ extension STPPaymentMethodParams: STPPaymentOption {
 
     @objc public var templateImage: UIImage {
         if type == .card && card != nil {
-            let brand = STPCardValidator.brand(forNumber: card?.number ?? "")
+            let brand = card?.preferredDisplayBrand ?? .unknown
             return STPImageLibrary.templatedBrandImage(for: brand)
         } else if type == .FPX {
             return STPImageLibrary.bankIcon()
@@ -45,5 +45,11 @@ extension STPPaymentMethodParams: STPPaymentOption {
         @unknown default:
             return false
         }
+    }
+}
+
+extension STPPaymentMethodCardParams {
+    var preferredDisplayBrand: STPCardBrand {
+        return networks?.preferred?.toCardBrand ?? STPCardValidator.brand(forNumber: number ?? "")
     }
 }

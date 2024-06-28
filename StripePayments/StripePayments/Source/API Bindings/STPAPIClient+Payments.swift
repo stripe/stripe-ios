@@ -1110,6 +1110,7 @@ extension STPAPIClient {
         forCustomer customerID: String,
         using ephemeralKeySecret: String,
         types: [STPPaymentMethodType] = [.card],
+        limit: Int? = nil,
         completion: @escaping STPPaymentMethodsCompletionBlock
     ) {
         let header = authorizationHeader(using: ephemeralKeySecret)
@@ -1125,10 +1126,13 @@ extension STPAPIClient {
 
         for type in types {
             group.enter()
-            let params = [
+            var params: [String: Any?] = [
                 "customer": customerID,
                 "type": STPPaymentMethod.string(from: type),
             ]
+            if let limit {
+                params["limit"] = limit
+            }
             APIRequest<STPPaymentMethodListDeserializer>.getWith(
                 self,
                 endpoint: APIEndpointPaymentMethods,
