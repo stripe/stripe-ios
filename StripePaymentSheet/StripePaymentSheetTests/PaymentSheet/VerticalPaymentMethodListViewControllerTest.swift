@@ -48,7 +48,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
 
         // Selecting card...
         shouldSelectPaymentMethodReturnValue = false // (and mocking `didTapPaymentMethod` to return false)
-        let cardButton = sut.getRowButton(accessibilityIdentifier: "Card")
+        let cardButton = sut.getRowButton(accessibilityIdentifier: "New card")
         sut.didTap(rowButton: cardButton, selection: .new(paymentMethodType: .stripe(.card)))
         // ...should not change the current selection...
         XCTAssertFalse(cardButton.isSelected)
