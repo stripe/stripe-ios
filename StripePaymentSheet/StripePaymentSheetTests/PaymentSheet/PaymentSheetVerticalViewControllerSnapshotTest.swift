@@ -23,12 +23,17 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         waitForExpectations(timeout: 1)
     }
 
-    func verify(_ sut: PaymentSheetVerticalViewController, identifier: String? = nil) {
+    func makeBottomSheetAndLayout(_ sut: PaymentSheetVerticalViewController) -> BottomSheetViewController {
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: .default, isTestMode: false, didCancelNative3DS2: {})
         bottomSheet.view.setNeedsLayout()
         bottomSheet.view.layoutIfNeeded()
         let height = bottomSheet.view.systemLayoutSizeFitting(.init(width: 375, height: UIView.noIntrinsicMetric)).height
         bottomSheet.view.frame = .init(origin: .zero, size: .init(width: 375, height: height))
+        return bottomSheet
+    }
+
+    func verify(_ sut: PaymentSheetVerticalViewController, identifier: String? = nil) {
+        let bottomSheet = makeBottomSheetAndLayout(sut)
         STPSnapshotVerifyView(bottomSheet.view, identifier: identifier)
     }
 
@@ -215,5 +220,20 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         // Take another snapshot displaying the form
         sut.didTapPaymentMethod(.new(paymentMethodType: .stripe(.USBankAccount)))
         verify(sut, identifier: "under_form")
+    }
+
+    func testAddNewCardFormTitle() {
+        // If we're displaying a saved card in the list, the card form title should be "New card" and not "Card"
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            savedPaymentMethods: [._testCard()],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, previousPaymentOption: nil)
+        _ = makeBottomSheetAndLayout(sut) // Laying out before calling `didTap` avoids breaking constraints due to zero size
+        let listVC = sut.paymentMethodListViewController!
+        listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "New card"), selection: .new(paymentMethodType: .stripe(.card)))
+        verify(sut)
     }
 }
