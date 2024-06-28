@@ -92,11 +92,13 @@ final class PaymentSheetLoader {
                     showApplePay: isFlowController ? isApplePayEnabled : false,
                     showLink: isFlowController ? isLinkEnabled : false
                 )
+                let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration, logAvailability: false)
                 analyticsClient.logPaymentSheetLoadSucceeded(
                     loadingStartDate: loadingStartDate,
                     linkEnabled: isLinkEnabled,
                     defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
-                    intentAnalyticsValue: intent.analyticsValue
+                    intentAnalyticsValue: intent.analyticsValue,
+                    orderedPaymentMethodTypes: paymentMethodTypes
                 )
                 if isFlowController {
                     AnalyticsHelper.shared.startTimeMeasurement(.checkout)
