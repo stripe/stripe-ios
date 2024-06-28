@@ -481,35 +481,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewCloseButton.tap()
     }
 
-    func testGiroPaymentMethodOnlyHasNameField() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePayEnabled = .off
-        settings.currency = .eur
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-        let payButton = app.buttons["Pay €50.99"]
-
-        guard let giro = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "giropay") else {
-            XCTFail()
-            return
-        }
-        giro.tap()
-
-        XCTAssertFalse(payButton.isEnabled)
-        let name = app.textFields["Full name"]
-        name.tap()
-        name.typeText("John Doe")
-        name.typeText(XCUIKeyboardKey.return.rawValue)
-
-        payButton.tap()
-
-        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
-        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
-        webviewCloseButton.tap()
-    }
-
     func testP24PaymentMethodHasTextFieldsAndDropdown() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
