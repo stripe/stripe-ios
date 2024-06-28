@@ -77,19 +77,6 @@ def create_pr
   )
 end
 
-def check_for_missing_localizations
-  # Check for missing localizations (we do this last to batch all the interactive parts to the end)
-  missing_localizations = `ci_scripts/l10n/check_for_missing_localizations.rb`
-  # Output the result of the check
-  if $?.exitstatus != 0
-    puts missing_localizations
-    rputs 'Please file a ticket for these missing localizations at https://go/ask/mobile-sdks'
-    notify_user
-  else
-    rputs 'No missing localizations.'
-  end
-end
-
 def propose_release
   return if @is_dry_run
 
@@ -118,7 +105,6 @@ steps = [
   method(:commit_changes),
   method(:push_changes),
   method(:create_pr),
-  method(:check_for_missing_localizations),
   method(:propose_release)
 ]
 execute_steps(steps, @step_index)
