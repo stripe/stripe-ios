@@ -92,12 +92,8 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
             // Take a snapshot of the old content and add it to our container - we'll fade it out
             let oldView = oldContentViewController.view!
-            let renderer = UIGraphicsImageRenderer(size: oldView.bounds.size)
-            let image = renderer.image { _ in
-                oldView.drawHierarchy(in: oldView.bounds, afterScreenUpdates: false)
-            }
-            let imageView = UIImageView(image: image)
-            contentContainerView.addSubview(imageView)
+            let oldViewImage = oldView.snapshotView(afterScreenUpdates: false) ?? UIView()
+            contentContainerView.addSubview(oldViewImage)
 
             // Remove the old VC
             oldContentViewController.view.removeFromSuperview()
@@ -133,7 +129,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             // Now animate to the correct height.
             UIView.animate(withDuration: 0.2) {
                 // Fade old content snapshot out
-                imageView.alpha = 0
+                oldViewImage.alpha = 0
             }
             animateHeightChange(forceAnimation: true, {
                 // Fade new content in
@@ -141,7 +137,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 self.manualHeightConstraint.constant = newHeight
             }, completion: {_ in
                 // Remove the old content snapshot
-                imageView.removeFromSuperview()
+                oldViewImage.removeFromSuperview()
 
                 // Inform accessibility
                 UIAccessibility.post(notification: .screenChanged, argument: self.contentViewController.view)
