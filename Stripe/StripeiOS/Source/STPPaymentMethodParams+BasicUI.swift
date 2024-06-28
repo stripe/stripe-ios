@@ -53,4 +53,3 @@ extension STPPaymentMethodCardParams {
         return networks?.preferred?.toCardBrand ?? STPCardValidator.brand(forNumber: number ?? "")
     }
 }
-
