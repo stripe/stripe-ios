@@ -88,8 +88,8 @@
 /* Payment Method type brand name */
 "UPI" = "UPI";
 
-/* Payment Method type name for US Bank Account payments. */
-"US Bank Account" = "US Bank Account";
+/* Payment Method type name for US bank account payments. */
+"US bank account" = "US bank account";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";

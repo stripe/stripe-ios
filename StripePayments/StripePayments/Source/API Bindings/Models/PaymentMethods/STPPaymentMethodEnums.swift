@@ -148,8 +148,8 @@ import Foundation
             return STPLocalizedString("Affirm", "Payment Method type brand name")
         case .USBankAccount:
             return STPLocalizedString(
-                "US Bank Account",
-                "Payment Method type name for US Bank Account payments."
+                "US bank account",
+                "Payment Method type name for US bank account payments."
             )
         case .cashApp:
             return STPLocalizedString("Cash App Pay", "Payment Method type brand name")
