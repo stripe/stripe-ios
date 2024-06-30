@@ -11,8 +11,10 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+/// A selectable button used in vertical mode to display payment methods.
 class RowButton: UIView {
     private let shadowRoundedRect: ShadowedRoundedRectangle
+    let appearance: PaymentSheet.Appearance
     let didTap: (RowButton) -> Void
     var isSelected: Bool = false {
         didSet {
@@ -28,6 +30,8 @@ class RowButton: UIView {
         }
     }
 
+    var heightConstraint: NSLayoutConstraint?
+
     func updateAccessibilityTraits() {
         var traits: UIAccessibilityTraits = [.button]
         if isSelected {
@@ -40,6 +44,7 @@ class RowButton: UIView {
     }
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) {
+        self.appearance = appearance
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         super.init(frame: .zero)
@@ -88,6 +93,13 @@ class RowButton: UIView {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12)
         imageViewBottomConstraint.priority = .defaultLow
 
+        // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
+        // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
+        if subtext == nil {
+            heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance))
+            heightConstraint?.isActive = true
+        }
+
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -126,6 +138,24 @@ class RowButton: UIView {
     @objc private func handleTap() {
         guard isEnabled else { return }
         didTap(self)
+    }
+
+#if !canImport(CompositorServices)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        // Update the height so that RowButtons heights w/o subtext match those with subtext
+        heightConstraint?.isActive = false
+        heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance))
+        heightConstraint?.isActive = true
+        super.traitCollectionDidChange(previousTraitCollection)
+    }
+#endif
+
+    static func calculateTallestHeight(appearance: PaymentSheet.Appearance) -> CGFloat {
+        let imageView = UIImageView(image: Image.link_icon.makeImage())
+        imageView.contentMode = .scaleAspectFit
+        let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext") { _ in }
+        let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
+        return size.height
     }
 }
 

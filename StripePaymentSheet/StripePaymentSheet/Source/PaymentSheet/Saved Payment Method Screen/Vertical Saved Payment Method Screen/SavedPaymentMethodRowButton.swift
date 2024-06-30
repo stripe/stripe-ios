@@ -1,5 +1,5 @@
 //
-//  PaymentMethodRowButton.swift
+//  SavedPaymentMethodRowButton.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/9/24.
@@ -11,13 +11,13 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentMethodRowButtonDelegate: AnyObject {
-    func didSelectButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
-    func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
-    func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
+protocol SavedPaymentMethodRowButtonDelegate: AnyObject {
+    func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
+    func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
+    func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
-final class PaymentMethodRowButton: UIView {
+final class SavedPaymentMethodRowButton: UIView {
 
     enum State: Equatable {
         case selected
@@ -79,7 +79,7 @@ final class PaymentMethodRowButton: UIView {
         }
     }
 
-    weak var delegate: PaymentMethodRowButtonDelegate?
+    weak var delegate: SavedPaymentMethodRowButtonDelegate?
 
     // MARK: Internal/private properties
     let paymentMethod: STPPaymentMethod

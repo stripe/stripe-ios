@@ -130,7 +130,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return stackView
     }()
 
-    private var paymentMethodRows: [PaymentMethodRowButton] = []
+    private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
 
     init(configuration: PaymentSheet.Configuration,
          selectedPaymentMethod: STPPaymentMethod?,
@@ -146,9 +146,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
     }
 
-    private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [PaymentMethodRowButton] {
+    private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [SavedPaymentMethodRowButton] {
         return paymentMethods.map { paymentMethod in
-            let button = PaymentMethodRowButton(paymentMethod: paymentMethod,
+            let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
                                                 appearance: configuration.appearance)
             button.delegate = self
             return button
@@ -246,9 +246,9 @@ extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
 }
 
 // MARK: - PaymentMethodRowButtonDelegate
-extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDelegate {
+extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButtonDelegate {
 
-    func didSelectButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
+    func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         // Set payment method as default
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
@@ -266,7 +266,7 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
         self.completeSelection(afterDelay: 0.3)
     }
 
-    func didSelectRemoveButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
+    func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage) { [weak self] in
             guard let self else { return }
@@ -276,7 +276,7 @@ extension VerticalSavedPaymentMethodsViewController: PaymentMethodRowButtonDeleg
         present(alertController, animated: true, completion: nil)
     }
 
-    func didSelectUpdateButton(_ button: PaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
+    func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                             appearance: configuration.appearance,
@@ -317,7 +317,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         }
 
         // Create the new button
-        let newButton = PaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
+        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
         newButton.delegate = self
         newButton.previousSelectedState = oldButton.previousSelectedState
         newButton.state = oldButton.state
