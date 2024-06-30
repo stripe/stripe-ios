@@ -62,7 +62,9 @@ extension PKPaymentButtonStyle {
 
 extension UIViewController {
     func switchContentIfNecessary(
-        to toVC: UIViewController, containerView: DynamicHeightContainerView
+        to toVC: UIViewController,
+        containerView: DynamicHeightContainerView,
+        resettingContentOffset: Bool = false
     ) {
         if children.count > 1 {
             let from_vc_name = NSStringFromClass(children.first!.classForCoder)
@@ -98,6 +100,9 @@ extension UIViewController {
                     toVC.didMove(toParent: self)
                     fromVC.view.alpha = 0
                     toVC.view.alpha = 1
+                    if resettingContentOffset {
+                        self.bottomSheetController?.resetContentOffset()
+                    }
                 },
                 completion: { _ in
                     // Finish removing the old one

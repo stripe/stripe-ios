@@ -37,8 +37,8 @@
 /* Title for collected bank account information */
 "Bank account" = "Bank account";
 
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
+/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+"Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
 /* Header text shown above a UPI ID text field */
 "Buy using a UPI ID" = "Buy using a UPI ID";

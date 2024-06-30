@@ -90,14 +90,19 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             // First, get the old height of the content + navigation bar + safe area.
             manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
 
+            // Take a snapshot of the old content and add it to our container - we'll fade it out
+            let oldView = oldContentViewController.view!
+            let oldViewImage = oldView.snapshotView(afterScreenUpdates: false) ?? UIView()
+            contentContainerView.addSubview(oldViewImage)
+
             // Remove the old VC
             oldContentViewController.view.removeFromSuperview()
             oldContentViewController.removeFromParent()
 
             // Add the new VC
             addChild(contentViewController)
-            self.contentContainerView.addArrangedSubview(self.contentViewController.view)
-            self.contentViewController.didMove(toParent: self)
+            contentContainerView.addArrangedSubview(self.contentViewController.view)
+            contentViewController.didMove(toParent: self)
             if let presentationController = rootParent.presentationController
                 as? BottomSheetPresentationController
             {
@@ -106,26 +111,37 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             }
 
             scrollView.contentInsetAdjustmentBehavior = .never
-            self.contentContainerView.layoutIfNeeded()
-            self.scrollView.layoutIfNeeded()
-            self.scrollView.updateConstraintsIfNeeded()
+            contentContainerView.layoutIfNeeded()
+            scrollView.layoutIfNeeded()
+            scrollView.updateConstraintsIfNeeded()
             oldContentViewController.navigationBar.removeFromSuperview()
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
             navigationBarContainerView.layoutIfNeeded()
             // Layout is mostly completed at this point. The new height is the navigation bar + content + the unsafe area at the bottom.
-            let newHeight = self.contentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
+            let newHeight = contentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
 
             // Force the old height, then force a layout pass
-            if self.modalPresentationStyle == .custom { // Only if we're using the custom presentation style (e.g. pinned to the bottom)
+            if modalPresentationStyle == .custom { // Only if we're using the custom presentation style (e.g. pinned to the bottom)
                 manualHeightConstraint.isActive = true
             }
-            self.rootParent.presentationController?.containerView?.layoutIfNeeded()
-            self.contentViewController.view.alpha = 0
+            rootParent.presentationController?.containerView?.layoutIfNeeded()
+            contentViewController.view.alpha = 0
             // Now animate to the correct height.
+            UIView.animate(withDuration: 0.2) {
+                // Fade old content snapshot out
+                oldViewImage.alpha = 0
+            }
             animateHeightChange(forceAnimation: true, {
+                // Fade new content in
                 self.contentViewController.view.alpha = 1
                 self.manualHeightConstraint.constant = newHeight
             }, completion: {_ in
+                // Remove the old content snapshot
+                oldViewImage.removeFromSuperview()
+
+                // Inform accessibility
+                UIAccessibility.post(notification: .screenChanged, argument: self.contentViewController.view)
+
                 // We shouldn't need this constraint anymore.
                 self.manualHeightConstraint.isActive = false
                 self.contentViewController.didFinishAnimatingHeight()
@@ -350,6 +366,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     @objc
     private func adjustForKeyboard(notification: Notification, animations: @escaping () -> Void) {
+        guard presentedViewController == nil else {
+            // The presentedVC handles the keyboard, not us.
+            return
+        }
         let adjustForKeyboard = {
             self.view.superview?.setNeedsLayout()
             UIView.animateAlongsideKeyboard(notification) {
@@ -391,6 +411,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             // But usually we can do this immediately, as we control the presentation and know we'll always be pinned to the bottom of the screen.
             adjustForKeyboard()
         }
+    }
+
+    func resetContentOffset(animated: Bool = false) {
+        scrollView.setContentOffset(.zero, animated: animated)
     }
 
     // MARK: - BottomSheetPresentable

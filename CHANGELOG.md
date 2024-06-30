@@ -1,7 +1,7 @@
 ## x.x.x x-x-x
 
-### STPPaymentOptionsViewController and STPPaymentContext
-* [Fixed] An issue where the correct card brand was not being displayed for card brand choice.
+### Payments
+* [Fixed] An issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
 
 ## PaymentSheet
 * [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.

@@ -92,11 +92,13 @@ final class PaymentSheetLoader {
                     showApplePay: isFlowController ? isApplePayEnabled : false,
                     showLink: isFlowController ? isLinkEnabled : false
                 )
+                let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration, logAvailability: false)
                 analyticsClient.logPaymentSheetLoadSucceeded(
                     loadingStartDate: loadingStartDate,
                     linkEnabled: isLinkEnabled,
                     defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
-                    intentAnalyticsValue: intent.analyticsValue
+                    intentAnalyticsValue: intent.analyticsValue,
+                    orderedPaymentMethodTypes: paymentMethodTypes
                 )
                 if isFlowController {
                     AnalyticsHelper.shared.startTimeMeasurement(.checkout)
@@ -262,11 +264,26 @@ final class PaymentSheetLoader {
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static func fetchSavedPaymentMethods(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
+        // Retrieve the payment methods from ElementsSession or by making direct API calls
+        var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = intent.elementsSession.customer?.paymentMethods {
-            return elementsSessionPaymentMethods
+            savedPaymentMethods = elementsSessionPaymentMethods
         } else {
-            return try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration)
+            savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration)
         }
+
+        // Move default PM to front
+        if let customerID = configuration.customer?.id {
+            let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+            if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
+                $0.stripeId == defaultPaymentMethod?.value
+            }) {
+                let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
+                savedPaymentMethods.insert(defaultPM, at: 0)
+            }
+        }
+
+        return savedPaymentMethods
     }
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
