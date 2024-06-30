@@ -215,10 +215,12 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         // Take another snapshot displaying the mandate
         let listVC = sut.paymentMethodListViewController!
         listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "Cash App Pay"), selection: .new(paymentMethodType: .stripe(.cashApp)))
+        sut.updateErrorLabel(for: MockError())
         verify(sut, identifier: "under_list_with_mandate")
 
         // Take another snapshot displaying the form
         sut.didTapPaymentMethod(.new(paymentMethodType: .stripe(.USBankAccount)))
+        sut.updateErrorLabel(for: MockError())
         verify(sut, identifier: "under_form")
     }
 

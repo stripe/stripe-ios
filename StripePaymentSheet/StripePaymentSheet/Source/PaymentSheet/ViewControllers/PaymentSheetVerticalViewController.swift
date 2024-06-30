@@ -145,12 +145,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         regenerateUI()
         // Only use the previous customer input for the first form shown
         self.previousPaymentOption = nil
-        updatePrimaryButton()
-        updateMandate(animated: false)
-        updateError()
     }
 
-    /// Regenerates the main content - either the PM list or the PM form
+    /// Regenerates the main content - either the PM list or the PM form and updates all UI elements (pay button, error, mandate)
     func regenerateUI(updatedListSelection: VerticalPaymentMethodListSelection? = nil) {
         // Remove any content vcs; we'll rebuild and add them now
         if let paymentMethodListViewController {
@@ -182,6 +179,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
             }
         }
+        updateUI()
+    }
+
+    /// Updates all UI elements (pay button, error, mandate)
+    func updateUI() {
+        updatePrimaryButton()
+        updateMandate()
+        updateError()
     }
 
     func updatePrimaryButton() {
@@ -236,7 +241,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func updateError() {
         errorLabel.text = error?.nonGenericDescription
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+        animateHeightChange {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
     }
@@ -480,6 +485,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     @objc func presentManageScreen() {
+        error = nil
         // Special case, only 1 card remaining but is co-branded, show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
@@ -569,6 +575,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) {
+        error = nil
 #if !canImport(CompositorServices)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
@@ -584,8 +591,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 navigationBar.setStyle(.back(showAdditionalButton: false))
             }
         }
-        updatePrimaryButton()
-        updateMandate()
+        updateUI()
     }
 
     func didTapSavedPaymentMethodAccessoryButton() {
@@ -644,9 +650,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         paymentMethodFormViewController = nil
         switchContentIfNecessary(to: paymentMethodListViewController!, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
-        updatePrimaryButton()
-        updateMandate()
-        updateError()
+        updateUI()
     }
 }
 

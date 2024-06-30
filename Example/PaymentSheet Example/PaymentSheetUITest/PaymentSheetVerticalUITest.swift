@@ -123,10 +123,13 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Fail payment
         app.buttons["Pay $50.99"].tap()
         app.waitForButtonOrStaticText("FAIL TEST PAYMENT").tap()
-        XCTAssertTrue(app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."].waitForExistence(timeout: 10))
+        let errorMessage = app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."]
+        XCTAssertTrue(errorMessage.waitForExistence(timeout: 10))
 
         // Try Cash App Pay
         app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        // Validate error disappears
+        XCTAssertFalse(errorMessage.waitForExistence(timeout: 0.1))
         app.buttons["Pay $50.99"].tap()
         app.waitForButtonOrStaticText("AUTHORIZE TEST PAYMENT").tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -184,7 +187,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
 
-        // Remove both the payment methods just added
+        // Remove one of the payment methods just added
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
@@ -225,6 +228,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 5.0))
         // Verify there's no more Saved section
         XCTAssertFalse(app.staticTexts["Saved"].waitForExistence(timeout: 0.1))
+        // Verify primary button isn't enabled b/c there is no selected PM
+        XCTAssertFalse(app.buttons["Set up"].isEnabled)
     }
 
     private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {
