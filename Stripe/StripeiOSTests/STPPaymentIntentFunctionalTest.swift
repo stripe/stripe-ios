@@ -456,64 +456,6 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
-    // MARK: - giropay
-
-    func testConfirmPaymentIntentWithGiropay() {
-        var clientSecret: String?
-        let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared.createPaymentIntent(
-            withParams: [
-                "payment_method_types": ["giropay"],
-                "currency": "eur",
-            ]) { createdClientSecret, creationError in
-            XCTAssertNotNil(createdClientSecret)
-            XCTAssertNil(creationError)
-            createExpectation.fulfill()
-            clientSecret = createdClientSecret
-        }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-        XCTAssertNotNil(clientSecret)
-
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let expectation = self.expectation(description: "Payment Intent confirm")
-
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret!)
-        let giropayParams = STPPaymentMethodGiropayParams()
-
-        let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.name = "Jenny Rosen"
-
-        paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
-            giropay: giropayParams,
-            billingDetails: billingDetails,
-            metadata: [
-                "test_key": "test_value",
-            ])
-        paymentIntentParams.returnURL = "example-app-scheme://authorized"
-
-        client.confirmPaymentIntent(
-            with: paymentIntentParams) { paymentIntent, error in
-            XCTAssertNil(error, "With valid key + secret, should be able to confirm the intent")
-
-            XCTAssertNotNil(paymentIntent)
-            XCTAssertEqual(paymentIntent?.stripeId, paymentIntentParams.stripeId)
-
-            XCTAssertFalse(paymentIntent!.livemode)
-            XCTAssertNotNil(paymentIntent?.paymentMethodId)
-
-            // giropay requires a redirect
-            XCTAssertEqual(paymentIntent?.status, .requiresAction)
-            XCTAssertNotNil(paymentIntent!.nextAction!.redirectToURL!.returnURL)
-            XCTAssertEqual(
-                paymentIntent!.nextAction!.redirectToURL!.returnURL,
-                URL(string: "example-app-scheme://authorized"))
-
-            expectation.fulfill()
-        }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-    }
-
     // MARK: - AU BECS Debit
 
     func testConfirmAUBECSDebitPaymentIntent() {
