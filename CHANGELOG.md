@@ -3,6 +3,9 @@
 ### Payments
 * [Fixed] An issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
 
+## PaymentSheet
+* [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
+
 ## 23.27.6 2024-06-25
 ### All
 * [Fixed] Improved reliability when paying with Swish.
