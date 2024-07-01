@@ -138,7 +138,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
          paymentMethods: [STPPaymentMethod],
          paymentMethodRemove: Bool,
          isCBCEligible: Bool,
-         ephemeralKeySecret: String?) {
+         ephemeralKeySecret: String) {
         self.configuration = configuration
         self.paymentMethodRemove = paymentMethodRemove
         self.isCBCEligible = isCBCEligible
