@@ -63,7 +63,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         }
 
         if isEditingPaymentMethods {
-            return .Localized.manage_payment_methods
+            return paymentMethods.count == 1 ?  .Localized.manage_payment_method : .Localized.manage_payment_methods
         }
 
         let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
