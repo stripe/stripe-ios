@@ -49,7 +49,7 @@ class STPSourceFunctionalTest: XCTestCase {
         let card = STPCardParams()
         card.number = "4242 4242 4242 4242"
         card.expMonth = 6
-        card.expYear = 2024
+        card.expYear = 2050
         card.currency = "usd"
         card.name = "Jenny Rosen"
         card.address.line1 = "123 Fake Street"

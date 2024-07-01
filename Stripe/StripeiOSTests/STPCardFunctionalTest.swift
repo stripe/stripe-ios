@@ -16,7 +16,7 @@ class STPCardFunctionalTest: XCTestCase {
 
         card.number = "4242 4242 4242 4242"
         card.expMonth = 6
-        card.expYear = 2024
+        card.expYear = 2050
         card.currency = "usd"
         card.address.line1 = "123 Fake Street"
         card.address.line2 = "Apartment 4"
