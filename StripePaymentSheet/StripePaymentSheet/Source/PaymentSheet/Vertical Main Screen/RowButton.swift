@@ -88,9 +88,9 @@ class RowButton: UIView {
         }
 
         // Resolve ambiguous height warning by setting these constraints w/ low priority
-        let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 12)
+        let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 14)
         imageViewTopConstraint.priority = .defaultLow
-        let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12)
+        let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
 
         // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
@@ -103,8 +103,8 @@ class RowButton: UIView {
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 12),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -12),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 14),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -14),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
 
