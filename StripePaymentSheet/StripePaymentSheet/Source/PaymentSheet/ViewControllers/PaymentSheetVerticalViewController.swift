@@ -514,7 +514,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             paymentMethodRemove: loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-            isCBCEligible: loadResult.intent.cardBrandChoiceEligible
+            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
+            ephemeralKeySecret: configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
@@ -664,7 +665,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
 // MARK: UpdateCardViewControllerDelegate
 extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
-        guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
+        guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent) else { return }
 
         // Detach the payment method from the customer
         let manager = SavedPaymentMethodManager(configuration: configuration)
@@ -679,7 +680,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
     }
 
     func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
-        guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
+        guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent) else { return }
 
         // Update the payment method
         let manager = SavedPaymentMethodManager(configuration: configuration)
