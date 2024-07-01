@@ -256,13 +256,13 @@ import Foundation
 
     static var removeBankAccountEndingIn: String {
         STPLocalizedString(
-            "Remove bank account ending in %@",
-            "Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242'")
+            "Bank account •••• %@",
+            "Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242'")
     }
 
     static var removeBankAccount: String {
         STPLocalizedString(
-            "Remove bank account",
+            "Remove bank account?",
             "Title for confirmation alert to remove a saved bank account payment method")
     }
 
