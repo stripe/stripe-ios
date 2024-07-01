@@ -37,7 +37,7 @@ class STPCardFunctionalTest: XCTestCase {
             XCTAssertNotNil(token?.tokenId)
                 XCTAssertEqual(token?.type, .card)
             XCTAssertEqual(6, token?.card?.expMonth)
-            XCTAssertEqual(2024, token?.card?.expYear)
+            XCTAssertEqual(2050, token?.card?.expYear)
             XCTAssertEqual("4242", token?.card?.last4)
             XCTAssertEqual("usd", token?.card?.currency)
             XCTAssertEqual("10002", token?.card?.address?.postalCode)
@@ -99,7 +99,7 @@ class STPCardFunctionalTest: XCTestCase {
 
         card.number = "4242 4242 4242 4242"
         card.expMonth = 6
-        card.expYear = 2024
+        card.expYear = 2050
 
         let client = STPAPIClient(publishableKey: "not_a_valid_key_asdf")
 
