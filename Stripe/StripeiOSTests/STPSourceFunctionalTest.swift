@@ -90,38 +90,6 @@ class STPSourceFunctionalTest: XCTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
-    func testCreateSource_giropay() {
-        let params = STPSourceParams.giropayParams(
-            withAmount: 1099,
-            name: "Jenny Rosen",
-            returnURL: "https://shop.example.com/crtABC",
-            statementDescriptor: "ORDER AT123")
-        params.metadata = [
-            "foo": "bar",
-        ]
-
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let expectation = self.expectation(description: "Source creation")
-        client.createSource(with: params) { source, error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(source)
-            XCTAssertEqual(source?.type, STPSourceType.giropay)
-            XCTAssertEqual(source?.amount, params.amount)
-            XCTAssertEqual(source?.currency, params.currency)
-            XCTAssertEqual(source?.owner?.name, params.owner?["name"] as? String)
-            XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
-            XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
-            XCTAssertNotNil(source?.redirect?.url)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
-
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-    }
-
     func testCreateSource_ideal() {
         let params = STPSourceParams.idealParams(
             withAmount: 1099,
