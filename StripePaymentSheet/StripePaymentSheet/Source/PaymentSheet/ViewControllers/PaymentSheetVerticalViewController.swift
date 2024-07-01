@@ -29,7 +29,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             case .link:
                 return .link(option: .wallet)
             case .new(paymentMethodType: let paymentMethodType):
-                return .new(confirmParams: IntentConfirmParams(type: paymentMethodType))
+                let params = IntentConfirmParams(type: paymentMethodType)
+                params.setDefaultBillingDetailsIfNecessary(for: configuration)
+                switch paymentMethodType {
+                case .stripe:
+                    return .new(confirmParams: params)
+                case .external(let type):
+                    return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
+                }
             case .saved(paymentMethod: let paymentMethod):
                 return .saved(paymentMethod: paymentMethod, confirmParams: nil)
             }
