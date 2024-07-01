@@ -30,7 +30,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let configuration: PaymentSheet.Configuration
     private let isCBCEligible: Bool
     private let paymentMethodRemove: Bool
-    private let ephemeralKeySecret: String?
+    private let ephemeralKeySecret: String
 
     private var updateViewController: UpdateCardViewController?
 
@@ -181,8 +181,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func remove(paymentMethod: STPPaymentMethod) {
-        guard let button = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
-                let ephemeralKeySecret = ephemeralKeySecret else { return }
+        guard let button = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }) else { return }
 
         // Detach the payment method from the customer
         let manager = SavedPaymentMethodManager(configuration: configuration)
@@ -301,8 +300,6 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
     }
 
     func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
-        guard let ephemeralKeySecret = ephemeralKeySecret else { return }
-
         // Update the payment method
         let manager = SavedPaymentMethodManager(configuration: configuration)
         let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
