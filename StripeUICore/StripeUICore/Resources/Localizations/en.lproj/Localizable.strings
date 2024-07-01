@@ -17,6 +17,9 @@ Section header for address fields */
 /* Label of an address field */
 "Area" = "Area";
 
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
+"Bank account •••• %@" = "Bank account •••• %@";
+
 /* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "Billing address is same as shipping";
 
@@ -147,10 +150,7 @@ Label of an address field */
 "Remove" = "Remove";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Remove bank account";
-
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Remove bank account ending in %@";
+"Remove bank account?" = "Remove bank account?";
 
 /* Label on a button for removing a card */
 "Remove card" = "Remove card";
