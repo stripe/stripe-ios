@@ -11,7 +11,7 @@ import XCTest
 
 class STPPaymentMethodSunbitTests: XCTestCase {
 
-    static let sunbitPaymentIntentClientSecret = "pi_3PWhWeFY0qyl6XeW0ByBJ26K_secret_zIhEsRYi9dep4sHDDwPXlbUtV"
+    static let sunbitPaymentIntentClientSecret = "pi_3PXmrrFY0qyl6XeW1KiGqDLP_secret_zAZk6ZD3cLPwb2lB6wTcLAhLU"
 
     func _retrieveSunbitJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
