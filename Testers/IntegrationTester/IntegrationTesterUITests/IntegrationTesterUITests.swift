@@ -116,7 +116,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         for integrationMethod in IntegrationMethod.allCases {
             print("Testing \(integrationMethod.rawValue)")
             switch integrationMethod {
-            case .iDEAL, .giropay, .przelewy24, .bancontact, .eps, .afterpay, .sofort, .paypal:
+            case .iDEAL, .przelewy24, .bancontact, .eps, .afterpay, .sofort, .paypal:
                 testNoInputIntegrationMethod(integrationMethod, shouldConfirm: true)
             case .alipay:
                 testAppToAppRedirect(integrationMethod)
@@ -134,6 +134,9 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
                 break
             case .oxxo:
                 // TODO: OXXO is currently broken
+                break
+            case .giropay:
+                // TODO: Giropay is deprecated
                 break
             }
         }
