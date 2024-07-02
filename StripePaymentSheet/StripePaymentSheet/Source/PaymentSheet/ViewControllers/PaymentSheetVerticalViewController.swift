@@ -235,7 +235,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateMandate(animated: Bool = true) {
-        self.mandateView.paymentMethodType = self.selectedPaymentMethodType
+        self.mandateView.state = VerticalMandateView.State(paymentMethodType: self.selectedPaymentMethodType,
+                                                           isReusing: selectedPaymentOption?.savedPaymentMethod != nil)
         self.mandateView.layoutIfNeeded()
         if animated {
             animateHeightChange {
