@@ -607,7 +607,15 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         // animate for OAuth since we make the authorize call in that case
         // and already have the same loading screen.
         let shouldAnimate = !authSession.isOauthNonOptional
-        pushPane(.accountPicker, animated: shouldAnimate)
+
+        // For OAuth sessions, we will get the next pane provided by the auth session.
+        // If for some reason this returns the `.partnerAuth` flow, we fallback to the
+        // `.accountPicker` pane to prevent an infinite loop.
+        if authSession.isOauthNonOptional, authSession.nextPane != .partnerAuth {
+            pushPane(authSession.nextPane, animated: shouldAnimate)
+        } else {
+            pushPane(.accountPicker, animated: shouldAnimate)
+        }
     }
 
     func partnerAuthViewController(
