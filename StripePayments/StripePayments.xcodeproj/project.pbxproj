@@ -219,6 +219,8 @@
 		C80A979CB3B453DF248C6339 /* STPPaymentIntentActionRedirectToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9850E5BC24407862EAEEE2BA /* STPPaymentIntentActionRedirectToURL.swift */; };
 		C8F612F8FACA11D956B50840 /* recorded_network_traffic in Resources */ = {isa = PBXBuildFile; fileRef = DAB375BFAB7E61A7B46799A1 /* recorded_network_traffic */; };
 		CA18F1CF38F4D2B25C8D93C1 /* STPSourceEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3299145C8B3D2382AE58911 /* STPSourceEnums.swift */; };
+		CAC3A02E2C2E1238007BC888 /* STPPaymentMethodSunbitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC3A02D2C2E1238007BC888 /* STPPaymentMethodSunbitParams.swift */; };
+		CAC3A0302C2E127B007BC888 /* STPPaymentMethodSunbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC3A02F2C2E127B007BC888 /* STPPaymentMethodSunbit.swift */; };
 		CB99BCA5D74904829DDF5A25 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 719D0377278FA11F93E19637 /* StripeCore.framework */; };
 		CBFB5A1330C916D5DC95F6FF /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086AC53333729531A067E435 /* STPLocalizedString.swift */; };
 		CCB5BAB2A22D94DE02938573 /* STPPaymentMethodMobilePayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A9741EA9B8FD4301DEB5FD /* STPPaymentMethodMobilePayParams.swift */; };
@@ -627,6 +629,8 @@
 		C740B96CCCC754A1CB19D44C /* STPPaymentMethodWeChatPayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodWeChatPayParams.swift; sourceTree = "<group>"; };
 		C82210A1FB3284993A193F13 /* STPIntentActionPromptPayDisplayQrCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionPromptPayDisplayQrCode.swift; sourceTree = "<group>"; };
 		CA58DFEBD2F9ADE14301B770 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		CAC3A02D2C2E1238007BC888 /* STPPaymentMethodSunbitParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSunbitParams.swift; sourceTree = "<group>"; };
+		CAC3A02F2C2E127B007BC888 /* STPPaymentMethodSunbit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSunbit.swift; sourceTree = "<group>"; };
 		CEFD8715EEA4EECD411465FB /* STPPaymentMethodCardWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardWallet.swift; sourceTree = "<group>"; };
 		D07382674619AEF657397B21 /* STPThreeDSUICustomization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPThreeDSUICustomization.swift; sourceTree = "<group>"; };
 		D093EFAC2C8F0B310EBD10C4 /* STPPaymentMethodSofortParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSofortParams.swift; sourceTree = "<group>"; };
@@ -1280,6 +1284,8 @@
 				208127DD5118F21D896C0711 /* STPPaymentMethodUSBankAccountParams.swift */,
 				5C27780E7E42FDBE450941C0 /* STPPaymentMethodWeChatPay.swift */,
 				C740B96CCCC754A1CB19D44C /* STPPaymentMethodWeChatPayParams.swift */,
+				CAC3A02D2C2E1238007BC888 /* STPPaymentMethodSunbitParams.swift */,
+				CAC3A02F2C2E127B007BC888 /* STPPaymentMethodSunbit.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -1661,6 +1667,7 @@
 				D63B4186EB3461366C8CF533 /* STPPaymentMethodBillingDetails.swift in Sources */,
 				D758E7EE398D4E72DE9F0F57 /* STPPaymentMethodEnums.swift in Sources */,
 				1E26C29F65205466B9437811 /* STPPaymentMethodParams.swift in Sources */,
+				CAC3A0302C2E127B007BC888 /* STPPaymentMethodSunbit.swift in Sources */,
 				2E5D133D1E203027C08DEDF0 /* STPPaymentMethodAUBECSDebit.swift in Sources */,
 				EC587986A9D69C5A5B180879 /* STPPaymentMethodAUBECSDebitParams.swift in Sources */,
 				A90639B7690FA9A8C5267561 /* STPPaymentMethodAffirm.swift in Sources */,
@@ -1674,6 +1681,7 @@
 				D56C720AFB3ABAEED747181F /* STPPaymentMethodBLIKParams.swift in Sources */,
 				6F3835CEBF9618207F8332AA /* STPPaymentMethodBacsDebit.swift in Sources */,
 				2BFBE84BD5718D4D8D4718D8 /* STPPaymentMethodBacsDebitParams.swift in Sources */,
+				CAC3A02E2C2E1238007BC888 /* STPPaymentMethodSunbitParams.swift in Sources */,
 				17083CBB3962C5ADB155EEF4 /* STPPaymentMethodBancontact.swift in Sources */,
 				31B7F5502BD1D4E500BF1015 /* HCaptchaDecoder.swift in Sources */,
 				6BA4B9162BF3E0C900D1F21D /* STPPaymentMethodMobilePay.swift in Sources */,

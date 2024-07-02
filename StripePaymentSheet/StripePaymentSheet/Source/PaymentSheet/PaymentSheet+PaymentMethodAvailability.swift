@@ -33,6 +33,7 @@ extension PaymentSheet {
         .bacsDebit,
         .alipay,
         .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
+        .sunbit,
         .boleto,
         .swish,
         .twint,
