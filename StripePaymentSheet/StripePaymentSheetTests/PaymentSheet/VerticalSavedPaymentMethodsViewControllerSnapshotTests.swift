@@ -36,7 +36,8 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
                                                             paymentMethodRemove: true,
-                                                            isCBCEligible: false)
+                                                            isCBCEligible: false,
+                                                            ephemeralKeySecret: "test-eph-key")
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         bottomSheet.view.autosizeHeight(width: 375)
 

@@ -30,7 +30,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
@@ -40,7 +41,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
@@ -50,7 +52,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
@@ -61,7 +64,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertFalse(viewController.canRemovePaymentMethods)
     }
 
@@ -71,7 +75,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertTrue(viewController.canEdit)
     }
 
@@ -81,7 +86,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertFalse(viewController.canEdit)
         // Should be in remove only mode
         XCTAssertTrue(viewController.isRemoveOnlyMode)
@@ -93,7 +99,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertTrue(viewController.canEdit)
     }
 
@@ -104,7 +111,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertFalse(viewController.canEdit)
     }
 
@@ -115,7 +123,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       isCBCEligible: false,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertFalse(viewController.canEdit)
     }
 
@@ -126,7 +135,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        paymentMethodRemove: true,
-                                                                       isCBCEligible: true)
+                                                                       isCBCEligible: true,
+                                                                       ephemeralKeySecret: "test-eph-key")
         XCTAssertTrue(viewController.canEdit)
     }
 }
