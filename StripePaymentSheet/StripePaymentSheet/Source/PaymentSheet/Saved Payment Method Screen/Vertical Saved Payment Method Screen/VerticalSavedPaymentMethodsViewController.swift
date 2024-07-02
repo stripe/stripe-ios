@@ -140,7 +140,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.configuration = configuration
         self.paymentMethodRemove = paymentMethodRemove
         self.isCBCEligible = isCBCEligible
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
+        // Put in remove only mode if:
+        // 1. We only have 1 payment method
+        // 2. AND We do not have a CBC card OR we are not CBC eligible
+        self.isRemoveOnlyMode = paymentMethods.count == 1 && (paymentMethods.filter { $0.isCoBrandedCard }.isEmpty || !isCBCEligible)
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
