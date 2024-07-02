@@ -113,7 +113,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
-        navBar.additionalButton.titleLabel?.font = configuration.appearance.scaledFont(for: configuration.appearance.font.base.medium, style: .footnote, maximumPointSize: 22)
         return navBar
     }()
 
