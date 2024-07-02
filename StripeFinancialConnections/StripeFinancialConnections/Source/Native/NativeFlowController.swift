@@ -607,7 +607,27 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         // animate for OAuth since we make the authorize call in that case
         // and already have the same loading screen.
         let shouldAnimate = !authSession.isOauthNonOptional
-        pushPane(.accountPicker, animated: shouldAnimate)
+
+        if authSession.isOauth == true {
+            authorizeOAuthSession(authSession).observe(on: .main) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let authSession):
+                    self.pushPane(authSession.nextPane, animated: shouldAnimate)
+                case .failure(let error):
+                    self.dataManager
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "CannotAuthorizeOauthSession",
+                            pane: .partnerAuth
+                        )
+                    self.showErrorPane(forError: error, referrerPane: .partnerAuth)
+                }
+            }
+        } else {
+            pushPane(.accountPicker, animated: shouldAnimate)
+        }
     }
 
     func partnerAuthViewController(
@@ -624,6 +644,30 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         dataManager.authSession = nil // clear any lingering auth sessions
 
         showErrorPane(forError: error, referrerPane: .partnerAuth)
+    }
+
+    private func authorizeOAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
+        dataManager.apiClient.fetchAuthSessionOAuthResults(
+            clientSecret: dataManager.clientSecret,
+            authSessionId: authSession.id
+        )
+        .chained(
+            on: .main,
+            using: { [weak self] mixedOAuthParameters in
+                guard let self = self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(
+                            debugDescription: "\(NativeFlowController.self) was deallocated."
+                        )
+                    )
+                }
+                return self.dataManager.apiClient.authorizeAuthSession(
+                    clientSecret: dataManager.clientSecret,
+                    authSessionId: authSession.id,
+                    publicToken: mixedOAuthParameters.publicToken
+                )
+            }
+        )
     }
 }
 
