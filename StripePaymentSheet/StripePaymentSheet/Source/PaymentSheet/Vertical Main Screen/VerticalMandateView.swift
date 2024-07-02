@@ -46,12 +46,12 @@ final class VerticalMandateView: UIView {
         guard let form = formProvider(paymentMethodType) else {
             return
         }
-        
+
         if form.collectsUserInput && !state.isReusing {
             // If it collects user input and is not being re-used, the mandate will be displayed in the form and not here
             return
         }
-        
+
         // Get the mandate from the form, if available
         // 🙋‍♂️ Note: assumes mandates are SimpleMandateElement!
         guard let mandateElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first else {
