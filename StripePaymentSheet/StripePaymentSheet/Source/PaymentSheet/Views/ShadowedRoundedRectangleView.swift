@@ -12,7 +12,6 @@ import UIKit
 /// The shadowed rounded rectangle that our cells use to display content
 class ShadowedRoundedRectangle: UIView {
     private let roundedRectangle: UIView
-    private let borderScaleFactor: CGFloat
     var appearance: PaymentSheet.Appearance {
         didSet {
             update()
@@ -50,7 +49,7 @@ class ShadowedRoundedRectangle: UIView {
 
         // Border
         if isSelected {
-            layer.borderWidth = appearance.borderWidth * borderScaleFactor
+            layer.borderWidth = appearance.borderWidth * 1.5
             layer.borderColor = appearance.colors.primary.cgColor
         } else {
             layer.borderWidth = appearance.borderWidth
@@ -58,9 +57,8 @@ class ShadowedRoundedRectangle: UIView {
         }
     }
 
-    required init(appearance: PaymentSheet.Appearance, borderScaleFactor: CGFloat = 2) {
+    required init(appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
-        self.borderScaleFactor = borderScaleFactor
         roundedRectangle = UIView()
         roundedRectangle.layer.masksToBounds = true
         super.init(frame: .zero)

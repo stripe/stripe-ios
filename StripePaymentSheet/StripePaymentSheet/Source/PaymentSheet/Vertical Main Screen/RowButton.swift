@@ -46,7 +46,7 @@ class RowButton: UIView {
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, didTap: @escaping (RowButton) -> Void) {
         self.appearance = appearance
         self.didTap = didTap
-        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance, borderScaleFactor: 1.5)
+        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         super.init(frame: .zero)
 
         // Label and sublabel
