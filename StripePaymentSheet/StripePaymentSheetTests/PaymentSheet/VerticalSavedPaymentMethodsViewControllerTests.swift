@@ -94,7 +94,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        paymentMethods: singlePaymentMethods,
                                                                        paymentMethodRemove: true,
                                                                        isCBCEligible: false)
-        XCTAssertTrue(viewController.canEdit)
+        XCTAssertFalse(viewController.canEdit)
+        XCTAssertTrue(viewController.isRemoveOnlyMode)
     }
 
     func testCanEdit_singlePaymentMethod_disallowsLastRemoval_returnsFalse() {
