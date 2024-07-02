@@ -21,6 +21,10 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
                      with selectedPaymentMethod: STPPaymentMethod?,
                      latestPaymentMethods: [STPPaymentMethod])
+    
+    
+    /// Notifies the delegate it should close the entire sheet it is presented in
+    func shouldClose()
 }
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
@@ -222,7 +226,7 @@ extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewContr
     }
 
     func didTapOrSwipeToDismiss() {
-        dismiss(animated: true)
+        delegate?.shouldClose()
     }
 
     var requiresFullScreen: Bool {
