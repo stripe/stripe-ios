@@ -21,8 +21,7 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
                      with selectedPaymentMethod: STPPaymentMethod?,
                      latestPaymentMethods: [STPPaymentMethod])
-    
-    
+
     /// Notifies the delegate it should close the entire sheet it is presented in
     func shouldClose()
 }
