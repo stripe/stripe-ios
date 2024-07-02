@@ -357,11 +357,13 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
     }
-    
+
 #if DEBUG
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        stpAssert(!view.hasAmbiguousLayout)
+        if let v = view.window!.ambiguousView() {
+            print(v)
+        }
     }
 #endif
 

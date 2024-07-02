@@ -121,7 +121,11 @@ import UIKit
         accessibilityHint = description
         accessibilityTraits = UISwitch().accessibilityTraits
 
-        descriptionLabel.text = description
+        if let description {
+            descriptionLabel.text = description
+        } else {
+            descriptionLabel.isHidden = true
+        }
 
         setupUI()
 
@@ -148,7 +152,7 @@ import UIKit
         super.layoutSubviews()
 
         // Preferred max width sometimes is off when changing font size
-        descriptionLabel.preferredMaxLayoutWidth = stackView.bounds.width
+//        descriptionLabel.preferredMaxLayoutWidth = stackView.bounds.width
         textView.invalidateIntrinsicContentSize()
     }
 

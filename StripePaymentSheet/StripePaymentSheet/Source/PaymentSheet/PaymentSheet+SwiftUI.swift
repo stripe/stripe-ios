@@ -11,6 +11,19 @@
 
 @_spi(STP) import StripeCore
 import SwiftUI
+extension UIView {
+    func ambiguousView() -> UIView? {
+        if hasAmbiguousLayout {
+           return self
+        }
+        for subview in self.subviews {
+            if let ambiguousSubview = subview.ambiguousView() {
+                return ambiguousSubview
+            }
+        }
+        return nil
+    }
+}
 
 extension View {
     /// Presents a sheet for a customer to complete their payment.

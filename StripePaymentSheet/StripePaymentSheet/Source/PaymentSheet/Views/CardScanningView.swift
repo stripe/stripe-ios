@@ -91,15 +91,6 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         return view
     }()
 
-    private lazy var instructionsLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.textAlignment = .center
-        label.font = .preferredFont(forTextStyle: .headline)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
         label.text = String.Localized.allow_camera_access
@@ -125,27 +116,7 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         let vibrancyEffect = UIVibrancyEffect(blurEffect: blurEffect)
         let vibrancyEffectView = UIVisualEffectView(effect: vibrancyEffect)
         vibrancyEffectView.translatesAutoresizingMaskIntoConstraints = false
-
-        vibrancyEffectView.contentView.addSubview(instructionsLabel)
-        cardOuterBlurView.contentView.addSubview(vibrancyEffectView)
-
-        cardOuterBlurView.addConstraints([
-            vibrancyEffectView.bottomAnchor.constraint(
-                equalTo: cardOuterBlurView.bottomAnchor, constant: 0),
-            vibrancyEffectView.leftAnchor.constraint(
-                equalTo: cardOuterBlurView.leftAnchor, constant: 0),
-            vibrancyEffectView.rightAnchor.constraint(
-                equalTo: cardOuterBlurView.rightAnchor, constant: 0),
-            vibrancyEffectView.topAnchor.constraint(
-                equalTo: cardOuterBlurView.topAnchor, constant: 0),
-        ])
-
-        vibrancyEffectView.addConstraints([
-            instructionsLabel.leftAnchor.constraint(
-                equalTo: vibrancyEffectView.leftAnchor, constant: 0),
-            instructionsLabel.rightAnchor.constraint(
-                equalTo: vibrancyEffectView.rightAnchor, constant: 0),
-        ])
+        cardOuterBlurView.contentView.addAndPinSubview(vibrancyEffectView)
     }
 
     func start() {
