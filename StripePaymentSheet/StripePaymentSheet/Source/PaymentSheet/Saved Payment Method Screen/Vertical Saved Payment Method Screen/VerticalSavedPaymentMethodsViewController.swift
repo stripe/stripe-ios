@@ -108,11 +108,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                                         appearance: configuration.appearance)
         navBar.setStyle(.back(showAdditionalButton: canEdit))
         navBar.delegate = self
-        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
+        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
         // TODO(porter) Read color from new secondary action color from appearance
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
+        navBar.additionalButton.titleLabel?.font = configuration.appearance.scaledFont(for: configuration.appearance.font.base.medium, style: .footnote, maximumPointSize: 22)
         return navBar
     }()
 
