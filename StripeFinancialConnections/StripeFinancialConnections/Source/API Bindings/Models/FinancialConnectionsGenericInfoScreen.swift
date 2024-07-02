@@ -108,7 +108,7 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
         let disclaimer: String?
         let primaryCta: GenericInfoAction?
         let secondaryCta: GenericInfoAction?
-        let belowCta: GenericInfoAction?
+        let belowCta: String?
 
         struct GenericInfoAction: Decodable {
             let id: String

@@ -43,5 +43,6 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
         let icon: FinancialConnectionsImage?
         let selectionCtaIcon: FinancialConnectionsImage?
         let drawerOnSelection: FinancialConnectionsGenericInfoScreen?
+        let accountIcon: FinancialConnectionsImage?
     }
 }

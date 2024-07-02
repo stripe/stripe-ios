@@ -50,7 +50,7 @@ final class LinkAccountPickerBodyView: UIView {
                 forAccount: accountTuple.partnerAccount
             )
             accountRowView.set(
-                institutionIconUrl: accountTuple.partnerAccount.institution?.icon?.default ?? accountTuple.accountPickerAccount.icon?.default,
+                institutionIconUrl: (accountTuple.accountPickerAccount.accountIcon?.default ?? accountTuple.partnerAccount.institution?.icon?.default ?? accountTuple.accountPickerAccount.icon?.default),
                 title: rowTitles.accountName,
                 subtitle: {
                     if let caption = accountTuple.accountPickerAccount.caption {
@@ -115,7 +115,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         selectionCta: nil,
                         icon: nil,
                         selectionCtaIcon: nil,
-                        drawerOnSelection: nil
+                        drawerOnSelection: nil,
+                        accountIcon: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -150,7 +151,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                             default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--warning-orange-3x.png"
                         ),
                         selectionCtaIcon: nil,
-                        drawerOnSelection: nil
+                        drawerOnSelection: nil,
+                        accountIcon: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -175,7 +177,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         selectionCta: nil,
                         icon: nil,
                         selectionCtaIcon: nil,
-                        drawerOnSelection: nil
+                        drawerOnSelection: nil,
+                        accountIcon: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
