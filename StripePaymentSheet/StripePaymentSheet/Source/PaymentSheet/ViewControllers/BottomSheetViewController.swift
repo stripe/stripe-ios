@@ -357,6 +357,13 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
     }
+    
+#if DEBUG
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        stpAssert(!view.hasAmbiguousLayout)
+    }
+#endif
 
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(
