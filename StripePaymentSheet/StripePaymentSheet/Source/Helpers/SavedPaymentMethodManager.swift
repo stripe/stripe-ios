@@ -38,7 +38,7 @@ final class SavedPaymentMethodManager {
 
     func update(paymentMethod: STPPaymentMethod,
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
-        guard let ephemeralKey = ephemeralKey else {
+        guard let ephemeralKey else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while updating a payment method.")
         }
 
