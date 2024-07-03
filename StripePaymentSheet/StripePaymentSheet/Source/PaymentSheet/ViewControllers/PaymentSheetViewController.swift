@@ -575,8 +575,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        guard case .saved(let paymentMethod) = paymentMethodSelection
-        else {
+        guard case .saved(let paymentMethod) = paymentMethodSelection else {
             return
         }
 
