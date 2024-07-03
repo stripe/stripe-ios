@@ -148,7 +148,6 @@ extension FinancialConnectionsNavigationController {
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
         shouldHideStripeLogo: Bool,
-        shouldLeftAlignStripeLogo: Bool,
         isTestMode: Bool
     ) {
         let iconHeight: CGFloat = 20
@@ -174,12 +173,7 @@ extension FinancialConnectionsNavigationController {
         let stripeLogoView: UIImageView? = {
             guard !shouldHideStripeLogo else { return nil }
 
-            let stripeLogoImage = UIImageView(
-                image: {
-                    let logo = Image.stripe_logo.makeImage(template: true)
-                    return shouldLeftAlignStripeLogo ? logo.withInsets(UIEdgeInsets(top: 0, left: 3, bottom: 0, right: 0)) : logo
-                }()
-            )
+            let stripeLogoImage = UIImageView(image: Image.stripe_logo.makeImage(template: true))
             stripeLogoImage.tintColor = UIColor.textActionPrimary
             stripeLogoImage.contentMode = .scaleAspectFit
             stripeLogoImage.sizeToFit()
@@ -215,12 +209,7 @@ extension FinancialConnectionsNavigationController {
         containerView.addSubview(stackView)
         stackView.center = containerView.center
 
-        if shouldLeftAlignStripeLogo {
-            navigationItem?.leftBarButtonItem = UIBarButtonItem(customView: stackView)
-        } else {
-            navigationItem?.titleView = stackView
-        }
-
+        navigationItem?.titleView = stackView
         navigationItem?.backButtonTitle = ""
         navigationItem?.rightBarButtonItem = closeItem
     }
