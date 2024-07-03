@@ -563,6 +563,10 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
 
         _ = viewController.bottomSheetController?.popContentViewController()
     }
+
+    func shouldClose() {
+        didTapOrSwipeToDismiss()
+    }
 }
 
 // MARK: - VerticalPaymentMethodListViewControllerDelegate
