@@ -29,16 +29,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     // MARK: Private properties
     private let configuration: PaymentSheet.Configuration
     private let intent: Intent
+    private let paymentMethodRemove: Bool
+    private let isCBCEligible: Bool
 
     private var updateViewController: UpdateCardViewController?
-
-    private var paymentMethodRemove: Bool {
-        intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
-    }
-
-    private var isCBCEligible: Bool {
-        intent.cardBrandChoiceEligible
-    }
 
     private var isEditingPaymentMethods: Bool = false {
         didSet {
@@ -149,6 +143,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
          intent: Intent) {
         self.configuration = configuration
         self.intent = intent
+        self.paymentMethodRemove = intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        self.isCBCEligible = intent.cardBrandChoiceEligible
         self.isRemoveOnlyMode = paymentMethods.count == 1 && paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
