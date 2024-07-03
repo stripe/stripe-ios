@@ -346,4 +346,11 @@ extension String.Localized {
             "Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button."
         )
     }
+
+    static var by_providing_your_card_information_text: String {
+        STPLocalizedString(
+            "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
+            "Text displayed below a credit card entry form when the card will be saved to make future payments."
+        )
+    }
 }
