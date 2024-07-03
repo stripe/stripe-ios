@@ -67,10 +67,6 @@ class ConsentViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
@@ -108,13 +104,6 @@ class ConsentViewController: UIViewController {
         paneLayoutView.addTo(view: view)
 
         dataSource.analyticsClient.logPaneLoaded(pane: .consent)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // this fixes an issue where presenting a UIViewController
-        // on top of ConsentViewController would stop the dot animation
-        consentLogoView?.animateDots()
 
         NotificationCenter.default.addObserver(
             self,
@@ -122,6 +111,13 @@ class ConsentViewController: UIViewController {
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // this fixes an issue where presenting a UIViewController
+        // on top of ConsentViewController would stop the dot animation
+        consentLogoView?.animateDots()
     }
 
     @objc private func appWillEnterForeground() {
