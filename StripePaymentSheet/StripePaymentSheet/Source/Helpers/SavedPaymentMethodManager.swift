@@ -6,26 +6,52 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 /// Provides shared implementations of common operations for managing saved payment methods in PaymentSheet
 final class SavedPaymentMethodManager {
 
-    let configuration: PaymentSheet.Configuration
+    enum Error: Swift.Error {
+        case missingEphemeralKey
+    }
 
-    init(configuration: PaymentSheet.Configuration) {
+    let configuration: PaymentSheet.Configuration
+    let intent: Intent
+
+    init(configuration: PaymentSheet.Configuration, intent: Intent) {
         self.configuration = configuration
+        self.intent = intent
     }
 
     func update(paymentMethod: STPPaymentMethod,
-                with updateParams: STPPaymentMethodUpdateParams,
-                using ephemeralKey: String) async throws -> STPPaymentMethod {
+                with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
+        guard let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent) else {
+            stpAssert(true, "Failed to read ephemeral key while updating a payment method.")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.missingEphemeralKey,
+                                              additionalNonPIIParams: ["operation": "update",
+                                                                       "customer_access_provider": configuration.customer?.customerAccessProvider.analyticValue as Any, ])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while updating a payment method.")
+        }
+
         return try await configuration.apiClient.updatePaymentMethod(with: paymentMethod.stripeId,
                                                                      paymentMethodUpdateParams: updateParams,
                                                                      ephemeralKeySecret: ephemeralKey)
     }
 
-    func detach(paymentMethod: STPPaymentMethod, using ephemeralKey: String) {
+    func detach(paymentMethod: STPPaymentMethod) {
+        guard let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent) else {
+            stpAssert(true, "Failed to read ephemeral key while detaching a payment method.")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.missingEphemeralKey,
+                                              additionalNonPIIParams: ["operation": "detach",
+                                                                       "customer_access_provider": configuration.customer?.customerAccessProvider.analyticValue as Any, ])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            return
+        }
+
         if let customerAccessProvider = configuration.customer?.customerAccessProvider,
            case .customerSession = customerAccessProvider,
            paymentMethod.type == .card,

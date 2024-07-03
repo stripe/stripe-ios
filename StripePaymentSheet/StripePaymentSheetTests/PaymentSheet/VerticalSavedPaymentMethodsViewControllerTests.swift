@@ -29,10 +29,27 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertTrue(viewController.canRemovePaymentMethods)
+    }
+
+    func testCanRemovePaymentMethods_multiplePaymentMethods_disallowsRemoval_returnsTrue() {
+        let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+                                                                       selectedPaymentMethod: paymentMethods.first,
+                                                                       paymentMethods: paymentMethods,
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                                                                                   customerSessionData: [
+                                                                                                       "payment_sheet": [
+                                                                                                           "enabled": true,
+                                                                                                           "features": ["payment_method_save": "enabled",
+                                                                                                                        "payment_method_remove": "disabled",
+                                                                                                                       ],
+                                                                                                       ],
+                                                                                                       "customer_sheet": [
+                                                                                                           "enabled": false
+                                                                                                       ],
+                                                                                                   ]))
+        XCTAssertFalse(viewController.canRemovePaymentMethods)
     }
 
     func testCanRemovePaymentMethods_multiplePaymentMethods_disallowsLastRemoval_returnsTrue() {
@@ -40,9 +57,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
@@ -51,9 +66,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
@@ -63,9 +76,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertFalse(viewController.canRemovePaymentMethods)
     }
 
@@ -74,9 +85,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertTrue(viewController.canEdit)
     }
 
@@ -85,9 +94,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertFalse(viewController.canEdit)
         // Should be in remove only mode
         XCTAssertTrue(viewController.isRemoveOnlyMode)
@@ -98,9 +105,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertTrue(viewController.canEdit)
     }
 
@@ -110,9 +115,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertFalse(viewController.canEdit)
     }
 
@@ -122,9 +125,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
         XCTAssertFalse(viewController.canEdit)
     }
 
@@ -134,9 +135,10 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: true,
-                                                                       ephemeralKeySecret: "test-eph-key")
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                                                                                   cardBrandChoiceData: [
+                                                                                                        "eligible": true])
+                                                                       )
         XCTAssertTrue(viewController.canEdit)
     }
 }
