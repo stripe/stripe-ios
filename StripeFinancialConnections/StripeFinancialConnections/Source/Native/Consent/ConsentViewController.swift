@@ -104,12 +104,25 @@ class ConsentViewController: UIViewController {
         paneLayoutView.addTo(view: view)
 
         dataSource.analyticsClient.logPaneLoaded(pane: .consent)
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // this fixes an issue where presenting a UIViewController
         // on top of ConsentViewController would stop the dot animation
+        consentLogoView?.animateDots()
+    }
+
+    @objc private func appWillEnterForeground() {
+        // Fixes an issue where the dot animation was stopped when the app
+        // was backgrounded, then reopened.
         consentLogoView?.animateDots()
     }
 
