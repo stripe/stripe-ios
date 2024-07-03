@@ -148,7 +148,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.intent = intent
         self.paymentMethodRemove = intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = intent.cardBrandChoiceEligible
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
         // Put in remove only mode and don't show the option to update PMs if:
         // 1. We only have 1 payment method
         // 2. The customer can't update the card brand 
