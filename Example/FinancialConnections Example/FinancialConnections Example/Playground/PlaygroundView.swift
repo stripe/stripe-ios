@@ -176,6 +176,9 @@ struct PlaygroundView: View {
         }
         .navigationTitle("Playground")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            UIScrollView.appearance().keyboardDismissMode = .interactive
+        }
     }
 }
 
