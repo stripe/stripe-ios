@@ -21,6 +21,9 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
                      with selectedPaymentMethod: STPPaymentMethod?,
                      latestPaymentMethods: [STPPaymentMethod])
+
+    /// Notifies the delegate it should close the entire sheet it is presented in
+    func shouldClose()
 }
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
@@ -113,7 +116,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                                         appearance: configuration.appearance)
         navBar.setStyle(.back(showAdditionalButton: canEdit))
         navBar.delegate = self
-        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
+        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
         // TODO(porter) Read color from new secondary action color from appearance
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
@@ -146,6 +149,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.paymentMethodRemove = intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = intent.cardBrandChoiceEligible
         self.isRemoveOnlyMode = paymentMethods.count == 1 && paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
+        // Put in remove only mode and don't show the option to update PMs if:
+        // 1. We only have 1 payment method
+        // 2. The customer can't update the card brand 
+        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
@@ -225,7 +232,7 @@ extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewContr
     }
 
     func didTapOrSwipeToDismiss() {
-        dismiss(animated: true)
+        delegate?.shouldClose()
     }
 
     var requiresFullScreen: Bool {
