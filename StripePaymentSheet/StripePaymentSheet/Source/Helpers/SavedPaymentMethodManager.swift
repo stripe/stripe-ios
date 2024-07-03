@@ -19,7 +19,7 @@ final class SavedPaymentMethodManager {
     let configuration: PaymentSheet.Configuration
     let intent: Intent
 
-    private var ephemeralKey: String? {
+    private lazy var ephemeralKey: String? = {
         guard let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent) else {
             stpAssert(true, "Failed to read ephemeral key.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
@@ -29,7 +29,7 @@ final class SavedPaymentMethodManager {
             return nil
         }
         return ephemeralKey
-    }
+    }()
 
     init(configuration: PaymentSheet.Configuration, intent: Intent) {
         self.configuration = configuration
