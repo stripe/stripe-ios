@@ -143,7 +143,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         // Put in remove only mode and don't show the option to update PMs if:
         // 1. We only have 1 payment method
         // 2. The customer can't update the card brand 
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && (paymentMethods.filter { $0.isCoBrandedCard }.isEmpty || !isCBCEligible)
+        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
