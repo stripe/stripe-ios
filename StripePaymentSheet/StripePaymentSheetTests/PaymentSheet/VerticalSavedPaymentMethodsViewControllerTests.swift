@@ -151,8 +151,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
 
         // The card is NOT co-branded and, we can't edit, enter remove only mode
         XCTAssertTrue(viewController.isRemoveOnlyMode)
@@ -164,8 +163,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: true)
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                                                                                   cardBrandChoiceData: ["eligible": true]))
 
         // The card is NOT co-branded and, we can't edit, enter remove only mode
         XCTAssertTrue(viewController.isRemoveOnlyMode)
@@ -177,8 +176,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: true)
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card],
+                                                                                                   cardBrandChoiceData: ["eligible": true]))
 
         // The card is co-branded and the merchant is CBC eligible, we can edit, don't enter remove only mode
         XCTAssertFalse(viewController.isRemoveOnlyMode)
@@ -190,8 +189,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       paymentMethodRemove: true,
-                                                                       isCBCEligible: false)
+                                                                       intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
 
         // The card is co-branded but the merchant is NOT CBC eligible, we can't edit, enter remove only mode
         XCTAssertTrue(viewController.isRemoveOnlyMode)
