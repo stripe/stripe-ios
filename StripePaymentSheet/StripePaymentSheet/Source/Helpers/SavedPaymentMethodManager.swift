@@ -48,7 +48,7 @@ final class SavedPaymentMethodManager {
     }
 
     func detach(paymentMethod: STPPaymentMethod) {
-        guard let ephemeralKey = ephemeralKey else {
+        guard let ephemeralKey else {
             return
         }
 
