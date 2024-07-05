@@ -145,6 +145,7 @@ extension PaneLayoutView {
         primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
         secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration? = nil,
         topText: String? = nil,
+        bottomText: String? = nil,
         didSelectURL: ((URL) -> Void)? = nil
     ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?, secondaryButton: StripeUICore.Button?) {
         guard
@@ -209,6 +210,24 @@ extension PaneLayoutView {
                 secondaryButton.heightAnchor.constraint(equalToConstant: 56)
             ])
             footerStackView.addArrangedSubview(secondaryButton)
+        }
+
+        if let bottomText {
+            let bottomTextLabel = AttributedTextView(
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                linkFont: .label(.small),
+                textColor: .textDefault,
+                alignCenter: true
+            )
+            bottomTextLabel.setText(
+                bottomText,
+                action: didSelectURL ?? { _ in }
+            )
+            if let lastView = footerStackView.arrangedSubviews.last {
+                footerStackView.setCustomSpacing(24, after: lastView)
+            }
+            footerStackView.addArrangedSubview(bottomTextLabel)
         }
 
         let paddingStackView = HitTestStackView(
