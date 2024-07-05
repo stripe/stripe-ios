@@ -56,6 +56,7 @@ final class AccountPickerSelectionListView: UIView {
         enabledAccounts.forEach { account in
             let accountRowView = AccountPickerRowView(
                 isDisabled: false,
+                isFaded: false,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     var selectedAccounts = selectedAccounts
@@ -85,6 +86,7 @@ final class AccountPickerSelectionListView: UIView {
         disabledAccounts.forEach { disabledAccount in
             let accountRowView = AccountPickerRowView(
                 isDisabled: true,
+                isFaded: true,
                 didSelect: {
                     // can't select disabled accounts
                 }
