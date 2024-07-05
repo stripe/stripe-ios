@@ -86,6 +86,9 @@
 		6A1D43072B17AE37005A1EB0 /* RoundedIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */; };
 		6A1D43092B17CB04005A1EB0 /* InstitutionNoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */; };
 		6A26A3AB2B991A4D00215510 /* FeedbackGeneratorAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A26A3AA2B991A4D00215510 /* FeedbackGeneratorAdapter.swift */; };
+		6A384A842C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A384A832C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift */; };
+		6A3DA1F52C34A37F005C3F6E /* GenericInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3DA1F42C34A37F005C3F6E /* GenericInfoViewController.swift */; };
+		6A3DA1F72C34B254005C3F6E /* GenericInfoFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3DA1F62C34B254005C3F6E /* GenericInfoFooterView.swift */; };
 		6A43202A2B7E8C5400A67A70 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4320292B7E8C5400A67A70 /* Constants.swift */; };
 		6A732C9A2B61C51C00828CB1 /* ShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C992B61C51C00828CB1 /* ShimmeringView.swift */; };
 		6A732C9C2B61C56A00828CB1 /* InstitutionTableLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */; };
@@ -365,6 +368,9 @@
 		6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedIconView.swift; sourceTree = "<group>"; };
 		6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionNoResultsView.swift; sourceTree = "<group>"; };
 		6A26A3AA2B991A4D00215510 /* FeedbackGeneratorAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGeneratorAdapter.swift; sourceTree = "<group>"; };
+		6A384A832C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsGenericInfoScreen.swift; sourceTree = "<group>"; };
+		6A3DA1F42C34A37F005C3F6E /* GenericInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericInfoViewController.swift; sourceTree = "<group>"; };
+		6A3DA1F62C34B254005C3F6E /* GenericInfoFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericInfoFooterView.swift; sourceTree = "<group>"; };
 		6A4320292B7E8C5400A67A70 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6A732C992B61C51C00828CB1 /* ShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringView.swift; sourceTree = "<group>"; };
 		6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionTableLoadingView.swift; sourceTree = "<group>"; };
@@ -741,6 +747,7 @@
 				429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */,
 				4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */,
 				495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */,
+				6A384A832C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -766,6 +773,15 @@
 				6A044E472BB3866A00D73A3E /* AccountUpdateRequiredViewController.swift */,
 			);
 			path = LinkAccountPicker;
+			sourceTree = "<group>";
+		};
+		6A3DA1F32C34A32D005C3F6E /* GenericInfoScreen */ = {
+			isa = PBXGroup;
+			children = (
+				6A3DA1F42C34A37F005C3F6E /* GenericInfoViewController.swift */,
+				6A3DA1F62C34B254005C3F6E /* GenericInfoFooterView.swift */,
+			);
+			path = GenericInfoScreen;
 			sourceTree = "<group>";
 		};
 		6A7814162B361C1900168992 /* PaneLayoutView */ = {
@@ -958,6 +974,7 @@
 		C0C2FC181FFA71CFAA6F3148 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				6A3DA1F32C34A32D005C3F6E /* GenericInfoScreen */,
 				6A7814162B361C1900168992 /* PaneLayoutView */,
 				7E5623CA300ADBCBE8B33E69 /* NetworkingOTPView */,
 				EE64D5A17913CF4AAD855A9A /* AttributedLabel.swift */,
@@ -1251,6 +1268,7 @@
 				432463EBF562CDDC6D3DC252 /* BankAccountToken.swift in Sources */,
 				6A732CA82B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift in Sources */,
 				6A732CAA2B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift in Sources */,
+				6A3DA1F52C34A37F005C3F6E /* GenericInfoViewController.swift in Sources */,
 				FBF513C7F73002FA30CC7C21 /* ConsumerSessionModels.swift in Sources */,
 				EC74B719F0FA1A977EF4708C /* FinancialConnectionsAccount.swift in Sources */,
 				460C7685096AA6C693309647 /* FinancialConnectionsAuthSession.swift in Sources */,
@@ -1279,6 +1297,7 @@
 				C61D5957D3276991795F7D16 /* FinancialConnectionsSheetAnalytics.swift in Sources */,
 				D3AB52D5AE87FE51642C50C1 /* ExperimentHelper.swift in Sources */,
 				6A13B9FA2B4E182A00FFA327 /* SpinnerView.swift in Sources */,
+				6A384A842C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift in Sources */,
 				0D56BD448019185656DF9310 /* FinancialConnectionsCustomManualEntryRequiredError.swift in Sources */,
 				6E6E30D01D4E9629DB07E97B /* FinancialConnectionsNavigationController.swift in Sources */,
 				01C820ECDBFC041A741A5499 /* FlowRouter.swift in Sources */,
@@ -1360,6 +1379,7 @@
 				3AC5CA5F5529B55026342A54 /* NetworkingLinkSignupDataSource.swift in Sources */,
 				6A13B9862B4CD04100FFA327 /* RetrieveAccountsLoadingView.swift in Sources */,
 				8DC6C2A239456994091BF3EE /* NetworkingLinkSignupFooterView.swift in Sources */,
+				6A3DA1F72C34B254005C3F6E /* GenericInfoFooterView.swift in Sources */,
 				54B51EA1F75B9607D7C29B08 /* NetworkingLinkSignupViewController.swift in Sources */,
 				3F835D5A1C797C1C9BCF05D0 /* NetworkingLinkStepUpVerificationBodyView.swift in Sources */,
 				11782289208971CCAA1037A5 /* NetworkingLinkStepUpVerificationDataSource.swift in Sources */,
