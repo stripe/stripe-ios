@@ -45,6 +45,8 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
                 let container = try decoder.singleValueContainer()
                 if type == .text, let value = try? container.decode(TextBodyEntry.self) {
                     self = .text(value)
+                } else if type == .image, let value = try? container.decode(ImageBodyEntry.self) {
+                    self = .image(value)
                 } else {
                     self = .unparasable
                 }
