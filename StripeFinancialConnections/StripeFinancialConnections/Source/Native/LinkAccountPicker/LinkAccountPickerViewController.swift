@@ -357,6 +357,23 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
         let selectedPartnerAccount = selectedAccountTuple.partnerAccount
 
+        if let drawerOnSelection = selectedAccountTuple.accountPickerAccount.drawerOnSelection {
+            let genericInfoViewController = GenericInfoViewController(
+                genericInfoScreen: drawerOnSelection,
+                panePresentationStyle: .sheet,
+                didSelectPrimaryButton: { genericInfoViewController in
+                    genericInfoViewController.dismiss(animated: true)
+                },
+                didSelectURL: { _ in } // TODO(kgaidis): fix handling URL
+            )
+            genericInfoViewController.present(on: self)
+
+            if !selectedAccountTuple.accountPickerAccount.allowSelection {
+                // if the account is not selectable, then we return early
+                return
+            }
+        }
+
         // unselecting
         if
             // unselecting in single account flow is not allowed
