@@ -67,6 +67,7 @@ final class AccountPickerRowView: UIView {
 
     init(
         isDisabled: Bool,
+        isFaded: Bool,
         theme: FinancialConnectionsTheme,
         didSelect: @escaping () -> Void
     ) {
@@ -77,7 +78,7 @@ final class AccountPickerRowView: UIView {
         // necessary so the shadow does not appear under text
         backgroundColor = .customBackgroundColor
 
-        if isDisabled {
+        if isFaded {
             horizontalStackView.alpha = 0.25
         }
         addAndPinSubviewToSafeArea(horizontalStackView)
@@ -111,6 +112,7 @@ final class AccountPickerRowView: UIView {
         institutionIconUrl: String? = nil,
         title: String,
         subtitle: String?,
+        underlineSubtitle: Bool = false,
         balanceString: String? = nil,
         isSelected: Bool
     ) {
@@ -127,6 +129,7 @@ final class AccountPickerRowView: UIView {
         labelView.set(
             title: title,
             subtitle: subtitle,
+            underlineSubtitle: underlineSubtitle,
             balanceString: balanceString
         )
         set(isSelected: isSelected)
@@ -168,6 +171,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
     let balanceString: String?
     let isSelected: Bool
     let isDisabled: Bool
+    let isFaded: Bool
     let theme: FinancialConnectionsTheme
 
     init(
@@ -177,6 +181,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
         balanceString: String?,
         isSelected: Bool,
         isDisabled: Bool,
+        isFaded: Bool,
         theme: FinancialConnectionsTheme = .light
     ) {
         self.institutionIconUrl = institutionIconUrl
@@ -185,12 +190,14 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
         self.balanceString = balanceString
         self.isSelected = isSelected
         self.isDisabled = isDisabled
+        self.isFaded = isFaded
         self.theme = theme
     }
 
     func makeUIView(context: Context) -> AccountPickerRowView {
         let view = AccountPickerRowView(
             isDisabled: isDisabled,
+            isFaded: isFaded,
             theme: theme,
             didSelect: {}
         )
@@ -229,14 +236,16 @@ struct AccountPickerRowView_Previews: PreviewProvider {
                         subtitle: "••••6789",
                         balanceString: nil,
                         isSelected: true,
-                        isDisabled: false
+                        isDisabled: false,
+                        isFaded: false
                     ).frame(height: 88)
                     AccountPickerRowViewUIViewRepresentable(
                         title: "Joint Checking Very Long Name To Truncate",
                         subtitle: "••••6789",
                         balanceString: nil,
                         isSelected: true,
-                        isDisabled: false
+                        isDisabled: false,
+                        isFaded: false
                     ).frame(height: 76)
                     AccountPickerRowViewUIViewRepresentable(
                         title: "Link Light Theme",
@@ -244,6 +253,7 @@ struct AccountPickerRowView_Previews: PreviewProvider {
                         balanceString: nil,
                         isSelected: true,
                         isDisabled: false,
+                        isFaded: false,
                         theme: .linkLight
                     ).frame(height: 76)
                     AccountPickerRowViewUIViewRepresentable(
@@ -251,21 +261,24 @@ struct AccountPickerRowView_Previews: PreviewProvider {
                         subtitle: "••••6789",
                         balanceString: "$3285.53",
                         isSelected: false,
-                        isDisabled: false
+                        isDisabled: false,
+                        isFaded: false
                     ).frame(height: 76)
                     AccountPickerRowViewUIViewRepresentable(
                         title: "Joint Checking",
                         subtitle: nil,
                         balanceString: "$3285.53",
                         isSelected: false,
-                        isDisabled: false
+                        isDisabled: false,
+                        isFaded: false
                     ).frame(height: 76)
                     AccountPickerRowViewUIViewRepresentable(
                         title: "Joint Checking",
                         subtitle: "Not available",
                         balanceString: nil,
                         isSelected: false,
-                        isDisabled: true
+                        isDisabled: true,
+                        isFaded: true
                     ).frame(height: 76)
                 }.padding()
             }
