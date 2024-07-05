@@ -14,35 +14,34 @@ func GenericInfoFooterView(
     didSelectSecondaryButton: @escaping () -> Void,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView? {
-    if let footer {
-        let primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
-        if let primaryCta = footer.primaryCta {
-            primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
-                title: primaryCta.label,
-                action: didSelectPrimaryButton
-            )
-        } else {
-            primaryButtonConfiguration = nil
-        }
-        let secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
-        if let secondaryCta = footer.secondaryCta {
-            secondaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
-                title: secondaryCta.label,
-                action: didSelectSecondaryButton
-            )
-        } else {
-            secondaryButtonConfiguration = nil
-        }
-        return PaneLayoutView.createFooterView(
-            primaryButtonConfiguration: primaryButtonConfiguration,
-            secondaryButtonConfiguration: secondaryButtonConfiguration,
-            topText: footer.disclaimer,
-            bottomText: footer.belowCta,
-            didSelectURL: didSelectURL
-        ).footerView
-    } else {
+    guard let footer else {
         return nil
     }
+    let primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
+    if let primaryCta = footer.primaryCta {
+        primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
+            title: primaryCta.label,
+            action: didSelectPrimaryButton
+        )
+    } else {
+        primaryButtonConfiguration = nil
+    }
+    let secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
+    if let secondaryCta = footer.secondaryCta {
+        secondaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
+            title: secondaryCta.label,
+            action: didSelectSecondaryButton
+        )
+    } else {
+        secondaryButtonConfiguration = nil
+    }
+    return PaneLayoutView.createFooterView(
+        primaryButtonConfiguration: primaryButtonConfiguration,
+        secondaryButtonConfiguration: secondaryButtonConfiguration,
+        topText: footer.disclaimer,
+        bottomText: footer.belowCta,
+        didSelectURL: didSelectURL
+    ).footerView
 }
 
 #if DEBUG
