@@ -83,7 +83,6 @@ final class LinkAccountPickerViewController: UIViewController {
     private weak var bodyView: LinkAccountPickerBodyView?
     private weak var footerView: LinkAccountPickerFooterView?
     private weak var lastAccountUpdateRequiredViewController: UIViewController?
-    private weak var lastDrawerOnSelectionViewController: UIViewController?
 
     init(dataSource: LinkAccountPickerDataSource) {
         self.dataSource = dataSource
@@ -359,13 +358,12 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
             let genericInfoViewController = GenericInfoViewController(
                 genericInfoScreen: drawerOnSelection,
                 panePresentationStyle: .sheet,
-                didSelectPrimaryButton: { [weak self] in
-                    self?.lastDrawerOnSelectionViewController?.dismiss(animated: true)
+                didSelectPrimaryButton: { genericInfoViewController in
+                    genericInfoViewController.dismiss(animated: true)
                 },
                 didSelectURL: { _ in } // TODO(kgaidis): fix handling URL
             )
             genericInfoViewController.present(on: self)
-            lastDrawerOnSelectionViewController = genericInfoViewController
 
             if !selectedAccountTuple.accountPickerAccount.allowSelection {
                 // if the account is not selectable, then we return early

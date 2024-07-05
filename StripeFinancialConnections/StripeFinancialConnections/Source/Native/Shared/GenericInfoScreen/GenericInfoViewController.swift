@@ -11,20 +11,20 @@ import UIKit
 final class GenericInfoViewController: SheetViewController {
 
     private let genericInfoScreen: FinancialConnectionsGenericInfoScreen
-    private let didSelectPrimaryButton: () -> Void
-    private let didSelectSecondaryButton: () -> Void
+    private let didSelectPrimaryButton: (_ genericInfoViewController: GenericInfoViewController) -> Void
+    private let didSelectSecondaryButton: (_ genericInfoViewController: GenericInfoViewController) -> Void
     private let didSelectURL: (URL) -> Void
 
     init(
         genericInfoScreen: FinancialConnectionsGenericInfoScreen,
         panePresentationStyle: PanePresentationStyle,
-        didSelectPrimaryButton: @escaping () -> Void,
-        didSelectSecondaryButton: (() -> Void)? = nil,
+        didSelectPrimaryButton: @escaping (_ genericInfoViewController: GenericInfoViewController) -> Void,
+        didSelectSecondaryButton: ((_ genericInfoViewController: GenericInfoViewController) -> Void)? = nil,
         didSelectURL: @escaping (URL) -> Void
     ) {
         self.genericInfoScreen = genericInfoScreen
         self.didSelectPrimaryButton = didSelectPrimaryButton
-        self.didSelectSecondaryButton = didSelectSecondaryButton ?? {}
+        self.didSelectSecondaryButton = didSelectSecondaryButton ?? { _ in }
         self.didSelectURL = didSelectURL
         super.init(panePresentationStyle: panePresentationStyle)
     }
@@ -54,8 +54,14 @@ final class GenericInfoViewController: SheetViewController {
             ),
             footerView: GenericInfoFooterView(
                 footer: genericInfoScreen.footer,
-                didSelectPrimaryButton: didSelectPrimaryButton,
-                didSelectSecondaryButton: didSelectSecondaryButton,
+                didSelectPrimaryButton: { [weak self] in
+                    guard let self else { return }
+                    didSelectPrimaryButton(self)
+                },
+                didSelectSecondaryButton: { [weak self] in
+                    guard let self else { return }
+                    didSelectSecondaryButton(self)
+                },
                 didSelectURL: didSelectURL
             )
         )
