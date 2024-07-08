@@ -111,7 +111,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                                         appearance: configuration.appearance)
         navBar.setStyle(.back(showAdditionalButton: canEdit))
         navBar.delegate = self
-        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
+        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
         // TODO(porter) Read color from new secondary action color from appearance
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
@@ -143,7 +143,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.configuration = configuration
         self.paymentMethodRemove = paymentMethodRemove
         self.isCBCEligible = isCBCEligible
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
+        // Put in remove only mode and don't show the option to update PMs if:
+        // 1. We only have 1 payment method
+        // 2. The customer can't update the card brand 
+        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
