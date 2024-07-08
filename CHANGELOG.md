@@ -6,6 +6,7 @@
 ## PaymentSheet
 * [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
 * [Fixed] Fixed an issue where amounts with currency=IDR were displayed as-is, instead of dropping the last two digits.
+* [Fixed] Fixed an issue where some payment method images in the horizontal scrollview could briefly flash.
 
 ## 23.27.6 2024-06-25
 ### All
