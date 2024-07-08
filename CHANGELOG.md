@@ -1,7 +1,8 @@
 ## x.x.x x-x-x
 
 ### Payments
-* [Fixed] An issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
+* [Fixed] Fixed an issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
+* [Fixed] Fixed an issue where successful TWINT payments were sometimes incorrectly considered 'canceled'.
 
 ## PaymentSheet
 * [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
