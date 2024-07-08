@@ -210,6 +210,15 @@ extension PaymentSheet {
     internal enum CustomerAccessProvider {
         case legacyCustomerEphemeralKey(String)
         case customerSession(String)
+
+        var analyticValue: String {
+            switch self {
+            case .legacyCustomerEphemeralKey:
+                return "legacy"
+            case .customerSession:
+                return "customer_session"
+            }
+        }
     }
 
     /// Configuration related to the Stripe Customer

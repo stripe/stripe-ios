@@ -84,7 +84,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private var isHackyLinkButtonSelected: Bool = false
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-       return SavedPaymentMethodManager(configuration: configuration)
+        return SavedPaymentMethodManager(configuration: configuration, intent: intent)
     }()
 
     // MARK: - Views
@@ -491,15 +491,12 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
     func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
-        guard case .saved(let paymentMethod) = paymentMethodSelection,
-              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
-        else {
-            throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
+        guard case .saved(let paymentMethod) = paymentMethodSelection else {
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
         return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
-                                                          with: updateParams,
-                                                          using: ephemeralKey)
+                                                          with: updateParams)
     }
 
     func didUpdateSelection(
@@ -535,13 +532,11 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        guard case .saved(let paymentMethod) = paymentMethodSelection,
-              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
-        else {
+        guard case .saved(let paymentMethod) = paymentMethodSelection else {
             return
         }
 
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod, using: ephemeralKey)
+        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false

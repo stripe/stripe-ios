@@ -94,6 +94,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         && !shouldShowLinkInList
     }
 
+    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+        SavedPaymentMethodManager(configuration: configuration, intent: intent)
+    }()
+
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
@@ -513,8 +517,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             configuration: configuration,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
-            paymentMethodRemove: loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-            isCBCEligible: loadResult.intent.cardBrandChoiceEligible
+            intent: intent
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
@@ -668,11 +671,8 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
 // MARK: UpdateCardViewControllerDelegate
 extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
-        guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
-
         // Detach the payment method from the customer
-        let manager = SavedPaymentMethodManager(configuration: configuration)
-        manager.detach(paymentMethod: paymentMethod, using: ephemeralKeySecret)
+        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
 
         // Update savedPaymentMethods
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
@@ -683,11 +683,8 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
     }
 
     func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
-        guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
-
         // Update the payment method
-        let manager = SavedPaymentMethodManager(configuration: configuration)
-        let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
+        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
         // Update savedPaymentMethods
         if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
