@@ -91,5 +91,14 @@ class NSString_StripeTest: XCTestCase {
             ),
             "ZZZ 10.99"
         )
+
+        XCTAssertEqual(
+            String.localizedAmountDisplayString(
+                for: 1000,
+                currency: "IDR",
+                locale: Locale(identifier: "en_US")
+            ),
+            "IDR 10"
+        )
     }
 }
