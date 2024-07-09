@@ -24,7 +24,7 @@
 
 "Bank account" = "Pangakonto";
 
-"Buy now or pay later with Klarna." = "Ostke nüüd või makske hiljem Klarnaga.";
+"Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
 
 "Buy using a UPI ID" = "UPI ID abil ostmine";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Makseviisi haldamine";
+
 "Manage payment methods" = "Halda makseviise";
 
 "Manage your payment methods" = "Makseviiside haldamine";
 
 "Name on card" = "Nimi kaardil";
+
+"New card" = "Uus kaart";
 
 "New payment method" = "Uus makseviis";
 

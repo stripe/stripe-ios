@@ -24,7 +24,7 @@
 
 "Bank account" = "Kont tal-bank";
 
-"Buy now or pay later with Klarna." = "Ixtri issa jew ħallas iktar tard bil-Klarna.";
+"Buy now or pay later with Klarna" = "Ixtri issa jew ħallas iktar tard bi Klarna";
 
 "Buy using a UPI ID" = "Ixtri billi tuża ID UPI";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Ħu ħsieb il-metodu tal-pagament";
+
 "Manage payment methods" = "Ħu ħsieb il-metodi tal-pagament";
 
 "Manage your payment methods" = "Ħu ħsieb il-metodi tal-pagament tiegħek";
 
 "Name on card" = "L-isem fuq il-karta";
+
+"New card" = "Karta ġdida";
 
 "New payment method" = "Metodu tal-pagament ġdid";
 

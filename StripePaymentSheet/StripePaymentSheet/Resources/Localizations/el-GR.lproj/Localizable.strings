@@ -24,7 +24,7 @@
 
 "Bank account" = "Τραπεζικός λογαριασμός";
 
-"Buy now or pay later with Klarna." = "Αγορά τώρα ή πληρωμή αργότερα με Klarna.";
+"Buy now or pay later with Klarna" = "Αγορά τώρα ή πληρωμή αργότερα με Klarna";
 
 "Buy using a UPI ID" = "Αγορά με χρήση αναγνωριστικού UPI";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Διαχείριση μεθόδου πληρωμής";
+
 "Manage payment methods" = "Διαχείριση μεθόδων πληρωμής";
 
 "Manage your payment methods" = "Διαχειριστείτε τις μεθόδους πληρωμής σας";
 
 "Name on card" = "Όνομα στην κάρτα";
+
+"New card" = "Νέα κάρτα";
 
 "New payment method" = "Νέα μέθοδος πληρωμής";
 
