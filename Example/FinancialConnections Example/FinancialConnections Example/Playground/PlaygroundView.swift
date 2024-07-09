@@ -176,6 +176,11 @@ struct PlaygroundView: View {
         }
         .navigationTitle("Playground")
         .navigationBarTitleDisplayMode(.inline)
+        .gesture(DragGesture().onChanged(hideKeyboard))
+    }
+
+    private func hideKeyboard(_ value: DragGesture.Value) {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
