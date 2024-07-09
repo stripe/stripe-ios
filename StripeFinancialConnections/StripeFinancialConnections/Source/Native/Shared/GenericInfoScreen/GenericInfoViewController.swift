@@ -49,6 +49,19 @@ final class GenericInfoViewController: SheetViewController {
                 }(),
                 title: genericInfoScreen.header?.title,
                 subtitle: genericInfoScreen.header?.subtitle,
+                headerAlignment: {
+                    let headerAlignment = genericInfoScreen.header?.alignment
+                    switch headerAlignment {
+                    case .center:
+                        return .center
+                    case .right:
+                        return .trailing
+                    case .left: fallthrough
+                    case .unparsable: fallthrough
+                    case .none:
+                        return .leading
+                    }
+                }(),
                 contentView: nil, // TODO(kgaidis): add support for content view
                 isSheet: (panePresentationStyle == .sheet)
             ),
