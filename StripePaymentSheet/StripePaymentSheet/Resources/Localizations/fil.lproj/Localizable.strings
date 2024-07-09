@@ -24,7 +24,7 @@
 
 "Bank account" = "Account sa bangko";
 
-"Buy now or pay later with Klarna." = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna.";
+"Buy now or pay later with Klarna" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna";
 
 "Buy using a UPI ID" = "Bumili gamit ang isang UPI ID";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Pangasiwaan ang paraan ng pagbabayad";
+
 "Manage payment methods" = "Pangasiwaan ang mga paraan ng pagbabayad";
 
 "Manage your payment methods" = "Pangasiwaan ang iyong mga paraan ng pagbabayad";
 
 "Name on card" = "Pangalan sa kard";
+
+"New card" = "Bagong kard";
 
 "New payment method" = "Bagong paraan ng pagbabayad";
 

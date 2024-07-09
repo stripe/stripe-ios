@@ -24,7 +24,7 @@
 
 "Bank account" = "Bančni račun";
 
-"Buy now or pay later with Klarna." = "Kupite zdaj ali pa plačajte pozneje s storitvijo Klarna.";
+"Buy now or pay later with Klarna" = "Kupite zdaj ali pa za plačilo pozneje uporabite Klarna";
 
 "Buy using a UPI ID" = "Za nakup uporabite UPI ID";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Uredi način plačila";
+
 "Manage payment methods" = "Upravljanje načinov plačila";
 
 "Manage your payment methods" = "Upravljajte svoje načine plačila";
 
 "Name on card" = "Ime na kartici";
+
+"New card" = "Nova kartica";
 
 "New payment method" = "Nov način plačila";
 
