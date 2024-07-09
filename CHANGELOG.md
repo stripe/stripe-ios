@@ -1,7 +1,8 @@
 ## x.x.x x-x-x
 
 ### Payments
-* [Fixed] Fixed an issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
+* [Fixed] An issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
+* [Added] Adds coupon support to STPApplePayContext with a new `didChangeCouponCode` delegate method (h/t @JoeyLeeMEA).
 * [Fixed] Fixed an issue where successful TWINT payments were sometimes incorrectly considered 'canceled'.
 
 ## PaymentSheet
