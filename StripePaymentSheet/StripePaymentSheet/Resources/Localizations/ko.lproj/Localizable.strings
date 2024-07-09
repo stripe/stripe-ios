@@ -24,7 +24,7 @@
 
 "Bank account" = "은행 계좌";
 
-"Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
+"Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
 
 "Buy using a UPI ID" = "UPI ID를 사용하여 구매";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "결제 방식 관리";
+
 "Manage payment methods" = "결제 방식 관리";
 
 "Manage your payment methods" = "내 결제 방식 관리";
 
 "Name on card" = "카드 명의자";
+
+"New card" = "새 카드";
 
 "New payment method" = "새 결제 방식";
 

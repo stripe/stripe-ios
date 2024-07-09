@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.27.7 2024-07-08
 
 ### Payments
 * [Fixed] An issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
