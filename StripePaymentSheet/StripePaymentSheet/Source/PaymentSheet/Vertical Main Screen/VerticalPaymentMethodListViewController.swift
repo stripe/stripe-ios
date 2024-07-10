@@ -85,7 +85,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let shouldReorderNewCard: Bool = paymentMethodTypes.contains(.stripe(.card)) && savedPaymentMethod?.type == .card
         if shouldReorderNewCard {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.card))
-            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card), savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance) { [weak self] in
+            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card), savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance, shouldAnimateOnPress: true) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
             views.append(rowButton)
@@ -123,13 +123,18 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let paymentMethodTypes = shouldReorderNewCard ? paymentMethodTypes.filter({ $0 != .stripe(.card) }) : paymentMethodTypes
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
-            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType,
-                                                               subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount),
-                                                               savedPaymentMethodType: savedPaymentMethod?.type,
-                                                               appearance: appearance) { [weak self] in
+            let rowButton = RowButton.makeForPaymentMethodType(
+                paymentMethodType: paymentMethodType,
+                subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount),
+                savedPaymentMethodType: savedPaymentMethod?.type,
+                appearance: appearance,
+                // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
+                shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)
+            ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
             views.append(rowButton)
+
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
@@ -171,6 +176,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             currentSelection = selection
         }
         delegate.didTapPaymentMethod(selection)
+        return
     }
 
     @objc func didTapAccessoryButton() {

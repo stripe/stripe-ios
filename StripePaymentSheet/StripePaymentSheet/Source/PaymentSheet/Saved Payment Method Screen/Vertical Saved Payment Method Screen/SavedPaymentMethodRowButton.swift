@@ -135,7 +135,6 @@ final class SavedPaymentMethodRowButton: UIView {
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)
-        // TODO(porter) accessibility?
     }
 
     required init?(coder aDecoder: NSCoder) {
