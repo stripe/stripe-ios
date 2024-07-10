@@ -12,7 +12,10 @@ import SafariServices
 import UIKit
 
 protocol ConsentViewControllerDelegate: AnyObject {
-    func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController)
+    func consentViewController(
+        _ viewController: ConsentViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    )
     func consentViewController(
         _ viewController: ConsentViewController,
         didConsentWithManifest manifest: FinancialConnectionsSessionManifest
@@ -165,7 +168,10 @@ class ConsentViewController: UIViewController {
             analyticsClient: dataSource.analyticsClient,
             handleStripeScheme: { urlHost in
                 if urlHost == "manual-entry" {
-                    delegate?.consentViewControllerDidSelectManuallyVerify(self)
+                    delegate?.consentViewController(
+                        self,
+                        didRequestNextPane: .manualEntry
+                    )
                 } else if urlHost == "data-access-notice" {
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
@@ -187,6 +193,11 @@ class ConsentViewController: UIViewController {
                         }
                     )
                     legalDetailsNoticeViewController.present(on: self)
+                } else if urlHost == "link-login" {
+                    delegate?.consentViewController(
+                        self,
+                        didRequestNextPane: .networkingLinkLoginWarmup
+                    )
                 }
             }
         )
