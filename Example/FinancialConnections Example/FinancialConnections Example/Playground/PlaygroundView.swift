@@ -17,6 +17,18 @@ struct PlaygroundView: View {
         ZStack {
             VStack {
                 Form {
+                    Section(header: Text("Experience")) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Picker("Select Experience", selection: viewModel.experience) {
+                                ForEach(PlaygroundConfiguration.Experience.allCases) {
+                                    Text($0.displayName)
+                                        .tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                    }
+
                     Section(header: Text("Select SDK Type")) {
                         VStack(alignment: .leading, spacing: 4) {
                             Picker("Select SDK Type", selection: viewModel.sdkType) {
@@ -63,13 +75,20 @@ struct PlaygroundView: View {
 
                     Section(header: Text("Select Use Case")) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Picker("Select Use Case", selection: viewModel.useCase) {
-                                ForEach(PlaygroundConfiguration.UseCase.allCases) {
-                                    Text($0.rawValue.capitalized.replacingOccurrences(of: "_", with: " "))
-                                        .tag($0)
+                            if viewModel.experience.wrappedValue == .instantDebits {
+                                Text("Instant debits only supports the _Payment Intent_ use case.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Picker("Select Use Case", selection: viewModel.useCase) {
+                                    ForEach(PlaygroundConfiguration.UseCase.allCases) {
+                                        Text($0.rawValue.capitalized.replacingOccurrences(of: "_", with: " "))
+                                            .tag($0)
+                                    }
                                 }
+                                .pickerStyle(.segmented)
                             }
-                            .pickerStyle(.segmented)
+
                         }
                     }
 

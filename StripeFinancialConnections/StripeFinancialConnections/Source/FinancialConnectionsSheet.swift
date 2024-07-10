@@ -143,13 +143,20 @@ final public class FinancialConnectionsSheet {
                     switch completedResult {
                     case .financialConnections(let session):
                         completion(.completed(session: session))
-                    case .instantDebits:
-                        let errorDescription = "Instant Debits is not supported via this interface."
-                        assertionFailure(errorDescription)
+                    case .instantDebits(let linkedBank):
+                        // TODO(mats): Add support for instant debits.
+                        let errorDescription = "Instant Debits is not currently supported via this interface."
+                        let sessionInfo =
+                        """
+                        paymentMethodId=\(linkedBank.paymentMethodId)
+                        bankName=\(linkedBank.bankName ?? "N/A")
+                        last4=\(linkedBank.last4 ?? "N/A")
+                        """
+
                         completion(
                             .failed(
                                 error: FinancialConnectionsSheetError
-                                    .unknown(debugDescription: errorDescription)
+                                    .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
                             )
                         )
                     }
