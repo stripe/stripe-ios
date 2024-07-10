@@ -118,7 +118,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         icon: nil,
                         selectionCtaIcon: nil,
                         drawerOnSelection: nil,
-                        accountIcon: nil
+                        accountIcon: nil,
+                        dataAccessNotice: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -154,7 +155,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         ),
                         selectionCtaIcon: nil,
                         drawerOnSelection: nil,
-                        accountIcon: nil
+                        accountIcon: nil,
+                        dataAccessNotice: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -180,7 +182,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         icon: nil,
                         selectionCtaIcon: nil,
                         drawerOnSelection: nil,
-                        accountIcon: nil
+                        accountIcon: nil,
+                        dataAccessNotice: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
