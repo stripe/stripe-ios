@@ -39,7 +39,35 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let consumerSession: ConsumerSessionData
-    let dataAccessNotice: FinancialConnectionsDataAccessNotice?
+    var dataAccessNotice: FinancialConnectionsDataAccessNotice? {
+        var selectedAccountDataAccessNotice: FinancialConnectionsDataAccessNotice?
+        if
+            let networkedAccountsResponse,
+            let returningNetworkingUserAccountPicker = networkedAccountsResponse.display?.text?.returningNetworkingUserAccountPicker,
+            !selectedAccounts.isEmpty
+        {
+            // Bank accounts can have multiple types (ex. linked account, and manual entry account).
+            //
+            // Example output:
+            // ["bctmacct", "csmrbankacct"]
+            let selectedAccountTypes = Set(selectedAccounts
+                .map({ $0.partnerAccount.id.split(separator: "_").first })
+                .compactMap({ $0 }))
+            if selectedAccountTypes.count > 1 {
+                // if user selected multiple different account types,
+                // present a special data access notice
+                selectedAccountDataAccessNotice = returningNetworkingUserAccountPicker.multipleAccountTypesSelectedDataAccessNotice
+            } else {
+                // we get here if user selected:
+                // 1) one account
+                // 2) or, multiple accounts of the same account type
+                selectedAccountDataAccessNotice = selectedAccounts.first?.accountPickerAccount.dataAccessNotice
+            }
+        }
+        return selectedAccountDataAccessNotice ?? consentDataAccessNotice
+    }
+    private let consentDataAccessNotice: FinancialConnectionsDataAccessNotice?
+    private var networkedAccountsResponse: FinancialConnectionsNetworkedAccountsResponse?
 
     private(set) var selectedAccounts: [FinancialConnectionsAccountTuple] = [] {
         didSet {
@@ -61,7 +89,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         self.analyticsClient = analyticsClient
         self.clientSecret = clientSecret
         self.consumerSession = consumerSession
-        self.dataAccessNotice = dataAccessNotice
+        self.consentDataAccessNotice = dataAccessNotice
     }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
@@ -70,6 +98,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
             consumerSessionClientSecret: consumerSession.clientSecret
         )
         .chained { [weak self] response in
+            self?.networkedAccountsResponse = response
             self?.nextPaneOnAddAccount = response.nextPaneOnAddAccount
             return Promise(value: response)
         }

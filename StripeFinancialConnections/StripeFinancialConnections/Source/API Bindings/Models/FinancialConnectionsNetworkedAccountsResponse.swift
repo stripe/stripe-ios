@@ -26,6 +26,8 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
     let defaultCta: String
     let addNewAccount: AddNewAccount
     let accounts: [FinancialConnectionsNetworkingAccountPicker.Account]
+    let aboveCta: String?
+    let multipleAccountTypesSelectedDataAccessNotice: FinancialConnectionsDataAccessNotice?
 
     struct AddNewAccount: Decodable {
         let body: String
@@ -44,5 +46,6 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
         let selectionCtaIcon: FinancialConnectionsImage?
         let drawerOnSelection: FinancialConnectionsGenericInfoScreen?
         let accountIcon: FinancialConnectionsImage?
+        let dataAccessNotice: FinancialConnectionsDataAccessNotice?
     }
 }
