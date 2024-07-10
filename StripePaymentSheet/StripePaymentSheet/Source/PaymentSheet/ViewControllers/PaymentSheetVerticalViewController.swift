@@ -13,6 +13,7 @@ import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
     enum Error: Swift.Error {
+        case missingPaymentMethodListViewController
         case missingPaymentMethodFormViewController
         case noPaymentOptionOnBuyButtonTap
     }
@@ -534,11 +535,7 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
         guard !isPaymentInFlight else {
            return
         }
-        if isFlowController {
-            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
-        } else {
-            paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)
-        }
+        didCancel()
     }
 
     var requiresFullScreen: Bool {
@@ -646,15 +643,19 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     private func shouldDisplayForm(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
         return makeFormVC(paymentMethodType: paymentMethodType).form.collectsUserInput
     }
-}
 
-extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+    func didCancel() {
         if isFlowController {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
         } else {
             paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)
         }
+    }
+}
+
+extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
+    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+        didCancel()
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
@@ -662,7 +663,15 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         view.endEditing(true)
         error = nil
         paymentMethodFormViewController = nil
-        switchContentIfNecessary(to: paymentMethodListViewController!, containerView: paymentContainerView)
+        guard let paymentMethodListViewController else {
+            stpAssertionFailure("Expected paymentMethodListViewController")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: Error.missingPaymentMethodListViewController)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            didCancel()
+            return
+        }
+        paymentMethodListViewController.clearSelection()
+        switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView)
         navigationBar.setStyle(.close(showAdditionalButton: false))
         updateUI()
     }

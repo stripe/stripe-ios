@@ -38,12 +38,12 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         paymentMethodButton.tap()
         app.buttons["Card"].tap()
         XCTAssertFalse(continueButton.isEnabled)
-        // Enter some details
+        // Enter some incomplete details
         app.textFields["Card number"].tap()
         app.textFields["Card number"].typeText("1")
         XCTAssertFalse(continueButton.isEnabled)
         app.tapCoordinate(at: .init(x: 200, y: 100))
-        // Tap out of FlowController
+        // Tap out of FlowController and expect empty payment method
         app.tapCoordinate(at: .init(x: 200, y: 100))
         XCTAssertEqual(paymentMethodButton.label, "None")
 
@@ -52,9 +52,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         // Back out of card form
         app.buttons["Back"].tap()
-        // Link should be selected
-        XCTAssertTrue(app.buttons["Link"].isSelected)
-        XCTAssertTrue(continueButton.isEnabled)
+        // Link shouldn't be selected anymore
+        XCTAssertFalse(app.buttons["Link"].isSelected)
+        XCTAssertFalse(continueButton.isEnabled)
 
         // Go back to card
         app.buttons["Card"].waitForExistenceAndTap()
