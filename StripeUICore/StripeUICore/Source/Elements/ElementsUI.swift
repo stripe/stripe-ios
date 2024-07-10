@@ -35,7 +35,7 @@ import UIKit
         )
     }()
 
-    public static func makeErrorLabel(theme: ElementsUITheme = .default) -> UILabel {
+    public static func makeErrorLabel(theme: ElementsUITheme) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.footnote
         label.textColor = theme.colors.danger
@@ -44,7 +44,7 @@ import UIKit
         return label
     }
 
-    public static func makeNoticeTextField(theme: ElementsUITheme = .default) -> UITextView {
+    public static func makeNoticeTextField(theme: ElementsUITheme) -> UITextView {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
@@ -55,7 +55,7 @@ import UIKit
         return textView
     }
 
-    public static func makeSectionTitleLabel(theme: ElementsUITheme = .default) -> UILabel {
+    public static func makeSectionTitleLabel(theme: ElementsUITheme) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.sectionHeader
         label.textColor = theme.colors.secondaryText

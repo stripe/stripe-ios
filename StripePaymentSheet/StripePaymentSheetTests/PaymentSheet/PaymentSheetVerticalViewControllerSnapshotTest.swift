@@ -178,7 +178,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         verify(sut)
     }
 
-    func testDisplaysMandateBelowList() {
+    func testDisplaysMandateBelowList_cashapp() {
         // When loaded with cash app + sfu = off_session...
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp], setupFutureUsage: .offSession),
@@ -190,6 +190,32 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(type: .stripe(.cashApp)))
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: previousPaymentOption)
         // ...should display list with cash app selected and mandate displayed
+        verify(sut)
+    }
+
+    func testDisplaysMandateBelowList_saved_sepa_debit() {
+        // When loaded with saved SEPA Debit PM...
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit]),
+            savedPaymentMethods: [._testSEPA()],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
+        // ...should display list with saved SEPA selected and mandate displayed
+        verify(sut)
+    }
+
+    func testDisplaysMandateBelowList_saved_us_bank_account() {
+        // When loaded with saved US Bank Account PM...
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .USBankAccount]),
+            savedPaymentMethods: [._testUSBankAccount()],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
+        // ...should display list with saved SEPA selected and mandate displayed
         verify(sut)
     }
 
