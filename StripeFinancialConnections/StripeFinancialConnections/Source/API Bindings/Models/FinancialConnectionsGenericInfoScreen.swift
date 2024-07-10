@@ -21,10 +21,11 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
         let icon: FinancialConnectionsImage?
         let alignment: Alignment?
 
-        enum Alignment: String, Decodable {
+        enum Alignment: String, SafeEnumCodable {
             case left = "left"
             case center = "center"
             case right = "right"
+            case unparsable
         }
     }
 
@@ -74,16 +75,18 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
             let alignment: Alignment?
             let size: Size?
 
-            enum Alignment: String, Decodable {
+            enum Alignment: String, SafeEnumCodable {
                 case left = "left"
                 case center = "center"
                 case right = "right"
+                case unparsable
             }
 
-            enum Size: String, Decodable {
+            enum Size: String, SafeEnumCodable {
                 case xsmall = "x-small"
                 case small = "small"
                 case medium = "medium"
+                case unparsable
             }
         }
 
@@ -125,9 +128,10 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
         let fullWidthContent: Bool?
         let verticalAlignment: VerticalAlignment?
 
-        enum VerticalAlignment: String, Decodable {
+        enum VerticalAlignment: String, SafeEnumCodable {
             case `default` = "default"
             case centered = "centered"
+            case unparsable
         }
     }
 }
