@@ -177,9 +177,7 @@ final class LinkAccountPickerViewController: UIViewController {
 
         let footerView = LinkAccountPickerFooterView(
             defaultCta: networkingAccountPicker.defaultCta,
-            isStripeDirect: false,
-            businessName: businessName,
-            permissions: dataSource.manifest.permissions,
+            aboveCta: networkingAccountPicker.aboveCta,
             singleAccount: dataSource.manifest.singleAccount,
             didSelectConnectAccount: { [weak self] in
                 guard let self = self else {
