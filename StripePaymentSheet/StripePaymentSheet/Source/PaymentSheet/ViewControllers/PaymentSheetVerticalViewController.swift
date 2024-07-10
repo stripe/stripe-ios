@@ -128,7 +128,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         )
     }()
 
-    private let mandateView = VerticalMandateView()
+    private lazy var mandateView = { SimpleMandateTextView(theme: configuration.appearance.asElementsTheme) }()
     private lazy var errorLabel: UILabel = {
         ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
@@ -236,24 +236,22 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func updateMandate(animated: Bool = true) {
         let theme = configuration.appearance.asElementsTheme
-        let newMandate: UIView? = {
+        let newMandateText: NSAttributedString? = {
             guard let selectedPaymentMethodType else { return nil }
             if selectedPaymentOption?.savedPaymentMethod != nil {
                 // 1. For saved PMs, manually build mandates
                 switch selectedPaymentMethodType {
                 case .stripe(.USBankAccount):
-                    let mandateText = USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(alignment: .natural, theme: theme)
-                    return SimpleMandateTextView(mandateText: mandateText, theme: theme)
+                    return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(alignment: .natural, theme: theme)
                 case .stripe(.SEPADebit):
-                    let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
-                    return SimpleMandateTextView(mandateText: mandateText, theme: theme)
+                    return .init(string: String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
                 default:
                     return nil
                 }
             } else {
                 // 2. For new PMs, see if we have a bottomNoticeAttributedString
                 if let bottomNoticeAttributedString = paymentMethodFormViewController?.bottomNoticeAttributedString {
-                    return SimpleMandateTextView(mandateText: bottomNoticeAttributedString, theme: theme)
+                    return bottomNoticeAttributedString
                 }
                 // 3. If not, generate the form
                 let form = makeFormVC(paymentMethodType: selectedPaymentMethodType).form
@@ -263,18 +261,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 }
                 // Get the mandate from the form, if available
                 // 🙋‍♂️ Note: assumes mandates are SimpleMandateElement!
-                return form.getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first?.view
+                return form.getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first?.mandateTextView.attributedText
             }
         }()
-        if animated {
-            self.mandateView.setContent(newMandate) { animations, completion in
-                self.animateHeightChange(animations, completion: completion)
-            }
-        } else {
-            self.mandateView.setContent(newMandate, animator: nil)
+        animateHeightChange {
+            self.mandateView.attributedText = newMandateText
+            self.mandateView.setHiddenIfNecessary(newMandateText == nil)
         }
     }
-    
+
     func updateError() {
         errorLabel.text = error?.nonGenericDescription
         animateHeightChange {
@@ -732,7 +727,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
 
 extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDelegate {
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
-        updatePrimaryButton()
+        updateUI()
     }
 
     func updateErrorLabel(for error: Swift.Error?) {

@@ -105,6 +105,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         _testUSBankAccount(mode: .payment, integrationType: .normal, vertical: true)
     }
 
+    func testInstantDebits_verticalmode() {
+        _testInstantDebits(mode: .payment, vertical: true)
+    }
+
     func testPayingWithNoFormPMs_verticalmode() {
         // We choose Alipay as a representative PM that does not require form details
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
