@@ -73,13 +73,9 @@ struct PlaygroundView: View {
                         }
                     }
 
-                    Section(header: Text("Select Use Case")) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            if viewModel.experience.wrappedValue == .instantDebits {
-                                Text("Instant debits only supports the _Payment Intent_ use case.")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            } else {
+                    if viewModel.experience.wrappedValue == .financialConnections {
+                        Section(header: Text("Select Use Case")) {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Picker("Select Use Case", selection: viewModel.useCase) {
                                     ForEach(PlaygroundConfiguration.UseCase.allCases) {
                                         Text($0.rawValue.capitalized.replacingOccurrences(of: "_", with: " "))
@@ -88,7 +84,6 @@ struct PlaygroundView: View {
                                 }
                                 .pickerStyle(.segmented)
                             }
-
                         }
                     }
 
@@ -196,6 +191,7 @@ struct PlaygroundView: View {
         .navigationTitle("Playground")
         .navigationBarTitleDisplayMode(.inline)
         .gesture(DragGesture().onChanged(hideKeyboard))
+        .animation(.easeIn(duration: 1), value: viewModel.experience.wrappedValue)
     }
 
     private func hideKeyboard(_ value: DragGesture.Value) {
