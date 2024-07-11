@@ -62,7 +62,10 @@ final class GenericInfoViewController: SheetViewController {
                         return .leading
                     }
                 }(),
-                contentView: nil, // TODO(kgaidis): add support for content view
+                contentView: GenericInfoBodyView(
+                    body: genericInfoScreen.body,
+                    didSelectURL: didSelectURL
+                ),
                 isSheet: (panePresentationStyle == .sheet)
             ),
             footerView: GenericInfoFooterView(

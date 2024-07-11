@@ -19,59 +19,73 @@ func GenericInfoBodyView(
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 0
     for entry in body.entries {
+        let entryView: UIView?
         switch entry {
         case .text(let textBodyEntry):
-            let font: FinancialConnectionsFont
-            let boldFont: FinancialConnectionsFont
-            let textColor: UIColor
-            switch textBodyEntry.size {
-            case .xsmall:
-                font = .body(.extraSmall)
-                boldFont = .body(.extraSmallEmphasized)
-                textColor = .textSubdued
-            case .small:
-                font = .body(.small)
-                boldFont = .body(.smallEmphasized)
-                textColor = .textSubdued
-            case .medium: fallthrough
-            case .unparsable: fallthrough
-            case .none:
-                font = .body(.medium)
-                boldFont = .body(.mediumEmphasized)
-                textColor = .textDefault
-            }
-            let textView = AttributedTextView(
-                font: font,
-                boldFont: boldFont,
-                linkFont: font,
-                textColor: textColor,
-                alignment: {
-                    switch textBodyEntry.alignment {
-                    case .left:
-                        return .left
-                    case .center:
-                        return .center
-                    case .right:
-                        return .right
-                    case .unparsable: fallthrough
-                    case .none:
-                        return nil
-                    }
-                }()
+            entryView = TextBodyEntryView(
+                textBodyEntry,
+                didSelectURL: didSelectURL
             )
-            textView.setText(
-                textBodyEntry.text,
-                action: didSelectURL
-            )
-            verticalStackView.addArrangedSubview(textView)
         case .image(let image):
-            print(image)
+            _ = image
+            entryView = nil // TODO(kgaidis): implement ImageBodyEntry support
         case .unparasable:
-            break // skip
+            entryView = nil // skip
+        }
+        if let entryView {
+            verticalStackView.addArrangedSubview(entryView)
         }
     }
     // check `isEmpty` in case we were not able to handle any entry type
     return verticalStackView.arrangedSubviews.isEmpty ? nil : verticalStackView
+}
+
+private func TextBodyEntryView(
+    _ textBodyEntry: FinancialConnectionsGenericInfoScreen.Body.TextBodyEntry,
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView {
+    let font: FinancialConnectionsFont
+    let boldFont: FinancialConnectionsFont
+    let textColor: UIColor
+    switch textBodyEntry.size {
+    case .xsmall:
+        font = .body(.extraSmall)
+        boldFont = .body(.extraSmallEmphasized)
+        textColor = .textSubdued
+    case .small:
+        font = .body(.small)
+        boldFont = .body(.smallEmphasized)
+        textColor = .textSubdued
+    case .medium: fallthrough
+    case .unparsable: fallthrough
+    case .none:
+        font = .body(.medium)
+        boldFont = .body(.mediumEmphasized)
+        textColor = .textDefault
+    }
+    let textView = AttributedTextView(
+        font: font,
+        boldFont: boldFont,
+        linkFont: font,
+        textColor: textColor,
+        alignment: {
+            switch textBodyEntry.alignment {
+            case .center:
+                return .center
+            case .right:
+                return .right
+            case .left: fallthrough
+            case .unparsable: fallthrough
+            case .none:
+                return .left
+            }
+        }()
+    )
+    textView.setText(
+        textBodyEntry.text,
+        action: didSelectURL
+    )
+    return textView
 }
 
 #if DEBUG
