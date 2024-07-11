@@ -206,7 +206,7 @@ class RowButton: UIView {
 
 extension RowButton: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        // This allows the scroll view (wayyy above in the view hierarchy) to scroll if you long press -> start sliding your finger to scroll. Without this, the long press prevents you from scrolling.
+        // Without this, the long press prevents you from scrolling or the tap gesture from triggering.
         true
     }
 }
