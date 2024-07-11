@@ -80,7 +80,7 @@ final class MerchantDataAccessView: HitTestView {
             boldFont: boldFont,
             linkFont: font,
             textColor: .textDefault,
-            alignCenter: alignCenter
+            alignment: .center
         )
         label.setText(
             finalString,

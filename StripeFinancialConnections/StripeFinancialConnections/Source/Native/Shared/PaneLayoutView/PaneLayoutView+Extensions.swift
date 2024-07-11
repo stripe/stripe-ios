@@ -169,7 +169,7 @@ extension PaneLayoutView {
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
                 textColor: .textDefault,
-                alignCenter: true
+                alignment: .center
             )
             topTextLabel.setText(
                 topText,
@@ -221,7 +221,7 @@ extension PaneLayoutView {
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
                 textColor: .textDefault,
-                alignCenter: true
+                alignment: .center
             )
             bottomTextLabel.setText(
                 bottomText,
