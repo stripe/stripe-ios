@@ -2316,7 +2316,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try? fillCardData(app, container: nil)
 
         app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -3768,7 +3768,12 @@ extension PaymentSheetUITestCase {
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
         // Make sure bottom notice mandate is visible
-        XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
+        switch mode {
+        case .payment:
+            XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
+        case .paymentWithSetup, .setup:
+            XCTAssertTrue(app.textViews["By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
+        }
 
         if mode == .payment {
             let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
