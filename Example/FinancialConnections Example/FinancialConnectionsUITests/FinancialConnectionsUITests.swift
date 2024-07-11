@@ -19,7 +19,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -47,7 +47,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -76,7 +76,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -124,7 +124,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -153,7 +153,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -247,7 +247,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"web","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"web","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -338,7 +338,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
