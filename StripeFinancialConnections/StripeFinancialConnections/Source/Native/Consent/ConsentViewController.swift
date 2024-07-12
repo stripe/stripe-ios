@@ -33,7 +33,7 @@ class ConsentViewController: UIViewController {
             boldFont: .heading(.extraLarge),
             linkFont: .heading(.extraLarge),
             textColor: .textDefault,
-            alignCenter: true
+            alignment: .center
         )
         titleLabel.setText(
             dataSource.consent.title,
