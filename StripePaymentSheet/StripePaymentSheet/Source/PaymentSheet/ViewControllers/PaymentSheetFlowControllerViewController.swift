@@ -243,7 +243,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
-        
+
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
         paymentContainerView.directionalLayoutMargins = .insets(
             leading: -PaymentSheetUI.defaultSheetMargins.leading,
@@ -349,7 +349,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         updateButton()
 
         // Notice
-//        updateBottomNotice()
+        updateBottomNotice()
     }
 
     func updateButton() {

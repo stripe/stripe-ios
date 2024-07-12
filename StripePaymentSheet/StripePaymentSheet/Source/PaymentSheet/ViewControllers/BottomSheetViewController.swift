@@ -110,7 +110,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                     contentViewController.requiresFullScreen
             }
 
-            scrollView.contentInsetAdjustmentBehavior = .never
             contentContainerView.layoutIfNeeded()
             scrollView.layoutIfNeeded()
             scrollView.updateConstraintsIfNeeded()
@@ -284,6 +283,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
+
+        // Our content VCs constrain against safeAreaLayoutGuide, we don't want the scroll view to adjust its content inset too. If `contentInsetAdjustmentBehavior` is left as the default (automatic),
+        // it causes an infinite layout loop under certain conditions when the content exceeds the height of the screen.
+        scrollView.contentInsetAdjustmentBehavior = .never
         let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         bottomAnchor.priority = .defaultLow
         self.bottomAnchor = bottomAnchor
