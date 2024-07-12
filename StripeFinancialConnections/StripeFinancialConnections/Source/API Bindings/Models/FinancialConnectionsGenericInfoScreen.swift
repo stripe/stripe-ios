@@ -96,7 +96,7 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
             let alt: String
         }
 
-        struct BulletsBodyEntry: Decodable {
+        struct BulletsBodyEntry: Decodable { // TODO(kgaidis): implement the bullets body entry as a type
             let id: String
             let bullets: [GenericBulletPoint]
 

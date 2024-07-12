@@ -137,7 +137,7 @@ final class NetworkingOTPView: UIView {
                 linkFont: .label(.medium),
                 textColor: .textFeedbackCritical,
                 linkColor: .textFeedbackCritical,
-                alignCenter: true
+                alignment: .center
             )
             errorLabel.setText(errorText)
             let errorView = UIStackView(
