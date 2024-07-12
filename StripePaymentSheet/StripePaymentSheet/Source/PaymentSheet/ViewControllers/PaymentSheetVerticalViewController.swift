@@ -373,7 +373,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -32),
-            primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+            primaryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
         ])
     }
 

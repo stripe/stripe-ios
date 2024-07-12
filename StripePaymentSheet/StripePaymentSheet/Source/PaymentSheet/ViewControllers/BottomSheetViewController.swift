@@ -88,7 +88,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             // instead of remaining pinned to the top.
 
             // First, get the old height of the content + navigation bar + safe area.
-            manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
+            manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height
 
             // Take a snapshot of the old content and add it to our container - we'll fade it out
             let oldView = oldContentViewController.view!
@@ -117,8 +117,8 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             oldContentViewController.navigationBar.removeFromSuperview()
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
             navigationBarContainerView.layoutIfNeeded()
-            // Layout is mostly completed at this point. The new height is the navigation bar + content + the unsafe area at the bottom.
-            let newHeight = contentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
+            // Layout is mostly completed at this point. The new height is the navigation bar + content
+            let newHeight = contentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height
 
             // Force the old height, then force a layout pass
             if modalPresentationStyle == .custom { // Only if we're using the custom presentation style (e.g. pinned to the bottom)
@@ -284,7 +284,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
-        let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         bottomAnchor.priority = .defaultLow
         self.bottomAnchor = bottomAnchor
 
@@ -310,16 +310,11 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         NSLayoutConstraint.activate([
-            contentContainerView.leadingAnchor.constraint(
-                equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            contentContainerView.trailingAnchor.constraint(
-                equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentContainerView.topAnchor.constraint(
-                equalTo: scrollView.contentLayoutGuide.topAnchor),
-            contentContainerView.bottomAnchor.constraint(
-                equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            contentContainerView.widthAnchor.constraint(
-                equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
         ])
         let hideKeyboardGesture = UITapGestureRecognizer(
@@ -383,12 +378,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 }
 
                 let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
-                var keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
-                if self.modalPresentationStyle == .custom {
-                    // If we're presenting in the custom (pinned to bottom of screen) style, incorporate the safe area insets
-                    keyboardInViewHeight -= self.view.safeAreaInsets.bottom
-                }
-
+                let keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
                 if notification.name == UIResponder.keyboardWillHideNotification {
                     bottomAnchor.constant = 0
                 } else {
