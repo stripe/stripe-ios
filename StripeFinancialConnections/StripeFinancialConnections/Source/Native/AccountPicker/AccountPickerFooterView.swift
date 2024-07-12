@@ -46,7 +46,6 @@ final class AccountPickerFooterView: UIView {
                     isNetworking: false,
                     font: .label(.small),
                     boldFont: .label(.smallEmphasized),
-                    alignCenter: true,
                     didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                 ),
                 linkAccountsButton,

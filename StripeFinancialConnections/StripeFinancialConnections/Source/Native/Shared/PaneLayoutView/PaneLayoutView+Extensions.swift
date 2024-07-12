@@ -17,6 +17,7 @@ extension PaneLayoutView {
         iconView: UIView?,
         title: String?,
         subtitle: String?,
+        headerAlignment: UIStackView.Alignment = .leading,
         contentView: UIView?,
         isSheet: Bool = false
     ) -> UIView {
@@ -27,6 +28,7 @@ extension PaneLayoutView {
             let headerView = createHeaderView(
                 iconView: iconView,
                 title: title,
+                alignment: headerAlignment,
                 isSheet: isSheet
             )
             verticalStackView.addArrangedSubview(headerView)
@@ -45,12 +47,13 @@ extension PaneLayoutView {
     static func createHeaderView(
         iconView: UIView?,
         title: String?,
+        alignment: UIStackView.Alignment = .leading,
         isSheet: Bool = false
     ) -> UIView {
         let headerStackView = HitTestStackView()
         headerStackView.axis = .vertical
         headerStackView.spacing = 16
-        headerStackView.alignment = .leading
+        headerStackView.alignment = alignment
         if let iconView = iconView {
             headerStackView.addArrangedSubview(iconView)
         }
@@ -166,7 +169,7 @@ extension PaneLayoutView {
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
                 textColor: .textDefault,
-                alignCenter: true
+                alignment: .center
             )
             topTextLabel.setText(
                 topText,
@@ -218,7 +221,7 @@ extension PaneLayoutView {
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
                 textColor: .textDefault,
-                alignCenter: true
+                alignment: .center
             )
             bottomTextLabel.setText(
                 bottomText,
