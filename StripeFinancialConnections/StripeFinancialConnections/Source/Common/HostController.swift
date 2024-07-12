@@ -39,16 +39,18 @@ class HostController {
 
     // MARK: - Properties
 
-    private let api: FinancialConnectionsAPIClient
+    private let apiClient: STPAPIClient
     private let clientSecret: String
     private let returnURL: String?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
+    private let analyticsClientV1: STPAnalyticsClientProtocol
 
     private var nativeFlowController: NativeFlowController?
     lazy var hostViewController = HostViewController(
+        analyticsClientV1: analyticsClientV1,
         clientSecret: clientSecret,
         returnURL: returnURL,
-        apiClient: api,
+        apiClient: apiClient,
         delegate: self
     )
     lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
@@ -58,13 +60,15 @@ class HostController {
     // MARK: - Init
 
     init(
-        api: FinancialConnectionsAPIClient,
+        apiClient: STPAPIClient,
+        analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
         publishableKey: String?,
         stripeAccount: String?
     ) {
-        self.api = api
+        self.apiClient = apiClient
+        self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
@@ -121,7 +125,7 @@ extension HostController: HostViewControllerDelegate {
                 visualUpdate: synchronizePayload.visual,
                 returnURL: returnURL,
                 consentPaneModel: synchronizePayload.text?.consentPane,
-                apiClient: api,
+                apiClient: apiClient,
                 clientSecret: clientSecret,
                 analyticsClient: analyticsClient
             )
@@ -154,15 +158,15 @@ private extension HostController {
             )
         )
 
-        let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
+        let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: apiClient, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(
-            api: api,
+            api: apiClient,
             clientSecret: clientSecret,
             accountFetcher: accountFetcher
         )
         let webFlowViewController = FinancialConnectionsWebFlowViewController(
             clientSecret: clientSecret,
-            apiClient: api,
+            apiClient: apiClient,
             manifest: manifest,
             sessionFetcher: sessionFetcher,
             returnURL: returnURL

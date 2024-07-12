@@ -205,7 +205,8 @@ final public class FinancialConnectionsSheet {
         }
 
         hostController = HostController(
-            api: apiClient,
+            apiClient: apiClient,
+            analyticsClientV1: analyticsClient,
             clientSecret: financialConnectionsSessionClientSecret,
             returnURL: returnURL,
             publishableKey: apiClient.publishableKey,
