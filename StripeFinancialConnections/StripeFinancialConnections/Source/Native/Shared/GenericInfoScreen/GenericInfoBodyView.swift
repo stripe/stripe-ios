@@ -26,9 +26,8 @@ func GenericInfoBodyView(
                 textBodyEntry,
                 didSelectURL: didSelectURL
             )
-        case .image(let image):
-            _ = image
-            entryView = nil // TODO(kgaidis): implement ImageBodyEntry support
+        case .image(let imageBodyEntry):
+            entryView = ImageBodyEntryView(imageBodyEntry)
         case .unparasable:
             entryView = nil // skip
         }
@@ -86,6 +85,45 @@ private func TextBodyEntryView(
         action: didSelectURL
     )
     return textView
+}
+
+private func ImageBodyEntryView(
+    _ imageBodyEntry: FinancialConnectionsGenericInfoScreen.Body.ImageBodyEntry
+) -> UIView? {
+    guard let imageUrlString = imageBodyEntry.image.default else {
+        return nil
+    }
+    let imageView = AutoResizableImageView()
+    imageView.setImage(with: imageUrlString)
+    return imageView
+}
+
+// `UIImageView` that will autoresize itself to be
+// full width, but maintain aspect ratio height
+private class AutoResizableImageView: UIImageView {
+
+    override var intrinsicContentSize: CGSize {
+        if let image, image.size.width > 0 {
+            let height = image.size.height * (bounds.width / image.size.width)
+            return CGSize(
+                width: UIView.noIntrinsicMetric,
+                height: height
+            )
+        } else {
+            return CGSize(
+                width: UIView.noIntrinsicMetric,
+                height: 200 // give some height with assumption that an image will load
+            )
+        }
+    }
+
+    override var image: UIImage? {
+        didSet {
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
 }
 
 #if DEBUG
@@ -148,6 +186,31 @@ struct GenericInfoBodyView_Previews: PreviewProvider {
                                 text: "Text - Alignment(right) - Size (medium)",
                                 alignment: .right,
                                 size: .medium
+                            )
+                        ),
+                        .text(
+                            FinancialConnectionsGenericInfoScreen.Body.TextBodyEntry(
+                                id: "",
+                                text: "vvv Image Item Expected Below vvv",
+                                alignment: .center,
+                                size: nil
+                            )
+                        ),
+                        .image(
+                            FinancialConnectionsGenericInfoScreen.Body.ImageBodyEntry(
+                                id: "",
+                                image: FinancialConnectionsImage(
+                                    default: "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png"
+                                ),
+                                alt: ""
+                            )
+                        ),
+                        .text(
+                            FinancialConnectionsGenericInfoScreen.Body.TextBodyEntry(
+                                id: "",
+                                text: "^^^ Image Item Expected Above ^^^",
+                                alignment: .center,
+                                size: nil
                             )
                         ),
                     ]
