@@ -136,7 +136,7 @@ private func CreateBodyView(subtitle: String?) -> UIView {
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.medium),
             textColor: .textDefault,
-            alignCenter: true
+            alignment: .center
         )
         subtitleLabel.setText(subtitle)
         labelVerticalStackView.addArrangedSubview(subtitleLabel)

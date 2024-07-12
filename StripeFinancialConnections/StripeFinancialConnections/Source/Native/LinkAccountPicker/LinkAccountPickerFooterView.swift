@@ -50,7 +50,7 @@ final class LinkAccountPickerFooterView: UIView {
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
                 textColor: .textDefault,
-                alignCenter: true
+                alignment: .center
             )
             merchantDataAccessLabel.setText(
                 aboveCta,

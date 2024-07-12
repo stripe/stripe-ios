@@ -51,6 +51,10 @@ struct FinancialConnectionsFont {
     }
 
     enum BodyToken {
+        /// 12 size / 16 line height / 400 weight
+        case extraSmall
+        /// 12 size / 16 line height / 600 weight
+        case extraSmallEmphasized
         /// 14 size / 20 line height / 400 weight
         case small
         /// 14 size / 20 line height / 600 weight
@@ -65,6 +69,14 @@ struct FinancialConnectionsFont {
         let lineHeight: CGFloat
         let appleTextStyle: UIFont.TextStyle
         switch token {
+        case .extraSmall:
+            font = UIFont.systemFont(ofSize: 12, weight: .regular)
+            lineHeight = 16
+            appleTextStyle = .caption1
+        case .extraSmallEmphasized:
+            font = UIFont.systemFont(ofSize: 12, weight: .bold)
+            lineHeight = 16
+            appleTextStyle = .caption1
         case .small:
             font = UIFont.systemFont(ofSize: 14, weight: .regular)
             lineHeight = 20
