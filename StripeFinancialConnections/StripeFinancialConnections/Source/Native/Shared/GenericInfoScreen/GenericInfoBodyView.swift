@@ -12,10 +12,10 @@ func GenericInfoBodyView(
     body: FinancialConnectionsGenericInfoScreen.Body?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView? {
-    guard  let body, !body.entries.isEmpty else {
+    guard let body, !body.entries.isEmpty else {
         return nil
     }
-    let verticalStackView = UIStackView()
+    let verticalStackView = HitTestStackView()
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 0
     for entry in body.entries {
