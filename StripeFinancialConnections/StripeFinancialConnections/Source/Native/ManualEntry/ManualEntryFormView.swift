@@ -153,7 +153,7 @@ final class ManualEntryFormView: UIView {
                 linkFont: .label(.medium),
                 textColor: .textFeedbackCritical,
                 linkColor: .textFeedbackCritical,
-                alignCenter: true
+                alignment: .center
             )
             errorLabel.setText(text)
             let paddingStackView = UIStackView(

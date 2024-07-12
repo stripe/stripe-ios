@@ -90,6 +90,8 @@
 		6A1D43072B17AE37005A1EB0 /* RoundedIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */; };
 		6A1D43092B17CB04005A1EB0 /* InstitutionNoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */; };
 		6A26A3AB2B991A4D00215510 /* FeedbackGeneratorAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A26A3AA2B991A4D00215510 /* FeedbackGeneratorAdapter.swift */; };
+		6A3739142C40558900D1F765 /* GenericInfoBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3739132C40558900D1F765 /* GenericInfoBodyView.swift */; };
+		6A3739162C4060BD00D1F765 /* AutoResizableUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3739152C4060BD00D1F765 /* AutoResizableUIView.swift */; };
 		6A384A842C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A384A832C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift */; };
 		6A3DA1F52C34A37F005C3F6E /* GenericInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3DA1F42C34A37F005C3F6E /* GenericInfoViewController.swift */; };
 		6A3DA1F72C34B254005C3F6E /* GenericInfoFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3DA1F62C34B254005C3F6E /* GenericInfoFooterView.swift */; };
@@ -376,6 +378,8 @@
 		6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedIconView.swift; sourceTree = "<group>"; };
 		6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionNoResultsView.swift; sourceTree = "<group>"; };
 		6A26A3AA2B991A4D00215510 /* FeedbackGeneratorAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGeneratorAdapter.swift; sourceTree = "<group>"; };
+		6A3739132C40558900D1F765 /* GenericInfoBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericInfoBodyView.swift; sourceTree = "<group>"; };
+		6A3739152C4060BD00D1F765 /* AutoResizableUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoResizableUIView.swift; sourceTree = "<group>"; };
 		6A384A832C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsGenericInfoScreen.swift; sourceTree = "<group>"; };
 		6A3DA1F42C34A37F005C3F6E /* GenericInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericInfoViewController.swift; sourceTree = "<group>"; };
 		6A3DA1F62C34B254005C3F6E /* GenericInfoFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericInfoFooterView.swift; sourceTree = "<group>"; };
@@ -797,6 +801,7 @@
 			isa = PBXGroup;
 			children = (
 				6A3DA1F42C34A37F005C3F6E /* GenericInfoViewController.swift */,
+				6A3739132C40558900D1F765 /* GenericInfoBodyView.swift */,
 				6A3DA1F62C34B254005C3F6E /* GenericInfoFooterView.swift */,
 			);
 			path = GenericInfoScreen;
@@ -1024,6 +1029,7 @@
 				6A13B9F92B4E182A00FFA327 /* SpinnerView.swift */,
 				6A732C992B61C51C00828CB1 /* ShimmeringView.swift */,
 				49C9113A2C59932300589E0D /* LinkSignupFormView.swift */,
+				6A3739152C4060BD00D1F765 /* AutoResizableUIView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1291,6 +1297,7 @@
 				6A732CAA2B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift in Sources */,
 				6A3DA1F52C34A37F005C3F6E /* GenericInfoViewController.swift in Sources */,
 				FBF513C7F73002FA30CC7C21 /* ConsumerSessionModels.swift in Sources */,
+				6A3739142C40558900D1F765 /* GenericInfoBodyView.swift in Sources */,
 				EC74B719F0FA1A977EF4708C /* FinancialConnectionsAccount.swift in Sources */,
 				460C7685096AA6C693309647 /* FinancialConnectionsAuthSession.swift in Sources */,
 				AB5AFAC3C70D6195075DE5AE /* FinancialConnectionsBulletPoint.swift in Sources */,
@@ -1400,6 +1407,7 @@
 				6A13B9842B48BF4300FFA327 /* AccountPickerRowLabelView.swift in Sources */,
 				3AC5CA5F5529B55026342A54 /* NetworkingLinkSignupDataSource.swift in Sources */,
 				6A13B9862B4CD04100FFA327 /* RetrieveAccountsLoadingView.swift in Sources */,
+				6A3739162C4060BD00D1F765 /* AutoResizableUIView.swift in Sources */,
 				8DC6C2A239456994091BF3EE /* NetworkingLinkSignupFooterView.swift in Sources */,
 				6A3DA1F72C34B254005C3F6E /* GenericInfoFooterView.swift in Sources */,
 				54B51EA1F75B9607D7C29B08 /* NetworkingLinkSignupViewController.swift in Sources */,
