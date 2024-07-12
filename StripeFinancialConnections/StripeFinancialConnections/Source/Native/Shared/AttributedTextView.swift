@@ -26,7 +26,7 @@ final class AttributedTextView: HitTestView {
     private let boldFont: FinancialConnectionsFont
     private let linkFont: FinancialConnectionsFont
     private let textColor: UIColor
-    private let alignCenter: Bool
+    private let alignment: NSTextAlignment?
     private let textView: IncreasedHitTestTextView
     private var linkURLStringToAction: [String: (URL) -> Void] = [:]
 
@@ -38,7 +38,7 @@ final class AttributedTextView: HitTestView {
         // links are the same color as the text by default
         linkColor: UIColor? = nil,
         showLinkUnderline: Bool = true,
-        alignCenter: Bool = false
+        alignment: NSTextAlignment? = nil
     ) {
         let linkColor = linkColor ?? textColor
         let textContainer = NSTextContainer(size: .zero)
@@ -54,7 +54,7 @@ final class AttributedTextView: HitTestView {
         self.boldFont = boldFont
         self.linkFont = linkFont
         self.textColor = textColor
-        self.alignCenter = alignCenter
+        self.alignment = alignment
         super.init(frame: .zero)
         textView.isScrollEnabled = false
         textView.delaysContentTouches = false
@@ -123,8 +123,8 @@ final class AttributedTextView: HitTestView {
         links: [LinkDescriptor]
     ) {
         let paragraphStyle = NSMutableParagraphStyle()
-        if alignCenter {
-            paragraphStyle.alignment = .center
+        if let alignment {
+            paragraphStyle.alignment = alignment
         }
         paragraphStyle.minimumLineHeight = font.lineHeight
         paragraphStyle.maximumLineHeight = font.lineHeight
