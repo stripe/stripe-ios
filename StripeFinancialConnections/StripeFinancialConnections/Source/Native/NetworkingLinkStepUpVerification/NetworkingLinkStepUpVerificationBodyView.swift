@@ -74,8 +74,7 @@ private func CreateResendCodeLabel(
         boldFont: .label(.mediumEmphasized),
         linkFont: .label(.mediumEmphasized),
         textColor: .textActionPrimary,
-        showLinkUnderline: false,
-        alignCenter: false
+        showLinkUnderline: false
     )
     let text = STPLocalizedString(
         "Resend code",
