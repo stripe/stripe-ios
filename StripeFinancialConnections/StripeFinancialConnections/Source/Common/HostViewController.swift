@@ -49,8 +49,9 @@ final class HostViewController: UIViewController {
 
     weak var delegate: HostViewControllerDelegate?
 
+    private let analyticsClientV1: STPAnalyticsClientProtocol
     private let clientSecret: String
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: STPAPIClient
     private let returnURL: String?
 
     private var lastError: Error?
@@ -58,11 +59,13 @@ final class HostViewController: UIViewController {
     // MARK: - Init
 
     init(
+        analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: STPAPIClient,
         delegate: HostViewControllerDelegate?
     ) {
+        self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
         self.apiClient = apiClient
@@ -99,6 +102,12 @@ extension HostViewController {
     private func getManifest() {
         loadingView.errorView.isHidden = true
         loadingView.showLoading(true)
+
+        analyticsClientV1.log(
+            analytic: FinancialConnectionsSheetInitialSynchronizeStarted(clientSecret: clientSecret),
+            apiClient: apiClient
+        )
+
         apiClient
             .synchronize(
                 clientSecret: clientSecret,
@@ -106,6 +115,16 @@ extension HostViewController {
             )
             .observe { [weak self] result in
                 guard let self = self else { return }
+
+                analyticsClientV1.log(
+                    analytic: FinancialConnectionsSheetInitialSynchronizeCompleted(
+                        clientSecret: clientSecret,
+                        success: result.success,
+                        possibleError: result.error
+                    ),
+                    apiClient: apiClient
+                )
+
                 switch result {
                 case .success(let synchronizePayload):
                     self.lastError = nil
