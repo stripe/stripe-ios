@@ -381,11 +381,11 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 }
 
                 let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
-                let keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
+                // Our view is pinned to the bottom of the screen, so just move it up by the height of the keyboard
                 if notification.name == UIResponder.keyboardWillHideNotification {
                     bottomAnchor.constant = 0
                 } else {
-                    bottomAnchor.constant = -keyboardInViewHeight
+                    bottomAnchor.constant = -keyboardViewEndFrame.height
                 }
 
                 self.view.superview?.layoutIfNeeded()
