@@ -100,41 +100,31 @@ extension HostController: HostViewControllerDelegate {
     ) {
         delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .open))
 
-        if synchronizePayload.manifest.isProductInstantDebits {
-            continueWithWebFlow(synchronizePayload.manifest)
-        } else {
-            let flowRouter = FlowRouter(
-                synchronizePayload: synchronizePayload,
-                analyticsClient: analyticsClient
-            )
-            defer {
-                // no matter how we exit this function
-                // log exposure to one of the variants if appropriate.
-                flowRouter.logExposureIfNeeded()
-            }
+        let flowRouter = FlowRouter(
+            synchronizePayload: synchronizePayload,
+            analyticsClient: analyticsClient
+        )
 
-            guard flowRouter.shouldUseNative else {
-                continueWithWebFlow(synchronizePayload.manifest)
-                return
-            }
-
-            navigationController.configureAppearanceForNative()
-
-            let dataManager = NativeFlowAPIDataManager(
-                manifest: synchronizePayload.manifest,
-                visualUpdate: synchronizePayload.visual,
-                returnURL: returnURL,
-                consentPaneModel: synchronizePayload.text?.consentPane,
-                apiClient: apiClient,
+        let flow = flowRouter.flow
+        analyticsClientV1.log(
+            analytic: FinancialConnectionsSheetFlowDetermined(
                 clientSecret: clientSecret,
-                analyticsClient: analyticsClient
-            )
-            nativeFlowController = NativeFlowController(
-                dataManager: dataManager,
-                navigationController: navigationController
-            )
-            nativeFlowController?.delegate = self
-            nativeFlowController?.startFlow()
+                flow: flow,
+                killswitchActive: flowRouter.killswitchActive
+            ),
+            apiClient: apiClient
+        )
+
+        switch flow {
+        case .webInstantDebits:
+            continueWithWebFlow(synchronizePayload.manifest)
+        case .nativeInstantDebits:
+            // Not currently supported.
+            break
+        case .webFinancialConnections:
+            continueWithWebFlow(synchronizePayload.manifest)
+        case .nativeFinancialConnections:
+            continueWithNativeFlow(synchronizePayload)
         }
     }
 
@@ -173,6 +163,26 @@ private extension HostController {
         )
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)
+    }
+
+    func continueWithNativeFlow(_ synchronizePayload: FinancialConnectionsSynchronize) {
+        navigationController.configureAppearanceForNative()
+
+        let dataManager = NativeFlowAPIDataManager(
+            manifest: synchronizePayload.manifest,
+            visualUpdate: synchronizePayload.visual,
+            returnURL: returnURL,
+            consentPaneModel: synchronizePayload.text?.consentPane,
+            apiClient: apiClient,
+            clientSecret: clientSecret,
+            analyticsClient: analyticsClient
+        )
+        nativeFlowController = NativeFlowController(
+            dataManager: dataManager,
+            navigationController: navigationController
+        )
+        nativeFlowController?.delegate = self
+        nativeFlowController?.startFlow()
     }
 }
 
