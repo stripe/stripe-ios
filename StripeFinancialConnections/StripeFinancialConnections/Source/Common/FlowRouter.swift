@@ -34,8 +34,8 @@ class FlowRouter {
 
     var flow: Flow {
         guard synchronizePayload.manifest.isProductInstantDebits == false else {
-            // We currently only support Instant Debits via a web flow.
-            return .webInstantDebits
+            // Only show Native Instant Debits from the example app, when native is selected.
+            return exampleAppNativeOverrideEnabled ? .nativeInstantDebits : .webInstantDebits
         }
 
         logExposureIfNeeded()
@@ -54,12 +54,18 @@ class FlowRouter {
 
     // MARK: - Private
 
-    private var shouldUseNative: Bool {
-        if let isNativeEnabled = UserDefaults.standard.value(
+    private var exampleAppNativeOverrideEnabled: Bool {
+        if let nativeOverride = UserDefaults.standard.value(
             forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE"
         ) as? Bool {
-            return isNativeEnabled
+            return nativeOverride
         }
+        return false
+    }
+
+    private var shouldUseNative: Bool {
+        // Override all other conditions if the example app has native selected.
+        if exampleAppNativeOverrideEnabled { return true }
 
         // if this version is killswitched by server, fallback to webview.
         if killswitchActive { return false }
