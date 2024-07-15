@@ -673,10 +673,24 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Attempt payment
         payButton.tap()
 
-        // Close the webview, no need to see the successful pay
+        // Close the webview, to simulate cancel
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
+
+        // Tap to attempt a payment, but fail it
+        payButton.waitForExistenceAndTap()
+        let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
+        failPaymentText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 5.0))
+
+        // Tap to attempt a payment
+        payButton.waitForExistenceAndTap()
+        let approvePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
+        approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 
     func testCashAppPaymentMethod_setup() throws {
@@ -703,10 +717,24 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Attempt set up
         setupButton.tap()
 
-        // Close the webview, no need to see the successful set up
+        // Close the webview, to simulate cancel
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
+
+        // Tap to attempt a set up, but fail it
+        setupButton.waitForExistenceAndTap()
+        let failSetupText = app.firstDescendant(withLabel: "FAIL TEST SETUP")
+        failSetupText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 5.0))
+
+        // Tap to attempt a set up, make it succeed
+        setupButton.waitForExistenceAndTap()
+        let approveSetupText = app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP")
+        approveSetupText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 
     func testCashAppPaymentMethod_setupFutureUsage() throws {
