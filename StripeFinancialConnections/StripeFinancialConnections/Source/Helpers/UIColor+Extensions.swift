@@ -55,6 +55,10 @@ extension UIColor {
         return neutral700
     }
 
+    static var iconPrimary: UIColor {
+        return neutral900
+    }
+
     static var iconActionPrimary: UIColor {
         return brand500
     }
@@ -129,6 +133,10 @@ extension UIColor {
 
     private static var neutral800: UIColor {
         return UIColor(red: 53 / 255.0, green: 58 / 255.0, blue: 68 / 255.0, alpha: 1)  // #353a44
+    }
+
+    private static var neutral900: UIColor {
+        return UIColor(red: 23 / 255.0, green: 23 / 255.0, blue: 23 / 255.0, alpha: 1)  // ##171717
     }
 
     static var brand25: UIColor {
