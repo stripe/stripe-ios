@@ -381,7 +381,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 }
 
                 let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
-                // We don't simply use the height of the keyboard b/c the keyboard height is large on iOS 16 simulator even when the keyboard is not displayed
                 var keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
                 // Account for edge case where keyboard is taller than our view
                 if keyboardViewEndFrame.origin.y < 0 {
@@ -391,7 +390,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 if notification.name == UIResponder.keyboardWillHideNotification {
                     bottomAnchor.constant = 0
                 } else {
-                    bottomAnchor.constant = -keyboardViewEndFrame.height
+                    bottomAnchor.constant = -keyboardInViewHeight
                 }
 
                 self.view.superview?.layoutIfNeeded()
