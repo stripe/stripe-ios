@@ -67,6 +67,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
         let popped = contentStack.remove(at: 0)
         contentViewController = toVC
+        // If you are implementing your own container view controller, it must call the willMove(toParent:) method of the child view controller before calling the removeFromParent() method, passing in a parent value of nil.
+        // The removeFromParent() method automatically calls the didMove(toParent:) method of the child view controller after it removes the child.
+        popped.willMove(toParent: nil)
+        popped.removeFromParent()
         return popped
     }
 
@@ -96,12 +100,15 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             contentContainerView.addSubview(oldViewImage)
 
             // Remove the old VC
+            oldContentViewController.beginAppearanceTransition(false, animated: true)
             oldContentViewController.view.removeFromSuperview()
-            oldContentViewController.removeFromParent()
+            oldContentViewController.endAppearanceTransition()
 
             // Add the new VC
+            // When your custom container calls the addChild(_:) method, it automatically calls the willMove(toParent:) method of the view controller to be added as a child before adding it.
             addChild(contentViewController)
             contentContainerView.addArrangedSubview(self.contentViewController.view)
+            // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
             contentViewController.didMove(toParent: self)
             if let presentationController = rootParent.presentationController
                 as? BottomSheetPresentationController
