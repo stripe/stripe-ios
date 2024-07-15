@@ -2316,7 +2316,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try? fillCardData(app, container: nil)
 
         app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -3767,6 +3767,14 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
+        // Make sure bottom notice mandate is visible
+        switch mode {
+        case .payment:
+            XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
+        case .paymentWithSetup, .setup:
+            XCTAssertTrue(app.textViews["By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
+        }
+
         if mode == .payment {
             let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
             XCTAssertFalse(saveThisAccountToggle.isSelected)
@@ -3784,26 +3792,32 @@ extension PaymentSheetUITestCase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].tap()
         XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons[confirmButtonText].waitForExistenceAndTap())
+
+        // Make sure bottom notice mandate is visible
+        XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].exists)
+
+        app.buttons[confirmButtonText].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
-    func _testInstantDebits(mode: PaymentSheetTestPlaygroundSettings.Mode) {
+    func _testInstantDebits(mode: PaymentSheetTestPlaygroundSettings.Mode, vertical: Bool = false) {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = mode
         settings.apmsEnabled = .off
         settings.supportedPaymentMethods = "card,link"
+        if vertical {
+            settings.layout = .vertical
+        }
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
-        // Select "Bank Account"
-        guard let bankAccount = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Bank") else {
-            XCTFail()
-            return
+        // Select "Bank"
+        if vertical {
+            XCTAssertTrue(app.buttons["Bank"].waitForExistenceAndTap())
+        } else {
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Bank")?.waitForExistenceAndTap() ?? false)
         }
-        bankAccount.tap()
-
         let email = "paymentsheetuitest-\(UUID().uuidString)@example.com"
 
         // Fill out name and email fields
