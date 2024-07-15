@@ -673,10 +673,24 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Attempt payment
         payButton.tap()
 
-        // Close the webview, no need to see the successful pay
+        // Close the webview, to simulate cancel
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
+
+        // Tap to attempt a payment, but fail it
+        payButton.waitForExistenceAndTap()
+        let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
+        failPaymentText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 5.0))
+
+        // Tap to attempt a payment
+        payButton.waitForExistenceAndTap()
+        let approvePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
+        approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 
     func testCashAppPaymentMethod_setup() throws {
@@ -703,10 +717,24 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Attempt set up
         setupButton.tap()
 
-        // Close the webview, no need to see the successful set up
+        // Close the webview, to simulate cancel
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
+
+        // Tap to attempt a set up, but fail it
+        setupButton.waitForExistenceAndTap()
+        let failSetupText = app.firstDescendant(withLabel: "FAIL TEST SETUP")
+        failSetupText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 5.0))
+
+        // Tap to attempt a set up, make it succeed
+        setupButton.waitForExistenceAndTap()
+        let approveSetupText = app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP")
+        approveSetupText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 
     func testCashAppPaymentMethod_setupFutureUsage() throws {
@@ -2316,7 +2344,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try? fillCardData(app, container: nil)
 
         app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -3767,6 +3795,14 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
+        // Make sure bottom notice mandate is visible
+        switch mode {
+        case .payment:
+            XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
+        case .paymentWithSetup, .setup:
+            XCTAssertTrue(app.textViews["By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
+        }
+
         if mode == .payment {
             let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
             XCTAssertFalse(saveThisAccountToggle.isSelected)
@@ -3784,26 +3820,32 @@ extension PaymentSheetUITestCase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].tap()
         XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons[confirmButtonText].waitForExistenceAndTap())
+
+        // Make sure bottom notice mandate is visible
+        XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].exists)
+
+        app.buttons[confirmButtonText].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
-    func _testInstantDebits(mode: PaymentSheetTestPlaygroundSettings.Mode) {
+    func _testInstantDebits(mode: PaymentSheetTestPlaygroundSettings.Mode, vertical: Bool = false) {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = mode
         settings.apmsEnabled = .off
         settings.supportedPaymentMethods = "card,link"
+        if vertical {
+            settings.layout = .vertical
+        }
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
-        // Select "Bank Account"
-        guard let bankAccount = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Bank") else {
-            XCTFail()
-            return
+        // Select "Bank"
+        if vertical {
+            XCTAssertTrue(app.buttons["Bank"].waitForExistenceAndTap())
+        } else {
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Bank")?.waitForExistenceAndTap() ?? false)
         }
-        bankAccount.tap()
-
         let email = "paymentsheetuitest-\(UUID().uuidString)@example.com"
 
         // Fill out name and email fields

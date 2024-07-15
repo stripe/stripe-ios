@@ -10,6 +10,13 @@ import Foundation
 
 class FlowRouter {
 
+    enum Flow: String {
+        case webInstantDebits = "web_instant_debits"
+        case nativeInstantDebits = "native_instant_debits"
+        case webFinancialConnections = "web_financial_connections"
+        case nativeFinancialConnections = "native_financial_connections"
+    }
+
     private let synchronizePayload: FinancialConnectionsSynchronize
     private let analyticsClient: FinancialConnectionsAnalyticsClient
 
@@ -23,9 +30,19 @@ class FlowRouter {
         self.analyticsClient = analyticsClient
     }
 
-    // MARK: - Private
+    // MARK: - Public
 
-    private var killswitchActive: Bool {
+    var flow: Flow {
+        guard synchronizePayload.manifest.isProductInstantDebits == false else {
+            // We currently only support Instant Debits via a web flow.
+            return .webInstantDebits
+        }
+
+        logExposureIfNeeded()
+        return shouldUseNative ? .nativeFinancialConnections : .webFinancialConnections
+    }
+
+    var killswitchActive: Bool {
         // If the manifest is missing features map, fallback to webview.
         guard let features = synchronizePayload.manifest.features else { return true }
 
@@ -35,13 +52,9 @@ class FlowRouter {
         return killswitchValue
     }
 
-    private var experimentVariant: String? {
-        return synchronizePayload.manifest.experimentAssignments?[Constants.nativeExperiment]
-    }
+    // MARK: - Private
 
-    // MARK: - Public
-
-    var shouldUseNative: Bool {
+    private var shouldUseNative: Bool {
         if let isNativeEnabled = UserDefaults.standard.value(
             forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE"
         ) as? Bool {
@@ -55,6 +68,10 @@ class FlowRouter {
         guard let experimentVariant = experimentVariant else { return false }
 
         return experimentVariant == Constants.nativeExperimentTreatment
+    }
+
+    private var experimentVariant: String? {
+        return synchronizePayload.manifest.experimentAssignments?[Constants.nativeExperiment]
     }
 
     func logExposureIfNeeded() {
@@ -76,7 +93,6 @@ class FlowRouter {
             assignmentEventId: assignmentEventId,
             accountholderToken: accountHolder
         )
-
     }
 }
 

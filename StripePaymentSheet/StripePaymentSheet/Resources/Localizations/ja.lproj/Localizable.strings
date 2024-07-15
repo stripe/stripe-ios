@@ -24,7 +24,7 @@
 
 "Bank account" = "銀行口座";
 
-"Buy now or pay later with Klarna." = "Klarna で後払いします。";
+"Buy now or pay later with Klarna" = "Klarna で後払い";
 
 "Buy using a UPI ID" = "UPI ID を使って購入";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "支払い方法の管理";
+
 "Manage payment methods" = "決済手段を管理する";
 
 "Manage your payment methods" = "決済手段を管理する";
 
 "Name on card" = "カード名義人";
+
+"New card" = "新しいカード";
 
 "New payment method" = "新しい決済手段";
 

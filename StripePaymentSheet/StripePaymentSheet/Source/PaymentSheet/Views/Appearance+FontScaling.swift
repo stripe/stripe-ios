@@ -16,6 +16,7 @@ extension PaymentSheet.Appearance {
     ///   - style: The style for your text
     ///   - maximumPointSize: The maximum font size to be scaled to
     /// - Returns: A font scaled to be used in PaymentSheet
+    /// - Note: To prevent the font from being scaled down, set `minimumContentSizeCategory = .large` on the label.
     func scaledFont(for font: UIFont, style: UIFont.TextStyle, maximumPointSize: CGFloat) -> UIFont {
         let defaultTraitCollection = UITraitCollection(preferredContentSizeCategory: .large) // large is the default content size category
         let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: defaultTraitCollection)

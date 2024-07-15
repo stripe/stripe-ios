@@ -30,7 +30,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":""}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":""}
 """
         )
 
@@ -87,7 +87,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
 """
         )
 
@@ -138,7 +138,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
 """
         )
 
@@ -190,7 +190,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)"}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)"}
 """
         )
 
@@ -240,7 +240,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
 """
         )
 
@@ -297,7 +297,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
 """
         )
 
@@ -362,7 +362,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"networking","transactions_permission":true,"email":"\(emailAddress)","phone":"4015006000"}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","transactions_permission":true,"email":"\(emailAddress)","phone":"4015006000"}
 """
         )
 

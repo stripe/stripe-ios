@@ -20,6 +20,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockClientSecret = "las_123345"
     private let mockAnalyticsClient = MockAnalyticsClient()
+    private let mockApiClient = APIStubbedTestCase.stubbedAPIClient()
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -46,7 +47,8 @@ class FinancialConnectionsSheetTests: XCTestCase {
 
         // Mock that financialConnections is completed
         let host = HostController(
-            api: EmptyFinancialConnectionsAPIClient(),
+            apiClient: mockApiClient,
+            analyticsClientV1: mockAnalyticsClient,
             clientSecret: "test",
             returnURL: nil,
             publishableKey: "test",
