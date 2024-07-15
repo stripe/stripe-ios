@@ -286,7 +286,7 @@ extension STPPaymentMethodType {
     var pollingRequirement: PollingRequirement? {
         switch self {
         // Note: Card only requires polling for 3DS2 web-based transactions
-        case .card, .amazonPay, .cashApp:
+        case .card, .amazonPay:
             return PollingRequirement(timeBetweenPollingAttempts: 3)
         case .swish, .twint:
             // We are intentionally polling for Swish and Twint even though they use the redirect trampoline.
@@ -303,9 +303,8 @@ extension STPPaymentMethodType {
         // Payment methods such as CashApp implement app-to-app redirects that bypass the "redirect trampoline" too give a more seamless user experience for app-to-app.
         // However, when returning to the merchant app in this scenario, the intent often isn't updated instantaneously, requiring us to hit the refresh endpoint.
         // Only a small subset of LPMs support refreshing
-        // TODO(porter) Enable refreshing for Cash App when test mode cancel behavior is fixed
         case .cashApp:
-            return false
+            return true
         default:
             return false
         }

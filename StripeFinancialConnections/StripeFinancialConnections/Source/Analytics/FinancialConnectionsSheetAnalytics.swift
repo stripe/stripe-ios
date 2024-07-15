@@ -42,6 +42,21 @@ struct FinancialConnectionsSheetClosedAnalytic: FinancialConnectionsSheetAnalyti
     }
 }
 
+/// Logged when the financial connections sheet flow is determined
+struct FinancialConnectionsSheetFlowDetermined: FinancialConnectionsSheetAnalytic {
+    let event = STPAnalyticEvent.financialConnectionsSheetFlowDetermined
+    let clientSecret: String
+    let flow: FlowRouter.Flow
+    let killswitchActive: Bool
+
+    var additionalParams: [String: Any] {
+        [
+            "flow": flow.rawValue,
+            "killswitchActive": killswitchActive,
+        ]
+    }
+}
+
 /// Logged if there's an error presenting the sheet
 struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalytic {
     let event = STPAnalyticEvent.financialConnectionsSheetFailed
