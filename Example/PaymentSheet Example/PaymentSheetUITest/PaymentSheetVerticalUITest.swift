@@ -28,8 +28,13 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         continueButton.tap()
         XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
 
-        // Go back in, select Link
+        // Reload - it should now default to "Apple Pay"
+        reload(app, settings: settings)
+        XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
         paymentMethodButton.tap()
+        XCTAssertTrue(app.buttons["Apple Pay"].isSelected)
+
+        // Select Link - FC paymentOption should change to Link
         app.buttons["Link"].tap()
         continueButton.tap()
         XCTAssertEqual(paymentMethodButton.label, "Link, link")

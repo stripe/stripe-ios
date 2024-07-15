@@ -263,6 +263,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
             .stripeId(paymentMethod.stripeId),
             forCustomer: configuration.customer?.id
         )
+
         // Deselect previous button
         paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
 
