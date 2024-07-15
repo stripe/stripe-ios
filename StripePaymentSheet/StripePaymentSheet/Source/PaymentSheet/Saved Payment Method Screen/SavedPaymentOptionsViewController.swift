@@ -671,14 +671,14 @@ extension STPPaymentMethod {
             )
         case .SEPADebit:
             let last4 = sepaDebit?.last4 ?? ""
-            let formattedMessage = String.Localized.removeBankAccountEndingIn
+            let formattedMessage = String.Localized.bank_account_xxxx
             return (
                 title: String.Localized.removeBankAccount,
                 message: String(format: formattedMessage, last4)
             )
         case .USBankAccount:
             let last4 = usBankAccount?.last4 ?? ""
-            let formattedMessage = String.Localized.removeBankAccountEndingIn
+            let formattedMessage = String.Localized.bank_account_xxxx
             return (
                 title: String.Localized.removeBankAccount,
                 message: String(format: formattedMessage, last4)

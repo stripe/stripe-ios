@@ -254,7 +254,7 @@ import Foundation
         STPLocalizedString("The account number you entered is incomplete.", "Error description for incomplete account number")
     }
 
-    static var removeBankAccountEndingIn: String {
+    static var bank_account_xxxx: String {
         STPLocalizedString(
             "Bank account •••• %@",
             "Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242'")

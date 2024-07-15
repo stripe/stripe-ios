@@ -173,7 +173,7 @@ extension InstantDebitsPaymentMethodElement: BankAccountInfoViewDelegate {
             )
             let alertController = UIAlertController(
                 title: String.Localized.removeBankAccount,
-                message: String(format: String.Localized.removeBankAccountEndingIn, last4BankAccount),
+                message: String(format: String.Localized.bank_account_xxxx, last4BankAccount),
                 preferredStyle: .alert
             )
             alertController.addAction(didTapCancel)
