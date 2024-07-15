@@ -36,6 +36,7 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
         enum BodyEntry: Decodable {
             case text(TextBodyEntry)
             case image(ImageBodyEntry)
+            case bullets(BulletsBodyEntry)
             case unparasable
 
             public init(from decoder: Decoder) throws {
@@ -48,6 +49,8 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
                     self = .text(value)
                 } else if type == .image, let value = try? container.decode(ImageBodyEntry.self) {
                     self = .image(value)
+                } else if type == .bullets, let value = try? container.decode(BulletsBodyEntry.self) {
+                    self = .bullets(value)
                 } else {
                     self = .unparasable
                 }
@@ -60,6 +63,7 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
                 enum BodyEntryType: String, Codable {
                     case text = "text"
                     case image = "image"
+                    case bullets = "bullets"
                 }
 
                 enum CodingKeys: String, CodingKey {
