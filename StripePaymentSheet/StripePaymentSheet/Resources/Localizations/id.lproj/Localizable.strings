@@ -24,7 +24,7 @@
 
 "Bank account" = "Rekening bank";
 
-"Buy now or pay later with Klarna." = "Beli sekarang atau bayar nanti dengan Klarna.";
+"Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
 
 "Buy using a UPI ID" = "Beli menggunakan identifikasi UPI";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Kelola metode pembayaran";
+
 "Manage payment methods" = "Kelola metode pembayaran";
 
 "Manage your payment methods" = "Kelola metode pembayaran Anda";
 
 "Name on card" = "Nama pada kartu";
+
+"New card" = "Kartu baru";
 
 "New payment method" = "Metode pembayaran baru";
 

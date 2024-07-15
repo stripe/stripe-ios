@@ -63,44 +63,52 @@ struct FinancialConnectionsSessionManifest: Decodable {
         }
     }
 
+    enum Theme: String, SafeEnumCodable, Equatable {
+        case light = "light"
+        case dashboardLight = "dashboard_light"
+        case linkLight = "link_light"
+        case unparsable
+    }
+
     // MARK: - Properties
 
+    let accountholderCustomerEmailAddress: String?
     let accountholderIsLinkConsumer: Bool?
+    let accountholderPhoneNumber: String?
+    let accountholderToken: String?
+    let accountDisconnectionMethod: AccountDisconnectionMethod?
+    let activeAuthSession: FinancialConnectionsAuthSession?
     let activeInstitution: FinancialConnectionsInstitution?
     let allowManualEntry: Bool
+    let assignmentEventId: String?
     let businessName: String?
+    let cancelUrl: String?
     let consentRequired: Bool
     let customManualEntryHandling: Bool
     let disableLinkMoreAccounts: Bool
+    let displayText: DisplayText?
+    let experimentAssignments: [String: String]?
+    let features: [String: Bool]?
     let hostedAuthUrl: String?
-    let successUrl: String?
-    let cancelUrl: String?
-    let activeAuthSession: FinancialConnectionsAuthSession?
     let initialInstitution: FinancialConnectionsInstitution?
     let instantVerificationDisabled: Bool
     let institutionSearchDisabled: Bool
+    let isEndUserFacing: Bool?
     let isLinkWithStripe: Bool?
     let isNetworkingUserFlow: Bool?
     let isStripeDirect: Bool?
     let livemode: Bool
+    let manualEntryMode: ManualEntryMode
     let manualEntryUsesMicrodeposits: Bool
     let nextPane: NextPane
-    let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
-    let singleAccount: Bool
     let paymentMethodType: FinancialConnectionsPaymentMethodType?
-    let accountDisconnectionMethod: AccountDisconnectionMethod?
-    let isEndUserFacing: Bool?
+    let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     let product: String
-    let accountholderToken: String?
-    let features: [String: Bool]?
-    let experimentAssignments: [String: String]?
-    let assignmentEventId: String?
+    let singleAccount: Bool
     let skipSuccessPane: Bool?
-    let manualEntryMode: ManualEntryMode
-    let accountholderCustomerEmailAddress: String?
-    let accountholderPhoneNumber: String?
     let stepUpAuthenticationRequired: Bool?
-    let displayText: DisplayText?
+    let successUrl: String?
+    let theme: Theme?
 
     var shouldAttachLinkedPaymentMethod: Bool {
         return (paymentMethodType != nil)

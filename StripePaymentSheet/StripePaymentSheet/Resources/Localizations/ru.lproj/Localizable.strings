@@ -24,7 +24,7 @@
 
 "Bank account" = "Банковский счет";
 
-"Buy now or pay later with Klarna." = "Купить немедленно или оплатить позже через систему Klarna.";
+"Buy now or pay later with Klarna" = "Купите сейчас или оплатите позже через систему Klarna";
 
 "Buy using a UPI ID" = "Купить с помощью идентификатора UPI";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Управление способом оплаты";
+
 "Manage payment methods" = "Управление способами оплаты";
 
 "Manage your payment methods" = "Управление способами оплаты";
 
 "Name on card" = "Имя и фамилия, указанные на карте";
+
+"New card" = "Новая карта";
 
 "New payment method" = "Новый способ оплаты";
 

@@ -172,10 +172,12 @@ class SheetNavigationBar: UIView {
 }
 
 extension UIButton {
-    func configureCommonEditButton(isEditingPaymentMethods: Bool) {
+    func configureCommonEditButton(isEditingPaymentMethods: Bool, appearance: PaymentSheet.Appearance) {
         let title = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
         setTitle(title, for: .normal)
         titleLabel?.adjustsFontForContentSizeCategory = true
+        titleLabel?.textAlignment = .right
+        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
     }
 }

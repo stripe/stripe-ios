@@ -1495,7 +1495,7 @@ public class STPPaymentHandler: NSObject {
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                     let shouldRetryForCard = paymentMethod.type == .card && paymentIntent.nextAction?.type == .useStripeSDK
                                     if retryCount > 0, paymentMethod.type != .card || shouldRetryForCard, let pollingRequirement = paymentMethod.type.pollingRequirement {
-                                        self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.pollingInterval) {
+                                        self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.timeBetweenPollingAttempts) {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 retryCount: retryCount - 1
                                             )
@@ -1558,7 +1558,7 @@ public class STPPaymentHandler: NSObject {
                             // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
                             if retryCount > 0, paymentMethod.type != .card || shouldRetryForCard, let pollingRequirement = paymentMethod.type.pollingRequirement {
-                                self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.pollingInterval) {
+                                self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.timeBetweenPollingAttempts) {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         retryCount: retryCount - 1
                                     )

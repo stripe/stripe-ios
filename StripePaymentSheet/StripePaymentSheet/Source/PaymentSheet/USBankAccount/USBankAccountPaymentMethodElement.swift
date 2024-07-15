@@ -175,20 +175,20 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
-        applyStyle(formattedString: formattedString, theme: theme)
+        applyStyle(formattedString: formattedString, alignment: .center, theme: theme)
         return formattedString
     }
 
-    class func attributedMandateTextSavedPaymentMethod(theme: ElementsUITheme = .default) -> NSMutableAttributedString {
+    class func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsUITheme) -> NSMutableAttributedString {
         let mandateText = Self.ContinueMandateText
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
-        applyStyle(formattedString: formattedString, theme: theme)
+        applyStyle(formattedString: formattedString, alignment: alignment, theme: theme)
         return formattedString
     }
 
-    private class func applyStyle(formattedString: NSMutableAttributedString, theme: ElementsUITheme = .default) {
+    private class func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsUITheme = .default) {
         let style = NSMutableParagraphStyle()
-        style.alignment = .center
+        style.alignment = alignment
         formattedString.addAttributes([.paragraphStyle: style,
                                        .font: UIFont.preferredFont(forTextStyle: .footnote),
                                        .foregroundColor: theme.colors.secondaryText,

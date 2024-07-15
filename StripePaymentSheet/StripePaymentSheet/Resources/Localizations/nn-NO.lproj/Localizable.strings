@@ -24,7 +24,7 @@
 
 "Bank account" = "Bankkonto";
 
-"Buy now or pay later with Klarna." = "Kjøp no eller betal seinare med Klarna.";
+"Buy now or pay later with Klarna" = "Kjøp no eller betal seinare med Klarna";
 
 "Buy using a UPI ID" = "Kjøp ved å bruke ein UPI ID";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Handsam betalingsmetode";
+
 "Manage payment methods" = "Handsam betalingsmetodar";
 
 "Manage your payment methods" = "Handsam betalingsmåtane dine";
 
 "Name on card" = "Namn på kort";
+
+"New card" = "Nytt kort";
 
 "New payment method" = "Ny betalingsmåte";
 

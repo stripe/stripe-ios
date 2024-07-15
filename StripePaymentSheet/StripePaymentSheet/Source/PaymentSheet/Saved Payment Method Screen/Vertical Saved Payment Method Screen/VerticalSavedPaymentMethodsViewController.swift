@@ -21,6 +21,9 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
                      with selectedPaymentMethod: STPPaymentMethod?,
                      latestPaymentMethods: [STPPaymentMethod])
+
+    /// Notifies the delegate it should close the entire sheet it is presented in
+    func shouldClose()
 }
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
@@ -28,8 +31,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
     private let configuration: PaymentSheet.Configuration
-    private let isCBCEligible: Bool
+    private let intent: Intent
     private let paymentMethodRemove: Bool
+    private let isCBCEligible: Bool
 
     private var updateViewController: UpdateCardViewController?
 
@@ -63,7 +67,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         }
 
         if isEditingPaymentMethods {
-            return .Localized.manage_payment_methods
+            return paymentMethods.count == 1 ?  .Localized.manage_payment_method : .Localized.manage_payment_methods
         }
 
         let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
@@ -92,6 +96,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return !paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
     }
 
+    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+        SavedPaymentMethodManager(configuration: configuration, intent: intent)
+    }()
+
     /// Determines if the we should operate in "Remove Only Mode". This mode is enabled under the following conditions:
     /// - There is exactly one payment method available at init time.
     /// - The single available payment method is not a co-branded card.
@@ -108,7 +116,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                                         appearance: configuration.appearance)
         navBar.setStyle(.back(showAdditionalButton: canEdit))
         navBar.delegate = self
-        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
+        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
         // TODO(porter) Read color from new secondary action color from appearance
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
         navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
@@ -135,12 +143,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(configuration: PaymentSheet.Configuration,
          selectedPaymentMethod: STPPaymentMethod?,
          paymentMethods: [STPPaymentMethod],
-         paymentMethodRemove: Bool,
-         isCBCEligible: Bool) {
+         intent: Intent) {
         self.configuration = configuration
-        self.paymentMethodRemove = paymentMethodRemove
-        self.isCBCEligible = isCBCEligible
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
+        self.intent = intent
+        self.paymentMethodRemove = intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        self.isCBCEligible = intent.cardBrandChoiceEligible
+        // Put in remove only mode and don't show the option to update PMs if:
+        // 1. We only have 1 payment method
+        // 2. The customer can't update the card brand 
+        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
@@ -178,12 +189,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func remove(paymentMethod: STPPaymentMethod) {
-        guard let button = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
-                let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
+        guard let button = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }) else { return }
 
         // Detach the payment method from the customer
-        let manager = SavedPaymentMethodManager(configuration: configuration)
-        manager.detach(paymentMethod: paymentMethod, using: ephemeralKeySecret)
+        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
 
         // Remove the payment method row button
         paymentMethodRows.removeAll { $0.paymentMethod.stripeId == paymentMethod.stripeId }
@@ -222,7 +231,7 @@ extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewContr
     }
 
     func didTapOrSwipeToDismiss() {
-        dismiss(animated: true)
+        delegate?.shouldClose()
     }
 
     var requiresFullScreen: Bool {
@@ -298,11 +307,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
     }
 
     func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
-        guard let ephemeralKeySecret = configuration.customer?.ephemeralKeySecret else { return }
-
         // Update the payment method
-        let manager = SavedPaymentMethodManager(configuration: configuration)
-        let updatedPaymentMethod = try await manager.update(paymentMethod: paymentMethod, with: updateParams, using: ephemeralKeySecret)
+        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
         replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
         _ = viewController.bottomSheetController?.popContentViewController()
