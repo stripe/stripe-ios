@@ -1,5 +1,5 @@
 ## x.x.x x-x-x
-### All
+### Payments
 * [Fixed] Improved reliability when paying or setting up with Cash App Pay.
 
 ## 23.28.0 2024-07-08
