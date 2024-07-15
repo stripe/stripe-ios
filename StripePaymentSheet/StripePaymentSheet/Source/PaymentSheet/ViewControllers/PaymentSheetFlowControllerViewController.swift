@@ -255,7 +255,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
+                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
 
         // Automatically switch into the adding new mode when Link is the only available payment method
