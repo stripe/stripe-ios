@@ -392,7 +392,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 // Account for edge case where keyboard is taller than our view
                 if keyboardViewEndFrame.origin.y < 0 {
                     // If keyboard frame is negative relative to our own, keyboardInViewHeight (the intersection of keyboard and our view) won't include it and we need to add the extra height:
-                    keyboardInViewHeight += keyboardViewEndFrame.origin.y
+                    keyboardInViewHeight += -keyboardViewEndFrame.origin.y
                 }
                 if notification.name == UIResponder.keyboardWillHideNotification {
                     bottomAnchor.constant = 0
