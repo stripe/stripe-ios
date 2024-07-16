@@ -14,6 +14,8 @@
 
 "BSB number" = "Numru BSB";
 
+"Bank account •••• %@" = "Kont tal-bank •••• %@";
+
 "Billing address is same as shipping" = "L-indirizz tal-fatturazzjoni huwa l-istess bħall-indirizz tal-posta";
 
 "Cancel" = "Ikkanċella";
@@ -94,9 +96,7 @@
 
 "Remove" = "Neħħi";
 
-"Remove bank account" = "Neħħi l-kont tal-bank";
-
-"Remove bank account ending in %@" = "Neħħi l-kont tal-bank li jispiċċa b'%@";
+"Remove bank account?" = "Tixtieq tneħħi l-kont tal-bank?";
 
 "Remove card" = "Neħħi l-karta";
 

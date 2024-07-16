@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB 番号";
 
+"Bank account •••• %@" = "銀行口座 •••• %@";
+
 "Billing address is same as shipping" = "請求先住所は配送先住所と同じ";
 
 "Cancel" = "キャンセル";
@@ -94,9 +96,7 @@
 
 "Remove" = "削除";
 
-"Remove bank account" = "銀行口座を削除";
-
-"Remove bank account ending in %@" = "末尾が %@ の銀行口座を削除する";
+"Remove bank account?" = "銀行口座を削除しますか？";
 
 "Remove card" = "カードを削除";
 

@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.28.1 2024-07-16
 ### Payments
 * [Fixed] Improved reliability when paying or setting up with Cash App Pay.
 * [Fixed] Pass stripeAccount context when presenting PayWithLinkWebController for connected accounts
