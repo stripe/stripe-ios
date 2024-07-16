@@ -347,7 +347,7 @@ fileprivate extension HCaptchaWebViewManager {
         }
         webView.loadHTMLString(html, baseURL: url)
         if webView.navigationDelegate == nil {
-            webView.navigationDelegate = self
+//            webView.navigationDelegate = self
         }
 
         if let observer = observer {
