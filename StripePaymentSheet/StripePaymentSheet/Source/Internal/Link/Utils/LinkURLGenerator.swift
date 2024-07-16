@@ -85,6 +85,7 @@ class LinkURLGenerator {
 
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
+                             stripeAccount: configuration.apiClient.stripeAccount,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
                              merchantInfo: merchantInfo,
                              customerInfo: customerInfo,
