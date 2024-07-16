@@ -151,11 +151,12 @@ extension NativeFlowController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
                     closeItem: self.navigationBarCloseBarButtonItem,
-                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
+                    theme: self.dataManager.manifest.theme,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
@@ -197,11 +198,12 @@ extension NativeFlowController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
                     closeItem: self.navigationBarCloseBarButtonItem,
-                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
+                    theme: self.dataManager.manifest.theme,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
@@ -1347,7 +1349,7 @@ private func CreatePaneViewController(
     return viewController
 }
 
-private func ShouldHideStripeLogoInNavigationBar(
+private func ShouldHideLogoInNavigationBar(
     forViewController viewController: UIViewController,
     reducedBranding: Bool,
     merchantLogo: [String]?

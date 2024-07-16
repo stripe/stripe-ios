@@ -147,12 +147,13 @@ extension FinancialConnectionsNavigationController {
     static func configureNavigationItemForNative(
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
-        shouldHideStripeLogo: Bool,
+        shouldHideLogo: Bool,
+        theme: FinancialConnectionsSessionManifest.Theme?,
         isTestMode: Bool
     ) {
         let iconHeight: CGFloat = 20
         var testModeImageViewWidth: CGFloat = 0
-        var stripeLogoImageViewWidth: CGFloat = 0
+        var logoImageViewWidth: CGFloat = 0
 
         let testModeBadgeView: UIImageView? = {
             guard isTestMode else { return nil }
@@ -170,26 +171,37 @@ extension FinancialConnectionsNavigationController {
             return testModeImage
         }()
 
-        let stripeLogoView: UIImageView? = {
-            guard !shouldHideStripeLogo else { return nil }
+        let logoView: UIImageView? = {
+            guard !shouldHideLogo else { return nil }
 
-            let stripeLogoImage = UIImageView(image: Image.stripe_logo.makeImage(template: true))
-            stripeLogoImage.tintColor = UIColor.textActionPrimary
-            stripeLogoImage.contentMode = .scaleAspectFit
-            stripeLogoImage.sizeToFit()
+            let logo: Image
+            let tint: UIColor
+            switch theme {
+            case .linkLight:
+                logo = .link_logo
+                tint = .linkGreen900
+            case .light, .dashboardLight, .unparsable, .none:
+                logo = .stripe_logo
+                tint = .textActionPrimary
+            }
 
-            stripeLogoImageViewWidth = stripeLogoImage.bounds.width * (iconHeight / max(1, stripeLogoImage.bounds.height))
-            stripeLogoImage.frame = CGRect(
+            let logoImage = UIImageView(image: logo.makeImage(template: true))
+            logoImage.tintColor = tint
+            logoImage.contentMode = .scaleAspectFit
+            logoImage.sizeToFit()
+
+            logoImageViewWidth = logoImage.bounds.width * (iconHeight / max(1, logoImage.bounds.height))
+            logoImage.frame = CGRect(
                 x: 0,
                 y: 0,
-                width: stripeLogoImageViewWidth,
+                width: logoImageViewWidth,
                 height: iconHeight
             )
-            return stripeLogoImage
+            return logoImage
         }()
 
         let spacing: CGFloat = 6
-        let imageViews = [stripeLogoView, testModeBadgeView].compactMap { $0.self }
+        let imageViews = [logoView, testModeBadgeView].compactMap { $0.self }
         let stackView = UIStackView(arrangedSubviews: imageViews)
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -197,7 +209,7 @@ extension FinancialConnectionsNavigationController {
         stackView.frame = CGRect(
             x: 0,
             y: 0,
-            width: stripeLogoImageViewWidth + testModeImageViewWidth + spacing,
+            width: logoImageViewWidth + testModeImageViewWidth + spacing,
             height: iconHeight
         )
 
