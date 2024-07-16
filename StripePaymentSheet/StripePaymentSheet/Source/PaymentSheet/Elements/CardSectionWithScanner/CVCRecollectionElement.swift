@@ -88,7 +88,14 @@ extension CVCRecollectionElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if case .valid = cvcRecollectionView.textFieldElement.validationState {
             let cardOptions = STPConfirmCardOptions()
-            cardOptions.cvc = cvcRecollectionView.textFieldElement.text
+            let cvc = cvcRecollectionView.textFieldElement.text
+            cardOptions.cvc = cvc
+            #if DEBUG
+            // There's no way to test an invalid recollected cvc in the API, so we hardcode a way:
+            if cvc == "666" {
+                cardOptions.cvc = "test_invalid_cvc"
+            }
+            #endif
             params.confirmPaymentMethodOptions.cardOptions = cardOptions
             return params
         }
