@@ -29,6 +29,7 @@ class ConsentPaneSnapshotTests: STPSnapshotTestCase {
     }
 
     func testConsentPane() {
+        recordMode = true
         presentAndLoadFinancialConnectionsSheet()
 
         let navigationController = financialConnectionsSheet.hostController!.navigationController
