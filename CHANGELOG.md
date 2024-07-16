@@ -1,6 +1,7 @@
 ## x.x.x x-x-x
 ### Payments
 * [Fixed] Improved reliability when paying or setting up with Cash App Pay.
+* [Fixed] Passing stripeAccount context when presenting PayWithLinkWebController for connected accounts
 
 ## 23.28.0 2024-07-08
 
