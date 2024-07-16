@@ -28,7 +28,7 @@ enum PaymentSheetUI {
     static let defaultMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, trailing: defaultPadding)
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
-        leading: defaultPadding, bottom: 36, trailing: defaultPadding)
+        leading: defaultPadding, bottom: 40, trailing: defaultPadding)
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
     static let defaultAnimationDuration: TimeInterval = 0.2
     static let quickAnimationDuration: TimeInterval = 0.1
