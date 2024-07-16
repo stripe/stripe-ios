@@ -55,10 +55,6 @@ extension UIColor {
         return neutral700
     }
 
-    static var iconPrimary: UIColor {
-        return neutral900
-    }
-
     static var iconActionPrimary: UIColor {
         return brand500
     }
@@ -135,10 +131,6 @@ extension UIColor {
         return UIColor(red: 53 / 255.0, green: 58 / 255.0, blue: 68 / 255.0, alpha: 1)  // #353a44
     }
 
-    private static var neutral900: UIColor {
-        return UIColor(red: 23 / 255.0, green: 23 / 255.0, blue: 23 / 255.0, alpha: 1)  // ##171717
-    }
-
     static var brand25: UIColor {
         return UIColor(red: 247 / 255.0, green: 245 / 255.0, blue: 253 / 255.0, alpha: 1)  // #f7f5fd
     }
@@ -177,6 +169,10 @@ extension UIColor {
 
     static var linkBrand600: UIColor {
         return UIColor(red: 26 / 255.0, green: 197 / 255.0, blue: 155 / 255.0, alpha: 1)  // #1ac59b
+    }
+
+    static var linkGreen900: UIColor {
+        return UIColor(red: 1 / 255.0, green: 30 / 255.0, blue: 15 / 255.0, alpha: 1)  // #011E0F
     }
 
     static func dynamic(light: UIColor, dark: UIColor) -> UIColor {

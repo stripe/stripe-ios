@@ -179,7 +179,7 @@ extension FinancialConnectionsNavigationController {
             switch theme {
             case .linkLight:
                 logo = .link_logo
-                tint = .iconPrimary
+                tint = .linkGreen900
             case .light, .dashboardLight, .unparsable, .none:
                 logo = .stripe_logo
                 tint = .textActionPrimary
