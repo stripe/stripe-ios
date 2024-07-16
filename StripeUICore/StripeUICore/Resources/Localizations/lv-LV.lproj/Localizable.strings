@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB numurs";
 
+"Bank account •••• %@" = "Bankas konts •••• %@";
+
 "Billing address is same as shipping" = "Norēķinu adrese un piegādes adrese sakrīt";
 
 "Cancel" = "Atcelt";
@@ -94,9 +96,7 @@
 
 "Remove" = "Noņemt";
 
-"Remove bank account" = "Noņemt bankas kontu";
-
-"Remove bank account ending in %@" = "Noņemt bankas kontu, kas beidzas ar %@";
+"Remove bank account?" = "Noņemt bankas kontu?";
 
 "Remove card" = "Noņemt karti";
 
