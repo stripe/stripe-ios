@@ -31,9 +31,6 @@ final class ConsentLogoView: UIView {
 
                 let isLastLogo = (i == merchantLogo.count - 1)
                 if !isLastLogo, showsAnimatedDots {
-                    // spacing between logos + ellipsis view
-                    horizontalStackView.spacing = 0
-
                     let ellipsisViewTuple = CreateEllipsisView(
                         leftLogoUrl:
                             merchantLogo[i],
