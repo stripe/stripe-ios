@@ -23,7 +23,7 @@ class CVCReconfirmationVerticalViewController: UIViewController {
     }
     var paymentOptionIntentConfirmParams: IntentConfirmParams? {
         let params = IntentConfirmParams(type: .stripe(.card))
-        if let updatedParams = cvcFormElement.updateParams(params: params) {
+        if let updatedParams = cvcRecollectionElement.updateParams(params: params) {
             return updatedParams
         }
         return nil
@@ -31,7 +31,7 @@ class CVCReconfirmationVerticalViewController: UIViewController {
     let paymentMethod: STPPaymentMethod
     let configuration: PaymentSheet.Configuration
     let cardBrand: STPCardBrand
-    let cvcFormElement: CVCRecollectionElement
+    let cvcRecollectionElement: CVCRecollectionElement
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -43,20 +43,14 @@ class CVCReconfirmationVerticalViewController: UIViewController {
         configuration: PaymentSheet.Configuration,
         elementDelegate: ElementDelegate
     ) {
-        self.cvcFormElement = PaymentSheetFormFactory(
-            intent: intent,
-            configuration: .paymentSheet(configuration),
-            paymentMethod: .stripe(.card),
-            previousCustomerInput: nil
-        ).makeCardCVCCollection(
-            paymentMethod: paymentMethod,
+        self.cvcRecollectionElement = CVCRecollectionElement(paymentMethod: paymentMethod,
             mode: .detailedWithInput,
             appearance: configuration.appearance
         )
         self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.cardBrand = paymentMethod.card?.brand ?? .unknown
-        self.cvcFormElement.delegate = elementDelegate
+        self.cvcRecollectionElement.delegate = elementDelegate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -66,7 +60,7 @@ class CVCReconfirmationVerticalViewController: UIViewController {
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel,
-            cvcFormElement.view,
+            cvcRecollectionElement.view,
         ])
         stackView.spacing = 16
         stackView.axis = .vertical
@@ -75,6 +69,6 @@ class CVCReconfirmationVerticalViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-            self.cvcFormElement.beginEditing()
+            self.cvcRecollectionElement.beginEditing()
     }
 }

@@ -52,6 +52,14 @@ extension XCTestCase {
             description: description
         )
     }
+    
+    public func wait(seconds: TimeInterval) {
+        let e = expectation(description: "Wait for \(seconds) seconds")
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+            e.fulfill()
+        }
+        waitForExpectations(timeout: seconds + 0.1)
+    }
 }
 
 public func XCTAssertIs<T>(

@@ -88,14 +88,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
         loadResult.isLinkEnabled && isFlowController && shouldShowApplePayInList
     }
-    // Whether or not we are in the special case where we don't show the list and show the card form directly
+    /// Whether or not we are in the special case where we don't show the list and show the card form directly
     var shouldDisplayCardFormOnly: Bool {
         return paymentMethodTypes.count == 1 && paymentMethodTypes[0] == .stripe(.card)
         && savedPaymentMethods.isEmpty
         && !shouldShowApplePayInList
         && !shouldShowLinkInList
     }
+    /// The content offset % of the payment method list before we transitioned away from it
     var paymentMethodListContentOffsetPercentage: CGFloat?
+    /// True while we are showing the CVC recollection UI (`cvcRecollectionViewController`)
+    var isRecollectingCVC: Bool = false
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, intent: intent)
@@ -568,7 +571,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         pay(with: selectedPaymentOption)
     }
-    var isRecollectingCVC: Bool = false
 
     @objc func presentManageScreen() {
         error = nil

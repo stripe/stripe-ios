@@ -231,14 +231,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             return FormElement(autoSectioningElements: [])
         }
 
-        let formElement = PaymentSheetFormFactory(
-            intent: intent,
-            configuration: .paymentSheet(paymentSheetConfiguration),
-            paymentMethod: .stripe(.card),
-            previousCustomerInput: nil)
-        let cvcCollectionElement = formElement.makeCardCVCCollection(paymentMethod: paymentMethod,
-                                                                     mode: .inputOnly,
-                                                                     appearance: appearance)
+        let cvcCollectionElement = CVCRecollectionElement(paymentMethod: paymentMethod, mode: .inputOnly, appearance: appearance)
         cvcCollectionElement.delegate = self
         return cvcCollectionElement
     }

@@ -291,6 +291,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Your card's security code is invalid."].waitForExistence(timeout: 10))
 
         app.textFields["CVC"].tap()
+        XCTAssertFalse(app.staticTexts["Your card's security code is invalid."].exists) // Error should be cleared
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 3)
         app.typeText(deleteString + "123")
         app.buttons["Confirm"].tap()

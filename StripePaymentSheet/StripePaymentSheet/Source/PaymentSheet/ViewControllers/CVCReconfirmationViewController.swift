@@ -40,12 +40,7 @@ class CVCReconfirmationViewController: UIViewController {
     }()
 
     lazy var cvcFormElement: CVCRecollectionElement = {
-        let formElement = PaymentSheetFormFactory(
-            intent: intent,
-            configuration: .paymentSheet(configuration),
-            paymentMethod: .stripe(.card),
-            previousCustomerInput: nil)
-        let cvcCollectionElement = formElement.makeCardCVCCollection(
+        let cvcCollectionElement = CVCRecollectionElement(
             paymentMethod: paymentMethod,
             mode: .detailedWithInput,
             appearance: configuration.appearance)

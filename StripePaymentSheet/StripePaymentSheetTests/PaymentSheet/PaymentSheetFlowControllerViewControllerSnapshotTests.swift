@@ -60,7 +60,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     func testCVCRecollectionScreen() {
         let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
 
-        let sut = PreConfirmationViewController(paymentMethod: STPPaymentMethod._testCard(),
+        let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCard(),
                                                 intent: ._testValue(),
                                                 configuration: configuration,
                                                 onCompletion: { _, _ in },
@@ -72,7 +72,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     func testCVVRecollectionScreen() {
         let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
 
-        let sut = PreConfirmationViewController(paymentMethod: STPPaymentMethod._testCardAmex(),
+        let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCardAmex(),
                                                 intent: ._testValue(),
                                                 configuration: configuration,
                                                 onCompletion: { _, _ in },
