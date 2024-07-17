@@ -16,12 +16,10 @@ final class ConsentLogoView: UIView {
 
     private var multipleDotView: UIView?
 
-    init(merchantLogo: [String]) {
+    init(merchantLogo: [String], showsAnimatedDots: Bool) {
         super.init(frame: .zero)
         let horizontalStackView = UIStackView()
         horizontalStackView.axis = .horizontal
-        // spacing between logos + ellipsis view
-        horizontalStackView.spacing = 0
         horizontalStackView.alignment = .center
 
         if merchantLogo.count == 2 || merchantLogo.count == 3 {
@@ -32,7 +30,7 @@ final class ConsentLogoView: UIView {
                 )
 
                 let isLastLogo = (i == merchantLogo.count - 1)
-                if !isLastLogo {
+                if !isLastLogo, showsAnimatedDots {
                     let ellipsisViewTuple = CreateEllipsisView(
                         leftLogoUrl:
                             merchantLogo[i],
@@ -46,6 +44,11 @@ final class ConsentLogoView: UIView {
                 }
             }
         }
+
+        if !showsAnimatedDots {
+            horizontalStackView.spacing = 16
+        }
+
         addAndPinSubview(
             CreateCenteringView(
                 centeredView: horizontalStackView
@@ -344,12 +347,15 @@ import SwiftUI
 
 private struct ConsentLogoViewUIViewRepresentable: UIViewRepresentable {
 
+    var showsAnimatedDots: Bool
+
     func makeUIView(context: Context) -> ConsentLogoView {
         ConsentLogoView(
             merchantLogo: [
                 "https://stripe-camo.global.ssl.fastly.net/a2f7a55341b7cdb849d5b2d68a465f95cc06ee6ec2449ea468b3623a61c17393/68747470733a2f2f66696c65732e7374726970652e636f6d2f6c696e6b732f4d44423859574e6a64463878546d5978575664445356553457474a6f52326c5966475a7358327870646d56664d58526f617a5a526454523354573144566a4a4e57584659526d6c3161464646303077384f5a645a3166",
                 "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png",
-            ]
+            ],
+            showsAnimatedDots: showsAnimatedDots
         )
     }
 
@@ -359,8 +365,9 @@ private struct ConsentLogoViewUIViewRepresentable: UIViewRepresentable {
 struct ConsentLogoView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .center) {
-            ConsentLogoViewUIViewRepresentable()
+            ConsentLogoViewUIViewRepresentable(showsAnimatedDots: true)
             Spacer()
+            ConsentLogoViewUIViewRepresentable(showsAnimatedDots: false)
         }
         .padding()
     }
