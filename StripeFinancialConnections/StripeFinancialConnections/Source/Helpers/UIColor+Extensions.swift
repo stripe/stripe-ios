@@ -171,6 +171,10 @@ extension UIColor {
         return UIColor(red: 26 / 255.0, green: 197 / 255.0, blue: 155 / 255.0, alpha: 1)  // #1ac59b
     }
 
+    static var linkGreen200: UIColor {
+        return UIColor(red: 0 / 255.0, green: 214 / 255.0, blue: 111 / 255.0, alpha: 1)  // #00D66F
+    }
+
     static var linkGreen900: UIColor {
         return UIColor(red: 1 / 255.0, green: 30 / 255.0, blue: 15 / 255.0, alpha: 1)  // #011E0F
     }

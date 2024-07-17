@@ -99,6 +99,7 @@ extension HostController: HostViewControllerDelegate {
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
         delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .open))
+        FinancialConnectionsTheme.current.setTheme(synchronizePayload.manifest.theme)
 
         let flowRouter = FlowRouter(
             synchronizePayload: synchronizePayload,
