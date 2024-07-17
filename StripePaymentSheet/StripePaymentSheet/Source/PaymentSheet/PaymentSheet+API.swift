@@ -143,6 +143,19 @@ extension PaymentSheet {
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(_, let paymentIntent):
+                let confirmPayment: (STPPaymentIntentParams) -> Void = { params in
+                    paymentHandler.confirmPayment(
+                        params,
+                        with: authenticationContext,
+                        completion: { actionStatus, paymentIntent, error in
+                            if let paymentIntent {
+                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration)
+                            }
+                            paymentHandlerCompletion(actionStatus, error)
+                        }
+                    )
+                }
+
                 let params = makePaymentIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
@@ -152,22 +165,46 @@ extension PaymentSheet {
                     paymentIntent: paymentIntent,
                     configuration: configuration
                 )
-                if case .new(let confirmParams) = paymentOption {
-                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
-                        params.paymentMethodId = paymentMethodId
-                        params.paymentMethodParams = nil
-                    }
+                if
+                    case .new(let confirmParams) = paymentOption,
+                    confirmParams.paymentMethodType == .instantDebits,
+                    let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId
+                {
+                    params.paymentMethodId = paymentMethodId
+                    params.paymentMethodParams = nil
                 }
-                paymentHandler.confirmPayment(
-                    params,
-                    with: authenticationContext,
-                    completion: { actionStatus, paymentIntent, error in
-                        if let paymentIntent {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration)
+
+                if
+                    case .new(let confirmParams) = paymentOption,
+                    confirmParams.paymentMethodType == .linkCardBrand
+                {
+                    paymentHandler.apiClient.sharePaymentDetails(
+                        for: "consumer_session_client_secret",
+                        id: "id_here",
+                        consumerAccountPublishableKey: "consumer_account_publishable_key",
+                        cvc: nil) { result in
+                            switch result {
+                            case .success(let paymentDetailsShareResponse):
+                                params.paymentMethodId = paymentDetailsShareResponse.paymentMethod
+                                print(paymentDetailsShareResponse.paymentMethod)
+                            case .failure(let error):
+                                print(error)
+                            }
                         }
-                        paymentHandlerCompletion(actionStatus, error)
-                    }
-                )
+//                    linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
+//                        switch result {
+//                        case .success(let shareResponse):
+//                            confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod, type: .card), linkAccount, shouldSave)
+//                        case .failure(let error):
+//                            STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
+//                            // If this fails, confirm directly
+//                            confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
+//                        }
+//                    }
+                } else {
+                    confirmPayment(params)
+                }
+
             // MARK: ↪ SetupIntent
             case .setupIntent(_, let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
@@ -179,19 +216,21 @@ extension PaymentSheet {
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
-                if case .new(let confirmParams) = paymentOption {
-                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
-                        setupIntentParams.paymentMethodID = paymentMethodId
-                        setupIntentParams.paymentMethodParams = nil
+                if
+                    case .new(let confirmParams) = paymentOption,
+                    confirmParams.paymentMethodType == .instantDebits,
+                    let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId
+                {
+                    setupIntentParams.paymentMethodID = paymentMethodId
+                    setupIntentParams.paymentMethodParams = nil
 
-                        let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
-                        let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
-                        // Tell Stripe to infer mandate info from client
-                        onlineParams.inferFromClient = true
-                        mandateCustomerAcceptanceParams.onlineParams = onlineParams
-                        mandateCustomerAcceptanceParams.type = .online
-                        setupIntentParams.mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
-                    }
+                    let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
+                    let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
+                    // Tell Stripe to infer mandate info from client
+                    onlineParams.inferFromClient = true
+                    mandateCustomerAcceptanceParams.onlineParams = onlineParams
+                    mandateCustomerAcceptanceParams.type = .online
+                    setupIntentParams.mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
                 }
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
@@ -417,6 +456,9 @@ extension PaymentSheet {
                         switch result {
                         case .success(let paymentDetails):
                             if intent.linkPassthroughModeEnabled {
+
+                                // TODO(kgaidis): this is where we make an extra API call...
+
                                 // If passthrough mode, share payment details
                                 linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
                                     switch result {

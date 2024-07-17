@@ -39,6 +39,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
                 case .instantDebits:
                     return .new(confirmParams: params)
+                case .linkCardBrand:
+                    return .new(confirmParams: params)
                 }
             case .saved(paymentMethod: let paymentMethod):
                 return .saved(paymentMethod: paymentMethod, confirmParams: nil)

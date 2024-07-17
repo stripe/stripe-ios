@@ -69,6 +69,17 @@ import Foundation
             }
         }
 
+        // Response:
+        // ▿ key : AnyHashable("link_mode")
+        //  - value : "link_mode"
+        //  - value : PASSTHROUGH
+        if
+            let linkMode = response["link_mode"] as? String,
+            linkMode == "LINK_CARD_BRAND"
+        {
+            print("link card brand")
+        }
+
         return LinkSettings(
             fundingSources: validFundingSources,
             popupWebviewOption: webviewOption,

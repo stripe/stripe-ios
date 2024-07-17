@@ -17,6 +17,7 @@ extension PaymentSheet {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
         case instantDebits
+        case linkCardBrand
 
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
@@ -27,7 +28,7 @@ extension PaymentSheet {
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.label
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
             }
         }
@@ -42,6 +43,8 @@ extension PaymentSheet {
                 return externalPaymentMethod.type
             case .instantDebits:
                 return "instant_debits"
+            case .linkCardBrand:
+                return "link_card_brand"
             }
         }
 
@@ -103,7 +106,7 @@ extension PaymentSheet {
                     }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
             }
         }
@@ -114,7 +117,7 @@ extension PaymentSheet {
                 return stpPaymentMethodType.iconRequiresTinting
             case .external:
                 return false
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return true
             }
         }
@@ -171,6 +174,20 @@ extension PaymentSheet {
                 )
                 if availabilityStatus == .supported {
                     recommendedPaymentMethodTypes.append(.instantDebits)
+                }
+            } else if
+                !recommendedStripePaymentMethodTypes.contains(.USBankAccount),
+                intent.linkFundingSources?.contains(.bankAccount) == true
+            // TODO(kgaidis): check link_mode=LINK_CARD_BRAND
+                // intent.elementsSession.linkSettings?.linkMode == LINK_CARD_BRAND
+            {
+                let availabilityStatus = configurationSatisfiesRequirements(
+                    requirements: [.financialConnectionsSDK],
+                    configuration: configuration,
+                    intent: intent
+                )
+                if availabilityStatus == .supported {
+                    recommendedPaymentMethodTypes.append(.linkCardBrand)
                 }
             }
 

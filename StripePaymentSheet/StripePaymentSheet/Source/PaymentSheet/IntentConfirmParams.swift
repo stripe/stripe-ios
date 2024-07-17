@@ -68,6 +68,9 @@ class IntentConfirmParams {
         case .instantDebits:
             let params = STPPaymentMethodParams(type: .link)
             self.init(params: params, type: type)
+        case .linkCardBrand:
+            let params = STPPaymentMethodParams(type: .card)
+            self.init(params: params, type: type)
         }
     }
 
