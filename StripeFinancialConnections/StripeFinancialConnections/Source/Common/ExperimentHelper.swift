@@ -16,7 +16,7 @@ final class ExperimentHelper {
     private var didLogExposure = false
 
     private var isExperimentValid: Bool {
-        return experimentVariant != nil && manifest.assignmentEventId != nil && manifest.accountholderToken != nil
+        return experimentVariant != nil && manifest.assignmentEventId != nil
     }
     private var experimentVariant: String? {
         return manifest.experimentAssignments?[experimentName]
@@ -52,17 +52,13 @@ final class ExperimentHelper {
             assertionFailure("`isExperimentValid` should ensure `assignmentEventId` is non-null")
             return
         }
-        guard let accountholderToken = manifest.accountholderToken else {
-            assertionFailure("`isExperimentValid` should ensure `accountholderToken` is non-null")
-            return
-        }
 
         if !didLogExposure {
             didLogExposure = true
             analyticsClient.logExposure(
                 experimentName: experimentName,
                 assignmentEventId: assignmentEventId,
-                accountholderToken: accountholderToken
+                accountholderToken: manifest.accountholderToken
             )
         }
     }

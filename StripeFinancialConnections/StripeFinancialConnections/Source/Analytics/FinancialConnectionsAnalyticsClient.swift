@@ -68,7 +68,7 @@ final class FinancialConnectionsAnalyticsClient {
     public func logExposure(
         experimentName: String,
         assignmentEventId: String,
-        accountholderToken: String
+        accountholderToken: String?
     ) {
         var parameters = additionalParameters
         parameters["experiment_retrieved"] = experimentName
