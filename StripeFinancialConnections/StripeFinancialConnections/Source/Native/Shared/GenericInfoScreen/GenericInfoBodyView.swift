@@ -28,6 +28,11 @@ func GenericInfoBodyView(
             )
         case .image(let imageBodyEntry):
             entryView = ImageBodyEntryView(imageBodyEntry)
+        case .bullets(let bulletsBodyEntry):
+            entryView = BulletsBodyEntryView(
+                bulletsBodyEntry,
+                didSelectURL: didSelectURL
+            )
         case .unparasable:
             entryView = nil // skip
         }
@@ -38,6 +43,8 @@ func GenericInfoBodyView(
     // check `isEmpty` in case we were not able to handle any entry type
     return verticalStackView.arrangedSubviews.isEmpty ? nil : verticalStackView
 }
+
+// MARK: - Text
 
 private func TextBodyEntryView(
     _ textBodyEntry: FinancialConnectionsGenericInfoScreen.Body.TextBodyEntry,
@@ -87,6 +94,8 @@ private func TextBodyEntryView(
     return textView
 }
 
+// MARK: - Image
+
 private func ImageBodyEntryView(
     _ imageBodyEntry: FinancialConnectionsGenericInfoScreen.Body.ImageBodyEntry
 ) -> UIView? {
@@ -125,6 +134,81 @@ private class AutoResizableImageView: UIImageView {
         }
     }
 }
+
+// MARK: - Bullets
+
+private func BulletsBodyEntryView(
+    _ bulletsBodyEntry: FinancialConnectionsGenericInfoScreen.Body.BulletsBodyEntry,
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView? {
+    guard !bulletsBodyEntry.bullets.isEmpty else {
+        return nil
+    }
+    let verticalStackView = HitTestStackView()
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 16
+    bulletsBodyEntry.bullets.forEach { genericBulletPoint in
+        verticalStackView.addArrangedSubview(
+            SingleBulletPointView(
+                title: genericBulletPoint.title,
+                content: genericBulletPoint.content,
+                iconUrlString: genericBulletPoint.icon?.default,
+                didSelectUrl: didSelectURL
+            )
+        )
+    }
+    return verticalStackView
+}
+
+private func SingleBulletPointView(
+    title: String?,
+    content: String?,
+    iconUrlString: String?,
+    didSelectUrl: @escaping (URL) -> Void
+) -> UIView {
+    let horizontalStackView = HitTestStackView()
+    let labelView = BulletPointLabelView(
+        title: title,
+        content: content,
+        didSelectURL: didSelectUrl
+    )
+    if let iconUrlString {
+        horizontalStackView.addArrangedSubview(
+            {
+                let imageView = UIImageView()
+                imageView.contentMode = .scaleAspectFit
+                imageView.setImage(with: iconUrlString)
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                let imageDiameter: CGFloat = 20
+                NSLayoutConstraint.activate([
+                    imageView.widthAnchor.constraint(equalToConstant: imageDiameter),
+                    imageView.heightAnchor.constraint(equalToConstant: imageDiameter),
+                ])
+                // add padding to the `imageView` so the
+                // image is aligned with the label
+                let paddingStackView = UIStackView(
+                    arrangedSubviews: [imageView]
+                )
+                paddingStackView.isLayoutMarginsRelativeArrangement = true
+                paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                    // center the image in the middle of the first line height
+                    top: max(0, (labelView.topLineHeight - imageDiameter) / 2),
+                    leading: 0,
+                    bottom: 0,
+                    trailing: 0
+                )
+                return paddingStackView
+            }()
+        )
+    }
+    horizontalStackView.addArrangedSubview(labelView)
+    horizontalStackView.axis = .horizontal
+    horizontalStackView.spacing = 16
+    horizontalStackView.alignment = .top
+    return horizontalStackView
+}
+
+// MARK: - SwiftUI Preview
 
 #if DEBUG
 
@@ -211,6 +295,35 @@ struct GenericInfoBodyView_Previews: PreviewProvider {
                                 text: "^^^ Image Item Expected Above ^^^",
                                 alignment: .center,
                                 size: nil
+                            )
+                        ),
+                        .bullets(
+                            FinancialConnectionsGenericInfoScreen.Body.BulletsBodyEntry(
+                                id: "",
+                                bullets: [
+                                    .init(
+                                        id: "",
+                                        icon: FinancialConnectionsImage(
+                                            default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--lock-primary-3x.png"
+                                        ),
+                                        title: "Bullet Title",
+                                        content: "Bullet Content"
+                                    ),
+                                    .init(
+                                        id: "String",
+                                        icon: nil,
+                                        title: "Bullet Title",
+                                        content: nil
+                                    ),
+                                    .init(
+                                        id: "",
+                                        icon: FinancialConnectionsImage(
+                                            default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--lock-primary-3x.png"
+                                        ),
+                                        title: nil,
+                                        content: "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
+                                    ),
+                                ]
                             )
                         ),
                     ]
