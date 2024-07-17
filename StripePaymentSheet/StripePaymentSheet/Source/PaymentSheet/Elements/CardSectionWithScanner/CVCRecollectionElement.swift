@@ -45,11 +45,9 @@ final class CVCRecollectionElement: ContainerElement {
 
     lazy var textFieldElement: TextFieldElement = {
         let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration, theme: appearance.asElementsTheme)
-        textFieldElement.view.backgroundColor = appearance.colors.componentBackground
         textFieldElement.view.layer.maskedCorners = mode == .detailedWithInput
         ? [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         : [.layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner, .layerMinXMaxYCorner]
-        textFieldElement.view.layer.cornerRadius = appearance.cornerRadius
         textFieldElement.delegate = self
         return textFieldElement
     }()
