@@ -1,11 +1,23 @@
-## x.x.x x-x-x
+## X.Y.Z 2024-xx-yy
+## PaymentSheet
+* [Added] When a card is saved (ie you're using a PaymentIntent + setup_future_usage or SetupIntent), legal disclaimer text now appears below the form indicating the card can be charged for future payments.
+
+## 23.28.1 2024-07-16
+### Payments
+* [Fixed] Improved reliability when paying or setting up with Cash App Pay.
+* [Fixed] Pass stripeAccount context when presenting PayWithLinkWebController for connected accounts
+
+## 23.28.0 2024-07-08
 
 ### Payments
 * [Fixed] An issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
+* [Added] Adds coupon support to STPApplePayContext with a new `didChangeCouponCode` delegate method (h/t @JoeyLeeMEA).
+* [Fixed] Fixed an issue where successful TWINT payments were sometimes incorrectly considered 'canceled'.
 
 ## PaymentSheet
 * [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
-* [Added] When a card is saved (ie you're using a PaymentIntent + setup_future_usage or SetupIntent), legal disclaimer text now appears below the form indicating the card can be charged for future payments.
+* [Fixed] Fixed an issue where amounts with currency=IDR were displayed as-is, instead of dropping the last two digits.
+* [Fixed] Fixed an issue where some payment method images in the horizontal scrollview could briefly flash.
 
 ## 23.27.6 2024-06-25
 ### All

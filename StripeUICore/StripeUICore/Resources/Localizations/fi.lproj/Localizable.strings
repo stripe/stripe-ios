@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB-numero";
 
+"Bank account •••• %@" = "Pankkitili •••• %@";
+
 "Billing address is same as shipping" = "Laskutusosoite on sama kuin toimitusosoite";
 
 "Cancel" = "Peruuta";
@@ -94,9 +96,7 @@
 
 "Remove" = "Poista";
 
-"Remove bank account" = "Poista pankkitili";
-
-"Remove bank account ending in %@" = "Poista pankkitili, joka päättyy numeroihin %@";
+"Remove bank account?" = "Poistetaanko pankkitili?";
 
 "Remove card" = "Poista kortti";
 

@@ -24,7 +24,7 @@
 
 "Bank account" = "Bankszámla";
 
-"Buy now or pay later with Klarna." = "Megvásárlás most, vagy fizetés később Klarnával.";
+"Buy now or pay later with Klarna" = "Vegye meg most, vagy fizetés később Klarnával";
 
 "Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Fizetési mód kezelése";
+
 "Manage payment methods" = "Fizetési módok kezelése";
 
 "Manage your payment methods" = "Fizetési módok kezelése";
 
 "Name on card" = "A kártyán szereplő név";
+
+"New card" = "Új kártya";
 
 "New payment method" = "Új fizetési mód";
 

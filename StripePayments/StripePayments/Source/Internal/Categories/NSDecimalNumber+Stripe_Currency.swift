@@ -17,6 +17,7 @@ extension NSDecimalNumber {
         "PKR": 2,
         "LAK": 2,
         "RSD": 2,
+        "IDR": 2,
     ]
 
     @objc @_spi(STP) public class func stp_decimalNumber(

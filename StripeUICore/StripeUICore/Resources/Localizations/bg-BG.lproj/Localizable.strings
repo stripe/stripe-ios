@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB номер";
 
+"Bank account •••• %@" = "Банкова сметка •••• %@";
+
 "Billing address is same as shipping" = "Адресът за фактуриране е същият като за доставка";
 
 "Cancel" = "Отмяна";
@@ -94,9 +96,7 @@
 
 "Remove" = "Премахване";
 
-"Remove bank account" = "Премахване на банкова сметка";
-
-"Remove bank account ending in %@" = "Премахване на банкова сметка, завършваща на %@";
+"Remove bank account?" = "Премахване на банкова сметка?";
 
 "Remove card" = "Премахване на банкова карта";
 

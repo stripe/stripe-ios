@@ -290,6 +290,7 @@ extension PaymentMethodTypeCollectionView {
         }
 
         // MARK: - Private Methods
+        var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
         private func update() {
             contentView.layer.cornerRadius = appearance.cornerRadius
             shadowRoundedRectangle.appearance = appearance
@@ -298,15 +299,21 @@ extension PaymentMethodTypeCollectionView {
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let currPaymentMethodType = self.paymentMethodType
             let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white) { [weak self] image in
-                guard let strongSelf = self,
-                      currPaymentMethodType == strongSelf.paymentMethodType else {
-                    return
-                }
                 DispatchQueue.main.async {
-                    strongSelf.updateImage(image)
+                    guard let self, currPaymentMethodType == self.paymentMethodType else {
+                        return
+                    }
+                    // Keep track of the PM type of the image
+                    self.paymentMethodTypeOfCurrentImage = currPaymentMethodType
+                    self.updateImage(image)
                 }
             }
-            updateImage(image)
+            // Hacky workaround: If we update unconditionally, we'll overwrite the current PM's valid image with a 1x1 placeholder here
+            // until it gets overwritten again when the image download completion block runs.
+            // Ideally, the DownloadManager API is refactored to not return a placeholder or an image; then we can set the image to a placeholder only when the payment method type of this cell changes.
+            if paymentMethodTypeOfCurrentImage != self.paymentMethodType || image.size != CGSize(width: 1, height: 1) {
+                updateImage(image)
+            }
 
             shadowRoundedRectangle.isSelected = isSelected
             // Set text color

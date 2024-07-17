@@ -317,9 +317,13 @@ extension CustomerAddPaymentMethodViewController {
             }
         }
 
+        let additionalParameters: [String: Any] = [
+            "hosted_surface": "customer_sheet",
+        ]
         client.collectBankAccountForSetup(
             clientSecret: clientSecret,
             returnURL: configuration.returnURL,
+            additionalParameters: additionalParameters,
             onEvent: nil,
             params: params,
             from: viewController,

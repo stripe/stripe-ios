@@ -33,7 +33,8 @@ extension STPElementsSession {
     static func _testValue(
         paymentMethodTypes: [String],
         externalPaymentMethodTypes: [String] = [],
-        customerSessionData: [String: Any]? = nil
+        customerSessionData: [String: Any]? = nil,
+        cardBrandChoiceData: [String: Any]? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -58,6 +59,10 @@ extension STPElementsSession {
                                 ]
         }
 
+        if let cardBrandChoiceData {
+            json["card_brand_choice"] = cardBrandChoiceData
+        }
+
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
@@ -68,11 +73,12 @@ extension Intent {
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
         customerSessionData: [String: Any]? = nil,
+        cardBrandChoiceData: [String: Any]? = nil,
         currency: String = "usd"
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData)
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData, cardBrandChoiceData: cardBrandChoiceData)
         return .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
     }
 

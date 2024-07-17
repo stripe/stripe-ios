@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB-szám";
 
+"Bank account •••• %@" = "Bankszámla •••• %@";
+
 "Billing address is same as shipping" = "A számlázási cím megegyezik a szállítási címmel";
 
 "Cancel" = "Mégse";
@@ -94,9 +96,7 @@
 
 "Remove" = "Eltávolítás";
 
-"Remove bank account" = "Bankszámla eltávolítása";
-
-"Remove bank account ending in %@" = "%@ számra végződő bankszámla eltávolítása";
+"Remove bank account?" = "Eltávolítja a bankszámlát?";
 
 "Remove card" = "Kártya törlése";
 

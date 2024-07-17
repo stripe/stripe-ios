@@ -24,7 +24,7 @@
 
 "Bank account" = "Tài khoản ngân hàng";
 
-"Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
+"Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
 "Buy using a UPI ID" = "Mua bằng cách sử dụng ID UPI";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Quản lý phương thức thanh toán";
+
 "Manage payment methods" = "Quản lý các phương thức thanh toán";
 
 "Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
 
 "Name on card" = "Tên trên thẻ";
+
+"New card" = "Thẻ mới";
 
 "New payment method" = "Phương thức thanh toán mới";
 

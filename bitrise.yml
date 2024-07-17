@@ -53,7 +53,7 @@ stages:
     - framework-tests: {}
     - test-builds-xcode-15: {}
     - test-builds-vision: {}
-    - deploy-docs: {}
+    # - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -72,7 +72,6 @@ stages:
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
-    - data-theorem-sast: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
 workflows:
@@ -111,32 +110,6 @@ workflows:
         title: Build documentation
     before_run:
     - prep_all
-    after_run:
-    - notify_ci
-  data-theorem-sast:
-    steps:
-    - script@1:
-        inputs:
-        - content: bundle config set path 'vendor/bundle'
-        is_always_run: true
-        title: Set Bundler to use local vendor directory
-    - script@1:
-        inputs:
-        - content: bundle config set without 'development'
-        title: Set bundler to ignore development and test gems
-    - git-clone@6: {}
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
-        inputs:
-        - compress_archive: "true"
-        - cache_paths: |
-            vendor
-            SourcePackages
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/push_dt.rb "$BITRISE_GIT_BRANCH" "$DT_UPLOAD_API_KEY"
-        title: Submit app to Data Theorem for SAST
     after_run:
     - notify_ci
   deploy-docs:

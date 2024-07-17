@@ -23,6 +23,22 @@ final class PlaygroundViewModel: ObservableObject {
 
     let playgroundConfiguration = PlaygroundConfiguration.shared
 
+    var experience: Binding<PlaygroundConfiguration.Experience> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.experience
+            },
+            set: { newValue in
+                self.playgroundConfiguration.experience = newValue
+                if newValue == .instantDebits {
+                    // Instant debits only supports the payment intent use case.
+                    self.playgroundConfiguration.useCase = .paymentIntent
+                }
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     var sdkType: Binding<PlaygroundConfiguration.SDKType> {
         Binding(
             get: {

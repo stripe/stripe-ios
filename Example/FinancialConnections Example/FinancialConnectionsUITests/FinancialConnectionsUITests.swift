@@ -19,7 +19,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -47,7 +47,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -76,7 +76,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -124,7 +124,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -153,7 +153,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -247,7 +247,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"web","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"web","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -338,7 +338,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -390,6 +390,29 @@ final class FinancialConnectionsUITests: XCTestCase {
 
             // 'cancel' the test as the bank is under the maintenance
         }
+    }
+
+    func testWebInstantDebitsFlow() throws {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"instant_debits","sdk_type":"web","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        let usesLinkText = app.webViews
+            .staticTexts
+            .containing(NSPredicate(format: "label CONTAINS 'uses Link to connect your account'"))
+            .firstMatch
+        XCTAssertTrue(usesLinkText.waitForExistence(timeout: 120.0))  // glitch app can take time to load
+
+        app.fc_secureWebViewCancelButton.tap()
+
+        let playgroundCancelAlert = app.alerts["Cancelled"]
+        XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
 }
 

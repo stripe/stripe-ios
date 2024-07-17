@@ -61,6 +61,9 @@ import Foundation
     case financialConnectionsSheetPresented = "stripeios.financialconnections.sheet.presented"
     case financialConnectionsSheetClosed = "stripeios.financialconnections.sheet.closed"
     case financialConnectionsSheetFailed = "stripeios.financialconnections.sheet.failed"
+    case financialConnectionsSheetFlowDetermined = "stripeios.financialconnections.sheet.flow_determined"
+    case financialConnectionsSheetInitialSynchronizeStarted = "stripeios.financialconnections.sheet.initial_synchronize.started"
+    case financialConnectionsSheetInitialSynchronizeCompleted = "stripeios.financialconnections.sheet.initial_synchronize.completed"
 
     // MARK: - PaymentSheet Init
     case mcInitCustomCustomer = "mc_custom_init_customer"

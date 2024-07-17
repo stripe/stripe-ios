@@ -28,8 +28,13 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         continueButton.tap()
         XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
 
-        // Go back in, select Link
+        // Reload - it should now default to "Apple Pay"
+        reload(app, settings: settings)
+        XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
         paymentMethodButton.tap()
+        XCTAssertTrue(app.buttons["Apple Pay"].isSelected)
+
+        // Select Link - FC paymentOption should change to Link
         app.buttons["Link"].tap()
         continueButton.tap()
         XCTAssertEqual(paymentMethodButton.label, "Link, link")
@@ -38,12 +43,12 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         paymentMethodButton.tap()
         app.buttons["Card"].tap()
         XCTAssertFalse(continueButton.isEnabled)
-        // Enter some details
+        // Enter some incomplete details
         app.textFields["Card number"].tap()
         app.textFields["Card number"].typeText("1")
         XCTAssertFalse(continueButton.isEnabled)
         app.tapCoordinate(at: .init(x: 200, y: 100))
-        // Tap out of FlowController
+        // Tap out of FlowController and expect empty payment method
         app.tapCoordinate(at: .init(x: 200, y: 100))
         XCTAssertEqual(paymentMethodButton.label, "None")
 
@@ -52,9 +57,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         // Back out of card form
         app.buttons["Back"].tap()
-        // Link should be selected
-        XCTAssertTrue(app.buttons["Link"].isSelected)
-        XCTAssertTrue(continueButton.isEnabled)
+        // Link shouldn't be selected anymore
+        XCTAssertFalse(app.buttons["Link"].isSelected)
+        XCTAssertFalse(continueButton.isEnabled)
 
         // Go back to card
         app.buttons["Card"].waitForExistenceAndTap()
@@ -103,6 +108,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
     func testUSBankAccount_verticalmode() {
         _testUSBankAccount(mode: .payment, integrationType: .normal, vertical: true)
+    }
+
+    func testInstantDebits_verticalmode() {
+        _testInstantDebits(mode: .payment, vertical: true)
     }
 
     func testPayingWithNoFormPMs_verticalmode() {
