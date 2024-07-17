@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 5/20/24.
 //
 
+@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @_spi(STP) @_spi(EarlyAccessCVCRecollectionFeature) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripeCore
 import XCTest
 
 final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase {
@@ -265,7 +265,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "New card"), selection: .new(paymentMethodType: .stripe(.card)))
         verify(sut)
     }
-    
+
     func testCVCRecollection() {
         let savedCard = STPPaymentMethod._testCard()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: { _, _, _ in }) { return true }
@@ -282,7 +282,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         sut.paymentSheetDelegate = self
         sut.didTapPrimaryButton()
         verify(sut)
-        
+
         // Snapshot when error is CVC related
         let cvcError = NSError(domain: STPError.stripeDomain, code: STPErrorCode.cardError.rawValue, userInfo: [STPError.errorParameterKey: "cvc", NSLocalizedDescriptionKey: "Bad CVC (this is a mock string)"])
         mockConfirmResult = .failed(error: cvcError)
@@ -298,7 +298,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         wait(seconds: PaymentSheetUI.minimumFlightTime + 1)
         self.verify(sut, identifier: "non_cvc_error")
     }
-    
+
     var mockConfirmResult: StripePaymentSheet.PaymentSheetResult = .canceled
 }
 
@@ -306,14 +306,14 @@ extension PaymentSheetVerticalViewControllerSnapshotTest: PaymentSheetViewContro
     func paymentSheetViewControllerShouldConfirm(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
         completion(mockConfirmResult, nil)
     }
-    
+
     func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol, result: StripePaymentSheet.PaymentSheetResult) {
-        
+
     }
-    
+
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol) {
     }
-    
+
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol) {
     }
 }

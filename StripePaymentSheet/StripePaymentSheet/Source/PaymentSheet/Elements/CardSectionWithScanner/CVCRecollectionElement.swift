@@ -14,7 +14,7 @@ final class CVCRecollectionElement: ContainerElement {
     var elements: [Element] {
         return [textFieldElement]
     }
-    
+
     let collectsUserInput: Bool = true
 
     enum Mode {
@@ -42,7 +42,7 @@ final class CVCRecollectionElement: ContainerElement {
     let defaultValues: DefaultValues
     var paymentMethod: STPPaymentMethod
     let appearance: PaymentSheet.Appearance
-    
+
     lazy var textFieldElement: TextFieldElement = {
         let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration, theme: appearance.asElementsTheme)
         textFieldElement.view.backgroundColor = appearance.colors.componentBackground
@@ -91,7 +91,7 @@ final class CVCRecollectionElement: ContainerElement {
     func clearTextFields() {
         textFieldElement.setText("")
     }
-    
+
     func updateErrorLabel() {
         if case let .invalid(error, shouldDisplay) = textFieldElement.validationState, shouldDisplay {
             cvcRecollectionView.errorLabel.text = error.localizedDescription

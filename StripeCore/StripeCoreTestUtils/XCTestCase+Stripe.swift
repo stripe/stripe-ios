@@ -52,7 +52,7 @@ extension XCTestCase {
             description: description
         )
     }
-    
+
     public func wait(seconds: TimeInterval) {
         let e = expectation(description: "Wait for \(seconds) seconds")
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
