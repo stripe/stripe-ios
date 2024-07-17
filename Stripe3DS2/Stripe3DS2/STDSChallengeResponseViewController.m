@@ -479,15 +479,8 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     // Get the keyboard’s frame at the end of its animation.
     CGRect keyboardFrameEnd = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
-    // In iOS 16.1 and later, the keyboard notification object is the screen the keyboard appears on.
-    // Use that screen to get the coordinate space to convert from.
-    id<UICoordinateSpace> fromCoordinateSpace = [(UIScreen *)notification.object coordinateSpace];
-
-    // Get your view's coordinate space.
-    id<UICoordinateSpace> toCoordinateSpace = self.view;
-
     // Convert the keyboard's frame from the screen's coordinate space to your view's coordinate space.
-    keyboardFrameEnd = [fromCoordinateSpace convertRect:keyboardFrameEnd toCoordinateSpace:toCoordinateSpace];
+    keyboardFrameEnd = [self.view convertRect:keyboardFrameEnd fromView:nil];
     
     // Get the intersection between the keyboard's frame and the view's bounds to work with the
     // part of the keyboard that overlaps your view.

@@ -436,7 +436,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.buttons["Pay €9.73"].tap()
         let challengeCodeTextField = app.textFields["STDSTextField"]
         XCTAssertTrue(challengeCodeTextField.waitForExistenceAndTap())
-        challengeCodeTextField.typeText("424242")
+        challengeCodeTextField.typeText("424242" + XCUIKeyboardKey.return.rawValue)
         app.buttons["Submit"].waitForExistenceAndTap()
         let successText = app.alerts.staticTexts["Your order is confirmed!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
