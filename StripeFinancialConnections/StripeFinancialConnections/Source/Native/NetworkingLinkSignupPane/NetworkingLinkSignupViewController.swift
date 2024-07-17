@@ -111,6 +111,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             aboveCtaText: networkingLinkSignup.aboveCta,
             saveToLinkButtonText: networkingLinkSignup.cta,
             notNowButtonText: networkingLinkSignup.skipCta,
+            theme: dataSource.manifest.theme,
             didSelectSaveToLink: { [weak self] in
                 self?.didSelectSaveToLink()
             },
@@ -241,6 +242,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 if urlHost == "legal-details-notice", let legalDetailsNotice {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNotice,
+                        theme: dataSource.manifest.theme,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(
                                 url,

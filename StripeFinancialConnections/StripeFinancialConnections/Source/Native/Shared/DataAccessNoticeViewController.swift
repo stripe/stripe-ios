@@ -12,13 +12,16 @@ import UIKit
 final class DataAccessNoticeViewController: SheetViewController {
 
     private let dataAccessNotice: FinancialConnectionsDataAccessNotice
+    private let theme: FinancialConnectionsTheme?
     private let didSelectUrl: (URL) -> Void
 
     init(
         dataAccessNotice: FinancialConnectionsDataAccessNotice,
+        theme: FinancialConnectionsTheme?,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.dataAccessNotice = dataAccessNotice
+        self.theme = theme
         self.didSelectUrl = didSelectUrl
         super.init()
     }
@@ -69,6 +72,7 @@ final class DataAccessNoticeViewController: SheetViewController {
                 ),
                 secondaryButtonConfiguration: nil,
                 topText: dataAccessNotice.disclaimer,
+                theme: theme,
                 didSelectURL: didSelectUrl
             ).footerView
         )
@@ -194,6 +198,7 @@ private struct DataAccessNoticeViewControllerRepresentable: UIViewControllerRepr
     func makeUIViewController(context: Context) -> DataAccessNoticeViewController {
         DataAccessNoticeViewController(
             dataAccessNotice: dataAccessNotice,
+            theme: .light,
             didSelectUrl: { _  in })
     }
 

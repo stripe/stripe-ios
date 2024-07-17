@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 extension Button {
-    static func primary() -> StripeUICore.Button {
-        let button = Button(configuration: .financialConnectionsPrimary)
+    static func primary(theme: FinancialConnectionsTheme?) -> StripeUICore.Button {
+        let button = Button(configuration: .financialConnectionsPrimary(theme: theme))
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
         button.layer.shadowOpacity = 0.25
@@ -32,16 +32,16 @@ extension Button {
 
 extension Button.Configuration {
 
-    fileprivate static var financialConnectionsPrimary: Button.Configuration {
+    fileprivate static func financialConnectionsPrimary(theme: FinancialConnectionsTheme?) -> Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         primaryButtonConfiguration.cornerRadius = 12.0
         // default
-        primaryButtonConfiguration.backgroundColor = .brand500
-        primaryButtonConfiguration.foregroundColor = .white
+        primaryButtonConfiguration.backgroundColor = theme.primaryColor
+        primaryButtonConfiguration.foregroundColor = theme.primaryButtonTextColor
         // disabled
-        primaryButtonConfiguration.disabledBackgroundColor = .brand500
-        primaryButtonConfiguration.disabledForegroundColor = .neutral0.withAlphaComponent(0.4)
+        primaryButtonConfiguration.disabledBackgroundColor = theme.primaryColor
+        primaryButtonConfiguration.disabledForegroundColor = theme.primaryButtonTextColor.withAlphaComponent(0.4)
         // pressed
         primaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.23)  // this tries to simulate `brand600`
         primaryButtonConfiguration.colorTransforms.highlightedForeground = nil

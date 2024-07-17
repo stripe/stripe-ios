@@ -63,13 +63,6 @@ struct FinancialConnectionsSessionManifest: Decodable {
         }
     }
 
-    enum Theme: String, SafeEnumCodable, Equatable {
-        case light = "light"
-        case dashboardLight = "dashboard_light"
-        case linkLight = "link_light"
-        case unparsable
-    }
-
     // MARK: - Properties
 
     let accountholderCustomerEmailAddress: String?
@@ -108,7 +101,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let skipSuccessPane: Bool?
     let stepUpAuthenticationRequired: Bool?
     let successUrl: String?
-    let theme: Theme?
+    let theme: FinancialConnectionsTheme?
 
     var shouldAttachLinkedPaymentMethod: Bool {
         return (paymentMethodType != nil)

@@ -11,10 +11,11 @@ import UIKit
 
 final class ManualEntryFooterView: UIView {
 
+    private let theme: FinancialConnectionsTheme?
     private let didSelectContinue: () -> Void
 
     private(set) lazy var continueButton: Button = {
-        let continueButton = Button.primary()
+        let continueButton = Button.primary(theme: theme)
         continueButton.title = "Submit"  // TODO(kgaidis): localize
         continueButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
         continueButton.translatesAutoresizingMaskIntoConstraints = false
@@ -25,7 +26,8 @@ final class ManualEntryFooterView: UIView {
         return continueButton
     }()
 
-    init(didSelectContinue: @escaping () -> Void) {
+    init(theme: FinancialConnectionsTheme?, didSelectContinue: @escaping () -> Void) {
+        self.theme = theme
         self.didSelectContinue = didSelectContinue
         super.init(frame: .zero)
 

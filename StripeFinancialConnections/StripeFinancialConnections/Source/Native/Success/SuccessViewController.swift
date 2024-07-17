@@ -48,6 +48,7 @@ final class SuccessViewController: UIViewController {
         contentView.addSubview(bodyView)
 
         let footerView = SuccessFooterView(
+            theme: dataSource.manifest.theme,
             didSelectDone: { [weak self] footerView in
                 guard let self = self else { return }
                 // we NEVER set isLoading to `false` because

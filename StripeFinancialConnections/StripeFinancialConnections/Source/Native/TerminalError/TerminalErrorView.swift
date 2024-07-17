@@ -11,6 +11,7 @@ import UIKit
 
 func TerminalErrorView(
     allowManualEntry: Bool,
+    theme: FinancialConnectionsTheme?,
     didSelectManualEntry: @escaping () -> Void,
     didSelectClose: @escaping () -> Void
 ) -> UIView {
@@ -56,7 +57,8 @@ func TerminalErrorView(
                         }
                     )
                 }
-            }()
+            }(),
+            theme: theme
         ).footerView
     ).createView()
 }
