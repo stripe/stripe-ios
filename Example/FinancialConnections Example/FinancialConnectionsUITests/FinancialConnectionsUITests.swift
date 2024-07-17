@@ -90,28 +90,28 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(manuallyVerifyLabel.waitForExistence(timeout: 120.0))
         manuallyVerifyLabel.tap()
 
-        let manualEntryRoutingNumberTextField = app.textFields["manual_entry_routing_number_text_field"]
+        let manualEntryRoutingNumberTextField = app.textFields["manual_entry_routing_number_text_field"].firstMatch
         XCTAssertTrue(manualEntryRoutingNumberTextField.waitForExistence(timeout: 60.0))
         manualEntryRoutingNumberTextField.tap()
         manualEntryRoutingNumberTextField.typeText("110000000")
 
         app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
 
-        let manualEntryAccountNumberTextField = app.textFields["manual_entry_account_number_text_field"]
+        let manualEntryAccountNumberTextField = app.textFields["manual_entry_account_number_text_field"].firstMatch
         XCTAssertTrue(manualEntryAccountNumberTextField.waitForExistence(timeout: 60.0))
         manualEntryAccountNumberTextField.tap()
         manualEntryAccountNumberTextField.typeText("000123456789")
 
         app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
 
-        let manualEntryAccountNumberConfirmationTextField = app.textFields["manual_entry_account_number_confirmation_text_field"]
+        let manualEntryAccountNumberConfirmationTextField = app.textFields["manual_entry_account_number_confirmation_text_field"].firstMatch
         XCTAssertTrue(manualEntryAccountNumberConfirmationTextField.waitForExistence(timeout: 60.0))
         manualEntryAccountNumberConfirmationTextField.tap()
         manualEntryAccountNumberConfirmationTextField.typeText("000123456789")
 
         app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
 
-        let manualEntryContinueButton = app.buttons["manual_entry_continue_button"]
+        let manualEntryContinueButton = app.buttons["manual_entry_continue_button"].firstMatch
         XCTAssertTrue(manualEntryContinueButton.waitForExistence(timeout: 120.0))
         manualEntryContinueButton.tap()
 
@@ -138,7 +138,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(manuallyVerifyLabel.waitForExistence(timeout: 10.0))
         manuallyVerifyLabel.tap()
 
-        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
+        let testModeAutofillButton = app.buttons["test_mode_autofill_button"].firstMatch
         XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
         testModeAutofillButton.tap()
 
@@ -233,11 +233,11 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(navigationBarCloseButton.waitForExistence(timeout: 60.0))
         navigationBarCloseButton.tap()
 
-        let exitConfirmationOKButton = app.buttons["close_confirmation_ok"]
+        let exitConfirmationOKButton = app.buttons["close_confirmation_ok"].firstMatch
         XCTAssertTrue(exitConfirmationOKButton.waitForExistence(timeout: 5))
         exitConfirmationOKButton.tap()
 
-        let playgroundCancelAlert = app.alerts["Cancelled"]
+        let playgroundCancelAlert = app.alerts["Cancelled"].firstMatch
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 60.0))
     }
 
@@ -330,7 +330,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_secureWebViewCancelButton.tap()
 
-        let playgroundCancelAlert = app.alerts["Cancelled"]
+        let playgroundCancelAlert = app.alerts["Cancelled"].firstMatch
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 60.0))
     }
 
@@ -376,7 +376,7 @@ final class FinancialConnectionsUITests: XCTestCase {
             institutionSearchNoResultsSubtitle.tap()
 
             // check that manual entry screen is opened
-            let manualEntryContinueButton = app.buttons["manual_entry_continue_button"]
+            let manualEntryContinueButton = app.buttons["manual_entry_continue_button"].firstMatch
             XCTAssertTrue(manualEntryContinueButton.waitForExistence(timeout: 60.0))
         }
         // (2) bank IS under maintenance
@@ -411,7 +411,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_secureWebViewCancelButton.tap()
 
-        let playgroundCancelAlert = app.alerts["Cancelled"]
+        let playgroundCancelAlert = app.alerts["Cancelled"].firstMatch
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
 }

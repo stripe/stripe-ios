@@ -272,13 +272,13 @@ extension XCTestCase {
     }
 
     func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        app.buttons["Reload"].waitForExistenceAndTap(timeout: 10)
+        app.buttons["Reload"].firstMatch.waitForExistenceAndTap(timeout: 10)
         waitForReload(app, settings: settings)
     }
 
     func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
         if settings.uiStyle == .paymentSheet {
-            let presentButton = app.buttons["Present PaymentSheet"]
+            let presentButton = app.buttons["Present PaymentSheet"].firstMatch
             expectation(
                 for: NSPredicate(format: "enabled == true"),
                 evaluatedWith: presentButton,
@@ -286,7 +286,7 @@ extension XCTestCase {
             )
             waitForExpectations(timeout: 10, handler: nil)
         } else {
-            let confirm = app.buttons["Confirm"]
+            let confirm = app.buttons["Confirm"].firstMatch
             expectation(
                 for: NSPredicate(format: "enabled == true"),
                 evaluatedWith: confirm,
@@ -312,7 +312,7 @@ extension XCTestCase {
         waitForReload(app, settings: settings)
     }
     func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
-        let paymentMethodButton = app.buttons["Payment method"]
+        let paymentMethodButton = app.buttons["Payment method"].firstMatch
         expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: paymentMethodButton,

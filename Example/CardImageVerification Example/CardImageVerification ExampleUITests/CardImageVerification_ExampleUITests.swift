@@ -28,24 +28,24 @@ class CardImageVerification_ExampleUITests: XCTestCase {
 
     func testPrivacyLinkExists() throws {
         // Wait for the screen to load
-        let verificationSheet = app.staticTexts["CardImageVerificationSheet"]
+        let verificationSheet = app.staticTexts["CardImageVerificationSheet"].firstMatch
         XCTAssertTrue(verificationSheet.waitForExistence(timeout: 60.0))
         verificationSheet.tap()
 
         // Test that Amex card changes "CVC" -> "CVV" and allows 4 digits
-        let iinField = app.textFields["424242"]
+        let iinField = app.textFields["424242"].firstMatch
         XCTAssertTrue(iinField.waitForExistence(timeout: 10.0))
         iinField.tap()
         XCTAssertNoThrow(iinField.typeText("258393"))
 
-        let last4Field = app.textFields["4242"]
+        let last4Field = app.textFields["4242"].firstMatch
         last4Field.tap()
         XCTAssertNoThrow(last4Field.typeText("1681"))
 
-        let firstContinueButton = app.buttons["Continue"]
+        let firstContinueButton = app.buttons["Continue"].firstMatch
         firstContinueButton.tap()
 
-        let secondContinueButton = app.buttons["Continue"]
+        let secondContinueButton = app.buttons["Continue"].firstMatch
         XCTAssertTrue(secondContinueButton.waitForExistence(timeout: 120.0))
         secondContinueButton.tap()
 

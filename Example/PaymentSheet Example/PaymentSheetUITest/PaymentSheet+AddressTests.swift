@@ -27,44 +27,44 @@ class PaymentSheet_AddressTests: XCTestCase {
             settings
         )
 
-        let shippingButton = app.buttons["Address"]
+        let shippingButton = app.buttons["Address"].firstMatch
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
         // The Save Address button should be disabled
-        let saveAddressButton = app.buttons["Save address"]
+        let saveAddressButton = app.buttons["Save address"].firstMatch
         XCTAssertFalse(saveAddressButton.isEnabled)
 
-        app.textFields["Full name"].tap()
-        app.textFields["Full name"].typeText("Jane Doe")
+        app.textFields["Full name"].firstMatch.tap()
+        app.textFields["Full name"].firstMatch.typeText("Jane Doe")
 
         // Tapping the address field should go to autocomplete
-        app.textFields["Address"].waitForExistenceAndTap()
-        app.buttons["Enter address manually"].waitForExistenceAndTap()
+        app.textFields["Address"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Enter address manually"].firstMatch.waitForExistenceAndTap()
 
         // Tapping the address line 1 field should now just let us enter the field manually
-        app.textFields["Address line 1"].waitForExistenceAndTap()
+        app.textFields["Address line 1"].firstMatch.waitForExistenceAndTap()
         app.typeText("510 Townsend St")
 
         // Tapping autocomplete button in line 1 field should take us to autocomplete with the line 1 already entered in the search field
-        app.buttons["autocomplete_affordance"].tap()
-        XCTAssertEqual(app.textFields["Address"].value as! String, "510 Townsend St")
-        app.buttons["Enter address manually"].waitForExistenceAndTap()
+        app.buttons["autocomplete_affordance"].firstMatch.tap()
+        XCTAssertEqual(app.textFields["Address"].firstMatch.value as! String, "510 Townsend St")
+        app.buttons["Enter address manually"].firstMatch.waitForExistenceAndTap()
 
         // Continue entering address manually...
-        app.textFields["Address line 2"].tap()
+        app.textFields["Address line 2"].firstMatch.tap()
         app.typeText("Apt 152")
-        app.textFields["City"].tap()
+        app.textFields["City"].firstMatch.tap()
         app.typeText("San Francisco")
-        app.textFields["State"].tap()
+        app.textFields["State"].firstMatch.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
         app.toolbars.buttons["Done"].tap()
         // The save address button should still be disabled until we fill in all required fields
         XCTAssertFalse(saveAddressButton.isEnabled)
-        app.textFields["ZIP"].tap()
+        app.textFields["ZIP"].firstMatch.tap()
         app.typeText("94102")
-        app.textFields["Phone number"].tap()
-        app.textFields["Phone number"].typeText("5555555555")
+        app.textFields["Phone number"].firstMatch.tap()
+        app.textFields["Phone number"].firstMatch.typeText("5555555555")
 
         XCTAssertTrue(saveAddressButton.isEnabled)
         saveAddressButton.tap()
@@ -82,14 +82,14 @@ US
         // Opening the shipping address back up...
         shippingButton.tap()
         // ...and editing ZIP to be invalid...
-        let zip = app.textFields["ZIP"]
+        let zip = app.textFields["ZIP"].firstMatch
         XCTAssertEqual(zip.value as! String, "94102")
         zip.tap()
         app.typeText(XCUIKeyboardKey.delete.rawValue) // Invalid length
         // ...should disable the save address button
         XCTAssertFalse(saveAddressButton.isEnabled)
         // If we dismiss the sheet while its invalid...
-        app.buttons["Close"].tap()
+        app.buttons["Close"].firstMatch.tap()
         // The merchant app should get back nil
         XCTAssertEqual(shippingButton.label, "Address")
     }
@@ -104,17 +104,17 @@ US
             settings
         )
 
-        let shippingButton = app.buttons["Address"]
+        let shippingButton = app.buttons["Address"].firstMatch
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
         // Autocomplete should be presentable
-        XCTAssertTrue(app.buttons["autocomplete_affordance"].waitForExistenceAndTap(timeout: 4.0))
-        XCTAssertTrue(app.buttons["Enter address manually"].waitForExistenceAndTap(timeout: 4.0))
+        XCTAssertTrue(app.buttons["autocomplete_affordance"].firstMatch.waitForExistenceAndTap(timeout: 4.0))
+        XCTAssertTrue(app.buttons["Enter address manually"].firstMatch.waitForExistenceAndTap(timeout: 4.0))
 
         // The Save address button should be enabled
-        XCTAssertTrue(app.buttons["Save address"].waitForExistence(timeout: 4.0))
-        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertTrue(app.buttons["Save address"].firstMatch.waitForExistence(timeout: 4.0))
+        let saveAddressButton = app.buttons["Save address"].firstMatch
         XCTAssertTrue(saveAddressButton.isEnabled)
 
         saveAddressButton.tap()
@@ -137,16 +137,16 @@ US
             app,
             settings
         )
-        let shippingButton = app.buttons["Address"]
+        let shippingButton = app.buttons["Address"].firstMatch
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
         // The Save address button should be disabled
-        let saveAddressButton = app.buttons["Save address"]
+        let saveAddressButton = app.buttons["Save address"].firstMatch
         XCTAssertFalse(saveAddressButton.isEnabled)
 
         // Tapping the address field should go to autocomplete
-        app.textFields["Address"].waitForExistenceAndTap()
+        app.textFields["Address"].firstMatch.waitForExistenceAndTap()
 
         // Enter partial address and tap first result
         app.typeText("354 Oyster Point")
@@ -155,19 +155,19 @@ US
         searchedCell.tap()
 
         // Verify text fields
-        _ = app.textFields["Address line 1"].waitForExistence(timeout: 5)
-        XCTAssertEqual(app.textFields["Address line 1"].value as! String, "354 Oyster Point Blvd")
-        XCTAssertEqual(app.textFields["Address line 2"].value as! String, "")
-        XCTAssertEqual(app.textFields["City"].value as! String, "South San Francisco")
-        XCTAssertEqual(app.textFields["State"].value as! String, "California")
-        XCTAssertEqual(app.textFields["ZIP"].value as! String, "94080")
+        _ = app.textFields["Address line 1"].firstMatch.waitForExistence(timeout: 5)
+        XCTAssertEqual(app.textFields["Address line 1"].firstMatch.value as! String, "354 Oyster Point Blvd")
+        XCTAssertEqual(app.textFields["Address line 2"].firstMatch.value as! String, "")
+        XCTAssertEqual(app.textFields["City"].firstMatch.value as! String, "South San Francisco")
+        XCTAssertEqual(app.textFields["State"].firstMatch.value as! String, "California")
+        XCTAssertEqual(app.textFields["ZIP"].firstMatch.value as! String, "94080")
 
         // Type in phone number
-        app.textFields["Phone number"].tap()
-        app.textFields["Phone number"].typeText("5555555555")
+        app.textFields["Phone number"].firstMatch.tap()
+        app.textFields["Phone number"].firstMatch.typeText("5555555555")
 
         // Type in the name to complete the form
-        app.textFields["Full name"].tap()
+        app.textFields["Full name"].firstMatch.tap()
         app.typeText("Jane Doe")
 
         XCTAssertTrue(saveAddressButton.isEnabled)
@@ -193,46 +193,46 @@ US
             settings
         )
 
-        let shippingButton = app.buttons["Address"]
+        let shippingButton = app.buttons["Address"].firstMatch
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
         // The Save address button should be disabled
-        let saveAddressButton = app.buttons["Save address"]
+        let saveAddressButton = app.buttons["Save address"].firstMatch
         XCTAssertFalse(saveAddressButton.isEnabled)
 
-        app.textFields["Full name"].tap()
-        app.textFields["Full name"].typeText("Jane Doe")
+        app.textFields["Full name"].firstMatch.tap()
+        app.textFields["Full name"].firstMatch.typeText("Jane Doe")
 
         // Set country to New Zealand
-        app.textFields["Country or region"].tap()
+        app.textFields["Country or region"].firstMatch.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇳🇿 New Zealand")
         app.toolbars.buttons["Done"].tap()
 
         // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support New Zealand
-        XCTAssertFalse(app.buttons["autocomplete_affordance"].exists)
+        XCTAssertFalse(app.buttons["autocomplete_affordance"].firstMatch.exists)
 
         // Tapping the address line 1 field...
-        app.textFields["Address line 1"].tap()
+        app.textFields["Address line 1"].firstMatch.tap()
 
         // ...should not go to auto complete b/c it's disabled for New Zealand
-        XCTAssertFalse(app.buttons["Enter address manually"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["Enter address manually"].firstMatch.waitForExistence(timeout: 3))
 
         // Make sure we can still fill out the form
 
         // Tapping the address line 1 field should now just let us enter the field manually
-        app.textFields["Address line 1"].tap()
+        app.textFields["Address line 1"].firstMatch.tap()
         app.typeText("1 South Bay Parade")
-        app.textFields["Address line 2"].tap()
+        app.textFields["Address line 2"].firstMatch.tap()
         app.typeText("Apt 152")
-        app.textFields["City"].tap()
+        app.textFields["City"].firstMatch.tap()
         app.typeText("Kaikōura")
         // The save address button should still be disabled until we fill in all required fields
         XCTAssertFalse(saveAddressButton.isEnabled)
-        app.textFields["Postal code"].tap()
+        app.textFields["Postal code"].firstMatch.tap()
         app.typeText("7300")
-        app.textFields["Phone number"].tap()
-        app.textFields["Phone number"].typeText("5555555555")
+        app.textFields["Phone number"].firstMatch.tap()
+        app.textFields["Phone number"].firstMatch.typeText("5555555555")
         XCTAssertTrue(saveAddressButton.isEnabled)
         saveAddressButton.tap()
 
@@ -262,79 +262,79 @@ NZ
             )
 
         // Using PaymentSheet.FlowController w/o a shipping address...
-        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["Payment method"].firstMatch.waitForExistenceAndTap()
 
         // ...should not show the "Billing address is same as shipping" checkbox
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
-        XCTAssertEqual(app.textFields["ZIP"].value as? String, "")
-        XCTAssertFalse(app.switches["Billing address is same as shipping"].exists)
-        app.buttons["Close"].tap()
+        XCTAssertEqual(app.textFields["Country or region"].firstMatch.value as? String, "United States")
+        XCTAssertEqual(app.textFields["ZIP"].firstMatch.value as? String, "")
+        XCTAssertFalse(app.switches["Billing address is same as shipping"].firstMatch.exists)
+        app.buttons["Close"].firstMatch.tap()
 
         // Entering a shipping address...
-        let shippingButton = app.buttons["Address"]
+        let shippingButton = app.buttons["Address"].firstMatch
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
-        app.textFields["Full name"].tap()
-        app.textFields["Full name"].typeText("Jane Doe")
+        app.textFields["Full name"].firstMatch.tap()
+        app.textFields["Full name"].firstMatch.typeText("Jane Doe")
         // Tapping the address field should go to autocomplete
-        app.textFields["Address"].waitForExistenceAndTap()
-        app.buttons["Enter address manually"].waitForExistenceAndTap()
-        app.textFields["Address line 1"].waitForExistenceAndTap()
+        app.textFields["Address"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Enter address manually"].firstMatch.waitForExistenceAndTap()
+        app.textFields["Address line 1"].firstMatch.waitForExistenceAndTap()
         app.typeText("510 Townsend St")
-        app.textFields["City"].tap()
+        app.textFields["City"].firstMatch.tap()
         app.typeText("San Francisco")
-        app.textFields["State"].tap()
+        app.textFields["State"].firstMatch.tap()
         app.typeText("California")
-        app.textFields["ZIP"].tap()
+        app.textFields["ZIP"].firstMatch.tap()
         app.typeText("94102")
-        app.buttons["Save address"].tap()
+        app.buttons["Save address"].firstMatch.tap()
 
         // ...and then using PaymentSheet.FlowController...
-        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["Payment method"].firstMatch.waitForExistenceAndTap()
 
         // ...should show the "Billing address is same as shipping" checkbox selected and set the address values to shipping
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
-        XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
-        XCTAssertTrue(app.switches["Billing address is same as shipping"].isSelected)
+        XCTAssertEqual(app.textFields["Country or region"].firstMatch.value as? String, "United States")
+        XCTAssertEqual(app.textFields["ZIP"].firstMatch.value as? String, "94102")
+        XCTAssertTrue(app.switches["Billing address is same as shipping"].firstMatch.isSelected)
 
         // Updating the shipping address country...
-        app.buttons["Close"].tap()
-        app.buttons["Address"].tap()
-        app.textFields["Country or region"].waitForExistenceAndTap()
+        app.buttons["Close"].firstMatch.tap()
+        app.buttons["Address"].firstMatch.tap()
+        app.textFields["Country or region"].firstMatch.waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Save address"].tap()
+        app.buttons["Save address"].firstMatch.tap()
 
         // ...should update PaymentSheet.FlowController
-        app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
+        app.buttons["Payment method"].firstMatch.waitForExistenceAndTap()
+        XCTAssertEqual(app.textFields["Country or region"].firstMatch.value as? String, "Canada")
 
         // If you change the billing address, however...
         let updatedBillingAddressPostalCode = "12345"
-        app.textFields["Postal code"].tap()
+        app.textFields["Postal code"].firstMatch.tap()
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5)
-        app.textFields["Postal code"].typeText(deleteString + updatedBillingAddressPostalCode)
+        app.textFields["Postal code"].firstMatch.typeText(deleteString + updatedBillingAddressPostalCode)
 
         // ...the "Billing address is same as shipping" checkbox should become deselected...
-        XCTAssertFalse(app.switches["Billing address is same as shipping"].isSelected)
+        XCTAssertFalse(app.switches["Billing address is same as shipping"].firstMatch.isSelected)
 
         // ...and changing the shipping address...
-        app.buttons["Close"].tap()
-        app.buttons["Address"].tap()
-        app.textFields["Country or region"].waitForExistenceAndTap()
+        app.buttons["Close"].firstMatch.tap()
+        app.buttons["Address"].firstMatch.tap()
+        app.textFields["Country or region"].firstMatch.waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Save address"].tap()
+        app.buttons["Save address"].firstMatch.tap()
 
         // ...should not affect your billing address...
-        app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
-        XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
+        app.buttons["Payment method"].firstMatch.waitForExistenceAndTap()
+        XCTAssertEqual(app.textFields["Country or region"].firstMatch.value as? String, "Canada")
+        XCTAssertEqual(app.textFields["Postal code"].firstMatch.value as? String, updatedBillingAddressPostalCode)
 
         // ...until 'Billing address is same as shipping' checkbox is selected again
-        app.switches["Billing address is same as shipping"].tap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
-        XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
+        app.switches["Billing address is same as shipping"].firstMatch.tap()
+        XCTAssertEqual(app.textFields["Country or region"].firstMatch.value as? String, "United States")
+        XCTAssertEqual(app.textFields["ZIP"].firstMatch.value as? String, "94102")
     }
 
     func testManualAddressEntry_phoneCountryDoesPersist() throws {
@@ -346,20 +346,20 @@ NZ
                 settings
             )
 
-        let shippingButton = app.buttons["Address"]
+        let shippingButton = app.buttons["Address"].firstMatch
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
         // The Save Address button should be disabled
-        let saveAddressButton = app.buttons["Save address"]
+        let saveAddressButton = app.buttons["Save address"].firstMatch
         XCTAssertFalse(saveAddressButton.isEnabled)
 
         // Select UK for phone number country
-        app.textFields["United States +1"].tap()
+        app.textFields["United States +1"].firstMatch.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇬🇧 United Kingdom +44")
         app.toolbars.buttons["Done"].tap()
 
         // Ensure UK is persisted as phone country after tapping done
-        XCTAssert(app.textFields["United Kingdom +44"].exists)
+        XCTAssert(app.textFields["United Kingdom +44"].firstMatch.exists)
     }
 }

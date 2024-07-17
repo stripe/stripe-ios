@@ -48,22 +48,22 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // "Success" institution is automatically selected in the Account Picker
         app.fc_nativeConnectAccountsButton.tap()
 
-        let emailTextField = app.textFields["email_text_field"]
+        let emailTextField = app.textFields["email_text_field"].firstMatch
         XCTAssertTrue(emailTextField.waitForExistence(timeout: 120.0))  // wait for synchronize to complete
         // there is no need to tap inside of the e-mail text
         // field because we auto-focus it
         emailTextField.typeText(emailAddress)
 
-        let phoneTextField = app.textFields["phone_text_field"]
+        let phoneTextField = app.textFields["phone_text_field"].firstMatch
         XCTAssertTrue(phoneTextField.waitForExistence(timeout: 120.0))  // wait for lookup to complete
         phoneTextField.tap()
         phoneTextField.typeText("4015006000")
 
-        let phoneTextFieldToolbarDoneButton = app.toolbars["Toolbar"].buttons["Done"]
+        let phoneTextFieldToolbarDoneButton = app.toolbars["Toolbar"].firstMatch.buttons["Done"]
         XCTAssertTrue(phoneTextFieldToolbarDoneButton.waitForExistence(timeout: 60.0))
         phoneTextFieldToolbarDoneButton.tap()
 
-        let saveToLinkButon = app.buttons["Save to Link"]
+        let saveToLinkButon = app.buttons["Save to Link"].firstMatch
         XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         saveToLinkButon.tap()
 
@@ -96,7 +96,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let linkContinueButton = app.buttons["link_continue_button"]
+        let linkContinueButton = app.buttons["link_continue_button"].firstMatch
         XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
         linkContinueButton.tap()
 
@@ -109,7 +109,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(successInstitution.waitForExistence(timeout: 120.0)) // need to wait for various API calls to appear
         successInstitution.tap()
 
-        let connectAccountButton = app.buttons["Connect account"]
+        let connectAccountButton = app.buttons["Connect account"].firstMatch
         XCTAssertTrue(connectAccountButton.waitForExistence(timeout: 60.0))
         connectAccountButton.tap()
 
@@ -147,11 +147,11 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let linkContinueButton = app.buttons["link_continue_button"]
+        let linkContinueButton = app.buttons["link_continue_button"].firstMatch
         XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
         linkContinueButton.tap()
 
-        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
+        let testModeAutofillButton = app.buttons["test_mode_autofill_button"].firstMatch
         XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
         testModeAutofillButton.tap()
 
@@ -159,7 +159,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         XCTAssertTrue(successInstitution.waitForExistence(timeout: 120.0)) // need to wait for various API calls to appear
         successInstitution.tap()
 
-        let connectAccountButton = app.buttons["Connect account"]
+        let connectAccountButton = app.buttons["Connect account"].firstMatch
         XCTAssertTrue(connectAccountButton.waitForExistence(timeout: 60.0))
         connectAccountButton.tap()
 
@@ -199,7 +199,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let linkContinueButton = app.buttons["link_continue_button"]
+        let linkContinueButton = app.buttons["link_continue_button"].firstMatch
         XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
         linkContinueButton.tap()
 
@@ -249,7 +249,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let linkContinueButton = app.buttons["link_continue_button"]
+        let linkContinueButton = app.buttons["link_continue_button"].firstMatch
         XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
         linkContinueButton.tap()
 
@@ -260,7 +260,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeBankAccount(name: bankAccountName).tap()
 
-        let accountUpdateRequiredContinueButton = app.buttons["account_update_required_continue_button"]
+        let accountUpdateRequiredContinueButton = app.buttons["account_update_required_continue_button"].firstMatch
         XCTAssertTrue(accountUpdateRequiredContinueButton.waitForExistence(timeout: 1))
         accountUpdateRequiredContinueButton.tap()
 
@@ -318,16 +318,16 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         // email will already be pre-filled
 
-        let phoneTextField = app.textFields["phone_text_field"]
+        let phoneTextField = app.textFields["phone_text_field"].firstMatch
         XCTAssertTrue(phoneTextField.waitForExistence(timeout: 120.0))  // wait for lookup to complete
         phoneTextField.tap()
         phoneTextField.typeText("4015006000")
 
-        let phoneTextFieldToolbarDoneButton = app.toolbars["Toolbar"].buttons["Done"]
+        let phoneTextFieldToolbarDoneButton = app.toolbars["Toolbar"].firstMatch.buttons["Done"]
         XCTAssertTrue(phoneTextFieldToolbarDoneButton.waitForExistence(timeout: 60.0))
         phoneTextFieldToolbarDoneButton.tap()
 
-        let saveToLinkButon = app.buttons["Save to Link"]
+        let saveToLinkButon = app.buttons["Save to Link"].firstMatch
         XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         saveToLinkButon.tap()
 
@@ -383,7 +383,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         // both, email and phone, will already be pre-filled
 
-        let saveToLinkButon = app.buttons["Save to Link"]
+        let saveToLinkButon = app.buttons["Save to Link"].firstMatch
         XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         saveToLinkButon.tap()
 

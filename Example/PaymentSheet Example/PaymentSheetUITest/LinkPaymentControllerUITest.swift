@@ -24,10 +24,10 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.launch()
 
         // PaymentSheet Example
-        app.staticTexts["LinkPaymentController"].tap()
+        app.staticTexts["LinkPaymentController"].firstMatch.tap()
 
         // LinkPaymentController
-        let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
+        let paymentMethodButton = app.buttons["SelectPaymentMethodButton"].firstMatch
         let paymentMethodButtonEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: paymentMethodButton
@@ -36,7 +36,7 @@ class LinkPaymentControllerUITest: XCTestCase {
         paymentMethodButton.tap()
 
         // "Consent" pane
-        app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Agree and continue"].firstMatch.waitForExistenceAndTap(timeout: timeout)
 
         // "Sign Up" pane
         app.textFields
@@ -45,7 +45,7 @@ class LinkPaymentControllerUITest: XCTestCase {
             .waitForExistenceAndTap(timeout: 10)
         let email = "linkpaymentcontrolleruitest-\(UUID().uuidString)@example.com"
         app.typeText(email + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Phone number"].tap()
+        app.textFields["Phone number"].firstMatch.tap()
         // the `XCUIKeyboardKey.return.rawValue` will automatically
         // press the "Continue with Link" button to proceed to next
         // screen
@@ -76,11 +76,11 @@ class LinkPaymentControllerUITest: XCTestCase {
             .tap()
 
         // "Account Picker" pane
-        _ = app.staticTexts["Select account"].waitForExistence(timeout: 10)
-        app.buttons["Connect account"].tap()
+        _ = app.staticTexts["Select account"].firstMatch.waitForExistence(timeout: 10)
+        app.buttons["Connect account"].firstMatch.tap()
 
         // "Success" pane
-        XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
+        XCTAssert(app.staticTexts["Success"].firstMatch.waitForExistence(timeout: 10))
         // XCUITest had problems tapping the Done button in success pane,
         // so here we tap the Done button by estimating coordinates
         app.coordinate(
@@ -94,7 +94,7 @@ class LinkPaymentControllerUITest: XCTestCase {
         sleep(1) // wait for modal to disappear before pressing Buy
 
         // Back to "LinkPaymentController"
-        app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Buy"].firstMatch.waitForExistenceAndTap(timeout: timeout)
         XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
     }
 }

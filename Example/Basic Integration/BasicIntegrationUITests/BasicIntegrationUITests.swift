@@ -40,13 +40,13 @@ class BasicIntegrationUITests: XCTestCase {
     }
 
     func disableAddressEntry(_ app: XCUIApplication) {
-        app.navigationBars["Emoji Apparel"].buttons["Settings"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Emoji Apparel"].firstMatch.buttons["Settings"].tapWhenHittableInTestCase(self)
         let noneButton = app.tables.children(matching: .cell).element(boundBy: 12).staticTexts[
             "None"]
         waitToAppear(noneButton)
         app.tables.firstMatch.swipeUp()
         noneButton.tapWhenHittableInTestCase(self)
-        app.navigationBars["Settings"].buttons["Done"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Settings"].firstMatch.buttons["Done"].tapWhenHittableInTestCase(self)
     }
 
     func selectItems(_ app: XCUIApplication) {
@@ -67,14 +67,14 @@ class BasicIntegrationUITests: XCTestCase {
         disableAddressEntry(app)
         selectItems(app)
 
-        app.buttons["Buy Now"].tapWhenHittableInTestCase(self)
+        app.buttons["Buy Now"].firstMatch.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         waitToAppear(payFromButton)
         payFromButton.tapWhenHittableInTestCase(self)
         let visa = app.tables.staticTexts["Visa ending in 4242"]
         visa.tapWhenHittableInTestCase(self)
-        app.buttons["Buy"].tapWhenHittableInTestCase(self)
-        let success = app.alerts["Success"].buttons["OK"]
+        app.buttons["Buy"].firstMatch.tapWhenHittableInTestCase(self)
+        let success = app.alerts["Success"].firstMatch.buttons["OK"]
         success.tapWhenHittableInTestCase(self)
     }
 
@@ -82,20 +82,20 @@ class BasicIntegrationUITests: XCTestCase {
         disableAddressEntry(app)
         selectItems(app)
 
-        let buyNowButton = app.buttons["Buy Now"]
+        let buyNowButton = app.buttons["Buy Now"].firstMatch
         buyNowButton.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tapWhenHittableInTestCase(self)
         let visa = app.tables.staticTexts["Visa ending in 3220"]
         visa.tapWhenHittableInTestCase(self)
-        app.buttons["Buy"].tapWhenHittableInTestCase(self)
+        app.buttons["Buy"].firstMatch.tapWhenHittableInTestCase(self)
 
         let elementsQuery = app.scrollViews.otherElements
         let learnMore = elementsQuery.buttons["Learn more about authentication"]
         learnMore.tapWhenHittableInTestCase(self)
         elementsQuery.buttons["Need help?"].tapWhenHittableInTestCase(self)
         app.scrollViews.otherElements.buttons["Continue"].tapWhenHittableInTestCase(self)
-        let success = app.alerts["Success"].buttons["OK"]
+        let success = app.alerts["Success"].firstMatch.buttons["OK"]
 
         success.tapWhenHittableInTestCase(self)
     }
@@ -104,21 +104,21 @@ class BasicIntegrationUITests: XCTestCase {
         disableAddressEntry(app)
         selectItems(app)
 
-        let buyNowButton = app.buttons["Buy Now"]
+        let buyNowButton = app.buttons["Buy Now"].firstMatch
         buyNowButton.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tapWhenHittableInTestCase(self)
         let tablesQuery = app.tables
         let applePay = tablesQuery.staticTexts["Apple Pay"]
         applePay.tapWhenHittableInTestCase(self)
-        app.buttons["Buy"].tapWhenHittableInTestCase(self)
+        app.buttons["Buy"].firstMatch.tapWhenHittableInTestCase(self)
     }
 
     func testCCEntry() {
         disableAddressEntry(app)
         selectItems(app)
 
-        let buyNowButton = app.buttons["Buy Now"]
+        let buyNowButton = app.buttons["Buy Now"].firstMatch
         buyNowButton.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tapWhenHittableInTestCase(self)
@@ -136,18 +136,18 @@ class BasicIntegrationUITests: XCTestCase {
         cvcField.typeText("223")
         zipField.typeText("90210")
 
-        let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Add a Card"]
+        let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Add a Card"].firstMatch
             .buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
         addcardviewcontrollernavbardonebuttonidentifierButton.tapWhenHittableInTestCase(self)
-        app.alerts["Your card has expired."].buttons["OK"].tapWhenHittableInTestCase(self)
+        app.alerts["Your card has expired."].firstMatch.buttons["OK"].tapWhenHittableInTestCase(self)
         cardNumberField.tapWhenHittableInTestCase(self)
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 4)
         cardNumberField.typeText(deleteString)
         cardNumberField.typeText("0341")
         addcardviewcontrollernavbardonebuttonidentifierButton.tapWhenHittableInTestCase(self)
-        let buyButton = app.buttons["Buy"]
+        let buyButton = app.buttons["Buy"].firstMatch
         buyButton.tapWhenHittableInTestCase(self)
-        let errorButton = app.alerts["Error"].buttons["OK"]
+        let errorButton = app.alerts["Error"].firstMatch.buttons["OK"]
         errorButton.tapWhenHittableInTestCase(self)
     }
 
@@ -156,7 +156,7 @@ class BasicIntegrationUITests: XCTestCase {
         // A STPPaymentOptionsVC w/o a selected card...
         disableAddressEntry(app)
         selectItems(app)
-        let buyNowButton = app.buttons["Buy Now"]
+        let buyNowButton = app.buttons["Buy Now"].firstMatch
         buyNowButton.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tapWhenHittableInTestCase(self)
@@ -174,7 +174,7 @@ class BasicIntegrationUITests: XCTestCase {
 
         // ...and resetting the PaymentOptions VC...
         // Note that STPPaymentContext clears its cache and refetches every time it's initialized, which happens whenever CheckoutViewController is pushed on
-        app.navigationBars["Checkout"].buttons["Products"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Checkout"].firstMatch.buttons["Products"].tapWhenHittableInTestCase(self)
         buyNowButton.tapWhenHittableInTestCase(self)
         payFromButton.tapWhenHittableInTestCase(self)
 
@@ -186,7 +186,7 @@ class BasicIntegrationUITests: XCTestCase {
         applePay.tapWhenHittableInTestCase(self)
 
         // ...and resetting the PaymentOptions VC...
-        app.navigationBars["Checkout"].buttons["Products"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Checkout"].firstMatch.buttons["Products"].tapWhenHittableInTestCase(self)
         buyNowButton.tapWhenHittableInTestCase(self)
         payFromButton.tapWhenHittableInTestCase(self)
 
@@ -198,10 +198,10 @@ class BasicIntegrationUITests: XCTestCase {
         visa.tapWhenHittableInTestCase(self)
 
         // ...and logging out...
-        app.navigationBars["Checkout"].buttons["Products"].tapWhenHittableInTestCase(self)
-        app.navigationBars["Emoji Apparel"].buttons["Settings"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Checkout"].firstMatch.buttons["Products"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Emoji Apparel"].firstMatch.buttons["Settings"].tapWhenHittableInTestCase(self)
         app.tables.children(matching: .cell).element(boundBy: 18).staticTexts["Log out"].tapWhenHittableInTestCase(self)
-        app.navigationBars["Settings"].buttons["Done"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Settings"].firstMatch.buttons["Done"].tapWhenHittableInTestCase(self)
 
         // ...and going back to PaymentOptionsVC...
         buyNowButton.tapWhenHittableInTestCase(self)
@@ -238,13 +238,13 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
     }
 
     func disableAddressEntry(_ app: XCUIApplication) {
-        app.navigationBars["Emoji Apparel"].buttons["Settings"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Emoji Apparel"].firstMatch.buttons["Settings"].tapWhenHittableInTestCase(self)
         let noneButton = app.tables.children(matching: .cell).element(boundBy: 12).staticTexts[
             "None"]
         waitToAppear(noneButton)
         app.tables.firstMatch.swipeUp()
         noneButton.tapWhenHittableInTestCase(self)
-        app.navigationBars["Settings"].buttons["OK"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Settings"].firstMatch.buttons["OK"].tapWhenHittableInTestCase(self)
     }
 
     func selectItems(_ app: XCUIApplication) {
@@ -265,13 +265,13 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         disableAddressEntry(app)
         selectItems(app)
 
-        app.buttons["Buy Now"].tapWhenHittableInTestCase(self)
+        app.buttons["Buy Now"].firstMatch.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tapWhenHittableInTestCase(self)
         let visa = app.tables.staticTexts["Visa se terminant par 4242"]
         visa.tapWhenHittableInTestCase(self)
-        app.buttons["Buy"].tapWhenHittableInTestCase(self)
-        let success = app.alerts["Success"].buttons["OK"]
+        app.buttons["Buy"].firstMatch.tapWhenHittableInTestCase(self)
+        let success = app.alerts["Success"].firstMatch.buttons["OK"]
         waitToAppear(success)
         success.tapWhenHittableInTestCase(self)
     }
@@ -280,7 +280,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         disableAddressEntry(app)
         selectItems(app)
 
-        let buyNowButton = app.buttons["Buy Now"]
+        let buyNowButton = app.buttons["Buy Now"].firstMatch
         buyNowButton.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         waitToAppear(payFromButton)
@@ -288,7 +288,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let visa = app.tables.staticTexts["Visa se terminant par 3220"]
         waitToAppear(visa)
         visa.tapWhenHittableInTestCase(self)
-        app.buttons["Buy"].tapWhenHittableInTestCase(self)
+        app.buttons["Buy"].firstMatch.tapWhenHittableInTestCase(self)
 
         let elementsQuery = app.scrollViews.otherElements
         let learnMore = elementsQuery.buttons["Learn more about authentication"]
@@ -296,7 +296,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         learnMore.tapWhenHittableInTestCase(self)
         elementsQuery.buttons["Need help?"].tapWhenHittableInTestCase(self)
         app.scrollViews.otherElements.buttons["Continue"].tapWhenHittableInTestCase(self)
-        let success = app.alerts["Success"].buttons["OK"]
+        let success = app.alerts["Success"].firstMatch.buttons["OK"]
         waitToAppear(success)
         success.tapWhenHittableInTestCase(self)
     }
@@ -305,7 +305,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         disableAddressEntry(app)
         selectItems(app)
 
-        let buyNowButton = app.buttons["Buy Now"]
+        let buyNowButton = app.buttons["Buy Now"].firstMatch
         buyNowButton.tapWhenHittableInTestCase(self)
 
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
@@ -315,14 +315,14 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let applePay = tablesQuery.staticTexts["Apple Pay"]
         waitToAppear(applePay)
         applePay.tapWhenHittableInTestCase(self)
-        app.buttons["Buy"].tapWhenHittableInTestCase(self)
+        app.buttons["Buy"].firstMatch.tapWhenHittableInTestCase(self)
     }
 
     func testCCEntry() {
         disableAddressEntry(app)
         selectItems(app)
 
-        let buyNowButton = app.buttons["Buy Now"]
+        let buyNowButton = app.buttons["Buy Now"].firstMatch
         buyNowButton.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         waitToAppear(payFromButton)
@@ -345,16 +345,16 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
             "Ajouter une carte"
         ].buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
         addcardviewcontrollernavbardonebuttonidentifierButton.tapWhenHittableInTestCase(self)
-        app.alerts["Votre carte a expiré."].buttons["OK"].tapWhenHittableInTestCase(self)
+        app.alerts["Votre carte a expiré."].firstMatch.buttons["OK"].tapWhenHittableInTestCase(self)
         cardNumberField.tapWhenHittableInTestCase(self)
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 4)
         cardNumberField.typeText(deleteString)
         cardNumberField.typeText("0341")
         addcardviewcontrollernavbardonebuttonidentifierButton.tapWhenHittableInTestCase(self)
-        let buyButton = app.buttons["Buy"]
+        let buyButton = app.buttons["Buy"].firstMatch
         waitToAppear(buyButton)
         buyButton.tapWhenHittableInTestCase(self)
-        let errorButton = app.alerts["Error"].buttons["OK"]
+        let errorButton = app.alerts["Error"].firstMatch.buttons["OK"]
         waitToAppear(errorButton)
         errorButton.tapWhenHittableInTestCase(self)
     }
@@ -364,7 +364,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         // A STPPaymentOptionsVC w/o a selected card...
         disableAddressEntry(app)
         selectItems(app)
-        let buyNowButton = app.buttons["Buy Now"]
+        let buyNowButton = app.buttons["Buy Now"].firstMatch
         buyNowButton.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         waitToAppear(payFromButton)
@@ -383,7 +383,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
 
         // ...and resetting the PaymentOptions VC...
         // Note that STPPaymentContext clears its cache and refetches every time it's initialized, which happens whenever CheckoutViewController is pushed on
-        app.navigationBars["Checkout"].buttons["Products"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Checkout"].firstMatch.buttons["Products"].tapWhenHittableInTestCase(self)
         buyNowButton.tapWhenHittableInTestCase(self)
         payFromButton.tapWhenHittableInTestCase(self)
 
@@ -395,7 +395,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         applePay.tapWhenHittableInTestCase(self)
 
         // ...and resetting the PaymentOptions VC...
-        app.navigationBars["Checkout"].buttons["Products"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Checkout"].firstMatch.buttons["Products"].tapWhenHittableInTestCase(self)
         buyNowButton.tapWhenHittableInTestCase(self)
         payFromButton.tapWhenHittableInTestCase(self)
 
@@ -407,10 +407,10 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         visa.tapWhenHittableInTestCase(self)
 
         // ...and logging out...
-        app.navigationBars["Checkout"].buttons["Products"].tapWhenHittableInTestCase(self)
-        app.navigationBars["Emoji Apparel"].buttons["Settings"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Checkout"].firstMatch.buttons["Products"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Emoji Apparel"].firstMatch.buttons["Settings"].tapWhenHittableInTestCase(self)
         app.tables.children(matching: .cell).element(boundBy: 18).staticTexts["Log out"].tapWhenHittableInTestCase(self)
-        app.navigationBars["Settings"].buttons["OK"].tapWhenHittableInTestCase(self)
+        app.navigationBars["Settings"].firstMatch.buttons["OK"].tapWhenHittableInTestCase(self)
 
         // ...and going back to PaymentOptionsVC...
         buyNowButton.tapWhenHittableInTestCase(self)

@@ -33,25 +33,25 @@ class CardImageVerification_EndToEndTests: XCTestCase {
     func testEndtoEnd() throws {
 #if targetEnvironment(simulator)
         // Wait for the screen to load
-        let verificationSheet = app.staticTexts["CardImageVerificationSheet"]
+        let verificationSheet = app.staticTexts["CardImageVerificationSheet"].firstMatch
         XCTAssertTrue(verificationSheet.waitForExistence(timeout: 60))
         verificationSheet.tap()
 
         // Test that Amex card changes "CVC" -> "CVV" and allows 4 digits
-        let iinField = app.textFields["424242"]
+        let iinField = app.textFields["424242"].firstMatch
         XCTAssertTrue(iinField.waitForExistence(timeout: 10))
         iinField.tap()
         XCTAssertNoThrow(iinField.typeText("258393"))
 
-        let last4Field = app.textFields["4242"]
+        let last4Field = app.textFields["4242"].firstMatch
         last4Field.tap()
         XCTAssertNoThrow(last4Field.typeText("1681"))
 
-        let firstContinueButton = app.buttons["Card Input Continue Button"]
+        let firstContinueButton = app.buttons["Card Input Continue Button"].firstMatch
         XCTAssertTrue(firstContinueButton.waitForExistence(timeout: 10))
         firstContinueButton.tap()
 
-        let secondContinueButton = app.buttons["Explaination Continue Button"]
+        let secondContinueButton = app.buttons["Explaination Continue Button"].firstMatch
         let secondContinueButtonExpectation = expectation(
             for: NSPredicate(format: "exists == true AND enabled == true"),
             evaluatedWith: secondContinueButton,
@@ -62,7 +62,7 @@ class CardImageVerification_EndToEndTests: XCTestCase {
 
         secondContinueButton.tap()
 
-        let okButton = app.buttons["OK"]
+        let okButton = app.buttons["OK"].firstMatch
         let okButtonExpectation = expectation(
             for: NSPredicate(format: "exists == true AND enabled == true"),
             evaluatedWith: secondContinueButton,
