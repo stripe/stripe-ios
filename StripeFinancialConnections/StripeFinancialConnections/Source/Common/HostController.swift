@@ -116,14 +116,9 @@ extension HostController: HostViewControllerDelegate {
         )
 
         switch flow {
-        case .webInstantDebits:
+        case .webInstantDebits, .webFinancialConnections:
             continueWithWebFlow(synchronizePayload.manifest)
-        case .nativeInstantDebits:
-            // Not currently supported.
-            break
-        case .webFinancialConnections:
-            continueWithWebFlow(synchronizePayload.manifest)
-        case .nativeFinancialConnections:
+        case .nativeInstantDebits, .nativeFinancialConnections:
             continueWithNativeFlow(synchronizePayload)
         }
     }
