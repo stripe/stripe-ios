@@ -44,6 +44,10 @@ class FlowRouter {
 
     var flow: Flow {
         if synchronizePayload.manifest.isProductInstantDebits {
+            if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                // Show web instant debits flow while UITesting for now.
+                return .webInstantDebits
+            }
             return exampleAppSdkOverride.shouldUseNativeFlow ? .nativeInstantDebits : .webInstantDebits
         } else {
             logExposureIfNeeded()
