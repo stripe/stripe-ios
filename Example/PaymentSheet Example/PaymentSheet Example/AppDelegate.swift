@@ -30,8 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             PaymentSheet.resetCustomer()
             PlaygroundController.resetCustomer()
 
-            // Speed up animations for quicker CI times
-            UIApplication.shared.keyWindow?.layer.speed = 100
+            // Disable animations for quicker CI times
+            UIView.setAnimationsEnabled(false)
         }
         #endif
 
