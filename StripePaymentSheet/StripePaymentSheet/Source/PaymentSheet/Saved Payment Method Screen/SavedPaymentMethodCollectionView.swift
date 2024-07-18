@@ -15,7 +15,7 @@ import UIKit
 
 // MARK: - Constants
 /// Entire cell size
-private let cellSize: CGSize = CGSize(width: 100, height: 88)
+private let cellSize: CGSize = CGSize(width: 106, height: 94)
 /// Size of the rounded rectangle that contains the PM logo
 let roundedRectangleSize = CGSize(width: 100, height: 64)
 private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
@@ -32,6 +32,7 @@ class SavedPaymentMethodCollectionView: UICollectionView {
             right: PaymentSheetUI.defaultPadding)
         layout.itemSize = cellSize
         layout.minimumInteritemSpacing = 12
+        layout.minimumLineSpacing = 4
         super.init(frame: .zero, collectionViewLayout: layout)
 
         showsHorizontalScrollIndicator = false
@@ -148,9 +149,9 @@ extension SavedPaymentMethodCollectionView {
                 contentView.addSubview($0)
             }
             NSLayoutConstraint.activate([
-                shadowRoundedRectangle.topAnchor.constraint(equalTo: contentView.topAnchor),
+                shadowRoundedRectangle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
                 shadowRoundedRectangle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-                shadowRoundedRectangle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                shadowRoundedRectangle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -6),
                 shadowRoundedRectangle.widthAnchor.constraint(
                     equalToConstant: roundedRectangleSize.width),
                 shadowRoundedRectangle.heightAnchor.constraint(
@@ -184,9 +185,9 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: 6),
 
                 accessoryButton.trailingAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.trailingAnchor, constant: 6),
+                    equalTo: contentView.trailingAnchor, constant: 0),
                 accessoryButton.topAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.topAnchor, constant: -6),
+                    equalTo: contentView.topAnchor, constant: 0),
             ])
         }
 
@@ -205,17 +206,6 @@ extension SavedPaymentMethodCollectionView {
             didSet {
                 update()
             }
-        }
-
-        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-            let translatedPoint = accessoryButton.convert(point, from: self)
-
-            // Ensures taps on the accessory button are handled properly as it lives outside its cells' bounds
-            if accessoryButton.bounds.contains(translatedPoint) && !accessoryButton.isHidden {
-                return accessoryButton.hitTest(translatedPoint, with: event)
-            }
-
-            return super.hitTest(point, with: event)
         }
 
         // MARK: - Internal Methods
