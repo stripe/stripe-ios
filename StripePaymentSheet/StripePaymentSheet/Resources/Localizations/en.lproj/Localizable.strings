@@ -91,8 +91,7 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
-/* A button used to confirm selecting a saved payment method
-   A button used to confirm the CVC/CVV */
+/* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
 
 /* Text for alert message when user needs to confirm payment in their banking app */
