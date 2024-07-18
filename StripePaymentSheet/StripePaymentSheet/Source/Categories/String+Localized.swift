@@ -352,5 +352,16 @@ extension String.Localized {
             "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
             "Text displayed below a credit card entry form when the card will be saved to make future payments."
         )
+
+    static var confirm_your_cvc: String {
+        STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
+    }
+
+    static var confirm_your_cvv: String {
+        STPLocalizedString("Confirm your CVV", "Title for prompting for a card's CVV on confirming the payment")
+    }
+
+    static var confirm: String {
+        STPLocalizedString("Confirm", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
     }
 }

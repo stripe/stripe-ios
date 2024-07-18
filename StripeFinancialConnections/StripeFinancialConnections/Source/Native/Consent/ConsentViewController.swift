@@ -84,7 +84,11 @@ class ConsentViewController: UIViewController {
                     trailing: 24
                 )
                 if let merchantLogo = dataSource.merchantLogo {
-                    let consentLogoView = ConsentLogoView(merchantLogo: merchantLogo)
+                    let showsAnimatedDots = dataSource.manifest.isLinkWithStripe != true
+                    let consentLogoView = ConsentLogoView(
+                        merchantLogo: merchantLogo,
+                        showsAnimatedDots: showsAnimatedDots
+                    )
                     self.consentLogoView = consentLogoView
                     verticalStackView.addArrangedSubview(consentLogoView)
                 }
