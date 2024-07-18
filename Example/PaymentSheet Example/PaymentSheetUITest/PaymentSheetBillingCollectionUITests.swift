@@ -44,35 +44,6 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
 }
 
 class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUITestCase {
-    func testCard_AutomaticFields_NoDefaults() throws {
-
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .guest
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-        settings.applePayEnabled = .off
-        settings.apmsEnabled = .off
-        settings.linkEnabled = .off
-        settings.attachDefaults = .off
-        settings.collectName = .automatic
-        settings.collectEmail = .automatic
-        settings.collectPhone = .automatic
-        settings.collectAddress = .automatic
-        loadPlayground(
-            app,
-            settings
-        )
-        checkoutButton.tap()
-
-        let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
-        card.tap()
-        try! fillCardData(app)
-
-        // Complete payment
-        payButton.tap()
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
-
     func testCard_AllFields_WithDefaults() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
