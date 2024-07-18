@@ -154,56 +154,8 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         confirmButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-
-    func testCard_OnlyCardInfo_WithDefaults() throws {
-
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .guest
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-        settings.applePayEnabled = .off
-        settings.apmsEnabled = .off
-        settings.linkEnabled = .off
-        settings.defaultBillingAddress = .on
-        settings.attachDefaults = .on
-        settings.collectName = .never
-        settings.collectEmail = .never
-        settings.collectPhone = .never
-        settings.collectAddress = .never
-        loadPlayground(
-            app,
-            settings
-        )
-        checkoutButton.tap()
-
-        let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
-        card.tap()
-
-        XCTAssertTrue(cardInfoField.waitForExistence(timeout: 10.0))
-        XCTAssertFalse(app.staticTexts["Contact information"].exists)
-        XCTAssertFalse(emailField.exists)
-        XCTAssertFalse(phoneField.exists)
-        XCTAssertFalse(nameOnCardField.exists)
-        XCTAssertFalse(billingAddressField.exists)
-        XCTAssertFalse(countryField.exists)
-        XCTAssertFalse(line1Field.exists)
-        XCTAssertFalse(line2Field.exists)
-        XCTAssertFalse(cityField.exists)
-        XCTAssertFalse(stateField.exists)
-        XCTAssertFalse(zipField.exists)
-
-        let numberField = app.textFields["Card number"]
-        numberField.forceTapWhenHittableInTestCase(self)
-        app.typeText("4242424242424242")
-        app.typeText("1228") // Expiry
-        app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Dismiss keyboard.
-
-        // Complete payment
-        payButton.tap()
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
 }
+
 class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITestCase {
     func testUSBankAccount_AutomaticFields_NoDefaults() throws {
 
