@@ -50,4 +50,15 @@ extension FinancialConnectionsTheme? {
             return .textActionPrimary
         }
     }
+
+    var spinnerColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen200
+        case .light, .dashboardLight, .unparsable:
+            return .brand500
+        case .none:
+            return .neutral200
+        }
+    }
 }

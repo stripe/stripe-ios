@@ -43,7 +43,8 @@ final class HostViewController: UIViewController {
         return item
     }()
 
-    private let loadingView = LoadingView(frame: .zero)
+    // We haven't loaded the manifest yet, so we use a nil theme and show a neutral-colored spinner.
+    private let loadingView = LoadingView(frame: .zero, theme: nil)
 
     // MARK: - Properties
 
