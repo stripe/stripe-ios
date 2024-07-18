@@ -28,6 +28,8 @@
 		551DB033DB4C8257ABAADA8F /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; };
 		56EF0879D7EAC041B147680C /* ExampleLinkPaymentCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */; };
 		5AF35F9FA7106ACD4E4F360F /* PaymentSheetBillingCollectionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083DF3A89B26704DA21858DB /* PaymentSheetBillingCollectionUITests.swift */; };
+		61C4A5DE2C4972480087EDF9 /* PaymentSheet Example-Shard4.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 61C4A5DC2C4972480087EDF9 /* PaymentSheet Example-Shard4.xctestplan */; };
+		61C4A5DF2C4972480087EDF9 /* PaymentSheet Example-Shard3.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 61C4A5DD2C4972480087EDF9 /* PaymentSheet Example-Shard3.xctestplan */; };
 		65D034E37B345C1B64785451 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6A5CCDA42C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5CCDA32C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift */; };
 		6BA8D3322B0C1E24008C51FF /* ExampleSwiftUICustomPaymentFlowCVCRecollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3312B0C1E24008C51FF /* ExampleSwiftUICustomPaymentFlowCVCRecollection.swift */; };
@@ -187,6 +189,8 @@
 		5CA299EAF5914484195167EB /* PaymentSheetUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetUITest.swift; sourceTree = "<group>"; };
 		5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearancePlaygroundView.swift; sourceTree = "<group>"; };
 		5E4DD63AD5E9B8153E04EF7C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		61C4A5DC2C4972480087EDF9 /* PaymentSheet Example-Shard4.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "PaymentSheet Example-Shard4.xctestplan"; sourceTree = "<group>"; };
+		61C4A5DD2C4972480087EDF9 /* PaymentSheet Example-Shard3.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "PaymentSheet Example-Shard3.xctestplan"; sourceTree = "<group>"; };
 		63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6891CC1208EA3F4DE934760E /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		6A5CCDA32C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPaymentControllerUITest.swift; sourceTree = "<group>"; };
@@ -392,6 +396,8 @@
 				C326AC7AEE88B92E72DDD6AF /* PaymentSheetUITest */,
 				B96951DD278BA611BBCBB10A /* PaymentSheet Example-Shard1.xctestplan */,
 				C9BC6E49FF08F3B2DB837734 /* PaymentSheet Example-Shard2.xctestplan */,
+				61C4A5DD2C4972480087EDF9 /* PaymentSheet Example-Shard3.xctestplan */,
+				61C4A5DC2C4972480087EDF9 /* PaymentSheet Example-Shard4.xctestplan */,
 				81BB8CD3461287DDB397717E /* PaymentSheet Example.xctestplan */,
 			);
 			name = Project;
@@ -602,6 +608,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61C4A5DE2C4972480087EDF9 /* PaymentSheet Example-Shard4.xctestplan in Resources */,
+				61C4A5DF2C4972480087EDF9 /* PaymentSheet Example-Shard3.xctestplan in Resources */,
 				AEC3BC636297A0D3E2DDF522 /* MockFiles in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

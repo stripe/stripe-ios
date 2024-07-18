@@ -45,6 +45,8 @@ stages:
     - size-report: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
     - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
@@ -60,6 +62,8 @@ stages:
     - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
@@ -582,6 +586,35 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard2
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
+  ui-tests-3:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard3
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
+  ui-tests-4:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard4
         - log_formatter: xcbeautify
         - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}

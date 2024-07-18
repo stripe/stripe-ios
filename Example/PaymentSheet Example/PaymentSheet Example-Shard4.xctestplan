@@ -31,6 +31,10 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
+        "CustomerSheetSnapshotTests",
+        "CustomerSheetUITest",
+        "LinkPaymentControllerUITest",
+        "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
@@ -39,23 +43,12 @@
         "PaymentSheetDeferredUITests",
         "PaymentSheetGDPRUITests",
         "PaymentSheetLinkUITests",
-        "PaymentSheetSnapshotTests",
-        "PaymentSheetStandardLPMUITests",
-        "PaymentSheetStandardUITests",
-        "PaymentSheetUITestCase",
-        "PaymentSheetVerticalUITests"
+        "PaymentSheet_AddressTests"
       ],
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",
         "identifier" : "AAF1424C7F0424C3506712E6",
         "name" : "PaymentSheetUITest"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:PaymentSheet Example.xcodeproj",
-        "identifier" : "5BBB41069612B9B628C5E65D",
-        "name" : "PaymentSheetLocalizationScreenshotGenerator"
       }
     }
   ],
