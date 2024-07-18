@@ -16,11 +16,6 @@
         "value" : "$(SRCROOT)\/..\/..\/Tests\/ReferenceImages"
       }
     ],
-    "locationScenario" : {
-      "identifier" : "San Francisco, CA, USA",
-      "referenceType" : "built-in"
-    },
-    "region" : "US",
     "targetForVariableExpansion" : {
       "containerPath" : "container:PaymentSheet Example.xcodeproj",
       "identifier" : "D017784615929C0DD3717FE8",
@@ -33,7 +28,6 @@
       "skippedTests" : [
         "CustomerSheetSnapshotTests",
         "CustomerSheetUITest",
-        "LinkPaymentControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
@@ -42,13 +36,20 @@
         "PaymentSheetStandardLPMUITests",
         "PaymentSheetStandardUITests",
         "PaymentSheetUITestCase",
-        "PaymentSheetVerticalUITests",
         "PaymentSheet_AddressTests"
       ],
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",
         "identifier" : "AAF1424C7F0424C3506712E6",
         "name" : "PaymentSheetUITest"
+      }
+    },
+    {
+      "enabled" : false,
+      "target" : {
+        "containerPath" : "container:PaymentSheet Example.xcodeproj",
+        "identifier" : "5BBB41069612B9B628C5E65D",
+        "name" : "PaymentSheetLocalizationScreenshotGenerator"
       }
     }
   ],

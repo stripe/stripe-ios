@@ -16,11 +16,6 @@
         "value" : "$(SRCROOT)\/..\/..\/Tests\/ReferenceImages"
       }
     ],
-    "locationScenario" : {
-      "identifier" : "San Francisco, CA, USA",
-      "referenceType" : "built-in"
-    },
-    "region" : "US",
     "targetForVariableExpansion" : {
       "containerPath" : "container:PaymentSheet Example.xcodeproj",
       "identifier" : "D017784615929C0DD3717FE8",
@@ -31,19 +26,14 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
-        "PaymentSheetBillingCollectionLPMUITests",
-        "PaymentSheetBillingCollectionUICardTests",
-        "PaymentSheetBillingCollectionUITestCase",
-        "PaymentSheetDeferredServerSideUITests",
+        "CustomerSheetUITest",
         "PaymentSheetDeferredUIBankAccountTests",
         "PaymentSheetDeferredUITests",
-        "PaymentSheetGDPRUITests",
         "PaymentSheetLinkUITests",
         "PaymentSheetSnapshotTests",
         "PaymentSheetStandardLPMUITests",
         "PaymentSheetStandardUITests",
-        "PaymentSheetUITestCase",
-        "PaymentSheetVerticalUITests"
+        "PaymentSheetUITestCase"
       ],
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",
