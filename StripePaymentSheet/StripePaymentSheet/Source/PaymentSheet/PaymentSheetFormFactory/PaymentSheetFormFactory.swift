@@ -127,6 +127,10 @@ class PaymentSheetFormFactory {
     }
 
     func make() -> PaymentMethodElement {
+        if case .instantDebits = paymentMethod {
+            return makeInstantDebits()
+        }
+
         guard case .stripe(let paymentMethod) = paymentMethod else {
             return makeExternalPaymentMethodForm()
         }
@@ -169,8 +173,6 @@ class PaymentSheetFormFactory {
             return makeBoleto()
         } else if paymentMethod == .swish {
             return makeSwish()
-        } else if paymentMethod == .instantDebits {
-            return makeInstantDebits()
         }
 
         guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {

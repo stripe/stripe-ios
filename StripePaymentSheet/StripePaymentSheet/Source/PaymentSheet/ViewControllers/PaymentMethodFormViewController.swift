@@ -25,20 +25,6 @@ class PaymentMethodFormViewController: UIViewController {
         // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have such divergent paths for link and instant debits. Where is the setDefaultBillingDetailsIfNecessary call, for example?
         if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
             return linkEnabledElement.makePaymentOption(intent: intent)
-        } else if let instantDebitsFormElement = form as? InstantDebitsPaymentMethodElement {
-            // we use `.instantDebits` payment method locally to display a
-            // new button, but the actual payment method is `.link`, so
-            // here we change it for the intent confirmation process
-            let paymentMethodParams = STPPaymentMethodParams(type: .link)
-            let intentConfirmParams = IntentConfirmParams(
-                params: paymentMethodParams,
-                type: .stripe(.link)
-            )
-            if let confirmParams = instantDebitsFormElement.updateParams(params: intentConfirmParams) {
-                return .new(confirmParams: confirmParams)
-            } else {
-                return nil
-            }
         }
 
         let params = IntentConfirmParams(type: paymentMethodType)
@@ -197,7 +183,7 @@ extension PaymentMethodFormViewController {
             } else {
                 return true
             }
-        } else if paymentMethodType == .stripe(.instantDebits) {
+        } else if paymentMethodType == .instantDebits {
             // only override buy button (show "Continue") IF we don't have a linked bank
             return instantDebitsFormElement?.getLinkedBank() == nil
         }
@@ -209,7 +195,7 @@ extension PaymentMethodFormViewController {
         let isEnabled: Bool = {
             if paymentMethodType == .stripe(.USBankAccount) && usBankAccountFormElement?.canLinkAccount ?? false {
                 true
-            } else if paymentMethodType == .stripe(.instantDebits) && instantDebitsFormElement?.enableCTA ?? false {
+            } else if paymentMethodType == .instantDebits && instantDebitsFormElement?.enableCTA ?? false {
                 true
             } else {
                 false
@@ -235,7 +221,7 @@ extension PaymentMethodFormViewController {
         switch paymentMethodType {
         case .stripe(.USBankAccount):
             handleCollectBankAccount(from: viewController)
-        case .stripe(.instantDebits):
+        case .instantDebits:
             handleCollectInstantDebits(from: viewController)
         default:
             return

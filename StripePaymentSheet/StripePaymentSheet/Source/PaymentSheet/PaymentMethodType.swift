@@ -16,6 +16,8 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
+        case instantDebits
+
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
@@ -25,6 +27,8 @@ extension PaymentSheet {
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.label
+            case .instantDebits:
+                return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
             }
         }
 
@@ -36,6 +40,8 @@ extension PaymentSheet {
                 return paymentMethodType.identifier
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.type
+            case .instantDebits:
+                return "instant_debits"
             }
         }
 
@@ -97,6 +103,8 @@ extension PaymentSheet {
                     }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
+            case .instantDebits:
+                return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
             }
         }
 
@@ -106,6 +114,8 @@ extension PaymentSheet {
                 return stpPaymentMethodType.iconRequiresTinting
             case .external:
                 return false
+            case .instantDebits:
+                return true
             }
         }
 
@@ -115,21 +125,26 @@ extension PaymentSheet {
         ///   - configuration: A `PaymentSheet` configuration.
         static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
-            var recommendedStripePaymentMethodTypes = intent.recommendedPaymentMethodTypes
-
+            var additionalPaymentMethodTypes: [PaymentMethodType] = []
             if
-                recommendedStripePaymentMethodTypes.contains(.link),
-                !recommendedStripePaymentMethodTypes.contains(.USBankAccount),
+                intent.recommendedPaymentMethodTypes.contains(.link),
+                !intent.recommendedPaymentMethodTypes.contains(.USBankAccount),
                 !intent.isDeferredIntent,
                 intent.linkFundingSources?.contains(.bankAccount) == true
             {
-                // we must add this BEFORE we do filtering via
-                // `PaymentSheet.PaymentMethodType.supportsAdding`
-                // because we want to filter out instant debits
-                // IF the user has not linked Financial Connections
-                recommendedStripePaymentMethodTypes.append(.instantDebits)
+                let availabilityStatus = configurationSatisfiesRequirements(
+                    requirements: [.financialConnectionsSDK],
+                    configuration: configuration,
+                    intent: intent
+                )
+                if availabilityStatus == .supported {
+                    additionalPaymentMethodTypes.append(.instantDebits)
+                } else {
+                    print("[Stripe SDK] Warning: instant_debits requires the StripeFinancialConnections SDK.")
+                }
             }
 
+            var recommendedStripePaymentMethodTypes = intent.recommendedPaymentMethodTypes
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethodType,
@@ -161,6 +176,8 @@ extension PaymentSheet {
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + intent.elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
+                // Additional Payment Methods
+                + additionalPaymentMethodTypes
 
             if let merchantPaymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
                 // Order the payment methods according to the merchant's `paymentMethodOrder` configuration:

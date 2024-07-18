@@ -70,7 +70,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         // try to get the email from the EmailElement
         let paymentMethodParams = formElement.updateParams(
             params: IntentConfirmParams(
-                type: .stripe(.instantDebits)
+                type: .instantDebits
             )
         )?.paymentMethodParams
         if let email = paymentMethodParams?.nonnil_billingDetails.email {
