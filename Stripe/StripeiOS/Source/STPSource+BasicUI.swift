@@ -39,8 +39,6 @@ extension STPSource: STPPaymentOption {
             } else {
                 return STPCard.string(from: .unknown)
             }
-        case .giropay:
-            return STPPaymentMethodType.giropay.displayName
         case .iDEAL:
             return STPPaymentMethodType.iDEAL.displayName
         case .SEPADebit:

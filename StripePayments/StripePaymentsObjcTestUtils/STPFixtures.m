@@ -26,7 +26,6 @@ NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
 NSString *const STPTestJSONSourceBancontact = @"BancontactSource";
 NSString *const STPTestJSONSourceCard = @"CardSource";
 NSString *const STPTestJSONSourceEPS = @"EPSSource";
-NSString *const STPTestJSONSourceGiropay = @"GiropaySource";
 NSString *const STPTestJSONSourceiDEAL = @"iDEALSource";
 NSString *const STPTestJSONSourceMultibanco = @"MultibancoSource";
 NSString *const STPTestJSONSourceP24 = @"P24Source";

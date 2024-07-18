@@ -29,8 +29,6 @@ import Foundation
     @objc(STPPaymentMethodTypeAUBECSDebit) case AUBECSDebit
     /// A Bacs Debit payment method.
     case bacsDebit
-    /// A giropay payment method.
-    case giropay
     /// A Przelewy24 Debit payment method.
     case przelewy24
     /// An EPS payment method.
@@ -111,8 +109,6 @@ import Foundation
             return STPLocalizedString("AU Direct Debit", "Payment Method type brand name.")
         case .grabPay:
             return STPLocalizedString("GrabPay", "Payment Method type brand name.")
-        case .giropay:
-            return STPLocalizedString("giropay", "Payment Method type brand name.")
         case .EPS:
             return STPLocalizedString("EPS", "Payment Method type brand name.")
         case .przelewy24:

@@ -823,32 +823,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentSheet_LPM_giropay_only() {
-        stubSessions(
-            fileMock: .elementsSessionsPaymentMethod_200,
-            responseCallback: { data in
-                return self.updatePaymentMethodDetail(
-                    data: data,
-                    variables: [
-                        "<paymentMethods>": "\"giropay\"",
-                        "<currency>": "\"eur\"",
-                    ]
-                )
-            }
-        )
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
-        stubCustomers()
-
-        preparePaymentSheet(
-            currency: "eur",
-            override_payment_methods_types: ["giropay"],
-            automaticPaymentMethods: false,
-            useLink: false
-        )
-        presentPaymentSheet(darkMode: false)
-        verify(paymentSheet.bottomSheetViewController.view!)
-    }
-
     func testPaymentSheet_LPM_p24_only() {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,

@@ -135,9 +135,6 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
             case .oxxo:
                 // TODO: OXXO is currently broken
                 break
-            case .giropay:
-                // TODO: Giropay is deprecated
-                break
             }
         }
     }

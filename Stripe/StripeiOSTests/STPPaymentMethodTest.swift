@@ -81,7 +81,6 @@ class STPPaymentMethodTest: XCTestCase {
             .OXXO,
             .alipay,
             .payPal,
-            .giropay,
             .multibanco,
             .unknown,
         ]
@@ -103,8 +102,6 @@ class STPPaymentMethodTest: XCTestCase {
                 XCTAssertEqual(string, "bacs_debit")
             case .AUBECSDebit:
                 XCTAssertEqual(string, "au_becs_debit")
-            case .giropay:
-                XCTAssertEqual(string, "giropay")
             case .przelewy24:
                 XCTAssertEqual(string, "p24")
             case .bancontact:

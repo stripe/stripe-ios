@@ -21,9 +21,6 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(STPSource.type(from: "card"), STPSourceType.card)
         XCTAssertEqual(STPSource.type(from: "CARD"), STPSourceType.card)
 
-        XCTAssertEqual(STPSource.type(from: "giropay"), STPSourceType.giropay)
-        XCTAssertEqual(STPSource.type(from: "GIROPAY"), STPSourceType.giropay)
-
         XCTAssertEqual(STPSource.type(from: "ideal"), STPSourceType.iDEAL)
         XCTAssertEqual(STPSource.type(from: "IDEAL"), STPSourceType.iDEAL)
 
@@ -59,7 +56,6 @@ class STPSourceTest: XCTestCase {
         let values = [
             STPSourceType.bancontact,
             STPSourceType.card,
-            STPSourceType.giropay,
             STPSourceType.iDEAL,
             STPSourceType.SEPADebit,
             STPSourceType.sofort,
@@ -79,8 +75,6 @@ class STPSourceTest: XCTestCase {
                 XCTAssertEqual(string, "bancontact")
             case STPSourceType.card:
                 XCTAssertEqual(string, "card")
-            case STPSourceType.giropay:
-                XCTAssertEqual(string, "giropay")
             case STPSourceType.iDEAL:
                 XCTAssertEqual(string, "ideal")
             case STPSourceType.SEPADebit:
@@ -419,7 +413,6 @@ class STPSourceTest: XCTestCase {
             STPTestUtils.jsonNamed(STPTestJSONSourceAlipay),
             STPTestUtils.jsonNamed(STPTestJSONSourceBancontact),
             STPTestUtils.jsonNamed(STPTestJSONSourceEPS),
-            STPTestUtils.jsonNamed(STPTestJSONSourceGiropay),
             STPTestUtils.jsonNamed(STPTestJSONSourceiDEAL),
             STPTestUtils.jsonNamed(STPTestJSONSourceMultibanco),
             STPTestUtils.jsonNamed(STPTestJSONSourceP24),
@@ -463,8 +456,6 @@ class STPSourceTest: XCTestCase {
                 XCTAssertEqual(source?.label, "Bancontact")
             case STPSourceType.card:
                 XCTAssertEqual(source?.label, "Visa 5556")
-            case STPSourceType.giropay:
-                XCTAssertEqual(source?.label, "giropay")
             case STPSourceType.iDEAL:
                 XCTAssertEqual(source?.label, "iDEAL")
             case STPSourceType.SEPADebit:

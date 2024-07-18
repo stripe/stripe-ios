@@ -36,7 +36,7 @@ extension STPPaymentMethodParams: STPPaymentOption {
         switch type {
         case .card, .link, .USBankAccount, .instantDebits:
             return true
-        case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
+        case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
             .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .affirm, .cashApp, .paynow,
             .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco,
