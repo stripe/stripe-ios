@@ -11,7 +11,7 @@ import UIKit
 
 final class SpinnerView: UIView {
 
-    private let imageView = UIImageView(image: Image.spinner.makeImage(template: true))
+    private let imageView = UIImageView(image: Image.spinner.makeImage())
     private let animationKey = "animation_key"
 
     init(shouldStartAnimating: Bool = true) {
