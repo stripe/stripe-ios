@@ -664,9 +664,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             let iDEAL = STPPaymentMethodiDEALParams()
             self.iDEAL = iDEAL
             self.iDEAL?.bankName = paymentMethod.iDEAL?.bankName
-        case .giropay:
-            let giropay = STPPaymentMethodGiropayParams()
-            self.giropay = giropay
         case .przelewy24:
             let przelewy24 = STPPaymentMethodPrzelewy24Params()
             self.przelewy24 = przelewy24
@@ -1195,8 +1192,6 @@ extension STPPaymentMethodParams {
             auBECSDebit = STPPaymentMethodAUBECSDebitParams()
         case .bacsDebit:
             bacsDebit = STPPaymentMethodBacsDebitParams()
-        case .giropay:
-            giropay = STPPaymentMethodGiropayParams()
         case .przelewy24:
             przelewy24 = STPPaymentMethodPrzelewy24Params()
         case .EPS:
@@ -1279,8 +1274,6 @@ extension STPPaymentMethodParams {
             return "Bacs Debit"
         case .AUBECSDebit:
             return "AU BECS Debit"
-        case .giropay:
-            return "giropay"
         case .przelewy24:
             return "Przelewy24"
         case .EPS:
