@@ -155,45 +155,6 @@ extension STPSourceParams {
         return params
     }
 
-    /// Creates params for a Giropay source.
-    /// - seealso: https://stripe.com/docs/sources/giropay#create-source
-    /// - Parameters:
-    ///   - amount:               The amount to charge the customer in EUR.
-    ///   - name:                 The full name of the account holder.
-    ///   - returnURL:            The URL the customer should be redirected to after
-    /// they have successfully verified the payment.
-    ///   - statementDescriptor:  (Optional) A custom statement descriptor for
-    /// the payment.
-    /// @note The currency for Giropay must be "eur". This will be set automatically
-    /// for you.
-    /// - Returns: an STPSourceParams object populated with the provided values.
-    @objc
-    public class func giropayParams(
-        withAmount amount: Int,
-        name: String,
-        returnURL: String,
-        statementDescriptor: String?
-    ) -> STPSourceParams {
-        let params = self.init()
-        params.type = .giropay
-        params.amount = NSNumber(value: amount)
-        params.currency = "eur"  // Giropay must always use eur
-        params.owner = [
-            "name": name
-        ]
-        params.redirect = [
-            "return_url": returnURL
-        ]
-        if let statementDescriptor = statementDescriptor {
-            params.additionalAPIParameters = [
-                "giropay": [
-                    "statement_descriptor": statementDescriptor
-                ],
-            ]
-        }
-        return params
-    }
-
     /// Creates params for an iDEAL source.
     /// - seealso: https://stripe.com/docs/sources/ideal#create-source
     /// - Parameters:

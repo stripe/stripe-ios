@@ -204,8 +204,6 @@ import Foundation
             return "au_becs_debit"
         case .bacsDebit:
             return "bacs_debit"
-        case .giropay:
-            return "giropay"
         case .przelewy24:
             return "p24"
         case .EPS:

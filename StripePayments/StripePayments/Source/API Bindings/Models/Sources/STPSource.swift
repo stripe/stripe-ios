@@ -82,7 +82,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return [
             "bancontact": NSNumber(value: STPSourceType.bancontact.rawValue),
             "card": NSNumber(value: STPSourceType.card.rawValue),
-            "giropay": NSNumber(value: STPSourceType.giropay.rawValue),
             "ideal": NSNumber(value: STPSourceType.iDEAL.rawValue),
             "sepa_debit": NSNumber(value: STPSourceType.SEPADebit.rawValue),
             "sofort": NSNumber(value: STPSourceType.sofort.rawValue),
