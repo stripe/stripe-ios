@@ -68,7 +68,7 @@ extension PaymentSheet {
         } else if case let .saved(paymentMethod, _) = paymentOption,
                   paymentMethod.type == .card,
                   intent.cvcRecollectionEnabled,
-                  (isFlowController || configuration.paymentMethodLayout == .vertical) {
+                  isFlowController || configuration.paymentMethodLayout == .vertical {
             // MARK: - CVC Recollection
             let presentingViewController = authenticationContext.authenticationPresentingViewController()
 
