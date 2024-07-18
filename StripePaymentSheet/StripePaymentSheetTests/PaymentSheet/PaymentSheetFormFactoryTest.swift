@@ -1698,6 +1698,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: .stripe(.card)
         )
         let cardForm_setup = makeCardForm(isSettingUp: true, previousCustomerInput: previousCustomerInput)
+        sendEventToSubviews(.viewDidAppear, from: cardForm_setup.view) // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
         // ...should have the checkbox hidden
         let cardForm_setup_params = cardForm_setup.updateParams(params: .init(type: .stripe(.card)))
         XCTAssertEqual(cardForm_setup_params?.saveForFutureUseCheckboxState, .hidden)
