@@ -125,25 +125,6 @@ extension PaymentSheet {
         ///   - configuration: A `PaymentSheet` configuration.
         static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
-            var additionalPaymentMethodTypes: [PaymentMethodType] = []
-            if
-                intent.recommendedPaymentMethodTypes.contains(.link),
-                !intent.recommendedPaymentMethodTypes.contains(.USBankAccount),
-                !intent.isDeferredIntent,
-                intent.linkFundingSources?.contains(.bankAccount) == true
-            {
-                let availabilityStatus = configurationSatisfiesRequirements(
-                    requirements: [.financialConnectionsSDK],
-                    configuration: configuration,
-                    intent: intent
-                )
-                if availabilityStatus == .supported {
-                    additionalPaymentMethodTypes.append(.instantDebits)
-                } else {
-                    print("[Stripe SDK] Warning: instant_debits requires the StripeFinancialConnections SDK.")
-                }
-            }
-
             var recommendedStripePaymentMethodTypes = intent.recommendedPaymentMethodTypes
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
@@ -176,8 +157,24 @@ extension PaymentSheet {
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + intent.elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
-                // Additional Payment Methods
-                + additionalPaymentMethodTypes
+
+            if
+                intent.recommendedPaymentMethodTypes.contains(.link),
+                !intent.recommendedPaymentMethodTypes.contains(.USBankAccount),
+                !intent.isDeferredIntent,
+                intent.linkFundingSources?.contains(.bankAccount) == true
+            {
+                let availabilityStatus = configurationSatisfiesRequirements(
+                    requirements: [.financialConnectionsSDK],
+                    configuration: configuration,
+                    intent: intent
+                )
+                if availabilityStatus == .supported {
+                    recommendedPaymentMethodTypes.append(.instantDebits)
+                } else {
+                    print("[Stripe SDK] Warning: instant_debits requires the StripeFinancialConnections SDK.")
+                }
+            }
 
             if let merchantPaymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
                 // Order the payment methods according to the merchant's `paymentMethodOrder` configuration:
