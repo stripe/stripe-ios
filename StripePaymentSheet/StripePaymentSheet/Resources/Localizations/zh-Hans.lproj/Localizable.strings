@@ -24,7 +24,7 @@
 
 "Bank account" = "银行账户";
 
-"Buy now or pay later with Klarna." = "用 Klarna 先买后付。";
+"Buy now or pay later with Klarna" = "用 Klarna 先买后付";
 
 "Buy using a UPI ID" = "用 UPI ID 购买";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "管理支付方式";
+
 "Manage payment methods" = "管理支付方式";
 
 "Manage your payment methods" = "管理您的支付方式";
 
 "Name on card" = "持卡人姓名";
+
+"New card" = "添加新卡";
 
 "New payment method" = "新支付方式";
 

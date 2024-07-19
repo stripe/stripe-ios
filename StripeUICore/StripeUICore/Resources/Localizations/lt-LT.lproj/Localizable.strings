@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB numeris";
 
+"Bank account •••• %@" = "Banko sąskaita •••• %@";
+
 "Billing address is same as shipping" = "Atsiskaitymo ir siuntimo adresai vienodi";
 
 "Cancel" = "Atšaukti";
@@ -94,9 +96,7 @@
 
 "Remove" = "Pašalinti";
 
-"Remove bank account" = "Pašalinti banko sąskaitą";
-
-"Remove bank account ending in %@" = "Pašalinti banko sąskaitą, kurios paskutiniai skaičiai %@";
+"Remove bank account?" = "Pašalinti banko sąskaitą?";
 
 "Remove card" = "Pašalinti kortelę";
 

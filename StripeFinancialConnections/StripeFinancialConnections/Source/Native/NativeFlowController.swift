@@ -151,13 +151,12 @@ extension NativeFlowController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
                     closeItem: self.navigationBarCloseBarButtonItem,
-                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    shouldLeftAlignStripeLogo: viewControllers.first == viewController
-                        && viewController is ConsentViewController,
+                    theme: self.dataManager.manifest.theme,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
@@ -199,12 +198,12 @@ extension NativeFlowController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
                     closeItem: self.navigationBarCloseBarButtonItem,
-                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    shouldLeftAlignStripeLogo: false,  // if we `push`, this is not the first VC
+                    theme: self.dataManager.manifest.theme,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
@@ -1350,7 +1349,7 @@ private func CreatePaneViewController(
     return viewController
 }
 
-private func ShouldHideStripeLogoInNavigationBar(
+private func ShouldHideLogoInNavigationBar(
     forViewController viewController: UIViewController,
     reducedBranding: Bool,
     merchantLogo: [String]?

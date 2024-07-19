@@ -10,7 +10,11 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class CVCRecollectionElement: Element {
+final class CVCRecollectionElement: ContainerElement {
+    var elements: [Element] {
+        return [textFieldElement]
+    }
+
     let collectsUserInput: Bool = true
 
     enum Mode {
@@ -26,17 +30,33 @@ final class CVCRecollectionElement: Element {
     var isViewInitialized: Bool = false
     lazy var cvcRecollectionView: CVCRecollectionView = {
         isViewInitialized = true
-        return CVCRecollectionView(defaultValues: defaultValues,
-                                   paymentMethod: paymentMethod,
-                                   mode: mode,
-                                   appearance: appearance,
-                                   elementDelegate: self)
-
+        return CVCRecollectionView(
+            defaultValues: defaultValues,
+            paymentMethod: paymentMethod,
+            mode: mode,
+            appearance: appearance,
+            textFieldView: textFieldElement.view
+        )
     }()
 
     let defaultValues: DefaultValues
     var paymentMethod: STPPaymentMethod
     let appearance: PaymentSheet.Appearance
+
+    lazy var textFieldElement: TextFieldElement = {
+        let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration, theme: appearance.asElementsTheme)
+        textFieldElement.view.layer.maskedCorners = mode == .detailedWithInput
+        ? [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        : [.layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner, .layerMinXMaxYCorner]
+        textFieldElement.delegate = self
+        return textFieldElement
+    }()
+
+    lazy var cvcElementConfiguration: TextFieldElement.CVCConfiguration = {
+        return TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) { [weak self] in
+            return self?.paymentMethod.card?.brand ?? .unknown
+        }
+    }()
 
     struct DefaultValues {
         internal init(cvc: String? = nil) {
@@ -59,36 +79,54 @@ final class CVCRecollectionElement: Element {
 
     func beginEditing() {
         DispatchQueue.main.async {
-            self.cvcRecollectionView.textFieldElement.beginEditing()
+            self.textFieldElement.beginEditing()
         }
     }
 
     var validationState: ElementValidationState {
-        return cvcRecollectionView.textFieldElement.validationState
+        return textFieldElement.validationState
     }
     func clearTextFields() {
-        self.cvcRecollectionView.textFieldElement.setText("")
+        textFieldElement.setText("")
+    }
+
+    func updateErrorLabel() {
+        if case let .invalid(error, shouldDisplay) = textFieldElement.validationState, shouldDisplay {
+            cvcRecollectionView.errorLabel.text = error.localizedDescription
+            cvcRecollectionView.errorLabel.isHidden = false
+            cvcRecollectionView.errorLabel.textColor = appearance.asElementsTheme.colors.danger
+        } else {
+            cvcRecollectionView.errorLabel.text = nil
+            cvcRecollectionView.errorLabel.isHidden = true
+        }
     }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
     func didUpdate(element: Element) {
         if isViewInitialized {
-            cvcRecollectionView.update()
+            updateErrorLabel()
         }
 
-        delegate?.didUpdate(element: cvcRecollectionView.textFieldElement)
+        delegate?.didUpdate(element: self)
     }
     func continueToNextField(element: Element) {
-        delegate?.continueToNextField(element: cvcRecollectionView.textFieldElement)
+        delegate?.continueToNextField(element: self)
     }
 }
 
 extension CVCRecollectionElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        if case .valid = cvcRecollectionView.textFieldElement.validationState {
+        if case .valid = textFieldElement.validationState {
             let cardOptions = STPConfirmCardOptions()
-            cardOptions.cvc = cvcRecollectionView.textFieldElement.text
+            let cvc = textFieldElement.text
+            cardOptions.cvc = cvc
+            #if DEBUG
+            // There's no way to test an invalid recollected cvc in the API, so we hardcode a way:
+            if cvc == "666" {
+                cardOptions.cvc = "test_invalid_cvc"
+            }
+            #endif
             params.confirmPaymentMethodOptions.cardOptions = cardOptions
             return params
         }

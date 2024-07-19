@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 extension RowButton {
-    final class RightAccessoryButton: UIView {
+    final class RightAccessoryButton: UIView, UIGestureRecognizerDelegate {
 
         enum AccessoryType: Equatable {
             case edit
@@ -39,7 +39,10 @@ extension RowButton {
         private var label: UILabel {
             let label = UILabel()
             label.text = accessoryType.text
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            if #available(iOS 15.0, *) {
+                label.minimumContentSizeCategory = .large
+            }
             label.textColor = appearance.colors.primary // TODO(porter) use secondary action color
             label.adjustsFontSizeToFitWidth = true
             label.adjustsFontForContentSizeCategory = true
@@ -80,6 +83,10 @@ extension RowButton {
             isAccessibilityElement = true
 
             addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+            let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(gesture:)))
+            longPressGesture.minimumPressDuration = 0.2
+            longPressGesture.delegate = self
+            addGestureRecognizer(longPressGesture)
         }
 
         required init?(coder: NSCoder) {
@@ -87,7 +94,26 @@ extension RowButton {
         }
 
         @objc func handleTap() {
+            alpha = 0.5
+            UIView.animate(withDuration: 0.2, delay: 0.1) { [self] in
+                alpha = 1.0
+            }
             didTap()
+        }
+
+        @objc private func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
+            switch gesture.state {
+            case .began:
+                alpha = 0.5
+            default:
+                alpha = 1.0
+            }
+        }
+
+        // MARK: - UIGestureRecognizerDelegate
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            // Without this, the long press prevents you from scrolling or the tap gesture from triggering.
+            true
         }
     }
 

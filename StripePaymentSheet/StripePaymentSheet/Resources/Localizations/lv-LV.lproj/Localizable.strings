@@ -24,7 +24,7 @@
 
 "Bank account" = "Bankas konts";
 
-"Buy now or pay later with Klarna." = "Pērciet tagad vai maksājiet vēlāk ar Klarna.";
+"Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
 "Buy using a UPI ID" = "Pirkt, izmantojot UPI ID";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Pārvaldīt maksājuma veidu";
+
 "Manage payment methods" = "Pārvaldīt maksājuma veidus";
 
 "Manage your payment methods" = "Pārvaldīt savus maksājuma veidus";
 
 "Name on card" = "Uz kartes norādītais vārds";
+
+"New card" = "Jauna karte";
 
 "New payment method" = "Jauns maksājumu veids";
 

@@ -171,6 +171,10 @@ extension UIColor {
         return UIColor(red: 26 / 255.0, green: 197 / 255.0, blue: 155 / 255.0, alpha: 1)  // #1ac59b
     }
 
+    static var linkGreen900: UIColor {
+        return UIColor(red: 1 / 255.0, green: 30 / 255.0, blue: 15 / 255.0, alpha: 1)  // #011E0F
+    }
+
     static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
         return UIColor(dynamicProvider: {
             switch $0.userInterfaceStyle {

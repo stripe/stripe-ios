@@ -14,6 +14,8 @@
 
 "BSB number" = "Număr BSB";
 
+"Bank account •••• %@" = "Cont bancar •••• %@";
+
 "Billing address is same as shipping" = "Adresa de facturare este la fel cu cea de expediere";
 
 "Cancel" = "Anulare";
@@ -94,9 +96,7 @@
 
 "Remove" = "Eliminare";
 
-"Remove bank account" = "Eliminați contul bancar";
-
-"Remove bank account ending in %@" = "Eliminați contul bancar care se termină în %@";
+"Remove bank account?" = "Eliminați contul bancar?";
 
 "Remove card" = "Eliminare card";
 

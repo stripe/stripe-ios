@@ -231,14 +231,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             return FormElement(autoSectioningElements: [])
         }
 
-        let formElement = PaymentSheetFormFactory(
-            intent: intent,
-            configuration: .paymentSheet(paymentSheetConfiguration),
-            paymentMethod: .stripe(.card),
-            previousCustomerInput: nil)
-        let cvcCollectionElement = formElement.makeCardCVCCollection(paymentMethod: paymentMethod,
-                                                                     mode: .inputOnly,
-                                                                     appearance: appearance)
+        let cvcCollectionElement = CVCRecollectionElement(paymentMethod: paymentMethod, mode: .inputOnly, appearance: appearance)
         cvcCollectionElement.delegate = self
         return cvcCollectionElement
     }
@@ -337,9 +330,10 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
 
-    func didFinishAnimatingHeight() {
-        // Wait 150ms after the view is presented to emphasize to users to enter their CVC
-        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(150))) {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Wait 200ms after the view is presented to emphasize to users to enter their CVC
+        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(200))) {
             if self.isViewLoaded {
                 self.toggleCVCElement()
             }
@@ -671,14 +665,14 @@ extension STPPaymentMethod {
             )
         case .SEPADebit:
             let last4 = sepaDebit?.last4 ?? ""
-            let formattedMessage = String.Localized.removeBankAccountEndingIn
+            let formattedMessage = String.Localized.bank_account_xxxx
             return (
                 title: String.Localized.removeBankAccount,
                 message: String(format: formattedMessage, last4)
             )
         case .USBankAccount:
             let last4 = usBankAccount?.last4 ?? ""
-            let formattedMessage = String.Localized.removeBankAccountEndingIn
+            let formattedMessage = String.Localized.bank_account_xxxx
             return (
                 title: String.Localized.removeBankAccount,
                 message: String(format: formattedMessage, last4)

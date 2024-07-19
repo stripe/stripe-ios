@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB-nummer";
 
+"Bank account •••• %@" = "Bankkonto •••• %@";
+
 "Billing address is same as shipping" = "Faktureringsadress är samma som leveransadress";
 
 "Cancel" = "Avbryt";
@@ -94,9 +96,7 @@
 
 "Remove" = "Ta bort";
 
-"Remove bank account" = "Ta bort bankkonto";
-
-"Remove bank account ending in %@" = "Ta bort bankkonto som slutar på %@";
+"Remove bank account?" = "Ta bort bankkonto?";
 
 "Remove card" = "Ta bort kort";
 

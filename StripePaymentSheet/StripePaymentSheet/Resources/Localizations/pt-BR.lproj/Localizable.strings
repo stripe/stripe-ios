@@ -24,7 +24,7 @@
 
 "Bank account" = "Conta bancária";
 
-"Buy now or pay later with Klarna." = "Compre agora ou pague depois com Klarna.";
+"Buy now or pay later with Klarna" = "Compre agora ou pague mais tarde com Klarna";
 
 "Buy using a UPI ID" = "Comprar usando um ID UPI";
 
@@ -82,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Gerenciar forma de pagamento";
+
 "Manage payment methods" = "Gerenciar formas de pagamento";
 
 "Manage your payment methods" = "Gerencie suas formas de pagamento";
 
 "Name on card" = "Nome no cartão";
+
+"New card" = "Novo cartão";
 
 "New payment method" = "Nova forma de pagamento";
 

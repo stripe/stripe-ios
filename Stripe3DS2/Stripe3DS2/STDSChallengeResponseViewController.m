@@ -474,8 +474,27 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
 }
 
 - (void)_keyboardDidShow:(NSNotification *)notification {
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.scrollView.contentInset.top, 0.0, keyboardSize.height, 0.0);
+    NSDictionary *userInfo = [notification userInfo];
+
+    // Get the keyboard’s frame at the end of its animation.
+    CGRect keyboardFrameEnd = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+
+    // Convert the keyboard's frame from the screen's coordinate space to your view's coordinate space.
+    keyboardFrameEnd = [self.view convertRect:keyboardFrameEnd fromView:nil];
+    
+    // Get the intersection between the keyboard's frame and the view's bounds to work with the
+    // part of the keyboard that overlaps your view.
+    CGRect viewIntersection = CGRectIntersection(self.view.bounds, keyboardFrameEnd);
+    CGFloat bottomOffset = 0;
+
+    // Check whether the keyboard intersects your view before adjusting your offset.
+    if (!CGRectIsEmpty(viewIntersection)) {
+        // Adjust the offset by the difference between the view's height and the height of the
+        // intersection rectangle.
+        bottomOffset = CGRectGetMaxY(self.view.bounds) - CGRectGetMinY(viewIntersection);
+    }
+
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.scrollView.contentInset.top, 0.0, bottomOffset, 0.0);
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }

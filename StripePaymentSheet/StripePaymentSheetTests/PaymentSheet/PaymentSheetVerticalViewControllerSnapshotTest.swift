@@ -5,8 +5,9 @@
 //  Created by Yuki Tokuhiro on 5/20/24.
 //
 
+@_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(EarlyAccessCVCRecollectionFeature) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import XCTest
 
@@ -178,7 +179,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         verify(sut)
     }
 
-    func testDisplaysMandateBelowList() {
+    func testDisplaysMandateBelowList_cashapp() {
         // When loaded with cash app + sfu = off_session...
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp], setupFutureUsage: .offSession),
@@ -190,6 +191,32 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(type: .stripe(.cashApp)))
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: previousPaymentOption)
         // ...should display list with cash app selected and mandate displayed
+        verify(sut)
+    }
+
+    func testDisplaysMandateBelowList_saved_sepa_debit() {
+        // When loaded with saved SEPA Debit PM...
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit]),
+            savedPaymentMethods: [._testSEPA()],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
+        // ...should display list with saved SEPA selected and mandate displayed
+        verify(sut)
+    }
+
+    func testDisplaysMandateBelowList_saved_us_bank_account() {
+        // When loaded with saved US Bank Account PM...
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .USBankAccount]),
+            savedPaymentMethods: [._testUSBankAccount()],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
+        // ...should display list with saved SEPA selected and mandate displayed
         verify(sut)
     }
 
@@ -237,5 +264,56 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let listVC = sut.paymentMethodListViewController!
         listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "New card"), selection: .new(paymentMethodType: .stripe(.card)))
         verify(sut)
+    }
+
+    func testCVCRecollection() {
+        let savedCard = STPPaymentMethod._testCard()
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: { _, _, _ in }) { return true }
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"], customerSessionData: nil)
+        let intent = Intent.deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            savedPaymentMethods: [savedCard],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, previousPaymentOption: nil)
+        _ = makeBottomSheetAndLayout(sut) // Laying out before calling `didTap` avoids breaking constraints due to zero size
+        sut.paymentSheetDelegate = self
+        sut.didTapPrimaryButton()
+        verify(sut)
+
+        // Snapshot when error is CVC related
+        let cvcError = NSError(domain: STPError.stripeDomain, code: STPErrorCode.cardError.rawValue, userInfo: [STPError.errorParameterKey: "cvc", NSLocalizedDescriptionKey: "Bad CVC (this is a mock string)"])
+        mockConfirmResult = .failed(error: cvcError)
+        sut.cvcRecollectionViewController?.cvcRecollectionElement.getTextFieldElement("CVC")?.setText("123")
+        sut.didTapPrimaryButton()
+        wait(seconds: PaymentSheetUI.minimumFlightTime + 1)
+        self.verify(sut, identifier: "cvc_error")
+
+        // Snapshot when error isn't CVC related
+        let nonCVCError = NSError(domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue, userInfo: [NSLocalizedDescriptionKey: "Some non-CVC-specific error message."])
+        mockConfirmResult = .failed(error: nonCVCError)
+        sut.didTapPrimaryButton()
+        wait(seconds: PaymentSheetUI.minimumFlightTime + 1)
+        self.verify(sut, identifier: "non_cvc_error")
+    }
+
+    var mockConfirmResult: StripePaymentSheet.PaymentSheetResult = .canceled
+}
+
+extension PaymentSheetVerticalViewControllerSnapshotTest: PaymentSheetViewControllerDelegate {
+    func paymentSheetViewControllerShouldConfirm(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+        completion(mockConfirmResult, nil)
+    }
+
+    func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol, result: StripePaymentSheet.PaymentSheetResult) {
+
+    }
+
+    func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol) {
+    }
+
+    func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol) {
     }
 }

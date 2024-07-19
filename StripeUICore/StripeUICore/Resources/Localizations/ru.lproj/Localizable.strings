@@ -14,6 +14,8 @@
 
 "BSB number" = "Номер BSB";
 
+"Bank account •••• %@" = "Банковский счет ••••%@";
+
 "Billing address is same as shipping" = "Адрес выставления счетов такой же, как адрес доставки";
 
 "Cancel" = "Отмена";
@@ -94,9 +96,7 @@
 
 "Remove" = "Удалить";
 
-"Remove bank account" = "Удалить банковский счет";
-
-"Remove bank account ending in %@" = "Удалить банковский счет, оканчивающийся на %@";
+"Remove bank account?" = "Удалить банковский счет?";
 
 "Remove card" = "Удалить карту";
 
