@@ -164,7 +164,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   deploy-example-apps:
@@ -314,7 +314,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   test-builds-xcode-15:
     steps:
     - xcode-build-for-test@2:
@@ -329,7 +329,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   test-builds-xcode-15-release:
     steps:
     - script@1:
@@ -341,7 +341,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   test-builds-vision:
     steps:
     - xcode-build-for-test@2:
@@ -354,7 +354,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.2.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   install-tests-non-carthage:
     steps:
     - fastlane@3:
@@ -396,7 +396,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   legacy-tests-15:
@@ -410,7 +410,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
     before_run:
     - prep_all
     after_run:
@@ -432,7 +432,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core    
+        machine_type_id: g2-m1-max.10core    
   lint-tests:
     steps:
     - script@1:
@@ -460,7 +460,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   notify_ci:
     steps:
     - script@1:
@@ -482,7 +482,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core  
+        machine_type_id: g2-m1-max.10core  
   pod-lint-tests:
     steps:
     - script@1:
@@ -554,7 +554,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.3.x
-        machine_type_id: g2-m1-max.5core       
+        machine_type_id: g2-m1-max.10core       
   ui-tests-1:
     steps:
     - xcode-test@4:
@@ -565,14 +565,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 10 -maximum-parallel-testing-workers 10
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   ui-tests-2:
     steps:
     - xcode-test@4:
@@ -583,14 +583,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 10 -maximum-parallel-testing-workers 10
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
@@ -603,4 +603,4 @@ workflows:
 meta:
   bitrise.io:
     stack: osx-xcode-15.0.x
-    machine_type_id: g2-m1-max.5core
+    machine_type_id: g2-m1-max.10core
