@@ -220,12 +220,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let setupButton = app.buttons["Set up"]
 
         // Select Cash App
-        guard let cashApp = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Cash App Pay")
-        else {
-            XCTFail()
-            return
-        }
-        cashApp.tap()
+        tapPaymentMethod("Cash App Pay")
 
         // Attempt set up
         setupButton.tap()
@@ -262,17 +257,10 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let payButton = app.buttons["Pay $50.99"]
 
         // Select Cash App
-        guard let cashApp = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Cash App Pay")
-        else {
-            XCTFail()
-            return
-        }
-        cashApp.tap()
+        tapPaymentMethod("Cash App Pay")
 
         // Attempt to pay
         payButton.tap()
-
-        // Close the webview, no need to see the successful set up
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
