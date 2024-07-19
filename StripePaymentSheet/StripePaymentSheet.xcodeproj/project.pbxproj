@@ -2145,7 +2145,7 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		02DA558074C345CAEE67EEF7 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/eurias-stripe/OHHTTPStubs";
+			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
 			requirement = {
 				branch = master;
 				kind = branch;

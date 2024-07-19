@@ -1382,7 +1382,7 @@ public class STPPaymentHandler: NSObject {
 
     // Follow the first redirect for a url, but not any subsequent redirects
     @_spi(STP) public func followRedirect(to url: URL) -> URL {
-        let urlSession = URLSession(configuration: .default, delegate: UnredirectableSessionDelegate(), delegateQueue: nil)
+        let urlSession = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration, delegate: UnredirectableSessionDelegate(), delegateQueue: nil)
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
 

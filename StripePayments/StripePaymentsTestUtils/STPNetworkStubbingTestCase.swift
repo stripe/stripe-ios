@@ -12,12 +12,24 @@ import XCTest
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
 /// ⚠️ Warning: `STPAPIClient`s created before `setUp` is called are not recorded!
+/// To write manual requests, try APIStubbedTestCase instead.
 @objc(STPNetworkStubbingTestCase) open class STPNetworkStubbingTestCase: XCTestCase {
     /// Set this to YES to record all traffic during this test. The test will then fail, to remind you to set this back to NO before pushing.
     open var recordingMode = false
+    
+    /// If `true` (the default), URL parameters will be recorded in requests.
+    /// Disable this if your test case sends paramters that may change (e.g. the time), as otherwise the requests may not match during playback.
+    open var strictParamsEnforcement = true
+
+    /// If `true` (the default), the recorder will always follow redirects.
+    /// Otherwise, the recorder will record the body of the HTTP redirect request.
+    /// Disable this when testing the STPPaymentHandler "UnredirectableSessionDelegate" behavior.
+    open var followRedirects = true
 
     open override func setUp() {
         super.setUp()
+
+        recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
 
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
         STPTestingAPIClient.shared.sessionConfig =
@@ -53,10 +65,20 @@ import XCTest
 
             // Creates filenames like `post_v1_tokens_0.tail`.
             var count = 0
+            if strictParamsEnforcement {
+                // Just record the full URL, don't try to strip out params
+                recorder?.urlRegexPatternBlock = { request, defaultPattern in
+                    // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
+                    return NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
+                }
+            } else {
+                recorder?.urlRegexPatternBlock = nil
+            }
+            recorder?.followRedirects = followRedirects
             recorder?.fileNamingBlock = { request, _, _ in
                 let method = request!.httpMethod?.lowercased()
                 let urlPath = request!.url?.path.replacingOccurrences(of: "/", with: "_")
-                var fileName = "\(method ?? "")\(urlPath ?? "")_\(count)"
+                var fileName = "\(String(format: "%04d", count))_\(method ?? "")\(urlPath ?? "")"
                 fileName =
                     URL(fileURLWithPath: fileName).appendingPathExtension("tail").lastPathComponent
                 count += 1
@@ -120,7 +142,8 @@ import XCTest
                 HTTPStubs.stubRequestsUsingMocktails(
                     atPath: relativePath,
                     in: bundle,
-                    error: &stubError
+                    error: &stubError,
+                    removeAfterUse: true
                 )
                 if let stubError = stubError {
                     XCTFail("Error stubbing requests: \(stubError)")
