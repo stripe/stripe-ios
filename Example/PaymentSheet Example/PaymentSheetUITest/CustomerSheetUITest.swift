@@ -853,7 +853,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: timeout))
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: timeout))
         cardBrandChoiceDropdown.selectNextOption()
-        app.toolbars.buttons["Done"].tap()
+        app.toolbars.buttons["Done"].waitForExistenceAndTap()
 
         // We should have selected cartes bancaires
         XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: timeout))
