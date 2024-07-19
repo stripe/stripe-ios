@@ -1,0 +1,18 @@
+POST
+/create_payment_intent$
+200
+text/html
+Content-Type: text/html;charset=utf-8
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Set-Cookie: rack.session=5PoTIxJ3uZqPIkB%2Fi3zXV9oKXl6Ywrrra3t8zDiuy%2FqHDA9YRjQu4qY2nJkOu7JJBZJIwBFtKQxI8jpj93EdCzT40YZJYGOhOh%2BhxdPNuELTSzabeN15jvAEWhxOFTEG1En2vCEupDoj21OOP16WvvtlHv34zdqpwgmNXZCzxnX2luK2u1HH7JPL2EUPJkoxGLm2M%2BafzUsYQMJcHGBzFf%2FND0lwexm97sPWM5Vs81A%3D; path=/
+Server: Google Frontend
+x-cloud-trace-context: 1efaabb8df924fbc4488898ef90a818e
+Via: 1.1 google
+x-xss-protection: 1; mode=block
+Date: Thu, 18 Jul 2024 03:09:08 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 147
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+
+{"intent":"pi_3PdkiOFY0qyl6XeW0NjrDCEF","secret":"pi_3PdkiOFY0qyl6XeW0NjrDCEF_secret_KsDW7By56GsNx1AdMukQU5ury","status":"requires_payment_method"}
