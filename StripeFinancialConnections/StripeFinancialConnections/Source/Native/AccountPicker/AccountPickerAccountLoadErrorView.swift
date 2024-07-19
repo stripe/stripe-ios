@@ -14,7 +14,7 @@ final class AccountPickerAccountLoadErrorView: UIView {
 
     init(
         institution: FinancialConnectionsInstitution,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectAnotherBank: @escaping () -> Void,
         didSelectTryAgain: (() -> Void)?,  // if nil, don't show button
         didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
@@ -99,7 +99,7 @@ import SwiftUI
 private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
-    let theme: FinancialConnectionsTheme?
+    let theme: FinancialConnectionsTheme
     let didSelectTryAgain: (() -> Void)?
     let didSelectEnterBankDetailsManually: (() -> Void)?
 

@@ -11,14 +11,14 @@ import UIKit
 final class AccountUpdateRequiredViewController: SheetViewController {
 
     private let institution: FinancialConnectionsInstitution?
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectContinue: () -> Void
     private let didSelectCancel: () -> Void
     private let willDismissSheet: () -> Void
 
     init(
         institution: FinancialConnectionsInstitution?,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: @escaping () -> Void,
         willDismissSheet: @escaping () -> Void

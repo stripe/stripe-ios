@@ -12,12 +12,12 @@ import UIKit
 final class DataAccessNoticeViewController: SheetViewController {
 
     private let dataAccessNotice: FinancialConnectionsDataAccessNotice
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectUrl: (URL) -> Void
 
     init(
         dataAccessNotice: FinancialConnectionsDataAccessNotice,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.dataAccessNotice = dataAccessNotice

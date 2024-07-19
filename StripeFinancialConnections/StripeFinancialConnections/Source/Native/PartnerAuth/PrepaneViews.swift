@@ -34,7 +34,7 @@ final class PrepaneViews {
         prepaneModel: FinancialConnectionsOAuthPrepane,
         isRepairSession: Bool,
         panePresentationStyle: PanePresentationStyle,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectURL: @escaping (URL) -> Void,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: @escaping () -> Void

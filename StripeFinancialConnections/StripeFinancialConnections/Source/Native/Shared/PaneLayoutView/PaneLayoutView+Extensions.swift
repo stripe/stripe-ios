@@ -145,7 +145,7 @@ extension PaneLayoutView {
         primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
         secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration? = nil,
         topText: String? = nil,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectURL: ((URL) -> Void)? = nil
     ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?, secondaryButton: StripeUICore.Button?) {
         guard

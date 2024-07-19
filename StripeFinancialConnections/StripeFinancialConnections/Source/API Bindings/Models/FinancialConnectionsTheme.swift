@@ -7,19 +7,26 @@
 
 import UIKit
 
-enum FinancialConnectionsTheme: String, SafeEnumCodable, Equatable {
-    case light = "light"
-    case dashboardLight = "dashboard_light"
-    case linkLight = "link_light"
-    case unparsable
+enum FinancialConnectionsTheme: String, Equatable {
+    case light
+    case linkLight
+
+    init(from theme: FinancialConnectionsSessionManifest.Theme?) {
+        switch theme {
+        case .linkLight:
+            self = .linkLight
+        case .light, .dashboardLight, .unparsable, .none:
+            self = .light
+        }
+    }
 }
 
-extension FinancialConnectionsTheme? {
+extension FinancialConnectionsTheme {
     var logo: Image {
         switch self {
         case .linkLight:
             return .link_logo
-        case .light, .dashboardLight, .unparsable, .none:
+        case .light:
             return .stripe_logo
         }
     }
@@ -28,7 +35,7 @@ extension FinancialConnectionsTheme? {
         switch self {
         case .linkLight:
             return .linkGreen200
-        case .light, .dashboardLight, .unparsable, .none:
+        case .light:
             return .brand500
         }
     }
@@ -37,7 +44,7 @@ extension FinancialConnectionsTheme? {
         switch self {
         case .linkLight:
             return .linkGreen900
-        case .light, .dashboardLight, .unparsable, .none:
+        case .light:
             return .white
         }
     }
@@ -46,7 +53,7 @@ extension FinancialConnectionsTheme? {
         switch self {
         case .linkLight:
             return .linkGreen900
-        case .light, .dashboardLight, .unparsable, .none:
+        case .light:
             return .textActionPrimary
         }
     }

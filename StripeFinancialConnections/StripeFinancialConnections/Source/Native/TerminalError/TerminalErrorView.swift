@@ -11,7 +11,7 @@ import UIKit
 
 func TerminalErrorView(
     allowManualEntry: Bool,
-    theme: FinancialConnectionsTheme?,
+    theme: FinancialConnectionsTheme,
     didSelectManualEntry: @escaping () -> Void,
     didSelectClose: @escaping () -> Void
 ) -> UIView {

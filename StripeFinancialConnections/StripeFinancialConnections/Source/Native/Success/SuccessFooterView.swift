@@ -12,7 +12,7 @@ import UIKit
 
 final class SuccessFooterView: UIView {
 
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectDone: (SuccessFooterView) -> Void
 
     private lazy var doneButton: Button = {
@@ -28,7 +28,7 @@ final class SuccessFooterView: UIView {
     }()
 
     init(
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectDone: @escaping (SuccessFooterView) -> Void
     ) {
         self.theme = theme

@@ -19,7 +19,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         institutionSkipAccountSelection: Bool,
         numberOfIneligibleAccounts: Int,
         paymentMethodType: FinancialConnectionsPaymentMethodType,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectAnotherBank: @escaping () -> Void
     ) {
         super.init(frame: .zero)

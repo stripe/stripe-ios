@@ -13,7 +13,7 @@ import UIKit
 class ConsentFooterView: HitTestView {
 
     private let agreeButtonText: String
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectAgree: () -> Void
 
     private lazy var agreeButton: StripeUICore.Button = {
@@ -32,7 +32,7 @@ class ConsentFooterView: HitTestView {
         aboveCtaText: String,
         ctaText: String,
         belowCtaText: String?,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectAgree: @escaping () -> Void,
         didSelectURL: @escaping (URL) -> Void
     ) {

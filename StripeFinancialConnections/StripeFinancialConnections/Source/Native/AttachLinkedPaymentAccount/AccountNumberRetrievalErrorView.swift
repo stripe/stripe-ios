@@ -15,7 +15,7 @@ final class AccountNumberRetrievalErrorView: UIView {
 
     init(
         institution: FinancialConnectionsInstitution,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectAnotherBank: @escaping () -> Void,
         didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
     ) {
@@ -80,7 +80,7 @@ import SwiftUI
 private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
-    let theme: FinancialConnectionsTheme?
+    let theme: FinancialConnectionsTheme
     let didSelectEnterBankDetailsManually: (() -> Void)?
 
     func makeUIView(context: Context) -> AccountNumberRetrievalErrorView {

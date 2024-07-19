@@ -11,7 +11,7 @@ import UIKit
 
 final class ManualEntryFooterView: UIView {
 
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectContinue: () -> Void
 
     private(set) lazy var continueButton: Button = {
@@ -26,7 +26,7 @@ final class ManualEntryFooterView: UIView {
         return continueButton
     }()
 
-    init(theme: FinancialConnectionsTheme?, didSelectContinue: @escaping () -> Void) {
+    init(theme: FinancialConnectionsTheme, didSelectContinue: @escaping () -> Void) {
         self.theme = theme
         self.didSelectContinue = didSelectContinue
         super.init(frame: .zero)

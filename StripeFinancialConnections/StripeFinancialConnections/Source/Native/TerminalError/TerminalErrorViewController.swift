@@ -19,10 +19,10 @@ final class TerminalErrorViewController: UIViewController {
 
     private let error: Error
     private let allowManualEntry: Bool
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     weak var delegate: TerminalErrorViewControllerDelegate?
 
-    init(error: Error, allowManualEntry: Bool, theme: FinancialConnectionsTheme?) {
+    init(error: Error, allowManualEntry: Bool, theme: FinancialConnectionsTheme) {
         self.error = error
         self.allowManualEntry = allowManualEntry
         self.theme = theme

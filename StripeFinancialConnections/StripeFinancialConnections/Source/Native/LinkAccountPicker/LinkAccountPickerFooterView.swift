@@ -13,7 +13,7 @@ final class LinkAccountPickerFooterView: UIView {
 
     private let defaultCta: String
     private let singleAccount: Bool
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectConnectAccount: () -> Void
 
     private lazy var connectAccountButton: Button = {
@@ -35,7 +35,7 @@ final class LinkAccountPickerFooterView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectConnectAccount: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {

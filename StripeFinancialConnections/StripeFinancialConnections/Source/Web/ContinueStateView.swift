@@ -18,7 +18,7 @@ final class ContinueStateViews {
 
     init(
         institutionImageUrl: String?,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: (() -> Void)? = nil
     ) {

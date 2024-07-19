@@ -15,7 +15,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     private let aboveCtaText: String
     private let saveToLinkButtonText: String
     private let notNowButtonText: String
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectSaveToLink: () -> Void
     private let didSelectNotNow: () -> Void
     private let didSelectURL: (URL) -> Void
@@ -86,7 +86,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
         aboveCtaText: String,
         saveToLinkButtonText: String,
         notNowButtonText: String,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectSaveToLink: @escaping () -> Void,
         didSelectNotNow: @escaping () -> Void,
         didSelectURL: @escaping (URL) -> Void

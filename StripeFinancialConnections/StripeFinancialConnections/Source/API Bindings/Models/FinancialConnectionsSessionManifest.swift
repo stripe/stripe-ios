@@ -63,6 +63,13 @@ struct FinancialConnectionsSessionManifest: Decodable {
         }
     }
 
+    enum Theme: String, SafeEnumCodable, Equatable {
+        case light = "light"
+        case dashboardLight = "dashboard_light"
+        case linkLight = "link_light"
+        case unparsable
+    }
+
     // MARK: - Properties
 
     let accountholderCustomerEmailAddress: String?
@@ -101,7 +108,11 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let skipSuccessPane: Bool?
     let stepUpAuthenticationRequired: Bool?
     let successUrl: String?
-    let theme: FinancialConnectionsTheme?
+
+    private let _theme: Theme?
+    var theme: FinancialConnectionsTheme {
+        FinancialConnectionsTheme(from: _theme)
+    }
 
     var shouldAttachLinkedPaymentMethod: Bool {
         return (paymentMethodType != nil)
@@ -113,5 +124,47 @@ struct FinancialConnectionsSessionManifest: Decodable {
 
     var isTestMode: Bool {
         !livemode
+    }
+
+    // MARK: - Coding Keys
+
+    enum CodingKeys: String, CodingKey {
+        case accountholderCustomerEmailAddress
+        case accountholderIsLinkConsumer
+        case accountholderPhoneNumber
+        case accountholderToken
+        case accountDisconnectionMethod
+        case activeAuthSession
+        case activeInstitution
+        case allowManualEntry
+        case assignmentEventId
+        case businessName
+        case cancelUrl
+        case consentRequired
+        case customManualEntryHandling
+        case disableLinkMoreAccounts
+        case displayText
+        case experimentAssignments
+        case features
+        case hostedAuthUrl
+        case initialInstitution
+        case instantVerificationDisabled
+        case institutionSearchDisabled
+        case isEndUserFacing
+        case isLinkWithStripe
+        case isNetworkingUserFlow
+        case isStripeDirect
+        case livemode
+        case manualEntryMode
+        case manualEntryUsesMicrodeposits
+        case nextPane
+        case paymentMethodType
+        case permissions
+        case product
+        case singleAccount
+        case skipSuccessPane
+        case stepUpAuthenticationRequired
+        case successUrl
+        case _theme = "theme"
     }
 }

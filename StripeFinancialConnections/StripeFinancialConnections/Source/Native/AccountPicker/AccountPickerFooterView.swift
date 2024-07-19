@@ -12,7 +12,7 @@ import UIKit
 final class AccountPickerFooterView: UIView {
 
     private let singleAccount: Bool
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectLinkAccounts: () -> Void
 
     private lazy var linkAccountsButton: Button = {
@@ -31,7 +31,7 @@ final class AccountPickerFooterView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectLinkAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {

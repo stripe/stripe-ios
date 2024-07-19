@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension StripeUICore.Button {
-    static func primary(theme: FinancialConnectionsTheme?) -> StripeUICore.Button {
+    static func primary(theme: FinancialConnectionsTheme) -> StripeUICore.Button {
         let button = Button(configuration: .financialConnectionsPrimary(theme: theme))
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
@@ -32,7 +32,7 @@ extension StripeUICore.Button {
 
 extension StripeUICore.Button.Configuration {
 
-    fileprivate static func financialConnectionsPrimary(theme: FinancialConnectionsTheme?) -> StripeUICore.Button.Configuration {
+    fileprivate static func financialConnectionsPrimary(theme: FinancialConnectionsTheme) -> StripeUICore.Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         primaryButtonConfiguration.cornerRadius = 12.0

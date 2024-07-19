@@ -12,12 +12,12 @@ import UIKit
 final class LegalDetailsNoticeViewController: SheetViewController {
 
     private let legalDetailsNotice: FinancialConnectionsLegalDetailsNotice
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme
     private let didSelectUrl: (URL) -> Void
 
     init(
         legalDetailsNotice: FinancialConnectionsLegalDetailsNotice,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.legalDetailsNotice = legalDetailsNotice

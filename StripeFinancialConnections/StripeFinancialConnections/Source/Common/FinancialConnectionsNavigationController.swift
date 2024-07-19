@@ -148,7 +148,7 @@ extension FinancialConnectionsNavigationController {
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
         shouldHideLogo: Bool,
-        theme: FinancialConnectionsTheme?,
+        theme: FinancialConnectionsTheme,
         isTestMode: Bool
     ) {
         let iconHeight: CGFloat = 20
