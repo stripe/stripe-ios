@@ -1,6 +1,6 @@
 POST
-/v1/tokens$
-200
+https:\/\/api\.stripe\.com\/v1\/tokens$
+400
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
 content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Ftokens; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
@@ -10,29 +10,27 @@ reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
-stripe-should-retry: false
+x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_bmCekz47Odg7fD
-x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 186
+request-id: req_fRhtvAy2DdrDZ2
+Content-Length: 321
 Vary: Origin
-Date: Thu, 18 Jul 2024 03:09:13 GMT
-original-request: req_bmCekz47Odg7fD
+Date: Fri, 19 Jul 2024 02:55:52 GMT
+original-request: req_fRhtvAy2DdrDZ2
 stripe-version: 2020-08-27
-idempotency-key: 568b96df-6c8f-4aec-9b11-2b0dad603d1e
+idempotency-key: 52564d8c-4d74-4232-af76-523c5e899a2d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
+Content-Language: en-us
 x-content-type-options: nosniff
 
 {
-  "object" : "token",
-  "id" : "cvctok_1PdkiTFY0qyl6XeW03AkZAPG",
-  "livemode" : false,
-  "client_ip" : "136.24.137.206",
-  "created" : 1721272153,
-  "used" : false,
-  "type" : "cvc_update"
+  "error" : {
+    "message" : "The certificate used to sign your request is invalid. For help troubleshooting, please visit https:\/\/stripe.com\/docs\/apple-pay\/apps#troubleshooting.",
+    "type" : "invalid_request_error",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_fRhtvAy2DdrDZ2?t=1721357752"
+  }
 }

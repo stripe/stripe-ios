@@ -1,5 +1,5 @@
 GET
-/v1/payment_intents/pi_3PdkiVFY0qyl6XeW0IVWSI1r\?client_secret=.*&expand%5B0%5D=.*$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pe6zAFY0qyl6XeW1v04J46Z\?client_secret=pi_3Pe6zAFY0qyl6XeW1v04J46Z_secret_CeUkHPfwDLlInd5c0uyAx5WGj&expand%5B0%5D=metadata$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_XLuZN5xi2mz80y
+request-id: req_BQ3IwNMrsNVxAq
 Content-Length: 887
 Vary: Origin
-Date: Thu, 18 Jul 2024 03:09:15 GMT
+Date: Fri, 19 Jul 2024 02:55:57 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -45,8 +45,8 @@ x-content-type-options: nosniff
     "amount_tax" : 0
   },
   "payment_method" : null,
-  "client_secret" : "pi_3PdkiVFY0qyl6XeW0IVWSI1r_secret_DrCJ4G53VxaOpSd0HKLKkxYoT",
-  "id" : "pi_3PdkiVFY0qyl6XeW0IVWSI1r",
+  "client_secret" : "pi_3Pe6zAFY0qyl6XeW1v04J46Z_secret_CeUkHPfwDLlInd5c0uyAx5WGj",
+  "id" : "pi_3Pe6zAFY0qyl6XeW1v04J46Z",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -59,6 +59,6 @@ x-content-type-options: nosniff
     "card"
   ],
   "setup_future_usage" : null,
-  "created" : 1721272155,
+  "created" : 1721357756,
   "description" : null
 }

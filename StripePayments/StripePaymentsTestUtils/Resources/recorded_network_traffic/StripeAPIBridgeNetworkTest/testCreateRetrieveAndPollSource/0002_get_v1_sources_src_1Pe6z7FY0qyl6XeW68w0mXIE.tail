@@ -1,5 +1,5 @@
 GET
-/v1/sources/src_1PdkiSFY0qyl6XeWhP13rjEQ\?client_secret=.*$
+https:\/\/api\.stripe\.com\/v1\/sources\/src_1Pe6z7FY0qyl6XeW68w0mXIE\?client_secret=src_client_secret_W2NEgpDBFPSS13OLvR2ajTuO$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=mono-bapi-srv"}],"include_subdomains":true}
-request-id: req_vkdV0Rh6Zd1Xo4
+request-id: req_HvGz2a9kRBoT62
 Content-Length: 890
 Vary: Origin
-Date: Thu, 18 Jul 2024 03:09:12 GMT
+Date: Fri, 19 Jul 2024 02:55:54 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -25,7 +25,7 @@ Content-Type: application/json
 x-content-type-options: nosniff
 
 {
-  "id" : "src_1PdkiSFY0qyl6XeWhP13rjEQ",
+  "id" : "src_1Pe6z7FY0qyl6XeW68w0mXIE",
   "livemode" : false,
   "amount" : null,
   "owner" : {
@@ -57,8 +57,8 @@ x-content-type-options: nosniff
     "name" : null,
     "three_d_secure" : "optional"
   },
-  "created" : 1721272152,
-  "client_secret" : "src_client_secret_VOWQwEseya1HNIF9SfOV06Nu",
+  "created" : 1721357753,
+  "client_secret" : "src_client_secret_W2NEgpDBFPSS13OLvR2ajTuO",
   "flow" : "none",
   "currency" : null,
   "status" : "chargeable"

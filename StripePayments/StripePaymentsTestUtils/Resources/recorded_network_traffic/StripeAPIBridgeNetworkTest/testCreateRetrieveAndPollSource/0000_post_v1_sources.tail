@@ -1,23 +1,26 @@
-GET
-/v1/sources/src_1PdkiSFY0qyl6XeWhP13rjEQ\?client_secret=.*$
+POST
+https:\/\/api\.stripe\.com\/v1\/sources$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
-content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fsources%2F%3Asource; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fsources; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report?s=mono-bapi-srv"
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
-x-stripe-routing-context-priority-tier: api-testmode
+stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=mono-bapi-srv"}],"include_subdomains":true}
-request-id: req_QlAC6ujvNEQHa9
+request-id: req_4ZTyruEjXhtrl0
+x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 890
 Vary: Origin
-Date: Thu, 18 Jul 2024 03:09:12 GMT
+Date: Fri, 19 Jul 2024 02:55:53 GMT
+original-request: req_4ZTyruEjXhtrl0
 stripe-version: 2020-08-27
+idempotency-key: 0c79e9e1-1dff-47fe-a14c-da858ea5d1b1
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -25,7 +28,7 @@ Content-Type: application/json
 x-content-type-options: nosniff
 
 {
-  "id" : "src_1PdkiSFY0qyl6XeWhP13rjEQ",
+  "id" : "src_1Pe6z7FY0qyl6XeW68w0mXIE",
   "livemode" : false,
   "amount" : null,
   "owner" : {
@@ -57,8 +60,8 @@ x-content-type-options: nosniff
     "name" : null,
     "three_d_secure" : "optional"
   },
-  "created" : 1721272152,
-  "client_secret" : "src_client_secret_VOWQwEseya1HNIF9SfOV06Nu",
+  "created" : 1721357753,
+  "client_secret" : "src_client_secret_W2NEgpDBFPSS13OLvR2ajTuO",
   "flow" : "none",
   "currency" : null,
   "status" : "chargeable"
