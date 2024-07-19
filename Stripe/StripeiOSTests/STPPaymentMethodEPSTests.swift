@@ -12,8 +12,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodEPSTests: XCTestCase {
+class STPPaymentMethodEPSTests: STPNetworkStubbingTestCase {
     private(set) var epsJSON: [AnyHashable: Any]?
 
     func _retrieveEPSJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

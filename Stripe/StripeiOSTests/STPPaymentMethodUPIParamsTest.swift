@@ -9,8 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodUPIParamsTests: XCTestCase {
+class STPPaymentMethodUPIParamsTests: STPNetworkStubbingTestCase {
     func testCreateUPIPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingINPublishableKey)
         let upiParams = STPPaymentMethodUPIParams()

@@ -57,7 +57,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         }
         // ...should default to the client-side asset
         XCTAssertEqual(usBankAccountImage, STPPaymentMethodType.USBankAccount.makeImage())
-        waitForExpectations(timeout: 1)
+        waitForExpectations(timeout: 0.1)
     }
 
     func testMakeImage_without_client_asset() {

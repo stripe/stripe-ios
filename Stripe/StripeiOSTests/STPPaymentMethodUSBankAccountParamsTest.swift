@@ -15,13 +15,15 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodUSBankAccountParamsTest: XCTestCase {
+class STPPaymentMethodUSBankAccountParamsTest: STPNetworkStubbingTestCase {
 
-    let apiClient: STPAPIClient = {
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        return client
-    }()
+    var apiClient: STPAPIClient!
+    override func setUp() {
+        super.setUp()
+        apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    }
 
     func testCreateUSBankAccountPaymentMethod_checking_individual() {
         let usBankAccountParams = STPPaymentMethodUSBankAccountParams()

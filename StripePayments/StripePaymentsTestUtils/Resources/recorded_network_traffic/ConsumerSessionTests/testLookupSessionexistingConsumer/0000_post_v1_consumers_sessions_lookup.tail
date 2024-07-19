@@ -1,0 +1,77 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/lookup$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fconsumers%2Fsessions%2Flookup; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=ocs-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
+request-id: req_xrrFxAQUz7ttiN
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1838
+Vary: Origin
+Date: Fri, 19 Jul 2024 23:24:43 GMT
+original-request: req_xrrFxAQUz7ttiN
+stripe-version: 2020-08-27
+idempotency-key: d0b572fd-e6c6-4df2-91d4-6b7dd309b310
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+
+{
+  "exists" : true,
+  "experiments" : [
+    {
+      "response_id" : "",
+      "experiment_name" : "link_payment_element_recollection_flow",
+      "event_id" : "d0ebeece-3952-43ca-8cd6-276331b5e613",
+      "variant" : "control"
+    }
+  ],
+  "error_message" : null,
+  "publishable_key" : "pk_test_51KZhvGBYgp8ftBq2dMntfdpGRvSoOFbaFnXa9ByFi3Lk9EqqAcQVuJUGwaQub9zFPwRLMuHViAYlaGnBjOWQvp4T00oRtbLrHO",
+  "consumer_session" : {
+    "unredacted_phone_number" : null,
+    "redacted_phone_number" : "+1********34",
+    "available_verification_factors" : null,
+    "phone_number_country" : null,
+    "redacted_formatted_phone_number" : "(***) *** **34",
+    "verification_sessions" : [
+
+    ],
+    "client_secret" : "pscs_AVsCY5VMtFzFzeU9QNUuFDG4-q16B39hPlnwjvyWksMM1xFuwiBpi1kFz1mXvBAfy9QyarsDSQ0Fh4tX3spTDnWuwAYlroRwdTYg9C_gAVOF3xt1oYtZZNKbph0vK9RMCDoTm16iWJ1W9wgoHp_CnTulKdAmRG-7ECbB1mHUfCoS66ehjGj9uaDf2kn1wKdaxRCVtN32cCQ3gh54gqJyvlsU0OwfnbQqGVr1gfGQU6jIZz3mrSjTdK3moNYexnij9YOp8agkSKFO4sPNFm_Aq-gOxzCJcTrcBnDprLqI62SKr52rXaeljPFQs_UuE7KtWdNl1WVsm2bmedE5KGhFk9SEQIZr1ucpHzuTmlLNKHenxInWNMpDnJyWO8MaegCyRGPuhzyaAm-G4Y9jCfJKFquBmEbsTlSJqM7wnJ5KHoe2rpVSStR0coIfSNw",
+    "support_payment_details_types" : [
+      "CARD",
+      "BANK_ACCOUNT"
+    ],
+    "email_address" : "mobile-payments-sdk-ci+a-consumer@stripe.com"
+  },
+  "redacted_payment_details" : [
+
+  ],
+  "shipping_addresses" : [
+
+  ],
+  "settings" : {
+    "link_app_redirect_token" : null,
+    "email_otp_verify_phone_despite_sms_otp" : true,
+    "link_card_program_names_enabled" : false,
+    "found_using_partial_cookie" : false,
+    "full_name_collection_required" : false,
+    "has_previous_merchant_relationship" : false,
+    "purchase_protections_holdback" : null,
+    "has_passkey" : false,
+    "email_otp_requires_additional_info" : true
+  },
+  "auth_session_client_secret" : null,
+  "account_id" : "acct_1KZhvGBYgp8ftBq2"
+}

@@ -110,6 +110,8 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
 class STPPaymentHandlerTests: APIStubbedTestCase {
 
     func testPaymentHandlerRetriesWithBackoff() {
+        let oldMaxRetries = StripeAPI.maxRetries
+        StripeAPI.maxRetries = 1
         STPPaymentHandler.sharedHandler.apiClient = stubbedAPIClient()
 
         stub { urlRequest in
@@ -268,6 +270,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
 
         wait(for: [paymentHandlerExpectation, checkedStillInProgress, fetchedSetupIntentExpectation], timeout: 60)
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
+        StripeAPI.maxRetries = oldMaxRetries
     }
 }
 

@@ -22,7 +22,7 @@ import SafariServices
 /// They can also test the presence/absence of particular fields for a payment method form e.g. the SEPA test asserts that there's a mandate element.
 /// 👀  See `testIdealConfirmFlows` for an example with comments.
 @MainActor
-final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
+final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
     enum MerchantCountry: String {
         case US = "us"
@@ -67,6 +67,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 
     override func setUp() async throws {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
+        // Don't follow redirects for this specific tests, as we want to record
+        // the body of the redirect request for UnredirectableSessionDelegate.
+        self.followRedirects = false
     }
 
     /// 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file

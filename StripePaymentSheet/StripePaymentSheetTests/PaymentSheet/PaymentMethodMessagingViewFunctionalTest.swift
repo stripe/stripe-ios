@@ -12,6 +12,9 @@
 @_spi(STP)@testable import StripePaymentsUI
 import XCTest
 
+// These tests are disabled, as this product is not currently available.
+
+/*
 class PaymentMethodMessagingViewFunctionalTest: STPNetworkStubbingTestCase {
     let mockAnalyticsClient = MockAnalyticsClient()
 
@@ -79,3 +82,4 @@ class PaymentMethodMessagingViewFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: 10)
     }
 }
+*/

@@ -14,8 +14,9 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodUSBankAccountTest: XCTestCase {
+class STPPaymentMethodUSBankAccountTest: STPNetworkStubbingTestCase {
 
     static let usBankAccountPaymentIntentClientSecret =
         "pi_3KhHLqFY0qyl6XeW1X2ZMsOT_secret_k5bOLoKJEW8ZhQFpokL0OrpbU"

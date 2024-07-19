@@ -11,16 +11,19 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class ConsumerSessionTests: XCTestCase {
+class ConsumerSessionTests: STPNetworkStubbingTestCase {
 
-    let apiClient: STPAPIClient = {
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        return apiClient
-    }()
+    var apiClient: STPAPIClient!
+    
+    override func setUp() {
+        super.setUp()
+        apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    }
 
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")

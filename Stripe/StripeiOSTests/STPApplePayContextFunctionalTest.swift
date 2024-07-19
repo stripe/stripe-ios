@@ -12,6 +12,7 @@ import OHHTTPStubs
 @testable import StripeApplePay
 @testable import StripeCoreTestUtils
 @testable import StripePayments
+@testable import StripePaymentsTestUtils
 @testable import StripePaymentsObjcTestUtils
 
 class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
@@ -27,12 +28,13 @@ class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
     var didCreatePaymentMethodDelegateMethod: ((_ paymentMethod: STPPaymentMethod?, _ paymentInformation: PKPayment?, _ completion: @escaping STPIntentClientSecretCompletionBlock) -> Void)?
 }
 
-class STPApplePayContextFunctionalTest: XCTestCase {
+class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
     var apiClient: STPApplePayContextFunctionalTestAPIClient!
     var delegate: STPTestApplePayContextDelegate!
     var context: STPApplePayContext!
 
     override func setUp() {
+        super.setUp()
         delegate = STPTestApplePayContextDelegate()
         let apiClient = STPApplePayContextFunctionalTestAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         apiClient.setupStubs()
@@ -47,6 +49,7 @@ class STPApplePayContextFunctionalTest: XCTestCase {
 
     override func tearDown() {
         HTTPStubs.removeAllStubs()
+        super.tearDown()
     }
 
     func testCompletesManualConfirmationPaymentIntent() {

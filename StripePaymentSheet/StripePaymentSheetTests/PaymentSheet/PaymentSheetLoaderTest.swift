@@ -13,8 +13,14 @@
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
-final class PaymentSheetLoaderTest: XCTestCase {
-    let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
+    
+    var apiClient: STPAPIClient!
+    
+    override func setUp() {
+        super.setUp()
+        self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    }
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
@@ -199,7 +205,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         let testCustomerID = "cus_OtOGvD0ZVacBoj"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // This is a saved Apple Pay card:

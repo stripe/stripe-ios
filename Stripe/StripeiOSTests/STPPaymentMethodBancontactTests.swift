@@ -13,8 +13,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodBancontactTests: XCTestCase {
+class STPPaymentMethodBancontactTests: STPNetworkStubbingTestCase {
     private(set) var bancontactJSON: [AnyHashable: Any]?
 
     func _retrieveBancontactJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

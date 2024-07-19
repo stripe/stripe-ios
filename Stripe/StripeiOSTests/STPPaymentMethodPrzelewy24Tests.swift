@@ -12,8 +12,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodPrzelewy24Tests: XCTestCase {
+class STPPaymentMethodPrzelewy24Tests: STPNetworkStubbingTestCase {
     private(set) var przelewy24JSON: [AnyHashable: Any]?
 
     func _retrievePrzelewy24JSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

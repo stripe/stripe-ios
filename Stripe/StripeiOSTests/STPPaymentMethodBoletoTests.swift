@@ -14,8 +14,9 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodBoletoTests: XCTestCase {
+class STPPaymentMethodBoletoTests: STPNetworkStubbingTestCase {
 
     private(set) var boletoJSON: [AnyHashable: Any]?
 

@@ -13,8 +13,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodNetBankingTests: XCTestCase {
+class STPPaymentMethodNetBankingTests: STPNetworkStubbingTestCase {
     private(set) var netbankingJSON: [AnyHashable: Any]?
 
     func _retrieveNetBankingJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

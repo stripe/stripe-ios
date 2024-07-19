@@ -6,8 +6,9 @@
 @testable import Stripe
 import StripeCoreTestUtils
 import XCTest
+import StripePaymentsTestUtils
 
-class STPPaymentMethodRevolutPayTests: XCTestCase {
+class STPPaymentMethodRevolutPayTests: STPNetworkStubbingTestCase {
 
     static let revolutPayPaymentIntentClientSecret = "pi_3NqgBBGoesj9fw9Q1TkY7iBp_secret_Ha7VfLCwaAuhEOshZiNnIDjh6"
 

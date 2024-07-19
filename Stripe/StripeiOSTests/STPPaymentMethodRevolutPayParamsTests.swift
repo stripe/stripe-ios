@@ -11,8 +11,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodRevolutPayParamsTests: XCTestCase {
+class STPPaymentMethodRevolutPayParamsTests: STPNetworkStubbingTestCase {
 
     func testCreateRevolutPayPaymentMethod() throws {
         let revolutPayParams = STPPaymentMethodRevolutPayParams()

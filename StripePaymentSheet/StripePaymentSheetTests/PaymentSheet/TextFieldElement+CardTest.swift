@@ -15,7 +15,7 @@ import XCTest
 @testable@_spi(STP) import StripeUICore
 @testable@_spi(STP) import StripePaymentsTestUtils
 
-class TextFieldElementCardTest: XCTestCase {
+class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     func testPANValidation() throws {
         typealias Error = TextFieldElement.PANConfiguration.Error
         let testcases: [String: ElementValidationState] = [

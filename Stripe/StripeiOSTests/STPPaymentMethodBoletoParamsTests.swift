@@ -14,8 +14,9 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodBoletoParamsTests: XCTestCase {
+class STPPaymentMethodBoletoParamsTests: STPNetworkStubbingTestCase {
 
     func testCreateBoletoPaymentMethod() throws {
         let boletoParams = STPPaymentMethodBoletoParams()

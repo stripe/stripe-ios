@@ -13,8 +13,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodAmazonPayParamsTests: XCTestCase {
+class STPPaymentMethodAmazonPayParamsTests: STPNetworkStubbingTestCase {
 
     func testCreateAmazonPayPaymentMethod() throws {
         let amazonPayParams = STPPaymentMethodAmazonPayParams()

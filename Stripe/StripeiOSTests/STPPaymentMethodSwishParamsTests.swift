@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import StripePaymentsTestUtils
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 
-class STPPaymentMethodSwishParamsTests: XCTestCase {
+class STPPaymentMethodSwishParamsTests: STPNetworkStubbingTestCase {
 
     func testCreateSwishPaymentMethod() throws {
         let swishParams = STPPaymentMethodSwishParams()

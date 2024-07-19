@@ -7,14 +7,14 @@
 
 import Foundation
 import StripeCoreTestUtils
-
+import StripePaymentsTestUtils
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentMethodAffirmParamsTests: XCTestCase {
+class STPPaymentMethodAffirmParamsTests: STPNetworkStubbingTestCase {
 
     func testCreateAffirmPaymentMethod() throws {
         let affirmParams = STPPaymentMethodAffirmParams()

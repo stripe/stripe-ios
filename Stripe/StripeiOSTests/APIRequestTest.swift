@@ -13,6 +13,7 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
 class AnyAPIResponse: NSObject, STPAPIResponseDecodable {
     override required init() {
@@ -32,9 +33,11 @@ class AnyAPIResponse: NSObject, STPAPIResponseDecodable {
 
 }
 
-class APIRequestTest: XCTestCase {
-    let apiClient = STPAPIClient()
+class APIRequestTest: STPNetworkStubbingTestCase {
+    var apiClient: STPAPIClient!
     override func setUp() {
+        super.setUp()
+        apiClient = STPAPIClient()
         // HTTPBin clone
         apiClient.apiURL = URL(string: "https://luxurious-alpine-devourer.glitch.me")
     }
@@ -244,6 +247,8 @@ class APIRequestTest: XCTestCase {
     }
 
     func test429Backoff() {
+        let oldMaxRetries = StripeAPI.maxRetries
+        StripeAPI.maxRetries = 2
         var inProgress = true
 
         let e = expectation(description: "Request completed")
@@ -267,6 +272,7 @@ class APIRequestTest: XCTestCase {
         }
 
         wait(for: [e, checkedStillInProgress], timeout: 30)
+        StripeAPI.maxRetries = oldMaxRetries
     }
 
     func test429NoBackoff() {

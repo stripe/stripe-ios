@@ -13,8 +13,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import StripePaymentsTestUtils
 
-class STPPaymentMethodUPITests: XCTestCase {
+class STPPaymentMethodUPITests: STPNetworkStubbingTestCase {
     private(set) var upiJSON: [AnyHashable: Any]?
 
     func _retrieveUPIJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

@@ -1,0 +1,18 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
+402
+text/html
+Content-Type: text/html;charset=utf-8
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Set-Cookie: rack.session=Wbv1OhLgqiz%2Fmip2tXacWkyR7Zwx8MLWQVCMLLd4w2uRvAM3Eoq6qjqELr%2Bz2uI5FyJ57Y4tEDtpCa6NY7XTipiNj2DKsDM8AjSpBRBkF%2BS2NqtgCQWD5b%2B8PvmJBoxEKuAMpLCFhdRYgTqd3IllPQvrLrTAo1s4I4Z96WAXZtIBnDbRx5%2FHaj1tOI%2FazfP3hUx%2BcCRxz9UN347bUELD9oe84otX%2FRzJBbH6G0B4kLI%3D; path=/
+Server: Google Frontend
+x-cloud-trace-context: cd559082f37b5e5014854587b6c5d7e8
+Via: 1.1 google
+x-xss-protection: 1; mode=block
+Date: Fri, 19 Jul 2024 22:35:48 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 133
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+
+Error creating PaymentIntent: The currency provided (usd) is invalid. Payments with bancontact support the following currencies: eur.

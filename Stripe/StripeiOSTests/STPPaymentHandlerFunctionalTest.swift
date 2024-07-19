@@ -13,7 +13,7 @@ import XCTest
 
 // You can add tests in here for payment methods that don't require customer actions (i.e. don't open webviews for customer authentication).
 // If they require customer action, use STPPaymentHandlerFunctionalTest.m instead
-final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationContext {
+final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, STPAuthenticationContext {
     // MARK: - STPAuthenticationContext
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
@@ -29,7 +29,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 XCTFail(String(describing: error))
                 return
             }
-            STPTestingAPIClient().createPaymentIntent(withParams: [
+            STPTestingAPIClient.shared().createPaymentIntent(withParams: [
                 "confirm": "true",
                 "payment_method_types": ["card"],
                 "currency": "usd",
@@ -73,7 +73,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 XCTFail(String(describing: error))
                 return
             }
-            STPTestingAPIClient().createPaymentIntent(withParams: [
+            STPTestingAPIClient.shared().createPaymentIntent(withParams: [
                 "confirm": "true",
                 "payment_method_types": ["sepa_debit"],
                 "currency": "eur",
@@ -117,7 +117,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 XCTFail(String(describing: error))
                 return
             }
-            STPTestingAPIClient().createSetupIntent(withParams: [
+            STPTestingAPIClient.shared().createSetupIntent(withParams: [
                 "confirm": "true",
                 "payment_method_types": ["card"],
                 "payment_method": paymentMethod.stripeId,
@@ -160,7 +160,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 XCTFail()
                 return
             }
-            STPTestingAPIClient().createSetupIntent(withParams: [
+            STPTestingAPIClient.shared().createSetupIntent(withParams: [
                 "confirm": "true",
                 "payment_method_types": ["sepa_debit"],
                 "payment_method": paymentMethod.stripeId,
