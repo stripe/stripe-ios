@@ -46,7 +46,14 @@ class BottomSheetPresentationAnimator: NSObject {
         }) { didComplete in
             // Calls viewDidAppear and viewDidDisappear
             fromVC.endAppearanceTransition()
-            transitionContext.completeTransition(didComplete)
+            // If the toVC is a BottomSheetViewController in the middle of setting its contentVC, wait until its animation finishes before completing the transition. Otherwise, `viewDidAppear` is called before the VC has fully transitioned onto the screen.
+            if let bottomSheetController = toVC as? BottomSheetViewController, bottomSheetController.isAnimatingSetContentViewController {
+                bottomSheetController.onSetContentViewControllerCompletion = {
+                    transitionContext.completeTransition(didComplete)
+                }
+            } else {
+                transitionContext.completeTransition(didComplete)
+            }
         }
     }
 
