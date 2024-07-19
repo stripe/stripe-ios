@@ -171,8 +171,6 @@ extension PaymentSheet {
                 )
                 if availabilityStatus == .supported {
                     recommendedPaymentMethodTypes.append(.instantDebits)
-                } else {
-                    print("[Stripe SDK] Warning: instant_debits requires the StripeFinancialConnections SDK.")
                 }
             }
 
