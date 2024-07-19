@@ -40,7 +40,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
         sut.endAppearanceTransition()
-        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1")?.text, "")
+        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1").text, "")
 
         // ...and updating the shipping address...
         shippingDetails = AddressViewController.AddressDetails(address: .init(country: "US", line1: "Updated line1"))
@@ -50,7 +50,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         sut.endAppearanceTransition()
 
         // ...should update its address fields with the shipping address
-        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1")?.text, "Updated line1")
+        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1").text, "Updated line1")
     }
 
     func testHandlesViewDidAppear() {

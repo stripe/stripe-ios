@@ -64,7 +64,7 @@ extension UIViewController {
     func switchContentIfNecessary(
         to toVC: UIViewController,
         containerView: DynamicHeightContainerView,
-        resettingContentOffset: Bool = false
+        contentOffsetPercentage: CGFloat? = nil
     ) {
         if children.count > 1 {
             let from_vc_name = NSStringFromClass(children.first!.classForCoder)
@@ -85,6 +85,7 @@ extension UIViewController {
             }
 
             // Add the new one
+            toVC.beginAppearanceTransition(true, animated: true)
             self.addChild(toVC)
             toVC.view.alpha = 0
             containerView.addPinnedSubview(toVC.view)
@@ -100,11 +101,14 @@ extension UIViewController {
                     toVC.didMove(toParent: self)
                     fromVC.view.alpha = 0
                     toVC.view.alpha = 1
-                    if resettingContentOffset {
-                        self.bottomSheetController?.resetContentOffset()
+                },
+                postLayoutAnimations: {
+                    if let contentOffsetPercentage {
+                        self.bottomSheetController?.contentOffsetPercentage = contentOffsetPercentage
                     }
                 },
                 completion: { _ in
+                    toVC.endAppearanceTransition()
                     // Finish removing the old one
                     fromVC.view.removeFromSuperview()
                     fromVC.didMove(toParent: nil)

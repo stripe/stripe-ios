@@ -286,7 +286,14 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["Confirm your CVC"].waitForExistence(timeout: 1))
         // CVC field should already be selected
-        app.typeText("123")
+        app.typeText("666") // Special hardcoded value that will fail w/ cvc error
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Your card's security code is invalid."].waitForExistence(timeout: 10))
+
+        app.textFields["CVC"].tap()
+        XCTAssertFalse(app.staticTexts["Your card's security code is invalid."].exists) // Error should be cleared
+        let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 3)
+        app.typeText(deleteString + "123")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
