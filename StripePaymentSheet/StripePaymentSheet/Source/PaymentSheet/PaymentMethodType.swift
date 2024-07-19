@@ -28,7 +28,7 @@ extension PaymentSheet {
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.label
             case .instantDebits:
-                return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
+                return String.Localized.bank
             }
         }
 
