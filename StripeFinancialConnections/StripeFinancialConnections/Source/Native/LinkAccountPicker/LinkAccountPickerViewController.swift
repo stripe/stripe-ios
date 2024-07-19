@@ -181,6 +181,7 @@ final class LinkAccountPickerViewController: UIViewController {
             businessName: businessName,
             permissions: dataSource.manifest.permissions,
             singleAccount: dataSource.manifest.singleAccount,
+            theme: dataSource.manifest.theme,
             didSelectConnectAccount: { [weak self] in
                 guard let self = self else {
                     return
@@ -196,6 +197,7 @@ final class LinkAccountPickerViewController: UIViewController {
                 if let dataAccessNotice = self.dataSource.dataAccessNotice {
                     let dataAccessNoticeViewController = DataAccessNoticeViewController(
                         dataAccessNotice: dataAccessNotice,
+                        theme: dataSource.manifest.theme,
                         didSelectUrl: { [weak self] url in
                             guard let self = self else { return }
                             AuthFlowHelpers.handleURLInTextFromBackend(
@@ -483,6 +485,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
                 let accountUpdateRequiredViewController = AccountUpdateRequiredViewController(
                     institution: selectedPartnerAccount.institution,
+                    theme: dataSource.manifest.theme,
                     didSelectContinue: { [weak self] in
                         guard let self else { return }
                         // delay deselecting accounts while we animate to the
