@@ -99,8 +99,6 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
-
-        let params = formElement.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
     }
 
     func testCard_CardInfoWithName() {

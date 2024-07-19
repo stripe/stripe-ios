@@ -44,55 +44,6 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
 }
 
 class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUITestCase {
-    func testCard_AllFields_WithDefaults() throws {
-
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .guest
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-        settings.applePayEnabled = .off
-        settings.apmsEnabled = .off
-        settings.linkEnabled = .off
-        settings.defaultBillingAddress = .on
-        settings.attachDefaults = .on
-        settings.collectName = .always
-        settings.collectEmail = .always
-        settings.collectPhone = .always
-        settings.collectAddress = .full
-        loadPlayground(
-            app,
-            settings
-        )
-        checkoutButton.tap()
-
-        let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
-        card.tap()
-
-        XCTAssertTrue(cardInfoField.waitForExistence(timeout: 10.0))
-        XCTAssertTrue(contactInfoField.exists)
-        XCTAssertEqual(emailField.value as? String, "foo@bar.com")
-        XCTAssertEqual(phoneField.value as? String, "(310) 555-1234")
-        XCTAssertEqual(nameOnCardField.value as? String, "Jane Doe")
-        XCTAssertTrue(billingAddressField.exists)
-        XCTAssertEqual(countryField.value as? String, "United States")
-        XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
-        XCTAssertEqual(line2Field.value as? String, "")
-        XCTAssertEqual(cityField.value as? String, "San Francisco")
-        XCTAssertEqual(stateField.value as? String, "California")
-        XCTAssertEqual(zipField.value as? String, "94102")
-
-        let numberField = app.textFields["Card number"]
-        numberField.forceTapWhenHittableInTestCase(self)
-        app.typeText("4242424242424242")
-        app.typeText("1228") // Expiry
-        app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Dismiss keyboard.
-
-        // Complete payment
-        payButton.tap()
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
-
     func testCard_AllFields_flowController_WithDefaults() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()

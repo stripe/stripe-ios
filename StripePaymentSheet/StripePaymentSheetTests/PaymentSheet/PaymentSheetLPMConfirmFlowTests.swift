@@ -400,6 +400,47 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             XCTAssertNil(form.getDropdownFieldElement("Country or region"))
         }
     }
+
+    func testCard_AllFields_WithDefaults() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "(310) 555-1234"
+        configuration.defaultBillingDetails.address.line1 = "123 Main Street"
+        configuration.defaultBillingDetails.address.line2 = "line 2"
+        configuration.defaultBillingDetails.address.city = "San Francisco"
+        configuration.defaultBillingDetails.address.state = "California"
+        configuration.defaultBillingDetails.address.country = "US"
+        configuration.defaultBillingDetails.address.postalCode = "12345"
+
+        try await _testConfirm(
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+            currency: "USD",
+            paymentMethodType: .stripe(.card),
+            configuration: configuration
+        ) { form in
+            print(form)
+            form.getCardSection().panElement.setText("4242424242424242")
+            form.getCardSection().expiryElement.setText("1228")
+            form.getCardSection().cvcElement.setText("123")
+
+            // Check billing details
+            XCTAssertEqual(form.getTextFieldElement("Name on card").text, "Jane Doe")
+            XCTAssertEqual(form.getPhoneNumberElement().phoneNumber, .fromE164("+13105551234"))
+            XCTAssertEqual(form.getTextFieldElement("Email").text, "foo@bar.com")
+            XCTAssertEqual(form.getTextFieldElement("Address line 1").text, "123 Main Street")
+            XCTAssertEqual(form.getTextFieldElement("Address line 2").text, "line 2")
+            XCTAssertEqual(form.getTextFieldElement("City").text, "San Francisco")
+            XCTAssertEqual(form.getDropdownFieldElement("State").rawData, "CA")
+            XCTAssertEqual(form.getDropdownFieldElement("Country or region").rawData, "US")
+            XCTAssertEqual(form.getTextFieldElement("ZIP").text, "12345")
+        }
+    }
 }
 
 // MARK: - Helper methods
