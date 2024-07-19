@@ -16,7 +16,7 @@ import XCTest
 @objc(STPNetworkStubbingTestCase) open class STPNetworkStubbingTestCase: XCTestCase {
     /// Set this to YES to record all traffic during this test. The test will then fail, to remind you to set this back to NO before pushing.
     open var recordingMode = false
-    
+
     /// If `true` (the default), URL parameters will be recorded in requests.
     /// Disable this if your test case sends paramters that may change (e.g. the time), as otherwise the requests may not match during playback.
     open var strictParamsEnforcement = true
@@ -67,7 +67,7 @@ import XCTest
             var count = 0
             if strictParamsEnforcement {
                 // Just record the full URL, don't try to strip out params
-                recorder?.urlRegexPatternBlock = { request, defaultPattern in
+                recorder?.urlRegexPatternBlock = { request, _ in
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
                     return NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
                 }

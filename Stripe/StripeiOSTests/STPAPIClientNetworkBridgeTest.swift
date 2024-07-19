@@ -9,10 +9,10 @@
 
 import PassKit
 import Stripe
-import StripeCoreTestUtils
-import StripePaymentsTestUtils
-@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
+@_spi(STP) import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
 class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
@@ -347,7 +347,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         FraudDetectionData.shared.sid = "123"
         FraudDetectionData.shared.muid = "123"
         FraudDetectionData.shared.sidCreationDate = Date()
-        
+
         client?.createRadarSession { session, error in
             XCTAssertNotNil(session)
             XCTAssertNil(error)
