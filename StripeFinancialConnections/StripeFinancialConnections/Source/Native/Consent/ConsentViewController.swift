@@ -14,7 +14,8 @@ import UIKit
 protocol ConsentViewControllerDelegate: AnyObject {
     func consentViewController(
         _ viewController: ConsentViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        nextPaneOrDrawerOnSecondaryCta: String?
     )
     func consentViewController(
         _ viewController: ConsentViewController,
@@ -165,11 +166,12 @@ class ConsentViewController: UIViewController {
             url: url,
             pane: .consent,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { urlHost in
+            handleURL: { urlHost, nextPaneOrDrawerOnSecondaryCta in
                 if urlHost == "manual-entry" {
                     delegate?.consentViewController(
                         self,
-                        didRequestNextPane: .manualEntry
+                        didRequestNextPane: .manualEntry,
+                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
                     )
                 } else if urlHost == "data-access-notice" {
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
@@ -193,7 +195,8 @@ class ConsentViewController: UIViewController {
                 } else if urlHost == "link-login" {
                     delegate?.consentViewController(
                         self,
-                        didRequestNextPane: .networkingLinkLoginWarmup
+                        didRequestNextPane: .networkingLinkLoginWarmup,
+                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
                     )
                 }
             }

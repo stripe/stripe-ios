@@ -200,7 +200,7 @@ final class LinkAccountPickerViewController: UIViewController {
                                 url: url,
                                 pane: .linkAccountPicker,
                                 analyticsClient: self.dataSource.analyticsClient,
-                                handleStripeScheme: { _ in }
+                                handleURL: { _, _ in }
                             )
                         }
                     )

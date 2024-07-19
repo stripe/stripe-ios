@@ -545,7 +545,7 @@ final class PartnerAuthViewController: SheetViewController {
             url: url,
             pane: .partnerAuth,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { urlHost in
+            handleURL: { urlHost, _ in
                 if urlHost == "data-access-notice" {
                     if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
