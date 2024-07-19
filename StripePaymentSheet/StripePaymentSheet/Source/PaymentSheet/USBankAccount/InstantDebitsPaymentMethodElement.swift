@@ -23,6 +23,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         return [linkedBankInfoSectionElement]
     }
     private let linkedBankInfoSectionElement: SectionElement
+    private let emailElement: TextFieldElement
     private let linkedBankInfoView: BankAccountInfoView
     private var linkedBank: InstantDebitsLinkedBank?
     private let theme: ElementsUITheme
@@ -64,33 +65,16 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var enableCTA: Bool {
-        return email != nil
+        return !email.isEmpty
     }
-    var email: String? {
-        // try to get the email from the EmailElement
-        let paymentMethodParams = formElement.updateParams(
-            params: IntentConfirmParams(
-                type: .instantDebits
-            )
-        )?.paymentMethodParams
-        if let email = paymentMethodParams?.nonnil_billingDetails.email {
-            return email
-        } else if
-            configuration
-            .billingDetailsCollectionConfiguration
-            .attachDefaultsToPaymentMethod
-        {
-            // default email
-            return configuration.defaultBillingDetails.email
-        } else {
-            return nil
-        }
+    var email: String {
+        return emailElement.text
     }
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
         titleElement: StaticElement?,
-        emailElement: PaymentMethodElement?,
+        emailElement: PaymentMethodElementWrapper<TextFieldElement>,
         theme: ElementsUITheme = .default
     ) {
         self.configuration = configuration
@@ -100,6 +84,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             elements: [StaticElement(view: linkedBankInfoView)],
             theme: theme
         )
+        self.emailElement = emailElement.element
         self.linkedBank = nil
         self.linkedBankInfoSectionElement.view.isHidden = true
         self.theme = theme

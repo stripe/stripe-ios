@@ -321,10 +321,7 @@ extension PaymentMethodFormViewController {
     }
 
     private func handleCollectInstantDebits(from viewController: UIViewController) {
-        guard
-            let instantDebitsFormElement,
-            let email = instantDebitsFormElement.email
-        else {
+        guard let instantDebitsFormElement else {
             let errorAnalytic = ErrorAnalytic(
                 event: .unexpectedPaymentSheetError,
                 error: Error.instantDebitsParamsMissing
@@ -335,7 +332,7 @@ extension PaymentMethodFormViewController {
         }
 
         let params = STPCollectBankAccountParams.collectInstantDebitsParams(
-            email: email
+            email: instantDebitsFormElement.email
         )
         let client = STPBankAccountCollector()
         let genericError = PaymentSheetError.accountLinkFailure
