@@ -495,8 +495,6 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "card"
         case .cardPresent:
             return "cardPresent"
-        case .giropay:
-            return "giropay"
         case .grabPay:
             return "grabPay"
         case .iDEAL:
@@ -774,8 +772,6 @@ extension STPSourceType: CustomStringConvertible {
             return "bancontact"
         case .card:
             return "card"
-        case .giropay:
-            return "giropay"
         case .iDEAL:
             return "iDEAL"
         case .klarna:

@@ -217,24 +217,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
-    /// Creates params for a giropay PaymentMethod;
-    /// - Parameters:
-    ///   - giropay:   An object containing additional giropay details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` is required for giropay PaymentMethods.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc
-    public convenience init(
-        giropay: STPPaymentMethodGiropayParams,
-        billingDetails: STPPaymentMethodBillingDetails,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .giropay
-        self.giropay = giropay
-        self.billingDetails = billingDetails
-        self.metadata = metadata
-    }
-
     /// Creates params for an EPS PaymentMethod;
     /// - Parameters:
     ///   - eps:   An object containing additional EPS details.
@@ -682,9 +664,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             let iDEAL = STPPaymentMethodiDEALParams()
             self.iDEAL = iDEAL
             self.iDEAL?.bankName = paymentMethod.iDEAL?.bankName
-        case .giropay:
-            let giropay = STPPaymentMethodGiropayParams()
-            self.giropay = giropay
         case .przelewy24:
             let przelewy24 = STPPaymentMethodPrzelewy24Params()
             self.przelewy24 = przelewy24
@@ -1213,8 +1192,6 @@ extension STPPaymentMethodParams {
             auBECSDebit = STPPaymentMethodAUBECSDebitParams()
         case .bacsDebit:
             bacsDebit = STPPaymentMethodBacsDebitParams()
-        case .giropay:
-            giropay = STPPaymentMethodGiropayParams()
         case .przelewy24:
             przelewy24 = STPPaymentMethodPrzelewy24Params()
         case .EPS:
@@ -1297,8 +1274,6 @@ extension STPPaymentMethodParams {
             return "Bacs Debit"
         case .AUBECSDebit:
             return "AU BECS Debit"
-        case .giropay:
-            return "giropay"
         case .przelewy24:
             return "Przelewy24"
         case .EPS:

@@ -66,7 +66,7 @@ extension STPPaymentMethod: STPPaymentOption {
             return true
         case .alipay,  // Careful! Revisit this if/when we support recurring Alipay
             .AUBECSDebit,
-            .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal,
+            .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .EPS, .payPal,
             .przelewy24, .bancontact,
             .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik,
             .weChatPay, .boleto, .klarna, .affirm, .cashApp, .paynow, .zip, .revolutPay, .amazonPay,

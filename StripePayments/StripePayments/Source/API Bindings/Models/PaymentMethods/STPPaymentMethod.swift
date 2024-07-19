@@ -246,9 +246,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.auBECSDebit = STPPaymentMethodAUBECSDebit.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "au_becs_debit")
         )
-        paymentMethod.giropay = STPPaymentMethodGiropay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "giropay")
-        )
         paymentMethod.eps = STPPaymentMethodEPS.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "eps")
         )
