@@ -62,7 +62,11 @@ final class ConsentLogoView: UIView {
 
     func animateDots() {
 #if targetEnvironment(simulator)
-        if ProcessInfo.processInfo.environment["UITesting"] != nil {
+        guard ProcessInfo.processInfo.environment["UITesting"] == nil else {
+            return
+        }
+
+        guard ProcessInfo.processInfo.environment["XCTestSessionIdentifier"] == nil else {
             return
         }
 #endif

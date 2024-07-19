@@ -12,7 +12,6 @@
 		06445472B3008395FCA92FEC /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C650E82A4195A7566AA54298 /* StripeCore.framework */; };
 		07712610C7D2F484AAB96982 /* FinancialConnectionsInstitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE8BCF5A9FF2B9392A755EA /* FinancialConnectionsInstitution.swift */; };
 		07A86CEB6B4F6BEB524EFE37 /* ManualEntryValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F897F5AA6A684D0A370EA7BC /* ManualEntryValidator.swift */; };
-		07BFA34C5643A79E1E35A159 /* FinancialConnectionsSession_only_accounts.json in Resources */ = {isa = PBXBuildFile; fileRef = 4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */; };
 		0AF88791C01102CDCC31F419 /* AccountFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A71EBB1B98CD285DD17D5F /* AccountFetcherTests.swift */; };
 		0D56BD448019185656DF9310 /* FinancialConnectionsCustomManualEntryRequiredError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2C7AE6509C80B6F30662AA /* FinancialConnectionsCustomManualEntryRequiredError.swift */; };
 		11782289208971CCAA1037A5 /* NetworkingLinkStepUpVerificationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925B7F2CBACCB2346CD0CDFC /* NetworkingLinkStepUpVerificationDataSource.swift */; };
@@ -59,7 +58,23 @@
 		492651662C24C9E7001DDBCA /* TestModeAutofillBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */; };
 		492651682C25C0C2001DDBCA /* info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 492651672C25C0C2001DDBCA /* info@3x.png */; };
 		494D62072C45B9B700106519 /* link_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 494D62062C45B9B700106519 /* link_logo@3x.png */; };
+		4937BDB02C3D78B1004A8122 /* FinancialConnectionsManifest_Demo.json in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDA62C3D78B1004A8122 /* FinancialConnectionsManifest_Demo.json */; };
+		4937BDB12C3D78B1004A8122 /* FinancialConnectionsSession_both_accounts_la.json in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDA72C3D78B1004A8122 /* FinancialConnectionsSession_both_accounts_la.json */; };
+		4937BDB22C3D78B1004A8122 /* FinancialConnectionsSession_only_accounts.json in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDA82C3D78B1004A8122 /* FinancialConnectionsSession_only_accounts.json */; };
+		4937BDB32C3D78B1004A8122 /* FinancialConnectionsSession_only_both_missing.json in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDA92C3D78B1004A8122 /* FinancialConnectionsSession_only_both_missing.json */; };
+		4937BDB42C3D78B1004A8122 /* FinancialConnectionsSession_only_la.json in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDAA2C3D78B1004A8122 /* FinancialConnectionsSession_only_la.json */; };
+		4937BDB52C3D78B1004A8122 /* link.png in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDAB2C3D78B1004A8122 /* link.png */; };
+		4937BDB62C3D78B1004A8122 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDAC2C3D78B1004A8122 /* lock.png */; };
+		4937BDB72C3D78B1004A8122 /* rocket-deliveries.png in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDAD2C3D78B1004A8122 /* rocket-deliveries.png */; };
+		4937BDB82C3D78B1004A8122 /* stripe-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4937BDAE2C3D78B1004A8122 /* stripe-logo.png */; };
+		49406EF92C371D9600EC17B0 /* ConsentPaneSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49406EF82C371D9600EC17B0 /* ConsentPaneSnapshotTests.swift */; };
+		495110382C38338400518E92 /* FCStubbedBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495110372C38338400518E92 /* FCStubbedBackend.swift */; };
+		4951103B2C38377400518E92 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 4951103A2C38377400518E92 /* OHHTTPStubs */; };
+		4951103D2C38377400518E92 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4951103C2C38377400518E92 /* OHHTTPStubsSwift */; };
 		496A6AE72C29E0BB00D34F8E /* testmode@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496A6AE62C29E0BB00D34F8E /* testmode@3x.png */; };
+		49D0B1B92C37245C00377B3C /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 49D0B1B82C37245C00377B3C /* iOSSnapshotTestCase */; };
+		49D0B1BA2C37248200377B3C /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E37D8CE9CD73443A9AAF2AE8 /* StripeFinancialConnections.framework */; };
+		49D0B1BB2C37248200377B3C /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E37D8CE9CD73443A9AAF2AE8 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */; };
 		4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */; };
 		4DC8EB63806434ABF4C9CC43 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782A419DCF59BE6AB6439D04 /* add@3x.png */; };
@@ -126,7 +141,6 @@
 		825C2182D13D7AC2DF67BB5E /* Locale+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AE2036F58EE5C098C1B25B /* Locale+Extensions.swift */; };
 		82FD3CEE526DE8B6519F666E /* FinancialConnectionsSessionFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A872C2B500306F775622F904 /* FinancialConnectionsSessionFetcher.swift */; };
 		846D1D7429B9E414744DEC99 /* FinancialConnectionsSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E7725EF317C3BD62ADF845 /* FinancialConnectionsSheetTests.swift */; };
-		864C5159C62C562C655B53F7 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E37D8CE9CD73443A9AAF2AE8 /* StripeFinancialConnections.framework */; };
 		87198EFD873751CA4E4B5005 /* FinancialConnectionsOAuthPrepane.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC5894A5EB74F6157C7DE95 /* FinancialConnectionsOAuthPrepane.swift */; };
 		87E22AF1E35FB63C20AEE9DF /* warning_triangle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D555DB0657A602274596428 /* warning_triangle@3x.png */; };
 		8927328EE28A0C94B5AB69DB /* ConsentLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0281E0221BDE01D0845DC0F9 /* ConsentLogoView.swift */; };
@@ -143,7 +157,6 @@
 		9CE29EA549C4BFA447AB82E0 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C650E82A4195A7566AA54298 /* StripeCore.framework */; };
 		9E0044ABEC04E2A8C50E3658 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */; };
 		A10B5A3E5E8AE8767CF09C15 /* AccountPickerSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */; };
-		A156FACA60231988F247F6F4 /* FinancialConnectionsSession_only_both_missing.json in Resources */ = {isa = PBXBuildFile; fileRef = 1DF07A1AAD6B39033F0B86FD /* FinancialConnectionsSession_only_both_missing.json */; };
 		A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */; };
 		A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */; };
 		A573468B2800DABF384CAB43 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCC4356AE3295B4A2F4A28 /* Image.swift */; };
@@ -153,7 +166,6 @@
 		AB5AFAC3C70D6195075DE5AE /* FinancialConnectionsBulletPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FD6A7D1638E42AA00C88C4 /* FinancialConnectionsBulletPoint.swift */; };
 		AB7C9A26484953762FFBB4A5 /* FinancialConnectionsWebFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD07CE6F99D7FAE83FC5CCC /* FinancialConnectionsWebFlowViewController.swift */; };
 		ABB28C3F6604C2BA2FCA079D /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3A660CB2E9651947FE6D0A /* String+Extensions.swift */; };
-		ACD21F21C6E42706A882A1AE /* FinancialConnectionsSession_only_la.json in Resources */ = {isa = PBXBuildFile; fileRef = AA01BC4016BF8788633CCAD9 /* FinancialConnectionsSession_only_la.json */; };
 		AD5B496425E2993C87F0B770 /* PrepaneImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F545087F12B09FF416991 /* PrepaneImageView.swift */; };
 		B271AAF41C9FE6AE392B88D3 /* FinancialConnectionsMixedOAuthParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BF4CD26CEAE792AC2A7313 /* FinancialConnectionsMixedOAuthParams.swift */; };
 		B2970FE2753A4D79E428BA73 /* SuccessDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C15A30C40F34CE330F89C41 /* SuccessDataSource.swift */; };
@@ -184,7 +196,6 @@
 		CBEAB081DD7353928F485071 /* APIPollingHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */; };
 		CBF7BE2271D309F2B1E794CC /* FinancialConnectionsDataAccessNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32ED8A7E94822F14AD94A698 /* FinancialConnectionsDataAccessNotice.swift */; };
 		CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */; };
-		D0C1EF46A418A8F8774B7418 /* FinancialConnectionsSession_both_accounts_la.json in Resources */ = {isa = PBXBuildFile; fileRef = F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */; };
 		D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */; };
 		D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */; };
 		D3AB52D5AE87FE51642C50C1 /* ExperimentHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2E9D1B7C962C46F7E0002A /* ExperimentHelper.swift */; };
@@ -237,6 +248,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				49D0B1BB2C37248200377B3C /* StripeFinancialConnections.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,7 +289,6 @@
 		1CE32B7E492EFD8143F687F2 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1CFE14532C10471EC61BB05A /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1D38B3C816EAB38AD242B064 /* SFSafariViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SFSafariViewController+Extensions.swift"; sourceTree = "<group>"; };
-		1DF07A1AAD6B39033F0B86FD /* FinancialConnectionsSession_only_both_missing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_both_missing.json; sourceTree = "<group>"; };
 		1E58AE51252DA4597DC82988 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
 		1E80DD2D042B327D9756E083 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1F2C7AE6509C80B6F30662AA /* FinancialConnectionsCustomManualEntryRequiredError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsCustomManualEntryRequiredError.swift; sourceTree = "<group>"; };
@@ -313,9 +324,19 @@
 		492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeAutofillBannerView.swift; sourceTree = "<group>"; };
 		492651672C25C0C2001DDBCA /* info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@3x.png"; sourceTree = "<group>"; };
 		494D62062C45B9B700106519 /* link_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "link_logo@3x.png"; sourceTree = "<group>"; };
+		4937BDA62C3D78B1004A8122 /* FinancialConnectionsManifest_Demo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FinancialConnectionsManifest_Demo.json; sourceTree = "<group>"; };
+		4937BDA72C3D78B1004A8122 /* FinancialConnectionsSession_both_accounts_la.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FinancialConnectionsSession_both_accounts_la.json; sourceTree = "<group>"; };
+		4937BDA82C3D78B1004A8122 /* FinancialConnectionsSession_only_accounts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_accounts.json; sourceTree = "<group>"; };
+		4937BDA92C3D78B1004A8122 /* FinancialConnectionsSession_only_both_missing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_both_missing.json; sourceTree = "<group>"; };
+		4937BDAA2C3D78B1004A8122 /* FinancialConnectionsSession_only_la.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_la.json; sourceTree = "<group>"; };
+		4937BDAB2C3D78B1004A8122 /* link.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = link.png; sourceTree = "<group>"; };
+		4937BDAC2C3D78B1004A8122 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lock.png; sourceTree = "<group>"; };
+		4937BDAD2C3D78B1004A8122 /* rocket-deliveries.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rocket-deliveries.png"; sourceTree = "<group>"; };
+		4937BDAE2C3D78B1004A8122 /* stripe-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stripe-logo.png"; sourceTree = "<group>"; };
+		49406EF82C371D9600EC17B0 /* ConsentPaneSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentPaneSnapshotTests.swift; sourceTree = "<group>"; };
+		495110372C38338400518E92 /* FCStubbedBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCStubbedBackend.swift; sourceTree = "<group>"; };
 		496A6AE62C29E0BB00D34F8E /* testmode@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testmode@3x.png"; sourceTree = "<group>"; };
 		4A7B146AA6BF44921A249DB8 /* EmptyFinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyFinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
-		4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_accounts.json; sourceTree = "<group>"; };
 		4BFCD9C339634B71FC8F85E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4C15A30C40F34CE330F89C41 /* SuccessDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessDataSource.swift; sourceTree = "<group>"; };
 		4DA1C1B311E06C1165C6F6A2 /* InstitutionSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchBar.swift; sourceTree = "<group>"; };
@@ -438,7 +459,6 @@
 		A680CB323B9139F838643EC1 /* LinkAccountPickerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountPickerFooterView.swift; sourceTree = "<group>"; };
 		A872C2B500306F775622F904 /* FinancialConnectionsSessionFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionFetcher.swift; sourceTree = "<group>"; };
 		A9B31B3A45DD8AAFD6F08820 /* AuthFlowHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowHelpers.swift; sourceTree = "<group>"; };
-		AA01BC4016BF8788633CCAD9 /* FinancialConnectionsSession_only_la.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_la.json; sourceTree = "<group>"; };
 		AC7FED22D9EAC568EA6B35EB /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		ACEF0BAF1A5BBA3061C15A09 /* FinancialConnectionsSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSession.swift; sourceTree = "<group>"; };
 		AFF070262170A321F5622CCF /* LinkAccountPickerNewAccountRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountPickerNewAccountRowView.swift; sourceTree = "<group>"; };
@@ -503,7 +523,6 @@
 		F2B7ECC6F6A4DA1F5F376467 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F2BA0F04A5A7D3B1DBF34AEE /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F669BB8F3DA862C425897705 /* HitTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestView.swift; sourceTree = "<group>"; };
-		F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_both_accounts_la.json; sourceTree = "<group>"; };
 		F897F5AA6A684D0A370EA7BC /* ManualEntryValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryValidator.swift; sourceTree = "<group>"; };
 		F8C7FDF59D906EA5C6B7A514 /* ManualEntryValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryValidatorTests.swift; sourceTree = "<group>"; };
 		F96A3BA5CCB8DCCFA3126974 /* StripeFinancialConnections.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeFinancialConnections.h; sourceTree = "<group>"; };
@@ -522,7 +541,10 @@
 				3BF4BBF7E722B961E037286C /* XCTest.framework in Frameworks */,
 				9CE29EA549C4BFA447AB82E0 /* StripeCore.framework in Frameworks */,
 				D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */,
-				864C5159C62C562C655B53F7 /* StripeFinancialConnections.framework in Frameworks */,
+				4951103B2C38377400518E92 /* OHHTTPStubs in Frameworks */,
+				49D0B1BA2C37248200377B3C /* StripeFinancialConnections.framework in Frameworks */,
+				4951103D2C38377400518E92 /* OHHTTPStubsSwift in Frameworks */,
+				49D0B1B92C37245C00377B3C /* iOSSnapshotTestCase in Frameworks */,
 				971E6F5E78BC3265CD80D0C6 /* StripeUICore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -651,6 +673,22 @@
 				6A05FB422BCF153F0001D128 /* InstantDebitsLinkedBankImplementation.swift */,
 			);
 			path = FinancialConnectionsSDK;
+			sourceTree = "<group>";
+		};
+		4937BDAF2C3D78B1004A8122 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4937BDA62C3D78B1004A8122 /* FinancialConnectionsManifest_Demo.json */,
+				4937BDA72C3D78B1004A8122 /* FinancialConnectionsSession_both_accounts_la.json */,
+				4937BDA82C3D78B1004A8122 /* FinancialConnectionsSession_only_accounts.json */,
+				4937BDA92C3D78B1004A8122 /* FinancialConnectionsSession_only_both_missing.json */,
+				4937BDAA2C3D78B1004A8122 /* FinancialConnectionsSession_only_la.json */,
+				4937BDAB2C3D78B1004A8122 /* link.png */,
+				4937BDAC2C3D78B1004A8122 /* lock.png */,
+				4937BDAD2C3D78B1004A8122 /* rocket-deliveries.png */,
+				4937BDAE2C3D78B1004A8122 /* stripe-logo.png */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		53C3F536D69FCBC77C3E7D5F /* Common */ = {
@@ -863,17 +901,6 @@
 			path = ManualEntry;
 			sourceTree = "<group>";
 		};
-		9D434FE45EB09749E475FED6 /* MockData */ = {
-			isa = PBXGroup;
-			children = (
-				F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */,
-				4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */,
-				1DF07A1AAD6B39033F0B86FD /* FinancialConnectionsSession_only_both_missing.json */,
-				AA01BC4016BF8788633CCAD9 /* FinancialConnectionsSession_only_la.json */,
-			);
-			path = MockData;
-			sourceTree = "<group>";
-		};
 		A7767444AAEB7AB6E887A54D /* PartnerAuth */ = {
 			isa = PBXGroup;
 			children = (
@@ -1021,7 +1048,7 @@
 		EA8A954B6F8275294AD1D76F /* StripeFinancialConnectionsTests */ = {
 			isa = PBXGroup;
 			children = (
-				9D434FE45EB09749E475FED6 /* MockData */,
+				4937BDAF2C3D78B1004A8122 /* Resources */,
 				77A71EBB1B98CD285DD17D5F /* AccountFetcherTests.swift */,
 				3ED33E6BADC0893C3F6B22D2 /* AccountPickerHelpersTests.swift */,
 				710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */,
@@ -1036,6 +1063,8 @@
 				965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */,
 				90A06A97D714450321A5D76D /* SoftLinkTests.swift */,
 				CF731140836AE438C7F4F6AB /* StringExtensionsTests.swift */,
+				49406EF82C371D9600EC17B0 /* ConsentPaneSnapshotTests.swift */,
+				495110372C38338400518E92 /* FCStubbedBackend.swift */,
 			);
 			path = StripeFinancialConnectionsTests;
 			sourceTree = "<group>";
@@ -1124,6 +1153,11 @@
 				3257A97C053FFC03C4806278 /* PBXTargetDependency */,
 			);
 			name = StripeFinancialConnectionsTests;
+			packageProductDependencies = (
+				49D0B1B82C37245C00377B3C /* iOSSnapshotTestCase */,
+				4951103A2C38377400518E92 /* OHHTTPStubs */,
+				4951103C2C38377400518E92 /* OHHTTPStubsSwift */,
+			);
 			productName = StripeFinancialConnectionsTests;
 			productReference = CFEEBA73EBBCE02A50B2DB7A /* StripeFinancialConnectionsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -1184,6 +1218,10 @@
 				"zh-Hant",
 			);
 			mainGroup = 7879CBA341D7E807714A831B;
+			packageReferences = (
+				49D0B1B72C37245C00377B3C /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				495110392C38377400518E92 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
+			);
 			productRefGroup = 820BF9CF057CF92872BC3C15 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1199,10 +1237,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0C1EF46A418A8F8774B7418 /* FinancialConnectionsSession_both_accounts_la.json in Resources */,
-				07BFA34C5643A79E1E35A159 /* FinancialConnectionsSession_only_accounts.json in Resources */,
-				A156FACA60231988F247F6F4 /* FinancialConnectionsSession_only_both_missing.json in Resources */,
-				ACD21F21C6E42706A882A1AE /* FinancialConnectionsSession_only_la.json in Resources */,
+				4937BDB32C3D78B1004A8122 /* FinancialConnectionsSession_only_both_missing.json in Resources */,
+				4937BDB72C3D78B1004A8122 /* rocket-deliveries.png in Resources */,
+				4937BDB22C3D78B1004A8122 /* FinancialConnectionsSession_only_accounts.json in Resources */,
+				4937BDB42C3D78B1004A8122 /* FinancialConnectionsSession_only_la.json in Resources */,
+				4937BDB82C3D78B1004A8122 /* stripe-logo.png in Resources */,
+				4937BDB12C3D78B1004A8122 /* FinancialConnectionsSession_both_accounts_la.json in Resources */,
+				4937BDB02C3D78B1004A8122 /* FinancialConnectionsManifest_Demo.json in Resources */,
+				4937BDB52C3D78B1004A8122 /* link.png in Resources */,
+				4937BDB62C3D78B1004A8122 /* lock.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1423,6 +1466,8 @@
 				846D1D7429B9E414744DEC99 /* FinancialConnectionsSheetTests.swift in Sources */,
 				C19996D0AC7E046DA87B6B32 /* ManualEntryValidatorTests.swift in Sources */,
 				779C729BB49FD4B99DCD517B /* MarkdownBoldAttributedStringTests.swift in Sources */,
+				495110382C38338400518E92 /* FCStubbedBackend.swift in Sources */,
+				49406EF92C371D9600EC17B0 /* ConsentPaneSnapshotTests.swift in Sources */,
 				BF5F964E1CA6312755D4161E /* SessionFetcherTests.swift in Sources */,
 				ED818E10F37230678B9B73CC /* SoftLinkTests.swift in Sources */,
 				D9F35B3B31CA2E52055D6B1D /* StringExtensionsTests.swift in Sources */,
@@ -1601,6 +1646,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		495110392C38377400518E92 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AliSoftware/OHHTTPStubs";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
+		49D0B1B72C37245C00377B3C /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/ios-snapshot-test-case.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4951103A2C38377400518E92 /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 495110392C38377400518E92 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		4951103C2C38377400518E92 /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 495110392C38377400518E92 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
+		};
+		49D0B1B82C37245C00377B3C /* iOSSnapshotTestCase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 49D0B1B72C37245C00377B3C /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */;
+			productName = iOSSnapshotTestCase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D00B888AF0B02587576A83F /* Project object */;
 }

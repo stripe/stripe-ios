@@ -70,7 +70,7 @@ final public class FinancialConnectionsSheet {
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((HostControllerResult) -> Void)?
 
-    private var hostController: HostController?
+    private(set) var hostController: HostController?
 
     private var wrapperViewController: ModalPresentationWrapperViewController?
 

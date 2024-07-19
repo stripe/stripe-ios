@@ -1,0 +1,145 @@
+{
+  "manifest": {
+    "id": "fcsess_1PZDslFLaOYXFtUADaitd835",
+    "account_disconnection_method": "support",
+    "account_subcategories": null,
+    "accountholder_is_link_consumer": false,
+    "accountholder_token": "bcaccthld_1PZDslFLaOYXFtUAs67viPV1",
+    "active_auth_session": null,
+    "active_institution": null,
+    "allow_manual_entry": false,
+    "assignment_event_id": "fd83041d-01c9-4900-88a7-bf4968e28248",
+    "auth_session_client_secret": null,
+    "business_name": "Rocket Deliveries",
+    "connect_platform_name": null,
+    "connected_account_name": null,
+    "consent_acquired_at": null,
+    "consent_required": true,
+    "custom_manual_entry_handling": false,
+    "deferred_intent_flow": false,
+    "disable_link_more_accounts": false,
+    "display_text": null,
+    "experiment_assignments": {
+      "connections_auth_flow_long_term_aa": "control",
+      "connections_consent_combined_logo": "treatment",
+      "connections_consent_prepane": "control",
+      "connections_ip_ua_aa": "control_test",
+      "connections_mobile_native": "treatment",
+      "connections_search_twenty": "control",
+      "connections_streamlined_consent_l3_v2": "control",
+      "connections_synchronize_aa": "control_test"
+    },
+    "features": {
+      "bank_connections_allow_retry_after_partner_auth_failure": true,
+      "bank_connections_android_enable_work_manager": false,
+      "bank_connections_continue_with_merchant_text": true,
+      "bank_connections_disable_defensive_auth_session_retrieval_on_complete": false,
+      "bank_connections_enable_async_push_pane_for_partner_auth": false,
+      "bank_connections_enable_passive_hcaptcha_check": true,
+      "bank_connections_enable_testmode_otp_help_text": true,
+      "bank_connections_partner_auth_js_redirect": false,
+      "bank_connections_separate_consent_pane_logo": false,
+      "bank_connections_token_exchange_on_oauth_completion": true,
+      "bank_connections_use_link_branding_in_crypto_onramp": false,
+      "bank_connections_use_mx_connect_origin_switcher": false,
+      "bank_connections_mobile_native_version_killswitch": false
+    },
+    "initial_institution": null,
+    "instant_verification_disabled": false,
+    "institution_search_disabled": false,
+    "is_end_user_facing": true,
+    "is_link_with_stripe": false,
+    "is_networking_user_flow": true,
+    "is_stripe_direct": false,
+    "link_account_session_cancellation_behavior": "treat_as_silent_success",
+    "link_hcaptcha_site_key": "20000000-ffff-ffff-ffff-000000000002",
+    "livemode": false,
+    "manual_entry_mode": "automatic",
+    "manual_entry_uses_microdeposits": false,
+    "mobile_handoff_enabled": true,
+    "modal_customization": null,
+    "next_pane": "consent",
+    "payment_method_type": null,
+    "permissions": [
+      "payment_method"
+    ],
+    "product": "external_api",
+    "single_account": false,
+    "skip_success_pane": false,
+    "step_up_authentication_required": false,
+    "theme": "light",
+    "use_single_sort_search": false,
+    "version": "v3"
+  },
+  "text": {
+    "consent_pane": {
+      "above_cta": "By continuing, you agree to Stripe's [Terms and Privacy Policy](stripe://legal-details-notice?eventName=click.legal_details.open&testId=legal-details-button)",
+      "body": {
+        "bullets": [
+          {
+            "content": "Connect your account in seconds.",
+            "icon": {
+              "default": "stripe://images/link"
+            },
+            "title": "Fast and simple"
+          },
+          {
+            "content": "Rocket Deliveries can [access data.](stripe://data-access-notice?eventName=click.data_requested) You can disconnect at any time.",
+            "icon": {
+              "default": "stripe://images/lock"
+            },
+            "title": "Your data is encrypted"
+          }
+        ]
+      },
+      "cta": "Agree and continue",
+      "data_access_notice": {
+        "body": {
+          "bullets": [
+            {
+              "icon": {
+                "default": "stripe://images/lock"
+              },
+              "title": "Account details"
+            }
+          ]
+        },
+        "cta": "OK",
+        "disclaimer": "Learn about [data shared with Stripe](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account?eventName=click.data_access.learn_more) and [how to disconnect](https://support.stripe.com/user/how-do-i-disconnect-my-linked-financial-account?eventName=click.disconnect_link)",
+        "icon": {
+          "default": "stripe://images/lock"
+        },
+        "subtitle": "Rocket Deliveries will have access to the following data and related insights:",
+        "title": "Data sharing"
+      },
+      "legal_details_notice": {
+        "body": {
+          "links": [
+            {
+              "title": "[Terms](https://stripe.com/legal/consumer/financial-connections?eventName=click.legal.terms)"
+            },
+            {
+              "title": "[Privacy Policy](https://stripe.com/privacy?eventName=click.legal.privacy_policy)"
+            }
+          ]
+        },
+        "cta": "OK",
+        "icon": {
+          "default": "stripe://images/link"
+        },
+        "subtitle": "Stripe only uses your data and credentials as described in the Terms, such as to improve its services, manage loss, and mitigate fraud.",
+        "title": "Terms and Privacy Policy"
+      },
+      "title": "Rocket Deliveries uses Stripe to connect your accounts"
+    },
+    "manual_entry_pane": {}
+  },
+  "visual": {
+    "merchant_logo": [
+      "stripe://images/rocket-deliveries",
+      "stripe://images/stripe-logo"
+    ],
+    "reduce_manual_entry_prominence_in_errors": false,
+    "reduced_branding": false
+  }
+}
