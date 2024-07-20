@@ -1,6 +1,7 @@
 ## X.Y.Z X-Y-Z
 ### PaymentSheet
 * [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
+* [Fixed] iOS 18 Compatibility with removing multiple saved payment methods
 
 ## 23.28.1 2024-07-16
 ### Payments
