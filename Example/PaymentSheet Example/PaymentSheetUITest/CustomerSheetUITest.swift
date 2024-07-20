@@ -885,8 +885,6 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: timeout))
         app.pickerWheels.firstMatch.swipeUp()
         app.toolbars.buttons["Done"].tap()
-        // Bug where it autoadvances to the MM / YY field even though it's filled out, have to tap Done again
-        app.toolbars.buttons["Done"].tap()
         app.buttons["Update"].waitForExistenceAndTap(timeout: timeout)
 
         // We should have updated to Visa
