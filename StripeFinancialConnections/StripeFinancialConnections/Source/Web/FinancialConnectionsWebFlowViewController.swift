@@ -84,7 +84,8 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         return item
     }()
 
-    private let loadingView = LoadingView(frame: .zero)
+    // Use nil theme so the spinner view doesn't flash to the theme's color before launching the webview.
+    private let loadingView = LoadingView(frame: .zero, theme: nil)
 
     // MARK: - Init
 

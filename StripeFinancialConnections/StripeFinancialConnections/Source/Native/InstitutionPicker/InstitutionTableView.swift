@@ -120,7 +120,7 @@ final class InstitutionTableView: UIView {
                     "Unable to dequeue cell \(InstitutionTableViewCell.self) with cell identifier \(cellIdentifier)"
                 )
             }
-            cell.customize(with: institution)
+            cell.customize(with: institution, theme: theme)
             return cell
         }
         dataSource.defaultRowAnimation = .fade

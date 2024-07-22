@@ -10,12 +10,13 @@ import Foundation
 import UIKit
 
 final class InstitutionTableViewCell: UITableViewCell {
+    private var theme: FinancialConnectionsTheme?
 
     private lazy var institutionIconView: InstitutionIconView = {
         return InstitutionIconView()
     }()
     private lazy var institutionCellView: InstitutionCellView = {
-        return InstitutionCellView()
+        return InstitutionCellView(theme: theme)
     }()
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
@@ -27,7 +28,6 @@ final class InstitutionTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         adjustBackgroundColor(isHighlighted: false)
-        contentView.addAndPinSubview(institutionCellView)
     }
 
     required init?(coder: NSCoder) {
@@ -74,7 +74,8 @@ final class InstitutionTableViewCell: UITableViewCell {
 
 extension InstitutionTableViewCell {
 
-    func customize(with institution: FinancialConnectionsInstitution) {
+    func customize(with institution: FinancialConnectionsInstitution, theme: FinancialConnectionsTheme?) {
+        self.theme = theme
         institutionIconView.setImageUrl(institution.icon?.default)
 
         institutionCellView.customize(
@@ -82,6 +83,8 @@ extension InstitutionTableViewCell {
             title: institution.name,
             subtitle: AuthFlowHelpers.formatUrlString(institution.url)
         )
+
+        contentView.addAndPinSubview(institutionCellView)
     }
 }
 
@@ -94,6 +97,7 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
 
     let showLoadingView: Bool
     let showOverlayView: Bool
+    let theme: FinancialConnectionsTheme
 
     func makeUIView(context: Context) -> InstitutionTableViewCell {
         InstitutionTableViewCell(style: .default, reuseIdentifier: "test")
@@ -108,7 +112,8 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
                 url: "https://www.bankofamerica.com/",
                 icon: nil,
                 logo: nil
-            )
+            ),
+            theme: theme
         )
         uiView.showLoadingView(showLoadingView)
         uiView.showOverlayView(showOverlayView)
@@ -121,17 +126,26 @@ struct InstitutionTableViewCell_Previews: PreviewProvider {
         VStack(spacing: 20) {
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: false,
-                showOverlayView: false
+                showOverlayView: false,
+                theme: .light
             ).frame(width: 343, height: 72)
 
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: true,
-                showOverlayView: false
+                showOverlayView: false,
+                theme: .light
+            ).frame(width: 343, height: 72)
+
+            InstitutionTableViewCellUIViewRepresentable(
+                showLoadingView: true,
+                showOverlayView: false,
+                theme: .linkLight
             ).frame(width: 343, height: 72)
 
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: false,
-                showOverlayView: true
+                showOverlayView: true,
+                theme: .light
             ).frame(width: 343, height: 72)
             Spacer()
         }

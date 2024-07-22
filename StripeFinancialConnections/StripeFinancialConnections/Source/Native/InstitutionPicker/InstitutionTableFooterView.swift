@@ -23,7 +23,7 @@ final class InstitutionTableFooterView: UIView {
         self.didSelect = didSelect
         super.init(frame: .zero)
 
-        let institutionCellView = InstitutionCellView()
+        let institutionCellView = InstitutionCellView(theme: theme)
         institutionCellView.customize(
             iconView: RoundedIconView(
                 image: .image(image),

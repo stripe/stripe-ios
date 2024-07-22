@@ -94,3 +94,16 @@ extension FinancialConnectionsTheme {
         }
     }
 }
+
+extension FinancialConnectionsTheme? {
+    var spinnerColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen200
+        case .light:
+            return .brand500
+        case .none:
+            return .neutral200
+        }
+    }
+}
