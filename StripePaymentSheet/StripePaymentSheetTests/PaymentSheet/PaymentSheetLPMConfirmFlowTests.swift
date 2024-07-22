@@ -424,7 +424,6 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             paymentMethodType: .stripe(.card),
             configuration: configuration
         ) { form in
-            print(form)
             form.getCardSection().panElement.setText("4242424242424242")
             form.getCardSection().expiryElement.setText("1228")
             form.getCardSection().cvcElement.setText("123")
