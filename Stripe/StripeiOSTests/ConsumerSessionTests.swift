@@ -11,15 +11,15 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
-import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
 class ConsumerSessionTests: STPNetworkStubbingTestCase {
 
     var apiClient: STPAPIClient!
-    
+
     override func setUp() {
         super.setUp()
         apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

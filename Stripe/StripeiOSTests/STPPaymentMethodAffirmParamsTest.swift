@@ -6,12 +6,12 @@
 //
 
 import Foundation
-import StripeCoreTestUtils
-import StripePaymentsTestUtils
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodAffirmParamsTests: STPNetworkStubbingTestCase {

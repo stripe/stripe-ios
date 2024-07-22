@@ -12,8 +12,8 @@ import OHHTTPStubs
 @testable import StripeApplePay
 @testable import StripeCoreTestUtils
 @testable import StripePayments
-@testable import StripePaymentsTestUtils
 @testable import StripePaymentsObjcTestUtils
+@testable import StripePaymentsTestUtils
 
 class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
     func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCreatePaymentMethod paymentMethod: StripePayments.STPPaymentMethod, paymentInformation: PKPayment, completion: @escaping StripeApplePay.STPIntentClientSecretCompletionBlock) {

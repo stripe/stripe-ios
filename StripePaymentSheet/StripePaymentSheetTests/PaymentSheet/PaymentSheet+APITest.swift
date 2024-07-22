@@ -19,7 +19,7 @@ import XCTest
 class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     var apiClient: STPAPIClient!
-    
+
     override func setUp() {
         super.setUp()
         self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

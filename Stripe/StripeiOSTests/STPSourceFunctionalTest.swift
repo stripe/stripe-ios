@@ -9,8 +9,8 @@
 
 @_spi(STP) @testable import StripeCore
 @testable import StripeCoreTestUtils
-import StripePaymentsTestUtils
 @_spi(STP) @testable import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
 class STPSourceFunctionalTest: STPNetworkStubbingTestCase {

@@ -11,9 +11,9 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
-@testable@_spi(STP) import StripePaymentsTestUtils
 
 class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     func testPANValidation() throws {

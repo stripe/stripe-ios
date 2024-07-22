@@ -13,8 +13,8 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
 import StripePaymentsTestUtils
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodUSBankAccountTest: STPNetworkStubbingTestCase {
 

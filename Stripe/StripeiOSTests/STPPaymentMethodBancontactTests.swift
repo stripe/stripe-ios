@@ -12,8 +12,8 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
 import StripePaymentsTestUtils
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodBancontactTests: STPNetworkStubbingTestCase {
     private(set) var bancontactJSON: [AnyHashable: Any]?

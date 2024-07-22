@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import StripePaymentsTestUtils
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
+import StripePaymentsTestUtils
 
 class STPPaymentMethodSwishParamsTests: STPNetworkStubbingTestCase {
 

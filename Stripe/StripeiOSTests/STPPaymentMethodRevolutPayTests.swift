@@ -5,8 +5,8 @@
 
 @testable import Stripe
 import StripeCoreTestUtils
-import XCTest
 import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodRevolutPayTests: STPNetworkStubbingTestCase {
 
