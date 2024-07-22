@@ -65,6 +65,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
     }
 
+    /// If `setContent..` is called while `BottomSheetPresentationAnimator` is mid-transition, we complete the transition before setting content.
+    var completeBottomSheetPresentationTransition: ((Bool) -> Void)?
+
     func pushContentViewController(_ contentViewController: BottomSheetContentViewController) {
         contentStack.insert(contentViewController, at: 0)
         self.contentViewController = contentViewController
@@ -94,6 +97,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             guard self.contentViewController !== oldContentViewController else {
                 return
             }
+
+            // Handle edge case where BottomSheetPresentationAnimator is mid-presentation
+            // We need to finish *that* transition before starting this one.
+            self.completeBottomSheetPresentationTransition?(true)
 
             // This is a hack to get the animation right.
             // Instead of allowing the height change to implicitly occur within

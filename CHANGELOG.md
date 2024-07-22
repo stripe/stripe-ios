@@ -1,6 +1,9 @@
 ## X.Y.Z X-Y-Z
 ### PaymentSheet
 * [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
+* [Added] When a card is saved (ie you're using a PaymentIntent + setup_future_usage or SetupIntent), legal disclaimer text now appears below the form indicating the card can be charged for future payments.
+* [Fixed] iOS 18 Compatibility with removing multiple saved payment methods
+
 
 ## 23.28.1 2024-07-16
 ### Payments
