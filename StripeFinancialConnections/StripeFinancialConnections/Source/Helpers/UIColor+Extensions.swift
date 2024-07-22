@@ -163,12 +163,16 @@ extension UIColor {
         return UIColor(red: 34 / 255.0, green: 132 / 255.0, blue: 3 / 255.0, alpha: 1)  // #228403
     }
 
-    static var linkBrand200: UIColor {
+    static var legacyLinkBrand200: UIColor {
         return UIColor(red: 166 / 255.0, green: 251 / 255.0, blue: 221 / 255.0, alpha: 1)  // #a6fbdd
     }
 
-    static var linkBrand600: UIColor {
+    static var legacyLinkBrand600: UIColor {
         return UIColor(red: 26 / 255.0, green: 197 / 255.0, blue: 155 / 255.0, alpha: 1)  // #1ac59b
+    }
+
+    static var linkGreen200: UIColor {
+        return UIColor(red: 0 / 255.0, green: 214 / 255.0, blue: 111 / 255.0, alpha: 1)  // #00D66F
     }
 
     static var linkGreen900: UIColor {

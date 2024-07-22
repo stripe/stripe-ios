@@ -59,6 +59,7 @@
 		492651662C24C9E7001DDBCA /* TestModeAutofillBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */; };
 		492651682C25C0C2001DDBCA /* info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 492651672C25C0C2001DDBCA /* info@3x.png */; };
 		494D62072C45B9B700106519 /* link_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 494D62062C45B9B700106519 /* link_logo@3x.png */; };
+		495539EE2C484DC200543D18 /* FinancialConnectionsTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */; };
 		496A6AE72C29E0BB00D34F8E /* testmode@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496A6AE62C29E0BB00D34F8E /* testmode@3x.png */; };
 		4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */; };
 		4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */; };
@@ -313,6 +314,7 @@
 		492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeAutofillBannerView.swift; sourceTree = "<group>"; };
 		492651672C25C0C2001DDBCA /* info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@3x.png"; sourceTree = "<group>"; };
 		494D62062C45B9B700106519 /* link_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "link_logo@3x.png"; sourceTree = "<group>"; };
+		495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsTheme.swift; sourceTree = "<group>"; };
 		496A6AE62C29E0BB00D34F8E /* testmode@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testmode@3x.png"; sourceTree = "<group>"; };
 		4A7B146AA6BF44921A249DB8 /* EmptyFinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyFinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_accounts.json; sourceTree = "<group>"; };
@@ -738,6 +740,7 @@
 				ACEF0BAF1A5BBA3061C15A09 /* FinancialConnectionsSession.swift */,
 				429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */,
 				4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */,
+				495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1390,6 +1393,7 @@
 				99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */,
 				AA80602323C28AFAC391358D /* TimeInterval+Extensions.swift in Sources */,
 				E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */,
+				495539EE2C484DC200543D18 /* FinancialConnectionsTheme.swift in Sources */,
 				486E50E6CB90208AB98C031E /* UIImageView+Extensions.swift in Sources */,
 				F0FB346A0F86C3561CD3C048 /* UITableView+Extensions.swift in Sources */,
 				A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */,
