@@ -452,6 +452,7 @@ extension PlaygroundController {
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
+            assert(settingsToLoad.apmsEnabled == .off, "supported payment methods is set but will have no effect while automatic payment methods are enabled")
             body["supported_payment_methods"] = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
