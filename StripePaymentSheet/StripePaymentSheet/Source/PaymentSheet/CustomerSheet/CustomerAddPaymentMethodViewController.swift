@@ -147,6 +147,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodScreenPresented()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        sendEventToSubviews(.viewDidAppear, from: view)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground

@@ -347,6 +347,13 @@ extension String.Localized {
         )
     }
 
+    static var by_providing_your_card_information_text: String {
+        STPLocalizedString(
+            "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
+            "Text displayed below a credit card entry form when the card will be saved to make future payments."
+        )
+    }
+
     static var confirm_your_cvc: String {
         STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
     }

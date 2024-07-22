@@ -158,6 +158,12 @@ FOUNDATION_EXPORT NSString * const SWHttpTrafficRecorderErrorDomain;
 @property(nonatomic, readonly, assign) BOOL isRecording;
 
 /**
+ *  A Boolean value indicating whether to follow HTTP redirects.
+ *  If NO, the recorder will only record the body of the redirect instead of the redirect itself.
+ */
+@property(nonatomic, assign) BOOL followRedirects;
+
+/**
  *  A Enum value which indicates the format the recording is using to record traffic.
  */
 @property(nonatomic, assign) SWHTTPTrafficRecordingFormat recordingFormat;
