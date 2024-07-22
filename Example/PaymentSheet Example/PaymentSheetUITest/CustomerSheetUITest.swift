@@ -854,6 +854,8 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: timeout))
         cardBrandChoiceDropdown.selectNextOption()
         app.toolbars.buttons["Done"].tap()
+        // Bug where it autoadvances to the MM / YY field even though it's filled out, have to tap Done again
+        app.toolbars.buttons["Done"].tap()
 
         // We should have selected cartes bancaires
         XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: timeout))
