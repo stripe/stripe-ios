@@ -84,7 +84,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                             customSuccessPaneMessage: nil
                         )
                     }
-                ) : nil
+                ) : nil,
+                theme: dataSource.manifest.theme
             ).footerView
         )
         paneLayoutView.addTo(view: view)

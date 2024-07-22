@@ -31,6 +31,7 @@ final class ManualEntryViewController: UIViewController {
     }()
     private lazy var footerView: ManualEntryFooterView = {
         let manualEntryFooterView = ManualEntryFooterView(
+            theme: dataSource.manifest.theme,
             didSelectContinue: { [weak self] in
                 self?.didSelectContinue()
             }
