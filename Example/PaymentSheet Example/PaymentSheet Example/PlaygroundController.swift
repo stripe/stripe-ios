@@ -14,9 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
-@_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -644,8 +642,8 @@ extension PlaygroundController {
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
                 if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400,
-                   let errorMessage = String(data: data, encoding: .utf8){
+                   (response as? HTTPURLResponse)?.statusCode == 400 {
+                    let errorMessage = String(decoding: data, as: UTF8.self)
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
