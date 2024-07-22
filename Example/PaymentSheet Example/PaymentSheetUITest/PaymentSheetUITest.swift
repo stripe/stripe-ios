@@ -449,43 +449,41 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
     // MARK: Deferred tests (client-side)
 
-    // TODO(porter) Re-enable
+    func testDeferredPaymentIntent_ClientSideConfirmation() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.integrationType = .deferred_csc
+        loadPlayground(app, settings)
 
-//    func testDeferredPaymentIntent_ClientSideConfirmation() {
-//        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-//        settings.integrationType = .deferred_csc
-//        loadPlayground(app, settings)
-//
-//        app.buttons["Present PaymentSheet"].tap()
-//        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
-//
-//        XCTAssertEqual(
-//            // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
-//            analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" }),
-//            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "mc_complete_sheet_newpm_show", "mc_form_shown"]
-//        )
-//        XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
-//
-//        try? fillCardData(app, container: nil)
-//
-//        app.buttons["Pay $50.99"].tap()
-//
-//        let successText = app.staticTexts["Success!"]
-//        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-//
-//        XCTAssertEqual(
-//            analyticsLog.suffix(8).map({ $0[string: "event"] }),
-//            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
-//        )
-//
-//        // Make sure they all have the same session id
-//        let sessionID = analyticsLog.first![string: "session_id"]
-//        XCTAssertTrue(!sessionID!.isEmpty)
-//        for analytic in analyticsLog {
-//            XCTAssertEqual(analytic[string: "session_id"], sessionID)
-//        }
-//
-//    }
+        app.buttons["Present PaymentSheet"].tap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+
+        XCTAssertEqual(
+            // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
+            analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" }),
+            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "mc_complete_sheet_newpm_show", "mc_form_shown"]
+        )
+        XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
+
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Pay $50.99"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        XCTAssertEqual(
+            analyticsLog.suffix(8).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+        )
+
+        // Make sure they all have the same session id
+        let sessionID = analyticsLog.first![string: "session_id"]
+        XCTAssertTrue(!sessionID!.isEmpty)
+        for analytic in analyticsLog {
+            XCTAssertEqual(analytic[string: "session_id"], sessionID)
+        }
+
+    }
 
     func testDeferredPaymentIntent_ClientSideConfirmation_LostCardDecline() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
