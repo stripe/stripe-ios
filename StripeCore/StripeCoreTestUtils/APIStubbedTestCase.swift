@@ -14,6 +14,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 
 /// A test case offering a custom STPAPIClient with manual JSON stubbing.
+/// To automatically record requests, try STPNetworkStubbingTestCase instead.
 open class APIStubbedTestCase: XCTestCase {
     open override func setUp() {
         super.setUp()

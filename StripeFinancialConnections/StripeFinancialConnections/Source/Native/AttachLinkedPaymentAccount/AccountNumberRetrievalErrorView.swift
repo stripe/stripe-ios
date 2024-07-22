@@ -15,6 +15,7 @@ final class AccountNumberRetrievalErrorView: UIView {
 
     init(
         institution: FinancialConnectionsInstitution,
+        theme: FinancialConnectionsTheme,
         didSelectAnotherBank: @escaping () -> Void,
         didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
     ) {
@@ -60,7 +61,8 @@ final class AccountNumberRetrievalErrorView: UIView {
                     } else {
                         return nil
                     }
-                }()
+                }(),
+                theme: theme
             ).footerView
         )
         paneLayoutView.addTo(view: self)
@@ -78,6 +80,7 @@ import SwiftUI
 private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
+    let theme: FinancialConnectionsTheme
     let didSelectEnterBankDetailsManually: (() -> Void)?
 
     func makeUIView(context: Context) -> AccountNumberRetrievalErrorView {
@@ -89,6 +92,7 @@ private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewReprese
                 icon: nil,
                 logo: nil
             ),
+            theme: theme,
             didSelectAnotherBank: {},
             didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
         )
@@ -101,11 +105,13 @@ struct AccountNumberRetrievalErrorView_Previews: PreviewProvider {
     static var previews: some View {
         AccountNumberRetrievalErrorViewUIViewRepresentable(
             institutionName: "Chase",
+            theme: .light,
             didSelectEnterBankDetailsManually: {}
         )
 
         AccountNumberRetrievalErrorViewUIViewRepresentable(
             institutionName: "Bank of America",
+            theme: .light,
             didSelectEnterBankDetailsManually: nil
         )
     }

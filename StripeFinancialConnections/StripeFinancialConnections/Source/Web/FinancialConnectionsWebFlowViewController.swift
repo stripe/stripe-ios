@@ -37,6 +37,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private lazy var continueStateView: UIView = {
         let continueStateViews = ContinueStateViews(
             institutionImageUrl: nil,
+            theme: manifest.theme,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
                 if let url = self.lastOpenedNativeURL {
