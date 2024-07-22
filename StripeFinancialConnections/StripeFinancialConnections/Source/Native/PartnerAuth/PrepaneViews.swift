@@ -34,6 +34,7 @@ final class PrepaneViews {
         prepaneModel: FinancialConnectionsOAuthPrepane,
         isRepairSession: Bool,
         panePresentationStyle: PanePresentationStyle,
+        theme: FinancialConnectionsTheme,
         didSelectURL: @escaping (URL) -> Void,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: @escaping () -> Void
@@ -89,7 +90,8 @@ final class PrepaneViews {
                         action: didSelectCancel
                     )
                 }
-            }()
+            }(),
+            theme: theme
         )
         self.footerView = footerViewTuple.footerView
         self.primaryButton = footerViewTuple.primaryButton
@@ -207,6 +209,7 @@ private class PrepanePreviewView: UIView {
         ),
         isRepairSession: false,
         panePresentationStyle: .sheet,
+        theme: .light,
         didSelectURL: { _ in },
         didSelectContinue: {},
         didSelectCancel: {}

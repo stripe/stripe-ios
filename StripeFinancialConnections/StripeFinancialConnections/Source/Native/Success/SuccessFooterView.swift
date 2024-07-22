@@ -12,10 +12,11 @@ import UIKit
 
 final class SuccessFooterView: UIView {
 
+    private let theme: FinancialConnectionsTheme
     private let didSelectDone: (SuccessFooterView) -> Void
 
     private lazy var doneButton: Button = {
-        let doneButton = Button.primary()
+        let doneButton = Button.primary(theme: theme)
         doneButton.title = "Done"  // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
         doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
@@ -27,8 +28,10 @@ final class SuccessFooterView: UIView {
     }()
 
     init(
+        theme: FinancialConnectionsTheme,
         didSelectDone: @escaping (SuccessFooterView) -> Void
     ) {
+        self.theme = theme
         self.didSelectDone = didSelectDone
         super.init(frame: .zero)
 

@@ -54,6 +54,7 @@ NSString * const SWHttpTrafficRecorderErrorDomain           = @"RECORDER_ERROR_D
     dispatch_once(&onceToken, ^{
         shared = self.new;
         shared.isRecording = NO;
+        shared.followRedirects = YES;
         shared.fileNo = 0;
         shared.fileCreationQueue = [[NSOperationQueue alloc] init];
         shared.runTimeStamp = 0;
@@ -254,6 +255,8 @@ didReceiveResponse:(NSURLResponse *)response
                                                  }];
     
     NSString *path = [self getFilePath:request response:response];
+    NSLog(@"Recording request: %@", request.URL);
+    NSLog(@"Recording response code: %ld", (long)response.statusCode);
     SWHTTPTrafficRecordingFormat format = [SWHttpTrafficRecorder sharedRecorder].recordingFormat;
     if(format == SWHTTPTrafficRecordingFormatBodyOnly){
         [self createBodyOnlyFileWithRequest:request response:response data:data atFilePath:path];
@@ -276,7 +279,11 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     if (response != nil) {
         [[self client] URLProtocol:self wasRedirectedToRequest:request redirectResponse:response];
     }
-    completionHandler(request);
+    if ([SWHttpTrafficRecorder sharedRecorder].followRedirects) {
+        completionHandler(request);
+    } else {
+        completionHandler(nil);
+    }
 }
 
 
