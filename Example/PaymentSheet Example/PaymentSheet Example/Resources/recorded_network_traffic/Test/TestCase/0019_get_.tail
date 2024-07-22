@@ -1,0 +1,15 @@
+GET
+https:\/\/q\.stripe\.com\/\?analytics_ua=analytics\.stripeios-1\.0&app_name=PaymentSheetExample&app_version=1\.0&apple_pay_enabled=true&bindings_version=23\.28\.1&device_type=arm64&event=mc_carousel_payment_method_tapped&install=X&is_decoupled=false&is_development=true&locale=en_US&network_type=Wi-Fi&ocr_type=none&os_version=18\.0&pay_var=paymentsheet&product_usage%5B0%5D=PaymentSheet&product_usage%5B1%5D=SwiftUI&publishable_key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&selected_lpm=us_bank_account&session_id=0277b683-6c63-4b70-9986-3d82e094b0d1$
+200
+image/gif;base64
+Server: nginx
+Content-Type: image/gif
+Pragma: no-cache
+Last-Modified: Mon, 28 Sep 1970 06:00:00 GMT
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Date: Sat, 20 Jul 2024 02:33:01 GMT
+Content-Length: 43
+Cache-Control: no-cache, no-store, private, must-revalidate, max-age=0, max-stale=0, post-check=0, pre-check=0
+Expires: 0
+
+R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAICTAEAOw==

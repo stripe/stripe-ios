@@ -6,7 +6,7 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -40,6 +40,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     @available(iOS 15.0, *)
     func launchWith(base64String: String) {
+        // Don't let the userdefaults influence the behavior:
+        UserDefaults.standard.customerToLastSelectedPaymentMethod = nil
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: PaymentSheetTestPlaygroundSettings.self)!
         let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings))
         let navController = UINavigationController(rootViewController: hvc)
@@ -70,6 +72,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.async {
             // Open URL contexts on app launch if available
             self.scene(scene, openURLContexts: connectionOptions.urlContexts)
+        }
+
+        if let testName = ProcessInfo.processInfo.environment["STP_NETWORK_MOCK_TEST"] {
+            let shouldRecord = ProcessInfo.processInfo.environment["STP_NETWORK_MOCK_RECORD_MODE"] ?? "" == "YES"
+            PaymentSheetNetworkRecorder.shared.beginMockingForTest(recordingMode: shouldRecord, name: testName)
         }
 
         if let playgroundData = ProcessInfo.processInfo.environment["STP_PLAYGROUND_DATA"] {

@@ -5,6 +5,7 @@
 
 import StripePaymentSheet
 import SwiftUI
+@_spi(STP) import StripeCore
 struct ExampleSwiftUICustomerSheet: View {
     @State private var showingCustomerSheet = false
     @ObservedObject var model = MyBackendCustomerSheetModel()
@@ -70,7 +71,7 @@ class MyBackendCustomerSheetModel: ObservableObject {
         ] as [String: Any]
 
         let url = URL(string: "\(backendCheckoutUrl)/customer_ephemeral_key")!
-        let session = URLSession.shared
+        let session = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)

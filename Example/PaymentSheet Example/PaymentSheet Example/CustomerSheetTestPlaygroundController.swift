@@ -6,6 +6,7 @@
 import Combine
 @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
+@_spi(STP) import StripeCore
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
     static let defaultEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
@@ -325,7 +326,7 @@ class CustomerSheetBackend {
         }
 
         let url = URL(string: "\(endpoint)/customer_ephemeral_key")!
-        let session = URLSession.shared
+        let session = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)
@@ -351,7 +352,7 @@ class CustomerSheetBackend {
                      "merchant_country_code": merchantCountryCode,
         ] as [String: Any]
         let url = URL(string: "\(endpoint)/create_setup_intent")!
-        let session = URLSession.shared
+        let session = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)

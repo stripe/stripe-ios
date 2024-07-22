@@ -1,0 +1,26 @@
+GET
+https:\/\/js\.stripe\.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-klarna@3x-d8624aa9a5662d719a44d16b9fcca0be\.png$
+200
+image/png;base64
+Server: Fastly
+timing-allow-origin: *
+Cache-Control: max-age=31536000
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Accept-Ranges: bytes
+Access-Control-Allow-Origin: *
+x-served-by: cache-bur-kbur8200094-BUR
+Alt-Svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+Content-Length: 454
+Via: 1.1 varnish
+Vary: Accept-Encoding
+Date: Sat, 20 Jul 2024 03:20:29 GMT
+x-cache-hits: 0
+x-request-id: d3303e5c-7c12-428f-bcdc-8d0b2f3b84b4
+Age: 2020132
+x-cache: HIT
+Content-Type: image/png
+Etag: "8d5f036c9404719c3d9fb096be2d598b"
+x-content-type-options: nosniff
+Last-Modified: Tue, 26 Sep 2023 23:09:09 GMT
+
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAdVBMVEUAAAD/s8f/r8f/s8b/ssf/s8f/s8f/tMf/ssf/s8f/ssT/tMn/s8b/s8cKCwngnq/Rk6NHNTjwqLs4KizCiZcpICEpICAaFhWjdICEX2h1VFx2VFyFX2iUaXQZFRVWP0SjdH9mSlAZFhUaFhSUaXOyfouTaXR1NhLaAAAADXRSTlMAvyDv39/PX2DvYF/PEUirVwAAAPNJREFUeF7d1sduwzAQRdGRZMuOncem4ppe/v8TgxkGRlbRm63vSgseEMOFSNF2TYfFumYjtbYH2bq19SvAJVZw1Ivs4GojjQ800vnAg8DZ3YGgnVAbg+YARy84KZgcICvIPCimzzyoI4w8mBTMoMHV8BsNYrAiC+J024AAt/VzJMHxEKwvcMDmNUmC1wpewAJcDDxHGpTZxEADpHcTZxrgM1gjDZD/jpFyGNIC+B0jK4gHteV/gDFY3wCe6tcCwKWKRAMMBqaComf2ERdBvJ1tGkJOd/hv5XNfWf5LcesDe5FHD1j7nw4u0bdS23LPn72u/QG60HcLBvu2CQAAAABJRU5ErkJggg==

@@ -1,0 +1,15 @@
+GET
+https:\/\/q\.stripe\.com\/\?analytics_ua=analytics\.stripeios-1\.0&app_name=PaymentSheetExample&app_version=1\.0&apple_pay_enabled=true&bindings_version=23\.28\.1&device_type=arm64&event=mc_complete_init_applepay&install=X&is_decoupled=false&is_development=true&locale=en_US&mpe_config%5Ballows_delayed_payment_methods%5D=true&mpe_config%5Bappearance%5D%5Bborder_width%5D=false&mpe_config%5Bappearance%5D%5Bcolors%5D=false&mpe_config%5Bappearance%5D%5Bcorner_radius%5D=false&mpe_config%5Bappearance%5D%5Bfont%5D=false&mpe_config%5Bappearance%5D%5Bprimary_button%5D=false&mpe_config%5Bappearance%5D%5Bshadow%5D=false&mpe_config%5Bappearance%5D%5Busage%5D=false&mpe_config%5Bapple_pay_config%5D=true&mpe_config%5Bbilling_details_collection_configuration%5D%5Baddress%5D=automatic&mpe_config%5Bbilling_details_collection_configuration%5D%5Battach_defaults%5D=false&mpe_config%5Bbilling_details_collection_configuration%5D%5Bemail%5D=automatic&mpe_config%5Bbilling_details_collection_configuration%5D%5Bname%5D=automatic&mpe_config%5Bbilling_details_collection_configuration%5D%5Bphone%5D=automatic&mpe_config%5Bcustomer%5D=false&mpe_config%5Bdefault_billing_details%5D=true&mpe_config%5Bpayment_method_layout%5D=horizontal&mpe_config%5Breturn_url%5D=true&mpe_config%5Bsave_payment_method_opt_in_behavior%5D=automatic&mpe_config%5Bstyle%5D=0&network_type=Wi-Fi&ocr_type=none&os_version=18\.0&pay_var=paymentsheet&product_usage%5B0%5D=PaymentSheet&publishable_key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&session_id=0277b683-6c63-4b70-9986-3d82e094b0d1$
+200
+image/gif;base64
+Server: nginx
+Content-Type: image/gif
+Pragma: no-cache
+Last-Modified: Mon, 28 Sep 1970 06:00:00 GMT
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Date: Sat, 20 Jul 2024 02:32:24 GMT
+Content-Length: 43
+Cache-Control: no-cache, no-store, private, must-revalidate, max-age=0, max-stale=0, post-check=0, pre-check=0
+Expires: 0
+
+R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAICTAEAOw==

@@ -1,0 +1,23 @@
+POST
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/checkout$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: a95f8280539aaf92d17b45584533dfc6
+Via: 1.1 google
+Date: Sat, 20 Jul 2024 03:20:54 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 513
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"201-P1iG6FLC/P+RE465kzn/YDHqSgs"
+
+{
+  "publishableKey" : "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C",
+  "customerEphemeralKeySecret" : "ek_test_YWNjdF8xSHZUSTdMdTVvM1AxOFpwLDhpR2pOZmdkWGFJWXZGd1I5WnBsTzdZMk9sYVZGSTg_00xJG2tenQ",
+  "intentClientSecret" : "pi_3PeTqsLu5o3P18Zp0A17YKl5_secret_3uefnyC9jb0i2lAszzVGStdHZ",
+  "amount" : "5099",
+  "customerId" : "cus_QVUprhiFcvOIyc",
+  "paymentMethodTypes" : "card,acss_debit,afterpay_clearpay,alipay,klarna,link,us_bank_account,wechat_pay,affirm,cashapp,amazon_pay"
+}

@@ -1,0 +1,26 @@
+GET
+https:\/\/js\.stripe\.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-affirm@3x-d2623d995950761883fca048ce6e0550\.png$
+200
+image/png;base64
+Server: Fastly
+timing-allow-origin: *
+Cache-Control: max-age=31536000
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Accept-Ranges: bytes
+Access-Control-Allow-Origin: *
+x-served-by: cache-bur-kbur8200170-BUR
+Alt-Svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+Content-Length: 1091
+Via: 1.1 varnish
+Vary: Accept-Encoding
+Date: Sat, 20 Jul 2024 03:20:29 GMT
+x-cache-hits: 1
+x-request-id: cd956d02-b7da-463e-a717-6f9c848c2835
+Age: 1936532
+x-cache: HIT
+Content-Type: image/png
+Etag: "e64c539c22af0acc5d7a7cdd9517d3d3"
+x-content-type-options: nosniff
+Last-Modified: Tue, 26 Sep 2023 23:09:09 GMT
+
+iVBORw0KGgoAAAANSUhEUgAAAD8AAAAwCAMAAACR11I4AAABCFBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////9VVfUlJyjo6P6Ojvi7u/sGCAmZmfihoqN3d/ZjZGVydHTd3f3v7++lpfmwsPp3d/dhYfXBwcH09P5gYPVjZWUWGBnS0vxKSvRsbPVERUakpPmioqNUVVYWGBiCgvfAwcGSk5PR0fzv8PDHx/uCg4SkpPqvr/rc3P1ERkexsrKCgvgWFxhERkbg4OBsbPavr/vBwcI1Nzc1NjdzdHTQ0NGZmfnGxvvf4ODQ0NA0NjewsbLR0dFTVVZzdHVUVlaDhISxsbImamD4AAAAFnRSTlMAEN/vz58gkK8wQH+ggL9vT3BQYF+PtSbYhwAAAtRJREFUeF6dled6ozAQRQUY48Rpm+xeqnvvTu8923t//zdZIjGfkD5IvD7/jH0uM54RsDxWNp2SaQGwChvO5gr7H4xt24KKVXq5qF10SFYx7eIi9ho4fli5HbrTmGG30rkC59kEo8zlq4vhVKUXnPCEsvGUvmoi5qQ7zaIX8i5W8/WyYucllPNqtwH4ZOck+ABKRqZeAHDmpgR3FsQc1vg14gJAwcjRL6Rc6/gg/LNAZnT9zIBHPSDZbQ+gEQ5lDxkBr0jXbD2BAmz9n5d6zUcO7VTAC2XpUr13kE8zKeE1gPSRMoEwqX2Cp/CTgE9AQeqboC/cJrBQwCTVQdEEArqMxQJ6A1g0gzXgs9DbeJ6mWIVdYD25vQWI0EARWt8b914UedejagspOqJTKoDtACGNRXJ0P44kowdIumoBJl1pp+1IxUsFTKgAk595wBe3B/FAthKgF3AJrMa+A1S4/wbEeZTBtV5AF3DEwZlxX3Z/eiCU8bxe339PAW/1AngDRSq/BqgFzPst0Y0n/Ib0d7kRAgbbBs7oU6qA2AZxI/x30vdp3FtsndpXNvf8AyQfhX8HiZucIoeVqBvkchwJIDnkEwRstgHMRFgmX75WR5HuU8k+CsxMiqlBp1Wtf6Md1P3LpGWTAaDdV9ijHcr0QzqtOf4Rn9lSPs1/cd/V/T0yxvXjm/6Pvaz+yTeBof7/J8V7fW1++gL6MJkph6nfnk7cz5z5T4ECK8lhEr+Evk+nOaN/WpkN5gChtv91IdQh+E2+vv+3gMN25GnQ/Dtef2sUEfr4LoEtVqQBuAN9371GtdpIbaB+/pv8JWQBFYqjhlXGB6ovn3emePrT84gYqf6xp/kB9yuALZ6fmKkvn1MuEH+g+f6UBrYV+4ZF69AbgAJkBV4fuh/QwpvsEQcYTDixTzw05uNY3v+LmL4AAvljm/srWJYi45SwHDYTGGtYAss2YvcfZQUqLiF7QosAAAAASUVORK5CYII=

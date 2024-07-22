@@ -410,7 +410,7 @@ extension PlaygroundController {
     }
 
     func makeRequest(with url: String, body: [String: Any], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
-        let session = URLSession.shared
+        let session = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
         let url = URL(string: url)!
 
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])

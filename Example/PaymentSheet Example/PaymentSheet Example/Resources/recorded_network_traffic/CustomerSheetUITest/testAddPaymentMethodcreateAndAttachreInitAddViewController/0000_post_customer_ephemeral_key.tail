@@ -1,0 +1,20 @@
+POST
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/customer_ephemeral_key$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: 7caf7ff39ae0be95d6a5a24d96e70df3;o=1
+Via: 1.1 google
+Date: Sat, 20 Jul 2024 02:58:17 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 284
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"11c-/OwfUAwBUrFIrz0e1Otn4r+S5FE"
+
+{
+  "customerEphemeralKeySecret" : "ek_test_YWNjdF8xSHZUSTdMdTVvM1AxOFpwLFpRWURLcEg3YVVUOUM1b2NDQWJUMkNPM0JibmZGcUE_00FwwNd9ll",
+  "publishableKey" : "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C",
+  "customerId" : "cus_QVUTJxkfX1oNXi"
+}

@@ -24,7 +24,7 @@ import UIKit
     private let analyticsClient: STPAnalyticsClient
 
     public init(
-        urlSessionConfiguration: URLSessionConfiguration = .default,
+        urlSessionConfiguration: URLSessionConfiguration = StripeAPIConfiguration.sharedUrlSessionConfiguration,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         let configuration = urlSessionConfiguration

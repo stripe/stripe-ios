@@ -1,0 +1,26 @@
+GET
+https:\/\/js\.stripe\.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-alipay@3x-d216a94882c3c5422274faaec75a3c81\.png$
+200
+image/png;base64
+Server: Fastly
+timing-allow-origin: *
+Cache-Control: max-age=31536000
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Accept-Ranges: bytes
+Access-Control-Allow-Origin: *
+x-served-by: cache-bur-kbur8200135-BUR
+Alt-Svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+Content-Length: 1201
+Via: 1.1 varnish
+Vary: Accept-Encoding
+Date: Sat, 20 Jul 2024 03:20:29 GMT
+x-cache-hits: 0
+x-request-id: 6f9c7e32-5c96-463e-a7d9-81fcfdf7ef8b
+Age: 724760
+x-cache: HIT
+Content-Type: image/png
+Etag: "281877c9acb09b4e5ddc58d409dc1a81"
+x-content-type-options: nosniff
+Last-Modified: Wed, 10 Jul 2024 15:27:55 GMT
+
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAACE4AAAhOAFFljFgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARGSURBVHgB7ZrPUxJhGMefXcjfpVKjOZNF5UFnmuTSpQ7hpVMzmH+Awq2bemg6in9B+hcAdulUcO0iHmqaqZmwi6eSrBl/VMaklqKwvd8XXmJhgd1lRZj8zOzALuzyfN/nx/u8y0pUyNNvblLSk6SQi+05qS6QEiQpUfYaofGeoOqT3LvAupNstgApipvqGUmKUirlI19fnO/ygzBelhepbka8InFKp0cgQua7GPnGMR44szYzDyxseVnYBKgRkeUR5gHFQ41KOjVlJ0VyMxFkJZNDbeTqtqmOLf9M0dzKb7IWadjOjO8ii/FebyGXw646Ft1IHoMAcsp0DHQ1SVQrjkVALTkVcNJIFNqsWIL8w+00w7Za4nv1i4If9yt+7//wgFFWx86Ts0M9D6CMjrxMkNWcJvFJYzfy5dH+ZvL0N1X8ntZE5nKcocDtsxXPnX63R4lkmvRiSADaA+9AK5kBoiqdG99NMeN3yAiGBKCsRTcPyQrgjaJEN3FtQwIwQtiqxdkhFxkPImsHZJQTSWJ3b3EeYWDCX2okAKNXTcepNaubDc2KIQRD3RebyHOpib8Wul6EVWz7iC1ajiiGjb0vhdY1wOzyHpmhrACsrPzDbUxEaUfBGGwwTCAERVhIRDeTbP9fWZy52VZ0DczSZnOrpIDAnXN8ZWUGIWr0cjPfh5gQq2Co7/lCBbMfzK/UNAU8udWRMx4/GsqWTxgiRgpeQTVxddu5UXd7z2iGBsD84XJ0aH6G0cdmmQCM2tRQxs2Iy7mVP5ozI47FttNclGh7IQTCJwx4bokNDAYiP8yMUNSNLt7r4oZMv901vQjnOcE8gmpTyiuFhNkcEPq0z1+NoBKAkVgdu2Bp6wuPIJ/0ghCNbhxyMXpCSxVCiGcQ0rES0ssVnR4QwGPeAWwtusSoBIhyGd8zF4+FIIT8GpMW8qdcaRZoiYl8PVCFmeZVhCeqoZTx8yyvup9952teI7U/I6aFXrg7SRnv4bmK66tyAOXu/X1H1TlQyniEppcZng8KBiY3rflBDyoPoCRi4xc1cRcCRUCMTCFaxgMxWFef/zCVezZ68Miff+AgpfC5gPcs7TbW3xyymC2/7ke/9PhGOwVZtRnsLA4/hM3DN+UXKvgNdKMQ8ZnNCYOdNl15onlXAnEm2gAkXHgtyZMns2JSckZjmThxrZmHntaP4VzMJ0GTVQ0lmN/pdtiNCYBxEGE2LgFCw/d6x5IFULkZvux9IcQyTnIaqOUwHM1ZNf1NKWDH1FAru7HQnLOp4o0t0RZMZO/5F4aKaJ3R0wSzHWctEB4xfGcOAsRqDPlQK4NLgeyIk4F/KGFwwvroMEtCZj6IUcOiLMmUSs9To5JWwplgXtharPtHDArBIwfjPSOZkoJnDzK50CjEszZneyE8OIFnD6Cq3oGN2eck+G7RFwLrXrLJnuwf4Jb/h2ySOC82yFdfXzT/g79RJe9Z5/8edgAAAABJRU5ErkJggg==

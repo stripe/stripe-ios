@@ -304,7 +304,12 @@ extension XCTestCase {
             // This should work, but we get an "Open in 'PaymentSheet Example'" consent dialog the first time we run it.
             // And while the dialog is appearing, `open()` doesn't return, so we can't install an interruption handler or anything to handle it.
             //   XCUIDevice.shared.system.open(urlComponents.url!)
-            app.launchEnvironment = app.launchEnvironment.merging(["STP_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launchEnvironment = app.launchEnvironment.merging(
+                ["STP_PLAYGROUND_DATA": settings.base64Data,
+                 "STP_NETWORK_MOCK_TEST": name,
+                 "STP_NETWORK_MOCK_RECORD_MODE": "NO"
+                ]
+            ) { (_, new) in new }
             app.launch()
         } else {
             XCTFail("This test is only supported on iOS 15.0 or later.")
@@ -322,7 +327,7 @@ extension XCTestCase {
     }
     func loadPlayground(_ app: XCUIApplication, _ settings: CustomerSheetTestPlaygroundSettings) {
         if #available(iOS 15.0, *) {
-            app.launchEnvironment = app.launchEnvironment.merging(["STP_CUSTOMERSHEET_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launchEnvironment = app.launchEnvironment.merging(["STP_CUSTOMERSHEET_PLAYGROUND_DATA": settings.base64Data, "STP_NETWORK_MOCK_TEST": name, "STP_NETWORK_MOCK_RECORD_MODE": "NO"]) { (_, new) in new }
             app.launch()
         } else {
             XCTFail("This test is only supported on iOS 15.0 or later.")

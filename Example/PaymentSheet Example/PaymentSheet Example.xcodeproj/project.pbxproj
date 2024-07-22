@@ -16,6 +16,13 @@
 		27233E85B0B6E1114E9AF6E8 /* ExampleSwiftUICustomerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */; };
 		2CB72F11E36DB65E8BA9205A /* PlaygroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0C0324B4075DED17688123 /* PlaygroundController.swift */; };
 		2CD71F097C7CD0D9BFC7499D /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD340D0C93E93B9E9DB7691F /* PaymentSheetTestPlaygroundSettings.swift */; };
+		3126E1882C4B41AA0004B056 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 3126E1872C4B41AA0004B056 /* OHHTTPStubs */; };
+		3126E18A2C4B41C90004B056 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3126E1892C4B41C90004B056 /* OHHTTPStubsSwift */; };
+		3126E18C2C4B41F30004B056 /* HTTPStubbing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3126E18B2C4B41F30004B056 /* HTTPStubbing.swift */; };
+		3126E1902C4B573C0004B056 /* SWHttpTrafficRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3126E18F2C4B573C0004B056 /* SWHttpTrafficRecorder.m */; };
+		3126E1922C4B5D190004B056 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 3126E1912C4B5D190004B056 /* OHHTTPStubs */; };
+		3126E1942C4B5D1C0004B056 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3126E1932C4B5D1C0004B056 /* OHHTTPStubsSwift */; };
+		3126E1962C4B5F960004B056 /* recorded_network_traffic in Resources */ = {isa = PBXBuildFile; fileRef = 3126E1952C4B5F960004B056 /* recorded_network_traffic */; };
 		31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */; };
 		3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */; };
 		37CDE2E21F00571F147FCFF7 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -160,6 +167,13 @@
 		2BA4C0DB741C5D8C406F381E /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Main.strings"; sourceTree = "<group>"; };
 		2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Debug.xcconfig"; sourceTree = "<group>"; };
 		2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLinkPaymentCheckoutViewController.swift; sourceTree = "<group>"; };
+		3126E1802C4B40730004B056 /* StripePaymentsTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentsTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3126E1832C4B40C00004B056 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/XROS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		3126E18B2C4B41F30004B056 /* HTTPStubbing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPStubbing.swift; sourceTree = "<group>"; };
+		3126E18D2C4B573B0004B056 /* PaymentSheet Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PaymentSheet Example-Bridging-Header.h"; sourceTree = "<group>"; };
+		3126E18E2C4B573C0004B056 /* SWHttpTrafficRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SWHttpTrafficRecorder.h; path = ../../../StripePayments/StripePaymentsObjcTestUtils/SWHttpTrafficRecorder.h; sourceTree = "<group>"; };
+		3126E18F2C4B573C0004B056 /* SWHttpTrafficRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SWHttpTrafficRecorder.m; path = ../../../StripePayments/StripePaymentsObjcTestUtils/SWHttpTrafficRecorder.m; sourceTree = "<group>"; };
+		3126E1952C4B5F960004B056 /* recorded_network_traffic */ = {isa = PBXFileReference; lastKnownFileType = folder; path = recorded_network_traffic; sourceTree = "<group>"; };
 		31A510FDEA3F1AAED0507251 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
 		31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		34CCC286E48ADD9F586832D9 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -282,6 +296,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3126E1922C4B5D190004B056 /* OHHTTPStubs in Frameworks */,
+				3126E1942C4B5D1C0004B056 /* OHHTTPStubsSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,9 +307,11 @@
 			files = (
 				95B578013869DFEA1C912A10 /* Stripe3DS2.framework in Frameworks */,
 				1094816DB7E9DFAF01815365 /* StripeApplePay.framework in Frameworks */,
+				3126E18A2C4B41C90004B056 /* OHHTTPStubsSwift in Frameworks */,
 				11DDC6610B393BFF4C6DF02C /* StripeCore.framework in Frameworks */,
 				9F126696AD86BF2E861B5CC5 /* StripeFinancialConnections.framework in Frameworks */,
 				551DB033DB4C8257ABAADA8F /* StripePaymentSheet.framework in Frameworks */,
+				3126E1882C4B41AA0004B056 /* OHHTTPStubs in Frameworks */,
 				D89C23032CFB732A0CFCD565 /* StripePayments.framework in Frameworks */,
 				000D59C19A60AB637CE65EE9 /* StripePaymentsUI.framework in Frameworks */,
 				FA36E30724AAC6E3EF717A6A /* StripeUICore.framework in Frameworks */,
@@ -315,6 +333,7 @@
 		132709C10C0114D239ED3FE9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3126E1952C4B5F960004B056 /* recorded_network_traffic */,
 				7CDBD593EFEAD2EDA4D33D5D /* LaunchScreen.storyboard */,
 				F4B26C754925F8D2A5183B2E /* Main.storyboard */,
 				59EF54A49D2FCC743E9EBC5F /* Assets.xcassets */,
@@ -357,6 +376,8 @@
 		66001906438D4343D9E72825 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3126E1832C4B40C00004B056 /* XCTest.framework */,
+				3126E1802C4B40730004B056 /* StripePaymentsTestUtils.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -421,6 +442,9 @@
 				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
 				132709C10C0114D239ED3FE9 /* Resources */,
 				05E317C6C8459B147C041D93 /* AppDelegate.swift */,
+				3126E18E2C4B573C0004B056 /* SWHttpTrafficRecorder.h */,
+				3126E18F2C4B573C0004B056 /* SWHttpTrafficRecorder.m */,
+				3126E18B2C4B41F30004B056 /* HTTPStubbing.swift */,
 				5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */,
 				DEC6711266D93A72ED4938F8 /* CustomerSheetTestPlayground.swift */,
 				B54E58F2CA450CF49ECD5637 /* CustomerSheetTestPlaygroundController.swift */,
@@ -443,6 +467,7 @@
 				575345B1A7F6EBD12A1A5F9C /* QRView.swift */,
 				53AAAA316E1DA1C44D30D7B0 /* SceneDelegate.swift */,
 				5259232431E2683DDD05CB84 /* ViewController.swift */,
+				3126E18D2C4B573B0004B056 /* PaymentSheet Example-Bridging-Header.h */,
 			);
 			path = "PaymentSheet Example";
 			sourceTree = "<group>";
@@ -475,6 +500,10 @@
 				C3A27D557E4528B40083617F /* PBXTargetDependency */,
 			);
 			name = PaymentSheetLocalizationScreenshotGenerator;
+			packageProductDependencies = (
+				3126E1912C4B5D190004B056 /* OHHTTPStubs */,
+				3126E1932C4B5D1C0004B056 /* OHHTTPStubsSwift */,
+			);
 			productName = PaymentSheetLocalizationScreenshotGenerator;
 			productReference = E8A5A0B5A4A1BF06663BE2BF /* PaymentSheetLocalizationScreenshotGenerator.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -515,6 +544,10 @@
 			dependencies = (
 			);
 			name = "PaymentSheet Example";
+			packageProductDependencies = (
+				3126E1872C4B41AA0004B056 /* OHHTTPStubs */,
+				3126E1892C4B41C90004B056 /* OHHTTPStubsSwift */,
+			);
 			productName = PaymentSheetExample;
 			productReference = 73DAE0051A928CB1597F8917 /* PaymentSheetExample.app */;
 			productType = "com.apple.product-type.application";
@@ -531,6 +564,9 @@
 					};
 					AAF1424C7F0424C3506712E6 = {
 						TestTargetID = D017784615929C0DD3717FE8;
+					};
+					D017784615929C0DD3717FE8 = {
+						LastSwiftMigration = 1530;
 					};
 				};
 			};
@@ -585,6 +621,7 @@
 			mainGroup = C9D5B927CC2F83061D0651E5;
 			packageReferences = (
 				337D25C9801D91652C4A4F6B /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				3126E1862C4B41AA0004B056 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
 			);
 			productRefGroup = 3263B2FC73C06F5F4413D183 /* Products */;
 			projectDirPath = "";
@@ -614,6 +651,7 @@
 				8A6DBB641294F9AE6A9C61B1 /* LaunchScreen.storyboard in Resources */,
 				31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
 				B36A24145C97D73C981DDBAC /* Main.storyboard in Resources */,
+				3126E1962C4B5F960004B056 /* recorded_network_traffic in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +695,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3126E18C2C4B41F30004B056 /* HTTPStubbing.swift in Sources */,
+				3126E1902C4B573C0004B056 /* SWHttpTrafficRecorder.m in Sources */,
 				EB1DCD930408180734A8D7CA /* AppDelegate.swift in Sources */,
 				4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */,
 				DDF30DE9D7AA4BCC47CC12FB /* CustomerSheetTestPlayground.swift in Sources */,
@@ -803,6 +843,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
@@ -811,6 +852,8 @@
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PaymentSheet Example/PaymentSheet Example-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
@@ -826,6 +869,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
@@ -834,6 +878,9 @@
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PaymentSheet Example/PaymentSheet Example-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
@@ -935,6 +982,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3126E1862C4B41AA0004B056 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		337D25C9801D91652C4A4F6B /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
@@ -946,6 +1001,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3126E1872C4B41AA0004B056 /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3126E1862C4B41AA0004B056 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		3126E1892C4B41C90004B056 /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3126E1862C4B41AA0004B056 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
+		};
+		3126E1912C4B5D190004B056 /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3126E1862C4B41AA0004B056 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		3126E1932C4B5D1C0004B056 /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3126E1862C4B41AA0004B056 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
+		};
 		B195FF5EEDEAC460C45887F1 /* iOSSnapshotTestCase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = iOSSnapshotTestCase;
