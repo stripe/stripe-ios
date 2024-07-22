@@ -40,17 +40,27 @@ class BottomSheetPresentationAnimator: NSObject {
         toVC.view.frame = transitionContext.finalFrame(for: toVC)
         toVC.view.frame.origin.y = transitionContext.containerView.frame.height
 
+        // Set the work to complete the transition on the BottomSheetViewController.
+        // Either we will invoke it in the presentation completion block, 
+        // or BottomSheetViewController will invoke it before transitioning to other content
+        if let bottomSheetController = toVC as? BottomSheetViewController {
+            bottomSheetController.completeBottomSheetPresentationTransition = { [weak bottomSheetController] didComplete in
+                transitionContext.completeTransition(didComplete)
+                bottomSheetController?.completeBottomSheetPresentationTransition = nil
+            }
+        }
+
         Self.animate({
             transitionContext.containerView.setNeedsLayout()
             transitionContext.containerView.layoutIfNeeded()
         }) { didComplete in
             // Calls viewDidAppear and viewDidDisappear
             fromVC.endAppearanceTransition()
-            // If the toVC is a BottomSheetViewController in the middle of setting its contentVC, wait until its animation finishes before completing the transition. Otherwise, `viewDidAppear` is called before the VC has fully transitioned onto the screen.
-            if let bottomSheetController = toVC as? BottomSheetViewController, bottomSheetController.isAnimatingSetContentViewController {
-                bottomSheetController.onSetContentViewControllerCompletion = {
-                    transitionContext.completeTransition(didComplete)
-                }
+
+            // Complete transition if it hasn't already been completed
+            if let bottomSheetController = toVC as? BottomSheetViewController,
+               let completePresentationTransition = bottomSheetController.completeBottomSheetPresentationTransition {
+                completePresentationTransition(didComplete)
             } else {
                 transitionContext.completeTransition(didComplete)
             }
