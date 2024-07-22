@@ -450,7 +450,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
     // MARK: Deferred tests (client-side)
 
     // TODO(porter) Re-enable
-    
+
 //    func testDeferredPaymentIntent_ClientSideConfirmation() {
 //        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
 //        settings.integrationType = .deferred_csc
