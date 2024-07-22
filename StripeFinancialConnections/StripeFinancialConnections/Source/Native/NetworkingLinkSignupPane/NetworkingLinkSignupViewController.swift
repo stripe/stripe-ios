@@ -38,7 +38,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }()
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
         let formView = NetworkingLinkSignupBodyFormView(
-            accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber
+            accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber,
+            theme: dataSource.manifest.theme
         )
         formView.delegate = self
         return formView
