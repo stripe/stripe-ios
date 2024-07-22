@@ -16,9 +16,6 @@
 /* Payment Method type brand name */
 "Bancontact" = "Bancontact";
 
-/* Link Instant Debit payment method display name */
-"Bank" = "Bank";
-
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
 
