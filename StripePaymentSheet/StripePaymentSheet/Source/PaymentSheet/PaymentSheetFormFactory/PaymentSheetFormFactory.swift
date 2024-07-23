@@ -127,66 +127,68 @@ class PaymentSheetFormFactory {
     }
 
     func make() -> PaymentMethodElement {
-        guard case .stripe(let paymentMethod) = paymentMethod else {
-            return makeExternalPaymentMethodForm()
-        }
-        var additionalElements = [Element]()
-
-        // We have two ways to create the form for a payment method
-        // 1. Custom, one-off forms
-        if paymentMethod == .card {
-            return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
-        } else if paymentMethod == .USBankAccount {
-            return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
-        } else if paymentMethod == .UPI {
-            return makeUPI()
-        } else if paymentMethod == .cashApp && isSettingUp {
-            // special case, display mandate for Cash App when setting up or pi+sfu
-            additionalElements = [makeCashAppMandate()]
-        } else if paymentMethod == .payPal && isSettingUp {
-            // Paypal requires mandate when setting up
-            additionalElements = [makePaypalMandate()]
-        } else if paymentMethod == .revolutPay && isSettingUp {
-            // special case, display mandate for revolutPay when setting up or pi+sfu
-            additionalElements = [makeRevolutPayMandate()]
-        } else if paymentMethod == .klarna && isSettingUp {
-            // special case, display mandate for Klarna when setting up or pi+sfu
-            additionalElements = [makeKlarnaMandate()]
-        } else if paymentMethod == .amazonPay && isSettingUp {
-            // special case, display mandate for Amazon Pay when setting up or pi+sfu
-            additionalElements = [makeAmazonPayMandate()]
-        } else if paymentMethod == .bancontact {
-            return makeBancontact()
-        } else if paymentMethod == .bacsDebit {
-            return makeBacsDebit()
-        } else if paymentMethod == .blik {
-            return makeBLIK()
-        } else if paymentMethod == .OXXO {
-            return  makeOXXO()
-        } else if paymentMethod == .konbini {
-            return makeKonbini()
-        } else if paymentMethod == .boleto {
-            return makeBoleto()
-        } else if paymentMethod == .swish {
-            return makeSwish()
-        } else if paymentMethod == .instantDebits {
+        switch paymentMethod {
+        case .instantDebits:
             return makeInstantDebits()
-        }
+        case .external:
+            return makeExternalPaymentMethodForm()
+        case .stripe(let paymentMethod):
+            var additionalElements = [Element]()
 
-        guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-            stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-            analyticsClient.log(analytic: errorAnalytic)
-            return FormElement(elements: [], theme: theme)
-        }
-        if paymentMethod == .iDEAL {
-            return makeiDEAL(spec: spec)
-        } else if paymentMethod == .sofort {
-            return makeSofort(spec: spec)
-        }
+            // We have two ways to create the form for a payment method
+            // 1. Custom, one-off forms
+            if paymentMethod == .card {
+                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
+            } else if paymentMethod == .USBankAccount {
+                return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
+            } else if paymentMethod == .UPI {
+                return makeUPI()
+            } else if paymentMethod == .cashApp && isSettingUp {
+                // special case, display mandate for Cash App when setting up or pi+sfu
+                additionalElements = [makeCashAppMandate()]
+            } else if paymentMethod == .payPal && isSettingUp {
+                // Paypal requires mandate when setting up
+                additionalElements = [makePaypalMandate()]
+            } else if paymentMethod == .revolutPay && isSettingUp {
+                // special case, display mandate for revolutPay when setting up or pi+sfu
+                additionalElements = [makeRevolutPayMandate()]
+            } else if paymentMethod == .klarna && isSettingUp {
+                // special case, display mandate for Klarna when setting up or pi+sfu
+                additionalElements = [makeKlarnaMandate()]
+            } else if paymentMethod == .amazonPay && isSettingUp {
+                // special case, display mandate for Amazon Pay when setting up or pi+sfu
+                additionalElements = [makeAmazonPayMandate()]
+            } else if paymentMethod == .bancontact {
+                return makeBancontact()
+            } else if paymentMethod == .bacsDebit {
+                return makeBacsDebit()
+            } else if paymentMethod == .blik {
+                return makeBLIK()
+            } else if paymentMethod == .OXXO {
+                return  makeOXXO()
+            } else if paymentMethod == .konbini {
+                return makeKonbini()
+            } else if paymentMethod == .boleto {
+                return makeBoleto()
+            } else if paymentMethod == .swish {
+                return makeSwish()
+            }
 
-        // 2. Element-based forms defined in JSON
-        return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
+            guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
+                stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
+                analyticsClient.log(analytic: errorAnalytic)
+                return FormElement(elements: [], theme: theme)
+            }
+            if paymentMethod == .iDEAL {
+                return makeiDEAL(spec: spec)
+            } else if paymentMethod == .sofort {
+                return makeSofort(spec: spec)
+            }
+
+            // 2. Element-based forms defined in JSON
+            return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
+        }
     }
 }
 

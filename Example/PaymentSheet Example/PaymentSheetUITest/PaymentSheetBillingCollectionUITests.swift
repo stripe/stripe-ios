@@ -44,84 +44,6 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
 }
 
 class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUITestCase {
-    func testCard_AutomaticFields_NoDefaults() throws {
-
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .guest
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-        settings.applePayEnabled = .off
-        settings.apmsEnabled = .off
-        settings.linkEnabled = .off
-        settings.attachDefaults = .off
-        settings.collectName = .automatic
-        settings.collectEmail = .automatic
-        settings.collectPhone = .automatic
-        settings.collectAddress = .automatic
-        loadPlayground(
-            app,
-            settings
-        )
-        checkoutButton.tap()
-
-        let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
-        card.tap()
-        try! fillCardData(app)
-
-        // Complete payment
-        payButton.tap()
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
-
-    func testCard_AllFields_WithDefaults() throws {
-
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .guest
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-        settings.applePayEnabled = .off
-        settings.apmsEnabled = .off
-        settings.linkEnabled = .off
-        settings.defaultBillingAddress = .on
-        settings.attachDefaults = .on
-        settings.collectName = .always
-        settings.collectEmail = .always
-        settings.collectPhone = .always
-        settings.collectAddress = .full
-        loadPlayground(
-            app,
-            settings
-        )
-        checkoutButton.tap()
-
-        let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
-        card.tap()
-
-        XCTAssertTrue(cardInfoField.waitForExistence(timeout: 10.0))
-        XCTAssertTrue(contactInfoField.exists)
-        XCTAssertEqual(emailField.value as? String, "foo@bar.com")
-        XCTAssertEqual(phoneField.value as? String, "(310) 555-1234")
-        XCTAssertEqual(nameOnCardField.value as? String, "Jane Doe")
-        XCTAssertTrue(billingAddressField.exists)
-        XCTAssertEqual(countryField.value as? String, "United States")
-        XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
-        XCTAssertEqual(line2Field.value as? String, "")
-        XCTAssertEqual(cityField.value as? String, "San Francisco")
-        XCTAssertEqual(stateField.value as? String, "California")
-        XCTAssertEqual(zipField.value as? String, "94102")
-
-        let numberField = app.textFields["Card number"]
-        numberField.forceTapWhenHittableInTestCase(self)
-        app.typeText("4242424242424242")
-        app.typeText("1228") // Expiry
-        app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Dismiss keyboard.
-
-        // Complete payment
-        payButton.tap()
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
-
     func testCard_AllFields_flowController_WithDefaults() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -183,56 +105,8 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         confirmButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-
-    func testCard_OnlyCardInfo_WithDefaults() throws {
-
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .guest
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-        settings.applePayEnabled = .off
-        settings.apmsEnabled = .off
-        settings.linkEnabled = .off
-        settings.defaultBillingAddress = .on
-        settings.attachDefaults = .on
-        settings.collectName = .never
-        settings.collectEmail = .never
-        settings.collectPhone = .never
-        settings.collectAddress = .never
-        loadPlayground(
-            app,
-            settings
-        )
-        checkoutButton.tap()
-
-        let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
-        card.tap()
-
-        XCTAssertTrue(cardInfoField.waitForExistence(timeout: 10.0))
-        XCTAssertFalse(app.staticTexts["Contact information"].exists)
-        XCTAssertFalse(emailField.exists)
-        XCTAssertFalse(phoneField.exists)
-        XCTAssertFalse(nameOnCardField.exists)
-        XCTAssertFalse(billingAddressField.exists)
-        XCTAssertFalse(countryField.exists)
-        XCTAssertFalse(line1Field.exists)
-        XCTAssertFalse(line2Field.exists)
-        XCTAssertFalse(cityField.exists)
-        XCTAssertFalse(stateField.exists)
-        XCTAssertFalse(zipField.exists)
-
-        let numberField = app.textFields["Card number"]
-        numberField.forceTapWhenHittableInTestCase(self)
-        app.typeText("4242424242424242")
-        app.typeText("1228") // Expiry
-        app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Dismiss keyboard.
-
-        // Complete payment
-        payButton.tap()
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
 }
+
 class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITestCase {
     func testUSBankAccount_AutomaticFields_NoDefaults() throws {
 

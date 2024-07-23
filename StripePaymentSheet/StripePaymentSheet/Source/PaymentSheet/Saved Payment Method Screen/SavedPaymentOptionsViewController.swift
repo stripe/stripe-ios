@@ -335,7 +335,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         // Wait 200ms after the view is presented to emphasize to users to enter their CVC
         DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(200))) {
             if self.isViewLoaded {
-                self.toggleCVCElement()
+                self.displayCVCRecollectionIfNeeded()
             }
         }
     }
@@ -376,9 +376,9 @@ class SavedPaymentOptionsViewController: UIViewController {
     private func updateFormElement() {
         cvcFormElement = makeElement()
         swapFormElementUIIfNeeded()
-        toggleCVCElement()
+        displayCVCRecollectionIfNeeded()
     }
-    private func toggleCVCElement() {
+    private func displayCVCRecollectionIfNeeded() {
         let shouldHideCVCRecollection = !selectedPaymentOptionIntentConfirmParamsRequired
         if cvcRecollectionContainerView.isHidden != shouldHideCVCRecollection {
             stackView.toggleArrangedSubview(cvcRecollectionContainerView, shouldShow: !shouldHideCVCRecollection, animated: isViewLoaded)
