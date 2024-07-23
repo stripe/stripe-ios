@@ -32,13 +32,15 @@ final class CustomerSheet_ConfirmFlowTests: XCTestCase {
         await withCheckedContinuation { continuation in
             Task {
                 AddressSpecProvider.shared.loadAddressSpecs {
-                    continuation.resume()
+                    FormSpecProvider.shared.load { _ in
+                        continuation.resume()
+                    }
                 }
             }
         }
     }
 
-    func testCardConfirmation_US() async throws {
+    func testCardConfirmation() async throws {
         let customer = "cus_QWYdNyavE2M5ah" // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
         try await _testConfirm(
             merchantCountry: .US,
@@ -63,7 +65,20 @@ final class CustomerSheet_ConfirmFlowTests: XCTestCase {
         }
     }
 
-
+    func testSepaConfirmation() async throws {
+        let customer = "cus_QWYdNyavE2M5ah" // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        try await _testConfirm(
+            merchantCountry: .US,
+            paymentMethodType: .SEPADebit,
+            customerID: customer) { form in
+                form.getTextFieldElement("Full name")?.setText("John Doe")
+                form.getTextFieldElement("Email")?.setText("test@example.com")
+                form.getTextFieldElement("IBAN")?.setText("DE89370400440532013000")
+                form.getTextFieldElement("Address line 1")?.setText("123 Main")
+                form.getTextFieldElement("City")?.setText("San Francisco")
+                form.getTextFieldElement("ZIP")?.setText("65432")
+        }
+    }
 }
 
 extension CustomerSheet_ConfirmFlowTests {

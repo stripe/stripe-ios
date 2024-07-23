@@ -446,35 +446,6 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
-    func testCustomerSheetStandard_applePayOff_addSepa() throws {
-        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePay = .off
-        loadPlayground(
-            app,
-            settings
-        )
-
-        let selectButton = app.staticTexts["None"]
-        XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
-        selectButton.tap()
-
-        let sepaDebit = app.staticTexts["SEPA Debit"]
-        XCTAssertTrue(sepaDebit.waitForExistence(timeout: timeout))
-        sepaDebit.tap()
-
-        try! fillSepaData(app)
-
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: timeout))
-        saveButton.tap()
-
-        let confirmButton = app.buttons["Confirm"]
-        XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
-        confirmButton.tap()
-
-        dismissAlertView(alertBody: "Success: ••••3000, selected", alertTitle: "Complete", buttonToTap: "OK")
-    }
 
     func testCustomerSheetStandard_applePayOff_addUSBankAccount_defaultBillingOnCollectNone() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
