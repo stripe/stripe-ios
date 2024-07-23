@@ -96,6 +96,7 @@
 		6A3DA1F52C34A37F005C3F6E /* GenericInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3DA1F42C34A37F005C3F6E /* GenericInfoViewController.swift */; };
 		6A3DA1F72C34B254005C3F6E /* GenericInfoFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3DA1F62C34B254005C3F6E /* GenericInfoFooterView.swift */; };
 		6A43202A2B7E8C5400A67A70 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4320292B7E8C5400A67A70 /* Constants.swift */; };
+		6A6F989C2C4F1BF00035C03D /* CreatePaneParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6F989B2C4F1BF00035C03D /* CreatePaneParameters.swift */; };
 		6A732C9A2B61C51C00828CB1 /* ShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C992B61C51C00828CB1 /* ShimmeringView.swift */; };
 		6A732C9C2B61C56A00828CB1 /* InstitutionTableLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */; };
 		6A732C9E2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C9D2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift */; };
@@ -384,6 +385,7 @@
 		6A3DA1F42C34A37F005C3F6E /* GenericInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericInfoViewController.swift; sourceTree = "<group>"; };
 		6A3DA1F62C34B254005C3F6E /* GenericInfoFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericInfoFooterView.swift; sourceTree = "<group>"; };
 		6A4320292B7E8C5400A67A70 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		6A6F989B2C4F1BF00035C03D /* CreatePaneParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePaneParameters.swift; sourceTree = "<group>"; };
 		6A732C992B61C51C00828CB1 /* ShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringView.swift; sourceTree = "<group>"; };
 		6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionTableLoadingView.swift; sourceTree = "<group>"; };
 		6A732C9D2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountPickerLoadingView.swift; sourceTree = "<group>"; };
@@ -1030,6 +1032,7 @@
 				6A732C992B61C51C00828CB1 /* ShimmeringView.swift */,
 				49C9113A2C59932300589E0D /* LinkSignupFormView.swift */,
 				6A3739152C4060BD00D1F765 /* AutoResizableUIView.swift */,
+				6A6F989B2C4F1BF00035C03D /* CreatePaneParameters.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1321,6 +1324,7 @@
 				6944E131D351784058C7D734 /* FinancialConnectionsPaymentMethodType.swift in Sources */,
 				1C043C73281C0856D2C979C6 /* FinancialConnectionsSession.swift in Sources */,
 				9E0044ABEC04E2A8C50E3658 /* FinancialConnectionsSessionManifest.swift in Sources */,
+				6A6F989C2C4F1BF00035C03D /* CreatePaneParameters.swift in Sources */,
 				D936C8A9F6E018DB144A5B0A /* FinancialConnectionsSynchronize.swift in Sources */,
 				15EC9F36187C341800164428 /* FinancialConnectionsAnalyticsClient.swift in Sources */,
 				C61D5957D3276991795F7D16 /* FinancialConnectionsSheetAnalytics.swift in Sources */,
