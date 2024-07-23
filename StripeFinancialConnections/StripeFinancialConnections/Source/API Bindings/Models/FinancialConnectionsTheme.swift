@@ -40,7 +40,7 @@ extension FinancialConnectionsTheme {
         }
     }
 
-    var primaryButtonTextColor: UIColor {
+    var primaryAccentColor: UIColor {
         switch self {
         case .linkLight:
             return .linkGreen900
@@ -55,6 +55,33 @@ extension FinancialConnectionsTheme {
             return .linkGreen900
         case .light:
             return .textActionPrimary
+        }
+    }
+
+    var iconTintColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen500
+        case .light:
+            return .iconActionPrimary
+        }
+    }
+
+    var iconBackgroundColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen50
+        case .light:
+            return .brand25
+        }
+    }
+
+    var textActionColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen500
+        case .light:
+            return .brand600
         }
     }
 }

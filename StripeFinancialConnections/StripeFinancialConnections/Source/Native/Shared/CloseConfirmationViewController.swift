@@ -30,7 +30,8 @@ final class CloseConfirmationViewController: SheetViewController {
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
                     image: .image(.panel_arrow_right),
-                    style: .circle
+                    style: .circle,
+                    theme: theme
                 ),
                 title: STPLocalizedString(
                     "Exit without connecting?",

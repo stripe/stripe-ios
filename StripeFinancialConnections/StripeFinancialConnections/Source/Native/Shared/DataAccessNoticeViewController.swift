@@ -55,7 +55,8 @@ final class DataAccessNoticeViewController: SheetViewController {
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
                     image: .imageUrl(dataAccessNotice.icon?.default),
-                    style: .circle
+                    style: .circle,
+                    theme: theme
                 ),
                 title: dataAccessNotice.title,
                 subtitle: firstSubtitle,
