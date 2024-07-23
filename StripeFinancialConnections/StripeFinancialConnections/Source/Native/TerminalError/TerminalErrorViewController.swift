@@ -19,11 +19,13 @@ final class TerminalErrorViewController: UIViewController {
 
     private let error: Error
     private let allowManualEntry: Bool
+    private let theme: FinancialConnectionsTheme
     weak var delegate: TerminalErrorViewControllerDelegate?
 
-    init(error: Error, allowManualEntry: Bool) {
+    init(error: Error, allowManualEntry: Bool, theme: FinancialConnectionsTheme) {
         self.error = error
         self.allowManualEntry = allowManualEntry
+        self.theme = theme
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -38,6 +40,7 @@ final class TerminalErrorViewController: UIViewController {
 
         let terminalErrorView = TerminalErrorView(
             allowManualEntry: true,
+            theme: theme,
             didSelectManualEntry: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.terminalErrorViewControllerDidSelectManualEntry(self)

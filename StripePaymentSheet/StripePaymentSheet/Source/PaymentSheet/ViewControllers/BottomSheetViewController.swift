@@ -19,7 +19,6 @@ protocol BottomSheetContentViewController: UIViewController {
     var navigationBar: SheetNavigationBar { get }
     var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
-    func didFinishAnimatingHeight()
 }
 
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
@@ -31,7 +30,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     // MARK: - Views
-    private lazy var scrollView: UIScrollView = {
+    lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.delegate = self
         return scrollView
@@ -52,6 +51,22 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             }
         }
     }
+
+    /// Content offset of the scroll view as a percentage (0 - 1.0) of the total height.
+    var contentOffsetPercentage: CGFloat {
+        get {
+            guard scrollView.contentSize.height > scrollView.bounds.height else { return 0 }
+            return scrollView.contentOffset.y / (scrollView.contentSize.height - scrollView.bounds.height)
+        }
+        set {
+            let maxContentOffset = scrollView.contentSize.height - scrollView.bounds.height
+            let newContentOffset = maxContentOffset * newValue
+            scrollView.setContentOffset(CGPoint(x: 0, y: newContentOffset), animated: false)
+        }
+    }
+
+    /// If `setContent..` is called while `BottomSheetPresentationAnimator` is mid-transition, we complete the transition before setting content.
+    var completeBottomSheetPresentationTransition: ((Bool) -> Void)?
 
     func pushContentViewController(_ contentViewController: BottomSheetContentViewController) {
         contentStack.insert(contentViewController, at: 0)
@@ -83,6 +98,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 return
             }
 
+            // Handle edge case where BottomSheetPresentationAnimator is mid-presentation
+            // We need to finish *that* transition before starting this one.
+            self.completeBottomSheetPresentationTransition?(true)
+
             // This is a hack to get the animation right.
             // Instead of allowing the height change to implicitly occur within
             // the animation block's layoutIfNeeded, we force a layout pass,
@@ -105,16 +124,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             oldContentViewController.endAppearanceTransition()
 
             // Add the new VC
+            contentViewController.beginAppearanceTransition(true, animated: true)
             // When your custom container calls the addChild(_:) method, it automatically calls the willMove(toParent:) method of the view controller to be added as a child before adding it.
             addChild(contentViewController)
             contentContainerView.addArrangedSubview(self.contentViewController.view)
-            // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
-            contentViewController.didMove(toParent: self)
-            if let presentationController = rootParent.presentationController
-                as? BottomSheetPresentationController
-            {
-                presentationController.forceFullHeight =
-                    contentViewController.requiresFullScreen
+            if let presentationController = rootParent.presentationController as? BottomSheetPresentationController {
+                presentationController.forceFullHeight = contentViewController.requiresFullScreen
             }
 
             contentContainerView.layoutIfNeeded()
@@ -142,6 +157,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 self.contentViewController.view.alpha = 1
                 self.manualHeightConstraint.constant = newHeight
             }, completion: {_ in
+                // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
+                self.contentViewController.didMove(toParent: self)
+                self.contentViewController.endAppearanceTransition()
+
                 // Remove the old content snapshot
                 oldViewImage.removeFromSuperview()
 
@@ -150,7 +169,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
                 // We shouldn't need this constraint anymore.
                 self.manualHeightConstraint.isActive = false
-                self.contentViewController.didFinishAnimatingHeight()
             })
         }
     }
@@ -416,10 +434,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             // But usually we can do this immediately, as we control the presentation and know we'll always be pinned to the bottom of the screen.
             adjustForKeyboard()
         }
-    }
-
-    func resetContentOffset(animated: Bool = false) {
-        scrollView.setContentOffset(.zero, animated: animated)
     }
 
     // MARK: - BottomSheetPresentable

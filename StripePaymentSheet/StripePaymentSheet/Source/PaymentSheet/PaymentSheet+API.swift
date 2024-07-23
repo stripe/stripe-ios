@@ -77,7 +77,7 @@ extension PaymentSheet {
                 completion(.failed(error: PaymentSheetError.alreadyPresented), nil)
                 return
             }
-            let preConfirmationViewController = PreConfirmationViewController(
+            let preConfirmationViewController = CVCReconfirmationViewController(
                 paymentMethod: paymentMethod,
                 intent: intent,
                 configuration: configuration,
@@ -87,13 +87,11 @@ extension PaymentSheet {
                 },
                 onCancel: { vc in
                     vc.dismiss(animated: true)
-                    DispatchQueue.main.async {
-                        completion(.canceled, nil)
-                    }
+                    completion(.canceled, nil)
                 }
             )
 
-            // Set the preConfirmationViewController as the content of our bottom sheet
+            // Present CVC VC
             let bottomSheetVC = FlowController.makeBottomSheetViewController(
                 preConfirmationViewController,
                 configuration: configuration,

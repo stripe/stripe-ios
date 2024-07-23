@@ -13,14 +13,14 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=mono-bapi-srv"}],"include_subdomains":true}
-request-id: req_6o8cO31BrkOF1z
+request-id: req_4ZTyruEjXhtrl0
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 890
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:37:01 GMT
-original-request: req_6o8cO31BrkOF1z
+Date: Fri, 19 Jul 2024 02:55:53 GMT
+original-request: req_4ZTyruEjXhtrl0
 stripe-version: 2020-08-27
-idempotency-key: b7d94f59-f5b2-4f80-878a-a8028b51752c
+idempotency-key: 0c79e9e1-1dff-47fe-a14c-da858ea5d1b1
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -28,7 +28,7 @@ Content-Type: application/json
 x-content-type-options: nosniff
 
 {
-  "id" : "src_1PePQ9FY0qyl6XeWzvk2847p",
+  "id" : "src_1Pe6z7FY0qyl6XeW68w0mXIE",
   "livemode" : false,
   "amount" : null,
   "owner" : {
@@ -60,8 +60,8 @@ x-content-type-options: nosniff
     "name" : null,
     "three_d_secure" : "optional"
   },
-  "created" : 1721428621,
-  "client_secret" : "src_client_secret_JGdlS2dl3AsNtvsJv7CN6HdF",
+  "created" : 1721357753,
+  "client_secret" : "src_client_secret_W2NEgpDBFPSS13OLvR2ajTuO",
   "flow" : "none",
   "currency" : null,
   "status" : "chargeable"

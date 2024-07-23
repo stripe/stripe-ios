@@ -14,6 +14,7 @@ final class AccountPickerAccountLoadErrorView: UIView {
 
     init(
         institution: FinancialConnectionsInstitution,
+        theme: FinancialConnectionsTheme,
         didSelectAnotherBank: @escaping () -> Void,
         didSelectTryAgain: (() -> Void)?,  // if nil, don't show button
         didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
@@ -79,7 +80,8 @@ final class AccountPickerAccountLoadErrorView: UIView {
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: primaryButtonConfiguration,
-                secondaryButtonConfiguration: secondaryButtonConfiguration
+                secondaryButtonConfiguration: secondaryButtonConfiguration,
+                theme: theme
             ).footerView
         )
         paneLayoutView.addTo(view: self)
@@ -97,6 +99,7 @@ import SwiftUI
 private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
+    let theme: FinancialConnectionsTheme
     let didSelectTryAgain: (() -> Void)?
     let didSelectEnterBankDetailsManually: (() -> Void)?
 
@@ -109,6 +112,7 @@ private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepre
                 icon: nil,
                 logo: nil
             ),
+            theme: theme,
             didSelectAnotherBank: {},
             didSelectTryAgain: didSelectTryAgain,
             didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
@@ -122,24 +126,28 @@ struct AccountPickerAccountLoadErrorView_Previews: PreviewProvider {
     static var previews: some View {
         AccountPickerAccountLoadErrorViewUIViewRepresentable(
             institutionName: "Chase",
+            theme: .light,
             didSelectTryAgain: {},
             didSelectEnterBankDetailsManually: {}
         )
 
         AccountPickerAccountLoadErrorViewUIViewRepresentable(
             institutionName: "Ally",
+            theme: .light,
             didSelectTryAgain: nil,
             didSelectEnterBankDetailsManually: {}
         )
 
         AccountPickerAccountLoadErrorViewUIViewRepresentable(
             institutionName: "Chase",
+            theme: .light,
             didSelectTryAgain: {},
             didSelectEnterBankDetailsManually: nil
         )
 
         AccountPickerAccountLoadErrorViewUIViewRepresentable(
             institutionName: "Chase",
+            theme: .light,
             didSelectTryAgain: nil,
             didSelectEnterBankDetailsManually: nil
         )

@@ -79,7 +79,8 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     action: { [weak self] in
                         self?.didSelectSkip()
                     }
-                )
+                ),
+                theme: dataSource.manifest.theme
             ).footerView
         )
     }

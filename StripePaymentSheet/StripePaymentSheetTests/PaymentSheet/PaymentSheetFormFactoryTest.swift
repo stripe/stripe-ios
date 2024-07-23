@@ -1286,7 +1286,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                                             ],
                                             ],
                                             "customer_sheet": [
-                                                "enabled": false
+                                                "enabled": false,
                                             ],
                                         ]),
             configuration: .paymentSheet(configuration),
@@ -1311,7 +1311,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                                             ],
                                             ],
                                             "customer_sheet": [
-                                                "enabled": false
+                                                "enabled": false,
                                             ],
                                         ]),
             configuration: .paymentSheet(configuration),
@@ -1336,7 +1336,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                                             ],
                                             ],
                                             "customer_sheet": [
-                                                "enabled": false
+                                                "enabled": false,
                                             ],
                                         ]),
             configuration: .paymentSheet(configuration),
@@ -1360,7 +1360,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                                         ],
                                         ],
                                         "customer_sheet": [
-                                            "enabled": false
+                                            "enabled": false,
                                         ],
                                       ]),
             configuration: .paymentSheet(configuration),
@@ -1384,7 +1384,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                                         ],
                                         ],
                                         "customer_sheet": [
-                                            "enabled": false
+                                            "enabled": false,
                                         ],
                                       ]),
             configuration: .paymentSheet(configuration),
@@ -1479,7 +1479,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testApplyDefaults() {
         let defaultAddress = PaymentSheet.Address(
             city: "San Francisco",
-            country: "US",
+            country: "CA",
             line1: "510 Townsend St.",
             line2: "Line 2",
             postalCode: "94102",
@@ -1502,7 +1502,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.line2, "Line 2")
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.city, "San Francisco")
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.state, "CA")
-        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.country, "US")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.country, "CA")
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode, "94102")
 
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = false
@@ -1543,6 +1543,37 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(errorAnalytic["event"] as? String, STPAnalyticEvent.unexpectedPaymentSheetFormFactoryError.rawValue)
         XCTAssertEqual(errorAnalytic["payment_method"] as? String, "card_present")
         XCTAssertEqual(errorAnalytic["error_code"] as? String, "missingFormSpec")
+    }
+
+    func testCardFormContainsMandateText() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        let analyticsClient = STPAnalyticsClient()
+
+        func makeForm(intent: Intent) -> PaymentMethodElement {
+            return PaymentSheetFormFactory(
+                intent: intent,
+                configuration: .paymentSheet(configuration),
+                paymentMethod: .stripe(.card),
+                analyticsClient: analyticsClient
+            ).make()
+        }
+        let cardForm_pi = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
+        XCTAssertTrue(cardForm_pi.getMandateElement() == nil)
+
+        let cardForm_pi_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession))
+        XCTAssertTrue(cardForm_pi_sfu.getMandateElement() != nil)
+
+        let cardForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.card]))
+        XCTAssertTrue(cardForm_si.getMandateElement() != nil)
     }
 
     // MARK: - Previous Customer Input tests
@@ -1667,6 +1698,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: .stripe(.card)
         )
         let cardForm_setup = makeCardForm(isSettingUp: true, previousCustomerInput: previousCustomerInput)
+        sendEventToSubviews(.viewDidAppear, from: cardForm_setup.view) // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
         // ...should have the checkbox hidden
         let cardForm_setup_params = cardForm_setup.updateParams(params: .init(type: .stripe(.card)))
         XCTAssertEqual(cardForm_setup_params?.saveForFutureUseCheckboxState, .hidden)
