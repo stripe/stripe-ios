@@ -14,7 +14,30 @@ import UIKit
 
 final class PlaygroundViewModel: ObservableObject {
 
+    enum SessionOutputField {
+        case message
+        case sessionId
+        case accountIds
+        case accountNames
+    }
+
     let playgroundConfiguration = PlaygroundConfiguration.shared
+
+    var experience: Binding<PlaygroundConfiguration.Experience> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.experience
+            },
+            set: { newValue in
+                self.playgroundConfiguration.experience = newValue
+                if newValue == .instantDebits {
+                    // Instant debits only supports the payment intent use case.
+                    self.playgroundConfiguration.useCase = .paymentIntent
+                }
+                self.objectWillChange.send()
+            }
+        )
+    }
 
     var sdkType: Binding<PlaygroundConfiguration.SDKType> {
         Binding(
@@ -179,6 +202,7 @@ final class PlaygroundViewModel: ObservableObject {
     }()
 
     @Published var isLoading: Bool = false
+    @Published var sessionOutput: [SessionOutputField: String] = [:]
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -201,30 +225,43 @@ final class PlaygroundViewModel: ObservableObject {
         SetupPlayground(
             configurationDictionary: playgroundConfiguration.configurationDictionary
         ) { [weak self] setupPlaygroundResponse in
+            guard let self else { return }
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
+                    useCase: self.playgroundConfiguration.useCase,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
                     onEvent: { event in
-                        if self?.liveEvents.wrappedValue == true {
+                        if self.liveEvents.wrappedValue == true {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
                             BannerHelper.shared.showBanner(with: message, for: 3.0)
                         }
                     },
-                    completionHandler: { result in
+                    completionHandler: { [weak self] result in
                         switch result {
                         case .completed(let session):
                             let accounts = session.accounts.data.filter { $0.last4 != nil }
                             let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+
+                            let sessionId = session.id
+                            let accountNames = session.accounts.data.map({ $0.displayName ?? "N/A" })
+                            let accountIds = session.accounts.data.map({ $0.id })
+
                             let sessionInfo =
 """
-session_id=\(session.id)
-account_names=\(session.accounts.data.map({ $0.displayName ?? "N/A" }))
-account_ids=\(session.accounts.data.map({ $0.id }))
+session_id=\(sessionId)
+account_names=\(accountNames)
+account_ids=\(accountIds)
 """
+
+                            let message = "\(accountInfos)\n\n\(sessionInfo)"
+                            self?.sessionOutput[.message] = message
+                            self?.sessionOutput[.sessionId] = sessionId
+                            self?.sessionOutput[.accountNames] = accountNames.joinedUnlessEmpty
+                            self?.sessionOutput[.accountIds] = accountIds.joinedUnlessEmpty
 
                             UIAlertController.showAlert(
                                 title: "Success",
-                                message: "\(accountInfos)\n\n\(sessionInfo)"
+                                message: message
                             )
                         case .canceled:
                             UIAlertController.showAlert(
@@ -250,12 +287,27 @@ account_ids=\(session.accounts.data.map({ $0.id }))
                     message: "Try clearing 'Custom Keys' or delete & re-install the app."
                 )
             }
-            self?.isLoading = false
+            self.isLoading = false
         }
     }
 
     func didSelectClearCaches() {
         URLSession.shared.reset(completionHandler: {})
+    }
+
+    func copySessionId() {
+        guard let sessionId = sessionOutput[.sessionId] else { return }
+        UIPasteboard.general.string = sessionId
+    }
+
+    func copyAccountNames() {
+        guard let accountNames = sessionOutput[.accountNames] else { return }
+        UIPasteboard.general.string = accountNames
+    }
+
+    func copyAccountIds() {
+        guard let accountIds = sessionOutput[.accountIds] else { return }
+        UIPasteboard.general.string = accountIds
     }
 }
 
@@ -264,7 +316,7 @@ private func SetupPlayground(
     completionHandler: @escaping ([String: String]?) -> Void
 ) {
     if
-        (configurationDictionary["test_mode"] as? Bool) == true,
+        (configurationDictionary["test_mode"] as? Bool) != true,
         (configurationDictionary["email"] as? String) == "test@test.com"
     {
         assertionFailure("test@test.com will not work with livemode, it will return rate limit exceeded")
@@ -320,6 +372,7 @@ private func SetupPlayground(
 }
 
 private func PresentFinancialConnectionsSheet(
+    useCase: PlaygroundConfiguration.UseCase,
     setupPlaygroundResponseJSON: [String: String],
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
@@ -366,11 +419,38 @@ private func PresentFinancialConnectionsSheet(
         returnURL: isUITest ? nil : "financial-connections-example://redirect"
     )
     financialConnectionsSheet.onEvent = onEvent
-    financialConnectionsSheet.present(
-        from: UIViewController.topMostViewController()!,
-        completion: { result in
-            completionHandler(result)
-            _ = financialConnectionsSheet  // retain the sheet
-        }
-    )
+    let topMostViewController = UIViewController.topMostViewController()!
+    if useCase == .token {
+        financialConnectionsSheet.presentForToken(
+            from: topMostViewController,
+            completion: { result in
+                completionHandler({
+                    switch result {
+                    case .completed(result: let tuple):
+                        return .completed(session: tuple.session)
+                    case .canceled:
+                        return .canceled
+                    case .failed(error: let error):
+                        return .failed(error: error)
+                    }
+                }())
+                _ = financialConnectionsSheet  // retain the sheet
+            }
+        )
+    } else {
+        financialConnectionsSheet.present(
+            from: topMostViewController,
+            completion: { result in
+                completionHandler(result)
+                _ = financialConnectionsSheet  // retain the sheet
+            }
+        )
+    }
+}
+
+private extension [String] {
+    /// Returns nil if the array is empty, otherwise joins the array values with a new line.
+    var joinedUnlessEmpty: String? {
+        isEmpty ? nil : joined(separator: "\n")
+    }
 }

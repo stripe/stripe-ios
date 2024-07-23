@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li 期 %2$@ 的無息付款";
+
 "+ Add" = "+ 添加";
+
+"Add US bank account" = "添加美國銀行帳戶";
 
 "Add a card" = "添加卡";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "銀行帳戶";
 
-"Buy now or pay later with Klarna." = "用 Klarna 先買後付。";
+"Buy now or pay later with Klarna" = "用 Klarna 先買後付";
 
 "Buy using a UPI ID" = "用 UPI ID 購買";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "管理支付方式";
+
 "Manage payment methods" = "管理支付方式";
 
 "Manage your payment methods" = "管理您的支付方式";
 
 "Name on card" = "持卡人姓名";
+
+"New card" = "添加新卡";
 
 "New payment method" = "新支付方式";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "不支援向 %@ 配送。";
 
 "Show menu" = "顯示選單";
+
+"Simple, secure one-click payments" = "簡單、安全地一鍵支付";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封包含說明的電子郵件，指導您用 %@ 保存您的銀行帳戶。";
 

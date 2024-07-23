@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li walang interes na mga pagbabayad ng %2$@";
+
 "+ Add" = "+Magdagdag";
+
+"Add US bank account" = "Magdagdag ng account sa bangko ng US";
 
 "Add a card" = "Magdagdag ng isang kard";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "Account sa bangko";
 
-"Buy now or pay later with Klarna." = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna.";
+"Buy now or pay later with Klarna" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna";
 
 "Buy using a UPI ID" = "Bumili gamit ang isang UPI ID";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Pangasiwaan ang paraan ng pagbabayad";
+
 "Manage payment methods" = "Pangasiwaan ang mga paraan ng pagbabayad";
 
 "Manage your payment methods" = "Pangasiwaan ang iyong mga paraan ng pagbabayad";
 
 "Name on card" = "Pangalan sa kard";
+
+"New card" = "Bagong kard";
 
 "New payment method" = "Bagong paraan ng pagbabayad";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "Hindi sinusuportahan ang pagpapadala sa %@.";
 
 "Show menu" = "Ipakita ang menu";
+
+"Simple, secure one-click payments" = "Simple, ligtas na isang-click na mga pagbabayad";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Idedeposito ng Stripe ang $0.01 sa iyong account sa loob ng 1-2 araw ng trabaho. Pagkatapos ay makakatanggap ka ng email na may mga tagubilin na tapusin ang pag-save sa iyong account sa bangko sa %@.";
 

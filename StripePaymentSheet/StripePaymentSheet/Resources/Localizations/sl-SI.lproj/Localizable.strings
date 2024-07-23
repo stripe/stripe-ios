@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li plačil brez obresti v znesku %2$@";
+
 "+ Add" = "+ Dodaj";
+
+"Add US bank account" = "Dodaj bančni račun v ZDA";
 
 "Add a card" = "Dodajte kartico";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "Bančni račun";
 
-"Buy now or pay later with Klarna." = "Kupite zdaj ali pa plačajte pozneje s storitvijo Klarna.";
+"Buy now or pay later with Klarna" = "Kupite zdaj ali pa za plačilo pozneje uporabite Klarna";
 
 "Buy using a UPI ID" = "Za nakup uporabite UPI ID";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Uredi način plačila";
+
 "Manage payment methods" = "Upravljanje načinov plačila";
 
 "Manage your payment methods" = "Upravljajte svoje načine plačila";
 
 "Name on card" = "Ime na kartici";
+
+"New card" = "Nova kartica";
 
 "New payment method" = "Nov način plačila";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "Dostava v državo %@ ni podprta.";
 
 "Show menu" = "Pokaži meni";
+
+"Simple, secure one-click payments" = "Enostavna in varna plačila z enim klikom";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe bo v 1–2 delovnih dneh na vaš račun nakazal znesek v višini 0,01 USD. Nato boste prejeli e-poštno sporočilo z navodili za dokončanje shranjevanja bančnega računa pri podjetju %@.";
 

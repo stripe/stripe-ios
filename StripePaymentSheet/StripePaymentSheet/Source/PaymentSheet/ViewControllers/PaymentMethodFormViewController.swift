@@ -44,7 +44,8 @@ class PaymentMethodFormViewController: UIViewController {
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = form.updateParams(params: params) {
-            params.setAllowRedisplay(for: intent.elementsSession.savePaymentMethodConsentBehavior())
+            params.setAllowRedisplay(paymentMethodSave: intent.elementsSession.customerSessionPaymentSheetPaymentMethodSave(),
+                                     isSettingUp: intent.isSettingUp)
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
@@ -109,6 +110,7 @@ class PaymentMethodFormViewController: UIViewController {
         sendEventToSubviews(.viewDidAppear, from: view)
         // The form is cached and could have been shared across other instance of PaymentMethodFormViewController after this instance was initialized, so we set the delegate in viewDidAppear to ensure that the form's delegate is up to date.
         form.delegate = self
+        delegate?.didUpdate(self) // notify delegate in case of any mandates being displayed
     }
 
     override func viewWillAppear(_ animated: Bool) {

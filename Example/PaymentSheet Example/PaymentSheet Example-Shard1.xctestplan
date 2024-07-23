@@ -16,6 +16,11 @@
         "value" : "$(SRCROOT)\/..\/..\/Tests\/ReferenceImages"
       }
     ],
+    "locationScenario" : {
+      "identifier" : "San Francisco, CA, USA",
+      "referenceType" : "built-in"
+    },
+    "region" : "US",
     "targetForVariableExpansion" : {
       "containerPath" : "container:PaymentSheet Example.xcodeproj",
       "identifier" : "D017784615929C0DD3717FE8",
@@ -33,7 +38,8 @@
         "PaymentSheetSnapshotTests",
         "PaymentSheetStandardLPMUITests",
         "PaymentSheetStandardUITests",
-        "PaymentSheetUITestCase"
+        "PaymentSheetUITestCase",
+        "PaymentSheetVerticalUITests"
       ],
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",

@@ -10,6 +10,8 @@
 
 "Back of identity card" = "신분증 뒷면";
 
+"Back of identity document" = "신분증 뒷면";
+
 "Camera permission" = "카메라 권한";
 
 "Camera unavailable" = "카메라 사용 불가";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "신분증 앞면 사진 업로드 성공";
 
 "Front of identity card" = "신분증 앞면";
+
+"Front of identity document" = "신분증 앞면";
 
 "Get ready to scan your photo ID" = "사진이 있는 신분증 스캔 준비";
 

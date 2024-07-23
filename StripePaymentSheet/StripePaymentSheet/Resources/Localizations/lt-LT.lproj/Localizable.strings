@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li %2$@ mokėjimai be palūkanų";
+
 "+ Add" = "+ Pridėti";
+
+"Add US bank account" = "Pridėti JAV banko sąskaitą";
 
 "Add a card" = "Pridėti kortelę";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "Banko sąskaita";
 
-"Buy now or pay later with Klarna." = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\".";
+"Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami „Klarna“";
 
 "Buy using a UPI ID" = "Pirkti naudojant UPI ID";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Tvarkyti mokėjimo būdą";
+
 "Manage payment methods" = "Valdyti mokėjimo būdus";
 
 "Manage your payment methods" = "Valdykite savo mokėjimo būdus";
 
 "Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
+
+"New card" = "Nauja kortelė";
 
 "New payment method" = "Naujas mokėjimo būdas";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
 
 "Show menu" = "Rodyti meniu";
+
+"Simple, secure one-click payments" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant „%@“.";
 

@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li rentevrije betalingen van %2$@";
+
 "+ Add" = "+ Toevoegen";
+
+"Add US bank account" = "Amerikaanse bankrekening toevoegen";
 
 "Add a card" = "Een kaart toevoegen";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "Bankrekening";
 
-"Buy now or pay later with Klarna." = "Koop nu of betaal later met Klarna.";
+"Buy now or pay later with Klarna" = "Koop nu of betaal later met Klarna";
 
 "Buy using a UPI ID" = "Kopen met een UPI-ID";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Betaalmethode beheren";
+
 "Manage payment methods" = "Betaalmethoden beheren";
 
 "Manage your payment methods" = "Uw betaalmethoden beheren";
 
 "Name on card" = "Naam op betaalkaart";
+
+"New card" = "Nieuwe betaalkaart";
 
 "New payment method" = "Nieuwe betaalmethode";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "Verzending naar %@ wordt niet ondersteund.";
 
 "Show menu" = "Menu weergeven";
+
+"Simple, secure one-click payments" = "Betaal eenvoudig en veilig met één klik";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Binnen 1 à 2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies om het instellen van je bankrekening bij %@ te voltooien.";
 

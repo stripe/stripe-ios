@@ -5,8 +5,9 @@
 //  Created by Yuki Tokuhiro on 5/20/24.
 //
 
+@_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(EarlyAccessCVCRecollectionFeature) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import XCTest
 
@@ -23,12 +24,17 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         waitForExpectations(timeout: 1)
     }
 
-    func verify(_ sut: PaymentSheetVerticalViewController, identifier: String? = nil) {
+    func makeBottomSheetAndLayout(_ sut: PaymentSheetVerticalViewController) -> BottomSheetViewController {
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: .default, isTestMode: false, didCancelNative3DS2: {})
         bottomSheet.view.setNeedsLayout()
         bottomSheet.view.layoutIfNeeded()
         let height = bottomSheet.view.systemLayoutSizeFitting(.init(width: 375, height: UIView.noIntrinsicMetric)).height
         bottomSheet.view.frame = .init(origin: .zero, size: .init(width: 375, height: height))
+        return bottomSheet
+    }
+
+    func verify(_ sut: PaymentSheetVerticalViewController, identifier: String? = nil) {
+        let bottomSheet = makeBottomSheetAndLayout(sut)
         STPSnapshotVerifyView(bottomSheet.view, identifier: identifier)
     }
 
@@ -173,7 +179,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         verify(sut)
     }
 
-    func testDisplaysMandateBelowList() {
+    func testDisplaysMandateBelowList_cashapp() {
         // When loaded with cash app + sfu = off_session...
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp], setupFutureUsage: .offSession),
@@ -188,6 +194,32 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         verify(sut)
     }
 
+    func testDisplaysMandateBelowList_saved_sepa_debit() {
+        // When loaded with saved SEPA Debit PM...
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit]),
+            savedPaymentMethods: [._testSEPA()],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
+        // ...should display list with saved SEPA selected and mandate displayed
+        verify(sut)
+    }
+
+    func testDisplaysMandateBelowList_saved_us_bank_account() {
+        // When loaded with saved US Bank Account PM...
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .USBankAccount]),
+            savedPaymentMethods: [._testUSBankAccount()],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
+        // ...should display list with saved SEPA selected and mandate displayed
+        verify(sut)
+    }
+
     func testDisplaysError() {
         struct MockError: LocalizedError {
             var errorDescription: String?{
@@ -196,18 +228,92 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         }
         // When loaded with US Bank (an example PM)...
         let loadResult = PaymentSheetLoader.LoadResult(
-            intent: ._testDeferredIntent(paymentMethodTypes: [.USBankAccount]),
+            intent: ._testDeferredIntent(paymentMethodTypes: [.USBankAccount, .cashApp], setupFutureUsage: .offSession),
             savedPaymentMethods: [],
             isLinkEnabled: false,
             isApplePayEnabled: false
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: true, previousPaymentOption: nil)
-        // ...and an error is sent...
+        // ...and an error is set...
         sut.updateErrorLabel(for: MockError())
         // ...we should display the error
-        verify(sut)
+        verify(sut, identifier: "under_list")
+
+        // Take another snapshot displaying the mandate
+        let listVC = sut.paymentMethodListViewController!
+        listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "Cash App Pay"), selection: .new(paymentMethodType: .stripe(.cashApp)))
+        sut.updateErrorLabel(for: MockError())
+        verify(sut, identifier: "under_list_with_mandate")
+
         // Take another snapshot displaying the form
         sut.didTapPaymentMethod(.new(paymentMethodType: .stripe(.USBankAccount)))
-        verify(sut, identifier: "form")
+        sut.updateErrorLabel(for: MockError())
+        verify(sut, identifier: "under_form")
+    }
+
+    func testAddNewCardFormTitle() {
+        // If we're displaying a saved card in the list, the card form title should be "New card" and not "Card"
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            savedPaymentMethods: [._testCard()],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, previousPaymentOption: nil)
+        _ = makeBottomSheetAndLayout(sut) // Laying out before calling `didTap` avoids breaking constraints due to zero size
+        let listVC = sut.paymentMethodListViewController!
+        listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "New card"), selection: .new(paymentMethodType: .stripe(.card)))
+        verify(sut)
+    }
+
+    func testCVCRecollection() {
+        let savedCard = STPPaymentMethod._testCard()
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: { _, _, _ in }) { return true }
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"], customerSessionData: nil)
+        let intent = Intent.deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            savedPaymentMethods: [savedCard],
+            isLinkEnabled: false,
+            isApplePayEnabled: false
+        )
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, previousPaymentOption: nil)
+        _ = makeBottomSheetAndLayout(sut) // Laying out before calling `didTap` avoids breaking constraints due to zero size
+        sut.paymentSheetDelegate = self
+        sut.didTapPrimaryButton()
+        verify(sut)
+
+        // Snapshot when error is CVC related
+        let cvcError = NSError(domain: STPError.stripeDomain, code: STPErrorCode.cardError.rawValue, userInfo: [STPError.errorParameterKey: "cvc", NSLocalizedDescriptionKey: "Bad CVC (this is a mock string)"])
+        mockConfirmResult = .failed(error: cvcError)
+        sut.cvcRecollectionViewController?.cvcRecollectionElement.getTextFieldElement("CVC")?.setText("123")
+        sut.didTapPrimaryButton()
+        wait(seconds: PaymentSheetUI.minimumFlightTime + 1)
+        self.verify(sut, identifier: "cvc_error")
+
+        // Snapshot when error isn't CVC related
+        let nonCVCError = NSError(domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue, userInfo: [NSLocalizedDescriptionKey: "Some non-CVC-specific error message."])
+        mockConfirmResult = .failed(error: nonCVCError)
+        sut.didTapPrimaryButton()
+        wait(seconds: PaymentSheetUI.minimumFlightTime + 1)
+        self.verify(sut, identifier: "non_cvc_error")
+    }
+
+    var mockConfirmResult: StripePaymentSheet.PaymentSheetResult = .canceled
+}
+
+extension PaymentSheetVerticalViewControllerSnapshotTest: PaymentSheetViewControllerDelegate {
+    func paymentSheetViewControllerShouldConfirm(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+        completion(mockConfirmResult, nil)
+    }
+
+    func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol, result: StripePaymentSheet.PaymentSheetResult) {
+
+    }
+
+    func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol) {
+    }
+
+    func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol) {
     }
 }

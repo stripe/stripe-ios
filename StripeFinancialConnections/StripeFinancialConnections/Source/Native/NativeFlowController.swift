@@ -106,6 +106,7 @@ class NativeFlowController {
         }
         if showConfirmationAlert {
             let closeConfirmationViewController = CloseConfirmationViewController(
+                theme: dataManager.manifest.theme,
                 didSelectClose: {
                     finishClosingAuthFlow()
                 }
@@ -151,13 +152,13 @@ extension NativeFlowController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
                     closeItem: self.navigationBarCloseBarButtonItem,
-                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    shouldLeftAlignStripeLogo: viewControllers.first == viewController
-                        && viewController is ConsentViewController
+                    theme: self.dataManager.manifest.theme,
+                    isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
             self.navigationController.setViewControllers(viewControllers, animated: animated)
@@ -198,12 +199,13 @@ extension NativeFlowController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
                     closeItem: self.navigationBarCloseBarButtonItem,
-                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    shouldLeftAlignStripeLogo: false  // if we `push`, this is not the first VC
+                    theme: self.dataManager.manifest.theme,
+                    isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
             } else {
@@ -1295,7 +1297,8 @@ private func CreatePaneViewController(
         if let terminalError = dataManager.terminalError {
             let terminalErrorViewController = TerminalErrorViewController(
                 error: terminalError,
-                allowManualEntry: dataManager.manifest.allowManualEntry
+                allowManualEntry: dataManager.manifest.allowManualEntry,
+                theme: dataManager.manifest.theme
             )
             terminalErrorViewController.delegate = nativeFlowController
             viewController = terminalErrorViewController
@@ -1348,7 +1351,7 @@ private func CreatePaneViewController(
     return viewController
 }
 
-private func ShouldHideStripeLogoInNavigationBar(
+private func ShouldHideLogoInNavigationBar(
     forViewController viewController: UIViewController,
     reducedBranding: Bool,
     merchantLogo: [String]?

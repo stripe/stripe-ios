@@ -33,7 +33,8 @@ extension STPElementsSession {
     static func _testValue(
         paymentMethodTypes: [String],
         externalPaymentMethodTypes: [String] = [],
-        customerSessionData: [String: Any]? = nil
+        customerSessionData: [String: Any]? = nil,
+        cardBrandChoiceData: [String: Any]? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -58,6 +59,10 @@ extension STPElementsSession {
                                 ]
         }
 
+        if let cardBrandChoiceData {
+            json["card_brand_choice"] = cardBrandChoiceData
+        }
+
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
@@ -68,11 +73,13 @@ extension Intent {
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
         customerSessionData: [String: Any]? = nil,
-        currency: String = "usd"
+        cardBrandChoiceData: [String: Any]? = nil,
+        currency: String = "usd",
+        cvcRecollectionEnabled: Bool = false
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData)
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData, cardBrandChoiceData: cardBrandChoiceData)
         return .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
     }
 
@@ -90,10 +97,10 @@ extension Intent {
         return .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
     }
 
-    static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType]) -> Intent {
+    static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType], setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: nil)
-        return .deferredIntent(elementsSession: elementsSession, intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in }))
+        return .deferredIntent(elementsSession: elementsSession, intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage), confirmHandler: { _, _, _ in }))
     }
 }
 
@@ -120,16 +127,20 @@ extension STPPaymentMethod {
         ])!
     }
 
-    static func _testCardCoBranded() -> STPPaymentMethod {
-        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+    static func _testCardCoBranded(brand: String = "visa", displayBrand: String? = nil, networks: [String] = ["visa", "amex"]) -> STPPaymentMethod {
+        var apiResponse: [String: Any] = [
             "id": "pm_123card",
             "type": "card",
             "card": [
                 "last4": "4242",
-                "brand": "visa",
-                "networks": ["available": ["visa", "amex"]],
+                "brand": brand,
+                "networks": ["available": networks],
             ],
-        ])!
+        ]
+        if let displayBrand {
+            apiResponse[jsonDict: "card"]?["display_brand"] = displayBrand
+        }
+        return STPPaymentMethod.decodedObject(fromAPIResponse: apiResponse)!
     }
 
     static func _testUSBankAccount() -> STPPaymentMethod {

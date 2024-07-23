@@ -36,6 +36,7 @@
 		4506A7016EA7C45796D3A30D /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758B9C9C2252A91FE4221702 /* STPLocalizedString.swift */; };
 		45DAE581F74EF7E11C64212B /* InstallMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E64986F72C7BD8B1105A95 /* InstallMethod.swift */; };
 		48A6CCB4008A5060C2655C5F /* XCTestCase+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE48D0086BED21F9E837D0B /* XCTestCase+Stripe.swift */; };
+		4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */; };
 		4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7727AEEFD2FC880BADDA1872 /* Dictionary+Stripe.swift */; };
 		53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCE36551600C3E53BEAF8F0 /* StripeCodableTest.swift */; };
 		552DA7969984C443617DBC3E /* STPMultipartFormDataPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C72BA9C44FF60A0E7BEF76 /* STPMultipartFormDataPart.swift */; };
@@ -221,6 +222,7 @@
 		45F11FF08733CF61D880640D /* UserDefaults+PaymentsCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+PaymentsCore.swift"; sourceTree = "<group>"; };
 		4689F6B4384244D9FD282560 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		48A3D6592296104A1512AE92 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Extensions.swift"; sourceTree = "<group>"; };
 		49424775D3233411D9C2473B /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
 		49538DBF8457D96707A2DA56 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4A8030BF88608CA86E295F18 /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
@@ -592,6 +594,7 @@
 				DEA5353BC5359E08128E116A /* StripeCoreBundleLocator.swift */,
 				C51179DB520568C246BF3AF0 /* URLEncoder.swift */,
 				B8B76840742D2CAF2931355A /* URLSession+Retry.swift */,
+				4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -981,6 +984,7 @@
 				45DAE581F74EF7E11C64212B /* InstallMethod.swift in Sources */,
 				096274D0729AA8849FAD103C /* PaymentsSDKVariant.swift in Sources */,
 				DA5A05459309B9B77ACDD736 /* STPDeviceUtils.swift in Sources */,
+				4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */,
 				83790210FFC2DD764C042C8E /* STPDispatchFunctions.swift in Sources */,
 				72DA29CA8A750E8B00DBF3D4 /* STPError.swift in Sources */,
 				F628BBE9FDA9D3A217ACA753 /* STPNumericStringValidator.swift in Sources */,
@@ -1264,7 +1268,7 @@
 		};
 		9F8CE18BDCF6289B6266E92D /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/eurias-stripe/OHHTTPStubs";
+			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
 			requirement = {
 				branch = master;
 				kind = branch;

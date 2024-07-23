@@ -49,7 +49,7 @@ class ShadowedRoundedRectangle: UIView {
 
         // Border
         if isSelected {
-            layer.borderWidth = appearance.borderWidth * 2
+            layer.borderWidth = appearance.borderWidth * 1.5
             layer.borderColor = appearance.colors.primary.cgColor
         } else {
             layer.borderWidth = appearance.borderWidth

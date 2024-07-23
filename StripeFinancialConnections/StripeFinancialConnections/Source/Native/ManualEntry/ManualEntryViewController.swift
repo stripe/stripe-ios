@@ -25,12 +25,13 @@ final class ManualEntryViewController: UIViewController {
     weak var delegate: ManualEntryViewControllerDelegate?
 
     private lazy var manualEntryFormView: ManualEntryFormView = {
-        let manualEntryFormView = ManualEntryFormView()
+        let manualEntryFormView = ManualEntryFormView(isTestMode: dataSource.manifest.isTestMode)
         manualEntryFormView.delegate = self
         return manualEntryFormView
     }()
     private lazy var footerView: ManualEntryFooterView = {
         let manualEntryFooterView = ManualEntryFooterView(
+            theme: dataSource.manifest.theme,
             didSelectContinue: { [weak self] in
                 self?.didSelectContinue()
             }
@@ -159,5 +160,10 @@ extension ManualEntryViewController: ManualEntryFormViewDelegate {
 
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView) {
         adjustContinueButtonStateIfNeeded()
+    }
+
+    func manualEntryFormViewShouldSubmit(_ view: ManualEntryFormView) {
+        adjustContinueButtonStateIfNeeded()
+        didSelectContinue()
     }
 }

@@ -35,7 +35,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
-            params.setAllowRedisplay(for: savePaymentMethodConsentBehavior)
+            params.setAllowRedisplayForCustomerSheet(savePaymentMethodConsentBehavior)
             return .new(confirmParams: params)
         }
         return nil
@@ -145,6 +145,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodScreenPresented()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        sendEventToSubviews(.viewDidAppear, from: view)
     }
 
     override func viewDidLoad() {
@@ -312,9 +317,13 @@ extension CustomerAddPaymentMethodViewController {
             }
         }
 
+        let additionalParameters: [String: Any] = [
+            "hosted_surface": "customer_sheet",
+        ]
         client.collectBankAccountForSetup(
             clientSecret: clientSecret,
             returnURL: configuration.returnURL,
+            additionalParameters: additionalParameters,
             onEvent: nil,
             params: params,
             from: viewController,

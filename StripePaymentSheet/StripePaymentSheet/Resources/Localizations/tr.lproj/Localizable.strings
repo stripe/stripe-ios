@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%2$@ tutarında %1$li faizsiz ödeme";
+
 "+ Add" = "+ Ekle";
+
+"Add US bank account" = "ABD banka hesabı ekleyin";
 
 "Add a card" = "Kart ekle";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "Banka hesabı";
 
-"Buy now or pay later with Klarna." = "Şimdi satın alın veya daha sonra Klarna ile ödeyin.";
+"Buy now or pay later with Klarna" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
 
 "Buy using a UPI ID" = "UPI Numarası kullanarak satın alın";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Ödeme yöntemini yönetin";
+
 "Manage payment methods" = "Ödeme yöntemlerini yönetin";
 
 "Manage your payment methods" = "Ödeme yöntemlerinizi yönetin";
 
 "Name on card" = "Karttaki isim";
+
+"New card" = "Yeni kart";
 
 "New payment method" = "Yeni ödeme yöntemi";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
 
 "Show menu" = "Menüyü göster";
+
+"Simple, secure one-click payments" = "Tek tıkla basit ve güvenli ödemeler";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe, 1-2 iş günü içerisinde hesabınıza 0,01 ABD doları yatıracaktır. Bunun ardından %@ işletmesinde banka hesabınızı kaydetme işlemini tamamlamak için yapmanız gerekenleri içeren bir e-posta alacaksınız.";
 

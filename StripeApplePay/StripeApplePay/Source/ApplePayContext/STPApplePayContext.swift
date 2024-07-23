@@ -35,6 +35,15 @@ import PassKit
         handler: @escaping (_ update: PKPaymentRequestShippingContactUpdate) -> Void
     )
 
+    /// Called when the user has entered or updated a coupon code. You should validate the
+    /// coupon and must invoke the completion block with a PKPaymentRequestCouponCodeUpdate object.
+    @available(iOS 15.0, *)
+    @objc optional func applePayContext(
+        _ context: STPApplePayContext,
+        didChangeCouponCode couponCode: String,
+        handler completion: @escaping (PKPaymentRequestCouponCodeUpdate) -> Void
+    )
+
     /// Optionally configure additional information on your PKPaymentAuthorizationResult.
     /// This closure will be called after the PaymentIntent or SetupIntent is confirmed, but before
     /// the Apple Pay sheet has been closed.
@@ -286,10 +295,31 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 handler:
             ))
 
-        return [
+        var delegateToAppleDelegateMapping = [
             pk_didSelectShippingMethod: stp_didSelectShippingMethod,
             pk_didSelectShippingContact: stp_didSelectShippingContact,
         ]
+
+        if #available(iOS 15.0, *) {
+            // On iOS 15+, Apple Pay can now accept coupon codes directly, so we need to broker the
+            // new coupon delegate functions between the host app and Apple Pay.
+            let pk_didChangeCouponCode = #selector(
+                PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
+                    _:
+                    didChangeCouponCode:
+                    handler:
+                ))
+            let stp_didChangeCouponCode = #selector(
+                _stpinternal_STPApplePayContextDelegateBase.applePayContext(
+                    _:
+                    didChangeCouponCode:
+                    handler:
+                ))
+
+            delegateToAppleDelegateMapping[pk_didChangeCouponCode] = stp_didChangeCouponCode
+        }
+
+        return delegateToAppleDelegateMapping
     }
 
     func _end() {
@@ -404,6 +434,22 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 ))
         ) ?? false {
             delegate?.applePayContext?(self, didSelectShippingContact: contact, handler: completion)
+        }
+    }
+
+    /// :nodoc:
+    @available(iOS 15.0, *)
+    @objc
+    public func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didChangeCouponCode couponCode: String,
+        handler completion: @escaping (PKPaymentRequestCouponCodeUpdate) -> Void) {
+
+        if delegate?.responds(
+            to: #selector(
+                _stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didChangeCouponCode:handler:))
+        ) ?? false {
+            delegate?.applePayContext?(self, didChangeCouponCode: couponCode, handler: completion)
         }
     }
 

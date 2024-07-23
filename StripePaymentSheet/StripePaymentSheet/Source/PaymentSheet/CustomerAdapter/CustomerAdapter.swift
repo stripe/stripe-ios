@@ -168,7 +168,8 @@ open class StripeCustomerAdapter: CustomerAdapter {
             apiClient.listPaymentMethods(
                 forCustomer: customerEphemeralKey.id,
                 using: customerEphemeralKey.ephemeralKeySecret,
-                types: savedPaymentMethodTypes
+                types: savedPaymentMethodTypes,
+                limit: 100
             ) { paymentMethods, error in
                 guard var paymentMethods, error == nil else {
                     let error = error ?? PaymentSheetError.unexpectedResponseFromStripeAPI // TODO: make a better default error

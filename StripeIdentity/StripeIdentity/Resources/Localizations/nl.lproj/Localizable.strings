@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Achterkant van identiteitskaart";
 
+"Back of identity document" = "Achterkant van identiteitsbewijs";
+
 "Camera permission" = "Toestemming voor camera";
 
 "Camera unavailable" = "Camera niet beschikbaar";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Foto van voorkant van identiteitskaart is geüpload";
 
 "Front of identity card" = "Voorkant van identiteitskaart";
+
+"Front of identity document" = "Voorkant van identiteitsbewijs";
 
 "Get ready to scan your photo ID" = "Bereid je voor om je foto-ID te scannen";
 

@@ -37,8 +37,8 @@
 /* Title for collected bank account information */
 "Bank account" = "Bank account";
 
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
+/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+"Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
 /* Header text shown above a UPI ID text field */
 "Buy using a UPI ID" = "Buy using a UPI ID";
@@ -70,6 +70,9 @@
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.";
 
+/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.";
+
 /* Legal text shown when creating a Link account. */
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
@@ -91,8 +94,7 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
-/* A button used to confirm selecting a saved payment method
-   A button used to confirm the CVC/CVV */
+/* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
 
 /* Text for alert message when user needs to confirm payment in their banking app */
@@ -131,6 +133,9 @@
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
 
+/* Title shown above a view containing the customer's payment method that they can delete or update */
+"Manage payment method" = "Manage payment method";
+
 /* Title shown above a view containing the customer's payment methods that they can delete or update */
 "Manage payment methods" = "Manage payment methods";
 
@@ -139,6 +144,9 @@
 
 /* Label for name on card field */
 "Name on card" = "Name on card";
+
+/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
+"New card" = "New card";
 
 /* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
 "New payment method" = "New payment method";

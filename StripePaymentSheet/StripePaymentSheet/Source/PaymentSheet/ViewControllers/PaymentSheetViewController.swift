@@ -58,7 +58,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-       return SavedPaymentMethodManager(configuration: configuration)
+        return SavedPaymentMethodManager(configuration: configuration, intent: intent)
     }()
 
     // MARK: - Views
@@ -529,9 +529,6 @@ extension PaymentSheetViewController: BottomSheetContentViewController {
     var requiresFullScreen: Bool {
         return false
     }
-    func didFinishAnimatingHeight() {
-        self.savedPaymentOptionsViewController.didFinishAnimatingHeight()
-    }
 }
 
 // MARK: - SavedPaymentOptionsViewControllerDelegate
@@ -546,15 +543,12 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
-        guard case .saved(let paymentMethod) = paymentMethodSelection,
-              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
-        else {
-            throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
+        guard case .saved(let paymentMethod) = paymentMethodSelection else {
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
         return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
-                                                                  with: updateParams,
-                                                                  using: ephemeralKey)
+                                                                  with: updateParams)
     }
 
     func didUpdateSelection(
@@ -578,13 +572,11 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        guard case .saved(let paymentMethod) = paymentMethodSelection,
-              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
-        else {
+        guard case .saved(let paymentMethod) = paymentMethodSelection else {
             return
         }
 
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod, using: ephemeralKey)
+        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
@@ -605,7 +597,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         } else {
             buyButton.update(state: buyButtonEnabledForSavedPayments())
         }
-        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
         navigationBar.additionalButton.addTarget(
             self,
             action: #selector(didSelectEditSavedPaymentMethodsButton),

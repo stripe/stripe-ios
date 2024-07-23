@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB numarası";
 
+"Bank account •••• %@" = "Banka hesabı •••• %@";
+
 "Billing address is same as shipping" = "Faturalama adresi, gönderim adresiyle aynı";
 
 "Cancel" = "İptal";
@@ -94,9 +96,7 @@
 
 "Remove" = "Kaldır";
 
-"Remove bank account" = "Banka hesabını kaldır";
-
-"Remove bank account ending in %@" = "%@ ile biten banka hesabını kaldır";
+"Remove bank account?" = "Banka hesabı kaldırılsın mı?";
 
 "Remove card" = "Kartı kaldır";
 

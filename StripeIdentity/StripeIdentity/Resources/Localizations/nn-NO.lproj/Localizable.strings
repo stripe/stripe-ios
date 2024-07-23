@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Baksida av ID-kort";
 
+"Back of identity document" = "Baksida av identifikasjonsdokumentet";
+
 "Camera permission" = "Kameraløyve";
 
 "Camera unavailable" = "Kamera ikkje tilgjengeleg";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Bilete av framsida av identifikasjonskort lasta opp";
 
 "Front of identity card" = "Framsida av identifikasjonskort";
+
+"Front of identity document" = "Framsida av identifikasjonsdokumentet";
 
 "Get ready to scan your photo ID" = "Gjør deg klar til å skanne bilde av ID-en din";
 

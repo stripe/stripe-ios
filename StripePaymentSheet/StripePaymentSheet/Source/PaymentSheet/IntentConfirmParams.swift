@@ -103,32 +103,47 @@ class IntentConfirmParams {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
         }
     }
-    func setAllowRedisplay(for savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior) {
-        switch savePaymentMethodConsentBehavior {
-        case .legacy:
-            // Always send unspecified
+    func setAllowRedisplay(paymentMethodSave: Bool?,
+                           isSettingUp: Bool) {
+        guard let paymentMethodSave else {
+            // Legacy Ephemeral Key
             paymentMethodParams.allowRedisplay = .unspecified
-        case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
-            switch saveForFutureUseCheckboxState {
-            case .hidden:
-                // For PI+SFU & SI:
-                paymentMethodParams.allowRedisplay = .limited
-            case .deselected:
-                // For PI w/out SFU
-                paymentMethodParams.allowRedisplay = .limited
-            case .selected:
-                // For PI, off-session during confirm
-                paymentMethodParams.allowRedisplay = .always
+            return
+        }
+
+        // Customer Session is enabled
+        if paymentMethodSave {
+            if isSettingUp {
+                if saveForFutureUseCheckboxState == .selected {
+                    paymentMethodParams.allowRedisplay = .always
+                } else if saveForFutureUseCheckboxState == .deselected {
+                    paymentMethodParams.allowRedisplay = .limited
+                }
+            } else {
+                if saveForFutureUseCheckboxState == .selected {
+                    paymentMethodParams.allowRedisplay = .always
+                } else if saveForFutureUseCheckboxState == .deselected {
+                    paymentMethodParams.allowRedisplay = .unspecified
+                }
             }
-        case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
-            // Checkbox is shown for all cases: PI, PI+SFU, SI
-            if saveForFutureUseCheckboxState == .selected {
-                paymentMethodParams.allowRedisplay = .always
-            } else if saveForFutureUseCheckboxState == .deselected {
+        } else {
+            if isSettingUp {
+                // Checkbox is hidden
                 paymentMethodParams.allowRedisplay = .limited
+            } else {
+                if saveForFutureUseCheckboxState == .selected {
+                    paymentMethodParams.allowRedisplay = .always
+                } else if saveForFutureUseCheckboxState == .deselected {
+                    paymentMethodParams.allowRedisplay = .unspecified
+                }
             }
-        case .customerSheetWithCustomerSession:
-            // UX (CustomerSheet) implies consent based on the UX
+        }
+    }
+
+    func setAllowRedisplayForCustomerSheet(_ savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior) {
+        if savePaymentMethodConsentBehavior == .legacy {
+            paymentMethodParams.allowRedisplay = .unspecified
+        } else if savePaymentMethodConsentBehavior == .customerSheetWithCustomerSession {
             paymentMethodParams.allowRedisplay = .always
         }
     }

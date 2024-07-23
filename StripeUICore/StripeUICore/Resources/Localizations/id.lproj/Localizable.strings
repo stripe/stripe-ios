@@ -14,6 +14,8 @@
 
 "BSB number" = "Nomor BSB";
 
+"Bank account •••• %@" = "Rekening bank •••• %@";
+
 "Billing address is same as shipping" = "Alamat tagihan sama dengan pengiriman";
 
 "Cancel" = "Batalkan";
@@ -94,9 +96,7 @@
 
 "Remove" = "Hapus";
 
-"Remove bank account" = "Hapus rekening bank";
-
-"Remove bank account ending in %@" = "Hapus rekening bank yang berakhiran dengan %@";
+"Remove bank account?" = "Hapus rekening bank?";
 
 "Remove card" = "Hapus kartu";
 

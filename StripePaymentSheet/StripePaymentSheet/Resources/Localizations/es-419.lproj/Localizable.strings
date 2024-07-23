@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li pagos sin intereses de %2$@";
+
 "+ Add" = "Agregar otro";
+
+"Add US bank account" = "Agrega una cuenta bancaria de EE. UU.";
 
 "Add a card" = "Agrega una tarjeta";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "Cuenta bancaria";
 
-"Buy now or pay later with Klarna." = "Compra ahora y paga después con Klarna.";
+"Buy now or pay later with Klarna" = "Compra ahora o paga después con Klarna";
 
 "Buy using a UPI ID" = "Comprar con un ID de UPI";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Gestionar el método de pago";
+
 "Manage payment methods" = "Gestiona los métodos de pago";
 
 "Manage your payment methods" = "Gestiona tus métodos de pago";
 
 "Name on card" = "Nombre del titular de la tarjeta";
+
+"New card" = "Nueva tarjeta";
 
 "New payment method" = "Nuevo método de pago";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "No se aceptan envíos a %@.";
 
 "Show menu" = "Mostrar menú";
+
+"Simple, secure one-click payments" = "Pagos seguros y sencillos en un clic";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe depositará $0.01 en tu cuenta dentro de 1 o 2 días hábiles. Luego, recibirás un correo electrónico con instrucciones para terminar de guardar tu cuenta bancaria con %@.";
 

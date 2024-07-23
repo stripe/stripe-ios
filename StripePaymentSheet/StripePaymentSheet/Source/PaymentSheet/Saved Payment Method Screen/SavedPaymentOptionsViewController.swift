@@ -231,14 +231,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             return FormElement(autoSectioningElements: [])
         }
 
-        let formElement = PaymentSheetFormFactory(
-            intent: intent,
-            configuration: .paymentSheet(paymentSheetConfiguration),
-            paymentMethod: .stripe(.card),
-            previousCustomerInput: nil)
-        let cvcCollectionElement = formElement.makeCardCVCCollection(paymentMethod: paymentMethod,
-                                                                     mode: .inputOnly,
-                                                                     appearance: appearance)
+        let cvcCollectionElement = CVCRecollectionElement(paymentMethod: paymentMethod, mode: .inputOnly, appearance: appearance)
         cvcCollectionElement.delegate = self
         return cvcCollectionElement
     }
@@ -337,9 +330,10 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
 
-    func didFinishAnimatingHeight() {
-        // Wait 150ms after the view is presented to emphasize to users to enter their CVC
-        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(150))) {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Wait 200ms after the view is presented to emphasize to users to enter their CVC
+        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(200))) {
             if self.isViewLoaded {
                 self.toggleCVCElement()
             }
@@ -428,18 +422,8 @@ class SavedPaymentOptionsViewController: UIViewController {
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
     static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
-
-        var savedPaymentMethods = savedPaymentMethods
         // Get the default
         let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
-
-        // Move default to front
-        if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
-            $0.stripeId == defaultPaymentMethod?.value
-        }) {
-            let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
-            savedPaymentMethods.insert(defaultPM, at: 0)
-        }
 
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
@@ -681,14 +665,14 @@ extension STPPaymentMethod {
             )
         case .SEPADebit:
             let last4 = sepaDebit?.last4 ?? ""
-            let formattedMessage = String.Localized.removeBankAccountEndingIn
+            let formattedMessage = String.Localized.bank_account_xxxx
             return (
                 title: String.Localized.removeBankAccount,
                 message: String(format: formattedMessage, last4)
             )
         case .USBankAccount:
             let last4 = usBankAccount?.last4 ?? ""
-            let formattedMessage = String.Localized.removeBankAccountEndingIn
+            let formattedMessage = String.Localized.bank_account_xxxx
             return (
                 title: String.Localized.removeBankAccount,
                 message: String(format: formattedMessage, last4)

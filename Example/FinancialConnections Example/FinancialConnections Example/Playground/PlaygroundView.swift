@@ -17,6 +17,18 @@ struct PlaygroundView: View {
         ZStack {
             VStack {
                 Form {
+                    Section(header: Text("Experience")) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Picker("Select Experience", selection: viewModel.experience) {
+                                ForEach(PlaygroundConfiguration.Experience.allCases) {
+                                    Text($0.displayName)
+                                        .tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                    }
+
                     Section(header: Text("Select SDK Type")) {
                         VStack(alignment: .leading, spacing: 4) {
                             Picker("Select SDK Type", selection: viewModel.sdkType) {
@@ -61,26 +73,31 @@ struct PlaygroundView: View {
                         }
                     }
 
-                    Section(header: Text("Select Use Case")) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Picker("Select Use Case", selection: viewModel.useCase) {
-                                ForEach(PlaygroundConfiguration.UseCase.allCases) {
-                                    Text($0.rawValue.capitalized.replacingOccurrences(of: "_", with: " "))
-                                        .tag($0)
+                    if viewModel.experience.wrappedValue == .financialConnections {
+                        Section(header: Text("Select Use Case")) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Picker("Select Use Case", selection: viewModel.useCase) {
+                                    ForEach(PlaygroundConfiguration.UseCase.allCases) {
+                                        Text($0.rawValue.capitalized.replacingOccurrences(of: "_", with: " "))
+                                            .tag($0)
+                                    }
                                 }
+                                .pickerStyle(.segmented)
                             }
-                            .pickerStyle(.segmented)
                         }
                     }
 
-                    Section(header: Text("Customer")) {
+                    Section(header: Text(viewModel.useCase.wrappedValue == .token ? "Account" : "Customer")) {
                         TextField("Email (ex. existing Link consumer)", text: viewModel.email)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .accessibility(identifier: "playground-email")
-                        TextField("Phone", text: viewModel.phone)
-                            .keyboardType(.phonePad)
-                            .accessibility(identifier: "playground-phone")
+
+                        if viewModel.useCase.wrappedValue != .token {
+                            TextField("Phone", text: viewModel.phone)
+                                .keyboardType(.phonePad)
+                                .accessibility(identifier: "playground-phone")
+                        }
                     }
 
                     Section(header: Text("PERMISSIONS")) {
@@ -119,7 +136,33 @@ struct PlaygroundView: View {
                             }
                         }
                     }
+
+                    Section(header: Text("Session output")) {
+                        if let output = viewModel.sessionOutput[.message] {
+                            TextEditor(text: .constant(output))
+                                .accessibility(identifier: "playground-session-output-textfield")
+                        }
+
+                        Button(action: viewModel.copySessionId) {
+                            Text("Copy Session ID")
+                        }
+                        .disabled(viewModel.sessionOutput[.sessionId] == nil)
+                        .accessibility(identifier: "playground-session-output-copy-session-id")
+
+                        Button(action: viewModel.copyAccountNames) {
+                            Text("Copy Account Names")
+                        }
+                        .disabled(viewModel.sessionOutput[.accountNames] == nil)
+                        .accessibility(identifier: "playground-session-output-copy-account-names")
+
+                        Button(action: viewModel.copyAccountIds) {
+                            Text("Copy Account IDs")
+                        }
+                        .disabled(viewModel.sessionOutput[.accountIds] == nil)
+                        .accessibility(identifier: "playground-session-output-copy-account-ids")
+                    }
                 }
+
                 VStack {
                     Button(action: viewModel.didSelectShow) {
                         VStack {
@@ -147,6 +190,12 @@ struct PlaygroundView: View {
         }
         .navigationTitle("Playground")
         .navigationBarTitleDisplayMode(.inline)
+        .gesture(DragGesture().onChanged(hideKeyboard))
+        .animation(.easeIn(duration: 1), value: viewModel.experience.wrappedValue)
+    }
+
+    private func hideKeyboard(_ value: DragGesture.Value) {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

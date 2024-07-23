@@ -59,10 +59,6 @@ final class IdentityAnalyticsClient {
         case timeToScreen = "time_to_screen"
         // MARK: Errors
         case genericError = "generic_error"
-        // MARK: Microblink
-        case mbStatus = "mb_status"
-        case mbError = "mb_error"
-        case mbCaptureStatus = "mb_capture_status"
         // MARK: Experiment
         case experimentExposure = "preloaded_experiment_retrieved"
     }
@@ -531,64 +527,6 @@ final class IdentityAnalyticsClient {
                     filePath: filePath,
                     line: line
                 ),
-            ],
-            verificationPage: try? sheetController.verificationPageResponse?.get()
-        )
-    }
-
-    // MARK: - Microblink Events
-    func logMbStatus(
-        required: Bool,
-        init_success: Bool? = nil,
-        init_failed_reason: String? = nil,
-        sheetController: VerificationSheetControllerProtocol
-    ) {
-        var metadata: [String: Any] = [
-            "required": required
-        ]
-
-        if let init_success = init_success {
-            metadata["init_success"] = init_success
-        }
-
-        if let reason = init_failed_reason {
-            metadata["init_failed_reason"] = reason
-        }
-
-        logAnalytic(
-            .mbStatus,
-            metadata: metadata,
-            verificationPage: try? sheetController.verificationPageResponse?.get()
-        )
-    }
-
-    func logMbError(
-        error: MBDetector.MBDetectorError,
-        filePath: StaticString = #filePath,
-        line: UInt = #line,
-        sheetController: VerificationSheetControllerProtocol
-    ) {
-        logAnalytic(
-            .mbError,
-            metadata: [
-                "error_details": AnalyticsClientV2.serialize(
-                    error: error,
-                    filePath: filePath,
-                    line: line
-                ),
-            ],
-            verificationPage: try? sheetController.verificationPageResponse?.get()
-        )
-    }
-
-    func logMbCaptureStatus(
-        capturedByMb: Bool,
-        sheetController: VerificationSheetControllerProtocol
-    ) {
-        logAnalytic(
-            .mbCaptureStatus,
-            metadata: [
-                "captured_by_mb": capturedByMb
             ],
             verificationPage: try? sheetController.verificationPageResponse?.get()
         )

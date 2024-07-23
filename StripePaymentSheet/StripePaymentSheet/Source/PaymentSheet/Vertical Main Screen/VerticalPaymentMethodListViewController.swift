@@ -55,7 +55,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
         // Create stack view views after super.init so that we can reference `self`
         var views = [UIView]()
-        // Saved payment methods:
+        // Saved payment method:
         if let savedPaymentMethod {
             let selection = VerticalPaymentMethodListSelection.saved(paymentMethod: savedPaymentMethod)
             let accessoryButton: RowButton.RightAccessoryButton? = {
@@ -79,6 +79,20 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 .makeSpacerView(height: 12),
                 Self.makeSectionLabel(text: .Localized.new_payment_method, appearance: appearance),
             ]
+        }
+
+        // Special case - order "New Card" immediately after saved card:
+        let shouldReorderNewCard: Bool = paymentMethodTypes.contains(.stripe(.card)) && savedPaymentMethod?.type == .card
+        if shouldReorderNewCard {
+            let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.card))
+            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card), savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance, shouldAnimateOnPress: true) { [weak self] in
+                self?.didTap(rowButton: $0, selection: selection)
+            }
+            views.append(rowButton)
+            if initialSelection == selection {
+                rowButton.isSelected = true
+                currentSelection = selection
+            }
         }
 
         // Apple Pay and Link:
@@ -105,15 +119,22 @@ class VerticalPaymentMethodListViewController: UIViewController {
             }
         }
 
-        // All other payment methods:
+        // All other payment methods (excluding card, if it was already added above):
+        let paymentMethodTypes = shouldReorderNewCard ? paymentMethodTypes.filter({ $0 != .stripe(.card) }) : paymentMethodTypes
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
-            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType,
-                                                               subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount),
-                                                               appearance: appearance) { [weak self] in
+            let rowButton = RowButton.makeForPaymentMethodType(
+                paymentMethodType: paymentMethodType,
+                subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount),
+                savedPaymentMethodType: savedPaymentMethod?.type,
+                appearance: appearance,
+                // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
+                shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)
+            ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
             views.append(rowButton)
+
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
@@ -133,6 +154,13 @@ class VerticalPaymentMethodListViewController: UIViewController {
         view.backgroundColor = appearance.colors.background
     }
 
+    func clearSelection() {
+        currentSelection = nil
+        for rowButton in rowButtons {
+            rowButton.isSelected = false
+        }
+    }
+
     // MARK: - Helpers
 
     func didTap(rowButton: RowButton, selection: VerticalPaymentMethodListSelection) {
@@ -148,6 +176,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             currentSelection = selection
         }
         delegate.didTapPaymentMethod(selection)
+        return
     }
 
     @objc func didTapAccessoryButton() {

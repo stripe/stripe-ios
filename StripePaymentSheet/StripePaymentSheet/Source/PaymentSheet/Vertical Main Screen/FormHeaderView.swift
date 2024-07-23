@@ -15,7 +15,7 @@ final class FormHeaderView: UIView {
     private lazy var label: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
         if paymentMethodType == .stripe(.card) {
-            label.text = hasASavedCard ? String.Localized.add_card : String.Localized.add_new_card
+            label.text = shouldUseNewCardHeader ? String.Localized.add_new_card : String.Localized.add_card
         } else if paymentMethodType == .stripe(.USBankAccount) {
             label.text = String.Localized.add_us_bank_account
         } else {
@@ -39,16 +39,17 @@ final class FormHeaderView: UIView {
         let views = [imageView, label].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.spacing = 12
+        stackView.alignment = .center
         return stackView
     }()
 
     private let paymentMethodType: PaymentSheet.PaymentMethodType
-    private let hasASavedCard: Bool // true if the customer has a saved payment method that is type card
+    private let shouldUseNewCardHeader: Bool // true if the customer has a saved payment method that is type card
     private let appearance: PaymentSheet.Appearance
 
-    init(paymentMethodType: PaymentSheet.PaymentMethodType, hasASavedCard: Bool, appearance: PaymentSheet.Appearance) {
+    init(paymentMethodType: PaymentSheet.PaymentMethodType, shouldUseNewCardHeader: Bool, appearance: PaymentSheet.Appearance) {
         self.paymentMethodType = paymentMethodType
-        self.hasASavedCard = hasASavedCard
+        self.shouldUseNewCardHeader = shouldUseNewCardHeader
         self.appearance = appearance
         super.init(frame: .zero)
         addAndPinSubview(stackView)

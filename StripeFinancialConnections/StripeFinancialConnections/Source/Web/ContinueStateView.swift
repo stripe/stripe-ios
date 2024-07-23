@@ -18,6 +18,7 @@ final class ContinueStateViews {
 
     init(
         institutionImageUrl: String?,
+        theme: FinancialConnectionsTheme,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: (() -> Void)? = nil
     ) {
@@ -55,7 +56,8 @@ final class ContinueStateViews {
                 } else {
                     return nil
                 }
-            }()
+            }(),
+            theme: theme
         )
         self.footerView = footerViewTuple.footerView
         self.primaryButton = footerViewTuple.primaryButton

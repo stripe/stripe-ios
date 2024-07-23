@@ -95,13 +95,13 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
-        var cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"]
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+        let amexButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"]
+        XCTAssertTrue(amexButton.waitForExistence(timeout: 10.0))
+        amexButton.forceTapElement()
 
-        cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+        let mastercardButton = applePay.buttons["Simulated Card - MasterCard, ‪•••• 1234‬"].firstMatch
+        XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
+        mastercardButton.forceTapElement()
 
         let payButton = applePay.buttons["Pay with Passcode"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
@@ -116,7 +116,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         for integrationMethod in IntegrationMethod.allCases {
             print("Testing \(integrationMethod.rawValue)")
             switch integrationMethod {
-            case .iDEAL, .giropay, .przelewy24, .bancontact, .eps, .afterpay, .sofort, .paypal:
+            case .iDEAL, .przelewy24, .bancontact, .eps, .afterpay, .sofort, .paypal:
                 testNoInputIntegrationMethod(integrationMethod, shouldConfirm: true)
             case .alipay:
                 testAppToAppRedirect(integrationMethod)
@@ -126,7 +126,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
                 break
             case .bacsDebit, .sepaDebit:
                 testNoInputIntegrationMethod(integrationMethod, shouldConfirm: false)
-            case .card, .cardSetupIntents, .fpx, .aubecsDebit, .applePay, .klarna:
+            case .card, .cardSetupIntents, .aubecsDebit, .applePay, .klarna, .fpx:
                 // Tested in method-specific functions.
                 break
             case .grabpay:
@@ -134,6 +134,9 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
                 break
             case .oxxo:
                 // TODO: OXXO is currently broken
+                break
+            case .giropay:
+                // TODO: Giropay is deprecated
                 break
             }
         }
@@ -341,6 +344,7 @@ class IntegrationTesterUITests: XCTestCase {
         if integrationMethod == .paypal {
             // PayPal uses ASWebAuthenticationSession, tap continue:
             let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            XCTAssertTrue(springboard.waitForExistence(timeout: 10.0))
             springboard.buttons["Continue"].tap()
         }
 

@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Πίσω πλευρά ταυτότητας";
 
+"Back of identity document" = "Πίσω πλευρά εγγράφου ταυτότητας";
+
 "Camera permission" = "Άδεια κάμερας";
 
 "Camera unavailable" = "Μη διαθέσιμη κάμερα";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Η φωτογραφία της μπροστινής πλευράς της ταυτότητας στάλθηκε με επιτυχία";
 
 "Front of identity card" = "Μπροστινή πλευρά ταυτότητας";
+
+"Front of identity document" = "Μπροστινή πλευρά εγγράφου ταυτότητας";
 
 "Get ready to scan your photo ID" = "Ετοιμαστείτε να σαρώσετε την ταυτότητα με φωτογραφία";
 

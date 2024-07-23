@@ -48,6 +48,7 @@ class ConsentViewController: UIViewController {
             aboveCtaText: dataSource.consent.aboveCta,
             ctaText: dataSource.consent.cta,
             belowCtaText: dataSource.consent.belowCta,
+            theme: dataSource.manifest.theme,
             didSelectAgree: { [weak self] in
                 self?.didSelectAgree()
             },
@@ -84,7 +85,11 @@ class ConsentViewController: UIViewController {
                     trailing: 24
                 )
                 if let merchantLogo = dataSource.merchantLogo {
-                    let consentLogoView = ConsentLogoView(merchantLogo: merchantLogo)
+                    let showsAnimatedDots = dataSource.manifest.isLinkWithStripe != true
+                    let consentLogoView = ConsentLogoView(
+                        merchantLogo: merchantLogo,
+                        showsAnimatedDots: showsAnimatedDots
+                    )
                     self.consentLogoView = consentLogoView
                     verticalStackView.addArrangedSubview(consentLogoView)
                 }
@@ -104,12 +109,25 @@ class ConsentViewController: UIViewController {
         paneLayoutView.addTo(view: view)
 
         dataSource.analyticsClient.logPaneLoaded(pane: .consent)
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // this fixes an issue where presenting a UIViewController
         // on top of ConsentViewController would stop the dot animation
+        consentLogoView?.animateDots()
+    }
+
+    @objc private func appWillEnterForeground() {
+        // Fixes an issue where the dot animation was stopped when the app
+        // was backgrounded, then reopened.
         consentLogoView?.animateDots()
     }
 
@@ -152,6 +170,7 @@ class ConsentViewController: UIViewController {
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNotice,
+                            theme: dataSource.manifest.theme,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
@@ -162,6 +181,7 @@ class ConsentViewController: UIViewController {
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNoticeModel,
+                        theme: dataSource.manifest.theme,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }

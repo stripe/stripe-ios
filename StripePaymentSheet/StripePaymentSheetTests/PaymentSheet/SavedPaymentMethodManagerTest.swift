@@ -25,15 +25,45 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
     }
 
     // MARK: Update tests
-    func testUpdatePaymentMethod() async throws {
+    func testUpdatePaymentMethod_legacy() async throws {
         let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
         let expectation = stubUpdatePaymentMethod(paymentMethod: paymentMethod,
                                 ephemeralKey: ephemeralKey)
+        var configuration = configuration
+        configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration)
+        let sut = SavedPaymentMethodManager(configuration: configuration, intent: Intent._testPaymentIntent(paymentMethodTypes: [.card]))
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
-                           with: STPPaymentMethodUpdateParams(),
-                           using: ephemeralKey)
+                           with: STPPaymentMethodUpdateParams())
+
+        // Verify the response was valid
+        XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
+        await fulfillment(of: [expectation], timeout: 5.0)
+    }
+
+    func testUpdatePaymentMethod_customerSessions() async throws {
+        let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
+        let expectation = stubUpdatePaymentMethod(paymentMethod: paymentMethod,
+                                ephemeralKey: "ek_12345")
+        var configuration = configuration
+        configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "cuss_test")
+
+        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card],
+                                         customerSessionData: [
+                                             "payment_sheet": [
+                                                 "enabled": true,
+                                                 "features": ["payment_method_save": "enabled",
+                                                              "payment_method_remove": "enabled",
+                                                             ],
+                                             ],
+                                             "customer_sheet": [
+                                                 "enabled": false
+                                             ],
+                                         ])
+
+        let sut = SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
+                           with: STPPaymentMethodUpdateParams())
 
         // Verify the response was valid
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
@@ -41,41 +71,44 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
     }
 
     // MARK: Detach tests
-    func testDetachPaymentMethod_noCustomer() {
-        let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
-                                                  ephemeralKey: ephemeralKey)
-
-        let sut = SavedPaymentMethodManager(configuration: configuration)
-        sut.detach(paymentMethod: paymentMethod, using: ephemeralKey)
-
-        wait(for: [expectation], timeout: 5.0)
-    }
-
-    func testDetachPaymentMethod_withLegacyCustomer() {
+    func testDetachPaymentMethod_legacy() {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration)
-        sut.detach(paymentMethod: paymentMethod, using: ephemeralKey)
+        let sut = SavedPaymentMethodManager(configuration: configuration, intent: Intent._testPaymentIntent(paymentMethodTypes: [.card]))
+        sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [expectation], timeout: 5.0)
     }
 
-    func testDetachPaymentMethod_withCustomerSession() {
+    func testDetachPaymentMethod_customerSessions() {
         var configuration = configuration
-        configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "session_123")
+        configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "cuss_test")
 
         let listPaymentMethodsExpectation = stubListPaymentMethods(customerId: configuration.customer!.id,
-                                                                   ephemeralKey: ephemeralKey)
+                                                                   ephemeralKey: "ek_12345")
 
         let detachExpectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
-                                                  ephemeralKey: ephemeralKey)
+                                                        ephemeralKey: "ek_12345")
 
-        let sut = SavedPaymentMethodManager(configuration: configuration)
-        sut.detach(paymentMethod: paymentMethod, using: ephemeralKey)
+        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card],
+                                         customerSessionData: [
+                                             "payment_sheet": [
+                                                 "enabled": true,
+                                                 "features": ["payment_method_save": "enabled",
+                                                              "payment_method_remove": "enabled",
+                                                             ],
+                                             ],
+                                             "customer_sheet": [
+                                                 "enabled": false
+                                             ],
+                                         ])
+
+        let sut = SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
     }

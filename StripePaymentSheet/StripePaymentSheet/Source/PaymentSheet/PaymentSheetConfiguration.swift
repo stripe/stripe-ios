@@ -210,6 +210,15 @@ extension PaymentSheet {
     internal enum CustomerAccessProvider {
         case legacyCustomerEphemeralKey(String)
         case customerSession(String)
+
+        var analyticValue: String {
+            switch self {
+            case .legacyCustomerEphemeralKey:
+                return "legacy"
+            case .customerSession:
+                return "customer_session"
+            }
+        }
     }
 
     /// Configuration related to the Stripe Customer
@@ -236,6 +245,11 @@ extension PaymentSheet {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
             self.ephemeralKeySecret = ""
+
+            stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
+                      "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+            stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
+                      "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
         }
     }
 

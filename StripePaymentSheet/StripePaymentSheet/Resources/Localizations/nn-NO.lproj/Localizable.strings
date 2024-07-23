@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li rentefrie betalingar på %2$@";
+
 "+ Add" = "+ Legg til";
+
+"Add US bank account" = "Legg til bankkonto i USA";
 
 "Add a card" = "Legg til kort";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "Bankkonto";
 
-"Buy now or pay later with Klarna." = "Kjøp no eller betal seinare med Klarna.";
+"Buy now or pay later with Klarna" = "Kjøp no eller betal seinare med Klarna";
 
 "Buy using a UPI ID" = "Kjøp ved å bruke ein UPI ID";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Handsam betalingsmetode";
+
 "Manage payment methods" = "Handsam betalingsmetodar";
 
 "Manage your payment methods" = "Handsam betalingsmåtane dine";
 
 "Name on card" = "Namn på kort";
+
+"New card" = "Nytt kort";
 
 "New payment method" = "Ny betalingsmåte";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "Levering til %@ er ikkje støtta.";
 
 "Show menu" = "Vis meny";
+
+"Simple, secure one-click payments" = "Enkle, trygge betalingar med eitt klikk";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe set inn 0,01 USD på kontoen din i løpet av 1–2 verkedagar. Deretter får du ei e-postmelding som forklarar resten av prosessen med å lagre bankkontoen din hos %@.";
 

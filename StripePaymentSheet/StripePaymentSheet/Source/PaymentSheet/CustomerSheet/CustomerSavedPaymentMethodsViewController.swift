@@ -342,10 +342,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private func defaultCallToAction() -> ConfirmButton.CallToActionType {
         switch mode {
         case .selectingSaved:
-            return .custom(title: STPLocalizedString(
-                "Confirm",
-                "A button used to confirm selecting a saved payment method"
-            ))
+            return .custom(title: String.Localized.confirm)
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
             return .customWithLock(title: STPLocalizedString(
                 "Save",
@@ -688,7 +685,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateBottomNotice()
             }
         }
-        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }
@@ -809,10 +806,6 @@ extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewContr
 
     var requiresFullScreen: Bool {
         return false
-    }
-
-    func didFinishAnimatingHeight() {
-        // no-op
     }
 }
 

@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li%2$@회 무이자 결제";
+
 "+ Add" = "+ 추가";
+
+"Add US bank account" = "미국 은행 계좌 추가";
 
 "Add a card" = "카드 추가";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "은행 계좌";
 
-"Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
+"Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
 
 "Buy using a UPI ID" = "UPI ID를 사용하여 구매";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "결제 방식 관리";
+
 "Manage payment methods" = "결제 방식 관리";
 
 "Manage your payment methods" = "내 결제 방식 관리";
 
 "Name on card" = "카드 명의자";
+
+"New card" = "새 카드";
 
 "New payment method" = "새 결제 방식";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
 
 "Show menu" = "메뉴 표시";
+
+"Simple, secure one-click payments" = "간단하고 안전한 원클릭 결제";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe는 영업일 기준 1~2일 후에 계좌에 0.01$를 예금할 예정입니다. 이후 %@에 은행 계좌 저장을 완료하라는 지침이 포함된 이메일이 전송됩니다.";
 

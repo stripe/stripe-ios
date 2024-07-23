@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Verso-ul cărții de identitate";
 
+"Back of identity document" = "Spatele documentului de identitate";
+
 "Camera permission" = "Permisiune cameră";
 
 "Camera unavailable" = "Cameră indisponibilă";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Fotografia părții frontale a cărții de identitate a fost încărcată cu succes";
 
 "Front of identity card" = "Partea frontală a cărții de identitate";
+
+"Front of identity document" = "Partea frontală a documentului de identitate";
 
 "Get ready to scan your photo ID" = "Pregătiți-vă să vă scanați documentul de identitate cu fotografie";
 

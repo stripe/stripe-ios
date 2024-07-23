@@ -51,20 +51,6 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
         uploadImagesExp.fulfill()
     }
 
-    func uploadImagesFromMB(
-        for side: StripeIdentity.DocumentSide,
-        originalImage: CGImage,
-        croppedImage: CGImage,
-        documentScannerOutput: StripeIdentity.DocumentScannerOutput?,
-        exifMetadata: StripeCameraCore.CameraExifMetadata?,
-        method: StripeCore.StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
-    ) {
-        uploadedSide = side
-        uploadedDocumentScannerOutput = documentScannerOutput
-        uploadMethod = method
-        uploadImagesExp.fulfill()
-    }
-
     func reset() {
         didReset = true
     }

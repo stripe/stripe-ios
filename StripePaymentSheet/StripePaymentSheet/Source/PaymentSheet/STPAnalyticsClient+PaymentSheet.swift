@@ -108,7 +108,9 @@ extension STPAnalyticsClient {
 
     func logPaymentSheetLoadSucceeded(loadingStartDate: Date,
                                       linkEnabled: Bool,
-                                      defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?) {
+                                      defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
+                                      intentAnalyticsValue: String,
+                                      orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]) {
         let defaultPaymentMethodAnalyticsValue: String = {
             switch defaultPaymentMethod {
             case .applePay:
@@ -124,11 +126,16 @@ extension STPAnalyticsClient {
                 return "none"
             }
         }()
+        let params = ["selected_lpm": defaultPaymentMethodAnalyticsValue,
+                      "intent_type": intentAnalyticsValue,
+                      "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }),
+        ] as [String: Any]
+
         logPaymentSheetEvent(
             event: .paymentSheetLoadSucceeded,
             duration: Date().timeIntervalSince(loadingStartDate),
             linkEnabled: linkEnabled,
-            params: ["selected_lpm": defaultPaymentMethodAnalyticsValue]
+            params: params
         )
     }
 
@@ -468,6 +475,24 @@ extension PaymentSheet.PaymentMethodLayout {
             return "horizontal"
         case .vertical:
             return "vertical"
+        }
+    }
+}
+
+extension Intent {
+    var analyticsValue: String {
+        switch self {
+        case .paymentIntent:
+            return "payment_intent"
+        case .setupIntent:
+            return "setup_intent"
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment:
+                return "deferred_payment_intent"
+            case .setup:
+                return "deferred_setup_intent"
+            }
         }
     }
 }

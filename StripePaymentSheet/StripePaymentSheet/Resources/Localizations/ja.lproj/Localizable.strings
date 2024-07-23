@@ -1,6 +1,10 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%2$@ の無利息の %1$li 回払い";
+
 "+ Add" = "+ 追加";
+
+"Add US bank account" = "アメリカの銀行口座を追加";
 
 "Add a card" = "カードを追加";
 
@@ -20,7 +24,7 @@
 
 "Bank account" = "銀行口座";
 
-"Buy now or pay later with Klarna." = "Klarna で後払いします。";
+"Buy now or pay later with Klarna" = "Klarna で後払い";
 
 "Buy using a UPI ID" = "UPI ID を使って購入";
 
@@ -78,11 +82,15 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "支払い方法の管理";
+
 "Manage payment methods" = "決済手段を管理する";
 
 "Manage your payment methods" = "決済手段を管理する";
 
 "Name on card" = "カード名義人";
+
+"New card" = "新しいカード";
 
 "New payment method" = "新しい決済手段";
 
@@ -155,6 +163,8 @@
 "Shipping to %@ is not supported." = "%@ への配送には対応していません。";
 
 "Show menu" = "メニューを表示";
+
+"Simple, secure one-click payments" = "シンプルで安全なワンクリック決済";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe は 1 ～ 2 営業日後に口座に $0.01 を入金します。その後、%@ で銀行口座の保存を完了させるための手順が記載されたメールが送信されます。";
 

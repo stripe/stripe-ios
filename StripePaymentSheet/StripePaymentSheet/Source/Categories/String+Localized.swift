@@ -226,7 +226,7 @@ extension String.Localized {
     }
 
     static var buy_now_or_pay_later_with_klarna: String {
-        STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
+        STPLocalizedString("Buy now or pay later with Klarna", "Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna")
     }
     static var klarna_mandate_text: String {
         STPLocalizedString(
@@ -284,6 +284,13 @@ extension String.Localized {
         )
     }
 
+    static var manage_payment_method: String {
+        STPLocalizedString(
+            "Manage payment method",
+            "Title shown above a view containing the customer's payment method that they can delete or update"
+        )
+    }
+
     static var remove_payment_method: String {
         STPLocalizedString(
             "Remove payment method",
@@ -331,5 +338,31 @@ extension String.Localized {
             "Simple, secure one-click payments",
             "Subtitle shown on a button allowing a user to select to pay with Link."
         )
+    }
+
+    static var new_card: String {
+        STPLocalizedString(
+            "New card",
+            "Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button."
+        )
+    }
+
+    static var by_providing_your_card_information_text: String {
+        STPLocalizedString(
+            "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
+            "Text displayed below a credit card entry form when the card will be saved to make future payments."
+        )
+    }
+
+    static var confirm_your_cvc: String {
+        STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
+    }
+
+    static var confirm_your_cvv: String {
+        STPLocalizedString("Confirm your CVV", "Title for prompting for a card's CVV on confirming the payment")
+    }
+
+    static var confirm: String {
+        STPLocalizedString("Confirm", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
     }
 }
