@@ -343,7 +343,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
 
         // Select US Bank Account
-        tapPaymentMethod("US bank account")
+        tapPaymentMethod("US Bank Account")
 
         let continueButton = app.buttons["Continue"]
         XCTAssertFalse(continueButton.isEnabled)
