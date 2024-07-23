@@ -106,6 +106,7 @@ class NativeFlowController {
         }
         if showConfirmationAlert {
             let closeConfirmationViewController = CloseConfirmationViewController(
+                theme: dataManager.manifest.theme,
                 didSelectClose: {
                     finishClosingAuthFlow()
                 }
@@ -1296,7 +1297,8 @@ private func CreatePaneViewController(
         if let terminalError = dataManager.terminalError {
             let terminalErrorViewController = TerminalErrorViewController(
                 error: terminalError,
-                allowManualEntry: dataManager.manifest.allowManualEntry
+                allowManualEntry: dataManager.manifest.allowManualEntry,
+                theme: dataManager.manifest.theme
             )
             terminalErrorViewController.delegate = nativeFlowController
             viewController = terminalErrorViewController

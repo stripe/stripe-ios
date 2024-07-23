@@ -147,7 +147,7 @@ func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElemen
 
         // Then, we do a scroll right on the scrollview
         let startCoordinate = collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
-        startCoordinate.press(forDuration: 0.01, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
+        startCoordinate.press(forDuration: 0.1, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
     }
     return nil
 }

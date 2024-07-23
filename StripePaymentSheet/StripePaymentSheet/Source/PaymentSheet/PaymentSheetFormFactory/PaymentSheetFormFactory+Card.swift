@@ -80,12 +80,20 @@ extension PaymentSheetFormFactory {
             addressElement: billingAddressSection,
             phoneElement: phoneElement)
 
+        let mandate: SimpleMandateElement? = {
+            if isSettingUp {
+                return .init(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
+            }
+            return nil
+        }()
+
         let cardFormElement = FormElement(
             elements: [
                 optionalPhoneAndEmailInformationSection,
                 cardSection,
                 billingAddressSection,
                 shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+                mandate,
             ],
             theme: theme)
 
@@ -101,10 +109,5 @@ extension PaymentSheetFormFactory {
         } else {
             return cardFormElement
         }
-    }
-    func makeCardCVCCollection(paymentMethod: STPPaymentMethod,
-                               mode: CVCRecollectionElement.Mode,
-                               appearance: PaymentSheet.Appearance) -> CVCRecollectionElement {
-        return CVCRecollectionElement(paymentMethod: paymentMethod, mode: mode, appearance: appearance)
     }
 }

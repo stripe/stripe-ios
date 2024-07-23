@@ -17,6 +17,16 @@ class FlowRouter {
         case nativeFinancialConnections = "native_financial_connections"
     }
 
+    private enum ExampleAppOverride: Equatable {
+        case native
+        case web
+        case none
+
+        var shouldUseNativeFlow: Bool {
+            self == .native
+        }
+    }
+
     private let synchronizePayload: FinancialConnectionsSynchronize
     private let analyticsClient: FinancialConnectionsAnalyticsClient
 
@@ -33,13 +43,16 @@ class FlowRouter {
     // MARK: - Public
 
     var flow: Flow {
-        guard synchronizePayload.manifest.isProductInstantDebits == false else {
-            // We currently only support Instant Debits via a web flow.
-            return .webInstantDebits
+        if synchronizePayload.manifest.isProductInstantDebits {
+            if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                // Show web instant debits flow while UITesting for now.
+                return .webInstantDebits
+            }
+            return exampleAppSdkOverride.shouldUseNativeFlow ? .nativeInstantDebits : .webInstantDebits
+        } else {
+            logExposureIfNeeded()
+            return shouldUseNative ? .nativeFinancialConnections : .webFinancialConnections
         }
-
-        logExposureIfNeeded()
-        return shouldUseNative ? .nativeFinancialConnections : .webFinancialConnections
     }
 
     var killswitchActive: Bool {
@@ -54,11 +67,20 @@ class FlowRouter {
 
     // MARK: - Private
 
-    private var shouldUseNative: Bool {
-        if let isNativeEnabled = UserDefaults.standard.value(
+    /// Returns `.native` if the FC example app has the native SDK selected, `.web` if the web SDK is selected, and `.none` otherwise.
+    private var exampleAppSdkOverride: ExampleAppOverride {
+        if let nativeOverride = UserDefaults.standard.value(
             forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE"
         ) as? Bool {
-            return isNativeEnabled
+            return nativeOverride ? .native : .web
+        }
+        return .none
+    }
+
+    private var shouldUseNative: Bool {
+        // Override all other conditions if the example app has native or web selected.
+        guard case .none = exampleAppSdkOverride else {
+            return exampleAppSdkOverride.shouldUseNativeFlow
         }
 
         // if this version is killswitched by server, fallback to webview.

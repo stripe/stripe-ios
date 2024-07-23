@@ -74,7 +74,8 @@ extension Intent {
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
         customerSessionData: [String: Any]? = nil,
         cardBrandChoiceData: [String: Any]? = nil,
-        currency: String = "usd"
+        currency: String = "usd",
+        cvcRecollectionEnabled: Bool = false
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)

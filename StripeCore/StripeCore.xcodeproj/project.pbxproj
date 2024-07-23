@@ -1268,7 +1268,7 @@
 		};
 		9F8CE18BDCF6289B6266E92D /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/eurias-stripe/OHHTTPStubs";
+			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
 			requirement = {
 				branch = master;
 				kind = branch;

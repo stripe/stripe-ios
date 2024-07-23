@@ -21,7 +21,7 @@
     {
       "identity" : "ohhttpstubs",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eurias-stripe/OHHTTPStubs",
+      "location" : "https://github.com/davidme-stripe/OHHTTPStubs",
       "state" : {
         "branch" : "master",
         "revision" : "94cf8e1d9e38b0edd580ddc699dda23a7bf66515"

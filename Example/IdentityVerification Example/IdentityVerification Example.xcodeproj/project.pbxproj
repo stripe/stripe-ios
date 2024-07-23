@@ -473,6 +473,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;
@@ -484,6 +485,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;

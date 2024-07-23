@@ -12,13 +12,16 @@ import UIKit
 final class LegalDetailsNoticeViewController: SheetViewController {
 
     private let legalDetailsNotice: FinancialConnectionsLegalDetailsNotice
+    private let theme: FinancialConnectionsTheme
     private let didSelectUrl: (URL) -> Void
 
     init(
         legalDetailsNotice: FinancialConnectionsLegalDetailsNotice,
+        theme: FinancialConnectionsTheme,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.legalDetailsNotice = legalDetailsNotice
+        self.theme = theme
         self.didSelectUrl = didSelectUrl
         super.init()
     }
@@ -53,6 +56,7 @@ final class LegalDetailsNoticeViewController: SheetViewController {
                 ),
                 secondaryButtonConfiguration: nil,
                 topText: legalDetailsNotice.disclaimer,
+                theme: theme,
                 didSelectURL: didSelectUrl
             ).footerView
         )
