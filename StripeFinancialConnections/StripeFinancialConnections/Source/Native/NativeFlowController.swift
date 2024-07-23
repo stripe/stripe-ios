@@ -167,6 +167,7 @@ extension NativeFlowController {
 
     private func pushPane(
         _ pane: FinancialConnectionsSessionManifest.NextPane,
+        parameters: CreatePaneParameters? = nil,
         animated: Bool,
         // useful for cases where we want to prevent the user from navigating back
         //
@@ -181,6 +182,7 @@ extension NativeFlowController {
         } else {
             let paneViewController = CreatePaneViewController(
                 pane: pane,
+                parameters: parameters,
                 nativeFlowController: self,
                 dataManager: dataManager
             )
@@ -217,10 +219,12 @@ extension NativeFlowController {
     }
 
     private func presentPaneAsSheet(
-        _ pane: FinancialConnectionsSessionManifest.NextPane
+        _ pane: FinancialConnectionsSessionManifest.NextPane,
+        parameters: CreatePaneParameters? = nil
     ) {
         let paneViewController = CreatePaneViewController(
             pane: pane,
+            parameters: parameters,
             nativeFlowController: self,
             dataManager: dataManager,
             panePresentationStyle: .sheet
@@ -515,12 +519,16 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 
     func consentViewController(
         _ viewController: ConsentViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        nextPaneOrDrawerOnSecondaryCta: String?
     ) {
+        let parameters = CreatePaneParameters(
+            nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+        )
         if nextPane == .networkingLinkLoginWarmup {
-            presentPaneAsSheet(nextPane)
+            presentPaneAsSheet(nextPane, parameters: parameters)
         } else {
-            pushPane(nextPane, animated: true)
+            pushPane(nextPane, parameters: parameters, animated: true)
         }
     }
 }
@@ -1069,6 +1077,7 @@ extension NativeFlowController: ErrorViewControllerDelegate {
 
 private func CreatePaneViewController(
     pane: FinancialConnectionsSessionManifest.NextPane,
+    parameters: CreatePaneParameters? = nil,
     nativeFlowController: NativeFlowController,
     dataManager: NativeFlowDataManager,
     panePresentationStyle: PanePresentationStyle = .fullscreen
@@ -1338,7 +1347,8 @@ private func CreatePaneViewController(
             manifest: dataManager.manifest,
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
-            analyticsClient: dataManager.analyticsClient
+            analyticsClient: dataManager.analyticsClient,
+            nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
             dataSource: networkingLinkWarmupDataSource,

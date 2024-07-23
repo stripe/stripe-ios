@@ -158,6 +158,7 @@ protocol FinancialConnectionsAPI {
 
     func disableNetworking(
         disabledReason: String?,
+        clientSuggestedNextPaneOnDisableNetworking: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest>
 
@@ -652,6 +653,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 case .failure(let error):
                     self.disableNetworking(
                         disabledReason: "account_numbers_not_available",
+                        clientSuggestedNextPaneOnDisableNetworking: nil,
                         clientSecret: clientSecret
                     ).observe { _ in } // ignoring return is intentional
 
@@ -722,6 +724,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func disableNetworking(
         disabledReason: String?,
+        clientSuggestedNextPaneOnDisableNetworking: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         var body: [String: Any] = [
@@ -729,6 +732,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "expand": ["active_auth_session"],
         ]
         body["disabled_reason"] = disabledReason
+        body["client_requested_next_pane_on_disable_networking"] = clientSuggestedNextPaneOnDisableNetworking
         return post(
             resource: APIEndpointDisableNetworking,
             parameters: body,
