@@ -357,6 +357,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
         if let drawerOnSelection = selectedAccountTuple.accountPickerAccount.drawerOnSelection {
             let genericInfoViewController = GenericInfoViewController(
                 genericInfoScreen: drawerOnSelection,
+                theme: dataSource.manifest.theme,
                 panePresentationStyle: .sheet,
                 didSelectPrimaryButton: { genericInfoViewController in
                     genericInfoViewController.dismiss(animated: true)

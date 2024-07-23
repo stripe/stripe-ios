@@ -11,18 +11,21 @@ import UIKit
 final class GenericInfoViewController: SheetViewController {
 
     private let genericInfoScreen: FinancialConnectionsGenericInfoScreen
+    private let theme: FinancialConnectionsTheme
     private let didSelectPrimaryButton: (_ genericInfoViewController: GenericInfoViewController) -> Void
     private let didSelectSecondaryButton: (_ genericInfoViewController: GenericInfoViewController) -> Void
     private let didSelectURL: (URL) -> Void
 
     init(
         genericInfoScreen: FinancialConnectionsGenericInfoScreen,
+        theme: FinancialConnectionsTheme,
         panePresentationStyle: PanePresentationStyle,
         didSelectPrimaryButton: @escaping (_ genericInfoViewController: GenericInfoViewController) -> Void,
         didSelectSecondaryButton: ((_ genericInfoViewController: GenericInfoViewController) -> Void)? = nil,
         didSelectURL: @escaping (URL) -> Void
     ) {
         self.genericInfoScreen = genericInfoScreen
+        self.theme = theme
         self.didSelectPrimaryButton = didSelectPrimaryButton
         self.didSelectSecondaryButton = didSelectSecondaryButton ?? { _ in }
         self.didSelectURL = didSelectURL
@@ -70,6 +73,7 @@ final class GenericInfoViewController: SheetViewController {
             ),
             footerView: GenericInfoFooterView(
                 footer: genericInfoScreen.footer,
+                theme: theme,
                 didSelectPrimaryButton: { [weak self] in
                     guard let self else { return }
                     didSelectPrimaryButton(self)
