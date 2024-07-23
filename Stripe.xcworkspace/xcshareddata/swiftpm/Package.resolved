@@ -1,4 +1,5 @@
 {
+  "originHash" : "2ad13697f5d60ad400147e34535361f52e72d2f7a280df77bb3c3521cc5623bc",
   "pins" : [
     {
       "identity" : "capture-core-sp",
@@ -33,7 +34,7 @@
       "location" : "https://github.com/davidme-stripe/OHHTTPStubs",
       "state" : {
         "branch" : "master",
-        "revision" : "94cf8e1d9e38b0edd580ddc699dda23a7bf66515"
+        "revision" : "7362f95d158c04e1847bd06acbc221c5a9e27dd1"
       }
     }
   ],
