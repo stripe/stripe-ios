@@ -79,6 +79,92 @@ final class CustomerSheet_ConfirmFlowTests: XCTestCase {
                 form.getTextFieldElement("ZIP")?.setText("65432")
         }
     }
+
+    func testUSBankAccount() async throws {
+        let expectation = expectation(description: "params validated")
+        let customer = "cus_QWYdNyavE2M5ah" // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+
+        let merchantCountry: MerchantCountry = .US
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        let customerSheetConfiguration: CustomerSheet.Configuration = {
+            var config = CustomerSheet.Configuration()
+            config.allowsRemovalOfLastSavedPaymentMethod = true
+            config.returnURL =  "https://foo.com"
+            return config
+        }()
+
+        try await _testUSBankAccountFields(
+            apiClient: apiClient,
+            customerSheetConfiguration: customerSheetConfiguration,
+            merchantCountry: merchantCountry,
+            paymentMethodType: .USBankAccount,
+            customerID: customer,
+            formCompleter: { form in
+                form.getTextFieldElement("Full name")?.setText("John Doe")
+                form.getTextFieldElement("Email").setText("test@example.com")
+            },
+            intentConfirmParamsValidator: { intentConfirmParams in
+                XCTAssertEqual(intentConfirmParams.paymentMethodType, .stripe(.USBankAccount))
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.bankName, "Test Bank")
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.last4, "1234")
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.sessionId, "las_123")
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.accountId, "fca_123")
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.displayName, "Test Bank")
+                XCTAssertTrue(intentConfirmParams.financialConnectionsLinkedBank?.instantlyVerified ?? false)
+                XCTAssertEqual(intentConfirmParams.paymentMethodParams.usBankAccount?.linkAccountSessionID, "las_123")
+                expectation.fulfill()
+            })
+        await fulfillment(of: [expectation], timeout: 25)
+    }
+
+    func testUSBankAccountAttachDefaults() async throws {
+        let expectation = expectation(description: "params validated")
+        let customer = "cus_QWYdNyavE2M5ah" // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+
+        let merchantCountry: MerchantCountry = .US
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        let customerSheetConfiguration: CustomerSheet.Configuration = {
+            var config = CustomerSheet.Configuration()
+            config.allowsRemovalOfLastSavedPaymentMethod = true
+            config.returnURL =  "https://foo.com"
+
+            var defaultBillingDetails = PaymentSheet.BillingDetails()
+            defaultBillingDetails.name = "John Do"
+            defaultBillingDetails.email = "test@example.co"
+            config.defaultBillingDetails = defaultBillingDetails
+
+            var billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration()
+            billingDetailsCollectionConfiguration.address = .never
+            billingDetailsCollectionConfiguration.email = .never
+            billingDetailsCollectionConfiguration.name = .never
+            billingDetailsCollectionConfiguration.phone = .never
+            billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+            config.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
+            return config
+        }()
+
+        try await _testUSBankAccountFields(
+            apiClient: apiClient,
+            customerSheetConfiguration: customerSheetConfiguration,
+            merchantCountry: merchantCountry,
+            paymentMethodType: .USBankAccount,
+            customerID: customer,
+            formCompleter: { _ in
+                // Intentionally nil since we are setting fields via defaultBillingDetails
+            },
+            intentConfirmParamsValidator: { intentConfirmParams in
+                XCTAssertEqual(intentConfirmParams.paymentMethodType, .stripe(.USBankAccount))
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.bankName, "Test Bank")
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.last4, "1234")
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.sessionId, "las_123")
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.accountId, "fca_123")
+                XCTAssertEqual(intentConfirmParams.financialConnectionsLinkedBank?.displayName, "Test Bank")
+                XCTAssertTrue(intentConfirmParams.financialConnectionsLinkedBank?.instantlyVerified ?? false)
+                XCTAssertEqual(intentConfirmParams.paymentMethodParams.usBankAccount?.linkAccountSessionID, "las_123")
+                expectation.fulfill()
+            })
+        await fulfillment(of: [expectation], timeout: 25)
+    }
 }
 
 extension CustomerSheet_ConfirmFlowTests {
@@ -88,15 +174,88 @@ extension CustomerSheet_ConfirmFlowTests {
                       customerID: String,
                       formCompleter: (PaymentMethodElement) -> Void) async throws {
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let csConfiguration: CustomerSheet.Configuration = {
+        let customerSheetConfiguration: CustomerSheet.Configuration = {
             var config = CustomerSheet.Configuration()
             config.apiClient = apiClient
             config.allowsRemovalOfLastSavedPaymentMethod = true
             config.returnURL =  "https://foo.com"
             return config
         }()
+
+        let (_, intent, paymentMethodForm) = try await _createElementAndIntent(apiClient: apiClient,
+                                                                               customerSheetConfiguration: customerSheetConfiguration,
+                                                                               merchantCountry: merchantCountry,
+                                                                               paymentMethodType: paymentMethodType,
+                                                                               customerID: customerID,
+                                                                               formCompleter: formCompleter)
+        // Generate params from the form
         let psPaymentMethodType: PaymentSheet.PaymentMethodType = .stripe(paymentMethodType)
-        let configuration = PaymentSheetFormFactoryConfig.customerSheet(csConfiguration)
+        guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: psPaymentMethodType)) else {
+            XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
+            return
+        }
+        let paymentOption: PaymentSheet.PaymentOption = .new(confirmParams: intentConfirmParams)
+
+        let expectation = expectation(description: "Confirm")
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+
+        // Confirm the intent with the form details
+        CustomerSheet.confirm(
+            intent: intent,
+            paymentOption: paymentOption,
+            configuration: customerSheetConfiguration,
+            paymentHandler: paymentHandler,
+            authenticationContext: self) { result in
+                switch result {
+                case .failed(let error):
+                    XCTFail("PaymentSheet.confirm failed - \(error.nonGenericDescription)")
+                case .canceled:
+                    XCTFail("Unexpected canceled state")
+                case .completed:
+                    print("✅ PaymentSheet.confirm completed")
+                }
+                expectation.fulfill()
+            }
+        await fulfillment(of: [expectation], timeout: 25)
+    }
+
+    @MainActor
+    func _testUSBankAccountFields(apiClient: STPAPIClient,
+                                  customerSheetConfiguration: CustomerSheet.Configuration,
+                                  merchantCountry: MerchantCountry = .US,
+                                  paymentMethodType: STPPaymentMethodType,
+                                  customerID: String,
+                                  formCompleter: (PaymentMethodElement) -> Void,
+                                  intentConfirmParamsValidator: (IntentConfirmParams) -> Void) async throws {
+        let (clientSecret, _, paymentMethodForm) = try await _createElementAndIntent(apiClient: apiClient,
+                                                                                     customerSheetConfiguration: customerSheetConfiguration,
+                                                                                     merchantCountry: merchantCountry,
+                                                                                     paymentMethodType: paymentMethodType,
+                                                                                     customerID: customerID,
+                                                                                     formCompleter: formCompleter)
+        await linkBankAccount(apiClient: apiClient,
+                              clientSecret: clientSecret,
+                              returnURL: customerSheetConfiguration.returnURL!,
+                              paymentMethodForm: paymentMethodForm)
+
+        // Generate params from the form
+        let psPaymentMethodType: PaymentSheet.PaymentMethodType = .stripe(paymentMethodType)
+        guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: psPaymentMethodType)) else {
+            XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
+            return
+        }
+        intentConfirmParamsValidator(intentConfirmParams)
+    }
+
+    @MainActor
+    func _createElementAndIntent(apiClient: STPAPIClient,
+                                 customerSheetConfiguration: CustomerSheet.Configuration,
+                                 merchantCountry: MerchantCountry = .US,
+                                 paymentMethodType: STPPaymentMethodType,
+                                 customerID: String,
+                                 formCompleter: (PaymentMethodElement) -> Void) async throws -> (String, Intent, PaymentMethodElement) {
+        let psPaymentMethodType: PaymentSheet.PaymentMethodType = .stripe(paymentMethodType)
+        let configuration = PaymentSheetFormFactoryConfig.customerSheet(customerSheetConfiguration)
         let formFactory = PaymentSheetFormFactory(configuration: configuration,
                                                   paymentMethod: psPaymentMethodType,
                                                   previousCustomerInput: nil,
@@ -115,56 +274,66 @@ extension CustomerSheet_ConfirmFlowTests {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view)
 
-        //Fill out the form
+        // Fill out the form
         sendEventToSubviews(.viewDidAppear, from: paymentMethodForm.view) // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
         formCompleter(paymentMethodForm)
 
-        // Generate params from the form
-        guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: psPaymentMethodType)) else {
-            XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
-            return
-        }
-        let paymentOption: PaymentSheet.PaymentOption = .new(confirmParams: intentConfirmParams)
-
-        let setupIntent: STPSetupIntent =  try await {
-            let clientSecret = try await setupIntentClientSecretProvider(paymentMethodType: paymentMethodType,
-                                                                         merchantCountry: merchantCountry,
-                                                                         customerID: customerID)
-            return try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
-        }()
+        let clientSecret = try await setupIntentClientSecretProvider(paymentMethodType: paymentMethodType,
+                                                                     merchantCountry: merchantCountry,
+                                                                     customerID: customerID)
+        let setupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
         let intent = Intent.setupIntent(elementsSession: ._testCardValue(),
                                         setupIntent: setupIntent)
+        return (clientSecret, intent, paymentMethodForm)
+    }
 
+    func linkBankAccount(apiClient: STPAPIClient,
+                         clientSecret: String,
+                         returnURL: String,
+                         paymentMethodForm: PaymentMethodElement) async {
+        await withCheckedContinuation { continuation in
+            let client = STPBankAccountCollector(apiClient: apiClient)
+            let additionalParameters: [String: Any] = [
+                "hosted_surface": "payment_element",
+            ]
+            let params = STPCollectBankAccountParams.collectUSBankAccountParams(
+                with: "John Doe",
+                email: "test@example.com"
+            )
 
-        let e = expectation(description: "Confirm")
-        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
-        var redirectShimCalled = false
-        paymentHandler._redirectShim = { _, _, _ in
-            // This gets called instead of the PaymentSheet.confirm callback if the Intent is successfully confirmed and requires next actions.
-            print("✅ Successfully confirmed the intent and saw a redirect attempt.")
-            paymentHandler._handleWillForegroundNotification()
-            redirectShimCalled = true
-        }
-
-
-        // Confirm the intent with the form details
-        CustomerSheet.confirm(
-            intent: intent,
-            paymentOption: paymentOption,
-            configuration: csConfiguration,
-            paymentHandler: paymentHandler,
-            authenticationContext: self) { result in
-                switch result {
-                case .failed(let error):
-                    XCTFail("PaymentSheet.confirm failed - \(error.nonGenericDescription)")
-                case .canceled:
-                    XCTAssertTrue(redirectShimCalled, "❌: PaymentSheet.confirm canceled")
-                case .completed:
-                    print("✅ PaymentSheet.confirm completed")
+            client.collectBankAccountForSetup(clientSecret: clientSecret,
+                                              returnURL: returnURL,
+                                              additionalParameters: additionalParameters,
+                                              onEvent: nil,
+                                              params: params,
+                                              from: UIViewController()) { result, _, error in
+                if error != nil {
+                    XCTFail("Failed to create linked bank account")
+                    continuation.resume()
+                    return
                 }
-                e.fulfill()
+                guard let financialConnectionsResult = result else {
+                    XCTFail("Failed to get result")
+                    continuation.resume()
+                    return
+                }
+                switch financialConnectionsResult {
+                case .cancelled:
+                    XCTFail("Unexpected Cancel")
+                case .completed(let completedResult):
+                    if case .financialConnections(let linkedBank) = completedResult {
+                        if let usBankElement = paymentMethodForm as? USBankAccountPaymentMethodElement {
+                            usBankElement.setLinkedBank(linkedBank)
+                        }
+                    } else {
+                        XCTFail("no linked account")
+                    }
+                case .failed:
+                    XCTFail("Failed")
+                }
+                continuation.resume()
             }
-        await fulfillment(of: [e], timeout: 25)
+        }
     }
 
     func setupIntentClientSecretProvider(paymentMethodType: STPPaymentMethodType,

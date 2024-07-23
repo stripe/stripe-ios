@@ -352,7 +352,7 @@ class CustomerSheetUITest: XCTestCase {
         dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
 
-    func testCustomerSheetStandard_applePayOff_addUSBankAccount() throws {
+    func testCustomerSheetStandard_addUSBankAccount() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .off
@@ -401,108 +401,8 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
-    func testCustomerSheetStandard_applePayOff_addUSBankAccount_customerSession() throws {
-        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePay = .off
-        settings.customerKeyType = .customerSession
-        loadPlayground(
-            app,
-            settings
-        )
 
-        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
-        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
-
-        try! fillUSBankData(app)
-
-        app.buttons["Continue"].waitForExistenceAndTap(timeout: timeout)
-
-        // Go through connections flow
-        app.buttons["consent_agree_button"].tap()
-        app.staticTexts["Test Institution"].forceTapElement()
-        // "Success" institution is automatically selected because its the first
-        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: timeout)
-
-        let notNowButton = app.buttons["Not now"]
-        if notNowButton.waitForExistence(timeout: timeout) {
-            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
-            notNowButton.tap()
-        }
-
-        XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: timeout))
-        app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
-
-        let testBankLinkedBankAccount = app.staticTexts["StripeBank"]
-        XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: timeout))
-
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: timeout))
-        saveButton.tap()
-
-        let confirmButton = app.buttons["Confirm"]
-        XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
-        confirmButton.tap()
-
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
-    }
-
-    func testCustomerSheetStandard_applePayOff_addUSBankAccount_defaultBillingOnCollectNone() throws {
-        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePay = .off
-        settings.defaultBillingAddress = .on
-        settings.attachDefaults = .on
-        settings.collectAddress = .never
-        settings.collectEmail = .never
-        settings.collectName = .never
-        settings.collectPhone = .never
-        loadPlayground(
-            app,
-            settings
-        )
-
-        let selectButton = app.staticTexts["None"]
-        XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
-        selectButton.tap()
-
-        let usBankAccountPMSelectorButton = app.staticTexts["US bank account"]
-        XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: timeout))
-        usBankAccountPMSelectorButton.tap()
-
-        let continueButton = app.buttons["Continue"]
-        XCTAssertTrue(continueButton.waitForExistence(timeout: timeout))
-        continueButton.tap()
-
-        // Go through connections flow
-        app.buttons["consent_agree_button"].tap()
-        app.staticTexts["Test Institution"].forceTapElement()
-        // "Success" institution is automatically selected because its the first
-        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
-
-        let notNowButton = app.buttons["Not now"]
-        if notNowButton.waitForExistence(timeout: timeout) {
-            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
-            notNowButton.tap()
-        }
-
-        XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: timeout))
-        app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
-
-        let testBankLinkedBankAccount = app.staticTexts["StripeBank"]
-        XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: timeout))
-
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: timeout))
-        saveButton.tap()
-
-        let confirmButton = app.buttons["Confirm"]
-        XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
-        confirmButton.tap()
-
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
-    }
-    func testCustomerSheetStandard_applePayOff_addUSBankAccount_MicroDeposit() throws {
+    func testCustomerSheetStandard_addUSBankAccount_MicroDeposit() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .off
@@ -544,6 +444,7 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
+
     func testCustomerSheetSwiftUI() throws {
         app.launch()
 
