@@ -65,6 +65,9 @@ class IntentConfirmParams {
             let params = STPPaymentMethodParams(type: .unknown)
             params.rawTypeString = externalPaymentMethod.type
             self.init(params: params, type: type)
+        case .instantDebits:
+            let params = STPPaymentMethodParams(type: .link)
+            self.init(params: params, type: type)
         }
     }
 

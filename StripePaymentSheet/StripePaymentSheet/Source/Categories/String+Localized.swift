@@ -365,4 +365,8 @@ extension String.Localized {
     static var confirm: String {
         STPLocalizedString("Confirm", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
     }
+
+    static var bank: String {
+        STPLocalizedString("Bank", "A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.")
+    }
 }

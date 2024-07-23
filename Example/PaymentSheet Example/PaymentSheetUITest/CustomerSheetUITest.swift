@@ -583,7 +583,7 @@ class CustomerSheetUITest: XCTestCase {
 
         app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
 
-        let usBankAccountPMSelectorButton = app.staticTexts["US Bank Account"]
+        let usBankAccountPMSelectorButton = app.staticTexts["US bank account"]
         XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: timeout))
         usBankAccountPMSelectorButton.tap()
 
@@ -632,7 +632,7 @@ class CustomerSheetUITest: XCTestCase {
         )
 
         app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
-        app.staticTexts["US Bank Account"].waitForExistenceAndTap(timeout: timeout)
+        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
 
         try! fillUSBankData(app)
 
@@ -715,7 +715,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
         selectButton.tap()
 
-        let usBankAccountPMSelectorButton = app.staticTexts["US Bank Account"]
+        let usBankAccountPMSelectorButton = app.staticTexts["US bank account"]
         XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: timeout))
         usBankAccountPMSelectorButton.tap()
 
@@ -765,7 +765,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
         selectButton.tap()
 
-        let usBankAccountPMSelectorButton = app.staticTexts["US Bank Account"]
+        let usBankAccountPMSelectorButton = app.staticTexts["US bank account"]
         XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: timeout))
         usBankAccountPMSelectorButton.tap()
 

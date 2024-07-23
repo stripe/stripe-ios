@@ -188,6 +188,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.customerMode = .new
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
         loadPlayground(app, settings)
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
@@ -2593,11 +2595,11 @@ extension PaymentSheetUITestCase {
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
-        // Select US Bank Account
+        // Select US bank account
         if vertical {
-            XCTAssertTrue(app.buttons["US Bank Account"].waitForExistenceAndTap())
+            XCTAssertTrue(app.buttons["US bank account"].waitForExistenceAndTap())
         } else {
-            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account")?.waitForExistenceAndTap() ?? false)
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US bank account")?.waitForExistenceAndTap() ?? false)
         }
 
         // Fill out name and email fields
@@ -2645,7 +2647,7 @@ extension PaymentSheetUITestCase {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
-        // Reload and pay with the now-saved us bank account
+        // Reload and pay with the now-saved US bank account
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].tap()
         XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())

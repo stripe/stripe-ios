@@ -34,7 +34,7 @@ extension STPPaymentMethodParams: STPPaymentOption {
 
     @objc public var isReusable: Bool {
         switch type {
-        case .card, .link, .USBankAccount, .instantDebits:
+        case .card, .link, .USBankAccount:
             return true
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
