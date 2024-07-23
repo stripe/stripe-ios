@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 final class InstitutionTableViewCell: UITableViewCell {
-    private var theme: FinancialConnectionsTheme?
+    private var theme: FinancialConnectionsTheme!
 
     private lazy var institutionIconView: InstitutionIconView = {
         return InstitutionIconView()
@@ -74,7 +74,7 @@ final class InstitutionTableViewCell: UITableViewCell {
 
 extension InstitutionTableViewCell {
 
-    func customize(with institution: FinancialConnectionsInstitution, theme: FinancialConnectionsTheme?) {
+    func customize(with institution: FinancialConnectionsInstitution, theme: FinancialConnectionsTheme) {
         self.theme = theme
         institutionIconView.setImageUrl(institution.icon?.default)
 

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 final class InstitutionCellView: UIView {
-    private let theme: FinancialConnectionsTheme?
+    private let theme: FinancialConnectionsTheme!
 
     private lazy var horizontalStackView: UIStackView = {
         let horizontalStackView = UIStackView()
@@ -73,7 +73,7 @@ final class InstitutionCellView: UIView {
         return activityIndicator
     }()
 
-    init(theme: FinancialConnectionsTheme?) {
+    init(theme: FinancialConnectionsTheme) {
         self.theme = theme
         super.init(frame: .zero)
         backgroundColor = .clear
