@@ -1,0 +1,64 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/sources$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fsources; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=mono-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=mono-bapi-srv"}],"include_subdomains":true}
+request-id: req_GQiWPfsT8bZeFL
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1337
+Vary: Origin
+Date: Fri, 19 Jul 2024 22:36:56 GMT
+original-request: req_GQiWPfsT8bZeFL
+stripe-version: 2020-08-27
+idempotency-key: 8c990d8a-f078-4ffc-845f-8e489430cc73
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+
+{
+  "id" : "src_1PePQ4BNJ02ErVOjvF1S5tf4",
+  "livemode" : false,
+  "amount" : 1010,
+  "owner" : {
+    "address" : null,
+    "phone" : null,
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : null,
+    "name" : null
+  },
+  "usage" : "single_use",
+  "statement_descriptor" : null,
+  "wechat" : {
+    "android_sign" : "96462481E34D6C8DD1F63EBB52C08648B45B746A7CC6C08496C0F933261126CE",
+    "android_package" : "Sign=WXPay",
+    "android_appId" : "wxa0df51ec63e578ce",
+    "ios_native_url" : "weixin:\/\/app\/wxa0df51ec63e578ce\/pay\/?appId=wxa0df51ec63e578ce&nonceStr=WEqDspjg2XJH7pW1iU6jlPTzkf2x2LUP&package=Sign%3DWXPay&partnerId=&prepayId=test_transaction&timeStamp=1721428616&sign=96462481E34D6C8DD1F63EBB52C08648B45B746A7CC6C08496C0F933261126CE",
+    "android_timeStamp" : "1721428616",
+    "qr_code_url" : "https:\/\/stripe.com\/sources\/test_source?client_secret=src_client_secret_p6zwLJWVzRKrFko1ObGgXn9J&source=src_1PePQ4BNJ02ErVOjvF1S5tf4",
+    "android_nonceStr" : "WEqDspjg2XJH7pW1iU6jlPTzkf2x2LUP",
+    "android_prepayId" : "test_transaction",
+    "prepay_id" : "test_transaction"
+  },
+  "type" : "wechat",
+  "object" : "source",
+  "created" : 1721428616,
+  "client_secret" : "src_client_secret_p6zwLJWVzRKrFko1ObGgXn9J",
+  "flow" : "none",
+  "currency" : "usd",
+  "status" : "pending"
+}

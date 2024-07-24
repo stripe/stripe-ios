@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore  // for StripeError
+import StripeCoreTestUtils
 import XCTest
 
 // swift-format-ignore

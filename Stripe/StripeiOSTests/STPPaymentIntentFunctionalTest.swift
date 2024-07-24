@@ -11,9 +11,10 @@
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentIntentFunctionalTest: XCTestCase {
+class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
     func testCreatePaymentIntentWithTestingServer() {
         let expectation = self.expectation(description: "PaymentIntent create.")
         STPTestingAPIClient.shared.createPaymentIntent(

@@ -15,9 +15,10 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class LinkInlineSignupViewModelTests: XCTestCase {
+class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
 
     // Should be ~4x the debounce time for best results.
     let accountLookupTimeout: TimeInterval = 4

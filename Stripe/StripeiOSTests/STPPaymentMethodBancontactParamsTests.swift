@@ -8,8 +8,9 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodBancontactParamsTests: XCTestCase {
+class STPPaymentMethodBancontactParamsTests: STPNetworkStubbingTestCase {
     func testCreateBancontactPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let bancontactParams = STPPaymentMethodBancontactParams()

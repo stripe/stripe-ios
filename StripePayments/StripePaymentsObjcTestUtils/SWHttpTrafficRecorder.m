@@ -257,6 +257,7 @@ didReceiveResponse:(NSURLResponse *)response
     NSString *path = [self getFilePath:request response:response];
     NSLog(@"Recording request: %@", request.URL);
     NSLog(@"Recording response code: %ld", (long)response.statusCode);
+    NSLog(@"To path: %@", path);
     SWHTTPTrafficRecordingFormat format = [SWHttpTrafficRecorder sharedRecorder].recordingFormat;
     if(format == SWHTTPTrafficRecordingFormatBodyOnly){
         [self createBodyOnlyFileWithRequest:request response:response data:data atFilePath:path];

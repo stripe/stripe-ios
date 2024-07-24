@@ -10,9 +10,10 @@
 @_spi(STP) @testable import StripeCore
 @testable import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
-class STPSourceFunctionalTest: XCTestCase {
+class STPSourceFunctionalTest: STPNetworkStubbingTestCase {
     func testCreateSource_bancontact() {
         let params = STPSourceParams.bancontactParams(
             withAmount: 1099,

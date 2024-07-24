@@ -16,9 +16,14 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
-class PaymentSheetAPITest: XCTestCase {
+class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
-    let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    var apiClient: STPAPIClient!
+
+    override func setUp() {
+        super.setUp()
+        self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    }
     lazy var paymentHandler: STPPaymentHandler = {
         return STPPaymentHandler(
             apiClient: apiClient
@@ -115,13 +120,13 @@ class PaymentSheetAPITest: XCTestCase {
                                         self.configuration.shippingDetails()?.address.line1
                                     )
                                     XCTAssertEqual(paymentIntent?.status, .succeeded)
+                                    expectation.fulfill()
                                 }
                             case .canceled:
                                 XCTFail("Confirm canceled")
                             case .failed(let error):
                                 XCTFail("Failed to confirm: \(error)")
                             }
-                            expectation.fulfill()
                         }
                     case .failure(let error):
                         print(error)
@@ -1062,12 +1067,12 @@ class PaymentSheetAPITest: XCTestCase {
     func testSetsNewlySavedPMAsDefault_PI() async throws {
         // A PI w/o SFU shouldn't set its PM as default
         func makePaymentIntent() async throws -> STPPaymentIntent {
-            let clientSecret = try await STPTestingAPIClient().createPaymentIntent(withParams: ["amount": 100])
+            let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(withParams: ["amount": 100])
             return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
         }
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
-            return try await STPTestingAPIClient().createPaymentIntent(withParams: ["amount": 100])
+            return try await STPTestingAPIClient.shared().createPaymentIntent(withParams: ["amount": 100])
         }
 
         // Set up intents
@@ -1089,11 +1094,11 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testSetsNewlySavedPMAsDefault_PaymentIntent_SFU() async throws {
         // PI + SFU with a new card should set the payment method to the default
-        let clientSecret = try await STPTestingAPIClient().createPaymentIntent(withParams: ["amount": 100, "setup_future_usage": "off_session"])
+        let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(withParams: ["amount": 100, "setup_future_usage": "off_session"])
         let paymentIntent = try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession)) { _, _ in
-            return try await STPTestingAPIClient().createPaymentIntent(withParams: ["amount": 100, "setup_future_usage": "off_session"])
+            return try await STPTestingAPIClient.shared().createPaymentIntent(withParams: ["amount": 100, "setup_future_usage": "off_session"])
         }
 
         // Set up intents
@@ -1109,11 +1114,11 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testSetsNewlySavedPMAsDefault_SetupIntent() async throws {
         // SetupIntent with a new card should set the payment method to the default
-        let clientSecret = try await STPTestingAPIClient().createSetupIntent(withParams: nil)
+        let clientSecret = try await STPTestingAPIClient.shared().createSetupIntent(withParams: nil)
         let setupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup()) { _, _ in
-            return try await STPTestingAPIClient().createSetupIntent(withParams: nil)
+            return try await STPTestingAPIClient.shared().createSetupIntent(withParams: nil)
         }
 
         // Set up intents
