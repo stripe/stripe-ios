@@ -101,7 +101,7 @@ final class RoundedTextField: UIView {
         var theme: ElementsUITheme = .default
         theme.colors = {
             var colors = ElementsUITheme.Color()
-            colors.primary = self.theme.textFieldFocusedColor
+            colors.primary = self.theme.primaryColor
             colors.secondaryText = .textSubdued
             return colors
         }()
