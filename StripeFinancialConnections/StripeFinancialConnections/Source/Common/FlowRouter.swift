@@ -44,14 +44,10 @@ class FlowRouter {
 
     var flow: Flow {
         if synchronizePayload.manifest.isProductInstantDebits {
-            if ProcessInfo.processInfo.environment["UITesting"] != nil {
-                // Show web instant debits flow while UITesting for now.
-                return .webInstantDebits
-            }
-            return exampleAppSdkOverride.shouldUseNativeFlow ? .nativeInstantDebits : .webInstantDebits
+            return shouldUseNativeInstantDebits ? .nativeInstantDebits : .webInstantDebits
         } else {
             logExposureIfNeeded()
-            return shouldUseNative ? .nativeFinancialConnections : .webFinancialConnections
+            return shouldUseNativeFinancialConnections ? .nativeFinancialConnections : .webFinancialConnections
         }
     }
 
@@ -77,7 +73,7 @@ class FlowRouter {
         return .none
     }
 
-    private var shouldUseNative: Bool {
+    private var shouldUseNativeFinancialConnections: Bool {
         // Override all other conditions if the example app has native or web selected.
         guard case .none = exampleAppSdkOverride else {
             return exampleAppSdkOverride.shouldUseNativeFlow
@@ -90,6 +86,20 @@ class FlowRouter {
         guard let experimentVariant = experimentVariant else { return false }
 
         return experimentVariant == Constants.nativeExperimentTreatment
+    }
+    
+    private var shouldUseNativeInstantDebits: Bool {
+        // Show web instant debits flow while UITesting for now.
+        guard ProcessInfo.processInfo.environment["UITesting"] == nil else {
+            return false
+        }
+        
+        // Override all other conditions if the example app has native or web selected.
+        guard case .none = exampleAppSdkOverride else {
+            return exampleAppSdkOverride.shouldUseNativeFlow
+        }
+        
+        return !killswitchActive
     }
 
     private var experimentVariant: String? {
