@@ -9,7 +9,6 @@
 import Foundation
 @_spi(STP) import StripeCore  // for StripeError
 import StripeCoreTestUtils
-import StripePaymentsTestUtils
 import XCTest
 
 // swift-format-ignore
@@ -18,7 +17,7 @@ import XCTest
 let STPTestingDefaultPublishableKey = "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"
 public let STPTestingNetworkRequestTimeout: TimeInterval = 8
 
-class STPPaymentMethodModernTest: STPNetworkStubbingTestCase {
+class STPPaymentMethodModernTest: XCTestCase {
     func testCreateCardPaymentMethod() {
         let expectation = self.expectation(description: "Created")
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

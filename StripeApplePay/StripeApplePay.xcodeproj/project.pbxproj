@@ -14,10 +14,6 @@
 		234FA38DC46927B23871A75D /* SetupIntentParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7CF2B75A797D6B2B5A04B4 /* SetupIntentParams.swift */; };
 		2D6CD6872A00B6FE0243C3F5 /* PKPayment+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906F7217DBF694BF42F23458 /* PKPayment+Stripe.swift */; };
 		2EBB230815383A8402D71146 /* STPPaymentMethodFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 905182496A07DE4F056A3EAA /* STPPaymentMethodFunctionalTest.swift */; };
-		3126E1982C50945C0004B056 /* StripePaymentsTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3126E1972C50945C0004B056 /* StripePaymentsTestUtils.framework */; };
-		3126E1992C50945C0004B056 /* StripePaymentsTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3126E1972C50945C0004B056 /* StripePaymentsTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3126E19B2C5094640004B056 /* StripePaymentsObjcTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3126E19A2C5094640004B056 /* StripePaymentsObjcTestUtils.framework */; };
-		3126E19C2C5094640004B056 /* StripePaymentsObjcTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3126E19A2C5094640004B056 /* StripePaymentsObjcTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		313F5F7B2B0BE5A600BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F7A2B0BE5A600BD98A9 /* Docs.docc */; };
 		43682CEAB00A93868FA3188A /* SetupIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2A354F50C5D563436A0068 /* SetupIntent.swift */; };
 		463680AADB8CED6E962CD45A /* PaymentIntentParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478361D29DF10F2B43F7A1D2 /* PaymentIntentParams.swift */; };
@@ -63,18 +59,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		F937383B644A63BD5FC4A081 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				3126E19C2C5094640004B056 /* StripePaymentsObjcTestUtils.framework in Embed Frameworks */,
-				3126E1992C50945C0004B056 /* StripePaymentsTestUtils.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FF3CB7A978895136380088BB /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -151,12 +135,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3126E1982C50945C0004B056 /* StripePaymentsTestUtils.framework in Frameworks */,
 				C0D4B1753F584397DD1AD946 /* XCTest.framework in Frameworks */,
 				01AA289840E0AC9229A8CF63 /* StripeApplePay.framework in Frameworks */,
 				EEF84AC6C1EBF27BF6AAC0BF /* StripeCoreTestUtils.framework in Frameworks */,
 				D8D613D3A85B81F8C4386E08 /* OHHTTPStubs in Frameworks */,
-				3126E19B2C5094640004B056 /* StripePaymentsObjcTestUtils.framework in Frameworks */,
 				526AE8381F232C9FEABFFDCD /* OHHTTPStubsSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,7 +360,6 @@
 			buildPhases = (
 				C5D7D85B45B4D8BECDF5B7CD /* Sources */,
 				200F36028817645AC1730398 /* Resources */,
-				F937383B644A63BD5FC4A081 /* Embed Frameworks */,
 				92797DEFFA4201115E38DEAD /* Frameworks */,
 			);
 			buildRules = (
