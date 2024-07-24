@@ -152,13 +152,8 @@ class CustomerSheetUITest: XCTestCase {
             XCTFail("unable to get card number field")
         }
 
-        let backButton = app.buttons["Back"]
-        XCTAssertTrue(backButton.waitForExistence(timeout: timeout))
-        backButton.tap()
-
-        let closeButton = app.buttons["Confirm"]
-        XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
-        closeButton.tap()
+        app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Confirm"].waitForExistenceAndTap(timeout: timeout)
 
         dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
 
@@ -180,9 +175,7 @@ class CustomerSheetUITest: XCTestCase {
 
         app.staticTexts["••••4444"].waitForExistenceAndTap(timeout: timeout)
 
-        let editButton = app.staticTexts["Edit"]
-        XCTAssertTrue(editButton.waitForExistence(timeout: timeout))
-        editButton.tap()
+        app.staticTexts["Edit"].waitForExistenceAndTap(timeout: timeout)
 
         removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
         // ••••4444 is rendered as the PM to remove, as well as the status on the playground
@@ -195,9 +188,7 @@ class CustomerSheetUITest: XCTestCase {
         let visa = app.staticTexts["••••4242"]
         waitToDisappear(visa)
 
-        let closeButton = app.buttons["Close"]
-        XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
-        closeButton.tap()
+        app.buttons["Close"].waitForExistenceAndTap(timeout: timeout)
 
         dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
 
@@ -229,9 +220,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
         // Don't tap!
 
-        let closeButton = app.buttons["Close"]
-        XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
-        closeButton.tap()
+        app.buttons["Close"].waitForExistenceAndTap(timeout: timeout)
 
         dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
@@ -246,10 +235,7 @@ class CustomerSheetUITest: XCTestCase {
         )
 
         app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
-
-        let usBankAccountPMSelectorButton = app.staticTexts["US bank account"]
-        XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: timeout))
-        usBankAccountPMSelectorButton.tap()
+        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
 
         try! fillUSBankData(app)
 
@@ -275,13 +261,8 @@ class CustomerSheetUITest: XCTestCase {
         let testBankLinkedBankAccount = app.staticTexts["StripeBank"]
         XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: timeout))
 
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: timeout))
-        saveButton.tap()
-
-        let confirmButton = app.buttons["Confirm"]
-        XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
-        confirmButton.tap()
+        app.buttons["Save"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Confirm"].waitForExistenceAndTap(timeout: timeout)
 
         dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
@@ -296,9 +277,7 @@ class CustomerSheetUITest: XCTestCase {
             settings
         )
 
-        let selectButton = app.staticTexts["None"]
-        XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
-        selectButton.tap()
+        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
 
         let usBankAccountPMSelectorButton = app.staticTexts["US bank account"]
         XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: timeout))
@@ -306,25 +285,15 @@ class CustomerSheetUITest: XCTestCase {
 
         try! fillUSBankData(app)
 
-        let continueButton = app.buttons["Continue"]
-        XCTAssertTrue(continueButton.waitForExistence(timeout: timeout))
-        continueButton.tap()
+        app.buttons["Continue"].waitForExistenceAndTap(timeout: timeout)
 
         // Go through connections flow
         app.otherElements["consent_manually_verify_label"].links.firstMatch.tap()
         try! fillUSBankData_microdeposits(app)
 
-        let continueManualEntry = app.buttons["manual_entry_continue_button"]
-        XCTAssertTrue(continueManualEntry.waitForExistence(timeout: timeout))
-        continueManualEntry.tap()
-
-        let doneManualEntry = app.buttons["success_done_button"]
-        XCTAssertTrue(doneManualEntry.waitForExistence(timeout: timeout))
-        doneManualEntry.tap()
-
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: timeout))
-        saveButton.tap()
+        app.buttons["manual_entry_continue_button"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["success_done_button"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons["Save"].waitForExistenceAndTap(timeout: timeout)
 
         dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
@@ -436,7 +405,7 @@ class CustomerSheetUITest: XCTestCase {
         numberField.typeText("49730197")
 
         // Card brand choice drop down should be enabled
-        cardBrandTextField.tap()
+        cardBrandTextField.waitForExistenceAndTap(timeout: timeout)
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: timeout))
         cardBrandChoiceDropdown.swipeDown()
         app.toolbars.buttons["Cancel"].tap()
@@ -445,7 +414,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 2))
 
         // Clear card text field, should reset selected card brand
-        numberField.tap()
+        numberField.waitForExistenceAndTap(timeout: timeout)
         numberField.clearText()
 
         // We should reset to showing unknown in the textfield for card brand
@@ -459,12 +428,13 @@ class CustomerSheetUITest: XCTestCase {
         app.typeText("123") // CVC
         app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
+        app.toolbars.buttons["Done"].tap() // Dismiss postal code dismisser
 
         // Card brand choice drop down should be enabled and we should auto select Visa
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: timeout))
 
         // Finish saving card
-        app.buttons["Save"].tap()
+        app.buttons["Save"].waitForExistenceAndTap(timeout: timeout)
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: timeout)
         let successText = app.staticTexts["Complete"]
         XCTAssertTrue(successText.waitForExistence(timeout: timeout))

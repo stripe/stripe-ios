@@ -45,6 +45,34 @@ extension XCUIElement {
         return true
     }
 
+    func waitForExistence(timeout: TimeInterval = 4.0) -> Bool {
+        if exists {
+            return true
+        }
+        guard waitForExistence(0, timeout: timeout) else {
+            return false
+        }
+        return true
+    }
+    private func waitForExistence(_ timeWaited: TimeInterval, timeout: TimeInterval) -> Bool {
+        if exists {
+            return true
+        }
+        guard timeWaited < timeout else {
+            return false
+        }
+
+        // Sleep for 50ms
+        Thread.sleep(forTimeInterval: 0.05)
+        var totalTimeSlept = timeWaited + 0.05
+
+        guard waitForExistence(totalTimeSlept, timeout: timeout) else {
+            return false
+        }
+
+        return true
+    }
+
     func firstDescendant(withLabel label: String) -> XCUIElement {
         return descendants(matching: .any).matching(
             NSPredicate(format: "label == %@", label)
