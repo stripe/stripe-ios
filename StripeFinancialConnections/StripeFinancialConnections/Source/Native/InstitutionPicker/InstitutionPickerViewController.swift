@@ -99,7 +99,8 @@ class InstitutionPickerViewController: UIViewController {
         let institutionTableView = InstitutionTableView(
             frame: view.bounds,
             allowManualEntry: dataSource.manifest.allowManualEntry,
-            institutionSearchDisabled: dataSource.manifest.institutionSearchDisabled
+            institutionSearchDisabled: dataSource.manifest.institutionSearchDisabled,
+            theme: dataSource.manifest.theme
         )
         institutionTableView.delegate = self
         return institutionTableView

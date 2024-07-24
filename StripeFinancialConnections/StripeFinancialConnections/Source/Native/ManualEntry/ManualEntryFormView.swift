@@ -88,7 +88,7 @@ final class ManualEntryFormView: UIView {
         return (routingNumberTextField.text, accountNumberTextField.text)
     }
 
-    init(isTestMode: Bool) {
+    init(isTestMode: Bool, theme: FinancialConnectionsTheme) {
         super.init(frame: .zero)
 
         let contentVerticalStackView = UIStackView()
@@ -96,6 +96,7 @@ final class ManualEntryFormView: UIView {
         if isTestMode {
             let testModeBannerView = TestModeAutofillBannerView(
                 context: .account,
+                theme: theme,
                 didTapAutofill: applyTestModeValues
             )
             contentVerticalStackView.addArrangedSubview(testModeBannerView)
