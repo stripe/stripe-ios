@@ -479,8 +479,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                 case .completed:
                     // We're done!
-                    let delay: TimeInterval =
-                    self.presentedViewController?.isBeingDismissed == true ? 1 : 0
+                    let delay: TimeInterval = self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
 #if !canImport(CompositorServices)
