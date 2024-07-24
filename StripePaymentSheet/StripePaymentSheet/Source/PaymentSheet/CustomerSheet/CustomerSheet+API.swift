@@ -16,6 +16,21 @@ extension CustomerSheet {
         paymentOption: PaymentOption,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
+        CustomerSheet.confirm(intent: intent,
+                              paymentOption: paymentOption,
+                              configuration: configuration,
+                              paymentHandler: self.paymentHandler,
+                              authenticationContext: self.bottomSheetViewController,
+                              completion: completion)
+    }
+    static func confirm(
+        intent: Intent,
+        paymentOption: PaymentOption,
+        configuration: CustomerSheet.Configuration,
+        paymentHandler: STPPaymentHandler,
+        authenticationContext: STPAuthenticationContext,
+        completion: @escaping (InternalCustomerSheetResult) -> Void
+    ) {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
             {
                 (status, intent, error) in
@@ -24,13 +39,13 @@ extension CustomerSheet {
                     completion(.canceled)
                 case .failed:
                     // Hold a strong reference to paymentHandler
-                    let unknownError = CustomerSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(self.paymentHandler.description)")
+                    let unknownError = CustomerSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(paymentHandler.description)")
                     completion(.failed(error: error ?? unknownError))
                 case .succeeded:
                     completion(.completed(intent))
                 @unknown default:
                     // Hold a strong reference to paymentHandler
-                    let unknownError = CustomerSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(self.paymentHandler.description)")
+                    let unknownError = CustomerSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(paymentHandler.description)")
                     completion(.failed(error: error ?? unknownError))
                 }
             }
@@ -42,7 +57,7 @@ extension CustomerSheet {
             setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
             paymentHandler.confirmSetupIntent(
                 setupIntentParams,
-                with: self.bottomSheetViewController,
+                with: authenticationContext,
                 completion: paymentHandlerCompletion)
         } else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,

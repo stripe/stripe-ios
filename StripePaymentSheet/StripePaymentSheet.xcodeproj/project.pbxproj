@@ -140,6 +140,7 @@
 		6BA8D3342B0C1F79008C51FF /* CVCRecollectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3332B0C1F79008C51FF /* CVCRecollectionElement.swift */; };
 		6BA8D3362B0C1F9B008C51FF /* CVCReconfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3352B0C1F9B008C51FF /* CVCReconfirmationViewController.swift */; };
 		6BA8D33A2B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3392B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift */; };
+		6BC1594C2C4EDA4E00BDDF4B /* CustomerSheet_ConfirmFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC1594B2C4EDA4E00BDDF4B /* CustomerSheet_ConfirmFlowTests.swift */; };
 		6BC19CCC2B16C4B2008E00C4 /* CVCRecollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC19CCB2B16C4B2008E00C4 /* CVCRecollectionView.swift */; };
 		707F242EECB9A305E04C5B3C /* StripePaymentsObjcTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40EDF386A07E1196FB043798 /* StripePaymentsObjcTestUtils.framework */; };
 		70FEF1703F45F8A90F687E51 /* SimpleMandateTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A49995CE949176F7A8C71F /* SimpleMandateTextView.swift */; };
@@ -481,6 +482,7 @@
 		6BA8D3352B0C1F9B008C51FF /* CVCReconfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCReconfirmationViewController.swift; sourceTree = "<group>"; };
 		6BA8D3392B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCPaymentMethodInformationView.swift; sourceTree = "<group>"; };
 		6BB97FB5D5730FE4CAB9298D /* SheetNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetNavigationBar.swift; sourceTree = "<group>"; };
+		6BC1594B2C4EDA4E00BDDF4B /* CustomerSheet_ConfirmFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheet_ConfirmFlowTests.swift; sourceTree = "<group>"; };
 		6BC19CCB2B16C4B2008E00C4 /* CVCRecollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVCRecollectionView.swift; sourceTree = "<group>"; };
 		6CCB22C60E716A575DA8180A /* SimpleMandateElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMandateElement.swift; sourceTree = "<group>"; };
 		6CDF0F248F60A38FE4977428 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -712,6 +714,7 @@
 				ED7ABCE56539213DCE501C54 /* CustomerSheetTests.swift */,
 				D7D7F7F19F4C2E89B8F9DF65 /* CustomerSheetConfigurationTests.swift */,
 				6B50BCEF2C29F888009702FB /* CustomerSavedPaymentMethodsCollectionViewControllerTests.swift */,
+				6BC1594B2C4EDA4E00BDDF4B /* CustomerSheet_ConfirmFlowTests.swift */,
 			);
 			path = CustomerSheet;
 			sourceTree = "<group>";
@@ -1672,6 +1675,7 @@
 				830DB7F3A2D341445BDB600F /* PaymentSheetAddressTests.swift in Sources */,
 				731DA57DAF9979D11AA5A0F6 /* PaymentSheetDeferredValidatorTests.swift in Sources */,
 				96575C19CD0FE05ADA0B0094 /* PaymentSheetErrorTest.swift in Sources */,
+				6BC1594C2C4EDA4E00BDDF4B /* CustomerSheet_ConfirmFlowTests.swift in Sources */,
 				B63B2CF72BFC116A003810F3 /* PaymentSheetVerticalViewControllerSnapshotTest.swift in Sources */,
 				0C22490240EB2D9642DC2A17 /* PaymentSheetExternalPaymentMethodTests.swift in Sources */,
 				8A420C567E5EF4CC2AE3193D /* PaymentSheetFlowControllerViewControllerSnapshotTests.swift in Sources */,
