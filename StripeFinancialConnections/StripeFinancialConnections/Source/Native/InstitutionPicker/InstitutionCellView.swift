@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 final class InstitutionCellView: UIView {
-    private let theme: FinancialConnectionsTheme!
+    private let theme: FinancialConnectionsTheme
 
     private lazy var horizontalStackView: UIStackView = {
         let horizontalStackView = UIStackView()
