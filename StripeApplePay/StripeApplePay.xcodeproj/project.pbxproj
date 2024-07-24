@@ -81,8 +81,6 @@
 		264583DBFFA42C864220D7FF /* PaymentMethod+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentMethod+API.swift"; sourceTree = "<group>"; };
 		29BFCC7B0FCEA743A857B51F /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		30DDE851AD7450BE70381337 /* SetupIntent+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetupIntent+API.swift"; sourceTree = "<group>"; };
-		3126E1972C50945C0004B056 /* StripePaymentsTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentsTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3126E19A2C5094640004B056 /* StripePaymentsObjcTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentsObjcTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		313F5F7A2B0BE5A600BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		3D7CF2B75A797D6B2B5A04B4 /* SetupIntentParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupIntentParams.swift; sourceTree = "<group>"; };
 		40D5ED47331313B6AD8B6F46 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -158,8 +156,6 @@
 		18E783E8B2360F08F2FCDEB9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3126E19A2C5094640004B056 /* StripePaymentsObjcTestUtils.framework */,
-				3126E1972C50945C0004B056 /* StripePaymentsTestUtils.framework */,
 				87A189B89110D3A8EF052425 /* XCTest.framework */,
 			);
 			name = Frameworks;
