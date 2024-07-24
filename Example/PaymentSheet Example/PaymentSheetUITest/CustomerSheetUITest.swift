@@ -873,9 +873,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: timeout))
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: timeout))
 
-        let editButton = app.staticTexts["Edit"]
-        XCTAssertTrue(editButton.waitForExistence(timeout: timeout))
-        editButton.tap()
+        app.staticTexts["Edit"].waitForExistenceAndTap(timeout: timeout)
 
         // Saved card should show the edit icon since it is co-branded
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
@@ -898,12 +896,14 @@ class CustomerSheetUITest: XCTestCase {
         confirmRemoval.tap()
 
         // Verify card is removed
-        app.buttons["Done"].waitForExistenceAndTap(timeout: timeout)
         app.buttons["Close"].waitForExistenceAndTap(timeout: timeout)
         app.buttons["Reload"].waitForExistenceAndTap(timeout: timeout)
         app.buttons["Payment method"].waitForExistenceAndTap(timeout: timeout)
-        // Card is no longer saved
-        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: timeout))
+
+        // Card is no longer saved - Wait for ApplePay is a signal the view has loaded, then wait 0.5
+        // up to 0.5 seconds to ensure card is not there
+        XCTAssertTrue(app.collectionViews.staticTexts["Apple Pay"].waitForExistence(timeout: timeout))
+        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 0.5))
     }
 
     func testCardBrandChoiceWithPreferredNetworks() throws {
@@ -1018,6 +1018,9 @@ class CustomerSheetUITest: XCTestCase {
         // Remove the 4242 saved PM
         XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Wait for alert view to disappear and removal animation to finish
+        sleep(1)
 
         // Should be able to edit CBC enabled PM even though it's the only one
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))

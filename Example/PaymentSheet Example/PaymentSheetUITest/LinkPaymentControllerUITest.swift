@@ -91,7 +91,7 @@ class LinkPaymentControllerUITest: XCTestCase {
             .withOffset(CGVector(dx: 0, dy: -130))
             .tap()
 
-        sleep(1) // wait for modal to disappear before pressing Buy
+        sleep(3) // wait for modal to disappear before pressing Buy
 
         // Back to "LinkPaymentController"
         app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)
