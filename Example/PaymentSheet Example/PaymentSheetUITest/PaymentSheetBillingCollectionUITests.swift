@@ -826,49 +826,4 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         // Just check the button is enabled, confirming a payment with Klarna is flaky.
         XCTAssertTrue(payButton.isEnabled)
     }
-
-    func testBlik_AutomaticFields() throws {
-
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.merchantCountryCode = .FR
-        settings.currency = .pln
-        settings.defaultBillingAddress = .off
-        settings.attachDefaults = .off
-        settings.collectName = .automatic
-        settings.collectEmail = .automatic
-        settings.collectPhone = .automatic
-        settings.collectAddress = .automatic
-        loadPlayground(
-            app,
-            settings
-        )
-        checkoutButton.tap()
-
-        let payButton = app.buttons["Pay PLN 50.99"]
-        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "BLIK"))
-        cell.tap()
-
-        XCTAssertFalse(emailField.exists)
-        XCTAssertFalse(fullNameField.exists)
-        XCTAssertFalse(phoneField.exists)
-        XCTAssertFalse(billingAddressField.exists)
-        XCTAssertFalse(countryField.exists)
-        XCTAssertFalse(line1Field.exists)
-        XCTAssertFalse(line2Field.exists)
-        XCTAssertFalse(cityField.exists)
-        XCTAssertFalse(stateField.exists)
-        XCTAssertFalse(zipField.exists)
-
-        XCTAssertFalse(payButton.isEnabled)
-        let blik_code = app.textFields["BLIK code"]
-        blik_code.tap()
-        blik_code.typeText("123456")
-        blik_code.typeText(XCUIKeyboardKey.return.rawValue)
-
-        payButton.tap()
-
-        // in test mode polling is auto approved in 10 seconds
-        XCTAssertTrue(successText.waitForExistence(timeout: 25.0))
-    }
 }

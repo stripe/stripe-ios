@@ -614,28 +614,27 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 15)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
-    
-    
+
     func testBlikPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new // new customer
-        settings.apmsEnabled = .off
+        settings.apmsEnabled = .on
         settings.currency = .pln
         settings.merchantCountryCode = .FR
         loadPlayground(app, settings)
-        
+
         app.buttons["Present PaymentSheet"].tap()
-        
-        // Select Blik
+
+        // Select Blik and pay
         tapPaymentMethod("BLIK")
-        
+        app.textFields["BLIK code"].waitForExistenceAndTap()
+        app.typeText("123456")
+        XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 1.0))
+
         // Cancel
-        "Cancel and p"
-        
-        
-        // Attempt payment
+        XCTAssertTrue(app.buttons["Cancel and pay another way"].waitForExistenceAndTap(timeout: 1.0))
+
+        // Pay
         XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 5.0))
-        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 15)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 }
