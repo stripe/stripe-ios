@@ -122,7 +122,7 @@ public class CustomerSheet {
                 // bottom sheet (i.e. Link) to be dismissed all at the same time.
                 presentingViewController.dismiss(animated: true)
             }
-            self.bottomSheetViewController.contentStack = [self.loadingViewController]
+            self.bottomSheetViewController.setViewControllers([self.loadingViewController])
             self.completion = nil
         }
         self.completion = completion
@@ -197,7 +197,7 @@ public class CustomerSheet {
                                                                                     cbcEligible: cbcEligible,
                                                                                     csCompletion: self.csCompletion,
                                                                                     delegate: self)
-                self.bottomSheetViewController.contentStack = [savedPaymentSheetVC]
+                self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
             }
         }
     }
