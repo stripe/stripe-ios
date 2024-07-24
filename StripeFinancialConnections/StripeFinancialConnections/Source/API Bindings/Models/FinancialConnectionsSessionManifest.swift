@@ -126,6 +126,84 @@ struct FinancialConnectionsSessionManifest: Decodable {
         !livemode
     }
 
+    init(
+        accountholderCustomerEmailAddress: String? = nil,
+        accountholderIsLinkConsumer: Bool? = nil,
+        accountholderPhoneNumber: String? = nil,
+        accountholderToken: String? = nil,
+        accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod? = nil,
+        activeAuthSession: FinancialConnectionsAuthSession? = nil,
+        activeInstitution: FinancialConnectionsInstitution? = nil,
+        allowManualEntry: Bool,
+        assignmentEventId: String? = nil,
+        businessName: String? = nil,
+        cancelUrl: String? = nil,
+        consentRequired: Bool,
+        customManualEntryHandling: Bool,
+        disableLinkMoreAccounts: Bool,
+        displayText: FinancialConnectionsSessionManifest.DisplayText? = nil,
+        experimentAssignments: [String: String]? = nil,
+        features: [String: Bool]? = nil,
+        hostedAuthUrl: String? = nil,
+        initialInstitution: FinancialConnectionsInstitution? = nil,
+        instantVerificationDisabled: Bool,
+        institutionSearchDisabled: Bool,
+        isEndUserFacing: Bool? = nil,
+        isLinkWithStripe: Bool? = nil,
+        isNetworkingUserFlow: Bool? = nil,
+        isStripeDirect: Bool? = nil,
+        livemode: Bool,
+        manualEntryMode: FinancialConnectionsSessionManifest.ManualEntryMode,
+        manualEntryUsesMicrodeposits: Bool,
+        nextPane: FinancialConnectionsSessionManifest.NextPane,
+        paymentMethodType: FinancialConnectionsPaymentMethodType? = nil,
+        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        product: String,
+        singleAccount: Bool,
+        skipSuccessPane: Bool? = nil,
+        stepUpAuthenticationRequired: Bool? = nil,
+        successUrl: String? = nil,
+        _theme: FinancialConnectionsSessionManifest.Theme? = nil
+    ) {
+        self.accountholderCustomerEmailAddress = accountholderCustomerEmailAddress
+        self.accountholderIsLinkConsumer = accountholderIsLinkConsumer
+        self.accountholderPhoneNumber = accountholderPhoneNumber
+        self.accountholderToken = accountholderToken
+        self.accountDisconnectionMethod = accountDisconnectionMethod
+        self.activeAuthSession = activeAuthSession
+        self.activeInstitution = activeInstitution
+        self.allowManualEntry = allowManualEntry
+        self.assignmentEventId = assignmentEventId
+        self.businessName = businessName
+        self.cancelUrl = cancelUrl
+        self.consentRequired = consentRequired
+        self.customManualEntryHandling = customManualEntryHandling
+        self.disableLinkMoreAccounts = disableLinkMoreAccounts
+        self.displayText = displayText
+        self.experimentAssignments = experimentAssignments
+        self.features = features
+        self.hostedAuthUrl = hostedAuthUrl
+        self.initialInstitution = initialInstitution
+        self.instantVerificationDisabled = instantVerificationDisabled
+        self.institutionSearchDisabled = institutionSearchDisabled
+        self.isEndUserFacing = isEndUserFacing
+        self.isLinkWithStripe = isLinkWithStripe
+        self.isNetworkingUserFlow = isNetworkingUserFlow
+        self.isStripeDirect = isStripeDirect
+        self.livemode = livemode
+        self.manualEntryMode = manualEntryMode
+        self.manualEntryUsesMicrodeposits = manualEntryUsesMicrodeposits
+        self.nextPane = nextPane
+        self.paymentMethodType = paymentMethodType
+        self.permissions = permissions
+        self.product = product
+        self.singleAccount = singleAccount
+        self.skipSuccessPane = skipSuccessPane
+        self.stepUpAuthenticationRequired = stepUpAuthenticationRequired
+        self.successUrl = successUrl
+        self._theme = _theme
+    }
+
     // MARK: - Coding Keys
 
     enum CodingKeys: String, CodingKey {
