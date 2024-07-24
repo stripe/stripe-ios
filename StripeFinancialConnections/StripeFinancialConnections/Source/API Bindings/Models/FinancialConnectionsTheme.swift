@@ -49,6 +49,15 @@ extension FinancialConnectionsTheme {
         }
     }
 
+    var textFieldFocusedColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen200
+        case .light:
+            return .brand600
+        }
+    }
+
     var logoColor: UIColor {
         switch self {
         case .linkLight:
