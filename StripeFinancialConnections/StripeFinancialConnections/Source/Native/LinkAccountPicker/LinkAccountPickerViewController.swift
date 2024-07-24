@@ -153,7 +153,8 @@ final class LinkAccountPickerViewController: UIViewController {
 
         let bodyView = LinkAccountPickerBodyView(
             accountTuples: accountTuples,
-            addNewAccount: networkingAccountPicker.addNewAccount
+            addNewAccount: networkingAccountPicker.addNewAccount,
+            theme: dataSource.manifest.theme
         )
         bodyView.delegate = self
         self.bodyView = bodyView
