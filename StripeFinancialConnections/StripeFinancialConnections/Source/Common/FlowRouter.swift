@@ -87,18 +87,18 @@ class FlowRouter {
 
         return experimentVariant == Constants.nativeExperimentTreatment
     }
-    
+
     private var shouldUseNativeInstantDebits: Bool {
         // Show web instant debits flow while UITesting for now.
         guard ProcessInfo.processInfo.environment["UITesting"] == nil else {
             return false
         }
-        
+
         // Override all other conditions if the example app has native or web selected.
         guard case .none = exampleAppSdkOverride else {
             return exampleAppSdkOverride.shouldUseNativeFlow
         }
-        
+
         return !killswitchActive
     }
 
