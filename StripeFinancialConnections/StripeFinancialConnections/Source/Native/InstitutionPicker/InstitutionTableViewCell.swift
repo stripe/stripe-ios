@@ -10,14 +10,12 @@ import Foundation
 import UIKit
 
 final class InstitutionTableViewCell: UITableViewCell {
-    private var theme: FinancialConnectionsTheme!
-
     private lazy var institutionIconView: InstitutionIconView = {
         return InstitutionIconView()
     }()
-    private lazy var institutionCellView: InstitutionCellView = {
-        return InstitutionCellView(theme: theme)
-    }()
+
+    private var institutionCellView: InstitutionCellView?
+
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
         overlayView.backgroundColor = .customBackgroundColor.withAlphaComponent(0.8)
@@ -51,7 +49,7 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     func showLoadingView(_ show: Bool) {
-        institutionCellView.showLoadingView(show)
+        institutionCellView?.showLoadingView(show)
     }
 
     func showOverlayView(_ show: Bool) {
@@ -75,7 +73,7 @@ final class InstitutionTableViewCell: UITableViewCell {
 extension InstitutionTableViewCell {
 
     func customize(with institution: FinancialConnectionsInstitution, theme: FinancialConnectionsTheme) {
-        self.theme = theme
+        let institutionCellView = InstitutionCellView(theme: theme)
         institutionIconView.setImageUrl(institution.icon?.default)
 
         institutionCellView.customize(
@@ -84,7 +82,11 @@ extension InstitutionTableViewCell {
             subtitle: AuthFlowHelpers.formatUrlString(institution.url)
         )
 
+        // Ensure the cell view isn't added to superview more than once.
+        self.institutionCellView?.removeFromSuperview()
         contentView.addAndPinSubview(institutionCellView)
+
+        self.institutionCellView = institutionCellView
     }
 }
 
