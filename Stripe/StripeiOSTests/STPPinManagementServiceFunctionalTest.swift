@@ -9,15 +9,15 @@
 import PassKit
 import XCTest
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
-import StripeCoreTestUtils
-import OHHTTPStubs
-import OHHTTPStubsSwift
 
 class TestEphemeralKeyProvider: NSObject, STPIssuingCardEphemeralKeyProvider {
     func createIssuingCardKey(
@@ -45,16 +45,13 @@ class TestEphemeralKeyProvider: NSObject, STPIssuingCardEphemeralKeyProvider {
 }
 
 class STPPinManagementServiceFunctionalTest: APIStubbedTestCase {
-    override func setUp() {
-        super.setUp()
-    }
 
     func testRetrievePin() {
         let keyProvider = TestEphemeralKeyProvider()
         let service = STPPinManagementService(keyProvider: keyProvider)
 
         let expectation = self.expectation(description: "Received PIN")
-        
+
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/issuing/cards/ic_token/pin") ?? false
         } response: { _ in
@@ -147,7 +144,7 @@ class STPPinManagementServiceFunctionalTest: APIStubbedTestCase {
         let service = STPPinManagementService(keyProvider: keyProvider)
 
         let expectation = self.expectation(description: "Received PIN")
-        
+
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/issuing/cards/ic_token/pin") ?? false
         } response: { _ in
@@ -258,7 +255,7 @@ class STPPinManagementServiceFunctionalTest: APIStubbedTestCase {
                 """
             return HTTPStubsResponse(data: pinResponseJSON.data(using: .utf8)!, statusCode: 400, headers: nil)
         }
-        
+
         service.retrievePin(
             "ic_token",
             verificationId: "iv_token",

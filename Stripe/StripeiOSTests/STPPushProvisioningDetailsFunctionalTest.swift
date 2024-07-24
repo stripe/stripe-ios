@@ -8,20 +8,17 @@
 
 import Stripe
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
-import OHHTTPStubs
-import OHHTTPStubsSwift
-import StripeCoreTestUtils
 
 class STPPushProvisioningDetailsFunctionalTest: APIStubbedTestCase {
-    override func setUp() {
-        super.setUp()
-    }
 
     func testRetrievePushProvisioningDetails() {
         // this API requires a secret key - replace the key below if you need to re-record the network traffic.
@@ -39,7 +36,7 @@ class STPPushProvisioningDetailsFunctionalTest: APIStubbedTestCase {
             Data(base64Encoded: cert2, options: [])!,
         ]
         let expectation = self.expectation(description: "Push provisioning details")
-        
+
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/issuing/cards/ic_1C0Xig4JYtv6MPZK91WoXa9u/push_provisioning_details") ?? false
         } response: { _ in
@@ -54,7 +51,7 @@ class STPPushProvisioningDetailsFunctionalTest: APIStubbedTestCase {
                 """
             return HTTPStubsResponse(data: pushDetailsResponseJSON.data(using: .utf8)!, statusCode: 200, headers: nil)
         }
-        
+
         let params = STPPushProvisioningDetailsParams(
             cardId: "ic_1C0Xig4JYtv6MPZK91WoXa9u",
             certificates: certs,

@@ -34,7 +34,7 @@ import XCTest
 
         recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
         disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
-        
+
         if disableMocking {
             // Don't set this up
             return

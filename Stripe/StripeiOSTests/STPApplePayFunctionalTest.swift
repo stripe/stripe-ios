@@ -18,10 +18,6 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
-    override func setUp() {
-        //        self.recordingMode = YES;
-        super.setUp()
-    }
 
     // TODO: regenerate these fixtures with a fresh/real PKPayment
     func testCreateTokenWithPaymentClassic() {
