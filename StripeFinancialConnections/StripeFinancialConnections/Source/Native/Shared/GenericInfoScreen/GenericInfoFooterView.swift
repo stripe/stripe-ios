@@ -10,6 +10,7 @@ import UIKit
 
 func GenericInfoFooterView(
     footer: FinancialConnectionsGenericInfoScreen.Footer?,
+    theme: FinancialConnectionsTheme,
     didSelectPrimaryButton: @escaping () -> Void,
     didSelectSecondaryButton: @escaping () -> Void,
     didSelectURL: @escaping (URL) -> Void
@@ -39,7 +40,7 @@ func GenericInfoFooterView(
         primaryButtonConfiguration: primaryButtonConfiguration,
         secondaryButtonConfiguration: secondaryButtonConfiguration,
         topText: footer.disclaimer,
-        theme: .light, // TODO(kgaidis): correct this
+        theme: theme,
         bottomText: footer.belowCta,
         didSelectURL: didSelectURL
     ).footerView
@@ -57,6 +58,7 @@ private struct GenericInfoFooterViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> UIView {
         GenericInfoFooterView(
             footer: footer,
+            theme: .light,
             didSelectPrimaryButton: {},
             didSelectSecondaryButton: {},
             didSelectURL: { _ in }
