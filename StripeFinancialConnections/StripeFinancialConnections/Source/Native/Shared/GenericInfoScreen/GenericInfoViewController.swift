@@ -45,7 +45,7 @@ final class GenericInfoViewController: SheetViewController {
                         return RoundedIconView(
                             image: .imageUrl(imageUrl),
                             style: .circle,
-                            theme: .light // TODO(kgaidis): correct
+                            theme: theme
                         )
                     } else {
                         return nil
