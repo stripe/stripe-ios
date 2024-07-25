@@ -63,21 +63,3 @@ extension Element {
             .first
     }
 }
-
-extension SectionElement: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return ["<SectionElement: \(Unmanaged.passUnretained(self).toOpaque())>", title].compactMap { $0 }.joined(separator: " - ")
-    }
-}
-
-extension TextFieldElement: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return "<TextFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>  -  \"\(configuration.label)\"  -  \(validationState)"
-    }
-}
-
-extension DropdownFieldElement {
-    public override var debugDescription: String {
-        return "<DropdownFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>  -  \"\(label ?? "nil")\"  -  \(validationState)"
-    }
-}

@@ -16,7 +16,7 @@ import UIKit
  
  Think of this as a light-weight, specialized view controller.
  */
-@_spi(STP) public protocol Element: AnyObject {
+@_spi(STP) public protocol Element: AnyObject, CustomDebugStringConvertible {
     /// - Note: This is set by your parent.
     var delegate: ElementDelegate? { get set }
 
@@ -106,4 +106,10 @@ extension Element {
 
 @_spi(STP) public protocol ElementValidationError: Error {
     var localizedDescription: String { get }
+}
+
+extension Element {
+    public var debugDescription: String {
+        return "<\(type(of: self)): \(Unmanaged.passUnretained(self).toOpaque())>"
+    }
 }
