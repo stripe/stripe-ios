@@ -18,6 +18,7 @@ protocol InstitutionSearchBarDelegate: AnyObject {
 
 final class InstitutionSearchBar: UIView {
 
+    private let theme: FinancialConnectionsTheme
     weak var delegate: InstitutionSearchBarDelegate?
     var text: String {
         get {
@@ -102,7 +103,8 @@ final class InstitutionSearchBar: UIView {
         return searchIconImageView
     }()
 
-    init() {
+    init(theme: FinancialConnectionsTheme) {
+        self.theme = theme
         super.init(frame: .zero)
         layer.cornerRadius = 12
 
@@ -160,7 +162,7 @@ final class InstitutionSearchBar: UIView {
         let searchBarBorderWidth: CGFloat
         let shadowOpacity: Float
         if shouldHighlightBorder {
-            searchBarBorderColor = .textActionPrimaryFocused
+            searchBarBorderColor = theme.textFieldFocusedColor
             searchBarBorderWidth = 2
             shadowOpacity = 0.1
         } else {
@@ -214,30 +216,46 @@ import SwiftUI
 private struct InstitutionSearchBarUIViewRepresentable: UIViewRepresentable {
 
     let text: String
+    var isSelected: Bool = false
+    let theme: FinancialConnectionsTheme
 
     func makeUIView(context: Context) -> InstitutionSearchBar {
-        InstitutionSearchBar()
+        InstitutionSearchBar(theme: theme)
     }
 
     func updateUIView(_ searchBar: InstitutionSearchBar, context: Context) {
         searchBar.text = text
+
+        if isSelected {
+            _ = searchBar.becomeFirstResponder()
+        }
     }
 }
 
 struct InstitutionSearchBar_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
-            InstitutionSearchBarUIViewRepresentable(text: "")
+            InstitutionSearchBarUIViewRepresentable(text: "", theme: .light)
                 .frame(width: 327)
                 .frame(height: 56)
 
-            InstitutionSearchBarUIViewRepresentable(text: "Chase")
+            InstitutionSearchBarUIViewRepresentable(text: "Chase", theme: .light)
                 .frame(width: 327)
                 .frame(height: 56)
 
             Spacer()
         }
         .frame(maxWidth: .infinity)
+
+        InstitutionSearchBarUIViewRepresentable(text: "Chase", isSelected: true, theme: .light)
+            .frame(width: 327)
+            .frame(height: 56)
+            .previewDisplayName("Selected - Light theme")
+
+        InstitutionSearchBarUIViewRepresentable(text: "Chase", isSelected: true, theme: .linkLight)
+            .frame(width: 327)
+            .frame(height: 56)
+            .previewDisplayName("Selected - Link Light theme")
     }
 }
 
