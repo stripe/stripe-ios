@@ -722,7 +722,8 @@ extension PaymentSheetStandardLPMUITests {
         app.typeText("foo@bar.com")
         app.typeText(XCUIKeyboardKey.return.rawValue)
         app.typeText("00000000000")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.toolbars.buttons["Done"].tap() // Tap "Done", don't hit return - that's not possible using the system numpad keyboard
+        app.textFields["Address line 1"].tap()
         app.typeText("123 fake st")
         app.typeText(XCUIKeyboardKey.return.rawValue)
         app.typeText(XCUIKeyboardKey.return.rawValue)
