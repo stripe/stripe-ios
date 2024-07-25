@@ -18,10 +18,6 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
-    override func setUp() {
-        //        self.recordingMode = YES;
-        super.setUp()
-    }
 
     // TODO: regenerate these fixtures with a fresh/real PKPayment
     func testCreateTokenWithPaymentClassic() {
@@ -40,13 +36,13 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
             }
 
             // Since we can't actually generate a new cryptogram in a CI environment, we should just post a blob of expired token data and
-            // make sure we get the "too long since tokenization" error. This at least asserts that our blob has been correctly formatted and
+            // make sure we get the "invalid cert" error. This at least asserts that our blob has been correctly formatted and
             // can be decrypted by the backend.
             XCTAssert(
                 ((error as NSError).userInfo[STPError.errorMessageKey] as? NSString)?.range(
-                    of: "too long"
+                    of: "certificate used to sign your request is invalid"
                 ).location != NSNotFound,
-                "Error is unrelated to 24-hour expiry: \(error)"
+                "Error is unrelated to cert expiration: \(error)"
             )
         }
         waitForExpectations(timeout: 5.0, handler: nil)
@@ -69,13 +65,13 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
             }
 
             // Since we can't actually generate a new cryptogram in a CI environment, we should just post a blob of expired token data and
-            // make sure we get the "too long since tokenization" error. This at least asserts that our blob has been correctly formatted and
+            // make sure we get the "invalid cert" error. This at least asserts that our blob has been correctly formatted and
             // can be decrypted by the backend.
             XCTAssert(
                 ((error as NSError).userInfo[STPError.errorMessageKey] as? NSString)?.range(
-                    of: "too long"
+                    of: "certificate used to sign your request is invalid"
                 ).location != NSNotFound,
-                "Error is unrelated to 24-hour expiry: \(error)"
+                "Error is unrelated to cert expiration: \(error)"
             )
         }
         waitForExpectations(timeout: 5.0, handler: nil)
@@ -97,13 +93,13 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
             }
 
             // Since we can't actually generate a new cryptogram in a CI environment, we should just post a blob of expired token data and
-            // make sure we get the "too long since tokenization" error. This at least asserts that our blob has been correctly formatted and
+            // make sure we get the "invalid cert" error. This at least asserts that our blob has been correctly formatted and
             // can be decrypted by the backend.
             XCTAssert(
                 ((error as NSError).userInfo[STPError.errorMessageKey] as? NSString)?.range(
-                    of: "too long"
+                    of: "certificate used to sign your request is invalid"
                 ).location != NSNotFound,
-                "Error is unrelated to 24-hour expiry: \(error)"
+                "Error is unrelated to cert expiration: \(error)"
             )
         }
         waitForExpectations(timeout: 5.0, handler: nil)

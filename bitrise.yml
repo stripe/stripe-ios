@@ -68,6 +68,7 @@ stages:
   stage-nightly-all:
     workflows:
     - basic-integration-tests: {}
+    - framework-tests-no-mocks: {}
     - check-docs: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
@@ -311,6 +312,28 @@ workflows:
     before_run:
     - prep_all
     after_run: []
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
+  framework-tests-no-mocks:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: preflight
+        title: fastlane preflight
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: AllStripeFrameworks-NoMocks
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
+    before_run:
+    - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x

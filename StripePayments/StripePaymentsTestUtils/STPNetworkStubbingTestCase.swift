@@ -17,6 +17,9 @@ import XCTest
     /// Set this to YES to record all traffic during this test. The test will then fail, to remind you to set this back to NO before pushing.
     open var recordingMode = false
 
+    /// Set this to YES to disable network mocking entirely (e.g. in a nightly test)
+    open var disableMocking = false
+
     /// If `true` (the default), URL parameters will be recorded in requests.
     /// Disable this if your test case sends paramters that may change (e.g. the time), as otherwise the requests may not match during playback.
     open var strictParamsEnforcement = true
@@ -30,6 +33,12 @@ import XCTest
         super.setUp()
 
         recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
+        disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
+
+        if disableMocking {
+            // Don't set this up
+            return
+        }
 
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
         STPTestingAPIClient.shared.sessionConfig =
@@ -156,6 +165,12 @@ import XCTest
 
     open override func tearDown() {
         super.tearDown()
+
+        if disableMocking {
+            // No teardown needed
+            return
+        }
+
         // Additional calls to `setFileNamingBlock` will be ignored if you don't do this
         SWHttpTrafficRecorder.shared().stopRecording()
 
