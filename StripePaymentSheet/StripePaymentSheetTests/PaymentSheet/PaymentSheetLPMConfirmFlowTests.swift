@@ -186,18 +186,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
 //        }
 //    }
 
-/* TODO: @lisaliu -- TODO: (9/15/2023) Uncomment this when amazon test mode becomes stable
-
     func testAmazonPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
-                               paymentMethodType: .stripe(.amazon_pay),
+                               paymentMethodType: .stripe(.amazonPay),
                                merchantCountry: .US) { form in
             // AmazonPay has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }
-*/
+
     func testAlmaConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",

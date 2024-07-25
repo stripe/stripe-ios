@@ -614,6 +614,29 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 15)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
+
+    func testBlikPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.apmsEnabled = .on
+        settings.currency = .pln
+        settings.merchantCountryCode = .FR
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Blik and pay
+        tapPaymentMethod("BLIK")
+        app.textFields["BLIK code"].waitForExistenceAndTap()
+        app.typeText("123456")
+        XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 1.0))
+
+        // Cancel
+        XCTAssertTrue(app.buttons["Cancel and pay another way"].waitForExistenceAndTap(timeout: 1.0))
+
+        // Pay
+        XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
 }
 
 // MARK: - Voucher based LPMs
