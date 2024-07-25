@@ -91,7 +91,7 @@ class InstitutionPickerViewController: UIViewController {
         return verticalStackView
     }()
     private lazy var searchBar: InstitutionSearchBar = {
-        let searchBar = InstitutionSearchBar()
+        let searchBar = InstitutionSearchBar(theme: dataSource.manifest.theme)
         searchBar.delegate = self
         return searchBar
     }()
