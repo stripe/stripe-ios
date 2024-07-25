@@ -131,14 +131,14 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSofortConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .sofort) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .sofort, defaultCountry: "AT") { form in
             XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
             XCTAssertNil(form.getTextFieldElement("Full name"))
             XCTAssertNil(form.getTextFieldElement("Email"))
             XCTAssertNil(form.getMandateElement())
         }
 
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .sofort) { form in
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .sofort, defaultCountry: "AT") { form in
             XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
             form.getTextFieldElement("Full name")?.setText("Foo")
             form.getTextFieldElement("Email")?.setText("f@z.c")
@@ -251,7 +251,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
             currency: "BRL",
             paymentMethodType: .boleto,
-            merchantCountry: .BR
+            merchantCountry: .BR,
+            defaultCountry: "BR"
         ) { form in
             form.getTextFieldElement("Full name")?.setText("Jane Doe")
             form.getTextFieldElement("Email")?.setText("foo@bar.com")
@@ -457,6 +458,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         paymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
+        defaultCountry: String = "US",
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
         for intentKind in intentKinds {
@@ -466,6 +468,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 paymentMethodType: paymentMethodType,
                 merchantCountry: merchantCountry,
                 configuration: configuration,
+                defaultCountry: defaultCountry,
                 formCompleter: formCompleter
             )
         }
@@ -487,6 +490,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         paymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
+        defaultCountry: String,
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
@@ -512,7 +516,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, apiClient: apiClient)
 
         // Check that the form respects billingDetailsCollection
-        _testFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType)
+        verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)
 
         for (description, intent) in intents {
             // Make the form
@@ -692,7 +696,24 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         }
     }
 
-    func _testFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: STPPaymentMethodType) {
+    func verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: STPPaymentMethodType, defaultCountry: String) {
+        let addressSpec = AddressSpecProvider.shared.addressSpec(for: defaultCountry)
+        func getName(from form: PaymentMethodElement) -> TextFieldElement? {
+            switch paymentMethodType {
+            case .card:
+                return form.getTextFieldElement("Name on card")
+            case .AUBECSDebit:
+                return form.getTextFieldElement("Name on account")
+            default:
+                return form.getTextFieldElement("Full name")
+            }
+        }
+
+        func getState(from form: PaymentMethodElement) -> Element? {
+            let label = addressSpec.stateNameType.localizedLabel // e.g. "State", "Province"
+            // Most countries use a text field for state but some (e.g. US) use a dropdown
+            return form.getTextFieldElement(label) ?? form.getDropdownFieldElement(label)
+        }
 
         // When set to .never, should not show any billing fields
         var noFieldsConfig = PaymentSheet.Configuration()
@@ -701,15 +722,20 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         noFieldsConfig.billingDetailsCollectionConfiguration.phone = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.address = .never
         let noFieldsForm = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), configuration: .paymentSheet(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
-        XCTAssertNil(noFieldsForm.getTextFieldElement("Name"))
+
+        XCTAssertNil(getName(from: noFieldsForm))
         XCTAssertNil(noFieldsForm.getTextFieldElement("Email"))
         XCTAssertNil(noFieldsForm.getPhoneNumberElement())
         XCTAssertNil(noFieldsForm.getTextFieldElement("Address line 1"))
         XCTAssertNil(noFieldsForm.getTextFieldElement("Address line 2"))
-        XCTAssertNil(noFieldsForm.getTextFieldElement("City"))
-        XCTAssertNil(noFieldsForm.getDropdownFieldElement("State"))
-        XCTAssertNil(noFieldsForm.getDropdownFieldElement("Country or region"))
-        XCTAssertNil(noFieldsForm.getTextFieldElement("ZIP"))
+        XCTAssertNil(noFieldsForm.getTextFieldElement(addressSpec.cityNameType.localizedLabel))
+        XCTAssertNil(getState(from: noFieldsForm))
+        // Klarna and Sofort have a bug where the country is still shown; rather than change this and potentially break integrations,
+        // we'll preserve existing behavior until the next major version
+        if ![.klarna, .sofort].contains(paymentMethodType) {
+            XCTAssertNil(noFieldsForm.getDropdownFieldElement("Country or region"))
+        }
+        XCTAssertNil(noFieldsForm.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
 
         // When set to .always, should show all billing fields
         var allFieldsConfig = PaymentSheet.Configuration()
@@ -718,15 +744,35 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         allFieldsConfig.billingDetailsCollectionConfiguration.phone = .always
         allFieldsConfig.billingDetailsCollectionConfiguration.address = .full
         let allFieldsForm = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), configuration: .paymentSheet(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
-        XCTAssertNil(allFieldsForm.getTextFieldElement("Name"))
-        XCTAssertNil(allFieldsForm.getTextFieldElement("Email"))
-        XCTAssertNil(allFieldsForm.getPhoneNumberElement())
-        XCTAssertNil(allFieldsForm.getTextFieldElement("Address line 1"))
-        XCTAssertNil(allFieldsForm.getTextFieldElement("Address line 2"))
-        XCTAssertNil(allFieldsForm.getTextFieldElement("City"))
-        XCTAssertNil(allFieldsForm.getDropdownFieldElement("State"))
-        XCTAssertNil(allFieldsForm.getDropdownFieldElement("Country or region"))
-        XCTAssertNil(allFieldsForm.getTextFieldElement("ZIP"))
+        XCTAssertNotNil(getName(from: allFieldsForm))
+        XCTAssertNotNil(allFieldsForm.getTextFieldElement("Email"))
+        XCTAssertNotNil(allFieldsForm.getPhoneNumberElement())
+        XCTAssertNotNil(allFieldsForm.getTextFieldElement("Address line 1"))
+        XCTAssertNotNil(allFieldsForm.getTextFieldElement("Address line 2"))
+        XCTAssertNotNil(allFieldsForm.getTextFieldElement(addressSpec.cityNameType.localizedLabel))
+        // Some countries don't have states/provinces
+        if addressSpec.fieldOrdering.contains(.state) {
+            XCTAssertNotNil(getState(from: allFieldsForm))
+        }
+        XCTAssertNotNil(allFieldsForm.getDropdownFieldElement("Country or region"))
+        XCTAssertNotNil(allFieldsForm.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
+
+        // When set to .always and defaults are set, should use defaults
+//        var allFieldsConfig = PaymentSheet.Configuration()
+//        allFieldsConfig.billingDetailsCollectionConfiguration.name = .always
+//        allFieldsConfig.billingDetailsCollectionConfiguration.email = .always
+//        allFieldsConfig.billingDetailsCollectionConfiguration.phone = .always
+//        allFieldsConfig.billingDetailsCollectionConfiguration.address = .full
+//        let allFieldsForm = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), configuration: .paymentSheet(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+//        XCTAssertNotNil(getNameField(from: allFieldsForm))
+//        XCTAssertNotNil(allFieldsForm.getTextFieldElement("Email"))
+//        XCTAssertNotNil(allFieldsForm.getPhoneNumberElement())
+//        XCTAssertNotNil(allFieldsForm.getTextFieldElement("Address line 1"))
+//        XCTAssertNotNil(allFieldsForm.getTextFieldElement("Address line 2"))
+//        XCTAssertNotNil(allFieldsForm.getTextFieldElement("City"))
+//        XCTAssertNotNil(allFieldsForm.getDropdownFieldElement("State"))
+//        XCTAssertNotNil(allFieldsForm.getDropdownFieldElement("Country or region"))
+//        XCTAssertNotNil(allFieldsForm.getTextFieldElement("ZIP"))
     }
 }
 
