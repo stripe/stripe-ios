@@ -82,7 +82,6 @@ final class LinkAccountPickerViewController: UIViewController {
     }()
     private weak var bodyView: LinkAccountPickerBodyView?
     private weak var footerView: LinkAccountPickerFooterView?
-    private weak var lastAccountUpdateRequiredViewController: UIViewController?
 
     init(dataSource: LinkAccountPickerDataSource) {
         self.dataSource = dataSource
@@ -354,18 +353,28 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
         FeedbackGeneratorAdapter.selectionChanged()
 
         let selectedPartnerAccount = selectedAccountTuple.partnerAccount
+        let eligibleToPresentAccountUpdateRequiredDrawer: Bool = (
+            // repair flow
+            selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair
+                // supportability -- account requires re-sharing with additonal permissions
+                || selectedPartnerAccount.nextPaneOnSelection == .partnerAuth
+        )
 
         if let drawerOnSelection = selectedAccountTuple.accountPickerAccount.drawerOnSelection {
-            let genericInfoViewController = GenericInfoViewController(
-                genericInfoScreen: drawerOnSelection,
-                theme: dataSource.manifest.theme,
-                panePresentationStyle: .sheet,
-                didSelectPrimaryButton: { genericInfoViewController in
-                    genericInfoViewController.dismiss(animated: true)
-                },
-                didSelectURL: { _ in } // TODO(kgaidis): fix handling URL
-            )
-            genericInfoViewController.present(on: self)
+            if !eligibleToPresentAccountUpdateRequiredDrawer {
+                let genericInfoViewController = GenericInfoViewController(
+                    genericInfoScreen: drawerOnSelection,
+                    theme: dataSource.manifest.theme,
+                    panePresentationStyle: .sheet,
+                    didSelectPrimaryButton: { genericInfoViewController in
+                        genericInfoViewController.dismiss(animated: true)
+                    },
+                    didSelectURL: { _ in } // TODO(kgaidis): fix handling URL
+                )
+                genericInfoViewController.present(on: self)
+            } else {
+                // we will likely be presenting account update required drawer later in this function
+            }
 
             if !selectedAccountTuple.accountPickerAccount.allowSelection {
                 // if the account is not selectable, then we return early
@@ -424,108 +433,124 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
             // some values for nextPane require immediate action (ie. popping up a sheet for repair)
             // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
-            if
-                // repair flow
-                selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair
-                    // supportability -- account requires re-sharing with additonal permissions
-                    || selectedPartnerAccount.nextPaneOnSelection == .partnerAuth
-            {
-                if selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair {
-                    dataSource
-                        .analyticsClient
-                        .log(
-                            eventName: "click.repair_accounts",
-                            pane: .linkAccountPicker
-                        )
-                } else {
-                    dataSource
-                        .analyticsClient
-                        .log(
-                            eventName: "click.supportability_account",
-                            pane: .linkAccountPicker
-                        )
-                }
+            if  eligibleToPresentAccountUpdateRequiredDrawer {
+                if let drawerOnSelection = selectedAccountTuple.accountPickerAccount.drawerOnSelection {
+                    if selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair {
+                        dataSource
+                            .analyticsClient
+                            .log(
+                                eventName: "click.repair_accounts",
+                                pane: .linkAccountPicker
+                            )
+                    } else {
+                        dataSource
+                            .analyticsClient
+                            .log(
+                                eventName: "click.supportability_account",
+                                pane: .linkAccountPicker
+                            )
+                    }
 
-                let deselectPreviouslySelectedAccount = { [weak self] in
-                    guard let self = self else { return }
-                    self.dataSource.updateSelectedAccounts(
-                        self.dataSource.selectedAccounts.filter(
-                            { $0.partnerAccount.id != selectedPartnerAccount.id }
+                    let deselectPreviouslySelectedAccount = { [weak self] in
+                        guard let self = self else { return }
+                        self.dataSource.updateSelectedAccounts(
+                            self.dataSource.selectedAccounts.filter(
+                                { $0.partnerAccount.id != selectedPartnerAccount.id }
+                            )
                         )
-                    )
-                }
+                    }
 
-                var delayDeselectingAccounts = false
-                let willDismissSheet = {
-                    if delayDeselectingAccounts {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    var delayDeselectingAccounts = false
+                    let willDismissSheet = {
+                        if delayDeselectingAccounts {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                deselectPreviouslySelectedAccount()
+                            }
+                        } else {
                             deselectPreviouslySelectedAccount()
                         }
-                    } else {
-                        deselectPreviouslySelectedAccount()
                     }
-                }
 
-                let didSelectContinue: () -> Void = { [weak self] in
-                    guard let self else { return }
-                    if selectedPartnerAccount.nextPaneOnSelection == .partnerAuth {
-                        if let institution = selectedPartnerAccount.institution {
-                            self.delegate?.linkAccountPickerViewController(
-                                self,
-                                requestedPartnerAuthWithInstitution: institution
-                            )
-                        } else {
-                            self.delegate?.linkAccountPickerViewController(
+                    let didSelectContinue: () -> Void = { [weak self] in
+                        guard let self else { return }
+                        if selectedPartnerAccount.nextPaneOnSelection == .partnerAuth {
+                            if let institution = selectedPartnerAccount.institution {
+                                self.delegate?.linkAccountPickerViewController(
+                                    self,
+                                    requestedPartnerAuthWithInstitution: institution
+                                )
+                            } else {
+                                self.delegate?.linkAccountPickerViewController(
+                                    self,
+                                    didRequestNextPane: .institutionPicker
+                                )
+                            }
+                        }
+                        // nextPaneOnSelection == bankAuthRepair
+                        else {
+                            dataSource
+                                .analyticsClient
+                                .logUnexpectedError(
+                                    FinancialConnectionsSheetError
+                                        .unknown(
+                                            debugDescription: "Updating a repair account, but repairs are not supported in Mobile."
+                                        ),
+                                    errorName: "UpdateRepairAccountError",
+                                    pane: .linkAccountPicker
+                                )
+                            delegate?.linkAccountPickerViewController(
                                 self,
                                 didRequestNextPane: .institutionPicker
                             )
                         }
                     }
-                    // nextPaneOnSelection == bankAuthRepair
-                    else {
-                        dataSource
-                            .analyticsClient
-                            .logUnexpectedError(
-                                FinancialConnectionsSheetError
-                                    .unknown(
-                                        debugDescription: "Updating a repair account, but repairs are not supported in Mobile."
-                                    ),
-                                errorName: "UpdateRepairAccountError",
-                                pane: .linkAccountPicker
-                            )
-                        delegate?.linkAccountPickerViewController(
-                            self,
-                            didRequestNextPane: .institutionPicker
-                        )
-                    }
-                }
 
-                let accountUpdateRequiredViewController = AccountUpdateRequiredViewController(
-                    institution: selectedPartnerAccount.institution,
-                    theme: dataSource.manifest.theme,
-                    didSelectContinue: { [weak self] in
-                        guard let self else { return }
-                        // delay deselecting accounts while we animate to the
-                        // next screen to reduce "animation jank" of
-                        // the account getting deselected
-                        delayDeselectingAccounts = true
-                        self.lastAccountUpdateRequiredViewController?.dismiss(
-                            animated: true,
-                            completion: {
-                                didSelectContinue()
-                            }
+                    let genericInfoViewController = GenericInfoViewController(
+                        genericInfoScreen: drawerOnSelection,
+                        theme: dataSource.manifest.theme,
+                        panePresentationStyle: .sheet,
+                        iconView: {
+                            let institutionIconView = InstitutionIconView()
+                            institutionIconView.setImageUrl(selectedPartnerAccount.institution?.icon?.default)
+                            return institutionIconView
+                        }(),
+                        // "did select continue"
+                        didSelectPrimaryButton: { genericInfoViewController in
+                            // delay deselecting accounts while we animate to the
+                            // next screen to reduce "animation jank" of
+                            // the account getting deselected
+                            delayDeselectingAccounts = true
+                            genericInfoViewController.dismiss(
+                                animated: true,
+                                completion: {
+                                    didSelectContinue()
+                                }
+                            )
+                        },
+                        // "did select cancel"
+                        didSelectSecondaryButton: { genericInfoViewController in
+                            delayDeselectingAccounts = false
+                            genericInfoViewController.dismiss(
+                                animated: true
+                            )
+                        },
+                        didSelectURL: { _ in
+                            // TODO(kgaidis): fix handling URL
+                        },
+                        willDismissSheet: willDismissSheet
+                    )
+                    genericInfoViewController.present(on: self)
+                } else {
+                    dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            FinancialConnectionsSheetError.unknown(
+                                debugDescription: "User was eligible for AccountUpdateRequiredDrawer but backend didn't return drawerOnSelection"
+                            ),
+                            errorName: "CantPresentAccountUpdateRequiredDrawer",
+                            pane: .linkAccountPicker
                         )
-                    },
-                    didSelectCancel: { [weak self] in
-                        delayDeselectingAccounts = false
-                        self?.lastAccountUpdateRequiredViewController?.dismiss(
-                            animated: true
-                        )
-                    },
-                    willDismissSheet: willDismissSheet
-                )
-                lastAccountUpdateRequiredViewController = accountUpdateRequiredViewController
-                accountUpdateRequiredViewController.present(on: self)
+                }
             }
         }
     }

@@ -11,26 +11,28 @@ import UIKit
 func GenericInfoFooterView(
     footer: FinancialConnectionsGenericInfoScreen.Footer?,
     theme: FinancialConnectionsTheme,
-    didSelectPrimaryButton: @escaping () -> Void,
-    didSelectSecondaryButton: @escaping () -> Void,
+    didSelectPrimaryButton: (() -> Void)?,
+    didSelectSecondaryButton: (() -> Void)?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView? {
     guard let footer else {
         return nil
     }
     let primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
-    if let primaryCta = footer.primaryCta {
+    if let primaryCta = footer.primaryCta, let didSelectPrimaryButton {
         primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
             title: primaryCta.label,
+            accessibilityIdentifier: "generic_info_primary_button",
             action: didSelectPrimaryButton
         )
     } else {
         primaryButtonConfiguration = nil
     }
     let secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
-    if let secondaryCta = footer.secondaryCta {
+    if let secondaryCta = footer.secondaryCta, let didSelectSecondaryButton {
         secondaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
             title: secondaryCta.label,
+            accessibilityIdentifier: "generic_info_secondary_button",
             action: didSelectSecondaryButton
         )
     } else {
