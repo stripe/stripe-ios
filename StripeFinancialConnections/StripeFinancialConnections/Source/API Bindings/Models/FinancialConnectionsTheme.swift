@@ -102,6 +102,15 @@ extension FinancialConnectionsTheme {
             return .brand500
         }
     }
+
+    var borderColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen200
+        case .light:
+            return .brand600
+        }
+    }
 }
 
 extension FinancialConnectionsTheme? {
