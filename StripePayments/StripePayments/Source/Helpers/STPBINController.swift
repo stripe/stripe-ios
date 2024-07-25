@@ -145,7 +145,7 @@ extension STPBINRange {
 
 @_spi(STP) public class STPBINController {
     @_spi(STP) public static let shared = STPBINController()
-    
+
     /// For testing
     @_spi(STP) public func reset() {
         _performSync {
@@ -395,7 +395,7 @@ extension STPBINRange {
     var sAllRanges: [STPBINRange] = {
         return STPBINRangeInitialRanges
     }()
-    
+
     let sAllRangesLockQueue: DispatchQueue = {
         DispatchQueue(label: "com.stripe.STPBINRange.allRanges")
     }()
