@@ -26,6 +26,7 @@ protocol RoundedTextFieldDelegate: AnyObject {
 final class RoundedTextField: UIView {
 
     private let showDoneToolbar: Bool
+    private let theme: FinancialConnectionsTheme
 
     // Used to optionally add an error message
     // at the bottom of the text field
@@ -100,7 +101,7 @@ final class RoundedTextField: UIView {
         var theme: ElementsUITheme = .default
         theme.colors = {
             var colors = ElementsUITheme.Color()
-            colors.primary = .brand500
+            colors.primary = self.theme.primaryColor
             colors.secondaryText = .textSubdued
             return colors
         }()
@@ -135,9 +136,11 @@ final class RoundedTextField: UIView {
     init(
         placeholder: String,
         footerText: String? = nil,
-        showDoneToolbar: Bool = false
+        showDoneToolbar: Bool = false,
+        theme: FinancialConnectionsTheme
     ) {
         self.showDoneToolbar = showDoneToolbar
+        self.theme = theme
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
         textField.placeholder = placeholder
@@ -194,7 +197,7 @@ final class RoundedTextField: UIView {
             containerHorizontalStackView.layer.borderWidth = 2.0
         } else {
             if highlighted {
-                containerHorizontalStackView.layer.borderColor = UIColor.textActionPrimaryFocused.cgColor
+                containerHorizontalStackView.layer.borderColor = theme.textFieldFocusedColor.cgColor
                 containerHorizontalStackView.layer.borderWidth = 2.0
             } else {
                 containerHorizontalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
@@ -655,15 +658,22 @@ private struct RoundedTextFieldUIViewRepresentable: UIViewRepresentable {
     let placeholder: String
     let footerText: String?
     let errorText: String?
+    let isFocused: Bool
+    let theme: FinancialConnectionsTheme
 
     func makeUIView(context: Context) -> RoundedTextField {
         RoundedTextField(
             placeholder: placeholder,
-            footerText: footerText
+            footerText: footerText,
+            theme: theme
         )
     }
 
     func updateUIView(_ uiView: RoundedTextField, context: Context) {
+        if isFocused {
+            _ = uiView.becomeFirstResponder()
+        }
+
         uiView.errorText = errorText
     }
 }
@@ -675,37 +685,70 @@ struct RoundedTextField_Previews: PreviewProvider {
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Routing number",
                     footerText: nil,
-                    errorText: nil
+                    errorText: nil,
+                    isFocused: false,
+                    theme: .light
                 )
                 .frame(height: 56)
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Account number",
                     footerText: "Your account can be checkings or savings.",
-                    errorText: nil
+                    errorText: nil,
+                    isFocused: false,
+                    theme: .light
                 )
                 .frame(height: 80)
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Confirm account number",
                     footerText: nil,
-                    errorText: nil
+                    errorText: nil,
+                    isFocused: false,
+                    theme: .light
                 )
                 .frame(height: 56)
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Routing number",
                     footerText: nil,
-                    errorText: "Routing number is required."
+                    errorText: "Routing number is required.",
+                    isFocused: false,
+                    theme: .light
                 )
                 .frame(height: 80)
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Account number",
                     footerText: "Your account can be checkings or savings.",
-                    errorText: "Account number is required."
+                    errorText: "Account number is required.",
+                    isFocused: false,
+                    theme: .light
                 )
                 .frame(height: 80)
                 Spacer()
             }
             .padding()
             .background(Color(UIColor.customBackgroundColor))
+
+            // Use separate devices to showcase highlighted state
+            RoundedTextFieldUIViewRepresentable(
+                placeholder: "Light theme",
+                footerText: nil,
+                errorText: nil,
+                isFocused: true,
+                theme: .light
+            )
+            .frame(height: 56)
+            .padding()
+            .previewDisplayName("Focused - Light theme")
+
+            RoundedTextFieldUIViewRepresentable(
+                placeholder: "Link Light theme",
+                footerText: nil,
+                errorText: nil,
+                isFocused: true,
+                theme: .linkLight
+            )
+            .frame(height: 56)
+            .padding()
+            .previewDisplayName("Focused - Link Light theme")
         }
     }
 }

@@ -12,7 +12,6 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -22,8 +21,7 @@ import SafariServices
 /// They can also test the presence/absence of particular fields for a payment method form e.g. the SEPA test asserts that there's a mandate element.
 /// 👀  See `testIdealConfirmFlows` for an example with comments.
 @MainActor
-final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
-
+final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
@@ -67,6 +65,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 
     override func setUp() async throws {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
+        // Don't follow redirects for this specific tests, as we want to record
+        // the body of the redirect request for UnredirectableSessionDelegate.
+        self.followRedirects = false
     }
 
     /// 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
@@ -86,8 +87,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.
         // e.g. iDEAL should show an email field and mandate for PI+SFU and SIs, so we test those separately here:
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .stripe(.iDEAL)) { form in
-            form.getTextFieldElement("Full name")?.setText("Foo")
-            form.getTextFieldElement("Email")?.setText("f@z.c")
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("f@z.c")
             XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
             XCTAssertNotNil(form.getMandateElement())
         }
@@ -379,6 +380,71 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     }
 }
 
+// MARK: - Billing detail configuration tests
+extension PaymentSheet_LPM_ConfirmFlowTests {
+    func testCard_OnlyCardInfo_WithDefaults() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.name = .never
+
+        try await _testConfirm(
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+            currency: "USD",
+            paymentMethodType: .stripe(.card),
+            configuration: configuration
+        ) { form in
+            form.getCardSection().panElement.setText("4242424242424242")
+            form.getCardSection().expiryElement.setText("1228")
+            form.getCardSection().cvcElement.setText("123")
+            // No ZIP or country fields
+            XCTAssertNil(form.getTextFieldElement("ZIP"))
+            XCTAssertNil(form.getDropdownFieldElement("Country or region"))
+        }
+    }
+
+    func testCard_AllFields_WithDefaults() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "(310) 555-1234"
+        configuration.defaultBillingDetails.address.line1 = "123 Main Street"
+        configuration.defaultBillingDetails.address.line2 = "line 2"
+        configuration.defaultBillingDetails.address.city = "San Francisco"
+        configuration.defaultBillingDetails.address.state = "California"
+        configuration.defaultBillingDetails.address.country = "US"
+        configuration.defaultBillingDetails.address.postalCode = "12345"
+
+        try await _testConfirm(
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+            currency: "USD",
+            paymentMethodType: .stripe(.card),
+            configuration: configuration
+        ) { form in
+            form.getCardSection().panElement.setText("4242424242424242")
+            form.getCardSection().expiryElement.setText("1228")
+            form.getCardSection().cvcElement.setText("123")
+
+            // Check billing details
+            XCTAssertEqual(form.getTextFieldElement("Name on card").text, "Jane Doe")
+            XCTAssertEqual(form.getPhoneNumberElement().phoneNumber, .fromE164("+13105551234"))
+            XCTAssertEqual(form.getTextFieldElement("Email").text, "foo@bar.com")
+            XCTAssertEqual(form.getTextFieldElement("Address line 1").text, "123 Main Street")
+            XCTAssertEqual(form.getTextFieldElement("Address line 2").text, "line 2")
+            XCTAssertEqual(form.getTextFieldElement("City").text, "San Francisco")
+            XCTAssertEqual(form.getDropdownFieldElement("State").rawData, "CA")
+            XCTAssertEqual(form.getDropdownFieldElement("Country or region").rawData, "US")
+            XCTAssertEqual(form.getTextFieldElement("ZIP").text, "12345")
+        }
+    }
+}
+
 // MARK: - Helper methods
 extension PaymentSheet_LPM_ConfirmFlowTests {
     enum IntentKind: CaseIterable {
@@ -387,13 +453,23 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         case setupIntent
     }
 
-    func _testConfirm(intentKinds: [IntentKind], currency: String, paymentMethodType: PaymentSheet.PaymentMethodType, merchantCountry: MerchantCountry = .US, formCompleter: (PaymentMethodElement) -> Void) async throws {
+    func _testConfirm(
+        intentKinds: [IntentKind],
+        currency: String,
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        merchantCountry: MerchantCountry = .US,
+        configuration: PaymentSheet.Configuration? = nil,
+        formCompleter: (PaymentMethodElement) -> Void
+    ) async throws {
         for intentKind in intentKinds {
-            try await _testConfirm(intentKind: intentKind,
-                                   currency: currency,
-                                   paymentMethodType: paymentMethodType,
-                                   merchantCountry: merchantCountry,
-                                   formCompleter: formCompleter)
+            try await _testConfirm(
+                intentKind: intentKind,
+                currency: currency,
+                paymentMethodType: paymentMethodType,
+                merchantCountry: merchantCountry,
+                configuration: configuration,
+                formCompleter: formCompleter
+            )
         }
     }
 
@@ -407,25 +483,33 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     /// - Parameter paymentMethodType: The payment method type you're testing
     /// - Parameter formCompleter: A closure that takes the form for your payment method. Your implementaiton should fill in the form's textfields etc. You can also perform additional checks e.g. to ensure certain fields are shown/hidden.
     @MainActor
-    func _testConfirm(intentKind: IntentKind,
-                      currency: String,
-                      paymentMethodType: PaymentSheet.PaymentMethodType,
-                      merchantCountry: MerchantCountry = .US,
-                      formCompleter: (PaymentMethodElement) -> Void) async throws {
+    func _testConfirm(
+        intentKind: IntentKind,
+        currency: String,
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        merchantCountry: MerchantCountry = .US,
+        configuration: PaymentSheet.Configuration? = nil,
+        formCompleter: (PaymentMethodElement) -> Void
+    ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
         let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _, _ in })
         _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let configuration: PaymentSheet.Configuration = {
+
+        var configuration: PaymentSheet.Configuration = {
+            // Use argument if non-nil, otherwise create a default
+            if let configuration {
+                return configuration
+            }
             var config = PaymentSheet.Configuration()
-            config.apiClient = apiClient
             config.allowsDelayedPaymentMethods = true
             config.returnURL = "https://foo.com"
             config.allowsPaymentMethodsRequiringShippingAddress = true
             return config
         }()
+        configuration.apiClient = apiClient
 
         let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, apiClient: apiClient)
 

@@ -8,9 +8,10 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPBankAccountFunctionalTest: XCTestCase {
+class STPBankAccountFunctionalTest: STPNetworkStubbingTestCase {
     func testCreateAndRetreiveBankAccountToken() {
         let bankAccount = STPBankAccountParams()
         bankAccount.accountNumber = "000123456789"

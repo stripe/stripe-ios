@@ -43,7 +43,8 @@ final class SuccessViewController: UIViewController {
                 // manual entry has "0" linked accounts count
                 isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
                 showSaveToLinkFailedNotice: showSaveToLinkFailedNotice
-            )
+            ),
+            theme: dataSource.manifest.theme
         )
         contentView.addSubview(bodyView)
 
@@ -112,7 +113,7 @@ final class SuccessViewController: UIViewController {
     }
 }
 
-private func CreateBodyView(subtitle: String?) -> UIView {
+private func CreateBodyView(subtitle: String?, theme: FinancialConnectionsTheme) -> UIView {
     let titleLabel = AttributedLabel(
         font: .heading(.extraLarge),
         textColor: .textDefault
@@ -144,7 +145,7 @@ private func CreateBodyView(subtitle: String?) -> UIView {
 
     let bodyVerticalStackView = UIStackView(
         arrangedSubviews: [
-            CreateIconView(),
+            CreateIconView(theme: theme),
             labelVerticalStackView,
         ]
     )
@@ -167,9 +168,9 @@ private func CreateBodyView(subtitle: String?) -> UIView {
     return bodyVerticalStackView
 }
 
-private func CreateIconView() -> UIView {
+private func CreateIconView(theme: FinancialConnectionsTheme) -> UIView {
     let iconContainerView = UIView()
-    iconContainerView.backgroundColor = .iconActionPrimary
+    iconContainerView.backgroundColor = theme.primaryColor
     let iconRadius: CGFloat = 56
     iconContainerView.layer.cornerRadius = iconRadius/2
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -179,7 +180,7 @@ private func CreateIconView() -> UIView {
     ])
 
     let iconImageView = UIImageView()
-    iconImageView.image = Image.check.makeImage().withTintColor(.white)
+    iconImageView.image = Image.check.makeImage().withTintColor(theme.primaryAccentColor)
     iconContainerView.addSubview(iconImageView)
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([

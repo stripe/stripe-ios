@@ -25,7 +25,10 @@ final class ManualEntryViewController: UIViewController {
     weak var delegate: ManualEntryViewControllerDelegate?
 
     private lazy var manualEntryFormView: ManualEntryFormView = {
-        let manualEntryFormView = ManualEntryFormView(isTestMode: dataSource.manifest.isTestMode)
+        let manualEntryFormView = ManualEntryFormView(
+            isTestMode: dataSource.manifest.isTestMode,
+            theme: dataSource.manifest.theme
+        )
         manualEntryFormView.delegate = self
         return manualEntryFormView
     }()

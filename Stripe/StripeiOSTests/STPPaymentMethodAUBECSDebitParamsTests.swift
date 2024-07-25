@@ -8,8 +8,9 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodAUBECSDebitParamsTests: XCTestCase {
+class STPPaymentMethodAUBECSDebitParamsTests: STPNetworkStubbingTestCase {
     func testCreateAUBECSPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingAUPublishableKey)
         let becsParams = STPPaymentMethodAUBECSDebitParams()

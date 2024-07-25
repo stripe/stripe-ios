@@ -11,6 +11,8 @@ import UIKit
 
 class LoadingView: UIView {
 
+    private let theme: FinancialConnectionsTheme?
+
     // MARK: - Subview Properties
 
     private lazy var errorLabel: UILabel = {
@@ -44,11 +46,14 @@ class LoadingView: UIView {
         return stackView
     }()
 
-    private let spinnerView = SpinnerView(shouldStartAnimating: false)
+    private lazy var spinnerView = {
+        SpinnerView(theme: theme, shouldStartAnimating: false)
+    }()
 
     // MARK: - Init
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, theme: FinancialConnectionsTheme?) {
+        self.theme = theme
         super.init(frame: frame)
 
         errorView.addArrangedSubview(errorLabel)

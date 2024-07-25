@@ -731,8 +731,7 @@ public class STPPaymentHandler: NSObject {
             .promptPay,
             .swish,
             .twint,
-            .multibanco,
-            .instantDebits:
+            .multibanco:
             return false
 
         case .unknown:

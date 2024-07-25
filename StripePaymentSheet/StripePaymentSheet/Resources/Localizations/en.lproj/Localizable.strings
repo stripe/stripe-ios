@@ -34,6 +34,9 @@
 /* Text for back button */
 "Back" = "Back";
 
+/* A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card. */
+"Bank" = "Bank";
+
 /* Title for collected bank account information */
 "Bank account" = "Bank account";
 

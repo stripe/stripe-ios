@@ -269,6 +269,7 @@ final class AccountPickerViewController: UIViewController {
             enabledAccounts: enabledAccounts,
             disabledAccounts: disabledAccounts,
             institution: dataSource.institution,
+            theme: dataSource.manifest.theme,
             delegate: self
         )
         self.accountPickerSelectionView = accountPickerSelectionView

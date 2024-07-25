@@ -40,12 +40,21 @@ extension FinancialConnectionsTheme {
         }
     }
 
-    var primaryButtonTextColor: UIColor {
+    var primaryAccentColor: UIColor {
         switch self {
         case .linkLight:
             return .linkGreen900
         case .light:
             return .white
+        }
+    }
+
+    var textFieldFocusedColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen200
+        case .light:
+            return .brand600
         }
     }
 
@@ -55,6 +64,62 @@ extension FinancialConnectionsTheme {
             return .linkGreen900
         case .light:
             return .textActionPrimary
+        }
+    }
+
+    var iconTintColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen500
+        case .light:
+            return .iconActionPrimary
+        }
+    }
+
+    var iconBackgroundColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen50
+        case .light:
+            return .brand25
+        }
+    }
+
+    var textActionColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen500
+        case .light:
+            return .brand600
+        }
+    }
+
+    var spinnerColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen200
+        case .light:
+            return .brand500
+        }
+    }
+
+    var borderColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen200
+        case .light:
+            return .brand600
+        }
+    }
+}
+
+extension FinancialConnectionsTheme? {
+    var spinnerColor: UIColor {
+        switch self {
+        case .some(let theme):
+            return theme.spinnerColor
+        case .none:
+            return .neutral200
         }
     }
 }

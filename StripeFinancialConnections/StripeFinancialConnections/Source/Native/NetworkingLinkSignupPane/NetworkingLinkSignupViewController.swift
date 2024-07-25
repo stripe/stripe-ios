@@ -34,11 +34,12 @@ final class NetworkingLinkSignupViewController: UIViewController {
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var loadingView: SpinnerView = {
-        return SpinnerView()
+        return SpinnerView(theme: dataSource.manifest.theme)
     }()
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
         let formView = NetworkingLinkSignupBodyFormView(
-            accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber
+            accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber,
+            theme: dataSource.manifest.theme
         )
         formView.delegate = self
         return formView

@@ -23,6 +23,7 @@ protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
 final class NetworkingLinkSignupBodyFormView: UIView {
 
     private let accountholderPhoneNumber: String?
+    private let theme: FinancialConnectionsTheme
     weak var delegate: NetworkingLinkSignupBodyFormViewDelegate?
 
     private lazy var verticalStackView: UIStackView = {
@@ -34,19 +35,20 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         return verticalStackView
     }()
     private(set) lazy var emailTextField: EmailTextField = {
-       let emailTextField = EmailTextField()
+       let emailTextField = EmailTextField(theme: theme)
         emailTextField.delegate = self
         return emailTextField
     }()
     private(set) lazy var phoneTextField: PhoneTextField = {
-       let phoneTextField = PhoneTextField(defaultPhoneNumber: accountholderPhoneNumber)
+       let phoneTextField = PhoneTextField(defaultPhoneNumber: accountholderPhoneNumber, theme: theme)
         phoneTextField.delegate = self
         return phoneTextField
     }()
     private var debounceEmailTimer: Timer?
     private var lastValidEmail: String?
 
-    init(accountholderPhoneNumber: String?) {
+    init(accountholderPhoneNumber: String?, theme: FinancialConnectionsTheme) {
+        self.theme = theme
         self.accountholderPhoneNumber = accountholderPhoneNumber
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
@@ -160,7 +162,7 @@ import SwiftUI
 private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingLinkSignupBodyFormView {
-        NetworkingLinkSignupBodyFormView(accountholderPhoneNumber: nil)
+        NetworkingLinkSignupBodyFormView(accountholderPhoneNumber: nil, theme: .light)
     }
 
     func updateUIView(_ uiView: NetworkingLinkSignupBodyFormView, context: Context) {}
