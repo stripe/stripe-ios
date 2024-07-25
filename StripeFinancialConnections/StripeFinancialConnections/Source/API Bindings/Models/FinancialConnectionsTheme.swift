@@ -93,4 +93,24 @@ extension FinancialConnectionsTheme {
             return .brand600
         }
     }
+
+    var spinnerColor: UIColor {
+        switch self {
+        case .linkLight:
+            return .linkGreen200
+        case .light:
+            return .brand500
+        }
+    }
+}
+
+extension FinancialConnectionsTheme? {
+    var spinnerColor: UIColor {
+        switch self {
+        case .some(let theme):
+            return theme.spinnerColor
+        case .none:
+            return .neutral200
+        }
+    }
 }

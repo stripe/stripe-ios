@@ -81,7 +81,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
     }
 
     private func attachLinkedAccountIdToLinkAccountSession() {
-        let loadingView = SpinnerView()
+        let loadingView = SpinnerView(theme: dataSource.manifest.theme)
         view.addAndPinSubviewToSafeArea(loadingView)
 
         let pollingStartDate = Date()

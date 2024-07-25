@@ -189,7 +189,7 @@ final class PartnerAuthViewController: SheetViewController {
         // note that this is purposefully separate from `showLoadingView`
         // function because it avoids animation glitches where
         // `showLoadingView(false)` can remove the loading view
-        let loadingView = SpinnerView()
+        let loadingView = SpinnerView(theme: dataSource.manifest.theme)
         self.legacyLoadingView = loadingView
         view.addAndPinSubviewToSafeArea(loadingView)
     }
@@ -534,7 +534,7 @@ final class PartnerAuthViewController: SheetViewController {
             continueStateViews?.showLoadingView(show)
         } else {
             if show {
-                let loadingView = SpinnerView()
+                let loadingView = SpinnerView(theme: dataSource.manifest.theme)
                 self.loadingView = loadingView
                 view.addAndPinSubviewToSafeArea(loadingView)
             }

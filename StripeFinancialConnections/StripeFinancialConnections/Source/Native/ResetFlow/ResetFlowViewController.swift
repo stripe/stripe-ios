@@ -48,7 +48,7 @@ final class ResetFlowViewController: UIViewController {
             .analyticsClient
             .logPaneLoaded(pane: .resetFlow)
 
-        let loadingView = SpinnerView()
+        let loadingView = SpinnerView(theme: dataSource.manifest.theme)
         view.addAndPinSubviewToSafeArea(loadingView)
 
         dataSource.markLinkingMoreAccounts()
