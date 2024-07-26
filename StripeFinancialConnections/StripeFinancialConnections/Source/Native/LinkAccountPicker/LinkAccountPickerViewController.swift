@@ -211,12 +211,7 @@ final class LinkAccountPickerViewController: UIViewController {
                         theme: dataSource.manifest.theme,
                         didSelectUrl: { [weak self] url in
                             guard let self = self else { return }
-                            AuthFlowHelpers.handleURLInTextFromBackend(
-                                url: url,
-                                pane: .linkAccountPicker,
-                                analyticsClient: self.dataSource.analyticsClient,
-                                handleURL: { _, _ in }
-                            )
+                            self.didSelectURLInTextFromBackend(url)
                         }
                     )
                     dataAccessNoticeViewController.present(on: self)
@@ -362,6 +357,15 @@ final class LinkAccountPickerViewController: UIViewController {
             }
         }
     }
+
+    private func didSelectURLInTextFromBackend(_ url: URL) {
+        AuthFlowHelpers.handleURLInTextFromBackend(
+            url: url,
+            pane: .linkAccountPicker,
+            analyticsClient: self.dataSource.analyticsClient,
+            handleURL: { _, _ in }
+        )
+    }
 }
 
 // MARK: - LinkAccountPickerBodyViewDelegate
@@ -390,7 +394,10 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                     didSelectPrimaryButton: { genericInfoViewController in
                         genericInfoViewController.dismiss(animated: true)
                     },
-                    didSelectURL: { _ in } // TODO(kgaidis): fix handling URL
+                    didSelectURL: { [weak self] url in
+                        guard let self = self else { return }
+                        self.didSelectURLInTextFromBackend(url)
+                    }
                 )
                 genericInfoViewController.present(on: self)
             } else {
@@ -560,8 +567,9 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                                 animated: true
                             )
                         },
-                        didSelectURL: { _ in
-                            // TODO(kgaidis): fix handling URL
+                        didSelectURL: { [weak self] url in
+                            guard let self = self else { return }
+                            self.didSelectURLInTextFromBackend(url)
                         },
                         willDismissSheet: willDismissSheet
                     )
