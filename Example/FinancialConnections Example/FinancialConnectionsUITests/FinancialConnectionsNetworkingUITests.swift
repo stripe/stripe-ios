@@ -260,8 +260,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeBankAccount(name: bankAccountName).tap()
 
-        let accountUpdateRequiredContinueButton = app.buttons["account_update_required_continue_button"]
-        XCTAssertTrue(accountUpdateRequiredContinueButton.waitForExistence(timeout: 1))
+        let accountUpdateRequiredContinueButton = app.buttons["generic_info_primary_button"]
+        XCTAssertTrue(accountUpdateRequiredContinueButton.waitForExistence(timeout: 10))
         accountUpdateRequiredContinueButton.tap()
 
         app.fc_nativeConnectAccountsButton.tap()
