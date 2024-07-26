@@ -510,9 +510,13 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                         theme: dataSource.manifest.theme,
                         panePresentationStyle: .sheet,
                         iconView: {
-                            let institutionIconView = InstitutionIconView()
-                            institutionIconView.setImageUrl(selectedPartnerAccount.institution?.icon?.default)
-                            return institutionIconView
+                            if let institutionIconUrl = selectedPartnerAccount.institution?.icon?.default {
+                                let institutionIconView = InstitutionIconView()
+                                institutionIconView.setImageUrl(institutionIconUrl)
+                                return institutionIconView
+                            } else {
+                                return nil
+                            }
                         }(),
                         // "did select continue"
                         didSelectPrimaryButton: { genericInfoViewController in
