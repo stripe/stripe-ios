@@ -79,18 +79,6 @@ public extension Element {
     func presentViewController(viewController: UIViewController, completion: (() -> Void)?)
 }
 
-extension Element {
-    /// A poorly named convenience method that returns all Elements underneath this Element, including this Element.
-    public func getAllSubElements() -> [Element] {
-        switch self {
-        case let container as ContainerElement:
-            return [container] + container.elements.flatMap { $0.getAllSubElements() }
-        default:
-            return [self]
-        }
-    }
-}
-
 @_spi(STP) @frozen public enum ElementValidationState {
     case valid
     case invalid(error: ElementValidationError, shouldDisplay: Bool)

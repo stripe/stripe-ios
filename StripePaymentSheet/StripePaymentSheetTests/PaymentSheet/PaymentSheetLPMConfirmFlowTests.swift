@@ -11,7 +11,7 @@ import XCTest
 import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -70,63 +70,43 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         self.followRedirects = false
     }
 
-    /// 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
-    func testiDEALConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
-            // Fill out your payment method form in here.
-            // Note: Each required field you fill out implicitly tests that the field exists; if the field doesn't exist, the test will fail because the form is incomplete.
-            form.getTextFieldElement("Full name")?.setText("Foo")
-            XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
-            // You can also explicitly assert for the existence/absence of certain elements.
-            // e.g. iDEAL shouldn't show a mandate or email field for a vanilla payment
-            XCTAssertNil(form.getMandateElement())
-            XCTAssertNil(form.getTextFieldElement("Email"))
-            // Tip: To help you debug, run `po form` in the debug console or `call debugPrint(form)`
-        }
-
-        // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.
-        // e.g. iDEAL should show an email field and mandate for PI+SFU and SIs, so we test those separately here:
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
-            form.getTextFieldElement("Full name").setText("Foo")
-            form.getTextFieldElement("Email").setText("f@z.c")
-            XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
-            XCTAssertNotNil(form.getMandateElement())
-        }
-    }
-
     func testSEPADebitConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit) { form in
-            form.getTextFieldElement("Full name")?.setText("Foo")
-            form.getTextFieldElement("Email")?.setText("f@z.c")
-            form.getTextFieldElement("IBAN")?.setText("DE89370400440532013000")
-            form.getTextFieldElement("Address line 1")?.setText("asdf")
-            form.getTextFieldElement("City")?.setText("asdf")
-            form.getTextFieldElement("ZIP")?.setText("12345")
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("f@z.c")
+            form.getTextFieldElement("IBAN").setText("DE89370400440532013000")
+            form.getTextFieldElement("Address line 1").setText("asdf")
+            form.getTextFieldElement("City").setText("asdf")
+            form.getTextFieldElement("ZIP").setText("12345")
             XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 17)
         }
     }
 
     func testAUBecsDebitConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "AUD", paymentMethodType: .AUBECSDebit, merchantCountry: .AU) { form in
-            form.getTextFieldElement("Name on account")?.setText("Tester McTesterface")
-            form.getTextFieldElement("Email")?.setText("example@link.com")
-            form.getTextFieldElement("BSB number")?.setText("000000")
-            form.getTextFieldElement("Account number")?.setText("000123456")
+            form.getTextFieldElement("Name on account").setText("Tester McTesterface")
+            form.getTextFieldElement("Email").setText("example@link.com")
+            form.getTextFieldElement("BSB number").setText("000000")
+            form.getTextFieldElement("Account number").setText("000123456")
             XCTAssertNotNil(form.getAUBECSMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 10)
         }
     }
 
     func testBancontactConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .bancontact) { form in
-            form.getTextFieldElement("Full name")?.setText("Foo")
+            form.getTextFieldElement("Full name").setText("Foo")
             XCTAssertNil(form.getMandateElement())
             XCTAssertNil(form.getTextFieldElement("Email"))
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
 
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .bancontact) { form in
-            form.getTextFieldElement("Full name")?.setText("Foo")
-            form.getTextFieldElement("Email")?.setText("f@z.c")
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("f@z.c")
             XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
         }
     }
 
@@ -136,22 +116,25 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             XCTAssertNil(form.getTextFieldElement("Full name"))
             XCTAssertNil(form.getTextFieldElement("Email"))
             XCTAssertNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
 
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .sofort, defaultCountry: "AT") { form in
             XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
-            form.getTextFieldElement("Full name")?.setText("Foo")
-            form.getTextFieldElement("Email")?.setText("f@z.c")
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("f@z.c")
             XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
         }
     }
 
     func testGrabPayConfirmFlows() async throws {
-        // GrabPay has no input fields
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "SGD",
                                paymentMethodType: .grabPay,
-                               merchantCountry: .SG) { _ in
+                               merchantCountry: .SG) { form in
+            // GrabPay has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
 
@@ -161,12 +144,14 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .FPX,
                                merchantCountry: .MY) { form in
             XCTAssertNotNil(form.getDropdownFieldElement("FPX Bank"))
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
     }
 
     func testBLIKConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "PLN", paymentMethodType: .blik, merchantCountry: .BE) { form in
-            form.getTextFieldElement("BLIK code")?.setText("123456")
+            form.getTextFieldElement("BLIK code").setText("123456")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
     }
 
@@ -192,7 +177,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .amazonPay,
                                merchantCountry: .US) { form in
             // AmazonPay has no input fields
-            XCTAssertEqual(form.getAllSubElements().count, 1)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
 
@@ -202,7 +187,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .alma,
                                merchantCountry: .FR) { form in
             // Alma has no input fields
-            XCTAssertEqual(form.getAllSubElements().count, 1)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
 
@@ -212,7 +197,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .alipay,
                                merchantCountry: .US) { form in
             // Alipay has no input fields
-            XCTAssertEqual(form.getAllSubElements().count, 1)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
 
@@ -221,8 +206,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "MXN",
                                paymentMethodType: .OXXO,
                                merchantCountry: .MX) { form in
-            form.getTextFieldElement("Full name")?.setText("Jane Doe")
-            form.getTextFieldElement("Email")?.setText("foo@bar.com")
+            form.getTextFieldElement("Full name").setText("Jane Doe")
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 4)
         }
     }
 
@@ -231,8 +217,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "JPY",
                                paymentMethodType: .konbini,
                                merchantCountry: .JP) { form in
-            form.getTextFieldElement("Full name")?.setText("Jane Doe")
-            form.getTextFieldElement("Email")?.setText("foo@bar.com")
+            form.getTextFieldElement("Full name").setText("Jane Doe")
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 6)
         }
     }
 
@@ -242,7 +229,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .paynow,
                                merchantCountry: .SG) { form in
             // PayNow has no input fields
-            XCTAssertEqual(form.getAllSubElements().count, 1)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
 
@@ -254,13 +241,14 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             merchantCountry: .BR,
             defaultCountry: "BR"
         ) { form in
-            form.getTextFieldElement("Full name")?.setText("Jane Doe")
-            form.getTextFieldElement("Email")?.setText("foo@bar.com")
-            form.getTextFieldElement("CPF/CPNJ")?.setText("00000000000")
-            form.getTextFieldElement("Address line 1")?.setText("123 fake st")
-            form.getTextFieldElement("City")?.setText("City")
-            form.getTextFieldElement("State")?.setText("AC")  // Valid Brazilian state code
-            form.getTextFieldElement("Postal code")?.setText("11111111")
+            form.getTextFieldElement("Full name").setText("Jane Doe")
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+            form.getTextFieldElement("CPF/CPNJ").setText("00000000000")
+            form.getTextFieldElement("Address line 1").setText("123 fake st")
+            form.getTextFieldElement("City").setText("City")
+            form.getTextFieldElement("State").setText("AC")  // Valid Brazilian state code
+            form.getTextFieldElement("Postal code").setText("11111111")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 15)
         }
     }
 
@@ -269,7 +257,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "THB",
                                paymentMethodType: .promptPay,
                                merchantCountry: .TH) { form in
-            form.getTextFieldElement("Email")?.setText("foo@bar.com")
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
     }
 
@@ -281,7 +270,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             merchantCountry: .FR
         ) { form in
             // Swish has no input fields
-            XCTAssertEqual(form.getAllSubElements().count, 1)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
 
@@ -293,7 +282,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             merchantCountry: .FR
         ) { form in
             // MobilePay has no input fields
-            XCTAssertEqual(form.getAllSubElements().count, 1)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
 
@@ -303,7 +292,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .twint,
                                merchantCountry: .GB) { form in
             // Twint has no input fields
-            XCTAssertEqual(form.getAllSubElements().count, 1)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
 
@@ -358,12 +347,14 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                    currency: "USD",
                                    paymentMethodType: .klarna,
                                    merchantCountry: .US) { form in
-                form.getTextFieldElement("Email")?.setText("foo@bar.com")
+                form.getTextFieldElement("Email").setText("foo@bar.com")
                 switch intentKind {
                 case .paymentIntent:
                     XCTAssertNil(form.getMandateElement())
+                    XCTAssertEqual(form.getAllUnwrappedSubElements().count, 6)
                 case .paymentIntentWithSetupFutureUsage, .setupIntent:
                     XCTAssertNotNil(form.getMandateElement())
+                    XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
                 }
             }
         }
@@ -374,7 +365,36 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "EUR",
                                paymentMethodType: .multibanco,
                                merchantCountry: .US) { form in
-            form.getTextFieldElement("Email")?.setText("foo@bar.com")
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
+        }
+    }
+
+    // MARK: Add tests above this line
+    // MARK: - 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
+    func testiDEALConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
+            // Fill out your payment method form in here.
+            // Note: Each required field you fill out implicitly tests that the field exists; if the field doesn't exist, the test will fail because the form is incomplete.
+            form.getTextFieldElement("Full name").setText("Foo")
+            XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
+            // You can also explicitly assert for the existence/absence of certain elements.
+            // e.g. iDEAL shouldn't show a mandate or email field for a vanilla payment
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNil(form.getTextFieldElement("Email"))
+            // Asserting the total number of elements prevents accidentally adding more elements to this form
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
+            // Tip: To help you debug, run `po form` in the debug console or `call debugPrint(form)`
+        }
+
+        // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.
+        // e.g. iDEAL should show an email field and mandate for PI+SFU and SIs, so we test those separately here:
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("f@z.c")
+            XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
+            XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
         }
     }
 }
