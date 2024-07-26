@@ -26,6 +26,7 @@ class IntentConfirmParams {
 
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
+    /// ⚠️ Usage of this is *not compatible* with server-side confirmation!
     let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
     /// True if the customer opts to save their payment method for future payments.

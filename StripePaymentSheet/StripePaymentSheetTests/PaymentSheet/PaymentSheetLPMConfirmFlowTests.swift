@@ -81,7 +81,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             // e.g. iDEAL shouldn't show a mandate or email field for a vanilla payment
             XCTAssertNil(form.getMandateElement())
             XCTAssertNil(form.getTextFieldElement("Email"))
-            // Tip: To help you debug, print out `form.getAllUnwrappedSubElements()`
+            // Tip: To help you debug, run `po form` in the debug console or `call debugPrint(form)`
         }
 
         // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.

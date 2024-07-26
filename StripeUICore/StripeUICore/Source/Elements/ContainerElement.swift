@@ -70,3 +70,16 @@ extension ContainerElement {
         delegate?.continueToNextField(element: self)
     }
 }
+
+extension ContainerElement {
+    public var debugDescription: String {
+        return "<\(type(of: self)): \(Unmanaged.passUnretained(self).toOpaque())>" + subElementDebugDescription
+    }
+
+    public var subElementDebugDescription: String  {
+        elements.reduce("") { partialResult, element in
+            // 
+            partialResult + "\n└─ \(String(describing: element).replacingOccurrences(of: "└─", with: "   └─"))"
+        }
+    }
+}

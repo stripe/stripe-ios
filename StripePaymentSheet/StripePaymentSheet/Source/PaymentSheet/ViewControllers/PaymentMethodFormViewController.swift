@@ -22,7 +22,7 @@ class PaymentMethodFormViewController: UIViewController {
     let configuration: PaymentSheet.Configuration
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
-        // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have such divergent paths for link and instant debits. Where is the setDefaultBillingDetailsIfNecessary call, for example?
+        // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have a divergent path for link. Where is the setDefaultBillingDetailsIfNecessary call, for example?
         if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
             return linkEnabledElement.makePaymentOption(intent: intent)
         }
