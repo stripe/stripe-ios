@@ -433,7 +433,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
             // some values for nextPane require immediate action (ie. popping up a sheet for repair)
             // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
-            if  eligibleToPresentAccountUpdateRequiredDrawer {
+            if eligibleToPresentAccountUpdateRequiredDrawer {
                 if let drawerOnSelection = selectedAccountTuple.accountPickerAccount.drawerOnSelection {
                     if selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair {
                         dataSource
