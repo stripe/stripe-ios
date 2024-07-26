@@ -75,7 +75,6 @@
 		6744CB1B182C5F7220B0B804 /* AuthFlowHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC0D3ED86914DC4216CCCA /* AuthFlowHelpersTests.swift */; };
 		691619AE9A989548ABA36535 /* HitTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669BB8F3DA862C425897705 /* HitTestView.swift */; };
 		6944E131D351784058C7D734 /* FinancialConnectionsPaymentMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191760EFAA9154C1F168E1D2 /* FinancialConnectionsPaymentMethodType.swift */; };
-		6A044E482BB3866A00D73A3E /* AccountUpdateRequiredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A044E472BB3866A00D73A3E /* AccountUpdateRequiredViewController.swift */; };
 		6A05FB412BCF15170001D128 /* FinancialConnectionsLinkedBankImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A05FB402BCF15170001D128 /* FinancialConnectionsLinkedBankImplementation.swift */; };
 		6A05FB432BCF153F0001D128 /* InstantDebitsLinkedBankImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A05FB422BCF153F0001D128 /* InstantDebitsLinkedBankImplementation.swift */; };
 		6A13B9822B48BD6C00FFA327 /* AccountPickerRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13B9812B48BD6C00FFA327 /* AccountPickerRowView.swift */; };
@@ -364,7 +363,6 @@
 		6652EBE38C47B36962AD370A /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66D2857E68EA69AC6F658BEA /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		66D3CAB53EC9D33831C5A48B /* NetworkingSaveToLinkVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingSaveToLinkVerificationViewController.swift; sourceTree = "<group>"; };
-		6A044E472BB3866A00D73A3E /* AccountUpdateRequiredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountUpdateRequiredViewController.swift; sourceTree = "<group>"; };
 		6A05FB402BCF15170001D128 /* FinancialConnectionsLinkedBankImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLinkedBankImplementation.swift; sourceTree = "<group>"; };
 		6A05FB422BCF153F0001D128 /* InstantDebitsLinkedBankImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsLinkedBankImplementation.swift; sourceTree = "<group>"; };
 		6A13B9812B48BD6C00FFA327 /* AccountPickerRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerRowView.swift; sourceTree = "<group>"; };
@@ -794,7 +792,6 @@
 				6A732C9D2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift */,
 				AFF070262170A321F5622CCF /* LinkAccountPickerNewAccountRowView.swift */,
 				1848547B588045C776236B3B /* LinkAccountPickerViewController.swift */,
-				6A044E472BB3866A00D73A3E /* AccountUpdateRequiredViewController.swift */,
 			);
 			path = LinkAccountPicker;
 			sourceTree = "<group>";
@@ -1405,7 +1402,7 @@
 				FFD76E78070ECBB283D43D5E /* NetworkingLinkLoginWarmupBodyView.swift in Sources */,
 				1E0C39EB65B8CB04F218D0BD /* NetworkingLinkLoginWarmupDataSource.swift in Sources */,
 				F7C10A1AB247D0F6E111DE36 /* NetworkingLinkLoginWarmupViewController.swift in Sources */,
-				6A044E482BB3866A00D73A3E /* AccountUpdateRequiredViewController.swift in Sources */,
+				5F3C86F23B65CAC56FDDEC90 /* NetworkingLinkSignupBodyFormView.swift in Sources */,
 				95B2A73AC5DA9FA64017B3CB /* NetworkingLinkSignupBodyView.swift in Sources */,
 				6A05FB432BCF153F0001D128 /* InstantDebitsLinkedBankImplementation.swift in Sources */,
 				6A13B9842B48BF4300FFA327 /* AccountPickerRowLabelView.swift in Sources */,
