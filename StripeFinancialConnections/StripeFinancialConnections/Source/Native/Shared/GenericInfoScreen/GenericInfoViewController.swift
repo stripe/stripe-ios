@@ -12,23 +12,29 @@ final class GenericInfoViewController: SheetViewController {
 
     private let genericInfoScreen: FinancialConnectionsGenericInfoScreen
     private let theme: FinancialConnectionsTheme
+    private let iconView: UIView?
     private let didSelectPrimaryButton: (_ genericInfoViewController: GenericInfoViewController) -> Void
-    private let didSelectSecondaryButton: (_ genericInfoViewController: GenericInfoViewController) -> Void
+    private let didSelectSecondaryButton: ((_ genericInfoViewController: GenericInfoViewController) -> Void)?
     private let didSelectURL: (URL) -> Void
+    private let willDismissSheet: (() -> Void)?
 
     init(
         genericInfoScreen: FinancialConnectionsGenericInfoScreen,
         theme: FinancialConnectionsTheme,
         panePresentationStyle: PanePresentationStyle,
+        iconView: UIView? = nil,
         didSelectPrimaryButton: @escaping (_ genericInfoViewController: GenericInfoViewController) -> Void,
         didSelectSecondaryButton: ((_ genericInfoViewController: GenericInfoViewController) -> Void)? = nil,
-        didSelectURL: @escaping (URL) -> Void
+        didSelectURL: @escaping (URL) -> Void,
+        willDismissSheet: (() -> Void)? = nil
     ) {
         self.genericInfoScreen = genericInfoScreen
         self.theme = theme
+        self.iconView = iconView
         self.didSelectPrimaryButton = didSelectPrimaryButton
-        self.didSelectSecondaryButton = didSelectSecondaryButton ?? { _ in }
+        self.didSelectSecondaryButton = didSelectSecondaryButton
         self.didSelectURL = didSelectURL
+        self.willDismissSheet = willDismissSheet
         super.init(panePresentationStyle: panePresentationStyle)
     }
 
@@ -40,7 +46,7 @@ final class GenericInfoViewController: SheetViewController {
         super.viewDidLoad()
         setup(
             withContentView: PaneLayoutView.createContentView(
-                iconView: {
+                iconView: iconView ?? {
                     if let imageUrl = genericInfoScreen.header?.icon?.default {
                         return RoundedIconView(
                             image: .imageUrl(imageUrl),
@@ -79,12 +85,25 @@ final class GenericInfoViewController: SheetViewController {
                     guard let self else { return }
                     didSelectPrimaryButton(self)
                 },
-                didSelectSecondaryButton: { [weak self] in
-                    guard let self else { return }
-                    didSelectSecondaryButton(self)
-                },
+                didSelectSecondaryButton: {
+                    if let didSelectSecondaryButton {
+                        return { [weak self] in
+                            guard let self else { return }
+                            didSelectSecondaryButton(self)
+                        }
+                    } else {
+                        return nil
+                    }
+                }(),
                 didSelectURL: didSelectURL
             )
         )
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isBeingDismissed, let willDismissSheet {
+            willDismissSheet()
+        }
     }
 }
