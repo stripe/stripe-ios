@@ -44,14 +44,14 @@ extension PaymentSheetFormFactory {
             }
             return String(format: "%02d%02d", expiryMonth, expiryYear % 100) // Modulo 100 as safeguard to get last 2 digits of the expiry
         }()
-        let cardDefaultValues = CardSection.DefaultValues(
+        let cardDefaultValues = CardSectionElement.DefaultValues(
             name: defaultBillingDetails().name,
             pan: previousCardInput?.number,
             cvc: previousCardInput?.cvc,
             expiry: formattedExpiry
         )
 
-        let cardSection = CardSection(
+        let cardSection = CardSectionElement(
             collectName: configuration.billingDetailsCollectionConfiguration.name == .always,
             defaultValues: cardDefaultValues,
             preferredNetworks: configuration.preferredNetworks,

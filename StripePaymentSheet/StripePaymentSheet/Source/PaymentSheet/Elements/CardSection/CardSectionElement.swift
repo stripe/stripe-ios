@@ -1,5 +1,5 @@
 //
-//  CardSectionWithScannerElement.swift
+//  CardSectionElement.swift
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 3/24/22.
@@ -16,7 +16,7 @@ import UIKit
 /// A Element that contains a SectionElement for card details, whose view depends on the availability of card scanning:
 /// If card scanning is available, it uses a custom view that adds card scanning. Otherwise, it uses the default SectionElement view.
 /// It coordinates between the PAN and CVC fields.
-final class CardSection: ContainerElement {
+final class CardSectionElement: ContainerElement {
 
     var elements: [Element] {
         return [cardSection]
@@ -255,7 +255,7 @@ private func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMeth
 #if !canImport(CompositorServices)
 // MARK: - CardSectionWithScannerViewDelegate
 
-extension CardSection: CardSectionWithScannerViewDelegate {
+extension CardSectionElement: CardSectionWithScannerViewDelegate {
     func didScanCard(cardParams: STPPaymentMethodCardParams) {
         let expiryString: String = {
             guard let expMonth = cardParams.expMonth, let expYear = cardParams.expYear else {

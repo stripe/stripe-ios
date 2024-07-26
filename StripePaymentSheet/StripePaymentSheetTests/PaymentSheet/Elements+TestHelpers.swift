@@ -53,7 +53,7 @@ extension Element {
             .first { $0.label.hasPrefix(prefix) }
     }
 
-    func getCardSection() -> CardSection {
+    func getCardSection() -> CardSectionElement {
         return getElement()!
     }
 
