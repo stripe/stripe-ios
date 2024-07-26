@@ -104,8 +104,8 @@ class PaymentMethodFormViewController: UIViewController {
         let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
         if
             configuration.defaultBillingDetails == .init(),
-            let addressSection = formElement.getAllSubElements()
-                .compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first?.element
+            let addressSection = formElement.getAllUnwrappedSubElements()
+                .compactMap({ $0 as? AddressSectionElement }).first
         {
             // If we're displaying an AddressSectionElement and we don't have default billing details, update it with the latest shipping details
             let delegate = addressSection.delegate

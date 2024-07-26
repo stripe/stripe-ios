@@ -7,8 +7,8 @@
 
 import XCTest
 
-@testable import StripePaymentSheet
-@testable@_spi(STP) import StripeUICore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripeUICore
 
 @MainActor
 final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
@@ -36,7 +36,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         let paymentMethodForm = makeForm(intent: intent, configuration: configuration)
 
         // External PMs display no fields
-        XCTAssertEqual(paymentMethodForm.getAllSubElements().count, 1)
+        XCTAssertEqual(paymentMethodForm.getAllUnwrappedSubElements().count, 1)
 
         // Confirm the intent with the form details
         PaymentSheet.confirm(
