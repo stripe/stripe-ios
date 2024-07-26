@@ -53,7 +53,7 @@ stages:
     - framework-tests: {}
     - test-builds-xcode-15: {}
     - test-builds-vision: {}
-    # - deploy-docs: {}
+    - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
