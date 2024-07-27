@@ -426,7 +426,16 @@ extension PlaygroundController {
         self.currentDataTask?.resume()
     }
 
+    struct PlaygroundError: LocalizedError {
+       let errorDescription: String?
+    }
+
     func loadBackend() {
+        func fail(error: Error) {
+            self.lastPaymentResult = .failed(error: error)
+            self.isLoading = false
+            self.currentlyRenderedSettings = self.settings
+        }
         paymentSheetFlowController = nil
         addressViewController = nil
         paymentSheet = nil
@@ -450,7 +459,10 @@ extension PlaygroundController {
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
-            assert(settingsToLoad.apmsEnabled == .off, "supported payment methods is set but will have no effect while automatic payment methods are enabled")
+            guard settingsToLoad.apmsEnabled == .off else {
+                fail(error: PlaygroundError(errorDescription: "supported payment methods is set but will have no effect while automatic payment methods are enabled"))
+                return
+            }
             body["supported_payment_methods"] = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
@@ -485,10 +497,7 @@ extension PlaygroundController {
                        let jsonError = json["error"] {
                         errorMessage = jsonError
                     }
-                    let error = NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
-                    self.lastPaymentResult = .failed(error: error)
-                    self.isLoading = false
-                    self.currentlyRenderedSettings = self.settings
+                    fail(error: PlaygroundError(errorDescription: errorMessage))
                 }
                 return
             }
