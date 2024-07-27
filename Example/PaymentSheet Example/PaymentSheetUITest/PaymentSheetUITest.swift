@@ -200,6 +200,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
         XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 2))
 
         // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
         XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_form_shown")
