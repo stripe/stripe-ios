@@ -642,6 +642,42 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20.0))
     }
 
+    func testBacsDebit() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.apmsEnabled = .on
+        settings.currency = .gbp
+        settings.merchantCountryCode = .GB
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Blik and pay
+        tapPaymentMethod("Bacs Direct Debit")
+        app.textFields["Full name"].tap()
+        app.typeText("Jane Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("foo@bar.com" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("108800")
+        app.typeText("00012345" + XCUIKeyboardKey.return.rawValue)
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("123 Main St" + XCUIKeyboardKey.return.rawValue + XCUIKeyboardKey.return.rawValue)
+        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("94010" + XCUIKeyboardKey.return.rawValue)
+        let payButton = app.buttons["Pay £50.99"]
+        XCTAssertFalse(payButton.isEnabled)
+        let checkbox = app.switches.firstMatch
+        XCTAssertEqual(checkbox.label, "I understand that Stripe will be collecting Direct Debits on behalf of Example, Inc. and confirm that I am the account holder and the only person required to authorise debits from this account.")
+        checkbox.tap()
+        payButton.tap()
+        app.buttons["Modify Details"].waitForExistenceAndTap()
+        payButton.waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20.0))
+    }
+
     // MARK: - Voucher based LPMs
     /// https://docs.stripe.com/payments/vouchers
     func testMultibancoPaymentMethod() throws {

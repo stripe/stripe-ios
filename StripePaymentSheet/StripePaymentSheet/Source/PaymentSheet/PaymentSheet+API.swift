@@ -15,6 +15,7 @@ import SwiftUI
 import UIKit
 
 extension PaymentSheet {
+    static var _preconfirmShim: ((UIViewController) -> Void)?
 
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(
@@ -53,6 +54,7 @@ extension PaymentSheet {
             let hostingController = UIHostingController(rootView: mandateView)
             hostingController.isModalInPresentation = true
             authenticationContext.authenticationPresentingViewController().present(hostingController, animated: true)
+            _preconfirmShim?(hostingController)
         } else if case let .saved(paymentMethod, _) = paymentOption,
                   paymentMethod.type == .card,
                   intent.cvcRecollectionEnabled,
