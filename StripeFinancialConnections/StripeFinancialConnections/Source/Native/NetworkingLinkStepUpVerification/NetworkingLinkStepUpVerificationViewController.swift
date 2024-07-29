@@ -13,7 +13,7 @@ import UIKit
 protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution
+        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?
     )
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
@@ -218,16 +218,11 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
                                         pane: .networkingLinkStepUpVerification
                                     )
 
-                                if let institution = institutionList.data.first {
-                                    self.delegate?.networkingLinkStepUpVerificationViewController(
-                                        self,
-                                        didCompleteVerificationWithInstitution: institution
-                                    )
-                                } else {
-                                    // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
-                                    // could still have a chance at successfully connecting their account
-                                    self.delegate?.networkingLinkStepUpVerificationViewControllerEncounteredSoftError(self)
-                                }
+                                self.delegate?.networkingLinkStepUpVerificationViewController(
+                                    self,
+                                    // networking manual entry will not return an institution
+                                    didCompleteVerificationWithInstitution: institutionList.data.first
+                                )
 
                                 // only hide loading view after animation
                                 // to next screen has completed
