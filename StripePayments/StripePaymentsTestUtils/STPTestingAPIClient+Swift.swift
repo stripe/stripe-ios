@@ -19,6 +19,7 @@ extension STPTestingAPIClient {
         currency: String = "eur",
         merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
+        shouldSavePM: Bool = false,
         customerID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:],
@@ -31,6 +32,9 @@ extension STPTestingAPIClient {
         params["confirm"] = confirm
         if let paymentMethodID {
             params["payment_method"] = paymentMethodID
+        }
+        if shouldSavePM {
+            params["payment_method_options"] = ["card": ["setup_future_usage": "off_session"]]
         }
         if let customerID {
             params["customer"] = customerID
@@ -57,6 +61,7 @@ extension STPTestingAPIClient {
         currency: String = "eur",
         merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
+        shouldSavePM: Bool = false,
         customerID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:]
@@ -67,6 +72,7 @@ extension STPTestingAPIClient {
                 currency: currency,
                 merchantCountry: merchantCountry,
                 paymentMethodID: paymentMethodID,
+                shouldSavePM: shouldSavePM,
                 customerID: customerID,
                 confirm: confirm,
                 otherParams: otherParams
@@ -141,6 +147,7 @@ extension STPTestingAPIClient {
         ]
         return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
     }
+
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(

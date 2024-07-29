@@ -91,6 +91,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// If this is a MobilePay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMobilePay`), this contains additional details.
     @objc private(set) public var mobilePay: STPPaymentMethodMobilePay?
 
+    /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
+    @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
+
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
@@ -154,6 +157,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "multibanco = \(String(describing: multibanco))",
             "mobilePay = \(String(describing: mobilePay))",
             "liveMode = \(liveMode ? "YES" : "NO")",
+            "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
         return "<\(props.joined(separator: "; "))>"
@@ -173,6 +177,13 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         return STPPaymentMethodType.allCases.first(where: { type in
             type.identifier == key
         }) ?? .unknown
+    }
+
+    @_spi(STP) public class func allowRedisplay(from string: String) -> STPPaymentMethodAllowRedisplay {
+        let key = string.lowercased()
+        return STPPaymentMethodAllowRedisplay.allCases.first(where: { type in
+            type.stringValue == key
+        }) ?? .unspecified
     }
 
     class func types(from strings: [String]) -> [NSNumber] {
@@ -195,10 +206,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
     @objc @_spi(STP) public required init(
         stripeId: String,
-        type: STPPaymentMethodType
+        type: STPPaymentMethodType,
+        allowRedisplay: STPPaymentMethodAllowRedisplay = .unspecified
     ) {
         self.stripeId = stripeId
         self.type = type
+        self.allowRedisplay = allowRedisplay
         super.init()
     }
 
@@ -215,7 +228,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         }
 
         let paymentMethod = self.init(stripeId: stripeId,
-                                      type: self.type(from: dict.stp_string(forKey: "type") ?? ""))
+                                      type: self.type(from: dict.stp_string(forKey: "type") ?? ""),
+                                      allowRedisplay: self.allowRedisplay(from: dict.stp_string(forKey: "allow_redisplay") ?? ""))
         paymentMethod.allResponseFields = response
         paymentMethod.stripeId = stripeId
         paymentMethod.created = dict.stp_date(forKey: "created")
