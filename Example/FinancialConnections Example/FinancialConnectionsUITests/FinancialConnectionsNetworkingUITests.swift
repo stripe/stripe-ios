@@ -401,4 +401,62 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
                 .exists
         )
     }
+
+    func testNativeNetworkingManualEntryTestMode() throws {
+        let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
+        executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: emailAddresss)
+        executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: emailAddresss)
+    }
+
+    private func executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: String) {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)","phone":"4015006000"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        // auto-fill manual entry screen
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
+
+        app.fc_nativeSaveToLinkButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+    }
+
+    private func executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: String) {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"token","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        // we expect this to open the warm up pane (a new behavior in networking manual entry)
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        app.fc_nativeNetworkingWarmupContinueButton.waitForExistenceAndTap()
+
+        // auto-fill OTP
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
+
+        // tap manual entry institution
+        app.scrollViews.staticTexts["Test Institution"].waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+    }
 }
