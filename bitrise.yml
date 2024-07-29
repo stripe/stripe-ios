@@ -130,14 +130,15 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-            SourcePackages
     - script@1:
         inputs:
         - content: git fetch origin
@@ -544,14 +545,16 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: "1"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-    - restore-spm-cache@1: {}
+    - restore-spm-cache@2.1: {}
   size-report:
     steps:
     - script@1:
@@ -563,14 +566,15 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-            SourcePackages
     - script@1:
         inputs:
         - content: git fetch origin
