@@ -7,7 +7,7 @@
 
 import XCTest
 
-class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
+class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
     func testEPS() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -264,7 +264,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
+}
 
+class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
     func testAmazonPayPaymentMethod_setup() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -569,7 +571,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
+}
 
+class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
     func testPromptPayPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
@@ -637,11 +641,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 5.0))
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20.0))
     }
-}
 
-// MARK: - Voucher based LPMs
-/// https://docs.stripe.com/payments/vouchers
-extension PaymentSheetStandardLPMUITests {
+    // MARK: - Voucher based LPMs
+    /// https://docs.stripe.com/payments/vouchers
     func testMultibancoPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -742,31 +744,9 @@ extension PaymentSheetStandardLPMUITests {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 }
+class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
+    // MARK: Card brand choice
 
-// MARK: - Helpers
-extension PaymentSheetStandardLPMUITests {
-    var webviewAuthorizePaymentButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT") }
-    var webviewAuthorizeSetupButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP") }
-    func tapPaymentMethod(_ id: String) {
-        guard let pm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: id) else {
-            XCTFail()
-            return
-        }
-        pm.tap()
-    }
-
-    /// This waits for the ["PaymentSheetExample" Wants to Use "stripe.com" to Sign In] modal that 
-    /// `ASWebAuthenticationSession` shows and taps continue to allow the web view to open:
-    func waitForASWebAuthSigninModalAndTapContinue() {
-        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let sbContinueButton = springboard.buttons["Continue"]
-        XCTAssertTrue(sbContinueButton.waitForExistence(timeout: 10.0))
-        sbContinueButton.tap()
-    }
-}
-
-// MARK: Card brand choice
-extension PaymentSheetStandardLPMUITests {
     func testCardBrandChoice() throws {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -958,5 +938,30 @@ extension PaymentSheetStandardLPMUITests {
 
         // Card should be removed
         XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+    }
+}
+
+// MARK: - Helpers
+class PaymentSheetStandardLPMUICase: PaymentSheetUITestCase {
+
+}
+extension PaymentSheetStandardLPMUICase {
+    var webviewAuthorizePaymentButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT") }
+    var webviewAuthorizeSetupButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP") }
+    func tapPaymentMethod(_ id: String) {
+        guard let pm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: id) else {
+            XCTFail()
+            return
+        }
+        pm.tap()
+    }
+
+    /// This waits for the ["PaymentSheetExample" Wants to Use "stripe.com" to Sign In] modal that
+    /// `ASWebAuthenticationSession` shows and taps continue to allow the web view to open:
+    func waitForASWebAuthSigninModalAndTapContinue() {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let sbContinueButton = springboard.buttons["Continue"]
+        XCTAssertTrue(sbContinueButton.waitForExistence(timeout: 10.0))
+        sbContinueButton.tap()
     }
 }
