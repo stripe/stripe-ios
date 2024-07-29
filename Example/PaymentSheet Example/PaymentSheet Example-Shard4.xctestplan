@@ -43,6 +43,8 @@
         "PaymentSheetDeferredUITests",
         "PaymentSheetGDPRUITests",
         "PaymentSheetLinkUITests",
+        "PaymentSheetStandardUITests",
+        "PaymentSheetVerticalUITests",
         "PaymentSheet_AddressTests"
       ],
       "target" : {

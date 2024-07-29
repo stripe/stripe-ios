@@ -40,8 +40,12 @@
         "PaymentSheetGDPRUITests",
         "PaymentSheetLinkUITests",
         "PaymentSheetSnapshotTests",
+        "PaymentSheetStandardLPMUICBCTests",
+        "PaymentSheetStandardLPMUICase",
+        "PaymentSheetStandardLPMUIOneTests",
         "PaymentSheetStandardLPMUITests",
-        "PaymentSheetStandardUITests",
+        "PaymentSheetStandardLPMUIThreeTests",
+        "PaymentSheetStandardLPMUITwoTests",
         "PaymentSheetUITestCase",
         "PaymentSheetVerticalUITests"
       ],
