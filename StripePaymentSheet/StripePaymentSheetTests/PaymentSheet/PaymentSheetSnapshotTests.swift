@@ -1165,9 +1165,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         let presentingExpectation = XCTestExpectation(description: "Presenting payment sheet")
         DispatchQueue.global(qos: .background).async {
             var isLoading = true
-            var count = 0
-            while isLoading && count < 10 {
-                count += 1
+            while isLoading {
                 DispatchQueue.main.sync {
                     guard
                         (self.paymentSheet.bottomSheetViewController.contentStack.first as? LoadingViewController)
