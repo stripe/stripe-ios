@@ -38,7 +38,6 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-15: {}
-    - test-builds-xcode-15-release: {}
     - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -52,6 +51,7 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-15: {}
+    - test-builds-xcode-15-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
@@ -67,6 +67,7 @@ stages:
     - integration-all: {}
   stage-nightly-all:
     workflows:
+    - test-builds-xcode-15-release: {}
     - basic-integration-tests: {}
     - framework-tests-no-mocks: {}
     - check-docs: {}

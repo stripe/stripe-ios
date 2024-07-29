@@ -27,3 +27,5 @@ import Foundation
         }
     }
 }
+
+extension STPPaymentMethodAllowRedisplay: CaseIterable { }
