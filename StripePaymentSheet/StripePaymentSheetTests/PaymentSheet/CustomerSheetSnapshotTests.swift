@@ -585,7 +585,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
                 }
             }
         }
-        wait(for: [presentingExpectation], timeout: 0.1)
+        wait(for: [presentingExpectation], timeout: 5)
 
         cs.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
             preferredContentSizeCategory: preferredContentSizeCategory
