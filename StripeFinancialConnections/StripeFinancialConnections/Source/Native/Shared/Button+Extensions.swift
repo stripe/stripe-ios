@@ -38,10 +38,10 @@ extension StripeUICore.Button.Configuration {
         primaryButtonConfiguration.cornerRadius = 12.0
         // default
         primaryButtonConfiguration.backgroundColor = theme.primaryColor
-        primaryButtonConfiguration.foregroundColor = theme.primaryButtonTextColor
+        primaryButtonConfiguration.foregroundColor = theme.primaryAccentColor
         // disabled
         primaryButtonConfiguration.disabledBackgroundColor = theme.primaryColor
-        primaryButtonConfiguration.disabledForegroundColor = theme.primaryButtonTextColor.withAlphaComponent(0.4)
+        primaryButtonConfiguration.disabledForegroundColor = theme.primaryAccentColor.withAlphaComponent(0.4)
         // pressed
         primaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.23)  // this tries to simulate `brand600`
         primaryButtonConfiguration.colorTransforms.highlightedForeground = nil

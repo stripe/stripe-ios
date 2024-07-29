@@ -5,9 +5,10 @@
 
 @testable import Stripe
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPPaymentMethodMobilePayTests: XCTestCase {
+class STPPaymentMethodMobilePayTests: STPNetworkStubbingTestCase {
 
     static let mobilePayPaymentIntentClientSecret = "pi_3PGVQJKG6vc7r7YC1Xs7oiWw_secret_5cqzEtQ059azmV1GmkLRA7Lvt"
 

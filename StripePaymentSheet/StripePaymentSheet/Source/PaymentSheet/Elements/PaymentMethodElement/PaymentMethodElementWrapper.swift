@@ -69,6 +69,9 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
         self.init(textFieldElement, defaultsApplier: defaultsApplier, paramsUpdater: paramsUpdater)
     }
 
+    public var debugDescription: String {
+        return String(describing: element)
+    }
 }
 
 // MARK: - PaymentMethodElement

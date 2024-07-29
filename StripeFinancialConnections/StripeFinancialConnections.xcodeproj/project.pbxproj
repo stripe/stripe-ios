@@ -61,6 +61,8 @@
 		494D62072C45B9B700106519 /* link_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 494D62062C45B9B700106519 /* link_logo@3x.png */; };
 		495539EE2C484DC200543D18 /* FinancialConnectionsTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */; };
 		496A6AE72C29E0BB00D34F8E /* testmode@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496A6AE62C29E0BB00D34F8E /* testmode@3x.png */; };
+		497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497142BB2C514B08000DFA64 /* FlowRouterTests.swift */; };
+		49AC518C2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */; };
 		4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */; };
 		4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */; };
 		4DC8EB63806434ABF4C9CC43 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782A419DCF59BE6AB6439D04 /* add@3x.png */; };
@@ -316,6 +318,8 @@
 		494D62062C45B9B700106519 /* link_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "link_logo@3x.png"; sourceTree = "<group>"; };
 		495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsTheme.swift; sourceTree = "<group>"; };
 		496A6AE62C29E0BB00D34F8E /* testmode@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testmode@3x.png"; sourceTree = "<group>"; };
+		497142BB2C514B08000DFA64 /* FlowRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowRouterTests.swift; sourceTree = "<group>"; };
+		49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLinkLoginPane.swift; sourceTree = "<group>"; };
 		4A7B146AA6BF44921A249DB8 /* EmptyFinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyFinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_accounts.json; sourceTree = "<group>"; };
 		4BFCD9C339634B71FC8F85E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -741,6 +745,7 @@
 				429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */,
 				4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */,
 				495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */,
+				49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1039,6 +1044,7 @@
 				965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */,
 				90A06A97D714450321A5D76D /* SoftLinkTests.swift */,
 				CF731140836AE438C7F4F6AB /* StringExtensionsTests.swift */,
+				497142BB2C514B08000DFA64 /* FlowRouterTests.swift */,
 			);
 			path = StripeFinancialConnectionsTests;
 			sourceTree = "<group>";
@@ -1256,6 +1262,7 @@
 				460C7685096AA6C693309647 /* FinancialConnectionsAuthSession.swift in Sources */,
 				AB5AFAC3C70D6195075DE5AE /* FinancialConnectionsBulletPoint.swift in Sources */,
 				B9A24A47454134F2B869C969 /* FinancialConnectionsConsent.swift in Sources */,
+				49AC518C2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift in Sources */,
 				CBF7BE2271D309F2B1E794CC /* FinancialConnectionsDataAccessNotice.swift in Sources */,
 				F67624595BD2CD7B6793BFDA /* FinancialConnectionsImage.swift in Sources */,
 				07712610C7D2F484AAB96982 /* FinancialConnectionsInstitution.swift in Sources */,
@@ -1423,6 +1430,7 @@
 				6744CB1B182C5F7220B0B804 /* AuthFlowHelpersTests.swift in Sources */,
 				39E5D4531961150E9CB3262F /* EmptyFinancialConnectionsAPIClient.swift in Sources */,
 				CB734C25A19D38A87876FB2B /* FinancialConnectionsAnalyticsTest.swift in Sources */,
+				497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */,
 				77D3B375B9DBF80BA209BC99 /* FinancialConnectionsSessionTests.swift in Sources */,
 				846D1D7429B9E414744DEC99 /* FinancialConnectionsSheetTests.swift in Sources */,
 				C19996D0AC7E046DA87B6B32 /* ManualEntryValidatorTests.swift in Sources */,

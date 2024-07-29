@@ -9,8 +9,11 @@
 import PassKit
 import XCTest
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
@@ -41,17 +44,88 @@ class TestEphemeralKeyProvider: NSObject, STPIssuingCardEphemeralKeyProvider {
     }
 }
 
-class STPPinManagementServiceFunctionalTest: STPNetworkStubbingTestCase {
-    override func setUp() {
-        //     self.recordingMode = YES;
-        super.setUp()
-    }
+class STPPinManagementServiceFunctionalTest: APIStubbedTestCase {
 
     func testRetrievePin() {
         let keyProvider = TestEphemeralKeyProvider()
         let service = STPPinManagementService(keyProvider: keyProvider)
 
         let expectation = self.expectation(description: "Received PIN")
+
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/issuing/cards/ic_token/pin") ?? false
+        } response: { _ in
+            let pinResponseJSON = """
+                {
+                  "pin" : "2345",
+                  "object" : "issuing.card_pin",
+                  "card" : {
+                    "id" : "ic_token",
+                    "last4" : "1234",
+                    "livemode" : true,
+                    "shipping" : null,
+                    "metadata" : {
+
+                    },
+                    "brand" : "Visa",
+                    "authorization_controls" : {
+                      "max_approvals" : null,
+                      "currency" : null,
+                      "allowed_categories" : null,
+                      "spending_limits" : null,
+                      "blocked_categories" : null,
+                      "max_amount" : null
+                    },
+                    "type" : "virtual",
+                    "cardholder" : {
+                      "id" : "ich_token",
+                      "livemode" : true,
+                      "phone_number" : "+1415",
+                      "metadata" : {
+
+                      },
+                      "authorization_controls" : {
+                        "blocked_categories" : [
+
+                        ],
+                        "spending_limits" : [
+
+                        ],
+                        "allowed_categories" : [
+
+                        ]
+                      },
+                      "type" : "individual",
+                      "object" : "issuing.cardholder",
+                      "billing" : {
+                        "address" : {
+                          "state" : "CA",
+                          "country" : "US",
+                          "line2" : "123",
+                          "city" : "San Francisco",
+                          "line1" : "510 Townsend St",
+                          "postal_code" : "94103"
+                        },
+                        "name" : "Arnaud Cavailhez"
+                      },
+                      "created" : 1536780742,
+                      "is_default" : false,
+                      "email" : "acavailhez@stripe.com",
+                      "name" : "Arnaud Cavailhez",
+                      "status" : "active"
+                    },
+                    "object" : "issuing.card",
+                    "exp_month" : 9,
+                    "exp_year" : 2021,
+                    "created" : 1536781947,
+                    "currency" : "usd",
+                    "name" : "Arnaud Cavailhez",
+                    "status" : "active"
+                  }
+                }
+                """
+            return HTTPStubsResponse(data: pinResponseJSON.data(using: .utf8)!, statusCode: 200, headers: nil)
+        }
 
         service.retrievePin(
             "ic_token",
@@ -71,6 +145,83 @@ class STPPinManagementServiceFunctionalTest: STPNetworkStubbingTestCase {
 
         let expectation = self.expectation(description: "Received PIN")
 
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/issuing/cards/ic_token/pin") ?? false
+        } response: { _ in
+            let pinResponseJSON = """
+                {
+                  "pin" : "3456",
+                  "object" : "issuing.card_pin",
+                  "card" : {
+                    "id" : "ic_token",
+                    "last4" : "1234",
+                    "livemode" : true,
+                    "replacement_for" : null,
+                    "metadata" : {
+
+                    },
+                    "brand" : "Visa",
+                    "shipping" : null,
+                    "authorization_controls" : {
+                      "max_approvals" : null,
+                      "currency" : null,
+                      "allowed_categories" : null,
+                      "spending_limits" : null,
+                      "blocked_categories" : null,
+                      "max_amount" : null
+                    },
+                    "replacement_reason" : null,
+                    "type" : "virtual",
+                    "cardholder" : {
+                      "id" : "ich_token",
+                      "livemode" : true,
+                      "phone_number" : "+1415",
+                      "metadata" : {
+
+                      },
+                      "authorization_controls" : {
+                        "blocked_categories" : [
+
+                        ],
+                        "spending_limits" : [
+
+                        ],
+                        "allowed_categories" : [
+
+                        ]
+                      },
+                      "type" : "individual",
+                      "object" : "issuing.cardholder",
+                      "billing" : {
+                        "address" : {
+                          "state" : "CA",
+                          "country" : "US",
+                          "line2" : "123",
+                          "city" : "San Francisco",
+                          "line1" : "510 Townsend St",
+                          "postal_code" : "94103"
+                        },
+                        "name" : "Arnaud Cavailhez"
+                      },
+                      "created" : 1536780742,
+                      "is_default" : false,
+                      "email" : "acavailhez@stripe.com",
+                      "name" : "Arnaud Cavailhez",
+                      "status" : "active"
+                    },
+                    "object" : "issuing.card",
+                    "exp_month" : 9,
+                    "exp_year" : 2021,
+                    "created" : 1536781947,
+                    "currency" : "usd",
+                    "name" : "Arnaud Cavailhez",
+                    "status" : "active"
+                  }
+                }
+                """
+            return HTTPStubsResponse(data: pinResponseJSON.data(using: .utf8)!, statusCode: 200, headers: nil)
+        }
+
         service.updatePin(
             "ic_token",
             newPin: "3456",
@@ -89,6 +240,21 @@ class STPPinManagementServiceFunctionalTest: STPNetworkStubbingTestCase {
         let service = STPPinManagementService(keyProvider: keyProvider)
 
         let expectation = self.expectation(description: "Received Error")
+
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/issuing/cards/ic_token/pin") ?? false
+        } response: { _ in
+            let pinResponseJSON = """
+                {
+                  "error" : {
+                    "message" : "Verification challenge does not exist or is already redeemed",
+                    "type" : "invalid_request_error",
+                    "code" : "already_redeemed"
+                  }
+                }
+                """
+            return HTTPStubsResponse(data: pinResponseJSON.data(using: .utf8)!, statusCode: 400, headers: nil)
+        }
 
         service.retrievePin(
             "ic_token",

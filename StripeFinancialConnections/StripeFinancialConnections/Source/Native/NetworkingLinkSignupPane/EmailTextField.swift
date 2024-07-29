@@ -20,9 +20,14 @@ protocol EmailTextFieldDelegate: AnyObject {
 
 final class EmailTextField: UIView {
 
+    private let theme: FinancialConnectionsTheme
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
-            placeholder: STPLocalizedString("Email address", "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address.")
+            placeholder: STPLocalizedString(
+                "Email address",
+                "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address."
+            ),
+            theme: theme
         )
         textField.textField.keyboardType = .emailAddress
         textField.textField.textContentType = .emailAddress
@@ -34,10 +39,10 @@ final class EmailTextField: UIView {
         textField.textField.accessibilityIdentifier = "email_text_field"
         return textField
     }()
-    private let activityIndicator: ActivityIndicator = {
+    private lazy var activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .medium)
         activityIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
-        activityIndicator.color = .iconActionPrimary
+        activityIndicator.color = theme.spinnerColor
         return activityIndicator
     }()
     fileprivate var didEndEditingOnce = false
@@ -57,7 +62,8 @@ final class EmailTextField: UIView {
 
     weak var delegate: EmailTextFieldDelegate?
 
-    init() {
+    init(theme: FinancialConnectionsTheme) {
+        self.theme = theme
         super.init(frame: .zero)
         addAndPinSubview(textField)
     }
@@ -140,9 +146,10 @@ private struct EmailTextFieldUIViewRepresentable: UIViewRepresentable {
 
     let text: String
     let isLoading: Bool
+    let theme: FinancialConnectionsTheme
 
     func makeUIView(context: Context) -> EmailTextField {
-        EmailTextField()
+        EmailTextField(theme: theme)
     }
 
     func updateUIView(
@@ -165,23 +172,39 @@ struct EmailTextField_Previews: PreviewProvider {
             VStack(spacing: 16) {
                 EmailTextFieldUIViewRepresentable(
                     text: "",
-                    isLoading: false
+                    isLoading: false,
+                    theme: .light
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "test@test.com",
-                    isLoading: false
+                    isLoading: false,
+                    theme: .light
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "test@test-very-long-name-thats-very-long.com",
-                    isLoading: true
+                    isLoading: true,
+                    theme: .light
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "wrongemail@wronger",
-                    isLoading: false
+                    isLoading: false,
+                    theme: .light
                 ).frame(height: 90)
+
+                EmailTextFieldUIViewRepresentable(
+                    text: "light@theme.com",
+                    isLoading: true,
+                    theme: .light
+                ).frame(height: 56)
+
+                EmailTextFieldUIViewRepresentable(
+                    text: "linklight@theme.com",
+                    isLoading: true,
+                    theme: .linkLight
+                ).frame(height: 56)
 
                 Spacer()
             }

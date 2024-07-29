@@ -523,7 +523,7 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "swish"
         case .twint:
             return "TWINT"
-        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay, .alma, .konbini, .promptPay, .instantDebits:
+        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay, .alma, .konbini, .promptPay:
             // `description` is the value used when this type is converted to a string for debugging purposes, just use the display name.
             return displayName
         case .multibanco:

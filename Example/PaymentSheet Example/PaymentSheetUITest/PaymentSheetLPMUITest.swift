@@ -343,7 +343,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
 
         // Select US Bank Account
-        tapPaymentMethod("US Bank Account")
+        tapPaymentMethod("US bank account")
 
         let continueButton = app.buttons["Continue"]
         XCTAssertFalse(continueButton.isEnabled)
@@ -614,6 +614,29 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 15)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
+
+    func testBlikPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.apmsEnabled = .on
+        settings.currency = .pln
+        settings.merchantCountryCode = .FR
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Blik and pay
+        tapPaymentMethod("BLIK")
+        app.textFields["BLIK code"].waitForExistenceAndTap()
+        app.typeText("123456")
+        XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 1.0))
+
+        // Cancel
+        XCTAssertTrue(app.buttons["Cancel and pay another way"].waitForExistenceAndTap(timeout: 1.0))
+
+        // Pay
+        XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20.0))
+    }
 }
 
 // MARK: - Voucher based LPMs
@@ -699,7 +722,8 @@ extension PaymentSheetStandardLPMUITests {
         app.typeText("foo@bar.com")
         app.typeText(XCUIKeyboardKey.return.rawValue)
         app.typeText("00000000000")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.toolbars.buttons["Done"].tap() // Tap "Done", don't hit return - that's not possible using the system numpad keyboard
+        app.textFields["Address line 1"].tap()
         app.typeText("123 fake st")
         app.typeText(XCUIKeyboardKey.return.rawValue)
         app.typeText(XCUIKeyboardKey.return.rawValue)

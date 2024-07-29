@@ -53,7 +53,7 @@ extension Element {
             .first { $0.label.hasPrefix(prefix) }
     }
 
-    func getCardSection() -> CardSection {
+    func getCardSection() -> CardSectionElement {
         return getElement()!
     }
 
@@ -61,23 +61,5 @@ extension Element {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? T }
             .first
-    }
-}
-
-extension SectionElement: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return ["<SectionElement: \(Unmanaged.passUnretained(self).toOpaque())>", title].compactMap { $0 }.joined(separator: " - ")
-    }
-}
-
-extension TextFieldElement: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return "<TextFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>  -  \"\(configuration.label)\"  -  \(validationState)"
-    }
-}
-
-extension DropdownFieldElement {
-    public override var debugDescription: String {
-        return "<DropdownFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>  -  \"\(label ?? "nil")\"  -  \(validationState)"
     }
 }

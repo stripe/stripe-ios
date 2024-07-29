@@ -23,7 +23,6 @@ extension PaymentSheet {
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
-        .instantDebits,
         .AUBECSDebit,
         .UPI,
         .cashApp,

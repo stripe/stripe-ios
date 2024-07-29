@@ -26,6 +26,7 @@ class IntentConfirmParams {
 
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
+    /// ⚠️ Usage of this is *not compatible* with server-side confirmation!
     let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
     /// True if the customer opts to save their payment method for future payments.
@@ -64,6 +65,9 @@ class IntentConfirmParams {
             // 2. Reuse existing form state restoration code in PaymentSheetFlowController, which depends on the previous state being encoded in an IntentConfirmParams.
             let params = STPPaymentMethodParams(type: .unknown)
             params.rawTypeString = externalPaymentMethod.type
+            self.init(params: params, type: type)
+        case .instantDebits:
+            let params = STPPaymentMethodParams(type: .link)
             self.init(params: params, type: type)
         }
     }

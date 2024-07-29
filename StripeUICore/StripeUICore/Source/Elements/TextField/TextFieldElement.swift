@@ -182,3 +182,10 @@ extension TextFieldElement: TextFieldViewDelegate {
         delegate?.continueToNextField(element: self)
     }
 }
+
+// MARK: - DebugDescription
+extension TextFieldElement {
+    public var debugDescription: String {
+        return "<TextFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(configuration.label); text = \(text); validationState = \(validationState)"
+    }
+}

@@ -188,6 +188,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.customerMode = .new
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
         loadPlayground(app, settings)
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
@@ -198,6 +200,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
         XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 2))
 
         // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
         XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_form_shown")
@@ -1994,23 +1997,12 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["pay_with_link_button"].waitForExistenceAndTap()
-
-        let expectation = XCTestExpectation(description: "Link sign in dialog")
-        // Listen for the system login dialog
-        addUIInterruptionMonitor(withDescription: "Link sign in system dialog") { alert in
-            // Cancel the payment
-            alert.buttons["Cancel"].waitForExistenceAndTap()
-            expectation.fulfill()
-            return true
-        }
-
         app.buttons["Confirm"].waitForExistenceAndTap()
-        app.tap() // required to trigger the UI interruption monitor
-        wait(for: [expectation], timeout: 5.0)
-
+        // Cancel the Link sign in system dialog
+        // Note: `addUIInterruptionMonitor` is flakey so we do this hack instead
+        XCTAssertTrue(XCUIApplication(bundleIdentifier: "com.apple.springboard").buttons["Cancel"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Payment canceled."].waitForExistence(timeout: 5))
-
-        // Re-tapping the payment method button should present the saved payment view
+        // Re-tapping the payment method button should present the main screen again
         app.buttons["Payment method"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 5))
     }
@@ -2593,11 +2585,11 @@ extension PaymentSheetUITestCase {
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
-        // Select US Bank Account
+        // Select US bank account
         if vertical {
-            XCTAssertTrue(app.buttons["US Bank Account"].waitForExistenceAndTap())
+            XCTAssertTrue(app.buttons["US bank account"].waitForExistenceAndTap())
         } else {
-            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account")?.waitForExistenceAndTap() ?? false)
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US bank account")?.waitForExistenceAndTap() ?? false)
         }
 
         // Fill out name and email fields
@@ -2645,7 +2637,7 @@ extension PaymentSheetUITestCase {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
-        // Reload and pay with the now-saved us bank account
+        // Reload and pay with the now-saved US bank account
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].tap()
         XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())

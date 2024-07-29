@@ -8,9 +8,10 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPCardFunctionalTest: XCTestCase {
+class STPCardFunctionalTest: STPNetworkStubbingTestCase {
     func testCreateCardToken() {
         let card = STPCardParams()
 

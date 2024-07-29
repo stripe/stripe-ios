@@ -36,12 +36,14 @@ final class LegalDetailsNoticeViewController: SheetViewController {
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
                     image: .imageUrl(legalDetailsNotice.icon?.default),
-                    style: .circle
+                    style: .circle,
+                    theme: theme
                 ),
                 title: legalDetailsNotice.title,
                 subtitle: legalDetailsNotice.subtitle,
                 contentView: CreateMultiLinkView(
                     linkItems: legalDetailsNotice.body.links,
+                    theme: theme,
                     didSelectURL: didSelectUrl
                 ),
                 isSheet: true
@@ -65,6 +67,7 @@ final class LegalDetailsNoticeViewController: SheetViewController {
 
 private func CreateMultiLinkView(
     linkItems: [FinancialConnectionsLegalDetailsNotice.Body.Link],
+    theme: FinancialConnectionsTheme,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView()
@@ -76,6 +79,7 @@ private func CreateMultiLinkView(
             CreateSingleLinkView(
                 title: linkItem.title,
                 content: linkItem.content,
+                theme: theme,
                 didSelectURL: didSelectURL
             )
         )
@@ -87,6 +91,7 @@ private func CreateMultiLinkView(
 private func CreateSingleLinkView(
     title: String,
     content: String?,
+    theme: FinancialConnectionsTheme,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalLabelStackView = HitTestStackView()
@@ -99,7 +104,7 @@ private func CreateSingleLinkView(
         boldFont: titleLabelFont,
         linkFont: titleLabelFont,
         textColor: .textDefault,
-        linkColor: .textActionPrimaryFocused,
+        linkColor: theme.textActionColor,
         showLinkUnderline: false
     )
     titleLabel.setText(title, action: didSelectURL)
@@ -112,7 +117,7 @@ private func CreateSingleLinkView(
             boldFont: contentFont,
             linkFont: contentFont,
             textColor: .textSubdued,
-            linkColor: .textActionPrimaryFocused,
+            linkColor: theme.textActionColor,
             showLinkUnderline: false
         )
         contentLabel.setText(content, action: didSelectURL)

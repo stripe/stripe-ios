@@ -171,12 +171,12 @@ public class PaymentSheet {
                         return verticalVC
                     }
                 }()
-                self.bottomSheetViewController.contentStack = [paymentSheetVC]
+                self.bottomSheetViewController.setViewControllers([paymentSheetVC])
             case .failure(let error):
                 completion(.failed(error: error))
             }
         }
-        self.bottomSheetViewController.contentStack = [self.loadingViewController]
+        self.bottomSheetViewController.setViewControllers([self.loadingViewController])
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 

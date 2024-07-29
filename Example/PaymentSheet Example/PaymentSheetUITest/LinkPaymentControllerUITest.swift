@@ -80,7 +80,7 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.buttons["Connect account"].tap()
 
         // "Success" pane
-        XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
+        XCTAssert(app.staticTexts["Your account was connected."].waitForExistence(timeout: 10))
         // XCUITest had problems tapping the Done button in success pane,
         // so here we tap the Done button by estimating coordinates
         app.coordinate(
@@ -91,7 +91,7 @@ class LinkPaymentControllerUITest: XCTestCase {
             .withOffset(CGVector(dx: 0, dy: -130))
             .tap()
 
-        sleep(1) // wait for modal to disappear before pressing Buy
+        sleep(3) // wait for modal to disappear before pressing Buy
 
         // Back to "LinkPaymentController"
         app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)

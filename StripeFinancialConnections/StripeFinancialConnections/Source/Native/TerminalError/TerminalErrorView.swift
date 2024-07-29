@@ -19,7 +19,8 @@ func TerminalErrorView(
         contentView: PaneLayoutView.createContentView(
             iconView: RoundedIconView(
                 image: .image(.warning_triangle),
-                style: .circle
+                style: .circle,
+                theme: theme
             ),
             title: STPLocalizedString(
                 "Something went wrong",

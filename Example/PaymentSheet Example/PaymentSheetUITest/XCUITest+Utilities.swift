@@ -33,6 +33,11 @@ extension XCUIElement {
 
     @discardableResult
     func waitForExistenceAndTap(timeout: TimeInterval = 4.0) -> Bool {
+        if exists {
+            forceTapElement()
+            return true
+        }
+
         guard waitForExistence(timeout: timeout) else {
             return false
         }
