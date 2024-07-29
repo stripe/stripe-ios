@@ -125,7 +125,12 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
-    - cache-pull@2: {}
+    - cache-pull@2:
+        cache_api_url: $BITRISE_CACHE_API_URL
+        is_debug_mode: false
+        allow_fallback: true
+        extract_to_relative_path: false
+        ignore_stack_difference: false
     - bundler@0: {}
     - cache-push@2:
         inputs:
@@ -539,7 +544,12 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: "1"
-    - cache-pull@2: {}
+    - cache-pull@2:
+        cache_api_url: $BITRISE_CACHE_API_URL
+        is_debug_mode: false
+        allow_fallback: true
+        extract_to_relative_path: false
+        ignore_stack_difference: false
     - bundler@0: {}
     - cache-push@2:
         inputs:
@@ -558,7 +568,12 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
-    - cache-pull@2: {}
+    - cache-pull@2:
+        cache_api_url: $BITRISE_CACHE_API_URL
+        is_debug_mode: false
+        allow_fallback: true
+        extract_to_relative_path: false
+        ignore_stack_difference: false
     - bundler@0: {}
     - cache-push@2:
         inputs:
