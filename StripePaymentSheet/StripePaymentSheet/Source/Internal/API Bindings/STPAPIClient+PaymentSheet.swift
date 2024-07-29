@@ -110,7 +110,7 @@ extension STPAPIClient {
         return (setupIntent, elementsSession)
     }
 
-    func retrieveElementsSession(
+    func retrieveDeferredElementsSession(
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         clientDefaultPaymentMethod: String?,
         configuration: PaymentSheet.Configuration

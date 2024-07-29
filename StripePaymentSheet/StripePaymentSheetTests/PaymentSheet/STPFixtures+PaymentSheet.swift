@@ -25,9 +25,7 @@ public extension PaymentSheet.Configuration {
 
 extension STPElementsSession {
     static func _testCardValue() -> STPElementsSession {
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        return elementsSession
+        return _testValue(paymentMethodTypes: ["card"])
     }
 
     static func _testValue(
@@ -66,21 +64,31 @@ extension STPElementsSession {
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
+
+    static func _testValue(intent: Intent) -> STPElementsSession {
+        let paymentMethodTypes: [String] = {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                return paymentIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: .init(rawValue: $0.intValue) ?? .unknown) ?? "unknown" }
+            case .setupIntent(let setupIntent):
+                return setupIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: .init(rawValue: $0.intValue) ?? .unknown) ?? "unknown" }
+            case .deferredIntent(let intentConfig):
+                return intentConfig.paymentMethodTypes ?? []
+            }
+        }()
+        return STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes)
+    }
 }
 
 extension Intent {
     static func _testPaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
-        customerSessionData: [String: Any]? = nil,
-        cardBrandChoiceData: [String: Any]? = nil,
-        currency: String = "usd",
-        cvcRecollectionEnabled: Bool = false
+        currency: String = "usd"
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData, cardBrandChoiceData: cardBrandChoiceData)
-        return .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
+        return .paymentIntent(paymentIntent)
     }
 
     static func _testValue() -> Intent {
@@ -94,13 +102,13 @@ extension Intent {
         let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: paymentMethodTypes)
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData)
-        return .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
+        return .setupIntent(setupIntent)
     }
 
     static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType], setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: nil)
-        return .deferredIntent(elementsSession: elementsSession, intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage), confirmHandler: { _, _, _ in }))
+        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage), confirmHandler: { _, _, _ in }))
     }
 }
 

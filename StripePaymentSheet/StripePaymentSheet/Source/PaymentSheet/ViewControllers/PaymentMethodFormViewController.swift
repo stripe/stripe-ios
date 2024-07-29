@@ -18,13 +18,14 @@ protocol PaymentMethodFormViewControllerDelegate: AnyObject {
 class PaymentMethodFormViewController: UIViewController {
     let form: PaymentMethodElement
     let intent: Intent
+    let elementsSession: STPElementsSession
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheet.Configuration
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
         // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have a divergent path for link. Where is the setDefaultBillingDetailsIfNecessary call, for example?
         if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
-            return linkEnabledElement.makePaymentOption(intent: intent)
+            return linkEnabledElement.makePaymentOption(intent: intent, elementsSession: elementsSession)
         }
 
         let params = IntentConfirmParams(type: paymentMethodType)
@@ -50,14 +51,15 @@ class PaymentMethodFormViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(type: PaymentSheet.PaymentMethodType, intent: Intent, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, headerView: UIView?, delegate: PaymentMethodFormViewControllerDelegate) {
+    init(type: PaymentSheet.PaymentMethodType, intent: Intent, elementsSession: STPElementsSession, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, headerView: UIView?, delegate: PaymentMethodFormViewControllerDelegate) {
         self.paymentMethodType = type
         self.intent = intent
+        self.elementsSession = elementsSession
         self.delegate = delegate
         self.configuration = configuration
         self.headerView = headerView
         let shouldOfferLinkSignup: Bool = {
-            guard isLinkEnabled && !intent.disableLinkSignup else {
+            guard isLinkEnabled && !elementsSession.disableLinkSignup else {
                 return false
             }
 
@@ -71,6 +73,7 @@ class PaymentMethodFormViewController: UIViewController {
         } else {
             self.form = PaymentSheetFormFactory(
                 intent: intent,
+                elementsSession: elementsSession,
                 configuration: .paymentSheet(configuration),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
@@ -273,7 +276,7 @@ extension PaymentMethodFormViewController {
             "hosted_surface": "payment_element",
         ]
         switch intent {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
@@ -283,7 +286,7 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent(_, let setupIntent):
+        case .setupIntent(let setupIntent):
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
@@ -293,7 +296,7 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case let .deferredIntent(elementsSession, intentConfig):
+        case let .deferredIntent(intentConfig):
             let amount: Int?
             let currency: String?
             switch intentConfig.mode {
@@ -363,7 +366,7 @@ extension PaymentMethodFormViewController {
             "hosted_surface": "payment_element",
         ]
         switch intent {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
@@ -373,7 +376,7 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent(_, let setupIntent):
+        case .setupIntent(let setupIntent):
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,

@@ -37,6 +37,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         // If there are saved PMs, always show the list, even if there's only one other PM
         let savedPMsLoadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             isLinkEnabled: false,
             isApplePayEnabled: false
@@ -46,6 +47,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         // If there are no saved payment methods and we have only one payment method and it collects user input, display the form directly
         let formDirectlyResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
             savedPaymentMethods: [],
             isLinkEnabled: false,
             isApplePayEnabled: false
@@ -55,6 +57,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         // If there are no saved payment methods and we have only one payment method and it doesn't collect user input, display the list
         let onlyOnePM = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             isLinkEnabled: false,
             isApplePayEnabled: false
@@ -64,6 +67,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         // If there are no saved payment methods and we have multiple PMs, display the list
         let multiplePMs = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             isLinkEnabled: false,
             isApplePayEnabled: false
@@ -73,6 +77,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         // If there are no saved payment methods and we have one PM and Link, display the list
         let onePMAndLink = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             isLinkEnabled: true,
             isApplePayEnabled: false
@@ -82,6 +87,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         // If there are no saved payment methods and we have one PM and Apple Pay, display the list
         let onePMAndApplePay = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             isLinkEnabled: false,
             isApplePayEnabled: true

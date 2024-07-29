@@ -138,9 +138,8 @@ extension PaymentSheet {
         }
 
         // MARK: - Private properties
-        var intent: Intent {
-            return viewController.intent
-        }
+        var intent: Intent { viewController.intent }
+        var elementsSession: STPElementsSession { viewController.elementsSession }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
         private var presentPaymentOptionsCompletion: (() -> Void)?
@@ -163,11 +162,6 @@ extension PaymentSheet {
 
             /// The status of the last update API call
             var status: Status = .inProgress
-
-            init(id: UUID, status: Status = .inProgress) {
-                self.id = id
-                self.status = status
-            }
 
             enum Status {
                 case completed
@@ -388,17 +382,18 @@ extension PaymentSheet {
                     configuration: configuration,
                     authenticationContext: authenticationContext,
                     intent: intent,
+                    elementsSession: elementsSession,
                     paymentOption: paymentOption,
                     paymentHandler: paymentHandler,
                     isFlowController: true
-                ) { [intent, configuration] result, deferredIntentConfirmationType in
+                ) { [intent, elementsSession, configuration] result, deferredIntentConfirmationType in
                     STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
                         isCustom: true,
                         paymentMethod: paymentOption.analyticsValue,
                         result: result,
-                        linkEnabled: PaymentSheetLoader.isLinkEnabled(intent: intent, configuration: configuration),
+                        linkEnabled: PaymentSheetLoader.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
                         activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                        linkSessionType: intent.linkPopupWebviewOption,
+                        linkSessionType: elementsSession.linkPopupWebviewOption,
                         currency: intent.currency,
                         intentConfig: intent.intentConfig,
                         deferredIntentConfirmationType: deferredIntentConfirmationType,
@@ -577,6 +572,7 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
 internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewController {
     var error: Error? { get }
     var intent: Intent { get }
+    var elementsSession: STPElementsSession { get }
     var selectedPaymentOption: PaymentOption? { get }
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.

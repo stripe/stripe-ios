@@ -44,11 +44,11 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         completion: @escaping STPIntentClientSecretCompletionBlock
     ) {
         switch intent {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             completion(paymentIntent.clientSecret, nil)
-        case .setupIntent(_, let setupIntent):
+        case .setupIntent(let setupIntent):
             completion(setupIntent.clientSecret, nil)
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
                 assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
                 completion(nil, STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod."))

@@ -53,10 +53,6 @@ class StubCustomerAdapter: CustomerAdapter {
 
 class CustomerSheetSnapshotTests: STPSnapshotTestCase {
 
-    private let backendCheckoutUrl = URL(
-        string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
-    )!
-
     private var cs: CustomerSheet!
 
     private var window: UIWindow {
@@ -573,9 +569,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         let presentingExpectation = XCTestExpectation(description: "Presenting payment sheet")
         DispatchQueue.global(qos: .background).async {
             var isLoading = true
-            var count = 0
-            while isLoading && count < 10 {
-                count += 1
+            while isLoading {
                 DispatchQueue.main.sync {
                     guard
                         (self.cs.bottomSheetViewController.contentStack.first as? LoadingViewController)
@@ -591,7 +585,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
                 }
             }
         }
-        wait(for: [presentingExpectation], timeout: 10.0)
+        wait(for: [presentingExpectation], timeout: 5)
 
         cs.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
             preferredContentSizeCategory: preferredContentSizeCategory
@@ -613,7 +607,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
-        var template = String(data: data, encoding: .utf8)!
+        var template = String(decoding: data, as: UTF8.self)
         for (templateKey, templateValue) in variables {
             let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
             template = translated

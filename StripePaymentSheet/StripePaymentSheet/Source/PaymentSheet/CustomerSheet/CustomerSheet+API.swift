@@ -50,7 +50,7 @@ extension CustomerSheet {
                 }
             }
         if case .new(let confirmParams) = paymentOption,
-           case .setupIntent(_, let setupIntent) = intent {
+           case .setupIntent(let setupIntent) = intent {
             let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
             setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
             setupIntentParams.returnURL = configuration.returnURL

@@ -98,7 +98,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         _ = PaymentSheet.FlowController(
             configuration: PaymentSheet.Configuration(),
             loadResult: .init(
-                intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), paymentIntent: STPFixtures.paymentIntent()),
+                intent: .paymentIntent(STPFixtures.paymentIntent()),
+                elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()),
                 savedPaymentMethods: [],
                 isLinkEnabled: false,
                 isApplePayEnabled: false

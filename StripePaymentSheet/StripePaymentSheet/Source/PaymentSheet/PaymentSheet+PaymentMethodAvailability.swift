@@ -64,7 +64,7 @@ extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
 extension Intent: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
-        case let .paymentIntent(_, paymentIntent):
+        case let .paymentIntent(paymentIntent):
             var reqs = [PaymentMethodTypeRequirement]()
             // Shipping address
             if let shippingInfo = paymentIntent.shipping {
@@ -85,7 +85,7 @@ extension Intent: PaymentMethodRequirementProvider {
             }
 
             return reqs
-        case let .setupIntent(_, setupIntent):
+        case let .setupIntent(setupIntent):
             var reqs = [PaymentMethodTypeRequirement]()
 
             // valid us bank verification method

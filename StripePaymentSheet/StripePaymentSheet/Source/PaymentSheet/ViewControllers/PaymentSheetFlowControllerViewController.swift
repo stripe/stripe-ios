@@ -17,6 +17,7 @@ import UIKit
 class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewControllerProtocol {
     // MARK: - Internal Properties
     let intent: Intent
+    let elementsSession: STPElementsSession
     let configuration: PaymentSheet.Configuration
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
@@ -84,7 +85,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private var isHackyLinkButtonSelected: Bool = false
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
     // MARK: - Views
@@ -162,6 +163,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         previousPaymentOption: PaymentOption? = nil
     ) {
         self.intent = loadResult.intent
+        self.elementsSession = loadResult.elementsSession
         self.isApplePayEnabled = loadResult.isApplePayEnabled
         self.isLinkEnabled = loadResult.isLinkEnabled
         self.configuration = configuration
@@ -200,15 +202,16 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-                allowsRemovalOfPaymentMethods: self.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+                allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
             appearance: configuration.appearance,
-            cbcEligible: intent.cardBrandChoiceEligible
+            cbcEligible: elementsSession.isCardBrandChoiceEligible
         )
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
+            elementsSession: elementsSession,
             configuration: configuration,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             isLinkEnabled: isLinkEnabled

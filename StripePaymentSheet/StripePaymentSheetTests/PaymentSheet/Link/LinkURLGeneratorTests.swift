@@ -48,13 +48,13 @@ class LinkURLGeneratorTests: XCTestCase {
             // Nothing
         }
         config.apiClient.publishableKey = "pk_123"
-        let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
 
         // Create a session ID
         AnalyticsHelper.shared.generateSessionID()
         let sessionID = AnalyticsHelper.shared.sessionID!
 
-        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent)
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .emptyElementsSession)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
                                            publishableKey: config.apiClient.publishableKey!,

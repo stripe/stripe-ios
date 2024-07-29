@@ -955,7 +955,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
-        var template = String(data: data, encoding: .utf8)!
+        var template = String(decoding: data, as: UTF8.self)
         for (templateKey, templateValue) in variables {
             let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
             template = translated
@@ -1165,9 +1165,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         let presentingExpectation = XCTestExpectation(description: "Presenting payment sheet")
         DispatchQueue.global(qos: .background).async {
             var isLoading = true
-            var count = 0
-            while isLoading && count < 10 {
-                count += 1
+            while isLoading {
                 DispatchQueue.main.sync {
                     guard
                         (self.paymentSheet.bottomSheetViewController.contentStack.first as? LoadingViewController)

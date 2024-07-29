@@ -114,7 +114,7 @@ class STPElementsSessionTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: nil)
 
-        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior
         let allowsRemovalPS = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemovalPS)
@@ -135,7 +135,7 @@ class STPElementsSessionTest: XCTestCase {
                                                                 ],
                                                             ])
 
-        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
@@ -155,7 +155,7 @@ class STPElementsSessionTest: XCTestCase {
                                                                 ],
                                                             ])
 
-        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
@@ -175,7 +175,7 @@ class STPElementsSessionTest: XCTestCase {
                                                                 ],
                                                             ])
 
-        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertFalse(allowsRemoval)
@@ -195,7 +195,7 @@ class STPElementsSessionTest: XCTestCase {
                                                                 ],
                                                             ])
 
-        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertFalse(allowsRemoval)
@@ -215,7 +215,7 @@ class STPElementsSessionTest: XCTestCase {
                                                                 ],
                                                             ])
 
-        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior()
+        let savePaymentMethodConsentBehavior = elementsSession.savePaymentMethodConsentBehavior
 
         XCTAssertEqual(.legacy, savePaymentMethodConsentBehavior)
     }
