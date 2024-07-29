@@ -312,6 +312,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
             clientSecretResolved.fulfill()
         }
         try await _testConfirm(intent: intent,
+                               elementsSession: elementsSession,
                                customerId: newCustomer.customer,
                                currency: currency,
                                apiClient: apiClient,
@@ -343,6 +344,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
     @MainActor
     func _testConfirm(
         intent: Intent,
+        elementsSession: STPElementsSession,
         customerId: String,
         currency: String,
         apiClient: STPAPIClient,
@@ -364,7 +366,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
         _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
 
         // Make the form
-        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testValue(intent: intent), configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType)
+        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: elementsSession, configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType)
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view)
