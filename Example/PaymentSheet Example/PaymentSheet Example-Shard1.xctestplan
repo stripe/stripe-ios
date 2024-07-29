@@ -36,7 +36,6 @@
         "PaymentSheetDeferredUIBankAccountTests",
         "PaymentSheetDeferredUITests",
         "PaymentSheetSnapshotTests",
-        "PaymentSheetStandardLPMUITests",
         "PaymentSheetStandardUITests",
         "PaymentSheetUITestCase",
         "PaymentSheetVerticalUITests"

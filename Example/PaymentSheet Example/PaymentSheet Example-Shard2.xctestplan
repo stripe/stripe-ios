@@ -39,6 +39,7 @@
         "PaymentSheetBillingCollectionUITestCase",
         "PaymentSheetGDPRUITests",
         "PaymentSheetLinkUITests",
+        "PaymentSheetStandardLPMUITests",
         "PaymentSheet_AddressTests"
       ],
       "target" : {
