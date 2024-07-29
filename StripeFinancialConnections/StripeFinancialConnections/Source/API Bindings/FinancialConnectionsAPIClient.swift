@@ -143,6 +143,22 @@ protocol FinancialConnectionsAPIClient {
     func markLinkVerified(
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest>
+
+    func linkAccountSignUp(
+        requestSurface: String,
+        emailAddress: String,
+        phoneNumber: String,
+        country: String,
+        paymentIntentId: String?,
+        merchantPublishableKey: String
+    ) -> Future<LinkSignUpResponse>
+
+    func attachLinkConsumerToLinkAccountSession(
+        requestSurface: String,
+        linkAccountSession: String,
+        merchantPublishableKey: String,
+        consumerSessionClientSecret: String
+    ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -709,6 +725,52 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return post(resource: "consumers/sessions/confirm_verification", parameters: parameters)
     }
+
+    func linkAccountSignUp(
+        requestSurface: String, // "ios_instant_debits"
+        emailAddress: String,
+        phoneNumber: String,
+        country: String,
+        paymentIntentId: String?,
+        merchantPublishableKey: String
+    ) -> Future<LinkSignUpResponse> {
+        var parameters: [String: Any] = [
+            "request_surface": requestSurface,
+            "email_address": emailAddress
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased(),
+            "phone_number": phoneNumber,
+            "country": country,
+            "country_inferring_method": "PHONE_NUMBER",
+            "locale": Locale.current.toLanguageTag(),
+            "consent_action": "entered_phone_number_clicked_save_to_link",
+            "key": merchantPublishableKey,
+        ]
+
+        if let paymentIntentId {
+            parameters["financial_incentive"] = [
+                "payment_intent": paymentIntentId
+            ]
+        }
+        return post(resource: APIEndpointLinkAccountsSignUp, parameters: parameters)
+    }
+
+    func attachLinkConsumerToLinkAccountSession(
+        requestSurface: String,
+        linkAccountSession: String,
+        merchantPublishableKey: String,
+        consumerSessionClientSecret: String
+    ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
+        let parameters: [String: Any] = [
+            "request_surface": requestSurface,
+            "link_account_session": linkAccountSession,
+            "key": merchantPublishableKey,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ],
+        ]
+        return post(resource: APIEndpointAttachLinkConsumerToLinkAccountSession, parameters: parameters)
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
@@ -737,3 +799,5 @@ private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts
 private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
 private let APIEndpointConsumerSessions = "connections/link_account_sessions/consumer_sessions"
 private let APIEndpointPollAccountNumbers = "link_account_sessions/poll_account_numbers"
+private let APIEndpointLinkAccountsSignUp = "consumers/accounts/sign_up"
+private let APIEndpointAttachLinkConsumerToLinkAccountSession = "consumers/attach_link_consumer_to_link_account_session"
