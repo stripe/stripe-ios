@@ -129,6 +129,11 @@ extension PaymentSheet {
 
         // MARK: - New Payment Method
         case let .new(confirmParams):
+            // Set allow_redisplay on params
+            confirmParams.setAllowRedisplay(
+                paymentMethodSave: elementsSession.customerSessionPaymentSheetPaymentMethodSave,
+                isSettingUp: intent.isSettingUp
+            )
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):

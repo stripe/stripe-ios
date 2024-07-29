@@ -216,8 +216,8 @@ extension STPElementsSession {
 }
 
 extension STPElementsSession {
-    func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
-        guard let paymentMethodSave = customerSessionPaymentSheetPaymentMethodSave() else {
+    var savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        guard let paymentMethodSave = customerSessionPaymentSheetPaymentMethodSave else {
             return .legacy
         }
         return paymentMethodSave
@@ -230,7 +230,7 @@ extension STPElementsSession {
     /// -   true, if the value of payment_method_save == "enabled",
     /// -   false, if the value of payment_method_save == "disabled",
     /// -   nil, if CustomerSession is not available (using legacy ephemeral key, or payment_sheet component is not enabled)
-    func customerSessionPaymentSheetPaymentMethodSave() -> Bool? {
+    var customerSessionPaymentSheetPaymentMethodSave: Bool? {
         guard let customerSession = customer?.customerSession,
               customerSession.paymentSheetComponent.enabled,
               let features = customerSession.paymentSheetComponent.features else {
