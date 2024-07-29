@@ -34,6 +34,7 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     }()
     private lazy var bodyView: NetworkingLinkStepUpVerificationBodyView = {
         let bodyView = NetworkingLinkStepUpVerificationBodyView(
+            theme: dataSource.manifest.theme,
             otpView: otpView,
             didSelectResendCode: { [weak self] in
                 self?.didSelectResendCode()
