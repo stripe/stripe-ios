@@ -364,7 +364,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
         _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
 
         // Make the form
-        let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType)
+        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testValue(intent: intent), configuration: .paymentSheet(configuration), paymentMethod: paymentMethodType)
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view)
@@ -393,6 +393,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: intent,
+            elementsSession: ._testValue(intent: intent),
             paymentOption: .new(confirmParams: intentConfirmParams),
             paymentHandler: paymentHandler
         ) { result, _  in
@@ -501,7 +502,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
-            return .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
+            return .paymentIntent(paymentIntent)
         case .paymentIntent_deferredIntent_csc:
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { _, _ in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
@@ -513,7 +514,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return clientSecret
             }
-            return .deferredIntent(elementsSession: elementsSession, intentConfig: deferredCSC)
+            return .deferredIntent(intentConfig: deferredCSC)
         case .paymentIntent_deferredIntent_ssc:
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { paymentMethod, shouldSavePM in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
@@ -529,7 +530,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return clientSecret
             }
-            return .deferredIntent(elementsSession: elementsSession, intentConfig: deferredSSC)
+            return .deferredIntent(intentConfig: deferredSSC)
 
         // MARK: - Payment Intent + SFU
         case .paymentIntentSFU_intentFirst_csc:
@@ -544,7 +545,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
-            return .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
+            return .paymentIntent(paymentIntent)
         case .paymentIntentSFU_deferredIntent_csc:
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
@@ -557,7 +558,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return clientSecret
             }
-            return .deferredIntent(elementsSession: elementsSession, intentConfig: deferredCSC)
+            return .deferredIntent(intentConfig: deferredCSC)
         case .paymentIntentSFU_deferredIntent_ssc:
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, shouldSavePM in
                 let otherParams = [
@@ -577,7 +578,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return clientSecret
             }
-            return .deferredIntent(elementsSession: elementsSession, intentConfig: deferredSSC)
+            return .deferredIntent(intentConfig: deferredSSC)
 
         // MARK: - Setup Intent
         case .setupIntent_intentFirst_csc:
@@ -590,7 +591,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
             }()
-            return .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
+            return .setupIntent(setupIntent)
         case .setupIntent_deferredIntent_csc:
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { _, _ in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes,
@@ -599,7 +600,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return clientSecret
             }
-            return .deferredIntent(elementsSession: elementsSession, intentConfig: deferredCSC)
+            return .deferredIntent(intentConfig: deferredCSC)
         case .setupIntent_deferredIntent_ssc:
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { paymentMethod, _ in
 
@@ -612,7 +613,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                 clientSecretCallback(clientSecret)
                 return clientSecret
             }
-            return .deferredIntent(elementsSession: elementsSession, intentConfig: deferredSSC)
+            return .deferredIntent(intentConfig: deferredSSC)
         }
     }
 }
@@ -631,10 +632,9 @@ extension PaymentSheet_GDPR_ConfirmFlowTests: PaymentSheetAuthenticationContext 
     }
 
     func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        guard let currentAction = action as? STPPaymentHandlerPaymentIntentActionParams else { return }
         // Simulate that the intent transitioned to succeeded
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state
-        currentAction.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
-        currentAction.complete(with: .succeeded, error: nil)
+        action.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
+        action.complete(with: .succeeded, error: nil)
     }
 }

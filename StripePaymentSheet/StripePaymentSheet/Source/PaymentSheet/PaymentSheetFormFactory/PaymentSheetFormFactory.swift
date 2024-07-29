@@ -84,7 +84,7 @@ class PaymentSheetFormFactory {
                   currency: intent.currency,
                   amount: intent.amount,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
-                  savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior(),
+                  savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   analyticsClient: analyticsClient)
     }
 
