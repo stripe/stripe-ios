@@ -194,6 +194,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testSunbitConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
+                               amount: 100000,
                                paymentMethodType: .sunbit,
                                merchantCountry: .US) { form in
             // Sunbit has no input fields
@@ -513,6 +514,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     func _testConfirm(
         intentKinds: [IntentKind],
         currency: String,
+        amount: Int? = nil,
         paymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
@@ -523,6 +525,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             try await _testConfirm(
                 intentKind: intentKind,
                 currency: currency,
+                amount: amount,
                 paymentMethodType: paymentMethodType,
                 merchantCountry: merchantCountry,
                 configuration: configuration,
@@ -545,6 +548,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     func _testConfirm(
         intentKind: IntentKind,
         currency: String,
+        amount: Int? = nil,
         paymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
@@ -571,7 +575,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         }()
         configuration.apiClient = apiClient
 
-        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, apiClient: apiClient)
+        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, apiClient: apiClient)
 
         // Check that the form respects billingDetailsCollection
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)
@@ -629,6 +633,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     func makeTestIntents(
         intentKind: IntentKind,
         currency: String,
+        amount: Int? = nil,
         paymentMethod: STPPaymentMethodType,
         merchantCountry: MerchantCountry,
         customer: String? = nil,
@@ -658,16 +663,18 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
 
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer
                 )
@@ -681,9 +688,11 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 // Blik doesn't support server-side confirmation
                 return intents
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { paymentMethod, _ in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency)) { paymentMethod, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
-                    types: paymentMethodTypes, currency: currency,
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     paymentMethodID: paymentMethod.stripeId,
                     customerID: customer,
@@ -702,28 +711,31 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     otherParams: ["setup_future_usage": "off_session"]
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     otherParams: ["setup_future_usage": "off_session"]
                 )
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
                 let otherParams = [
                     "setup_future_usage": "off_session",
                 ].merging(paramsForServerSideConfirmation) { _, b in b }
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     paymentMethodID: paymentMethod.stripeId,
                     customerID: customer,

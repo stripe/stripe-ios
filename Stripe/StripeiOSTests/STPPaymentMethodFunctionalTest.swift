@@ -290,6 +290,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertNil(error)
             XCTAssertNotNil(paymentMethod)
             XCTAssertEqual(paymentMethod?.type, .sunbit)
+            XCTAssertNotNil(paymentMethod?.sunbit, "The `sunbit` property must be populated")
             expectation.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)
