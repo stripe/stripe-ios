@@ -158,25 +158,15 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
     func testCanPayWithLinkWallet_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .payment
+        settings.layout = .vertical
         loadPlayground(app, settings)
 
-        XCTAssertTrue(app.buttons["vertical"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Present PaymentSheet"].waitForExistenceAndTap())
 
-        let expectation = XCTestExpectation(description: "Link sign in dialog")
-        // Listen for the system login dialog
-        addUIInterruptionMonitor(withDescription: "Link sign in system dialog") { alert in
-            // Cancel the payment
-            XCTAssertTrue(alert.buttons["Cancel"].waitForExistenceAndTap())
-            expectation.fulfill()
-            return true
-        }
-
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistenceAndTap())
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.app.tap() // required to trigger the UI interruption monitor
-        }
-        wait(for: [expectation], timeout: 5.0)
+        // Cancel the Link sign in system dialog
+        // Note: `addUIInterruptionMonitor` is flakey so we do this hack instead
+        XCTAssertTrue(XCUIApplication(bundleIdentifier: "com.apple.springboard").buttons["Cancel"].waitForExistenceAndTap())
     }
 
     func testRemovalOfSavedPaymentMethods_verticalMode() {

@@ -211,8 +211,8 @@ class PollingViewController: UIViewController {
                                   repeats: true)
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.intentPoller.beginPolling()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+            self?.intentPoller.beginPolling()
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
