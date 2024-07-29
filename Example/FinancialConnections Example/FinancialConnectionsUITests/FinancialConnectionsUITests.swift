@@ -131,16 +131,9 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
 
-        let manuallyVerifyLabel = app
-            .otherElements["consent_manually_verify_label"]
-            .links
-            .firstMatch
-        XCTAssertTrue(manuallyVerifyLabel.waitForExistence(timeout: 10.0))
-        manuallyVerifyLabel.tap()
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
 
-        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
-        XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
-        testModeAutofillButton.tap()
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
 
         app.fc_nativeSuccessDoneButton.tap()
 
