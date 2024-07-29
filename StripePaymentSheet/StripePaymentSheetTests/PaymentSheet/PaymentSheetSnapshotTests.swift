@@ -955,7 +955,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
-        var template = String(data: data, encoding: .utf8)!
+        var template = String(decoding: data, as: UTF8.self)
         for (templateKey, templateValue) in variables {
             let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
             template = translated
