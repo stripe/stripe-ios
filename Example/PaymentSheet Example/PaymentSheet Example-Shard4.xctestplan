@@ -35,14 +35,14 @@
         "CustomerSheetUITest",
         "LinkPaymentControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
+        "PaymentSheetBillingCollectionLPMUITests",
+        "PaymentSheetBillingCollectionUICardTests",
+        "PaymentSheetBillingCollectionUITestCase",
+        "PaymentSheetDeferredServerSideUITests",
         "PaymentSheetDeferredUIBankAccountTests",
         "PaymentSheetDeferredUITests",
         "PaymentSheetGDPRUITests",
         "PaymentSheetLinkUITests",
-        "PaymentSheetStandardLPMUITests",
-        "PaymentSheetStandardUITests",
-        "PaymentSheetUITestCase",
-        "PaymentSheetVerticalUITests",
         "PaymentSheet_AddressTests"
       ],
       "target" : {
