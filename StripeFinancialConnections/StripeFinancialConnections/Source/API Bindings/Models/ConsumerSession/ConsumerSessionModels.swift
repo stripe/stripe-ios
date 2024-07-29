@@ -22,6 +22,7 @@ struct LookupConsumerSessionResponse: Decodable {
 struct LinkSignUpResponse: Decodable {
     let accountId: String
     let publishableKey: String
+    let authSessionClientSecret: String
     let consumerSession: ConsumerSessionData
 }
 

@@ -148,15 +148,12 @@ protocol FinancialConnectionsAPIClient {
         requestSurface: String,
         emailAddress: String,
         phoneNumber: String,
-        country: String,
-        paymentIntentId: String?,
-        merchantPublishableKey: String
+        country: String
     ) -> Future<LinkSignUpResponse>
 
     func attachLinkConsumerToLinkAccountSession(
         requestSurface: String,
         linkAccountSession: String,
-        merchantPublishableKey: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse>
 }
@@ -730,9 +727,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         requestSurface: String, // "ios_instant_debits"
         emailAddress: String,
         phoneNumber: String,
-        country: String,
-        paymentIntentId: String?,
-        merchantPublishableKey: String
+        country: String
     ) -> Future<LinkSignUpResponse> {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -744,13 +739,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "country_inferring_method": "PHONE_NUMBER",
             "locale": Locale.current.toLanguageTag(),
             "consent_action": "entered_phone_number_clicked_save_to_link",
-            "key": merchantPublishableKey,
         ]
 
-        if let paymentIntentId {
-            parameters["financial_incentive"] = [
-                "payment_intent": paymentIntentId
-            ]
+        if let publishableKey {
+            parameters["key"] = publishableKey
         }
         return post(resource: APIEndpointLinkAccountsSignUp, parameters: parameters)
     }
@@ -758,17 +750,19 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func attachLinkConsumerToLinkAccountSession(
         requestSurface: String,
         linkAccountSession: String,
-        merchantPublishableKey: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "link_account_session": linkAccountSession,
-            "key": merchantPublishableKey,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
             ],
         ]
+
+        if let publishableKey {
+            parameters["key"] = publishableKey
+        }
         return post(resource: APIEndpointAttachLinkConsumerToLinkAccountSession, parameters: parameters)
     }
 }
