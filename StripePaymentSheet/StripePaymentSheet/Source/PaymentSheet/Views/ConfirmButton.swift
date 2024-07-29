@@ -44,11 +44,11 @@ class ConfirmButton: UIView {
 
         static func makeDefaultTypeForPaymentSheet(intent: Intent) -> CallToActionType {
             switch intent {
-            case .paymentIntent(_, let paymentIntent):
+            case .paymentIntent(let paymentIntent):
                 return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
             case .setupIntent:
                 return .setup
-            case .deferredIntent(_, let intentConfig):
+            case .deferredIntent(let intentConfig):
                 switch intentConfig.mode {
                 case .payment(let amount, let currency, _, _):
                     return .pay(amount: amount, currency: currency)
@@ -134,10 +134,6 @@ class ConfirmButton: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
 
 #if !canImport(CompositorServices)

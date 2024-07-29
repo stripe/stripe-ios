@@ -181,7 +181,13 @@ extension STPElementsSession: STPAPIResponseDecodable {
         )
     }
 }
+
+// MARK: - Extensions
 extension STPElementsSession {
+    var isCardBrandChoiceEligible: Bool {
+        return cardBrandChoice?.eligible ?? false
+    }
+
     func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {

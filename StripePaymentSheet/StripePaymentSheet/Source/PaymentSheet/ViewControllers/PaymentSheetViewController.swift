@@ -47,7 +47,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
-    private(set) var intent: Intent
+    let intent: Intent
+    let elementsSession: STPElementsSession
     enum Mode {
         case selectingSaved
         case addingNew
@@ -58,7 +59,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
     // MARK: - Views
@@ -66,6 +67,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
         return AddPaymentMethodViewController(
             intent: intent,
+            elementsSession: elementsSession,
             configuration: configuration,
             isLinkEnabled: isLinkEnabled,
             delegate: self
@@ -145,6 +147,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         delegate: PaymentSheetViewControllerDelegate
     ) {
         self.intent = loadResult.intent
+        self.elementsSession = loadResult.elementsSession
         self.configuration = configuration
         self.isApplePayEnabled = loadResult.isApplePayEnabled
         self.isLinkEnabled = loadResult.isLinkEnabled
@@ -161,12 +164,12 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 isCVCRecollectionEnabled: loadResult.intent.cvcRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-                allowsRemovalOfPaymentMethods: loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+                allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
             appearance: configuration.appearance,
-            cbcEligible: intent.cardBrandChoiceEligible
+            cbcEligible: elementsSession.isCardBrandChoiceEligible
         )
 
         if loadResult.savedPaymentMethods.isEmpty {
@@ -454,7 +457,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     result: result,
                     linkEnabled: self.isLinkEnabled,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    linkSessionType: self.intent.linkPopupWebviewOption,
+                    linkSessionType: self.elementsSession.linkPopupWebviewOption,
                     currency: self.intent.currency,
                     intentConfig: self.intent.intentConfig,
                     deferredIntentConfirmationType: deferredIntentConfirmationType,

@@ -62,6 +62,7 @@ class PaymentSheetFormFactory {
 
     convenience init(
         intent: Intent,
+        elementsSession: STPElementsSession,
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
@@ -76,14 +77,14 @@ class PaymentSheetFormFactory {
                   addressSpecProvider: addressSpecProvider,
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
-                  cardBrandChoiceEligible: intent.cardBrandChoiceEligible,
-                  supportsLinkCard: intent.supportsLinkCard,
+                  cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
+                  supportsLinkCard: elementsSession.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
                   currency: intent.currency,
                   amount: intent.amount,
-                  countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
-                  savePaymentMethodConsentBehavior: intent.elementsSession.savePaymentMethodConsentBehavior(),
+                  countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
+                  savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior(),
                   analyticsClient: analyticsClient)
     }
 

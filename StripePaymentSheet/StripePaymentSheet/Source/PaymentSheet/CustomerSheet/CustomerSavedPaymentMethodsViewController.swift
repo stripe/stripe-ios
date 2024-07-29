@@ -463,12 +463,12 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            guard let (fetchedSetupIntent, fetchedElementsSession) = await fetchSetupIntent(clientSecret: clientSecret) else {
+            guard let (fetchedSetupIntent, _) = await fetchSetupIntent(clientSecret: clientSecret) else {
                 self.processingInFlight = false
                 self.updateUI()
                 return
             }
-            let setupIntent = Intent.setupIntent(elementsSession: fetchedElementsSession, setupIntent: fetchedSetupIntent)
+            let setupIntent = Intent.setupIntent(setupIntent: fetchedSetupIntent)
 
             guard let setupIntent = await self.confirm(intent: setupIntent, paymentOption: paymentOption),
                   let paymentMethod = setupIntent.paymentMethod else {

@@ -252,6 +252,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 configuration: self.configuration,
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
+                elementsSession: paymentSheetViewController.elementsSession,
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
                 isFlowController: false
@@ -312,7 +313,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         self.presentPayWithLinkController(
             from: paymentSheetViewController,
-            intent: paymentSheetViewController.intent
+            intent: paymentSheetViewController.intent,
+            elementsSession: paymentSheetViewController.elementsSession
         )
     }
 }
@@ -335,6 +337,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
     func payWithLinkWebControllerDidComplete(
         _ PayWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
+        elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
         let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.85)
@@ -367,10 +370,12 @@ private extension PaymentSheet {
     func presentPayWithLinkController(
         from presentingController: UIViewController,
         intent: Intent,
+        elementsSession: STPElementsSession,
         completion: (() -> Void)? = nil
     ) {
         let payWithLinkVC = PayWithLinkWebController(
             intent: intent,
+            elementsSession: elementsSession,
             configuration: configuration
         )
 
@@ -384,6 +389,7 @@ private extension PaymentSheet {
 
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
+    var elementsSession: STPElementsSession { get }
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()

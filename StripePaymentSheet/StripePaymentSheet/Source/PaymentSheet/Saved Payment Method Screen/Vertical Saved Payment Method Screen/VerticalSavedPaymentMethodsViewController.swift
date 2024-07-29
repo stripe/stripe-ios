@@ -31,7 +31,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
     private let configuration: PaymentSheet.Configuration
-    private let intent: Intent
+    private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let isCBCEligible: Bool
 
@@ -97,7 +97,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
     /// Determines if the we should operate in "Remove Only Mode". This mode is enabled under the following conditions:
@@ -143,11 +143,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(configuration: PaymentSheet.Configuration,
          selectedPaymentMethod: STPPaymentMethod?,
          paymentMethods: [STPPaymentMethod],
-         intent: Intent) {
+         elementsSession: STPElementsSession) {
         self.configuration = configuration
-        self.intent = intent
-        self.paymentMethodRemove = intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
-        self.isCBCEligible = intent.cardBrandChoiceEligible
+        self.elementsSession = elementsSession
+        self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         // Put in remove only mode and don't show the option to update PMs if:
         // 1. We only have 1 payment method
         // 2. The customer can't update the card brand 

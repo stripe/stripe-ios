@@ -72,9 +72,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let configuration: PaymentSheet.Configuration
-    var intent: Intent {
-        return loadResult.intent
-    }
+    let intent: Intent
+    let elementsSession: STPElementsSession
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
     private var savedPaymentMethods: [STPPaymentMethod]
@@ -103,7 +102,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var isRecollectingCVC: Bool = false
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
     // MARK: - UI properties
@@ -146,12 +145,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool, previousPaymentOption: PaymentOption? = nil) {
         self.loadResult = loadResult
+        self.intent = loadResult.intent
+        self.elementsSession = loadResult.elementsSession
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: loadResult.intent,
+            elementsSession: elementsSession,
             configuration: configuration,
             logAvailability: false
         )
@@ -351,9 +353,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
-            isCBCEligible: loadResult.intent.cardBrandChoiceEligible,
+            isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-            allowsPaymentMethodRemoval: loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         )
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
@@ -475,14 +477,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     result: result,
                     linkEnabled: loadResult.isLinkEnabled,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    linkSessionType: self.intent.linkPopupWebviewOption,
-                    currency: self.intent.currency,
-                    intentConfig: self.intent.intentConfig,
+                    linkSessionType: elementsSession.linkPopupWebviewOption,
+                    currency: intent.currency,
+                    intentConfig: intent.intentConfig,
                     deferredIntentConfirmationType: deferredIntentConfirmationType,
                     paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
                     error: result.error,
                     linkContext: paymentOption.linkContext,
-                    apiClient: self.configuration.apiClient
+                    apiClient: configuration.apiClient
                 )
 
                 self.isPaymentInFlight = false
@@ -580,12 +582,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
-           loadResult.intent.cardBrandChoiceEligible {
+           elementsSession.isCardBrandChoiceEligible {
             let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                 appearance: configuration.appearance,
                                                                 hostedSurface: .paymentSheet,
-                                                                canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && loadResult.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                                                                canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                 isTestMode: configuration.apiClient.isTestmode)
             updateViewController.delegate = self
             bottomSheetController?.pushContentViewController(updateViewController)
@@ -596,7 +598,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             configuration: configuration,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
-            intent: intent
+            elementsSession: elementsSession
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
@@ -711,6 +713,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         return PaymentMethodFormViewController(
             type: paymentMethodType,
             intent: intent,
+            elementsSession: elementsSession,
             previousCustomerInput: previousCustomerInput,
             configuration: configuration,
             isLinkEnabled: loadResult.isLinkEnabled,
