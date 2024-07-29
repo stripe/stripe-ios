@@ -287,6 +287,7 @@ class IntegrationTesterUITests: XCTestCase {
         numberField.tap()
         numberField.typeText(number)
         let expField = app.textFields["expiration date"]
+        _ = expField.waitForExistence(timeout: 10)
         expField.typeText("1228")
         if STPCardValidator.brand(forNumber: number) == .amex {
             let cvcField = app.textFields["CVV"]
