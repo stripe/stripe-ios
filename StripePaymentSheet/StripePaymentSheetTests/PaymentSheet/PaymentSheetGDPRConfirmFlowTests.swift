@@ -231,6 +231,64 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                  expectedAllowRedisplay: .attached(.limited))
     }
 
+    func testAllowRedisplay_paymentIntent_legacyEphemeralKey() async throws {
+        try await _testAndAssert(intentKind: .paymentIntent_intentFirst_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .checked,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .checked,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_ssc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .checked,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+
+        try await _testAndAssert(intentKind: .paymentIntent_intentFirst_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .unchecked,
+                                 expectedAllowRedisplay: .unattached)
+        try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .unchecked,
+                                 expectedAllowRedisplay: .unattached)
+        try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_ssc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .unchecked,
+                                 expectedAllowRedisplay: .unattached)
+    }
+
+    func testAllowRedisplay_paymentIntentSFU_legacyEphemeralKey() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentSFU_intentFirst_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentSFU_deferredIntent_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentSFU_deferredIntent_ssc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+    }
+
+    func testAllowRedisplay_paymentIntentSI_legacyEphemeralKey() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentSFU_intentFirst_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentSFU_deferredIntent_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentSFU_deferredIntent_ssc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+    }
+
     func _testAndAssert(intentKind: IntentKind,
                         elementsSession: STPElementsSession,
                         paymentMethodTypes: [String] = ["card"],
