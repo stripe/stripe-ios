@@ -19,8 +19,8 @@ import UIKit
 
 /// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
 enum Intent {
-    case paymentIntent(paymentIntent: STPPaymentIntent)
-    case setupIntent(setupIntent: STPSetupIntent)
+    case paymentIntent(STPPaymentIntent)
+    case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
 
     var isPaymentIntent: Bool {

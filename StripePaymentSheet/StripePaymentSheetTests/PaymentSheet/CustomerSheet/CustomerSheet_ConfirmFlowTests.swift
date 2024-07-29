@@ -8,7 +8,6 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
@@ -282,8 +281,7 @@ extension CustomerSheet_ConfirmFlowTests {
                                                                      merchantCountry: merchantCountry,
                                                                      customerID: customerID)
         let setupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
-        let intent = Intent.setupIntent(elementsSession: ._testCardValue(),
-                                        setupIntent: setupIntent)
+        let intent = Intent.setupIntent(setupIntent)
         return (clientSecret, intent, paymentMethodForm)
     }
 

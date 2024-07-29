@@ -468,7 +468,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            let setupIntent = Intent.setupIntent(setupIntent: fetchedSetupIntent)
+            let setupIntent = Intent.setupIntent(fetchedSetupIntent)
 
             guard let setupIntent = await self.confirm(intent: setupIntent, paymentOption: paymentOption),
                   let paymentMethod = setupIntent.paymentMethod else {

@@ -210,7 +210,7 @@ final class PaymentSheetLoader {
                 // Error if the PaymentIntent is in a terminal state
                 throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
             }
-            intent = .paymentIntent(paymentIntent: paymentIntent)
+            intent = .paymentIntent(paymentIntent)
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
             do {
@@ -227,7 +227,7 @@ final class PaymentSheetLoader {
                 // Error if the SetupIntent is in a terminal state
                 throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
-            intent = .setupIntent(setupIntent: setupIntent)
+            intent = .setupIntent(setupIntent)
         case .deferredIntent(let intentConfig):
             do {
                 elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(withIntentConfig: intentConfig,

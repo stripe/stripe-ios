@@ -144,7 +144,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
                                                                                                merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        let elementSession = try await client.retrieveElementsSession(
+        let elementSession = try await client.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
                                     confirmHandler: { _, _, _ in
                                         // no-op

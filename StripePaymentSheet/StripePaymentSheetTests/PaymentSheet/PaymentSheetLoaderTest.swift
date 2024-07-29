@@ -45,13 +45,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let loadResult):
                 // ...PaymentSheet should successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
+                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
                 // Sanity check that the ElementsSession object contain the types in the PI
                 XCTAssertEqual(
-                    Set(elementsSession.orderedPaymentMethodTypes.map { $0.identifier }),
+                    Set(loadResult.elementsSession.orderedPaymentMethodTypes.map { $0.identifier }),
                     Set(types)
                 )
                 // Sanity check the PI matches the one we fetched
@@ -80,7 +80,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(loadResult.intent.recommendedPaymentMethodTypes),
+                    Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                     Set(expected)
                 )
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
@@ -258,17 +258,17 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let loadResult):
                 // ...PaymentSheet should successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
+                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
                 // ...and elements sessions response should contain the configured external payment methods
                 XCTAssertEqual(
-                    elementsSession.externalPaymentMethods.map { $0.type },
+                    loadResult.elementsSession.externalPaymentMethods.map { $0.type },
                     ["external_paypal"]
                 )
                 XCTAssertEqual(
-                    elementsSession.externalPaymentMethods.first?.label,
+                    loadResult.elementsSession.externalPaymentMethods.first?.label,
                     "PayPal"
                 )
                 // Sanity check the PI matches the one we fetched
@@ -299,7 +299,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let loadResult):
                 // ...PaymentSheet should *still* successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
+                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
@@ -309,7 +309,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 XCTAssertTrue(loadResult.isApplePayEnabled)
 
                 // ...with an empty `externalPaymentMethods` property
-                XCTAssertTrue(elementsSession.externalPaymentMethods.isEmpty)
+                XCTAssertTrue(loadResult.elementsSession.externalPaymentMethods.isEmpty)
                 // ...and shouldn't send a load failure analytic
                 let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
                 XCTAssertFalse(analyticEvents.contains(where: { dict in

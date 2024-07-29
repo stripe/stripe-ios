@@ -323,6 +323,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                     configuration: configuration,
                     authenticationContext: self,
                     intent: intent,
+                    elementsSession: ._testValue(intent: intent),
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: paymentHandler
                 ) { result, _  in
@@ -567,7 +568,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
         for (description, intent) in intents {
             // Make the form
-            let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: .stripe(paymentMethodType))
+            let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testValue(intent: intent), configuration: .paymentSheet(configuration), paymentMethod: .stripe(paymentMethodType))
             let paymentMethodForm = formFactory.make()
 
             let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
@@ -597,6 +598,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 configuration: configuration,
                 authenticationContext: self,
                 intent: intent,
+                elementsSession: ._testValue(intent: intent),
                 paymentOption: .new(confirmParams: intentConfirmParams),
                 paymentHandler: paymentHandler
             ) { result, _  in
@@ -635,7 +637,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             ],
         ]
         func makeDeferredIntent(_ intentConfig: PaymentSheet.IntentConfiguration) -> Intent {
-            return .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig)
+            return .deferredIntent(intentConfig: intentConfig)
         }
 
         var intents: [(String, Intent)]
@@ -662,7 +664,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             }
 
             intents = [
-                ("PaymentIntent", .paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)),
+                ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
             ]
             guard paymentMethod != .blik else {
@@ -720,7 +722,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 )
             }
             return [
-                ("PaymentIntent w/ setup_future_usage", .paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)),
+                ("PaymentIntent w/ setup_future_usage", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
@@ -736,7 +738,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: paramsForServerSideConfirmation)
             }
             return [
-                ("SetupIntent", .setupIntent(elementsSession: ._testCardValue(), setupIntent: setupIntent)),
+                ("SetupIntent", .setupIntent(setupIntent)),
                 ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
@@ -768,7 +770,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         noFieldsConfig.billingDetailsCollectionConfiguration.email = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.phone = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.address = .never
-        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), configuration: .paymentSheet(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentSheet(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
 
         XCTAssertNil(getName(from: form))
         XCTAssertNil(form.getTextFieldElement("Email"))
@@ -790,7 +792,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         allFieldsConfig.billingDetailsCollectionConfiguration.email = .always
         allFieldsConfig.billingDetailsCollectionConfiguration.phone = .always
         allFieldsConfig.billingDetailsCollectionConfiguration.address = .full
-        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), configuration: .paymentSheet(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentSheet(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
         XCTAssertNotNil(getName(from: form))
         XCTAssertNotNil(form.getTextFieldElement("Email"))
         XCTAssertNotNil(form.getPhoneNumberElement())

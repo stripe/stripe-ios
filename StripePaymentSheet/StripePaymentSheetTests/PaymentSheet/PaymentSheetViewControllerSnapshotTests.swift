@@ -12,10 +12,11 @@ import StripeCoreTestUtils
 import XCTest
 
 final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
-    func makeTestLoadResult(paymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
+    func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
             intent: ._testValue(),
-            savedPaymentMethods: paymentMethods,
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: savedPaymentMethods,
             isLinkEnabled: false,
             isApplePayEnabled: false
         )
@@ -27,7 +28,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
         ]
         let sut = PaymentSheetViewController(
             configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods),
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
@@ -40,7 +41,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
         ]
         let sut = PaymentSheetViewController(
             configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods),
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
@@ -53,7 +54,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
         ]
         let sut = PaymentSheetViewController(
             configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods),
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)

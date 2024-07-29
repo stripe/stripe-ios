@@ -13,10 +13,11 @@ import StripeCoreTestUtils
 import XCTest
 
 final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTestCase {
-    func makeTestLoadResult(paymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
+    func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
             intent: ._testValue(),
-            savedPaymentMethods: paymentMethods,
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: savedPaymentMethods,
             isLinkEnabled: false,
             isApplePayEnabled: false
         )
@@ -28,7 +29,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         ]
         let sut = PaymentSheetFlowControllerViewController(
             configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods)
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods)
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -40,7 +41,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         ]
         let sut = PaymentSheetFlowControllerViewController(
             configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods)
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods)
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -52,7 +53,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         ]
         let sut = PaymentSheetFlowControllerViewController(
             configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods)
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods)
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -89,7 +90,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         configuration.primaryButtonLabel = "Submit"
         let sut = PaymentSheetFlowControllerViewController(
             configuration: configuration,
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods)
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods)
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -109,7 +110,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         configuration.primaryButtonLabel = "Submit"
         let sut = PaymentSheetFlowControllerViewController(
             configuration: configuration,
-            loadResult: makeTestLoadResult(paymentMethods: [])
+            loadResult: makeTestLoadResult(savedPaymentMethods: [])
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
