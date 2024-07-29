@@ -50,25 +50,23 @@ def main
   
   skipped_tests1 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard1.xctestplan")  
   skipped_tests2 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard2.xctestplan")  
+  skipped_tests3 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard3.xctestplan")  
+  skipped_tests4 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard4.xctestplan")  
+
+  all_skipped_tests = skipped_tests1 + skipped_tests2 + skipped_tests3 + skipped_tests4
   
-  # Make sure there are no duplicates across skipped_tests1 and 2
-  skipped_in_both = skipped_tests1 & skipped_tests2
-  if !skipped_in_both.empty?
-    puts "#{skipped_in_both} skipped in both test plans. Remove one from the PaymentSheet Example-Shard1.xctestplan exclusion list."
-    exit 1
+  # Make sure every test in `test_classes` is skipped in one and only one of the test plans
+  test_classes.each do |test_class|
+    # Check against skipped_tests1 through 4 to make sure it appears three times
+    if all_skipped_tests.count(test_class) != 3
+      puts "Test class #{test_class} is skipped in #{all_skipped_tests.count(test_class)} test plans. It should be skipped in 3/4 test plans."
+      puts "Please open \"PaymentSheet Example-Shard1.xctestplan\" through \"PaymentSheet Example-Shard4.xctestplan\" and ensure it is only enabled in one plan."
+      exit(1)
+    end
   end
 
-  all_skipped_tests = skipped_tests1 + skipped_tests2 
   
-  exitcode = 0
-  test_classes.each do |test_class|  
-    puts "Checking #{test_class}"
-    if !all_skipped_tests.include?(test_class)  
-      puts "#{test_class} is duplicated across test plans. Please exclude it in PaymentSheet Example-Shard1.xctestplan or PaymentSheet Example-Shard2.xctestplan."  
-      exitcode = 1
-    end  
-  end  
-  exit(exitcode)
+
 end  
   
 main  

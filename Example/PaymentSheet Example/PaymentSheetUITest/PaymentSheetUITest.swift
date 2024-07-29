@@ -1071,8 +1071,10 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Should still show "+ Add" and Link
         XCTAssertEqual(app.cells.count, 2)
     }
+}
 
-    // MARK: - External PayPal 
+class PaymentSheetExternalPMUITests: PaymentSheetUITestCase {
+    // MARK: - External PayPal
     func testExternalPaypalPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.externalPaymentMethods = .paypal
@@ -1133,6 +1135,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.alerts.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
+}
+class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
     // MARK: - Customer Session
     func testDedupedPaymentMethods_paymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -1382,6 +1386,9 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
     }
 
+}
+
+class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
     // MARK: - PaymentMethodRemoval w/ CBC
     func testPSPaymentMethodRemoveTwoCards() {
 
@@ -1505,7 +1512,9 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 10))
     }
+}
 
+class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
     func testCVCRecollectionFlowController_deferredCSC() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
