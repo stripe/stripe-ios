@@ -193,4 +193,21 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsSessionManifest> {
         return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
     }
+
+    func linkAccountSignUp(
+        requestSurface: String,
+        emailAddress: String,
+        phoneNumber: String,
+        country: String
+    ) -> Future<LinkSignUpResponse> {
+        return Promise<StripeFinancialConnections.LinkSignUpResponse>()
+    }
+
+    func attachLinkConsumerToLinkAccountSession(
+        requestSurface: String,
+        linkAccountSession: String,
+        consumerSessionClientSecret: String
+    ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
+        return Promise<StripeFinancialConnections.AttachLinkConsumerToLinkAccountSessionResponse>()
+    }
 }
