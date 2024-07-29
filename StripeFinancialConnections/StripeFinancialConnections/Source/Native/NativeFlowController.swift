@@ -980,7 +980,7 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
 
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution
+        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?
     ) {
         dataManager.institution = institution
         pushPane(.success, animated: true)
