@@ -11,6 +11,7 @@ import UIKit
 
 protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent,
+                                                        elementsSession: STPElementsSession,
                                                         with paymentOption: PaymentOption,
                                                         completion: @escaping(InternalCustomerSheetResult) -> Void)
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
@@ -463,14 +464,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            guard let (fetchedSetupIntent, _) = await fetchSetupIntent(clientSecret: clientSecret) else {
+            guard let (fetchedSetupIntent, elementsSession) = await fetchSetupIntent(clientSecret: clientSecret) else {
                 self.processingInFlight = false
                 self.updateUI()
                 return
             }
             let setupIntent = Intent.setupIntent(fetchedSetupIntent)
 
-            guard let setupIntent = await self.confirm(intent: setupIntent, paymentOption: paymentOption),
+            guard let setupIntent = await self.confirm(intent: setupIntent, elementsSession: elementsSession, paymentOption: paymentOption),
                   let paymentMethod = setupIntent.paymentMethod else {
                 self.processingInFlight = false
                 self.updateUI()
@@ -543,11 +544,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    func confirm(intent: Intent, paymentOption: PaymentOption) async -> STPSetupIntent? {
+    func confirm(intent: Intent, elementsSession: STPElementsSession, paymentOption: PaymentOption) async -> STPSetupIntent? {
         var setupIntent: STPSetupIntent?
         do {
             setupIntent = try await withCheckedThrowingContinuation { continuation in
-                self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, with: paymentOption, completion: { result in
+                self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, elementsSession: elementsSession, with: paymentOption, completion: { result in
                     switch result {
                     case .canceled:
                         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentCanceled()
