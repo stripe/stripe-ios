@@ -302,7 +302,6 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
         let clientSecretResolved = expectation(description: "clientSecretResolved")
         var clientSecret: String!
         let intent = try await intentCreation(intentKind: intentKind,
-                                              elementsSession: elementsSession,
                                               apiClient: apiClient,
                                               customerID: newCustomer.customer,
                                               paymentMethodTypes: paymentMethodTypes,
@@ -395,7 +394,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: intent,
-            elementsSession: ._testValue(intent: intent),
+            elementsSession: elementsSession,
             paymentOption: .new(confirmParams: intentConfirmParams),
             paymentHandler: paymentHandler
         ) { result, _  in
@@ -484,7 +483,6 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
     }
 
     func intentCreation(intentKind: IntentKind,
-                        elementsSession: STPElementsSession,
                         apiClient: STPAPIClient,
                         customerID: String,
                         paymentMethodTypes: [String],
