@@ -287,4 +287,41 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Confirm"].tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
+
+    func testPreservesFormDetails() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .setup
+        settings.uiStyle = .paymentSheet
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+        // TODO: Include update flow - check that updating re-generates the form.
+
+        // PaymentSheet + Vertical
+        func _testVerticalPreservesFormDetails() {
+            // Typing something into the card form...
+            app.buttons["Card"].waitForExistenceAndTap()
+            let numberField = app.textFields["Card number"]
+            numberField.waitForExistenceAndTap()
+            app.typeText("4")
+            // ...and tapping to the main screen and back should preserve the card form
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["Klarna"].waitForExistenceAndTap()
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["Card"].waitForExistenceAndTap()
+            XCTAssertEqual(numberField.value as? String, "4, Your card number is incomplete.")
+            // Exit
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["Close"].waitForExistenceAndTap()
+        }
+        app.buttons["paymentSheet"].waitForExistenceAndTap()
+        app.buttons["vertical"].waitForExistenceAndTap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        _testVerticalPreservesFormDetails()
+
+        // PaymentSheet.FlowController + Vertical
+        app.buttons["flowController"].waitForExistenceAndTap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        _testVerticalPreservesFormDetails()
+    }
 }
