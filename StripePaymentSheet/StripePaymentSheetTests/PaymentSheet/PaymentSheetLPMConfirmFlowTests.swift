@@ -201,6 +201,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testBillieConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .stripe(.billie),
+                               merchantCountry: .DE) { form in
+            // Sunbit has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
     func testAlipayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",

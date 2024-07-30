@@ -47,7 +47,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 33;
+    return 34;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -151,6 +151,9 @@
             break;
         case 32:
             cell.textLabel.text = @"Sunbit";
+            break;
+        case 33:
+            cell.textLabel.text = @"Billie";
             break;
     }
     return cell;
@@ -360,6 +363,12 @@
         }
         case 32: {
             SunbitExampleViewController *exampleVC = [SunbitExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 32: {
+            BillieExampleViewController *exampleVC = [BillieExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
