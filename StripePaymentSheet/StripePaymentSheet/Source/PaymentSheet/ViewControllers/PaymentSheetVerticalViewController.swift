@@ -656,7 +656,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             return true
         case let .new(paymentMethodType: paymentMethodType):
             // Only make payment methods appear selected in the list if they don't push to a form
-            return !makeFormVC(paymentMethodType: paymentMethodType).form.collectsUserInput
+            return !shouldDisplayForm(for: paymentMethodType)
         case .saved:
             return true
         }

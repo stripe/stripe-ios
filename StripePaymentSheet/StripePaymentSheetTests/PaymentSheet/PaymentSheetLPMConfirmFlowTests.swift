@@ -572,7 +572,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
             // Add to window to avoid layout errors due to zero size and presentation errors
             window.rootViewController = formVC
-            
+
             // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
             formVC.viewDidAppear(false)
 

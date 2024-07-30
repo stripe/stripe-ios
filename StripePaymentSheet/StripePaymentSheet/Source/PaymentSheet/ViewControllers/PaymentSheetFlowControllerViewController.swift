@@ -19,6 +19,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentSheet.Configuration
+    let formCache: PaymentMethodFormCache = .init()
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -214,7 +215,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             elementsSession: elementsSession,
             configuration: configuration,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
-            isLinkEnabled: isLinkEnabled
+            isLinkEnabled: isLinkEnabled,
+            formCache: formCache
         )
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self

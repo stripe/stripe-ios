@@ -67,6 +67,7 @@ class AddPaymentMethodViewController: UIViewController {
     private let elementsSession: STPElementsSession
     private let configuration: PaymentSheet.Configuration
     private let isLinkEnabled: Bool
+    private let formCache: PaymentMethodFormCache
     var previousCustomerInput: IntentConfirmParams?
 
     private var paymentMethodFormElement: PaymentMethodElement {
@@ -75,7 +76,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, isLinkEnabled: isLinkEnabled, headerView: nil, delegate: self)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, isLinkEnabled: isLinkEnabled, headerView: nil, delegate: self)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -107,6 +108,7 @@ class AddPaymentMethodViewController: UIViewController {
         configuration: PaymentSheet.Configuration,
         previousCustomerInput: IntentConfirmParams? = nil,
         isLinkEnabled: Bool,
+        formCache: PaymentMethodFormCache,
         delegate: AddPaymentMethodViewControllerDelegate? = nil
     ) {
         self.configuration = configuration
@@ -115,6 +117,7 @@ class AddPaymentMethodViewController: UIViewController {
         self.previousCustomerInput = previousCustomerInput
         self.delegate = delegate
         self.isLinkEnabled = isLinkEnabled
+        self.formCache = formCache
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -153,7 +156,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     private func updateFormElement() {
         if selectedPaymentMethodType != paymentMethodFormViewController.paymentMethodType {
-            paymentMethodFormViewController = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, isLinkEnabled: isLinkEnabled, headerView: nil, delegate: self)
+            paymentMethodFormViewController = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, isLinkEnabled: isLinkEnabled, headerView: nil, delegate: self)
         }
         updateUI()
     }
