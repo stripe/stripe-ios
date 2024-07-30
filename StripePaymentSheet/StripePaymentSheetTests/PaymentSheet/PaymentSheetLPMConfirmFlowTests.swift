@@ -22,7 +22,7 @@ import XCTest
 /// 👀  See `testIdealConfirmFlows` for an example with comments.
 @MainActor
 final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
-    let window: UIWindow = UIWindow(frame: UIScreen.main.bounds)
+    let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
 
     enum MerchantCountry: String {
         case US = "us"
@@ -573,7 +573,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
             // Add to window to avoid layout errors due to zero size and presentation errors
             window.rootViewController = formVC
-            window.makeKeyAndVisible()
+            formVC.viewDidAppear(true)
 
             // Fill out the form
             formCompleter(paymentMethodForm)
