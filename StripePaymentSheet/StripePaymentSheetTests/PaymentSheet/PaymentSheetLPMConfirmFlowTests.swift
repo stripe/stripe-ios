@@ -567,13 +567,14 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
         for (description, intent) in intents {
             // Make the form
-            PaymentMethodFormViewController.clearFormCache()
-            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, headerView: nil, delegate: self)
+            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, formCache: .init(), configuration: configuration, isLinkEnabled: false, headerView: nil, delegate: self)
             let paymentMethodForm = formVC.form
 
             // Add to window to avoid layout errors due to zero size and presentation errors
             window.rootViewController = formVC
-            formVC.viewDidAppear(true)
+            
+            // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
+            formVC.viewDidAppear(false)
 
             // Fill out the form
             formCompleter(paymentMethodForm)
