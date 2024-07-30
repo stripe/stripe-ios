@@ -51,7 +51,7 @@ stages:
     - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
-    - framework-tests: {}
+    - framework-tests-no-mocks: {}
     - test-builds-xcode-15: {}
     - test-builds-xcode-15-release: {}
     - test-builds-vision: {}
