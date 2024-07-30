@@ -447,6 +447,7 @@ extension PlaygroundController {
             "customer": customerIdOrType,
             "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
+            "amount": settings.amount.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,

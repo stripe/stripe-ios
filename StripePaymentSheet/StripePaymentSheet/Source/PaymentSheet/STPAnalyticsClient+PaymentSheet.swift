@@ -128,7 +128,7 @@ extension STPAnalyticsClient {
         }()
         let params = ["selected_lpm": defaultPaymentMethodAnalyticsValue,
                       "intent_type": intentAnalyticsValue,
-                      "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }),
+                      "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
         ] as [String: Any]
 
         logPaymentSheetEvent(
