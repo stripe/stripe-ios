@@ -208,6 +208,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func completeSelection(afterDelay: TimeInterval = 0.0) {
+        // Note this dispatch async gives a brief delay, even when `afterDelay` is 0
         DispatchQueue.main.asyncAfter(deadline: .now() + afterDelay) { [weak self] in
             guard let self = self else { return }
             // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `completeSelection` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
@@ -267,9 +268,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         self.view.isUserInteractionEnabled = false
         self.navigationBar.isUserInteractionEnabled = false
 
-        // Give time for new selected row to show it has been selected before dismissing
-        // Makes UX feel a little nicer
-        self.completeSelection(afterDelay: 0.3)
+        self.completeSelection()
     }
 
     func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
