@@ -16,8 +16,6 @@ final class PaymentSheetLoader {
         let intent: Intent
         let elementsSession: STPElementsSession
         let savedPaymentMethods: [STPPaymentMethod]
-        let isLinkEnabled: Bool
-        let isApplePayEnabled: Bool
     }
 
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
@@ -79,11 +77,8 @@ final class PaymentSheetLoader {
                         )
                     }
 
-                // Determine if Link and Apple Pay are enabled
-                let isLinkEnabled = isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay()
-                    && configuration.applePay != nil
-                    && elementsSession.isApplePayEnabled
+                let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+                let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
                 // Send load finished analytic
                 // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
@@ -109,9 +104,7 @@ final class PaymentSheetLoader {
                 let loadResult = LoadResult(
                     intent: intent,
                     elementsSession: elementsSession,
-                    savedPaymentMethods: filteredSavedPaymentMethods,
-                    isLinkEnabled: isLinkEnabled,
-                    isApplePayEnabled: isApplePayEnabled
+                    savedPaymentMethods: filteredSavedPaymentMethods
                 )
                 completion(.success(loadResult))
             } catch {
@@ -121,15 +114,6 @@ final class PaymentSheetLoader {
                 completion(.failure(error))
             }
         }
-    }
-
-    // MARK: - Helpers
-
-    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) -> Bool {
-        guard elementsSession.supportsLink else {
-            return false
-        }
-        return !configuration.requiresBillingDetailCollection()
     }
 
     // MARK: - Helper methods that load things
@@ -153,7 +137,7 @@ final class PaymentSheetLoader {
 
     static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
         // Only lookup the consumer account if Link is supported
-        guard isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
+        guard PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
             return nil
         }
 

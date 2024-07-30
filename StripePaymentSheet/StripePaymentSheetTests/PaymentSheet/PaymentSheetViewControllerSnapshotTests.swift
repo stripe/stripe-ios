@@ -15,10 +15,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
             intent: ._testValue(),
-            elementsSession: ._testCardValue(),
-            savedPaymentMethods: savedPaymentMethods,
-            isLinkEnabled: false,
-            isApplePayEnabled: false
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
+            savedPaymentMethods: savedPaymentMethods
         )
     }
 
@@ -27,7 +25,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             STPPaymentMethod._testCard(),
         ]
         let sut = PaymentSheetViewController(
-            configuration: ._testValue_MostPermissive(),
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             delegate: self
         )
@@ -40,7 +38,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             STPPaymentMethod._testUSBankAccount(),
         ]
         let sut = PaymentSheetViewController(
-            configuration: ._testValue_MostPermissive(),
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             delegate: self
         )
@@ -53,7 +51,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             STPPaymentMethod._testSEPA(),
         ]
         let sut = PaymentSheetViewController(
-            configuration: ._testValue_MostPermissive(),
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             delegate: self
         )

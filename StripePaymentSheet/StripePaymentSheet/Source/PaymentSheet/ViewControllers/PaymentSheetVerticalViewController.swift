@@ -83,13 +83,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private var previousPaymentOption: PaymentOption?
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
-    var shouldShowApplePayInList: Bool {
-        loadResult.isApplePayEnabled && isFlowController
-    }
-    var shouldShowLinkInList: Bool {
-        // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
-        loadResult.isLinkEnabled && isFlowController && shouldShowApplePayInList
-    }
+    let shouldShowApplePayInList: Bool
+    let shouldShowLinkInList: Bool
     /// Whether or not we are in the special case where we don't show the list and show the card form directly
     var shouldDisplayCardFormOnly: Bool {
         return paymentMethodTypes.count == 1 && paymentMethodTypes[0] == .stripe(.card)
@@ -158,6 +153,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             configuration: configuration,
             logAvailability: false
         )
+        self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController
+        // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
+        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && shouldShowApplePayInList
         super.init(nibName: nil, bundle: nil)
 
         regenerateUI()
@@ -375,10 +373,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makeWalletHeaderView() -> UIView? {
         var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
-        if loadResult.isApplePayEnabled && !shouldShowApplePayInList {
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList {
             walletOptions.insert(.applePay)
         }
-        if loadResult.isLinkEnabled && !shouldShowLinkInList {
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList {
             walletOptions.insert(.link)
         }
         guard !walletOptions.isEmpty else {
@@ -476,7 +474,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     isCustom: false,
                     paymentMethod: paymentOption.analyticsValue,
                     result: result,
-                    linkEnabled: loadResult.isLinkEnabled,
+                    linkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                     linkSessionType: elementsSession.linkPopupWebviewOption,
                     currency: intent.currency,
@@ -718,7 +716,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
-            isLinkEnabled: loadResult.isLinkEnabled,
             headerView: headerView,
             delegate: self
         )
@@ -731,7 +728,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: .paymentSheet(configuration),
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
-            offerSaveToLinkWhenSupported: false,
             linkAccount: LinkAccountContext.shared.account
         ).make().collectsUserInput
     }

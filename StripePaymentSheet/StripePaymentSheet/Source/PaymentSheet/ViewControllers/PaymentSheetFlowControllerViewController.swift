@@ -165,8 +165,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     ) {
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
-        self.isApplePayEnabled = loadResult.isApplePayEnabled
-        self.isLinkEnabled = loadResult.isLinkEnabled
+        self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         self.configuration = configuration
 
         // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
@@ -215,7 +215,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             elementsSession: elementsSession,
             configuration: configuration,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
-            isLinkEnabled: isLinkEnabled,
             formCache: formCache
         )
         super.init(nibName: nil, bundle: nil)

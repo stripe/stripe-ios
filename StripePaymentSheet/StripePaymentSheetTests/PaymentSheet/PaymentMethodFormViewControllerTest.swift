@@ -34,7 +34,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...and no default billing address...
         XCTAssertEqual(configuration.defaultBillingDetails, PaymentSheet.Configuration().defaultBillingDetails)
         // ...PaymentMethodFormVC...
-        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), elementsSession: ._testCardValue(), previousCustomerInput: nil, formCache: .init(), configuration: configuration, isLinkEnabled: false, headerView: nil, delegate: self)
+        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), elementsSession: ._testCardValue(), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, delegate: self)
 
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
@@ -62,7 +62,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             previousCustomerInput: nil,
             formCache: .init(),
             configuration: ._testValue_MostPermissive(),
-            isLinkEnabled: false,
+
             headerView: nil,
             delegate: self
         )
@@ -86,7 +86,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             previousCustomerInput: nil,
             formCache: formCache,
             configuration: ._testValue_MostPermissive(),
-            isLinkEnabled: false,
+
             headerView: nil,
             delegate: self
         )
@@ -99,7 +99,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             previousCustomerInput: nil,
             formCache: formCache,
             configuration: ._testValue_MostPermissive(),
-            isLinkEnabled: false,
+
             headerView: nil,
             delegate: self
         )

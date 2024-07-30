@@ -391,7 +391,7 @@ extension PaymentSheet {
                         isCustom: true,
                         paymentMethod: paymentOption.analyticsValue,
                         result: result,
-                        linkEnabled: PaymentSheetLoader.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
+                        linkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
                         activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                         linkSessionType: elementsSession.linkPopupWebviewOption,
                         currency: intent.currency,

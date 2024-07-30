@@ -46,7 +46,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                     XCTFail("Expecting payment intent")
                     return
                 }
-                XCTAssertFalse(loadResult.isApplePayEnabled)
+                XCTAssertFalse(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
                 XCTAssertEqual(paymentIntent.stripeId, "pi_3Kth")
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 0)
                 // The last analytic should be a load succeeded event w/ selected_lpm set
@@ -179,10 +179,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         // ...loading PaymentSheet with a customer...
         let loaded = expectation(description: "Loaded")
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
         let analyticsClient = STPTestingAnalyticsClient()
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
-            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            configuration: configuration,
             analyticsClient: analyticsClient,
             isFlowController: false
         ) { result in
@@ -205,10 +206,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
 
                 // ...and with link disabled
-                XCTAssertFalse(loadResult.isLinkEnabled)
+                XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...and apple pay enabled
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...and should report analytics indicating the v1/elements/session load failed
                 let analyticEvents = analyticsClient.events.map { $0.event }
@@ -241,9 +242,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         // ...loading PaymentSheet with a customer...
         let loaded = expectation(description: "Loaded")
         let analyticsClient = STPTestingAnalyticsClient()
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret("seti_1234_secret_1234"),
-            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            configuration: configuration,
             analyticsClient: analyticsClient,
             isFlowController: false
         ) { result in
@@ -266,10 +268,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
 
                 // ...and with link disabled
-                XCTAssertFalse(loadResult.isLinkEnabled)
+                XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...and apple pay enabled
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...and should report analytics indicating the v1/elements/session load failed
                 let analyticEvents = analyticsClient.events.map { $0.event }
@@ -299,10 +301,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         // ...loading PaymentSheet with a customer...
         let loaded = expectation(description: "LoadedWithoutTypes")
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
         let analyticsClient = STPTestingAnalyticsClient()
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
-            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            configuration: configuration,
             analyticsClient: analyticsClient,
             isFlowController: false
         ) { result in
@@ -325,10 +328,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
 
                 // ...and with link disabled
-                XCTAssertFalse(loadResult.isLinkEnabled)
+                XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...and apple pay enabled
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...and should report analytics indicating the v1/elements/session load failed
                 let analyticEvents = analyticsClient.events.map { $0.event }
@@ -345,7 +348,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded2 = expectation(description: "LoadedWithTypes")
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
-            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            configuration: configuration,
             analyticsClient: analyticsClient,
             isFlowController: false
         ) { result in
@@ -368,10 +371,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
 
                 // ...and with link disabled
-                XCTAssertFalse(loadResult.isLinkEnabled)
+                XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...and apple pay enabled
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...and should report analytics indicating the v1/elements/session load failed
                 let analyticEvents = analyticsClient.events.map { $0.event }

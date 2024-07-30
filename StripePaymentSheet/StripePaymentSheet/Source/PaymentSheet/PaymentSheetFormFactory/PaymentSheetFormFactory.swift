@@ -26,11 +26,10 @@ class PaymentSheetFormFactory {
     let paymentMethod: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheetFormFactoryConfig
     let addressSpecProvider: AddressSpecProvider
-    let offerSaveToLinkWhenSupported: Bool
+    let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
     let previousCustomerInput: IntentConfirmParams?
 
-    let supportsLinkCard: Bool
     let isPaymentIntent: Bool
     let isSettingUp: Bool
     let currency: String?
@@ -67,18 +66,31 @@ class PaymentSheetFormFactory {
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
-        offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
+
+        /// Whether or not the card form should show the link inline signup checkbox
+        let showLinkInlineCardSignup: Bool = {
+            guard case .paymentSheet(let configuration) = configuration else {
+                return false
+            }
+
+            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+            guard isLinkEnabled && !elementsSession.disableLinkSignup && elementsSession.supportsLinkCard else {
+                return false
+            }
+
+            let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
+            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
                   addressSpecProvider: addressSpecProvider,
-                  offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
+                  showLinkInlineCardSignup: showLinkInlineCardSignup,
                   linkAccount: linkAccount,
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
-                  supportsLinkCard: elementsSession.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
                   currency: intent.currency,
@@ -93,10 +105,9 @@ class PaymentSheetFormFactory {
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
-        offerSaveToLinkWhenSupported: Bool = false,
+        showLinkInlineCardSignup: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
         cardBrandChoiceEligible: Bool = false,
-        supportsLinkCard: Bool,
         isPaymentIntent: Bool,
         isSettingUp: Bool,
         currency: String?,
@@ -108,7 +119,7 @@ class PaymentSheetFormFactory {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
         self.addressSpecProvider = addressSpecProvider
-        self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
+        self.showLinkInlineCardSignup = showLinkInlineCardSignup
         self.linkAccount = linkAccount
         // Restore the previous customer input if its the same type
         if previousCustomerInput?.paymentMethodType == paymentMethod {
@@ -116,7 +127,6 @@ class PaymentSheetFormFactory {
         } else {
             self.previousCustomerInput = nil
         }
-        self.supportsLinkCard = supportsLinkCard
         self.isPaymentIntent = isPaymentIntent
         self.isSettingUp = isSettingUp
         self.currency = currency
