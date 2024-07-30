@@ -301,12 +301,12 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
         let clientSecretResolved = expectation(description: "clientSecretResolved")
         var clientSecret: String!
-        let intent = try await intentCreation(intentKind: intentKind,
-                                              apiClient: apiClient,
-                                              customerID: newCustomer.customer,
-                                              paymentMethodTypes: paymentMethodTypes,
-                                              currency: currency,
-                                              merchantCountry: merchantCountry) { cs in
+        let intent = try await createIntent(intentKind: intentKind,
+                                            apiClient: apiClient,
+                                            customerID: newCustomer.customer,
+                                            paymentMethodTypes: paymentMethodTypes,
+                                            currency: currency,
+                                            merchantCountry: merchantCountry) { cs in
             clientSecret = cs
             clientSecretResolved.fulfill()
         }
@@ -482,13 +482,13 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
                                              ])
     }
 
-    func intentCreation(intentKind: IntentKind,
-                        apiClient: STPAPIClient,
-                        customerID: String,
-                        paymentMethodTypes: [String],
-                        currency: String,
-                        merchantCountry: MerchantCountry,
-                        clientSecretCallback: @escaping (String) -> Void ) async throws -> Intent {
+    func createIntent(intentKind: IntentKind,
+                      apiClient: STPAPIClient,
+                      customerID: String,
+                      paymentMethodTypes: [String],
+                      currency: String,
+                      merchantCountry: MerchantCountry,
+                      clientSecretCallback: @escaping (String) -> Void ) async throws -> Intent {
         switch intentKind {
         // MARK: - Payment Intent
         case .paymentIntent_intentFirst_csc:
