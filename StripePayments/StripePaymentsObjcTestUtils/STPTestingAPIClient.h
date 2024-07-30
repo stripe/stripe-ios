@@ -48,7 +48,7 @@ static NSString * const STPTestingTHPublishableKey =
 // Account token: acct_1PSnNaAlz2yHYCNZ
 // Scenario link: https://admin.corp.stripe.com/scenarios?runId=scnrun*AZAoKlcYbwAAAIDN
 static NSString * const STPTestingDEPublishableKey =
-    @"pk_test_51PSnNaAlz2yHYCNZgjajit4L8Hl1rDDPPCj9XhHNZWRSi4vwHhrHIbTgstLJptPSzwQVl1HlyqhwWRs1rBJHag8W00sM0SOXIL"
+    @"pk_test_51PSnNaAlz2yHYCNZgjajit4L8Hl1rDDPPCj9XhHNZWRSi4vwHhrHIbTgstLJptPSzwQVl1HlyqhwWRs1rBJHag8W00sM0SOXIL";
 
 @interface STPTestingAPIClient : NSObject
 
