@@ -239,3 +239,17 @@ extension STPElementsSession {
         return features.paymentMethodSave
     }
 }
+
+extension STPElementsSession {
+    func savePaymentMethodConsentBehaviorForCustomerSheet() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        return customerSessionCustomerSheet() ? .customerSheetWithCustomerSession : .legacy
+    }
+
+    func customerSessionCustomerSheet() -> Bool {
+        guard let customerSession = customer?.customerSession,
+              customerSession.customerSheetComponent.enabled else {
+            return false
+        }
+        return true
+    }
+}

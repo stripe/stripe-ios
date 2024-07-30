@@ -35,7 +35,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
-            params.setAllowRedisplayForCustomerSheet(savePaymentMethodConsentBehavior)
             return .new(confirmParams: params)
         }
         return nil

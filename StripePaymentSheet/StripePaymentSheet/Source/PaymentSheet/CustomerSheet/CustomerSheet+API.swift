@@ -13,10 +13,12 @@ import UIKit
 extension CustomerSheet {
     func confirmIntent(
         intent: Intent,
+        elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         CustomerSheet.confirm(intent: intent,
+                              elementsSession: elementsSession,
                               paymentOption: paymentOption,
                               configuration: configuration,
                               paymentHandler: self.paymentHandler,
@@ -25,6 +27,7 @@ extension CustomerSheet {
     }
     static func confirm(
         intent: Intent,
+        elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
         configuration: CustomerSheet.Configuration,
         paymentHandler: STPPaymentHandler,
@@ -51,6 +54,7 @@ extension CustomerSheet {
             }
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
+            confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
             let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
             setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
             setupIntentParams.returnURL = configuration.returnURL
