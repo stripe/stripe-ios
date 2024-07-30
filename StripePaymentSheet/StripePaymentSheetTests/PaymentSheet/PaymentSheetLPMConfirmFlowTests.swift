@@ -36,6 +36,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         case BR = "br"
         case FR = "fr"
         case TH = "th"
+        case DE = "de"
 
         var publishableKey: String {
             switch self {
@@ -61,6 +62,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingFRPublishableKey
             case .TH:
                 return STPTestingTHPublishableKey
+            case .DE:
+                return STPTestingDEPublishableKey
             }
         }
     }
@@ -197,6 +200,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .sunbit,
                                merchantCountry: .US) { form in
             // Sunbit has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
+    func testBillieConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .billie,
+                               merchantCountry: .DE) { form in
+            // Billie has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }

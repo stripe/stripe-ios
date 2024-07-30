@@ -102,6 +102,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var alma: STPPaymentMethodAlmaParams?
     /// If this is a Sunbit PaymentMethod, this contains additional details.
     @objc public var sunbit: STPPaymentMethodSunbitParams?
+    /// If this is a Billie PaymentMethod, this contains additional details.
+    @objc public var billie: STPPaymentMethodBillieParams?
     /// If this is a Multibanco PaymentMethod, this contains additional details.
     @objc public var multibanco: STPPaymentMethodMultibancoParams?
 
@@ -664,6 +666,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Billie PaymentMethod.
+    /// - Parameters:
+    ///   - billie:           An object containing additional Billie details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        billie: STPPaymentMethodBillieParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .billie
+        self.billie = billie
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for an Multibanco PaymentMethod.
     /// - Parameters:
     ///   - multibanco:          An object containing additional Multibanco details.
@@ -748,6 +768,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.alma = STPPaymentMethodAlmaParams()
         case .sunbit:
             self.sunbit = STPPaymentMethodSunbitParams()
+        case .billie:
+            self.billie = STPPaymentMethodBillieParams()
         case .multibanco:
             self.multibanco = STPPaymentMethodMultibancoParams()
         case .paynow, .zip, .mobilePay, .konbini, .promptPay, .twint:
@@ -811,6 +833,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: amazonPay)): "amazon_pay",
             NSStringFromSelector(#selector(getter: alma)): "alma",
             NSStringFromSelector(#selector(getter: sunbit)): "sunbit",
+            NSStringFromSelector(#selector(getter: billie)): "billie",
             NSStringFromSelector(#selector(getter: multibanco)): "multibanco",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1283,6 +1306,8 @@ extension STPPaymentMethodParams {
             alma = STPPaymentMethodAlmaParams()
         case .sunbit:
             sunbit = STPPaymentMethodSunbitParams()
+        case .billie:
+            billie = STPPaymentMethodBillieParams()
         case .multibanco:
             multibanco = STPPaymentMethodMultibancoParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint:
@@ -1367,7 +1392,8 @@ extension STPPaymentMethodParams {
             return "Multibanco"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish,
+             .sunbit, .billie:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         @unknown default:
