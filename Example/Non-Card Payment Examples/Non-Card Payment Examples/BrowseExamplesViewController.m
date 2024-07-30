@@ -367,7 +367,7 @@
             viewController = exampleVC;
             break;
         }
-        case 32: {
+        case 33: {
             BillieExampleViewController *exampleVC = [BillieExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;

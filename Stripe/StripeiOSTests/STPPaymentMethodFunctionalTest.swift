@@ -309,7 +309,6 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
-
     func testCreateMultibancoPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let billingDetails = STPPaymentMethodBillingDetails()
