@@ -1,5 +1,5 @@
 {
-  "originHash" : "530a6c636c7312c76d79302c9aa8d6509a52eee6ff843d18d291ce1b23e6a2b3",
+  "originHash" : "2ad13697f5d60ad400147e34535361f52e72d2f7a280df77bb3c3521cc5623bc",
   "pins" : [
     {
       "identity" : "capture-core-sp",
@@ -38,5 +38,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }
