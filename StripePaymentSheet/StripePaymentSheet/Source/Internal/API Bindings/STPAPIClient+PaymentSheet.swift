@@ -126,22 +126,23 @@ extension STPAPIClient {
         )
     }
 
-    func retrieveElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
-                                                 clientDefaultPaymentMethod: String?,
-                                                 customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
+    func retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
+                                                         clientDefaultPaymentMethod: String?,
+                                                         customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
 
-        let parameters = makeElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
-                                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                                    customerSessionClientSecret: customerSessionClientSecret)
+        let parameters = makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
+                                                                            clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                            customerSessionClientSecret: customerSessionClientSecret)
         return try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
     }
-    func makeElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
-                                                    clientDefaultPaymentMethod: String?,
-                                                    customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
+
+    func makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
+                                                            clientDefaultPaymentMethod: String?,
+                                                            customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
@@ -160,6 +161,39 @@ extension STPAPIClient {
             deferredIntent["payment_method_types"] = paymentMethodTypes
         }
         parameters["deferred_intent"] = deferredIntent
+        return parameters
+    }
+
+    func retrieveElementsSessionForCustomerSheet(setupIntentClientSecret: String,
+                                                 clientDefaultPaymentMethod: String?,
+                                                 customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
+        let parameters = makeElementsSessionsParamsForCustomerSheet(setupIntentClientSecret: setupIntentClientSecret,
+                                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                    customerSessionClientSecret: customerSessionClientSecret)
+        return try await APIRequest<STPElementsSession>.getWith(
+            self,
+            endpoint: APIEndpointElementsSessions,
+            parameters: parameters
+        )
+    }
+
+    func makeElementsSessionsParamsForCustomerSheet(setupIntentClientSecret: String,
+                                                    clientDefaultPaymentMethod: String?,
+                                                    customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
+        var parameters: [String: Any] = [:]
+        parameters["type"] = "setup_intent"
+        parameters["client_secret"] = setupIntentClientSecret
+        parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
+
+        parameters["locale"] = Locale.current.toLanguageTag()
+
+        if let customerSessionClientSecret {
+            parameters["customer_session_client_secret"] = customerSessionClientSecret.clientSecret
+        }
+
+        if let clientDefaultPaymentMethod {
+            parameters["client_default_payment_method"] = clientDefaultPaymentMethod
+        }
         return parameters
     }
 }

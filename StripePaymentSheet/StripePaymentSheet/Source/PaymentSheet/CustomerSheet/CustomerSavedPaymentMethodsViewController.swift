@@ -525,9 +525,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     private func fetchSetupIntent(clientSecret: String) async -> (STPSetupIntent, STPElementsSession)? {
         do {
-            return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret,
-                                                                             clientDefaultPaymentMethod: nil,
-                                                                             configuration: .init())
+            return try await self.customerSheetDataSource.fetchElementsSession(setupIntentClientSecret: clientSecret)
         } catch {
             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
             self.error = error
