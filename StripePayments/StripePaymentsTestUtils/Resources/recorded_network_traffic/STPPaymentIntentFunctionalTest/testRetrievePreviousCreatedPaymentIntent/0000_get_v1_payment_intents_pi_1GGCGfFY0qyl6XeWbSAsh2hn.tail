@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_s0UpZwLqrpEHiI
+request-id: req_XkYIiMFb2CBNq2
 Content-Length: 878
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:35:49 GMT
+Date: Tue, 30 Jul 2024 23:12:15 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300

@@ -203,4 +203,9 @@ FOUNDATION_EXPORT NSString * const SWHttpTrafficRecorderErrorDomain;
  */
 @property(nonatomic, copy) NSString*(^createFileInCustomFormatBlock)(NSURLRequest *request, NSURLResponse *response, NSData *bodyData, NSString *filePath);
 
+/**
+ *  The optional block (if provided) to be applied to every request to change the recorded POST body.
+ */
+@property(nonatomic, copy) NSString*(^postBodyTransformBlock)(NSURLRequest *request, NSString *postBody);
+
 @end

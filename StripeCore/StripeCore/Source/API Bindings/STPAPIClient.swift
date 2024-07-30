@@ -392,6 +392,11 @@ extension STPAPIClient {
                 "application/x-www-form-urlencoded",
                 forHTTPHeaderField: "Content-Type"
             )
+            #if DEBUG
+            if StripeAPIConfiguration.mockNetworkRequests {
+                request.setValue(URLEncoder.queryString(from: parameters), forHTTPHeaderField: "X-Stripe-Mock-Request")
+            }
+            #endif
         }
 
         request.httpMethod = method.rawValue

@@ -13,14 +13,14 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_HHzLJKwH1kJ9tp
+request-id: req_CGnR75Zh5S8x0f
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 931
 Vary: Origin
-Date: Mon, 29 Jul 2024 18:42:06 GMT
-original-request: req_HHzLJKwH1kJ9tp
+Date: Tue, 30 Jul 2024 21:59:22 GMT
+original-request: req_CGnR75Zh5S8x0f
 stripe-version: 2020-08-27
-idempotency-key: 520770e4-d197-42fb-a234-72809325ae4f
+idempotency-key: da836af0-c4f7-4e63-8bd4-c3a17bb850c1
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -29,7 +29,7 @@ x-content-type-options: nosniff
 
 {
   "object" : "payment_method",
-  "id" : "pm_1PhyWIFY0qyl6XeWErCX2RRw",
+  "id" : "pm_1PiO4kFY0qyl6XeWhFQDcovQ",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -69,7 +69,7 @@ x-content-type-options: nosniff
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1722278526,
+  "created" : 1722376762,
   "allow_redisplay" : "limited",
   "type" : "card",
   "customer" : null

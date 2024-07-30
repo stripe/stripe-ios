@@ -1,9 +1,10 @@
 GET
 https:\/\/luxurious-alpine-devourer\.glitch\.me\/bearer\?foo=bar$
+
 200
 application/json
 access-control-allow-credentials: true
-Date: Fri, 19 Jul 2024 23:12:38 GMT
+Date: Tue, 30 Jul 2024 21:37:34 GMT
 Content-Type: application/json
 Content-Length: 50
 Server: gunicorn/19.2.0

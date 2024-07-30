@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_QZ6jAzgc5Ekwmf&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_QZX8zCEQzRmvKV&type=card$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_wZKb2NKhjzgUE2
+request-id: req_6njEu5wWNrFPQ4
 Content-Length: 89
 Vary: Origin
-Date: Mon, 29 Jul 2024 18:41:39 GMT
+Date: Tue, 30 Jul 2024 21:58:54 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300

@@ -1,11 +1,12 @@
 GET
 https:\/\/luxurious-alpine-devourer\.glitch\.me\/get\?$
+
 200
 application/json
 access-control-allow-credentials: true
-Date: Fri, 19 Jul 2024 23:12:37 GMT
+Date: Tue, 30 Jul 2024 21:37:33 GMT
 Content-Type: application/json
-Content-Length: 865
+Content-Length: 864
 Server: gunicorn/19.2.0
 Access-Control-Allow-Origin: *
 
@@ -18,14 +19,14 @@ Access-Control-Allow-Origin: *
     "Accept-Encoding" : "gzip, deflate, br",
     "Connection" : "close",
     "Host" : "luxurious-alpine-devourer.glitch.me",
-    "Traceparent" : "00-3f90b736be904611a9330a7bb14f3f95-0e4b47628588c35a-01",
+    "Traceparent" : "00-5fd9e5e735a84317a6f0a195040151f7-0ffcb7b115e16e2b-01",
     "Authorization" : "Bearer",
     "Accept-Language" : "en-US,en;q=0.9",
     "User-Agent" : "xctest\/22719 CFNetwork\/1406.0.4 Darwin\/23.5.0",
     "Stripe-Version" : "2020-08-27",
     "X-Forwarded-Host" : "luxurious-alpine-devourer.glitch.me",
-    "X-Stripe-User-Agent" : "{\"os_version\":\"16.4\",\"bindings_version\":\"23.28.1\",\"model\":\"iPhone\",\"lang\":\"objective-c\",\"vendor_identifier\":\"6B9BD889-FE40-4D9D-BD6E-CA93E8B754A3\",\"type\":\"arm64\"}"
+    "X-Stripe-User-Agent" : "{\"bindings_version\":\"23.28.1\",\"lang\":\"objective-c\",\"os_version\":\"16.4\",\"vendor_identifier\":\"6B9BD889-FE40-4D9D-BD6E-CA93E8B754A3\",\"model\":\"iPhone\",\"type\":\"arm64\"}"
   },
-  "origin" : "136.24.137.206,::ffff:10.10.11.121,::ffff:10.10.93.214",
+  "origin" : "136.24.137.206,::ffff:10.10.11.196,::ffff:10.10.87.35",
   "url" : "https,http,http:\/\/luxurious-alpine-devourer.glitch.me\/get"
 }

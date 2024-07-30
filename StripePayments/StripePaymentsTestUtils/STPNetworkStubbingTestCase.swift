@@ -43,6 +43,7 @@ import XCTest
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
         STPTestingAPIClient.shared.sessionConfig =
             StripeAPIConfiguration.sharedUrlSessionConfiguration
+        StripeAPIConfiguration.mockNetworkRequests = true
 
         // [self name] returns a string like `-[STPMyTestCase testThing]` - this transforms it into the recorded path `recorded_network_traffic/STPMyTestCase/testThing`.
         let rawComponents = name.components(separatedBy: " ")
@@ -80,8 +81,16 @@ import XCTest
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
                     return NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
                 }
+                recorder?.postBodyTransformBlock = { _, postBody in
+                    // HACK: Filter out MUID and GUID if available
+                    let escapedBody = NSRegularExpression.escapedPattern(for: postBody ?? "")
+                    return replaceUUIDs(escapedBody)
+                }
             } else {
                 recorder?.urlRegexPatternBlock = nil
+                recorder?.postBodyTransformBlock = { _, _ in
+                    return ""
+                }
             }
             recorder?.followRedirects = followRedirects
             recorder?.fileNamingBlock = { request, _, _ in
@@ -177,4 +186,22 @@ import XCTest
         // Don't accidentally keep any stubs around during the next test run
         HTTPStubs.removeAllStubs()
     }
+}
+
+//let genericUUID = "00000000-0000-0000-0000-000000000000"
+
+// Function to replace GUID and MUID with generic UUID, allowing the tests to still pass even if the MUID/GUID change
+fileprivate func replaceUUIDs(_ input: String) -> String {
+    var components = input.components(separatedBy: "&")
+    
+    for (index, component) in components.enumerated() {
+        if component.contains("[guid]=") || component.contains("[muid]=") {
+            let parts = component.components(separatedBy: "=")
+            if parts.count == 2 {
+                components[index] = "\(parts[0])=.*"
+            }
+        }
+    }
+    
+    return components.joined(separator: "&")
 }

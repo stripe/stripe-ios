@@ -241,11 +241,11 @@
 		625636EFF4844186C7A31FAF /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		64635404BD4D5D62486A7626 /* UnknownFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownFields.swift; sourceTree = "<group>"; };
 		66CC52EF207F05E0EFAEACD8 /* NSMutableURLRequest+StripeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableURLRequest+StripeTest.swift"; sourceTree = "<group>"; };
-		6B9C7B822BC73B1C007D5A28 /* AnalyticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelper.swift; sourceTree = "<group>"; };
 		6A05FB442BCF24100001D128 /* FinancialConnectionsSDKResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSDKResult.swift; sourceTree = "<group>"; };
 		6A05FB462BCF24370001D128 /* FinancialConnectionsLinkedBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLinkedBank.swift; sourceTree = "<group>"; };
 		6A05FB482BCF244A0001D128 /* InstantDebitsLinkedBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsLinkedBank.swift; sourceTree = "<group>"; };
 		6A05FB4A2BCF245C0001D128 /* FinancialConnectionsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsEvent.swift; sourceTree = "<group>"; };
+		6B9C7B822BC73B1C007D5A28 /* AnalyticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelper.swift; sourceTree = "<group>"; };
 		6CDBCD70CB220014972B49A5 /* PluginDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginDetector.swift; sourceTree = "<group>"; };
 		6E852B53CF75A119D3810B41 /* NSBundle+Stripe_AppName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSBundle+Stripe_AppName.swift"; sourceTree = "<group>"; };
 		6EEB07003465364DBAFA7DEB /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1270,7 +1270,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
 			requirement = {
-				branch = master;
+				branch = "stripe-mock";
 				kind = branch;
 			};
 		};

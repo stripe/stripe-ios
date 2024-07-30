@@ -12,5 +12,7 @@ import Foundation
 @_spi(STP) public struct StripeAPIConfiguration {
 
     public static let sharedUrlSessionConfiguration = URLSessionConfiguration.default
+    
+    @_spi(STP) public static var mockNetworkRequests = false
 
 }
