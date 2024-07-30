@@ -5,15 +5,15 @@
 //  Created by Yuki Tokuhiro on 7/18/23.
 //
 
-import StripeCoreTestUtils
-import XCTest
-
 import SafariServices
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
+import SwiftUI
+import XCTest
 
 /// These tests exercise 9 different confirm flows based on the combination of:
 /// - The Stripe Intent: PaymentIntent or PaymentIntent+SFU or SetupIntent
@@ -22,6 +22,8 @@ import SafariServices
 /// 👀  See `testIdealConfirmFlows` for an example with comments.
 @MainActor
 final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
+    let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
+
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
@@ -155,21 +157,18 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
-    // TODO: Re-enable this test.
-    // More info: It didn't trigger the bacs-specific logic in `performLocalActionsIfNeededAndConfirm` because it used `.dynamic(bacs_debit)`, whereas the logic checked for `.bacsDebit`
-    // This `dynamic` vs. `bacsDebit` mismatch is fixed and no longer possible (happily), but we have no good way to complete the local next action.
-//    func testBacsDDConfirmFlows() async throws {
-//        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .stripe(.bacsDebit), merchantCountry: .GB) { form in
-//            form.getTextFieldElement("Full name")!.setText("Foo")
-//            form.getTextFieldElement("Email")!.setText("f@z.c")
-//            form.getTextFieldElement("Sort code")!.setText("108800")
-//            form.getTextFieldElement("Account number")!.setText("00012345")
-//            form.getTextFieldElement("Address line 1")!.setText("asdf")
-//            form.getTextFieldElement("City")!.setText("asdf")
-//            form.getTextFieldElement("ZIP")!.setText("12345")
-//            form.getCheckboxElement(startingWith: "I understand that Stripe will be collecting Direct Debits")!.isSelected = true
-//        }
-//    }
+    func testBacsDDConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB) { form in
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("f@z.c")
+            form.getTextFieldElement("Sort code").setText("108800")
+            form.getTextFieldElement("Account number").setText("00012345")
+            form.getTextFieldElement("Address line 1").setText("asdf")
+            form.getTextFieldElement("City").setText("asdf")
+            form.getTextFieldElement("ZIP").setText("12345")
+            form.getCheckboxElement(startingWith: "I understand that Stripe will be collecting Direct Debits")!.isSelected = true
+        }
+    }
 
     func testAmazonPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -582,14 +581,15 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
         for (description, intent) in intents {
             // Make the form
-            let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testValue(intent: intent), configuration: .paymentSheet(configuration), paymentMethod: .stripe(paymentMethodType))
-            let paymentMethodForm = formFactory.make()
+            PaymentMethodFormViewController.clearFormCache()
+            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, headerView: nil, delegate: self)
+            let paymentMethodForm = formVC.form
 
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
-            view.addAndPinSubview(paymentMethodForm.view)
+            // Add to window to avoid layout errors due to zero size and presentation errors
+            window.rootViewController = formVC
+            formVC.viewDidAppear(true)
 
             // Fill out the form
-            sendEventToSubviews(.viewDidAppear, from: paymentMethodForm.view) // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
             formCompleter(paymentMethodForm)
 
             // Generate params from the form
@@ -605,6 +605,13 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
                 paymentHandler._handleWillForegroundNotification()
                 redirectShimCalled = true
+            }
+
+            // Hack to PaymentSheet-specific local actions that happen before control is handed over to STPPaymentHandler.
+            PaymentSheet._preconfirmShim = { viewController in
+                if paymentMethodType == .bacsDebit {
+                    ((viewController as! UIHostingController<BacsDDMandateView>).rootView).confirmAction()
+                }
             }
 
             // Confirm the intent with the form details
@@ -832,7 +839,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
 extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
-        return UIViewController()
+        return window.rootViewController!
     }
 
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
@@ -848,5 +855,13 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state
         action.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
         action.complete(with: .succeeded, error: nil)
+    }
+}
+
+extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDelegate {
+    nonisolated func didUpdate(_ viewController: StripePaymentSheet.PaymentMethodFormViewController) {
+    }
+
+    nonisolated func updateErrorLabel(for error: (any Error)?) {
     }
 }
