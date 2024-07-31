@@ -1159,44 +1159,31 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         // Payment sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
         // to present with the expected content. When the sheet is presented, it initially shows a loading screen,
         // and when it is done loading, the loading screen is replaced with the expected content.
-        // Therefore, the following code polls every 50 milliseconds to check if the LoadingViewController
-        // has been removed.  If the LoadingViewController is not there (or we reach the maximum number of times to poll),
+        // Therefore, the following code polls every 0.1 seconds to check if the LoadingViewController
+        // has been removed. If the LoadingViewController is not there (or we reach the maximum number of times to poll),
         // we assume the content has been loaded and continue.
-        let presentingExpectation = XCTestExpectation(description: "Presenting payment sheet")
-        DispatchQueue.global(qos: .background).async {
-            var isLoading = true
-            while isLoading {
-                DispatchQueue.main.sync {
-                    guard
-                        (self.paymentSheet.bottomSheetViewController.contentStack.first as? LoadingViewController)
-                            != nil
-                    else {
-                        isLoading = false
-                        presentingExpectation.fulfill()
-                        return
-                    }
-                }
-                if isLoading {
-                    usleep(50000)  // 50ms
+        let loadFinishedExpectation = XCTestExpectation(description: "Load finished")
+        func pollForLoadingFinished() {
+            if !(paymentSheet.bottomSheetViewController.contentStack.first is LoadingViewController) {
+                loadFinishedExpectation.fulfill()
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    guard self != nil else { return }
+                    pollForLoadingFinished()
                 }
             }
         }
-        wait(for: [presentingExpectation], timeout: 10.0)
+        pollForLoadingFinished()
+        wait(for: [loadFinishedExpectation], timeout: 5)
 
         paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
             preferredContentSizeCategory: preferredContentSizeCategory
         )
     }
 
-    private func sleepInBackground(numSeconds: Int) {
+    private func sleepInBackground(numSeconds: TimeInterval) {
         let waitExpectation = XCTestExpectation(description: "Waiting in background")
-        let maxCount = numSeconds * 2
-        DispatchQueue.global(qos: .background).async {
-            var count = 0
-            while count < maxCount {
-                count += 1
-                usleep(500000)  // 500ms
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + numSeconds) {
             waitExpectation.fulfill()
         }
         wait(for: [waitExpectation], timeout: 10.0)

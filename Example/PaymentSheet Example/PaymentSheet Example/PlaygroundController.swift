@@ -625,7 +625,7 @@ extension PlaygroundController {
             return
         case .deferred_csc:
             if settings.integrationType == .deferred_csc {
-                DispatchQueue.global(qos: .background).async {
+                DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
                     intentCreationCallback(.success(self.clientSecret!))
                 }
             }
