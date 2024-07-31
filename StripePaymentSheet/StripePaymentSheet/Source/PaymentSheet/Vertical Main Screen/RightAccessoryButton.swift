@@ -39,7 +39,7 @@ extension RowButton {
         private var label: UILabel {
             let label = UILabel()
             label.text = accessoryType.text
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20, fontSize: 14)
             if #available(iOS 15.0, *) {
                 label.minimumContentSizeCategory = .large
             }
