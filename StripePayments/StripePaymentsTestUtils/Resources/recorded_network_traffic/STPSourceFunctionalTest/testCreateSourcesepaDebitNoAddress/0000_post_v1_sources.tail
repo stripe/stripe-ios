@@ -13,26 +13,27 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=mono-bapi-srv"}],"include_subdomains":true}
-request-id: req_t6q5svb3WWKyen
+request-id: req_yGtysdVRHC2b3V
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1376
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:36:55 GMT
-original-request: req_t6q5svb3WWKyen
+Date: Wed, 31 Jul 2024 02:11:34 GMT
+original-request: req_yGtysdVRHC2b3V
 stripe-version: 2020-08-27
-idempotency-key: 0cef1148-3a1e-4053-a1ab-d9e14eac75e4
+idempotency-key: b50239ae-d7e4-4e9f-a739-2eeef5ace714
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: currency=eur&guid=.*&metadata\[foo]=bar&muid=.*&owner\[name]=Jenny%20Rosen&payment_user_agent=.*&sepa_debit\[iban]=DE89370400440532013000&sid=.*&type=sepa_debit
 
 {
-  "id" : "src_1PePQ3FY0qyl6XeWJLmv1Jay",
+  "id" : "src_1PiS0nFY0qyl6XeWB2EW1E5N",
   "mandate" : {
     "amount" : null,
-    "reference" : "PGO4OW4ON7ITQSA4",
-    "url" : "https:\/\/hooks.stripe.com\/adapter\/sepa_debit\/file\/src_1PePQ3FY0qyl6XeWJLmv1Jay\/src_client_secret_tN01fCbN9Ef8kWhLuNqtkRkI",
+    "reference" : "G7A9L6RXFVARGV5W",
+    "url" : "https:\/\/hooks.stripe.com\/adapter\/sepa_debit\/file\/src_1PiS0nFY0qyl6XeWB2EW1E5N\/src_client_secret_JGPfLJbqA7pbNoTnms8lyJnE",
     "acceptance" : {
       "online" : null,
       "status" : "pending",
@@ -62,8 +63,8 @@ x-content-type-options: nosniff
   "statement_descriptor" : null,
   "type" : "sepa_debit",
   "object" : "source",
-  "created" : 1721428615,
-  "client_secret" : "src_client_secret_tN01fCbN9Ef8kWhLuNqtkRkI",
+  "created" : 1722391893,
+  "client_secret" : "src_client_secret_JGPfLJbqA7pbNoTnms8lyJnE",
   "flow" : "none",
   "currency" : "eur",
   "status" : "chargeable",
@@ -71,9 +72,9 @@ x-content-type-options: nosniff
     "branch_code" : null,
     "country" : "DE",
     "fingerprint" : "MamVJqscD6xUvxgA",
-    "mandate_url" : "https:\/\/hooks.stripe.com\/adapter\/sepa_debit\/file\/src_1PePQ3FY0qyl6XeWJLmv1Jay\/src_client_secret_tN01fCbN9Ef8kWhLuNqtkRkI",
+    "mandate_url" : "https:\/\/hooks.stripe.com\/adapter\/sepa_debit\/file\/src_1PiS0nFY0qyl6XeWB2EW1E5N\/src_client_secret_JGPfLJbqA7pbNoTnms8lyJnE",
     "last4" : "3000",
-    "mandate_reference" : "PGO4OW4ON7ITQSA4",
+    "mandate_reference" : "G7A9L6RXFVARGV5W",
     "bank_code" : "37040044"
   }
 }

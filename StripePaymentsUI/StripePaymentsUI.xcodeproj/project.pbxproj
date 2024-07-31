@@ -928,7 +928,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
 			requirement = {
-				branch = master;
+				branch = "stripe-mock";
 				kind = branch;
 			};
 		};

@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_QZ6jzLJvV7FUTE&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_QZbIrXIjtLb7uD&type=card$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_SsCBgaayMGGqCt
+request-id: req_PS0XyOdGdHXyge
 Content-Length: 1271
 Vary: Origin
-Date: Mon, 29 Jul 2024 18:42:02 GMT
+Date: Wed, 31 Jul 2024 02:16:35 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -30,7 +30,7 @@ x-content-type-options: nosniff
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1PhyWBFY0qyl6XeWyJGpKrmy",
+      "id" : "pm_1PiS5cFY0qyl6XeW8QNUYYHx",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -71,10 +71,10 @@ x-content-type-options: nosniff
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1722278519,
+      "created" : 1722392192,
       "allow_redisplay" : "limited",
       "type" : "card",
-      "customer" : "cus_QZ6jzLJvV7FUTE"
+      "customer" : "cus_QZbIrXIjtLb7uD"
     }
   ],
   "url" : "\/v1\/payment_methods"

@@ -13,23 +13,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_UcIwuT4jS3l9AC
+request-id: req_RYzO1PKu6KF8bg
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 554
 Vary: Origin
-Date: Mon, 29 Jul 2024 23:23:50 GMT
-original-request: req_UcIwuT4jS3l9AC
+Date: Wed, 31 Jul 2024 03:30:53 GMT
+original-request: req_RYzO1PKu6KF8bg
 stripe-version: 2020-08-27
-idempotency-key: d5d18e15-0aa6-4439-8fd4-87f777d2ef31
+idempotency-key: 3a84886c-4bbe-426b-8164-dbac91783054
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=asdf&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=asdf&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=12345&billing_details\[address]\[state]=AL&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&payment_user_agent=.*&type=bacs_debit
 
 {
   "object" : "payment_method",
-  "id" : "pm_1Pi2uwGoesj9fw9QKdRXZmes",
+  "id" : "pm_1PiTFZGoesj9fw9QSvQY1lFs",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
@@ -50,7 +51,7 @@ x-content-type-options: nosniff
     "sort_code" : "108800"
   },
   "allow_redisplay" : "unspecified",
-  "created" : 1722295430,
+  "created" : 1722396653,
   "customer" : null,
   "type" : "bacs_debit"
 }

@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davidme-stripe/OHHTTPStubs",
       "state" : {
-        "branch" : "master",
-        "revision" : "dc0276bc6de8d7233681cb7a534602cf53f4a307"
+        "branch" : "stripe-mock",
+        "revision" : "5e90dfd42873ab8de026735d0725ad618b8ca7dd"
       }
     }
   ],

@@ -603,7 +603,13 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             paymentHandler._redirectShim = { _, _, _ in
                 // This gets called instead of the PaymentSheet.confirm callback if the Intent is successfully confirmed and requires next actions.
                 print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
-                paymentHandler._handleWillForegroundNotification()
+                // Defer this until after the `.succeeded` call is made in the below PaymentSheetAuthenticationContext
+                // if applicable, so that we don't re-fetch the PI unintentionally
+                DispatchQueue.main.async {
+                    if paymentHandler.isInProgress {
+                        paymentHandler._handleWillForegroundNotification()
+                    }
+                }
                 redirectShimCalled = true
             }
 

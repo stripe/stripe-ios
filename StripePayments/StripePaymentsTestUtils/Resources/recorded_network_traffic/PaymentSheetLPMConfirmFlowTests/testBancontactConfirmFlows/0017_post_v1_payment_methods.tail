@@ -13,23 +13,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_FuSZAS9jICCnMo
+request-id: req_8UF9DSNsZh2afS
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 460
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:40:43 GMT
-original-request: req_FuSZAS9jICCnMo
+Date: Wed, 31 Jul 2024 03:31:08 GMT
+original-request: req_8UF9DSNsZh2afS
 stripe-version: 2020-08-27
-idempotency-key: d674bd71-f760-4cc9-9e82-c4e2361ce088
+idempotency-key: 4e48a236-15e7-4149-97ff-6756430c45fb
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&payment_user_agent=.*&type=bancontact
 
 {
   "object" : "payment_method",
-  "id" : "pm_1PePTjFY0qyl6XeW0G53FwxA",
+  "id" : "pm_1PiTFoFY0qyl6XeW65kVKD9l",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
@@ -44,7 +45,7 @@ x-content-type-options: nosniff
     }
   },
   "livemode" : false,
-  "created" : 1721428843,
+  "created" : 1722396668,
   "allow_redisplay" : "unspecified",
   "type" : "bancontact",
   "customer" : null,

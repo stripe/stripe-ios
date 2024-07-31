@@ -13,23 +13,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_k6XIXtx1dD9RzK
+request-id: req_DTY65qT6eyyePj
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 495
 Vary: Origin
-Date: Fri, 26 Jul 2024 21:42:14 GMT
-original-request: req_k6XIXtx1dD9RzK
+Date: Wed, 31 Jul 2024 03:32:20 GMT
+original-request: req_DTY65qT6eyyePj
 stripe-version: 2020-08-27
-idempotency-key: 31d73493-cb55-4617-bf13-0c7fb15a9ec7
+idempotency-key: d9b6fcfb-2faa-401a-b2d9-ce4c9b8dcca7
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=unspecified&payment_user_agent=.*&type=cashapp
 
 {
   "object" : "payment_method",
-  "id" : "pm_1PgvtyFY0qyl6XeW7zI9zdxi",
+  "id" : "pm_1PiTGyFY0qyl6XeW5l56Sn2v",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -44,7 +45,7 @@ x-content-type-options: nosniff
     }
   },
   "livemode" : false,
-  "created" : 1722030134,
+  "created" : 1722396740,
   "allow_redisplay" : "unspecified",
   "type" : "cashapp",
   "customer" : null,

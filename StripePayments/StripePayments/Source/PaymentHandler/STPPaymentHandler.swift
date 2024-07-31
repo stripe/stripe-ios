@@ -164,6 +164,9 @@ public class STPPaymentHandler: NSObject {
     }
 
     internal var _redirectShim: ((URL, URL?, Bool) -> Void)?
+    internal var isInProgress: Bool {
+        return STPPaymentHandler.inProgress
+    }
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
 
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
