@@ -49,23 +49,18 @@ import Foundation
     let propertyAccessQueue = DispatchQueue(label: "FutureQueue", qos: .userInitiated)
 
     public func observe(
-        on queue: DispatchQueue? = nil,
+        on queue: DispatchQueue = .main,
         using callback: @escaping (Result) -> Void
     ) {
-        let wrappedCallback: (Result) -> Void
-        if let queue = queue {
-            wrappedCallback = { r in
-                queue.async {
-                    callback(r)
-                }
+        let wrappedCallback: (Result) -> Void = { r in
+            queue.async {
+                callback(r)
             }
-        } else {
-            wrappedCallback = callback
         }
 
         propertyAccessQueue.async { [self] in
             // If a result has already been set, call the callback directly:
-            if let result = result {
+            if let result {
                 return wrappedCallback(result)
             }
 
@@ -81,7 +76,7 @@ import Foundation
     }
 
     public func chained<T>(
-        on queue: DispatchQueue? = nil,
+        on queue: DispatchQueue = .main,
         using closure: @escaping (Value) throws -> Future<T>
     ) -> Future<T> {
         // We'll start by constructing a "wrapper" promise that will be
@@ -99,7 +94,7 @@ import Foundation
 
                     // Observe the "nested" future, and once it
                     // completes, resolve/reject the "wrapper" future:
-                    future.observe { result in
+                    future.observe(on: queue) { result in
                         switch result {
                         case .success(let value):
                             promise.resolve(with: value)

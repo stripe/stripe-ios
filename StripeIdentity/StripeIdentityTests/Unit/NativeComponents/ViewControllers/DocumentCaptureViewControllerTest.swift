@@ -11,7 +11,6 @@ import Foundation
 @_spi(STP) import StripeCameraCoreTestUtils
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import StripeCameraCore
@@ -38,7 +37,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     let mockError = NSError(domain: "mock_error", code: 100, userInfo: nil)
 
-    override class func setUp() {
+    override static func setUp() {
         super.setUp()
         mockSampleBuffer = CapturedImageMock.frontDriversLicense.image.convertToSampleBuffer()
         guard let mockVerificationPage = try? VerificationPageMock.response200.make() else {
@@ -329,9 +328,14 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Request to save data
         vc.saveOrFlipDocument(scannedImage: mockBackImage, documentSide: .back)
 
-        guard case .success = mockSheetController.backUploadedDocumentsResult else {
-            return XCTFail("Expected success result")
+        let e = expectation(description: "back upload result")
+        mockDocumentUploader.backUploadPromise.observe { _ in
+            guard case .success = self.mockSheetController.backUploadedDocumentsResult else {
+                return XCTFail("Expected success result")
+            }
+            e.fulfill()
         }
+        waitForExpectations(timeout: 1)
 
         // Verify state
         verify(
