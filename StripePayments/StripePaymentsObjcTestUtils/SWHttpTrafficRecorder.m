@@ -437,15 +437,15 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 }
 
 -(NSString *)postBodyRequestStringForRequest:(NSURLRequest *)request {
-    NSString *debugHeader = [request valueForHTTPHeaderField:@"X-Stripe-Mock-Request"];
-    if (debugHeader != nil && [debugHeader length] > 0) {
-        NSString *(^postBodyBlock)(NSURLRequest *request, NSString *postBody) = [SWHttpTrafficRecorder sharedRecorder].postBodyTransformBlock;
+    NSString *postBody = [request valueForHTTPHeaderField:@"X-Stripe-Mock-Request"];
+    if (postBody != nil && [postBody length] > 0) {
+        NSString *(^postBodyTransformBlock)(NSURLRequest *request, NSString *postBody) = [SWHttpTrafficRecorder sharedRecorder].postBodyTransformBlock;
         
-        if(postBodyBlock){
-            debugHeader = postBodyBlock(request, debugHeader);
+        if(postBodyTransformBlock){
+            postBody = postBodyTransformBlock(request, postBody);
         }
 
-        return debugHeader;
+        return postBody;
     }
     return nil;
 }

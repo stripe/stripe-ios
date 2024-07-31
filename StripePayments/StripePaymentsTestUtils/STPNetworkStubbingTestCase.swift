@@ -216,9 +216,8 @@ private func replaceNondeterministicParams(_ input: String) -> String {
     for (index, component) in components.enumerated() {
         if componentsToFilter.first(where: { component.contains($0) }) != nil {
             let parts = component.components(separatedBy: "=")
-            if parts.count == 2 {
-                components[index] = "\(parts[0])=.*"
-            }
+            XCTAssertEqual(parts.count, 2, "Invalid portion of query string: index\(index), component: \(component)")
+            components[index] = "\(parts[0])=.*"
         }
     }
 
