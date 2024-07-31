@@ -38,7 +38,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
         let types = ["ideal", "card", "bancontact", "sofort"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
-        PaymentMethodFormViewController.formCache = [.stripe(.card): FormElement(elements: [])]
         // Given a PaymentIntent client secret...
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, isFlowController: false) { result in
             expectation.fulfill()
@@ -58,8 +57,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 XCTAssertTrue(loadResult.isApplePayEnabled)
-                // Ensure the form cache was cleared
-                XCTAssertTrue(PaymentMethodFormViewController.formCache.isEmpty)
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }

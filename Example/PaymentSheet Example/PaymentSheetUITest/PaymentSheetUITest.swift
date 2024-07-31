@@ -47,9 +47,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     func testPaymentSheetStandard() throws {
         app.launch()
         app.staticTexts["PaymentSheet"].tap()
-        let buyButton = app.staticTexts["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
-        buyButton.tap()
+        app.staticTexts["Buy"].waitForExistenceAndTap(timeout: 60)
 
         try! fillCardData(app)
         app.buttons["Pay €9.73"].tap()
@@ -445,6 +443,45 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
+    }
+
+    func testPreservesFormDetails() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .setup
+        settings.uiStyle = .paymentSheet
+        settings.layout = .horizontal
+        loadPlayground(app, settings)
+
+        // Add a card first so we can test saved screen
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.buttons["Set up"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        app.buttons["Reload"].tap()
+
+        func _testHorizontalPreservesFormDetails() {
+            // Typing something into the card form...
+            let numberField = app.textFields["Card number"]
+            numberField.waitForExistenceAndTap()
+            app.typeText("4")
+            // ...and tapping to a different form and back...
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Cash App Pay")?.waitForExistenceAndTap() ?? false)
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Card")?.waitForExistenceAndTap() ?? false)
+            // ...should preserve the card form
+            XCTAssertEqual(numberField.value as? String, "4, Your card number is incomplete.")
+            // ...tapping to the saved PM screen and back should do the same
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["+ Add"].waitForExistenceAndTap()
+            XCTAssertEqual(numberField.value as? String, "4, Your card number is incomplete.")
+            // Exit
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["Close"].waitForExistenceAndTap()
+        }
+        // PaymenSheet + Horizontal
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        _testHorizontalPreservesFormDetails()
     }
 }
 

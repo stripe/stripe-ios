@@ -44,11 +44,12 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             return isLinkEnabled || isApplePayEnabled
         }
     }
+    let intent: Intent
+    let elementsSession: STPElementsSession
+    let formCache: PaymentMethodFormCache = .init()
 
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
-    let intent: Intent
-    let elementsSession: STPElementsSession
     enum Mode {
         case selectingSaved
         case addingNew
@@ -70,6 +71,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             elementsSession: elementsSession,
             configuration: configuration,
             isLinkEnabled: isLinkEnabled,
+            formCache: formCache,
             delegate: self
         )
     }()

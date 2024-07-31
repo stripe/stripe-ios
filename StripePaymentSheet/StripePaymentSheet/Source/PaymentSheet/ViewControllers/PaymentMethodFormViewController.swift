@@ -47,17 +47,32 @@ class PaymentMethodFormViewController: UIViewController {
     }()
     let headerView: UIView?
 
+    /// This caches forms for payment methods so that customers don't have to re-enter details
+    /// This assumes the form generated for a given PM type _does not change_ at any point after load.
+    let formCache: PaymentMethodFormCache
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(type: PaymentSheet.PaymentMethodType, intent: Intent, elementsSession: STPElementsSession, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, headerView: UIView?, delegate: PaymentMethodFormViewControllerDelegate) {
+    init(
+        type: PaymentSheet.PaymentMethodType,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        previousCustomerInput: IntentConfirmParams?,
+        formCache: PaymentMethodFormCache,
+        configuration: PaymentSheet.Configuration,
+        isLinkEnabled: Bool,
+        headerView: UIView?,
+        delegate: PaymentMethodFormViewControllerDelegate
+    ) {
         self.paymentMethodType = type
         self.intent = intent
         self.elementsSession = elementsSession
         self.delegate = delegate
         self.configuration = configuration
         self.headerView = headerView
+        self.formCache = formCache
         let shouldOfferLinkSignup: Bool = {
             guard isLinkEnabled && !elementsSession.disableLinkSignup else {
                 return false
@@ -67,8 +82,7 @@ class PaymentMethodFormViewController: UIViewController {
             return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
         }()
 
-        // TODO: Inject form cache, make it come from LoadResult, maybe move cache to FormFactory so that shouldDisplayForm checks don't initialize this vc and set the form delegate
-        if let form = Self.formCache[type] {
+        if let form = self.formCache[type] {
             self.form = form
         } else {
             self.form = PaymentSheetFormFactory(
@@ -80,7 +94,7 @@ class PaymentMethodFormViewController: UIViewController {
                 offerSaveToLinkWhenSupported: shouldOfferLinkSignup,
                 linkAccount: LinkAccountContext.shared.account
             ).make()
-            Self.formCache[type] = form
+            self.formCache[type] = form
         }
 
         super.init(nibName: nil, bundle: nil)
@@ -150,13 +164,18 @@ extension PaymentMethodFormViewController: PresentingViewControllerDelegate {
 
 // MARK: - Form cache
 
-extension PaymentMethodFormViewController {
-    /// This caches forms for payment methods so that customers don't have to re-enter details
-    /// This class expects the formCache to be invalidated (cleared) when we load PaymentSheet; we assume the form generated for a given PM type _does not change_ at any point after load.
-    static var formCache: [PaymentSheet.PaymentMethodType: PaymentMethodElement] = [:]
+/// This caches forms for payment methods so that customers don't have to re-enter details.
+/// ⚠️ Make sure you invalidate the cache appropriately e.g. changing the Intent should invalidate the cache.
+class PaymentMethodFormCache {
+    private var cache: [PaymentSheet.PaymentMethodType: PaymentMethodElement] = [:]
 
-    static func clearFormCache() {
-        formCache = [:]
+    subscript(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodElement? {
+        get {
+            return cache[paymentMethodType]
+        }
+        set {
+            cache[paymentMethodType] = newValue
+        }
     }
 }
 

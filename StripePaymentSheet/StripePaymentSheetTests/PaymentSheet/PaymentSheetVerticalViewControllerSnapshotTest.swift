@@ -18,7 +18,6 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         AddressSpecProvider.shared.loadAddressSpecs {
             FormSpecProvider.shared.load { _ in
                 expectation.fulfill()
-                PaymentMethodFormViewController.clearFormCache()
             }
         }
         waitForExpectations(timeout: 1)

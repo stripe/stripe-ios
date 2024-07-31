@@ -74,6 +74,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let configuration: PaymentSheet.Configuration
     let intent: Intent
     let elementsSession: STPElementsSession
+    let formCache: PaymentMethodFormCache = .init()
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
     private var savedPaymentMethods: [STPPaymentMethod]
@@ -655,7 +656,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             return true
         case let .new(paymentMethodType: paymentMethodType):
             // Only make payment methods appear selected in the list if they don't push to a form
-            return !makeFormVC(paymentMethodType: paymentMethodType).form.collectsUserInput
+            return !shouldDisplayForm(for: paymentMethodType)
         case .saved:
             return true
         }
@@ -715,6 +716,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             intent: intent,
             elementsSession: elementsSession,
             previousCustomerInput: previousCustomerInput,
+            formCache: formCache,
             configuration: configuration,
             isLinkEnabled: loadResult.isLinkEnabled,
             headerView: headerView,
@@ -723,7 +725,15 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     private func shouldDisplayForm(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
-        return makeFormVC(paymentMethodType: paymentMethodType).form.collectsUserInput
+        return PaymentSheetFormFactory(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: .paymentSheet(configuration),
+            paymentMethod: paymentMethodType,
+            previousCustomerInput: nil,
+            offerSaveToLinkWhenSupported: false,
+            linkAccount: LinkAccountContext.shared.account
+        ).make().collectsUserInput
     }
 
     func didCancel() {
