@@ -14,15 +14,15 @@ struct ConsumerSessionData: Decodable {
 }
 
 struct LookupConsumerSessionResponse: Decodable {
-    let consumerSession: ConsumerSessionData?
     let exists: Bool
     let accountId: String?
+    let publishableKey: String?
+    let consumerSession: ConsumerSessionData?
 }
 
 struct LinkSignUpResponse: Decodable {
     let accountId: String
     let publishableKey: String
-    let authSessionClientSecret: String
     let consumerSession: ConsumerSessionData
 }
 

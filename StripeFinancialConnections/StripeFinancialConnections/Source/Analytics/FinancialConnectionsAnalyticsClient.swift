@@ -210,6 +210,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .networkingSaveToLinkVerification
         case is LinkAccountPickerViewController:
             return .linkAccountPicker
+        case is LinkLoginViewController:
+            return .linkLogin
         case is ErrorViewController:
             return .unexpectedError
         default:

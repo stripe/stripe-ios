@@ -1,5 +1,5 @@
 //
-//  NetworkingLinkSignupBodyFormView.swift
+//  LinkSignupFormView.swift
 //  StripeFinancialConnections
 //
 //  Created by Krisjanis Gaidis on 1/24/23.
@@ -10,21 +10,21 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
-    func networkingLinkSignupBodyFormView(
-        _ view: NetworkingLinkSignupBodyFormView,
+protocol LinkSignupFormViewDelegate: AnyObject {
+    func linkSignupFormView(
+        _ view: LinkSignupFormView,
         didEnterValidEmailAddress emailAddress: String
     )
-    func networkingLinkSignupBodyFormViewDidUpdateFields(
-        _ view: NetworkingLinkSignupBodyFormView
+    func linkSignupFormViewDidUpdateFields(
+        _ view: LinkSignupFormView
     )
 }
 
-final class NetworkingLinkSignupBodyFormView: UIView {
+final class LinkSignupFormView: UIView {
 
     private let accountholderPhoneNumber: String?
     private let theme: FinancialConnectionsTheme
-    weak var delegate: NetworkingLinkSignupBodyFormViewDelegate?
+    weak var delegate: LinkSignupFormViewDelegate?
 
     private lazy var verticalStackView: UIStackView = {
        let verticalStackView = UIStackView()
@@ -69,6 +69,27 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         return true // phone number is shown for the first time
     }
 
+    func showAndEditPhoneNumberFieldIfNeeded() {
+        let didShowPhoneNumberFieldForTheFirstTime = showPhoneNumberFieldIfNeeded()
+        // in case user needs to slowly re-type the e-mail,
+        // we want to only jump to the phone number the
+        // first time they enter the e-mail
+        if didShowPhoneNumberFieldForTheFirstTime {
+            let didPrefillPhoneNumber = (phoneTextField.phoneNumber?.number ?? "").count > 1
+            if !didPrefillPhoneNumber {
+                // this disables the "Phone" label animating (we don't want that animation here)
+                UIView.performWithoutAnimation {
+                    // auto-focus the non-prefilled phone field
+                    beginEditingPhoneNumberField()
+                }
+            } else {
+                // user is done with e-mail AND phone number, so dismiss the keyboard
+                // so they can see the "Save to Link" button
+                endEditingEmailAddressField()
+            }
+        }
+    }
+
     func prefillEmailAddress(_ emailAddress: String?) {
         guard let emailAddress = emailAddress, !emailAddress.isEmpty else {
             return
@@ -91,14 +112,14 @@ final class NetworkingLinkSignupBodyFormView: UIView {
 
 // MARK: - EmailTextFieldDelegate
 
-extension NetworkingLinkSignupBodyFormView: EmailTextFieldDelegate {
+extension LinkSignupFormView: EmailTextFieldDelegate {
 
     func emailTextField(
         _ emailTextField: EmailTextField,
         didChangeEmailAddress emailAddress: String,
         isValid: Bool
     ) {
-        delegate?.networkingLinkSignupBodyFormViewDidUpdateFields(self)
+        delegate?.linkSignupFormViewDidUpdateFields(self)
 
         if isValid {
             debounceEmailTimer?.invalidate()
@@ -122,7 +143,7 @@ extension NetworkingLinkSignupBodyFormView: EmailTextFieldDelegate {
                         emailAddress != self.lastValidEmail
                 {
                     self.lastValidEmail = emailAddress
-                    self.delegate?.networkingLinkSignupBodyFormView(
+                    self.delegate?.linkSignupFormView(
                         self,
                         didEnterValidEmailAddress: emailAddress
                     )
@@ -144,14 +165,28 @@ extension NetworkingLinkSignupBodyFormView: EmailTextFieldDelegate {
     }
 }
 
+extension LinkSignupFormView {
+    var email: String {
+        emailTextField.text
+    }
+
+    var phoneNumber: String {
+        phoneTextField.phoneNumber?.string(as: .e164) ?? ""
+    }
+
+    var countryCode: String {
+        phoneTextField.phoneNumber?.countryCode ?? "US"
+    }
+}
+
 // MARK: - PhoneTextFieldDelegate
 
-extension NetworkingLinkSignupBodyFormView: PhoneTextFieldDelegate {
+extension LinkSignupFormView: PhoneTextFieldDelegate {
     func phoneTextField(
         _ phoneTextField: PhoneTextField,
         didChangePhoneNumber phoneNumber: PhoneNumber?
     ) {
-        delegate?.networkingLinkSignupBodyFormViewDidUpdateFields(self)
+        delegate?.linkSignupFormViewDidUpdateFields(self)
     }
 }
 
@@ -161,11 +196,11 @@ import SwiftUI
 
 private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepresentable {
 
-    func makeUIView(context: Context) -> NetworkingLinkSignupBodyFormView {
-        NetworkingLinkSignupBodyFormView(accountholderPhoneNumber: nil, theme: .light)
+    func makeUIView(context: Context) -> LinkSignupFormView {
+        LinkSignupFormView(accountholderPhoneNumber: nil, theme: .light)
     }
 
-    func updateUIView(_ uiView: NetworkingLinkSignupBodyFormView, context: Context) {}
+    func updateUIView(_ uiView: LinkSignupFormView, context: Context) {}
 }
 
 struct NetworkingLinkSignupBodyFormView_Previews: PreviewProvider {
