@@ -188,14 +188,22 @@ import XCTest
     }
 }
 
-//let genericUUID = "00000000-0000-0000-0000-000000000000"
-
-// Function to replace GUID and MUID with generic UUID, allowing the tests to still pass even if the MUID/GUID change
+// Function to filter out some common UUIDs or other request parameters that may change
 fileprivate func replaceUUIDs(_ input: String) -> String {
+    let componentsToFilter = [
+        "guid=",
+        "muid=",
+        "sid=",
+        "[guid]=",
+        "[muid]=",
+        "[sid]=",
+        "payment_user_agent",
+        "pk_token_transaction_id",
+    ]
     var components = input.components(separatedBy: "&")
     
     for (index, component) in components.enumerated() {
-        if component.contains("[guid]=") || component.contains("[muid]=") {
+        if componentsToFilter.first(where: { component.contains($0) }) != nil {
             let parts = component.components(separatedBy: "=")
             if parts.count == 2 {
                 components[index] = "\(parts[0])=.*"

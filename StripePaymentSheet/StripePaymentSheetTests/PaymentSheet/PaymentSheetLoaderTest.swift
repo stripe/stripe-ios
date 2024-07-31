@@ -123,7 +123,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     func testPaymentSheetLoadDeferredIntentSucceeds() {
-        let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         // Test PaymentSheetLoader.load can load various IntentConfigurations
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
             XCTFail("Confirm handler shouldn't be called.")
@@ -140,10 +139,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             // Setup config w/o currency
             .init(mode: .setup(), confirmHandler: confirmHandler),
         ]
-        loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
+            let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
             PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, isFlowController: true) { result in
-                loadExpectation.fulfill()
                 switch result {
                 case .success(let loadResult):
                     guard case .deferredIntent = loadResult.intent else {
@@ -155,9 +153,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     XCTFail("Test case at index \(index) failed: \(error)")
                     print(error)
                 }
+                loadExpectation.fulfill()
             }
+            wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
         }
-        wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testPaymentSheetLoadDeferredIntentFails() {

@@ -1,5 +1,5 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/log_out$
+/v1/consumers/sessions/log_out$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,19 +13,20 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
-request-id: req_STJTtYyOQhYscZ
+request-id: req_3Qy6cehxTVPAHL
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 889
 Vary: Origin
-Date: Fri, 19 Jul 2024 23:24:45 GMT
-original-request: req_STJTtYyOQhYscZ
+Date: Wed, 31 Jul 2024 02:08:51 GMT
+original-request: req_3Qy6cehxTVPAHL
 stripe-version: 2020-08-27
-idempotency-key: 8dfe0b1c-6800-47ad-bad9-49927e11d8de
+idempotency-key: 68814297-8254-4b41-952b-a6f8907b3a50
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: 
 
 {
   "consumer_session" : {
@@ -37,10 +38,10 @@ x-content-type-options: nosniff
     "verification_sessions" : [
 
     ],
-    "client_secret" : "pscs_AVsCY5UnfNrlGK87PslJO76JLE1SNTm-6yX34111lopKU34khtxepKhgFl4nqY4gt8xXQMh7LYzgP3FO5NdsGEBx-2CmkCmtB2mlXmmrrdvQtKCCWnB2D1B3k4DIZ-yqlBg_sjY4Sl0SzsF6CXYlBrxuXophKBd26kCXU-gLROmY4gTRsD6J64hXxbTJOSZsEFmMoWRw0fsdm39hJRGOVyYqsHQu7N5cOiVCzpHnNaFjl7e9omxOL3PO8plxcIruRVFxXJ0p5cIY320dpQGU4gka7bfRl4YhEsfkwC1tJRRP0zQAr_xbDiUldVk97u0k_tUSnjLjuWEqAlBJ2bnHyADgH3QHKjOLd7aGJozgCl-9neqmaJEsskFCJJVfHpJF6e6JveI8e8nnB6jIMrBYOBhc2yCmAYBEmMsdisLDRVq9daKLBKniA-BPwlQ",
+    "client_secret" : "pscs_AVsCY5VSHWCnNEc1MHWqrdBOkZznPskf5nvedkE0qy6vVjthveBvQJLDPnuskghizsVwWzncoIwbMDJqHGU8Y1xllyI1MeXAGO2YT6WwX77MMYlJyvDFdEbpogbdOdIUSHR-ik_qypDkvLwoHO7AquEc7Vrf3mu9oL706S9bEnJDBEbj-gDmdToL6c8ojXMfODe7ush9pQSZA3eRZ0L6FAeMGfvhANRhSi8PUT6RaBTQxgbJvSTpWJr4b7VkxC24Pzv87W8E3Y-Y_PxAwRkf72-LmX_Gs3pvk5NPHKaSXbfPKw-DpJ4D9QVFK_CRX0tyHyLAynVqP1jHdywf5ct8G8Wfk4JGHXDmzcy4wdE4RKj6ll9vLq1mtM4v_fSuk9Wvcj4rgAWVpO7yrJG9VgxUzq9LDZM1ASQPyKF3ZrqEDFFlVSUmBDClHGArFmo",
     "support_payment_details_types" : [
 
     ],
-    "email_address" : "mobile-payments-sdk-ci+a954d11e-4cef-4ebf-883b-fbbeafa8ffed@stripe.com"
+    "email_address" : "mobile-payments-sdk-ci+874e9b29-df47-4a14-be39-be257a89dccb@stripe.com"
   }
 }

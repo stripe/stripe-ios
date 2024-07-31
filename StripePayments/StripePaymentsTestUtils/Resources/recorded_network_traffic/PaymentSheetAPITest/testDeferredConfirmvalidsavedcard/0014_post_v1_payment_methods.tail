@@ -13,23 +13,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_28ngKD53IX1F7H
+request-id: req_xsjaAhCb0kWwqe
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 931
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:39:05 GMT
-original-request: req_28ngKD53IX1F7H
+Date: Wed, 31 Jul 2024 02:13:50 GMT
+original-request: req_xsjaAhCb0kWwqe
 stripe-version: 2020-08-27
-idempotency-key: ad64836f-4e8e-4e0d-8f94-0aa0f340a71b
+idempotency-key: 302bc7fb-44c5-46e3-9c36-7fc27472d6c2
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_month]=1&card\[exp_year]=2025&card\[number]=4242424242424242&payment_user_agent=.*&type=card
 
 {
   "object" : "payment_method",
-  "id" : "pm_1PePS9FY0qyl6XeWcnkdOFxW",
+  "id" : "pm_1PiS2zFY0qyl6XeWlMKBbYVV",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -69,7 +70,7 @@ x-content-type-options: nosniff
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1721428745,
+  "created" : 1722392029,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null

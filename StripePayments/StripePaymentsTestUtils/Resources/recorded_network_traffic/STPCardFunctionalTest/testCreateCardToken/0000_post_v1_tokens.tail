@@ -13,23 +13,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_DIvtNQqBdXhYcl
+request-id: req_TO88a0QYLGTclN
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 852
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:34:44 GMT
-original-request: req_DIvtNQqBdXhYcl
+Date: Wed, 31 Jul 2024 02:09:40 GMT
+original-request: req_TO88a0QYLGTclN
 stripe-version: 2020-08-27
-idempotency-key: ff4152b4-d1c0-42cc-b762-1307806f9c31
+idempotency-key: b49454f0-bbfd-465f-9d20-c0543bfefba6
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: card\[address_city]=New%20York&card\[address_country]=USA&card\[address_line1]=123%20Fake%20Street&card\[address_line2]=Apartment%204&card\[address_state]=NY&card\[address_zip]=10002&card\[currency]=usd&card\[exp_month]=6&card\[exp_year]=2050&card\[number]=4242%204242%204242%204242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*
 
 {
   "object" : "token",
-  "id" : "tok_1PePNwFY0qyl6XeW4NF9PdeW",
+  "id" : "tok_1PiRyyFY0qyl6XeW5aAjnkfi",
   "card" : {
     "address_line1_check" : "unchecked",
     "dynamic_last4" : null,
@@ -51,7 +52,7 @@ x-content-type-options: nosniff
     },
     "name" : null,
     "funding" : "credit",
-    "id" : "card_1PePNwFY0qyl6XeWRJcjqcLE",
+    "id" : "card_1PiRyyFY0qyl6XeW2QkyXkwp",
     "tokenization_method" : null,
     "address_country" : "USA",
     "wallet" : null,
@@ -59,7 +60,7 @@ x-content-type-options: nosniff
   },
   "client_ip" : "136.24.137.206",
   "livemode" : false,
-  "created" : 1721428484,
+  "created" : 1722391780,
   "used" : false,
   "type" : "card"
 }

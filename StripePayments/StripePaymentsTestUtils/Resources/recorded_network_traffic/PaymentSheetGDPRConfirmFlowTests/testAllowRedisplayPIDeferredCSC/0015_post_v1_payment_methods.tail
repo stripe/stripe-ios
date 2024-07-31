@@ -13,23 +13,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_CuPetRdpsbeBAG
+request-id: req_sSwsDPOF0XXAw7
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 930
 Vary: Origin
-Date: Tue, 30 Jul 2024 21:58:35 GMT
-original-request: req_CuPetRdpsbeBAG
+Date: Wed, 31 Jul 2024 02:15:53 GMT
+original-request: req_sSwsDPOF0XXAw7
 stripe-version: 2020-08-27
-idempotency-key: 71b2ea8d-31d0-4e5a-a18d-ff06bab90c74
+idempotency-key: d63a5486-84ea-4a25-9f9c-82383869b5cd
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=always&billing_details\[address]\[country]=US&billing_details\[address]\[postal_code]=65432&card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=32&card\[number]=4242424242424242&payment_user_agent=.*&type=card
 
 {
   "object" : "payment_method",
-  "id" : "pm_1PiO3zFY0qyl6XeWqFvNOQ7x",
+  "id" : "pm_1PiS4zFY0qyl6XeWtTdKApCt",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -69,7 +70,7 @@ x-content-type-options: nosniff
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1722376715,
+  "created" : 1722392153,
   "allow_redisplay" : "always",
   "type" : "card",
   "customer" : null

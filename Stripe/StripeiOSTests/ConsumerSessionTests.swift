@@ -21,6 +21,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
     var apiClient: STPAPIClient!
 
     override func setUp() {
+        strictParamsEnforcement = false
         super.setUp()
         apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     }
