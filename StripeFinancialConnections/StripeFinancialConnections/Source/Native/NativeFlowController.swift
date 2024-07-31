@@ -985,6 +985,8 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
     }
 }
 
+// MARK: - LinkLoginViewControllerDelegate
+
 extension NativeFlowController: LinkLoginViewControllerDelegate {
     func linkLoginViewController(
         _ viewController: LinkLoginViewController,

@@ -49,7 +49,7 @@ final class LinkLoginViewController: UIViewController {
         return formView
     }()
 
-    private var footerView: LinkLoginFooterView?
+    private var footerButton: StripeUICore.Button?
 
     init(dataSource: LinkLoginDataSource) {
         self.dataSource = dataSource
@@ -87,18 +87,20 @@ final class LinkLoginViewController: UIViewController {
             subtitle: linkLoginPane.body,
             contentView: formView
         )
-        let footerView = LinkLoginFooterView(
-            aboveCtaText: linkLoginPane.aboveCta,
-            cta: linkLoginPane.cta,
+        let footerView = PaneLayoutView.createFooterView(
+            primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                title: linkLoginPane.cta,
+                action: didSelectContinueWithLink
+            ),
+            topText: linkLoginPane.aboveCta,
             theme: dataSource.manifest.theme,
-            didSelectCta: didSelectContinueWithLink,
             didSelectURL: didSelectURLInTextFromBackend
         )
-        self.footerView = footerView
+        self.footerButton = footerView.primaryButton
 
         let paneLayoutView = PaneLayoutView(
             contentView: contentView,
-            footerView: footerView
+            footerView: footerView.footerView
         )
 
         paneLayoutView.addTo(view: view)
@@ -128,7 +130,7 @@ final class LinkLoginViewController: UIViewController {
     }
 
     private func didSelectContinueWithLink() {
-        footerView?.setIsLoading(true)
+        footerButton?.isLoading = true
 
         dataSource.signUp(
             emailAddress: formView.email,
@@ -145,7 +147,7 @@ final class LinkLoginViewController: UIViewController {
         }
         .observe { [weak self] result in
             guard let self else { return }
-            self.footerView?.setIsLoading(false)
+            self.footerButton?.isLoading = false
 
             switch result {
             case .success(let response):
@@ -168,7 +170,7 @@ final class LinkLoginViewController: UIViewController {
     private func setContinueWithLinkButtonDisabledState() {
         let isEmailValid = formView.emailTextField.isEmailValid
         let isPhoneNumberValid = formView.phoneTextField.isPhoneNumberValid
-        footerView?.enableCtaButton(isEmailValid && isPhoneNumberValid)
+        footerButton?.isEnabled = isEmailValid && isPhoneNumberValid
     }
 }
 
