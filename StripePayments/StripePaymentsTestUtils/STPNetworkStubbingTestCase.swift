@@ -43,7 +43,9 @@ import XCTest
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
         STPTestingAPIClient.shared.sessionConfig =
             StripeAPIConfiguration.sharedUrlSessionConfiguration
-        StripeAPIConfiguration.mockNetworkRequests = true
+
+        // Enable the Debug Params headers. We'll record these and include them in the header list.
+        StripeAPIConfiguration.includeDebugParamsHeader = true
 
         // [self name] returns a string like `-[STPMyTestCase testThing]` - this transforms it into the recorded path `recorded_network_traffic/STPMyTestCase/testThing`.
         let rawComponents = name.components(separatedBy: " ")
@@ -82,9 +84,10 @@ import XCTest
                     return NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
                 }
                 recorder?.postBodyTransformBlock = { _, postBody in
-                    // HACK: Filter out MUID and GUID if available
+                    // Regex filter these:
                     let escapedBody = NSRegularExpression.escapedPattern(for: postBody ?? "")
-                    return replaceUUIDs(escapedBody)
+                    // Then remove any params that may contain UUIDs or other random data
+                    return replaceNondeterministicParams(escapedBody)
                 }
             } else {
                 recorder?.urlRegexPatternBlock = nil
@@ -189,19 +192,19 @@ import XCTest
 }
 
 // Function to filter out some common UUIDs or other request parameters that may change
-fileprivate func replaceUUIDs(_ input: String) -> String {
+private func replaceNondeterministicParams(_ input: String) -> String {
     let componentsToFilter = [
-        "guid=",
+        "guid=", // Fraud detection data
         "muid=",
         "sid=",
         "[guid]=",
         "[muid]=",
         "[sid]=",
-        "payment_user_agent",
-        "pk_token_transaction_id",
+        "payment_user_agent", // Contains the SDK version number
+        "pk_token_transaction_id", // Random string
     ]
     var components = input.components(separatedBy: "&")
-    
+
     for (index, component) in components.enumerated() {
         if componentsToFilter.first(where: { component.contains($0) }) != nil {
             let parts = component.components(separatedBy: "=")
@@ -210,6 +213,6 @@ fileprivate func replaceUUIDs(_ input: String) -> String {
             }
         }
     }
-    
+
     return components.joined(separator: "&")
 }

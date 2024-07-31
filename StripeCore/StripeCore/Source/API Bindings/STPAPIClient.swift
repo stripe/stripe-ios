@@ -393,7 +393,7 @@ extension STPAPIClient {
                 forHTTPHeaderField: "Content-Type"
             )
             #if DEBUG
-            if StripeAPIConfiguration.mockNetworkRequests {
+            if StripeAPIConfiguration.includeDebugParamsHeader {
                 request.setValue(URLEncoder.queryString(from: parameters), forHTTPHeaderField: "X-Stripe-Mock-Request")
             }
             #endif
