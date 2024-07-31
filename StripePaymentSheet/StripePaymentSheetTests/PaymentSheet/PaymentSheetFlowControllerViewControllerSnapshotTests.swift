@@ -16,10 +16,8 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
             intent: ._testValue(),
-            elementsSession: ._testCardValue(),
-            savedPaymentMethods: savedPaymentMethods,
-            isLinkEnabled: false,
-            isApplePayEnabled: false
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
+            savedPaymentMethods: savedPaymentMethods
         )
     }
 
@@ -28,7 +26,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             STPPaymentMethod._testCard(),
         ]
         let sut = PaymentSheetFlowControllerViewController(
-            configuration: ._testValue_MostPermissive(),
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods)
         )
         sut.view.autosizeHeight(width: 375)
@@ -40,7 +38,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             STPPaymentMethod._testUSBankAccount(),
         ]
         let sut = PaymentSheetFlowControllerViewController(
-            configuration: ._testValue_MostPermissive(),
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods)
         )
         sut.view.autosizeHeight(width: 375)
@@ -52,14 +50,14 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             STPPaymentMethod._testSEPA(),
         ]
         let sut = PaymentSheetFlowControllerViewController(
-            configuration: ._testValue_MostPermissive(),
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods)
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
     func testCVCRecollectionScreen() {
-        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
 
         let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCard(),
                                                 intent: ._testValue(),
@@ -71,7 +69,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     }
 
     func testCVVRecollectionScreen() {
-        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
 
         let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCardAmex(),
                                                 intent: ._testValue(),
@@ -86,7 +84,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         let paymentMethods = [
             STPPaymentMethod._testSEPA(),
         ]
-        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.primaryButtonLabel = "Submit"
         let sut = PaymentSheetFlowControllerViewController(
             configuration: configuration,
@@ -105,7 +103,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         }
         waitForExpectations(timeout: 1)
 
-        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.primaryButtonLabel = "Submit"
         let sut = PaymentSheetFlowControllerViewController(
             configuration: configuration,

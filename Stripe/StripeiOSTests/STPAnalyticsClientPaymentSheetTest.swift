@@ -100,9 +100,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             loadResult: .init(
                 intent: .paymentIntent(STPFixtures.paymentIntent()),
                 elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()),
-                savedPaymentMethods: [],
-                isLinkEnabled: false,
-                isApplePayEnabled: false
+                savedPaymentMethods: []
             )
         )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet.FlowController"))

@@ -14,7 +14,7 @@ import UIKit
 
 extension PaymentSheetFormFactory {
     func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
-        let isLinkEnabled = offerSaveToLinkWhenSupported && supportsLinkCard
+        let showLinkInlineSignup = showLinkInlineCardSignup
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_this_card_for_future_$merchant_payments(
                 merchantDisplayName: configuration.merchantDisplayName
@@ -97,7 +97,7 @@ extension PaymentSheetFormFactory {
             ],
             theme: theme)
 
-        if case .paymentSheet(let configuration) = configuration, isLinkEnabled {
+        if case .paymentSheet(let configuration) = configuration, showLinkInlineSignup {
             return LinkEnabledPaymentMethodElement(
                 type: .card,
                 paymentMethodElement: cardFormElement,

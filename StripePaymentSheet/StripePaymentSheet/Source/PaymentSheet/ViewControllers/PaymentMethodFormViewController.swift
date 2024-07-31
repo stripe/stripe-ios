@@ -62,7 +62,6 @@ class PaymentMethodFormViewController: UIViewController {
         previousCustomerInput: IntentConfirmParams?,
         formCache: PaymentMethodFormCache,
         configuration: PaymentSheet.Configuration,
-        isLinkEnabled: Bool,
         headerView: UIView?,
         delegate: PaymentMethodFormViewControllerDelegate
     ) {
@@ -73,15 +72,6 @@ class PaymentMethodFormViewController: UIViewController {
         self.configuration = configuration
         self.headerView = headerView
         self.formCache = formCache
-        let shouldOfferLinkSignup: Bool = {
-            guard isLinkEnabled && !elementsSession.disableLinkSignup else {
-                return false
-            }
-
-            let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
-        }()
-
         if let form = self.formCache[type] {
             self.form = form
         } else {
@@ -91,7 +81,6 @@ class PaymentMethodFormViewController: UIViewController {
                 configuration: .paymentSheet(configuration),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
-                offerSaveToLinkWhenSupported: shouldOfferLinkSignup,
                 linkAccount: LinkAccountContext.shared.account
             ).make()
             self.formCache[type] = form

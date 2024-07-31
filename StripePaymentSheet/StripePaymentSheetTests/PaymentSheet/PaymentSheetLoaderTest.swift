@@ -56,7 +56,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
@@ -81,7 +81,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     Set(expected)
                 )
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail()
@@ -145,7 +145,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                         XCTFail()
                         return
                     }
-                    XCTAssertTrue(loadResult.isApplePayEnabled)
+                    XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
                 case .failure(let error):
                     XCTFail("Test case at index \(index) failed: \(error)")
                     print(error)
@@ -270,7 +270,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
@@ -302,7 +302,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...with an empty `externalPaymentMethods` property
                 XCTAssertTrue(loadResult.elementsSession.externalPaymentMethods.isEmpty)

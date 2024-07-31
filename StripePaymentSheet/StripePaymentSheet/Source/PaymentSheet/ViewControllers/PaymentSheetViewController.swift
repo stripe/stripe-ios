@@ -70,7 +70,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
-            isLinkEnabled: isLinkEnabled,
             formCache: formCache,
             delegate: self
         )
@@ -151,8 +150,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
         self.configuration = configuration
-        self.isApplePayEnabled = loadResult.isApplePayEnabled
-        self.isLinkEnabled = loadResult.isLinkEnabled
+        self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
         self.delegate = delegate
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(

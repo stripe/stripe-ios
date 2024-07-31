@@ -13,12 +13,14 @@ import StripePaymentsTestUtils
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
-    static func _testValue_MostPermissive() -> Self {
+    static func _testValue_MostPermissive(isApplePayEnabled: Bool = true) -> Self {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "https://foo.com"
         configuration.allowsDelayedPaymentMethods = true
         configuration.allowsPaymentMethodsRequiringShippingAddress = true
-        configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
+        if isApplePayEnabled {
+            configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
+        }
         return configuration
     }
 }
@@ -32,7 +34,9 @@ extension STPElementsSession {
         paymentMethodTypes: [String],
         externalPaymentMethodTypes: [String] = [],
         customerSessionData: [String: Any]? = nil,
-        cardBrandChoiceData: [String: Any]? = nil
+        cardBrandChoiceData: [String: Any]? = nil,
+        isLinkPassthroughModeEnabled: Bool? = nil,
+        disableLinkSignup: Bool? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -59,6 +63,14 @@ extension STPElementsSession {
 
         if let cardBrandChoiceData {
             json["card_brand_choice"] = cardBrandChoiceData
+        }
+
+        if let isLinkPassthroughModeEnabled {
+            json[jsonDict: "link_settings"]!["link_passthrough_mode_enabled"] = isLinkPassthroughModeEnabled
+        }
+
+        if let disableLinkSignup {
+            json[jsonDict: "link_settings"]!["link_mobile_disable_signup"] = disableLinkSignup
         }
 
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!

@@ -38,6 +38,21 @@ extension PaymentSheet {
         .twint,
         .multibanco,
     ]
+
+    /// Canonical source of truth for whether Apple Pay is enabled
+    static func isApplePayEnabled(elementsSession: STPElementsSession, configuration: Configuration) -> Bool {
+        return StripeAPI.deviceSupportsApplePay()
+            && configuration.applePay != nil
+            && elementsSession.isApplePayEnabled
+    }
+
+    /// Canonical source of truth for whether Link is enabled
+    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: Configuration) -> Bool {
+        guard elementsSession.supportsLink else {
+            return false
+        }
+        return !configuration.requiresBillingDetailCollection()
+    }
 }
 
 // MARK: - PaymentMethodRequirementProvider
