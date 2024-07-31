@@ -38,9 +38,15 @@ import Foundation
 
     fileprivate var result: Result? {
         // Observe whenever a result is assigned, and report it:
-        didSet { result.map(report) }
+        didSet {
+            propertyAccessQueue.async { [self] in
+                result.map(report)
+            }
+        }
     }
     private var callbacks = [(Result) -> Void]()
+    // Since our methods can be called on different threads and our methods access our properties, we need to protect access to prevent race conditions.
+    let propertyAccessQueue = DispatchQueue(label: "FutureQueue", qos: .userInitiated)
 
     public func observe(
         on queue: DispatchQueue? = nil,
@@ -57,17 +63,21 @@ import Foundation
             wrappedCallback = callback
         }
 
-        // If a result has already been set, call the callback directly:
-        if let result = result {
-            return wrappedCallback(result)
-        }
+        propertyAccessQueue.async { [self] in
+            // If a result has already been set, call the callback directly:
+            if let result = result {
+                return wrappedCallback(result)
+            }
 
-        callbacks.append(wrappedCallback)
+            callbacks.append(wrappedCallback)
+        }
     }
 
     private func report(result: Result) {
-        callbacks.forEach { $0(result) }
-        callbacks = []
+        propertyAccessQueue.async { [self] in
+            callbacks.forEach { $0(result) }
+            callbacks = []
+        }
     }
 
     public func chained<T>(
