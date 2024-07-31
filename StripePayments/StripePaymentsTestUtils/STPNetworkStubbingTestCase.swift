@@ -39,6 +39,12 @@ import XCTest
             // Don't set this up
             return
         }
+        
+        // Set some default FraudDetectionData
+        FraudDetectionData.shared.sid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.muid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.guid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.sidCreationDate = Date()
 
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
         STPTestingAPIClient.shared.sessionConfig =
@@ -200,6 +206,8 @@ private func replaceNondeterministicParams(_ input: String) -> String {
         "[guid]=",
         "[muid]=",
         "[sid]=",
+        "app_version_key", // Current version of Xcode, for Alipay
+        
         "payment_user_agent", // Contains the SDK version number
         "pk_token_transaction_id", // Random string
     ]
