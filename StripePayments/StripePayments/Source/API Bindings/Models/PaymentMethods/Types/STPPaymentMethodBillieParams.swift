@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// An object representing parameters used to create a Sunbit Payment Method
+/// An object representing parameters used to create a Billie Payment Method
 public class STPPaymentMethodBillieParams: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 

@@ -209,7 +209,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "EUR",
                                paymentMethodType: .billie,
                                merchantCountry: .DE) { form in
-            // Sunbit has no input fields
+            // Billie has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
