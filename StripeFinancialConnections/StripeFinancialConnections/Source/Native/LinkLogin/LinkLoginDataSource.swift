@@ -82,7 +82,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
     ) -> Future<FinancialConnectionsSynchronize> {
-        attachLinkConsumerToLinkAccountSessionResponse(
+        attachLinkConsumerToLinkAccountSession(
             linkAccountSession: clientSecret,
             consumerSessionClientSecret: linkSignUpResponse.consumerSession.clientSecret
         )
@@ -100,7 +100,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         }
     }
 
-    private func attachLinkConsumerToLinkAccountSessionResponse(
+    private func attachLinkConsumerToLinkAccountSession(
         linkAccountSession: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {

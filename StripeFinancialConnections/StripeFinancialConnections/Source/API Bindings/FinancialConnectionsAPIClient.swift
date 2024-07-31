@@ -185,7 +185,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         returnURL: String?
     ) -> Future<FinancialConnectionsSynchronize> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
             "client_secret": clientSecret,
             "mobile": {
@@ -199,6 +199,9 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             }(),
             "locale": Locale.current.toLanguageTag(),
         ]
+        if let publishableKey {
+            parameters["key"] = publishableKey
+        }
         return self.post(
             resource: "financial_connections/sessions/synchronize",
             parameters: parameters

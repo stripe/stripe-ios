@@ -881,6 +881,10 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
         consumerSession: ConsumerSessionData?
     ) {
+        if dataManager.manifest.isProductInstantDebits, let consumerPublishableKey = dataManager.consumerPublishableKey {
+            // Switch the API client to use the consumer publishable key going forward.
+            dataManager.updateApiClient(with: consumerPublishableKey)
+        }
         if let consumerSession = consumerSession {
             dataManager.consumerSession = consumerSession
         }
@@ -992,7 +996,9 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         _ viewController: LinkLoginViewController,
         foundReturningUserWith lookupConsumerSessionResponse: LookupConsumerSessionResponse
     ) {
-        // TODO(BANKCON-11476): Save consumer publishable key for future use.
+        // Stores the consumer publishable key for use after the Link account is verified.
+        // See the `NetworkingLinkVerificationViewControllerDelegate` conformance for that step.
+        dataManager.consumerPublishableKey = lookupConsumerSessionResponse.publishableKey
         dataManager.consumerSession = lookupConsumerSessionResponse.consumerSession
         pushPane(.networkingLinkVerification, animated: true)
     }
@@ -1001,7 +1007,8 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         _ viewController: LinkLoginViewController,
         receivedLinkSignUpResponse linkSignUpResponse: LinkSignUpResponse
     ) {
-        // TODO(BANKCON-11476): Update apiClient to use new publishable key.
+        // Switch the API client to use the consumer publishable key going forward.
+        dataManager.updateApiClient(with: linkSignUpResponse.publishableKey)
         dataManager.consumerSession = linkSignUpResponse.consumerSession
     }
 
@@ -1200,6 +1207,8 @@ private func CreatePaneViewController(
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
+                returnURL: dataManager.returnURL,
+                consumerPublishableKey: dataManager.consumerPublishableKey,
                 analyticsClient: dataManager.analyticsClient
             )
             let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)

@@ -17,6 +17,7 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
 
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
+    func attachConsumerToLinkAccountAndSynchronize() -> Future<FinancialConnectionsSynchronize>
 }
 
 final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVerificationDataSource {
@@ -25,6 +26,8 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
     let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
+    private let returnURL: String?
+    private let consumerPublishableKey: String?
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let networkingOTPDataSource: NetworkingOTPDataSource
 
@@ -35,12 +38,16 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
+        returnURL: String?,
+        consumerPublishableKey: String?,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.accountholderCustomerEmailAddress = accountholderCustomerEmailAddress
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
+        self.returnURL = returnURL
+        self.consumerPublishableKey = consumerPublishableKey
         self.analyticsClient = analyticsClient
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "SMS",
@@ -71,6 +78,45 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
             clientSecret: clientSecret,
             consumerSessionClientSecret: consumerSessionClientSecret
         )
+    }
+
+    func attachConsumerToLinkAccountAndSynchronize() -> Future<FinancialConnectionsSynchronize> {
+        guard manifest.isProductInstantDebits else {
+            return Promise(error: FinancialConnectionsSheetError.unknown(
+                debugDescription: "Invalid \(#function) state: should only be used in instant debits flow"
+            ))
+        }
+
+        guard let consumerPublishableKey else {
+            return Promise(error: FinancialConnectionsSheetError.unknown(
+                debugDescription: "Invalid \(#function) state: no consumerPublishableKey"
+            ))
+        }
+
+        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
+            return Promise(error: FinancialConnectionsSheetError.unknown(
+                debugDescription: "Invalid \(#function) state: no consumerSessionClientSecret"
+            ))
+        }
+
+        return apiClient.attachLinkConsumerToLinkAccountSession(
+            requestSurface: "ios_instant_debits",
+            linkAccountSession: clientSecret,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+        .chained { [weak self] _ in
+            guard let self else {
+                return Promise(error: FinancialConnectionsSheetError.unknown(
+                    debugDescription: "Data source deallocated"
+                ))
+            }
+
+            let consumerApiClient = STPAPIClient(publishableKey: consumerPublishableKey)
+            return consumerApiClient.synchronize(
+                clientSecret: self.clientSecret,
+                returnURL: self.returnURL
+            )
+        }
     }
 }
 

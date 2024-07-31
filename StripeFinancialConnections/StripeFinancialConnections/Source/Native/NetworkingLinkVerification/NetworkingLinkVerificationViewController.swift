@@ -92,6 +92,30 @@ final class NetworkingLinkVerificationViewController: UIViewController {
             delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: FinancialConnectionsSheetError.unknown(debugDescription: "logic error: did not have consumerSession"))
         }
     }
+
+    private func attachConsumerToLinkAccountAndSynchronize(from view: NetworkingOTPView) {
+        dataSource
+            .attachConsumerToLinkAccountAndSynchronize()
+            .observe { [weak self] result in
+                guard let self else { return }
+                self.hideOTPLoadingViewAfterDelay(view)
+
+                switch result {
+                case .success:
+                    self.requestNextPane(.linkAccountPicker)
+                case .failure(let error):
+                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+                }
+            }
+    }
+
+    private func hideOTPLoadingViewAfterDelay(_ view: NetworkingOTPView) {
+        // only hide loading view after animation
+        // to next screen has completed
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak view] in
+            view?.showLoadingView(false)
+        }
+    }
 }
 
 // MARK: - NetworkingOTPViewDelegate
@@ -163,6 +187,8 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
     }
 
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        var shouldHideLoadingView = true
+
         view.showLoadingView(true)
         dataSource.markLinkVerified()
             .observe { [weak self] result in
@@ -173,7 +199,12 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                         eventName: "networking.verification.success",
                         pane: .networkingLinkVerification
                     )
-                    self.requestNextPane(.linkAccountPicker)
+                    if self.dataSource.manifest.isProductInstantDebits {
+                        shouldHideLoadingView = false
+                        self.attachConsumerToLinkAccountAndSynchronize(from: view)
+                    } else {
+                        self.requestNextPane(.linkAccountPicker)
+                    }
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
@@ -201,12 +232,8 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                     self.requestNextPane(nextPane)
                 }
 
-                // only hide loading view after animation
-                // to next screen has completed
-                DispatchQueue.main.asyncAfter(
-                    deadline: .now() + 1.0
-                ) { [weak view] in
-                    view?.showLoadingView(false)
+                if shouldHideLoadingView {
+                    self.hideOTPLoadingViewAfterDelay(view)
                 }
             }
     }

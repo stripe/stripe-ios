@@ -31,7 +31,9 @@ protocol NativeFlowDataManager: AnyObject {
     var saveToLinkWithStripeSucceeded: Bool? { get set }
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneMessage: String? { get set }
+    var consumerPublishableKey: String? { get set }
 
+    func updateApiClient(with publishableKey: String)
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
 }
@@ -68,10 +70,10 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent?
-    let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
+    var apiClient: FinancialConnectionsAPIClient
     var institution: FinancialConnectionsInstitution?
     var authSession: FinancialConnectionsAuthSession?
     var linkedAccounts: [FinancialConnectionsPartnerAccount]?
@@ -84,6 +86,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var saveToLinkWithStripeSucceeded: Bool?
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
     var customSuccessPaneMessage: String?
+    var consumerPublishableKey: String?
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -106,6 +109,10 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         // If the server returns active institution use that, otherwise resort to initial institution.
         self.institution = manifest.activeInstitution ?? manifest.initialInstitution
         didUpdateManifest()
+    }
+
+    func updateApiClient(with publishableKey: String) {
+        self.apiClient = STPAPIClient(publishableKey: publishableKey)
     }
 
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession> {
