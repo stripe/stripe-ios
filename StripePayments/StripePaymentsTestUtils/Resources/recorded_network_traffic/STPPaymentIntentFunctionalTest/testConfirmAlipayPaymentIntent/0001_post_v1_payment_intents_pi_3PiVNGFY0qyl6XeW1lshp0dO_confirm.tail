@@ -1,5 +1,5 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3PiRzYFY0qyl6XeW0Gup89M3\/confirm$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3PiVNGFY0qyl6XeW1lshp0dO\/confirm$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,20 +13,20 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_TAlbNvjZ1VGyqX
+request-id: req_JinI7NmCuDGmvr
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1219
 Vary: Origin
-Date: Wed, 31 Jul 2024 02:10:17 GMT
-original-request: req_TAlbNvjZ1VGyqX
+Date: Wed, 31 Jul 2024 05:46:59 GMT
+original-request: req_JinI7NmCuDGmvr
 stripe-version: 2020-08-27
-idempotency-key: 435b5546-1e55-4995-ad5d-e519ae949f42
+idempotency-key: e24bdc2d-966c-45ea-8ae9-228f94b7f9e1
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
-X-Stripe-Mock-Request: client_secret=pi_3PiRzYFY0qyl6XeW0Gup89M3_secret_Lyp6Xo7GQX9P04TOVfA18hNoT&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=alipay&payment_method_options\[alipay]\[app_bundle_id]=com\.apple\.dt\.xctest\.tool&payment_method_options\[alipay]\[app_version_key]=15\.3&return_url=foo%3A\/\/bar
+X-Stripe-Mock-Request: client_secret=pi_3PiVNGFY0qyl6XeW1lshp0dO_secret_rdjOA565ohLdvmMEsFmeEqzNw&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=alipay&payment_method_options\[alipay]\[app_bundle_id]=com\.apple\.dt\.xctest\.tool&payment_method_options\[alipay]\[app_version_key]=.*&return_url=foo%3A\/\/bar
 
 {
   "payment_method_configuration_details" : null,
@@ -48,7 +48,7 @@ X-Stripe-Mock-Request: client_secret=pi_3PiRzYFY0qyl6XeW0Gup89M3_secret_Lyp6Xo7G
     "alipay_handle_redirect" : {
       "native_url" : null,
       "native_data" : null,
-      "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1PiRzZFY0qyl6XeWsfYQASB8?client_secret=src_client_secret_dpzeg3RCaT2VY1oeW1GAqlMd",
+      "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1PiVNHFY0qyl6XeWQ5HI64kA?client_secret=src_client_secret_CAp1jarAnH8kTL0vy06thv92",
       "return_url" : "foo:\/\/bar"
     }
   },
@@ -56,9 +56,9 @@ X-Stripe-Mock-Request: client_secret=pi_3PiRzYFY0qyl6XeW0Gup89M3_secret_Lyp6Xo7G
     "amount_discount" : 0,
     "amount_tax" : 0
   },
-  "payment_method" : "pm_1PiRzYFY0qyl6XeWbfyEVVYu",
-  "client_secret" : "pi_3PiRzYFY0qyl6XeW0Gup89M3_secret_Lyp6Xo7GQX9P04TOVfA18hNoT",
-  "id" : "pi_3PiRzYFY0qyl6XeW0Gup89M3",
+  "payment_method" : "pm_1PiVNHFY0qyl6XeWDFv12KYj",
+  "client_secret" : "pi_3PiVNGFY0qyl6XeW1lshp0dO_secret_rdjOA565ohLdvmMEsFmeEqzNw",
+  "id" : "pi_3PiVNGFY0qyl6XeW1lshp0dO",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -71,6 +71,6 @@ X-Stripe-Mock-Request: client_secret=pi_3PiRzYFY0qyl6XeW0Gup89M3_secret_Lyp6Xo7G
     "alipay"
   ],
   "setup_future_usage" : null,
-  "created" : 1722391816,
+  "created" : 1722404818,
   "description" : null
 }
