@@ -11,6 +11,7 @@ struct FinancialConnectionsNetworkedAccountsResponse: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
     let display: Display?
     let nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane?
+    let acquireConsentOnPrimaryCtaClick: Bool?
 
     struct Display: Decodable {
         let text: Text?
