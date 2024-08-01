@@ -288,6 +288,12 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
+        - scheme: StripeConnect
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
         - scheme: StripeIdentity
     - xcode-test@4:
         inputs:
