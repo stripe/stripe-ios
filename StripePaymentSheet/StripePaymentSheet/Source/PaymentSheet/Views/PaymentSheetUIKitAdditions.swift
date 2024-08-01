@@ -159,19 +159,6 @@ extension UIFont {
     }
 }
 
-extension UILabel {
-    static func makeVerticalRowButtonLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
-        let label = UILabel()
-        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
-        label.adjustsFontSizeToFitWidth = true
-        label.adjustsFontForContentSizeCategory = true
-        label.text = text
-        label.numberOfLines = 1
-        label.textColor = appearance.colors.componentText
-        return label
-    }
-}
-
 extension UIStackView {
     /// Convenience DRY method that creates a stackview for use in horizontal "row button" content
     static func makeRowButtonContentStackView(arrangedSubviews: [UIView]) -> UIStackView {
