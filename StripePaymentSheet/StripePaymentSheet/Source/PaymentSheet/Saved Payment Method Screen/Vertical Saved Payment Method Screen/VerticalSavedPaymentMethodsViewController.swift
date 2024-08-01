@@ -131,7 +131,14 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [UIView.makeSpacerView()])
+        let spacerView = UIView(frame: .zero)
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+
+        let heightConstraint = spacerView.heightAnchor.constraint(equalToConstant: 0)
+        heightConstraint.priority = .defaultLow
+        heightConstraint.isActive = true
+        
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [spacerView])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
