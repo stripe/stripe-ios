@@ -108,8 +108,10 @@ public class PaymentSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
         self.configuration = configuration
-        STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration,
-                                                                   intentConfig: mode.intentConfig)
+        self.analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: configuration)
+        analyticsHelper.logInitialized()
+//        STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration,
+//                                                                   intentConfig: mode.intentConfig)
     }
 
     /// Presents a sheet for a customer to complete their payment
@@ -237,6 +239,7 @@ public class PaymentSheet {
         return vc
     }()
 
+    let analyticsHelper: PaymentSheetAnalyticsHelper
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {

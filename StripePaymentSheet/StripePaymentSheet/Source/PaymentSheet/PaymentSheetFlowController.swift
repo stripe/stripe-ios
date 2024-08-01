@@ -172,6 +172,7 @@ extension PaymentSheet {
 
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
+        let analyticsHelper: PaymentSheetAnalyticsHelper
 
         // MARK: - Initializer (Internal)
 
@@ -180,10 +181,12 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult
         ) {
             STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
-            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true,
-                                                                       configuration: configuration,
-                                                                       intentConfig: loadResult.intent.intentConfig)
+//            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true,
+//                                                                       configuration: configuration,
+//                                                                       intentConfig: loadResult.intent.intentConfig)
             self.configuration = configuration
+            self.analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: configuration)
+            self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult)
             self.viewController.flowControllerDelegate = self
         }

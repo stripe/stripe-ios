@@ -13,17 +13,6 @@ import Foundation
 
 extension STPAnalyticsClient {
     // MARK: - Log events
-    func logPaymentSheetInitialized(
-        isCustom: Bool = false, configuration: PaymentSheet.Configuration, intentConfig: PaymentSheet.IntentConfiguration?
-    ) {
-        logPaymentSheetEvent(event: paymentSheetInitEventValue(
-                             isCustom: isCustom,
-                             configuration: configuration),
-                             configuration: configuration,
-                             intentConfig: intentConfig,
-                             apiClient: configuration.apiClient)
-    }
-
     func logPaymentSheetPayment(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
@@ -400,8 +389,21 @@ extension PaymentSheet.PaymentOption {
     }
 }
 
+/// Prevents accidentally reusing param names
+///
 struct PaymentSheetAnalytic: StripePayments.PaymentAnalytic {
     let event: STPAnalyticEvent
+//    
+//    let duration: TimeInterval?
+//    let activeLinkSession: Bool?
+//    let linkSessionType: LinkSettings.PopupWebviewOption?
+//    let configuration: PaymentSheet.Configuration?
+//    let currency: String?
+//    let intentConfig: PaymentSheet.IntentConfiguration?
+//    let error: Error?
+//    let deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
+//    let paymentMethodTypeAnalyticsValue: String?
+//    let linkContext: String?
     let additionalParams: [String: Any]
 }
 
