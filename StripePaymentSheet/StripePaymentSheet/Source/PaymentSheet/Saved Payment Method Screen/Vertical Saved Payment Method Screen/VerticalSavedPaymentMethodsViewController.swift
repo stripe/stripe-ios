@@ -181,7 +181,20 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
-        view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: PaymentSheetUI.defaultSheetMargins.top),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: PaymentSheetUI.defaultSheetMargins.top),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: PaymentSheetUI.defaultSheetMargins.leading),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -PaymentSheetUI.defaultSheetMargins.trailing),
+        ])
+
+        // Add a height constraint to the view to ensure a minimum height of 200
+        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200)
+        minHeightConstraint.priority = .defaultHigh
+        minHeightConstraint.isActive = true
     }
 
     @objc func didSelectEditSavedPaymentMethodsButton() {
