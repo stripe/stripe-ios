@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 
-class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
+class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList

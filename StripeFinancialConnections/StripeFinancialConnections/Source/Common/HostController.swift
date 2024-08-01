@@ -39,7 +39,7 @@ class HostController {
 
     // MARK: - Properties
 
-    private let apiClient: STPAPIClient
+    private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let returnURL: String?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -67,7 +67,7 @@ class HostController {
         publishableKey: String?,
         stripeAccount: String?
     ) {
-        self.apiClient = apiClient
+        self.apiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
@@ -112,7 +112,7 @@ extension HostController: HostViewControllerDelegate {
                 flow: flow,
                 killswitchActive: flowRouter.killswitchActive
             ),
-            apiClient: apiClient
+            apiClient: apiClient.backingAPIClient
         )
 
         switch flow {

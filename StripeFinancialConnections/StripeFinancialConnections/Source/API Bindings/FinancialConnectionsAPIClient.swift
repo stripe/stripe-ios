@@ -8,8 +8,54 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol FinancialConnectionsAPIClient {
+class FinancialConnectionsAPIClient {
+    let backingAPIClient: STPAPIClient
 
+    var isLinkWithStripe: Bool = false
+    var consumerPublishableKey: String?
+    var consumerSession: ConsumerSessionData?
+
+    static let shared = FinancialConnectionsAPIClient(apiClient: .shared)
+
+    init(apiClient: STPAPIClient) {
+        self.backingAPIClient = apiClient
+    }
+
+    func consumerPublishableKeyProvider(canUseConsumerKey: Bool) -> String? {
+        guard canUseConsumerKey, isLinkWithStripe, consumerSession?.isVerified == true else {
+            return nil
+        }
+        return consumerPublishableKey
+    }
+
+    func get<T: Decodable>(
+        resource: String,
+        parameters: [String: Any],
+        canUseConsumerPublishableKey: Bool
+    ) -> Promise<T> {
+        let consumerPubKey = consumerPublishableKeyProvider(canUseConsumerKey: canUseConsumerPublishableKey)
+        return backingAPIClient.get(
+            resource: resource,
+            parameters: parameters,
+            ephemeralKeySecret: consumerPubKey
+        )
+    }
+
+    func post<T: Decodable>(
+        resource: String,
+        parameters: [String: Any],
+        canUseConsumerPublishableKey: Bool
+    ) -> Promise<T> {
+        let consumerPubKey = consumerPublishableKeyProvider(canUseConsumerKey: canUseConsumerPublishableKey)
+        return backingAPIClient.post(
+            resource: resource,
+            parameters: parameters,
+            ephemeralKeySecret: consumerPubKey
+        )
+    }
+}
+
+protocol FinancialConnectionsAPI {
     func synchronize(
         clientSecret: String,
         returnURL: String?
@@ -158,7 +204,7 @@ protocol FinancialConnectionsAPIClient {
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse>
 }
 
-extension STPAPIClient: FinancialConnectionsAPIClient {
+extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func fetchFinancialConnectionsAccounts(
         clientSecret: String,
@@ -170,14 +216,16 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         }
         return self.get(
             resource: APIEndpointListAccounts,
-            parameters: parameters
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
         )
     }
 
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
         return self.get(
             resource: APIEndpointSessionReceipt,
-            parameters: ["client_secret": clientSecret]
+            parameters: ["client_secret": clientSecret],
+            canUseConsumerPublishableKey: false
         )
     }
 
@@ -201,7 +249,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.post(
             resource: "financial_connections/sessions/synchronize",
-            parameters: parameters
+            parameters: parameters,
+            canUseConsumerPublishableKey: true
         )
     }
 
@@ -211,7 +260,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.post(
             resource: APIEndpointConsentAcquired,
-            parameters: parameters
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
         )
     }
 
@@ -221,7 +271,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.get(
             resource: APIEndpointFeaturedInstitutions,
-            parameters: parameters
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
         )
     }
 
@@ -233,7 +284,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.get(
             resource: APIEndpointSearchInstitutions,
-            parameters: parameters
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
         )
     }
 
@@ -245,7 +297,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "use_abstract_flow": true,
             "return_url": "ios",
         ]
-        return self.post(resource: APIEndpointAuthSessions, parameters: body)
+        return self.post(
+            resource: APIEndpointAuthSessions,
+            parameters: body,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
@@ -253,7 +309,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        return self.post(resource: APIEndpointAuthSessionsCancel, object: body)
+        return self.post(
+            resource: APIEndpointAuthSessionsCancel,
+            parameters: body,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func retrieveAuthSession(
@@ -264,7 +324,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        return self.post(resource: APIEndpointAuthSessionsRetrieve, parameters: body)
+        return self.post(
+            resource: APIEndpointAuthSessionsRetrieve,
+            parameters: body,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
@@ -281,7 +345,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
                     )
                 }
-                return self.post(resource: APIEndpointAuthSessionsOAuthResults, object: body)
+                return self.post(
+                    resource: APIEndpointAuthSessionsOAuthResults,
+                    parameters: body,
+                    canUseConsumerPublishableKey: false
+                )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsMixedOAuthParams>.PollTimingOptions(
                 initialPollDelay: 0,
@@ -302,7 +370,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "id": authSessionId,
         ]
         body["public_token"] = publicToken  // not all integrations require public_token
-        return self.post(resource: APIEndpointAuthSessionsAuthorized, object: body)
+        return self.post(
+            resource: APIEndpointAuthSessionsAuthorized,
+            parameters: body,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func fetchAuthSessionAccounts(
@@ -322,7 +394,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
                     )
                 }
-                return self.post(resource: APIEndpointAuthSessionsAccounts, parameters: body)
+                return self.post(
+                    resource: APIEndpointAuthSessionsAccounts,
+                    parameters: body,
+                    canUseConsumerPublishableKey: false
+                )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSessionAccounts>.PollTimingOptions(
                 initialPollDelay: initialPollDelay
@@ -342,14 +418,22 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "selected_accounts": selectedAccountIds,
             "expand": ["data.institution"],
         ]
-        return self.post(resource: APIEndpointAuthSessionsSelectedAccounts, parameters: body)
+        return self.post(
+            resource: APIEndpointAuthSessionsSelectedAccounts,
+            parameters: body,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let body = [
             "client_secret": clientSecret,
         ]
-        return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
+        return self.post(
+            resource: APIEndpointLinkMoreAccounts,
+            parameters: body,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func completeFinancialConnectionsSession(
@@ -360,41 +444,44 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
         ]
         body["terminal_error"] = terminalError
-        return self.post(resource: APIEndpointComplete, parameters: body)
-            .chained { (session: StripeAPI.FinancialConnectionsSession) in
-                if session.accounts.hasMore {
-                    // de-paginate the accounts we get from the session because
-                    // we want to give the clients a full picture of the number
-                    // of accounts that were linked
-                    let accountAPIFetcher = FinancialConnectionsAccountAPIFetcher(
-                        api: self,
-                        clientSecret: clientSecret
-                    )
-                    return
-                        accountAPIFetcher
-                        .fetchAccounts(initial: session.accounts.data)
-                        .chained { [accountAPIFetcher] accounts in
-                            _ = accountAPIFetcher  // retain `accountAPIFetcher` for the duration of the network call
-                            return Promise(
-                                value: StripeAPI.FinancialConnectionsSession(
-                                    clientSecret: session.clientSecret,
-                                    id: session.id,
-                                    accounts: StripeAPI.FinancialConnectionsSession.AccountList(
-                                        data: accounts,
-                                        hasMore: false
-                                    ),
-                                    livemode: session.livemode,
-                                    paymentAccount: session.paymentAccount,
-                                    bankAccountToken: session.bankAccountToken,
-                                    status: session.status,
-                                    statusDetails: session.statusDetails
-                                )
+        return self.post(
+            resource: APIEndpointComplete,
+            parameters: body,
+            canUseConsumerPublishableKey: true
+        )
+        .chained { (session: StripeAPI.FinancialConnectionsSession) in
+            if session.accounts.hasMore {
+                // de-paginate the accounts we get from the session because
+                // we want to give the clients a full picture of the number
+                // of accounts that were linked
+                let accountAPIFetcher = FinancialConnectionsAccountAPIFetcher(
+                    api: self,
+                    clientSecret: clientSecret
+                )
+                return accountAPIFetcher
+                    .fetchAccounts(initial: session.accounts.data)
+                    .chained { [accountAPIFetcher] accounts in
+                        _ = accountAPIFetcher  // retain `accountAPIFetcher` for the duration of the network call
+                        return Promise(
+                            value: StripeAPI.FinancialConnectionsSession(
+                                clientSecret: session.clientSecret,
+                                id: session.id,
+                                accounts: StripeAPI.FinancialConnectionsSession.AccountList(
+                                    data: accounts,
+                                    hasMore: false
+                                ),
+                                livemode: session.livemode,
+                                paymentAccount: session.paymentAccount,
+                                bankAccountToken: session.bankAccountToken,
+                                status: session.status,
+                                statusDetails: session.statusDetails
                             )
-                        }
-                } else {
-                    return Promise(value: session)
-                }
+                        )
+                    }
+            } else {
+                return Promise(value: session)
             }
+        }
     }
 
     func attachBankAccountToLinkAccountSession(
@@ -459,7 +546,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
                     )
                 }
-                return self.post(resource: APIEndpointAttachPaymentAccount, parameters: body)
+                return self.post(
+                    resource: APIEndpointAttachPaymentAccount,
+                    parameters: body,
+                    canUseConsumerPublishableKey: false
+                )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsPaymentAccountResource>.PollTimingOptions(
                 initialPollDelay: 1.0
@@ -488,10 +579,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 ] as [String: Any],
             ],
         ]
-        body["key"] = publishableKey
+        body["key"] = backingAPIClient.publishableKey
         return self.post(
             resource: APIEndpointAuthSessionsEvents,
-            parameters: body
+            parameters: body,
+            canUseConsumerPublishableKey: false
         )
     }
 
@@ -581,7 +673,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 }
                 return self.get(
                     resource: APIEndpointPollAccountNumbers,
-                    parameters: body
+                    parameters: body,
+                    canUseConsumerPublishableKey: false
                 )
             },
             pollTimingOptions: APIPollingHelper<EmptyResponse>.PollTimingOptions(
@@ -612,7 +705,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         body["country"] = country
         body["locale"] = (phoneNumber != nil) ? Locale.current.toLanguageTag() : nil
         body["consumer_session_client_secret"] = consumerSessionClientSecret
-        return post(resource: APIEndpointSaveAccountsToLink, parameters: body)
+        return post(
+            resource: APIEndpointSaveAccountsToLink,
+            parameters: body,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func disableNetworking(
@@ -624,7 +721,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "expand": ["active_auth_session"],
         ]
         body["disabled_reason"] = disabledReason
-        return post(resource: APIEndpointDisableNetworking, parameters: body)
+        return post(
+            resource: APIEndpointDisableNetworking,
+            parameters: body,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func markLinkVerified(
@@ -634,7 +735,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "expand": ["active_auth_session"],
         ]
-        return post(resource: APIEndpointLinkVerified, parameters: parameters)
+        return post(
+            resource: APIEndpointLinkVerified,
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func fetchNetworkedAccounts(
@@ -646,7 +751,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "consumer_session_client_secret": consumerSessionClientSecret,
             "expand": ["data.institution"],
         ]
-        return get(resource: APIEndpointNetworkedAccounts, parameters: parameters)
+        return get(
+            resource: APIEndpointNetworkedAccounts,
+            parameters: parameters,
+            canUseConsumerPublishableKey: true
+        )
     }
 
     func selectNetworkedAccounts(
@@ -659,7 +768,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "consumer_session_client_secret": consumerSessionClientSecret,
         ]
-        return post(resource: APIEndpointShareNetworkedAccount, parameters: parameters)
+        return post(
+            resource: APIEndpointShareNetworkedAccount,
+            parameters: parameters,
+            canUseConsumerPublishableKey: true
+        )
     }
 
     func markLinkStepUpAuthenticationVerified(
@@ -669,7 +782,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "expand": ["active_auth_session"],
         ]
-        return post(resource: APIEndpointLinkStepUpAuthenticationVerified, parameters: parameters)
+        return post(
+            resource: APIEndpointLinkStepUpAuthenticationVerified,
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func consumerSessionLookup(
@@ -683,7 +800,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 .lowercased(),
             "client_secret": clientSecret,
         ]
-        return post(resource: APIEndpointConsumerSessions, parameters: parameters)
+        return post(
+            resource: APIEndpointConsumerSessions,
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     // MARK: - Link API's
@@ -704,7 +825,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         parameters["custom_email_type"] = customEmailType
         parameters["connections_merchant_name"] = connectionsMerchantName
-        return post(resource: "consumers/sessions/start_verification", parameters: parameters)
+        return post(
+            resource: "consumers/sessions/start_verification",
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func consumerSessionConfirmVerification(
@@ -720,7 +845,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             ],
             "request_surface": "ios_connections",
         ]
-        return post(resource: "consumers/sessions/confirm_verification", parameters: parameters)
+        return post(
+            resource: "consumers/sessions/confirm_verification",
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func linkAccountSignUp(
@@ -729,7 +858,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse> {
-        var parameters: [String: Any] = [
+        let parameters: [String: Any] = [
             "request_surface": requestSurface,
             "email_address": emailAddress
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -740,11 +869,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "locale": Locale.current.toLanguageTag(),
             "consent_action": "entered_phone_number_clicked_save_to_link",
         ]
-
-        if let publishableKey {
-            parameters["key"] = publishableKey
-        }
-        return post(resource: APIEndpointLinkAccountsSignUp, parameters: parameters)
+        return post(
+            resource: APIEndpointLinkAccountsSignUp,
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
+        )
     }
 
     func attachLinkConsumerToLinkAccountSession(
@@ -752,18 +881,18 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         linkAccountSession: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
-        var parameters: [String: Any] = [
+        let parameters: [String: Any] = [
             "request_surface": requestSurface,
             "link_account_session": linkAccountSession,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
             ],
         ]
-
-        if let publishableKey {
-            parameters["key"] = publishableKey
-        }
-        return post(resource: APIEndpointAttachLinkConsumerToLinkAccountSession, parameters: parameters)
+        return post(
+            resource: APIEndpointAttachLinkConsumerToLinkAccountSession,
+            parameters: parameters,
+            canUseConsumerPublishableKey: false
+        )
     }
 }
 
