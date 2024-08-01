@@ -177,7 +177,7 @@ extension UIButton {
         setTitle(title, for: .normal)
         titleLabel?.adjustsFontForContentSizeCategory = true
         titleLabel?.textAlignment = .right
-        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 22)
+        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
     }
 }
