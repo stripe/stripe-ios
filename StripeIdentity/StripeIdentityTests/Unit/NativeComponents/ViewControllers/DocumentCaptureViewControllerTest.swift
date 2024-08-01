@@ -302,10 +302,14 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         // Request to save data
         vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
-
-        guard case .success = mockSheetController.frontUploadedDocumentsResult else {
-            return XCTFail("Expected success result")
+        let e = expectation(description: "back upload result")
+        mockDocumentUploader.frontUploadPromise.observe { _ in
+            guard case .success = self.mockSheetController.frontUploadedDocumentsResult else {
+                return XCTFail("Expected success result")
+            }
+            e.fulfill()
         }
+        waitForExpectations(timeout: 1)
 
         // Verify state
         verify(
