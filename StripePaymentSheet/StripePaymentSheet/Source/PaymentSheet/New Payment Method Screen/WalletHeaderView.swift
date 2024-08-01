@@ -182,3 +182,17 @@ extension PaymentSheetViewController {
         }
     }
 }
+
+// MARK: - EventHandler
+extension PaymentSheetViewController.WalletHeaderView: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            alpha = 1
+        case .shouldDisableUserInteraction:
+            alpha = 0.8
+        default:
+            break
+        }
+    }
+}

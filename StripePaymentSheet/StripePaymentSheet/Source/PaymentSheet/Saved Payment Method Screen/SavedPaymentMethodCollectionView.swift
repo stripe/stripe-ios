@@ -225,8 +225,10 @@ extension SavedPaymentMethodCollectionView {
                 switch event {
                 case .shouldDisableUserInteraction:
                     self.label.alpha = 0.6
+                    self.paymentMethodLogo.alpha = 0.6
                 case .shouldEnableUserInteraction:
                     self.label.alpha = 1
+                    self.paymentMethodLogo.alpha = 1
                 default:
                     break
                 }
