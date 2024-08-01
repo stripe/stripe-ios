@@ -171,7 +171,8 @@ protocol FinancialConnectionsAPI {
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
-        consumerSessionClientSecret: String
+        consumerSessionClientSecret: String,
+        consentAcquired: Bool?
     ) -> Future<FinancialConnectionsInstitutionList>
 
     func markLinkStepUpAuthenticationVerified(
@@ -776,13 +777,15 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
-        consumerSessionClientSecret: String
+        consumerSessionClientSecret: String,
+        consentAcquired: Bool?
     ) -> Future<FinancialConnectionsInstitutionList> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "selected_accounts": selectedAccountIds,
             "client_secret": clientSecret,
             "consumer_session_client_secret": consumerSessionClientSecret,
         ]
+        parameters["consent_acquired"] = consentAcquired
         return post(
             resource: APIEndpointShareNetworkedAccount,
             parameters: parameters,
