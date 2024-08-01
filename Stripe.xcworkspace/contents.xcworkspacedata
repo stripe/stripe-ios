@@ -48,6 +48,9 @@
       location = "group:StripeCardScan/StripeCardScan.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:StripeConnect/StripeConnect.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:StripeCore/StripeCore.xcodeproj">
    </FileRef>
    <FileRef
