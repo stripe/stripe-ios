@@ -178,14 +178,12 @@ extension PaymentSheet {
 
         required init(
             configuration: Configuration,
-            loadResult: PaymentSheetLoader.LoadResult
+            loadResult: PaymentSheetLoader.LoadResult,
+            analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
             STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
-//            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true,
-//                                                                       configuration: configuration,
-//                                                                       intentConfig: loadResult.intent.intentConfig)
             self.configuration = configuration
-            self.analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: configuration)
+            self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult)
             self.viewController.flowControllerDelegate = self
@@ -256,17 +254,20 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
+            let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: configuration)
             AnalyticsHelper.shared.generateSessionID()
             PaymentSheetLoader.load(
                 mode: mode,
                 configuration: configuration,
+                analyticsHelper: analyticsHelper,
                 isFlowController: true
             ) { result in
                 switch result {
                 case .success(let loadResult):
                     let flowController = FlowController(
                         configuration: configuration,
-                        loadResult: loadResult
+                        loadResult: loadResult,
+                        analyticsHelper: analyticsHelper
                     )
 
                     // Synchronously pre-load image into cache.
@@ -431,6 +432,7 @@ extension PaymentSheet {
             PaymentSheetLoader.load(
                 mode: .deferredIntent(intentConfiguration),
                 configuration: configuration,
+                analyticsHelper: analyticsHelper,
                 isFlowController: true
             ) { [weak self] result in
                 assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")

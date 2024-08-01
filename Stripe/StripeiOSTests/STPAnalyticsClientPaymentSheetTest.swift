@@ -101,7 +101,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
                 intent: .paymentIntent(STPFixtures.paymentIntent()),
                 elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()),
                 savedPaymentMethods: []
-            )
+            ), analyticsHelper: .init(isCustom: true, configuration: .init())
         )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet.FlowController"))
     }

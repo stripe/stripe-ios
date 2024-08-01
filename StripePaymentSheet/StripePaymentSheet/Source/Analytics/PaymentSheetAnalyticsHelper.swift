@@ -53,6 +53,61 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
+    var loadingStartDate: Date?
+    func logLoadStarted() {
+        loadingStartDate = Date()
+        log(event: .paymentSheetLoadStarted)
+    }
+
+    func logLoadFailed(error: Error) {
+        assert(loadingStartDate != nil)
+        let duration: TimeInterval = {
+            guard let loadingStartDate else { return 0 }
+            return Date().timeIntervalSince(loadingStartDate)
+        }()
+        log(event: .paymentSheetLoadFailed, duration: duration, error: error)
+    }
+
+    func logLoadSucceeded(
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
+        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    ) {
+        assert(loadingStartDate != nil)
+        self.intent = intent
+        self.elementsSession = elementsSession
+        let defaultPaymentMethodAnalyticsValue: String = {
+            switch defaultPaymentMethod {
+            case .applePay:
+                return "apple_pay"
+            case .link:
+                return "link"
+            case .saved(paymentMethod: let paymentMethod):
+                return paymentMethod.type.identifier
+            case nil:
+                return "none"
+            case .add:
+                assertionFailure("Caller should ensure that default payment method is `nil` in this case.")
+                return "none"
+            }
+        }()
+        let params: [String: Any] = [
+            "selected_lpm": defaultPaymentMethodAnalyticsValue,
+            "intent_type": intent.analyticsValue,
+            "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
+        ]
+        let duration: TimeInterval = {
+            guard let loadingStartDate else { return 0 }
+            return Date().timeIntervalSince(loadingStartDate)
+        }()
+        log(
+            event: .paymentSheetLoadSucceeded,
+            duration: duration,
+            params: params
+        )
+    }
+
     func logShow(paymentMethod: AnalyticsPaymentMethodType) {
         assert(intent != nil)
         assert(elementsSession != nil)
@@ -103,42 +158,6 @@ final class PaymentSheetAnalyticsHelper {
             }
         }()
         log(event: event)
-    }
-
-    func logLoadSucceeded(
-        loadingStartDate: Date,
-        intent: Intent,
-        elementsSession: STPElementsSession,
-        defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
-        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
-    ) {
-        self.intent = intent
-        self.elementsSession = elementsSession
-        let defaultPaymentMethodAnalyticsValue: String = {
-            switch defaultPaymentMethod {
-            case .applePay:
-                return "apple_pay"
-            case .link:
-                return "link"
-            case .saved(paymentMethod: let paymentMethod):
-                return paymentMethod.type.identifier
-            case nil:
-                return "none"
-            case .add:
-                assertionFailure("Caller should ensure that default payment method is `nil` in this case.")
-                return "none"
-            }
-        }()
-        let params = ["selected_lpm": defaultPaymentMethodAnalyticsValue,
-                      "intent_type": intent.analyticsValue,
-                      "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
-        ] as [String: Any]
-
-        log(
-            event: .paymentSheetLoadSucceeded,
-            duration: Date().timeIntervalSince(loadingStartDate),
-            params: params
-        )
     }
 
 //    func logFormShown(paymentMethodTypeIdentifier: String, apiClient: STPAPIClient) {

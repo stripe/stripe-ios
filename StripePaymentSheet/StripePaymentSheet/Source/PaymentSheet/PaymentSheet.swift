@@ -150,6 +150,7 @@ public class PaymentSheet {
         PaymentSheetLoader.load(
             mode: mode,
             configuration: configuration,
+            analyticsHelper: analyticsHelper,
             isFlowController: false
         ) { result in
             switch result {

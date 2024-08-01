@@ -39,7 +39,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let types = ["ideal", "card", "bancontact", "sofort"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         // Given a PaymentIntent client secret...
-        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, isFlowController: false) { result in
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: false) { result in
             expectation.fulfill()
             switch result {
             case .success(let loadResult):
@@ -72,6 +72,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret(clientSecret),
             configuration: self.configuration,
+            analyticsHelper: .init(isCustom: false, configuration: configuration),
             isFlowController: false
         ) { result in
             switch result {
@@ -107,6 +108,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             PaymentSheetLoader.load(
                 mode: .setupIntentClientSecret(clientSecret),
                 configuration: self.configuration,
+                analyticsHelper: .init(isCustom: false, configuration: self.configuration),
                 isFlowController: false
             ) { result in
                 defer { expectation.fulfill() }
@@ -138,7 +140,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         ]
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
             let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, isFlowController: true) { result in
+            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: true) { result in
                 switch result {
                 case .success(let loadResult):
                     guard case .deferredIntent = loadResult.intent else {
@@ -175,7 +177,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         ]
         loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsClient: analyticsClient, isFlowController: false) { result in
+            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: false) { result in
                 loadExpectation.fulfill()
                 switch result {
                 case .success:
@@ -224,7 +226,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             XCTFail("Confirm handler shouldn't be called.")
         }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
-        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, isFlowController: true) { result in
+        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: true) { result in
             loadExpectation.fulfill()
             switch result {
             case .success(let loadResult):
@@ -249,7 +251,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             externalPaymentMethods: ["external_paypal"],
             externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
         )
-        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, isFlowController: false) { result in
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: false) { result in
             expectation.fulfill()
             switch result {
             case .success(let loadResult):
@@ -290,7 +292,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             externalPaymentMethods: ["external_invalid_value"],
             externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
         )
-        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, isFlowController: true) { result in
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: true) { result in
             expectation.fulfill()
             switch result {
             case .success(let loadResult):
@@ -331,7 +333,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // Set it to another number to manually run if you're making changes to load and want to measure its performance.
         measure(options: options) {
             let e = expectation(description: "")
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, isFlowController: true) { result in
+            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: true) { result in
                 switch result {
                 case .failure(let error):
                     XCTFail(error.localizedDescription)

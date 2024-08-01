@@ -248,3 +248,12 @@ extension PaymentSheetLoader.LoadResult {
         )
     }
 }
+
+extension PaymentSheetAnalyticsHelper {
+    class TestHelper {
+
+    }
+    static func _testValue() -> Self {
+        return .init(isCustom: false, configuration: .init())
+    }
+}
