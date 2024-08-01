@@ -135,13 +135,16 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         spacerView.translatesAutoresizingMaskIntoConstraints = false
 
         let heightConstraint = spacerView.heightAnchor.constraint(equalToConstant: 0)
-        heightConstraint.priority = .defaultLow
+        heightConstraint.priority = UILayoutPriority(rawValue: 1)
         heightConstraint.isActive = true
 
         let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [spacerView])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
+        if let lastPaymentMethodRow = paymentMethodRows.last {
+            stackView.setCustomSpacing(0, after: lastPaymentMethodRow)
+        }
         return stackView
     }()
 
