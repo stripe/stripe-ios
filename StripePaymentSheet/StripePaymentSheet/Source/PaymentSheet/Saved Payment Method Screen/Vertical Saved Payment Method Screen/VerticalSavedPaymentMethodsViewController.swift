@@ -137,7 +137,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         let heightConstraint = spacerView.heightAnchor.constraint(equalToConstant: 0)
         heightConstraint.priority = .defaultLow
         heightConstraint.isActive = true
-        
+
         let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [spacerView])
         stackView.axis = .vertical
         stackView.spacing = 12
