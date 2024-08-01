@@ -5,9 +5,11 @@
 * [Fixed] iOS 18 Compatibility with removing multiple saved payment methods
 * [Fixed] Fixed an issue where the keyboard could focus on a hidden phone number field.
 * [Added] Support for Sunbit (Private Beta) with PaymentIntents.
+* [Added] Support for Billie (Private Beta) with PaymentIntents.
 
 ### Payments
 * [Added] Support for Sunbit (Private Beta) bindings.
+* [Added] Support for Billie (Private Beta) bindings.
 
 ## 23.28.1 2024-07-16
 ### Payments
