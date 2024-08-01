@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 
 extension XCUIElementQuery {
-    
+
     var lastMatch: XCUIElement {
         guard count > 0 else {
             return firstMatch
