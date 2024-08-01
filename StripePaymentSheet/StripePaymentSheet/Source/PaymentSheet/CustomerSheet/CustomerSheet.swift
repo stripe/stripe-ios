@@ -184,21 +184,19 @@ public class CustomerSheet {
             loadSpecsPromise.resolve(with: ())
         }
 
-        loadSpecsPromise.observe { _ in
-            DispatchQueue.main.async {
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
-                let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
-                                                                                    selectedPaymentMethodOption: selectedPaymentMethodOption,
-                                                                                    merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
-                                                                                    configuration: self.configuration,
-                                                                                    customerSheetDataSource: customerSheetDataSource,
-                                                                                    isApplePayEnabled: isApplePayEnabled,
-                                                                                    paymentMethodRemove: paymentMethodRemove,
-                                                                                    cbcEligible: cbcEligible,
-                                                                                    csCompletion: self.csCompletion,
-                                                                                    delegate: self)
-                self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
-            }
+        loadSpecsPromise.observe(on: .main) { _ in
+            let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
+            let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
+                                                                                selectedPaymentMethodOption: selectedPaymentMethodOption,
+                                                                                merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
+                                                                                configuration: self.configuration,
+                                                                                customerSheetDataSource: customerSheetDataSource,
+                                                                                isApplePayEnabled: isApplePayEnabled,
+                                                                                paymentMethodRemove: paymentMethodRemove,
+                                                                                cbcEligible: cbcEligible,
+                                                                                csCompletion: self.csCompletion,
+                                                                                delegate: self)
+            self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
         }
     }
 
