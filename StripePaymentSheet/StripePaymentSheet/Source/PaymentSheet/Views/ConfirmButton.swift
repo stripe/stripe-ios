@@ -192,7 +192,6 @@ class ConfirmButton: UIView {
 
         // Enable/disable
         isUserInteractionEnabled = state == .enabled
-        alpha = isUserInteractionEnabled ? 1.0 : 0.8
 
         // Update the buy button; it has its own presentation logic
         self.buyButton.update(status: state, callToAction: callToAction, animated: animated)
