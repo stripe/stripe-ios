@@ -1186,7 +1186,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + numSeconds) {
             waitExpectation.fulfill()
         }
-        wait(for: [waitExpectation], timeout: 10.0)
+        wait(for: [waitExpectation])
     }
 
     func verify(
