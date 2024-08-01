@@ -289,6 +289,34 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                  expectedAllowRedisplay: .attached(.unspecified))
     }
 
+    func testAllowRedisplay_allowOverride() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentSFU_intentFirst_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false, allowRedisplayOverride: .always),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .paymentIntentSFU_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false, allowRedisplayOverride: .always),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .paymentIntentSFU_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false, allowRedisplayOverride: .always),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.always))
+
+        try await _testAndAssert(intentKind: .setupIntent_intentFirst_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false, allowRedisplayOverride: .always),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .setupIntent_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false, allowRedisplayOverride: .always),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .setupIntent_deferredIntent_ssc,
+                                 elementsSession: elementsSession(paymentMethodSave: false, allowRedisplayOverride: .always),
+                                 checkbox: .hidden,
+                                 expectedAllowRedisplay: .attached(.always))
+    }
+
     func _testAndAssert(intentKind: IntentKind,
                         elementsSession: STPElementsSession,
                         paymentMethodTypes: [String] = ["card"],
@@ -466,15 +494,23 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
 // MARK: - Creation Helpers
 extension PaymentSheet_GDPR_ConfirmFlowTests {
-    func elementsSession(paymentMethodSave: Bool) -> STPElementsSession {
+    func elementsSession(paymentMethodSave: Bool,
+                         allowRedisplayOverride: STPPaymentMethodAllowRedisplay? = nil) -> STPElementsSession {
         let paymentMethodSaveValue = paymentMethodSave ? "enabled" : "disabled"
+
+        var features: [String: Any] = [
+            "payment_method_save": paymentMethodSaveValue,
+            "payment_method_remove": "enabled",
+        ]
+        if let allowRedisplayOverride {
+            features["payment_method_save_allow_redisplay_override"] = allowRedisplayOverride.stringValue
+        }
+
         return STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                              customerSessionData: [
                                                 "payment_sheet": [
                                                     "enabled": true,
-                                                    "features": ["payment_method_save": paymentMethodSaveValue,
-                                                                 "payment_method_remove": "enabled",
-                                                                ],
+                                                    "features": features,
                                                 ],
                                                 "customer_sheet": [
                                                     "enabled": false
