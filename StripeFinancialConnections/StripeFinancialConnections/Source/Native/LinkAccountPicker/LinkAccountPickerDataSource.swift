@@ -114,7 +114,8 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         return apiClient.selectNetworkedAccounts(
             selectedAccountIds: selectedAccounts.map({ $0.id }),
             clientSecret: clientSecret,
-            consumerSessionClientSecret: consumerSession.clientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret,
+            consentAcquired: networkedAccountsResponse?.acquireConsentOnPrimaryCtaClick
         )
     }
 }
