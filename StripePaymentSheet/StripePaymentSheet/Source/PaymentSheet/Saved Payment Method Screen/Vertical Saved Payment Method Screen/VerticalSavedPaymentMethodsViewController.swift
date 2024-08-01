@@ -191,7 +191,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         ])
 
         // Add a height constraint to the view to ensure a minimum height of 200
-        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200)
+        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height)
         minHeightConstraint.priority = .defaultHigh
         minHeightConstraint.isActive = true
     }
