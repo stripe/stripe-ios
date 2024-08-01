@@ -296,7 +296,13 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
-    func testCreateBilliePaymentMethod() {
+    func testCreateBilliePaymentMethod() throws {
+        let templateVariables = STPTemplateVariables(paymentMethod: .billie)
+        try configureSTPTemplatedNetworkStubs(
+            variables: templateVariables,
+            templateDir: "response_templates/STPPaymentMethodFunctionalTest/testCreatePaymentMethod"
+        )
+        
         let client = STPAPIClient(publishableKey: STPTestingDEPublishableKey)
         let params = STPPaymentMethodParams(billie: STPPaymentMethodBillieParams(), billingDetails: nil, metadata: nil)
         let expectation = self.expectation(description: "Payment Method create")

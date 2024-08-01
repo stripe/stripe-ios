@@ -194,24 +194,20 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSunbitConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent],
-                               currency: "USD",
-                               amount: 100000,
-                               paymentMethodType: .sunbit,
-                               merchantCountry: .US) { form in
-            // Sunbit has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+        try await _testConfirmWithoutInputFields(
+            paymentMethod: .sunbit,
+            merchantCountry: .US,
+            currency: "USD",
+            amount: 10000
+        )
     }
 
     func testBillieConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent],
-                               currency: "EUR",
-                               paymentMethodType: .billie,
-                               merchantCountry: .DE) { form in
-            // Billie has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+        try await _testConfirmWithoutInputFields(
+            paymentMethod: .billie,
+            merchantCountry: .DE,
+            currency: "EUR"
+        )
     }
 
     func testAlipayConfirmFlows() async throws {
@@ -521,6 +517,26 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
         case setupIntent
+    }
+    
+    func _testConfirmWithoutInputFields(
+        paymentMethod: STPPaymentMethodType,
+        merchantCountry: MerchantCountry,
+        currency: String = "USD",
+        amount: Int = 5099
+    ) async throws {
+        let templateVariables = STPTemplateVariables(paymentMethod: paymentMethod, amount: amount, currency: currency)
+        try configureSTPTemplatedNetworkStubs(
+            variables: templateVariables,
+            templateDir: "response_templates/PaymentSheetLPMConfirmFlowTests/testConfirmFlows"
+        )
+        
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: currency,
+                               paymentMethodType: paymentMethod,
+                               merchantCountry: merchantCountry) { form in
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
     }
 
     func _testConfirm(

@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pgvu8Goesj9fw9Q0IOK5vPe\?client_secret=pi_3Pgvu8Goesj9fw9Q0IOK5vPe_secret_NFDSK09UwFzYDlO9dwCWHDQek&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3PWj22Alz2yHYCNZ0vnWGOMN\?client_secret=pi_3PWj22Alz2yHYCNZ0vnWGOMN_secret_8eUe1QkN5OVMY0323P4rsYPvv&expand%5B0%5D=payment_method$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_KXD1322rkIRKkW
-Content-Length: 1509
+request-id: req_t7h3hqznGLQ7n6
+Content-Length: 1467
 Vary: Origin
-Date: Fri, 26 Jul 2024 21:42:26 GMT
+Date: Thu, 01 Aug 2024 16:50:55 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -28,50 +28,44 @@ x-content-type-options: nosniff
   "payment_method_configuration_details" : null,
   "canceled_at" : null,
   "source" : null,
-  "amount" : 100000,
+  "amount" : 5099,
   "capture_method" : "automatic",
   "livemode" : false,
   "shipping" : null,
-  "status" : "requires_action",
+  "status" : "succeeded",
   "object" : "payment_intent",
   "currency" : "eur",
   "last_payment_error" : null,
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
-  "next_action" : {
-    "type" : "redirect_to_url",
-    "redirect_to_url" : {
-      "return_url" : "https:\/\/foo.com",
-      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1KmkHbGoesj9fw9Q\/pa_nonce_QY1yiL7DYx2QlKoHAXYF6pfWHCSO6MN"
-    }
-  },
+  "next_action" : null,
   "payment_method" : {
     "object" : "payment_method",
     "billie" : {
 
     },
-    "id" : "pm_1Pgvu8Goesj9fw9QmWWXiORC",
+    "id" : "pm_1PWj26Alz2yHYCNZ2hDkr3v7",
     "billing_details" : {
-      "email" : null,
-      "phone" : null,
-      "name" : null,
+      "email" : "email@email.com",
+      "phone" : "+18008675309",
+      "name" : "Jenny Rosen",
       "address" : {
-        "state" : null,
-        "country" : null,
+        "state" : "CA",
+        "country" : "US",
         "line2" : null,
-        "city" : null,
-        "line1" : null,
-        "postal_code" : null
+        "city" : "South San Francisco",
+        "line1" : "354 Oyster Point Blvd",
+        "postal_code" : "94080"
       }
     },
     "livemode" : false,
-    "created" : 1722030144,
+    "created" : 1719597386,
     "allow_redisplay" : "unspecified",
     "type" : "billie",
     "customer" : null
   },
-  "client_secret" : "pi_3Pgvu8Goesj9fw9Q0IOK5vPe_secret_NFDSK09UwFzYDlO9dwCWHDQek",
-  "id" : "pi_3Pgvu8Goesj9fw9Q0IOK5vPe",
+  "client_secret" : "pi_3PWj22Alz2yHYCNZ0vnWGOMN_secret_8eUe1QkN5OVMY0323P4rsYPvv",
+  "id" : "pi_3PWj22Alz2yHYCNZ0vnWGOMN",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -81,9 +75,18 @@ x-content-type-options: nosniff
   "processing" : null,
   "receipt_email" : null,
   "payment_method_types" : [
+    "card",
+    "ideal",
+    "sepa_debit",
+    "bancontact",
+    "sofort",
+    "eps",
+    "giropay",
+    "p24",
+    "multibanco",
     "billie"
   ],
   "setup_future_usage" : null,
-  "created" : 1722030144,
+  "created" : 1719597382,
   "description" : null
 }

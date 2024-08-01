@@ -1178,9 +1178,10 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
 
     // MARK: - Sunbit
 
-    func testConfirmPaymentIntentWithSunbit() {
+    func testConfirmPaymentIntentWithSunbit() throws {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
+
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["sunbit"],
@@ -1228,9 +1229,16 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
 
     // MARK: - Billie
 
-    func testConfirmPaymentIntentWithBillie() {
+    func testConfirmPaymentIntentWithBillie() throws {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
+        
+        let templateVariables = STPTemplateVariables(paymentMethod: .billie, currency: "EUR")
+        try configureSTPTemplatedNetworkStubs(
+            variables: templateVariables,
+            templateDir: "response_templates/STPPaymentIntentFunctionalTest/testConfirmPaymentIntent"
+        )
+        
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["billie"],

@@ -149,7 +149,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 
-        func testSunbitPaymentMethod() throws {
+    func testSunbitPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.currency = .usd
         settings.amount = ._10000
@@ -172,10 +172,10 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
         settings.merchantCountryCode = .DE
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
-
+        
         // Select Billie
         tapPaymentMethod("Billie")
-
+        
         // Pay
         app.buttons["Pay €50.99"].waitForExistenceAndTap()
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)

@@ -8,13 +8,16 @@
 @testable import Stripe
 import StripeCoreTestUtils
 import XCTest
+import StripePaymentsTestUtils
 
-class STPPaymentMethodBillieTests: XCTestCase {
+class STPPaymentMethodBillieTests: STPNetworkStubbingTestCase {
 
     static let billiePaymentIntentClientSecret = "pi_3PWj22Alz2yHYCNZ0vnWGOMN_secret_8eUe1QkN5OVMY0323P4rsYPvv"
+    static let PaymentIntent = "pi_3PWj22Alz2yHYCNZ0vnWGOMN"
 
     func _retrieveBillieJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingDEPublishableKey)
+        
         client.retrievePaymentIntent(
             withClientSecret: Self.billiePaymentIntentClientSecret,
             expand: ["payment_method"]
@@ -25,9 +28,20 @@ class STPPaymentMethodBillieTests: XCTestCase {
         }
     }
 
-    func testObjectDecoding() {
+    func testObjectDecoding() throws {
         let retrieveJSON = XCTestExpectation(description: "Retrieve JSON")
-
+        
+        let templateVariables = STPTemplateVariables(
+            paymentMethod: .billie,
+            currency: "EUR",
+            paymentIntent: Self.PaymentIntent,
+            clientSecret: Self.billiePaymentIntentClientSecret
+        )
+        try configureSTPTemplatedNetworkStubs(
+            variables: templateVariables,
+            templateDir: "response_templates/STPPaymentMethodTests/testObjectDecoding"
+        )
+        
         _retrieveBillieJSON({ json in
             let billie = STPPaymentMethodBillie.decodedObject(fromAPIResponse: json)
             XCTAssertNotNil(billie, "Failed to decode JSON")

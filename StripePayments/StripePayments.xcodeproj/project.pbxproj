@@ -219,6 +219,9 @@
 		C80A979CB3B453DF248C6339 /* STPPaymentIntentActionRedirectToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9850E5BC24407862EAEEE2BA /* STPPaymentIntentActionRedirectToURL.swift */; };
 		C8F612F8FACA11D956B50840 /* recorded_network_traffic in Resources */ = {isa = PBXBuildFile; fileRef = DAB375BFAB7E61A7B46799A1 /* recorded_network_traffic */; };
 		CA18F1CF38F4D2B25C8D93C1 /* STPSourceEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3299145C8B3D2382AE58911 /* STPSourceEnums.swift */; };
+		CA96C6002C5AD06400EF8248 /* STPTemplatedNetworkStubbing.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96C5FF2C5AD06400EF8248 /* STPTemplatedNetworkStubbing.swift */; };
+		CA96C6042C5AE87300EF8248 /* response_templates in Resources */ = {isa = PBXBuildFile; fileRef = CA96C6032C5AE87300EF8248 /* response_templates */; };
+		CA96C6062C5AFA9700EF8248 /* STPTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96C6052C5AFA9700EF8248 /* STPTestingUtils.swift */; };
 		CAB989BB2C58771100DF9851 /* STPPaymentMethodSunbitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB989BA2C58771100DF9851 /* STPPaymentMethodSunbitParams.swift */; };
 		CAB989BD2C58776100DF9851 /* STPPaymentMethodBillieParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB989BC2C58776100DF9851 /* STPPaymentMethodBillieParams.swift */; };
 		CAB989BF2C5877FE00DF9851 /* STPPaymentMethodBillie.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB989BE2C5877FE00DF9851 /* STPPaymentMethodBillie.swift */; };
@@ -631,6 +634,9 @@
 		C740B96CCCC754A1CB19D44C /* STPPaymentMethodWeChatPayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodWeChatPayParams.swift; sourceTree = "<group>"; };
 		C82210A1FB3284993A193F13 /* STPIntentActionPromptPayDisplayQrCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionPromptPayDisplayQrCode.swift; sourceTree = "<group>"; };
 		CA58DFEBD2F9ADE14301B770 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		CA96C5FF2C5AD06400EF8248 /* STPTemplatedNetworkStubbing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTemplatedNetworkStubbing.swift; sourceTree = "<group>"; };
+		CA96C6032C5AE87300EF8248 /* response_templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = response_templates; sourceTree = "<group>"; };
+		CA96C6052C5AFA9700EF8248 /* STPTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTestingUtils.swift; sourceTree = "<group>"; };
 		CAB989BA2C58771100DF9851 /* STPPaymentMethodSunbitParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSunbitParams.swift; sourceTree = "<group>"; };
 		CAB989BC2C58776100DF9851 /* STPPaymentMethodBillieParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBillieParams.swift; sourceTree = "<group>"; };
 		CAB989BE2C5877FE00DF9851 /* STPPaymentMethodBillie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBillie.swift; sourceTree = "<group>"; };
@@ -744,6 +750,7 @@
 		05AEE155B8C0698988C3B496 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CA96C6032C5AE87300EF8248 /* response_templates */,
 				DAB375BFAB7E61A7B46799A1 /* recorded_network_traffic */,
 			);
 			path = Resources;
@@ -1024,6 +1031,8 @@
 				6C360F4D54167F6A484B8D9F /* STPTestAPIClient+Swift.swift */,
 				1168126130A35B9E449C6E91 /* STPTestingAPIClient+Swift.swift */,
 				8EA81FB26BC27763B09E55ED /* StripePaymentsTestUtils.h */,
+				CA96C5FF2C5AD06400EF8248 /* STPTemplatedNetworkStubbing.swift */,
+				CA96C6052C5AFA9700EF8248 /* STPTestingUtils.swift */,
 			);
 			path = StripePaymentsTestUtils;
 			sourceTree = "<group>";
@@ -1580,6 +1589,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8F612F8FACA11D956B50840 /* recorded_network_traffic in Resources */,
+				CA96C6042C5AE87300EF8248 /* response_templates in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1590,7 +1600,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA96C6062C5AFA9700EF8248 /* STPTestingUtils.swift in Sources */,
 				436438C8BCEB77FB5AF709C7 /* STPFixtures+Swift.swift in Sources */,
+				CA96C6002C5AD06400EF8248 /* STPTemplatedNetworkStubbing.swift in Sources */,
 				63F661872BA387640F3C4978 /* STPNetworkStubbingTestCase.swift in Sources */,
 				42E2FB027833C37FA1508E90 /* STPTestAPIClient+Swift.swift in Sources */,
 				38B88AA49E476BEA2F6332E6 /* STPTestingAPIClient+Swift.swift in Sources */,

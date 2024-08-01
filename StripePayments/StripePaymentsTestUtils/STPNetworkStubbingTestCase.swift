@@ -33,7 +33,7 @@ import XCTest
         super.setUp()
 
         recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
-        disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
+        disableMocking = networkMocksAreDisabled()
 
         if disableMocking {
             // Don't set this up
@@ -94,22 +94,8 @@ import XCTest
                 return fileName
             }
 
-            // The goal is for `basePath` to be e.g. `~/stripe-ios/Stripe/StripeiOSTests`
-            // A little gross/hardcoded (but it works fine); feel free to improve this...
-            let testDirectoryName = "stripe-ios/StripePayments/StripePaymentsTestUtils"
-            var basePath = "\(#file)"
-            while !basePath.hasSuffix(testDirectoryName) {
-                assert(
-                    basePath.contains(testDirectoryName),
-                    "Not in a subdirectory of \(testDirectoryName): \(#file)"
-                )
-                basePath = URL(fileURLWithPath: basePath).deletingLastPathComponent().path
-            }
-
-            let recordingPath = URL(fileURLWithPath: basePath)
-                .appendingPathComponent("Resources")
-                .appendingPathComponent(relativePath)
-                .path
+            let recordingPath = resolveResourcesDirectoryPath(relativePath: relativePath)
+            
             // Delete existing stubs
             do {
                 try FileManager.default.removeItem(atPath: recordingPath)
@@ -145,6 +131,7 @@ import XCTest
 
             // Note: in order to make this work, the stub files (end in .tail) must be added to the test bundle during Build Phases/Copy Resources Step.
             let bundle = Bundle(for: STPNetworkStubbingTestCase.self)
+            
             let url = bundle.url(forResource: relativePath, withExtension: nil)
             if url != nil {
                 var stubError: NSError?
@@ -162,7 +149,7 @@ import XCTest
             }
         }
     }
-
+    
     open override func tearDown() {
         super.tearDown()
 
@@ -178,3 +165,5 @@ import XCTest
         HTTPStubs.removeAllStubs()
     }
 }
+
+
