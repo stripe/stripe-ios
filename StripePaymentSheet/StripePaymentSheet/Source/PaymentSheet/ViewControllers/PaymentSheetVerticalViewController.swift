@@ -686,7 +686,9 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     func didTapSavedPaymentMethodAccessoryButton() {
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+#if !canImport(CompositorServices)
+        UISelectionFeedbackGenerator().selectionChanged()
+#endif
         presentManageScreen()
     }
 
