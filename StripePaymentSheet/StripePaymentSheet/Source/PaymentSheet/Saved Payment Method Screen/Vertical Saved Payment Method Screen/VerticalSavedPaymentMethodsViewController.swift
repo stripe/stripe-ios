@@ -186,7 +186,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: PaymentSheetUI.defaultSheetMargins.top),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: PaymentSheetUI.defaultSheetMargins.top),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: PaymentSheetUI.defaultSheetMargins.leading),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -PaymentSheetUI.defaultSheetMargins.trailing),
         ])
