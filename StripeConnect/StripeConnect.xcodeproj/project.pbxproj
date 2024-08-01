@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		41A2A5622C5A972A0077FC74 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2A5612C5A972A0077FC74 /* Placeholder.swift */; };
+		41A2A5642C5ABD6C0077FC74 /* StripeConnectTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */; };
+		41A2A5682C5AC5120077FC74 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A2A5672C5AC5120077FC74 /* StripeCore.framework */; };
+		41D17A452C5A73A6007C6EE6 /* StripeConnect.docc in Sources */ = {isa = PBXBuildFile; fileRef = 41D17A442C5A73A6007C6EE6 /* StripeConnect.docc */; };
 		41D17A4B2C5A73A7007C6EE6 /* StripeConnect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41D17A402C5A73A6007C6EE6 /* StripeConnect.framework */; };
 		41D17A502C5A73A7007C6EE6 /* StripeConnectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D17A4F2C5A73A7007C6EE6 /* StripeConnectTests.swift */; };
 		41D17A512C5A73A7007C6EE6 /* StripeConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = 41D17A432C5A73A6007C6EE6 /* StripeConnect.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -35,6 +38,8 @@
 
 /* Begin PBXFileReference section */
 		41A2A5612C5A972A0077FC74 /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
+		41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectTests.xctestplan; sourceTree = "<group>"; };
+		41A2A5672C5AC5120077FC74 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41D17A402C5A73A6007C6EE6 /* StripeConnect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeConnect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41D17A432C5A73A6007C6EE6 /* StripeConnect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeConnect.h; sourceTree = "<group>"; };
 		41D17A4A2C5A73A7007C6EE6 /* StripeConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41A2A5682C5AC5120077FC74 /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,13 +84,23 @@
 			path = Source;
 			sourceTree = "<group>";
 		};
+		41A2A5662C5AC5110077FC74 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				41A2A5672C5AC5120077FC74 /* StripeCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		41D17A362C5A73A6007C6EE6 = {
 			isa = PBXGroup;
 			children = (
+				41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */,
 				41D17A642C5A7429007C6EE6 /* BuildConfigurations */,
 				41D17A422C5A73A6007C6EE6 /* StripeConnect */,
 				41D17A4E2C5A73A7007C6EE6 /* StripeConnectTests */,
 				41D17A412C5A73A6007C6EE6 /* Products */,
+				41A2A5662C5AC5110077FC74 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -209,6 +225,9 @@
 				Base,
 			);
 			mainGroup = 41D17A362C5A73A6007C6EE6;
+			packageReferences = (
+				41A2A5652C5AC0290077FC74 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+			);
 			productRefGroup = 41D17A412C5A73A6007C6EE6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -229,6 +248,7 @@
 				41D17A6D2C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig in Resources */,
 				41D17A6A2C5A7429007C6EE6 /* StripeiOS Tests-Shared.xcconfig in Resources */,
 				41D17A6B2C5A7429007C6EE6 /* StripeiOS-Debug.xcconfig in Resources */,
+				41A2A5642C5ABD6C0077FC74 /* StripeConnectTests.xctestplan in Resources */,
 				41D17A672C5A7429007C6EE6 /* Project-Shared.xcconfig in Resources */,
 				41D17A682C5A7429007C6EE6 /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				41D17A6E2C5A7429007C6EE6 /* Version.xcconfig in Resources */,
@@ -409,6 +429,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		41A2A5652C5AC0290077FC74 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 41D17A372C5A73A6007C6EE6 /* Project object */;
 }
