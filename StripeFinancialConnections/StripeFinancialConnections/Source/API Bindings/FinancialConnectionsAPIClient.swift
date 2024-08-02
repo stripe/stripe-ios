@@ -8,49 +8,55 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-class FinancialConnectionsAPIClient {
+final class FinancialConnectionsAPIClient {
     let backingAPIClient: STPAPIClient
 
     var isLinkWithStripe: Bool = false
     var consumerPublishableKey: String?
     var consumerSession: ConsumerSessionData?
 
-    static let shared = FinancialConnectionsAPIClient(apiClient: .shared)
-
     init(apiClient: STPAPIClient) {
         self.backingAPIClient = apiClient
     }
 
-    func consumerPublishableKeyProvider(canUseConsumerKey: Bool) -> String? {
+    /// Returns the `consumerPublishableKey` for scenarios where it is valid to do so. That is;
+    /// - `canUseConsumerKey` must be `true`. This is a flag passed in by each API request.
+    /// - `isLinkWithStripe` must be `true`. This represents whether we're in the Instant Debits flow.
+    /// - `consumerSession` must be verfied. This represents whether we have a verified Link user.
+    private func consumerPublishableKeyProvider(canUseConsumerKey: Bool) -> String? {
         guard canUseConsumerKey, isLinkWithStripe, consumerSession?.isVerified == true else {
             return nil
         }
         return consumerPublishableKey
     }
 
-    func get<T: Decodable>(
+    /// Passthrough to `STPAPIClient.get` which uses the `consumerPublishableKey` whenever it should be used.
+    /// As a rule of thumb, `useConsumerPublishableKeyIfNeeded` should be `true` for requests that happen after the user is verified.
+    /// However, there are some exceptions to this rules (such as the create payment method request).
+    private func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
-        canUseConsumerPublishableKey: Bool
+        useConsumerPublishableKeyIfNeeded: Bool
     ) -> Promise<T> {
-        let consumerPubKey = consumerPublishableKeyProvider(canUseConsumerKey: canUseConsumerPublishableKey)
+        let possibleConsumerPublishableKey = consumerPublishableKeyProvider(canUseConsumerKey: useConsumerPublishableKeyIfNeeded)
         return backingAPIClient.get(
             resource: resource,
             parameters: parameters,
-            ephemeralKeySecret: consumerPubKey
+            ephemeralKeySecret: possibleConsumerPublishableKey
         )
     }
 
-    func post<T: Decodable>(
+    /// Passthrough to `STPAPIClient.post` which uses the `consumerPublishableKey` whenever it should be used.
+    private func post<T: Decodable>(
         resource: String,
         parameters: [String: Any],
-        canUseConsumerPublishableKey: Bool
+        useConsumerPublishableKeyIfNeeded: Bool
     ) -> Promise<T> {
-        let consumerPubKey = consumerPublishableKeyProvider(canUseConsumerKey: canUseConsumerPublishableKey)
+        let possibleConsumerPublishableKey = consumerPublishableKeyProvider(canUseConsumerKey: useConsumerPublishableKeyIfNeeded)
         return backingAPIClient.post(
             resource: resource,
             parameters: parameters,
-            ephemeralKeySecret: consumerPubKey
+            ephemeralKeySecret: possibleConsumerPublishableKey
         )
     }
 }
@@ -217,7 +223,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointListAccounts,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -225,7 +231,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointSessionReceipt,
             parameters: ["client_secret": clientSecret],
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -250,7 +256,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: "financial_connections/sessions/synchronize",
             parameters: parameters,
-            canUseConsumerPublishableKey: true
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -261,7 +267,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointConsentAcquired,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -272,7 +278,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointFeaturedInstitutions,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -285,7 +291,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointSearchInstitutions,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -300,7 +306,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessions,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -312,7 +318,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsCancel,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -327,7 +333,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsRetrieve,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -348,7 +354,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAuthSessionsOAuthResults,
                     parameters: body,
-                    canUseConsumerPublishableKey: false
+                    useConsumerPublishableKeyIfNeeded: false
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsMixedOAuthParams>.PollTimingOptions(
@@ -373,7 +379,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsAuthorized,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -397,7 +403,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAuthSessionsAccounts,
                     parameters: body,
-                    canUseConsumerPublishableKey: false
+                    useConsumerPublishableKeyIfNeeded: false
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSessionAccounts>.PollTimingOptions(
@@ -421,7 +427,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsSelectedAccounts,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -432,7 +438,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointLinkMoreAccounts,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -447,7 +453,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointComplete,
             parameters: body,
-            canUseConsumerPublishableKey: true
+            useConsumerPublishableKeyIfNeeded: true
         )
         .chained { (session: StripeAPI.FinancialConnectionsSession) in
             if session.accounts.hasMore {
@@ -549,7 +555,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAttachPaymentAccount,
                     parameters: body,
-                    canUseConsumerPublishableKey: false
+                    useConsumerPublishableKeyIfNeeded: false
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsPaymentAccountResource>.PollTimingOptions(
@@ -583,7 +589,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsEvents,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -674,7 +680,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.get(
                     resource: APIEndpointPollAccountNumbers,
                     parameters: body,
-                    canUseConsumerPublishableKey: false
+                    useConsumerPublishableKeyIfNeeded: false
                 )
             },
             pollTimingOptions: APIPollingHelper<EmptyResponse>.PollTimingOptions(
@@ -708,7 +714,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointSaveAccountsToLink,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -724,7 +730,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointDisableNetworking,
             parameters: body,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -738,7 +744,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointLinkVerified,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -754,7 +760,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return get(
             resource: APIEndpointNetworkedAccounts,
             parameters: parameters,
-            canUseConsumerPublishableKey: true
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -771,7 +777,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointShareNetworkedAccount,
             parameters: parameters,
-            canUseConsumerPublishableKey: true
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -785,7 +791,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointLinkStepUpAuthenticationVerified,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -803,7 +809,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointConsumerSessions,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -828,7 +834,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: "consumers/sessions/start_verification",
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -848,7 +854,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: "consumers/sessions/confirm_verification",
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -872,7 +878,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointLinkAccountsSignUp,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -891,7 +897,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointAttachLinkConsumerToLinkAccountSession,
             parameters: parameters,
-            canUseConsumerPublishableKey: false
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 }

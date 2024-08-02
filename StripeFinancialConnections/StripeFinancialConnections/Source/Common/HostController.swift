@@ -60,14 +60,14 @@ class HostController {
     // MARK: - Init
 
     init(
-        apiClient: STPAPIClient,
+        apiClient: FinancialConnectionsAPIClient,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
         publishableKey: String?,
         stripeAccount: String?
     ) {
-        self.apiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
+        self.apiClient = apiClient
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
