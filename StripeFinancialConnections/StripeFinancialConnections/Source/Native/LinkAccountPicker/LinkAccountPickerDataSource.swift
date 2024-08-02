@@ -30,7 +30,7 @@ protocol LinkAccountPickerDataSource: AnyObject {
     func selectNetworkedAccounts(
         _ selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) -> Future<FinancialConnectionsInstitutionList>
-    func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest>
+    func markConsentAcquired() -> Future<FinancialConnectionsSessionManifest>
 }
 
 final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSource {
@@ -124,7 +124,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         )
     }
 
-    func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest> {
+    func markConsentAcquired() -> Future<FinancialConnectionsSessionManifest> {
         return apiClient.markConsentAcquired(clientSecret: clientSecret)
     }
 }
