@@ -282,7 +282,28 @@ final class LinkAccountPickerViewController: UIViewController {
                 pane: .linkAccountPicker
             )
 
-        if nextPane == .success {
+        if
+            dataSource.acquireConsentOnPrimaryCtaClick,
+            let selectedAccount = dataSource.selectedAccounts.first(
+                // to better handle multi-select, we want to ensure that
+                // the account we pick has a `drawerOnSelection`
+                where: { $0.accountPickerAccount.drawerOnSelection != nil }
+            ),
+            let drawerOnSelection = selectedAccount.accountPickerAccount.drawerOnSelection,
+            IsAccountUpdateRequired(forAccount: selectedAccount.partnerAccount)
+        {
+            footerView?.showLoadingView(true)
+            dataSource
+                .markConsentAcquired()
+                .observe { [weak self] _ in
+                    guard let self = self else { return }
+                    footerView?.showLoadingView(false)
+                    self.presentAccountUpdateRequiredDrawer(
+                        drawerOnSelection: drawerOnSelection,
+                        partnerAccount: selectedAccount.partnerAccount
+                    )
+                }
+        } else if nextPane == .success {
             footerView?.showLoadingView(true)
             // prevent user from accidentally pressing
             // a button on the screen; this is safe because
@@ -312,19 +333,26 @@ final class LinkAccountPickerViewController: UIViewController {
                     }
                 }
         } else {
-            // we should never push here to these panes since we will present
-            // as sheet when the user selects an account that needs to be repaired
-            // or requires additional permissions (supportability)
-            if nextPane == .partnerAuth {
-                dataSource
-                    .analyticsClient
-                    .logUnexpectedError(
-                        FinancialConnectionsSheetError
-                            .unknown(
-                                debugDescription: "Connecting a supportability account, but user shouldn't be able to."
-                            ),
-                        errorName: "ConnectSupportabilityAccountError",
-                        pane: .linkAccountPicker
+
+            let pushToNextPane = { [weak self] in
+                guard let self = self else { return }
+                // we should never push here to these panes here since we will present
+                // as sheet when the user selects an account that needs to be repaired
+                // or requires additional permissions (supportability)
+                if nextPane == .partnerAuth {
+                    dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            FinancialConnectionsSheetError
+                                .unknown(
+                                    debugDescription: "Connecting a supportability account, but user shouldn't be able to."
+                                ),
+                            errorName: "ConnectSupportabilityAccountError",
+                            pane: .linkAccountPicker
+                        )
+                    delegate?.linkAccountPickerViewController(
+                        self,
+                        didRequestNextPane: .institutionPicker
                     )
                 delegate?.linkAccountPickerViewController(
                     self,
@@ -356,6 +384,124 @@ final class LinkAccountPickerViewController: UIViewController {
                 )
             }
         }
+
+        if dataSource.acquireConsentOnPrimaryCtaClick {
+            footerView?.showLoadingView(true)
+            dataSource
+                .markConsentAcquired()
+                .observe { [weak self] _ in
+                    guard let self = self else { return }
+                    footerView?.showLoadingView(false)
+                    pushToNextPane()
+                }
+        } else {
+            pushToNextPane()
+        }
+    }
+
+    // the "account update required drawer" offers the user two choices:
+    // 1. re-link bank account by going through the bank auth flow again (partner_auth pane)
+    // 2. repair the bank account (bank_auth_repair)
+    private func presentAccountUpdateRequiredDrawer(
+        drawerOnSelection: FinancialConnectionsGenericInfoScreen,
+        partnerAccount: FinancialConnectionsPartnerAccount
+    ) {
+        let deselectPreviouslySelectedAccount = { [weak self] in
+            guard let self = self else { return }
+            self.dataSource.updateSelectedAccounts(
+                self.dataSource.selectedAccounts.filter(
+                    { $0.partnerAccount.id != partnerAccount.id }
+                )
+            )
+        }
+
+        var delayDeselectingAccounts = false
+        let willDismissSheet = {
+            if delayDeselectingAccounts {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    deselectPreviouslySelectedAccount()
+                }
+            } else {
+                deselectPreviouslySelectedAccount()
+            }
+        }
+
+        let didSelectContinue: () -> Void = { [weak self] in
+            guard let self else { return }
+            if partnerAccount.nextPaneOnSelection == .partnerAuth {
+                if let institution = partnerAccount.institution {
+                    self.delegate?.linkAccountPickerViewController(
+                        self,
+                        requestedPartnerAuthWithInstitution: institution
+                    )
+                } else {
+                    self.delegate?.linkAccountPickerViewController(
+                        self,
+                        didRequestNextPane: .institutionPicker,
+                        hideBackButtonOnNextPane: false
+                    )
+                }
+            }
+            // nextPaneOnSelection == bankAuthRepair
+            else {
+                dataSource
+                    .analyticsClient
+                    .logUnexpectedError(
+                        FinancialConnectionsSheetError
+                            .unknown(
+                                debugDescription: "Updating a repair account, but repairs are not supported in Mobile."
+                            ),
+                        errorName: "UpdateRepairAccountError",
+                        pane: .linkAccountPicker
+                    )
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    didRequestNextPane: .institutionPicker,
+                    hideBackButtonOnNextPane: false
+                )
+            }
+        }
+
+        let genericInfoViewController = GenericInfoViewController(
+            genericInfoScreen: drawerOnSelection,
+            theme: dataSource.manifest.theme,
+            panePresentationStyle: .sheet,
+            iconView: {
+                if let institutionIconUrl = partnerAccount.institution?.icon?.default {
+                    let institutionIconView = InstitutionIconView()
+                    institutionIconView.setImageUrl(institutionIconUrl)
+                    return institutionIconView
+                } else {
+                    return nil
+                }
+            }(),
+            // "did select continue"
+            didSelectPrimaryButton: { genericInfoViewController in
+                // delay deselecting accounts while we animate to the
+                // next screen to reduce "animation jank" of
+                // the account getting deselected
+                delayDeselectingAccounts = true
+                genericInfoViewController.dismiss(
+                    animated: true,
+                    completion: {
+                        didSelectContinue()
+                    }
+                )
+            },
+            // "did select cancel"
+            didSelectSecondaryButton: { genericInfoViewController in
+                delayDeselectingAccounts = false
+                genericInfoViewController.dismiss(
+                    animated: true
+                )
+            },
+            didSelectURL: { [weak self] url in
+                guard let self = self else { return }
+                self.didSelectURLInTextFromBackend(url)
+            },
+            willDismissSheet: willDismissSheet
+        )
+        genericInfoViewController.present(on: self)
     }
 
     private func didSelectURLInTextFromBackend(_ url: URL) {
@@ -378,16 +524,19 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
         FeedbackGeneratorAdapter.selectionChanged()
 
         let selectedPartnerAccount = selectedAccountTuple.partnerAccount
-        let eligibleToPresentAccountUpdateRequiredDrawer: Bool = (
-            // repair flow
-            selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair
-                // supportability -- account requires re-sharing with additonal permissions
-                || selectedPartnerAccount.nextPaneOnSelection == .partnerAuth
+        let eligibleToPresentAccountUpdateRequiredDrawer = IsAccountUpdateRequired(
+            forAccount: selectedPartnerAccount
         )
 
         if let drawerOnSelection = selectedAccountTuple.accountPickerAccount.drawerOnSelection {
+            // we need the `eligibleToPresentAccountUpdateRequiredDrawer` check here because
+            // of confusing evolution of code...`drawerOnSelection` is used for two different
+            // types of drawers, so we check `eligibleToPresentAccountUpdateRequiredDrawer`
+            // to avoid presenting a drawer here because we will present another drawer later
             if !eligibleToPresentAccountUpdateRequiredDrawer {
-                let genericInfoViewController = GenericInfoViewController(
+                // the "account selection drawer" gives user an explanation of
+                // why they can't use this bank account
+                let accountSelectionDrawerViewController = GenericInfoViewController(
                     genericInfoScreen: drawerOnSelection,
                     theme: dataSource.manifest.theme,
                     panePresentationStyle: .sheet,
@@ -399,11 +548,13 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                         self.didSelectURLInTextFromBackend(url)
                     }
                 )
-                genericInfoViewController.present(on: self)
+                accountSelectionDrawerViewController.present(on: self)
             } else {
-                // we will likely be presenting account update required drawer later in this function
+                // we will (likely) be presenting a different drawer further down the function
             }
 
+            // this extra `allowSelection` check is necessary because we override
+            // `isDisabled` for `AccountPickerRowView` when `drawerOnSelection != nil`
             if !selectedAccountTuple.accountPickerAccount.allowSelection {
                 // if the account is not selectable, then we return early
                 return
@@ -479,12 +630,13 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                             )
                     }
 
-                    let deselectPreviouslySelectedAccount = { [weak self] in
-                        guard let self = self else { return }
-                        self.dataSource.updateSelectedAccounts(
-                            self.dataSource.selectedAccounts.filter(
-                                { $0.partnerAccount.id != selectedPartnerAccount.id }
-                            )
+                    // if we need to acquire consent, instead of showing the drawer now,
+                    // we will show the drawer when user presses the CTA where
+                    // pressing the CTA will make a call to `markConsentAcquired`
+                    if !dataSource.acquireConsentOnPrimaryCtaClick {
+                        presentAccountUpdateRequiredDrawer(
+                            drawerOnSelection: drawerOnSelection,
+                            partnerAccount: selectedPartnerAccount
                         )
                     }
 
@@ -510,7 +662,8 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                             } else {
                                 self.delegate?.linkAccountPickerViewController(
                                     self,
-                                    didRequestNextPane: .institutionPicker
+                                    didRequestNextPane: .institutionPicker,
+                                    hideBackButtonOnNextPane: false
                                 )
                             }
                         }
@@ -637,4 +790,13 @@ private func ZipAccounts(
         }
     }
     return accountTuples
+}
+
+private func IsAccountUpdateRequired(
+    forAccount account: FinancialConnectionsPartnerAccount
+) -> Bool {
+    // repair flow
+    return account.nextPaneOnSelection == .bankAuthRepair
+    // supportability -- account requires re-sharing with additonal permissions
+    || account.nextPaneOnSelection == .partnerAuth
 }

@@ -23,12 +23,14 @@ protocol LinkAccountPickerDataSource: AnyObject {
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane? { get set }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var dataAccessNotice: FinancialConnectionsDataAccessNotice? { get }
+    var acquireConsentOnPrimaryCtaClick: Bool { get }
 
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple])
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
     func selectNetworkedAccounts(
         _ selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) -> Future<FinancialConnectionsInstitutionList>
+    func markConsentAcquired() -> Future<FinancialConnectionsSessionManifest>
 }
 
 final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSource {
@@ -68,6 +70,9 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     }
     private let consentDataAccessNotice: FinancialConnectionsDataAccessNotice?
     private var networkedAccountsResponse: FinancialConnectionsNetworkedAccountsResponse?
+    var acquireConsentOnPrimaryCtaClick: Bool {
+        return networkedAccountsResponse?.acquireConsentOnPrimaryCtaClick ?? false
+    }
 
     private(set) var selectedAccounts: [FinancialConnectionsAccountTuple] = [] {
         didSet {
@@ -115,7 +120,11 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
             selectedAccountIds: selectedAccounts.map({ $0.id }),
             clientSecret: clientSecret,
             consumerSessionClientSecret: consumerSession.clientSecret,
-            consentAcquired: networkedAccountsResponse?.acquireConsentOnPrimaryCtaClick
+            consentAcquired: acquireConsentOnPrimaryCtaClick
         )
+    }
+
+    func markConsentAcquired() -> Future<FinancialConnectionsSessionManifest> {
+        return apiClient.markConsentAcquired(clientSecret: clientSecret)
     }
 }
