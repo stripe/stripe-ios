@@ -91,9 +91,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
                 return Promise(error: Self.deallocatedError)
             }
 
-            let consumerPublishableKey = linkSignUpResponse.publishableKey
-            let consumerApiClient = STPAPIClient(publishableKey: consumerPublishableKey)
-            return consumerApiClient.synchronize(
+            return apiClient.synchronize(
                 clientSecret: self.clientSecret,
                 returnURL: self.returnURL
             )

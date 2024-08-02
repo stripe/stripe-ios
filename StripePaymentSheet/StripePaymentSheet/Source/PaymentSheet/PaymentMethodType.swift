@@ -237,7 +237,9 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco, .sunbit:
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
+                        .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
+                        .sunbit, .billie:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -249,7 +251,8 @@ extension PaymentSheet {
                     case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                            .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .swish, .twint, .sunbit:
+                            .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
+                            .mobilePay, .swish, .twint, .sunbit, .billie:
                         return [.returnURL]
                     case .USBankAccount:
                         return [

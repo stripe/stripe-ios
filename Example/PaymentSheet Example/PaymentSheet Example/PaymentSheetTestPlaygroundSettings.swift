@@ -133,6 +133,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case JP
         case BR
         case TH
+        case DE
     }
 
     enum APMSEnabled: String, PickerEnum {

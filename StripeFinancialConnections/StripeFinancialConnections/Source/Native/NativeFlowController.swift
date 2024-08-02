@@ -992,7 +992,7 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         _ viewController: LinkLoginViewController,
         foundReturningUserWith lookupConsumerSessionResponse: LookupConsumerSessionResponse
     ) {
-        // TODO(BANKCON-11476): Save consumer publishable key for future use.
+        dataManager.consumerPublishableKey = lookupConsumerSessionResponse.publishableKey
         dataManager.consumerSession = lookupConsumerSessionResponse.consumerSession
         pushPane(.networkingLinkVerification, animated: true)
     }
@@ -1001,7 +1001,7 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         _ viewController: LinkLoginViewController,
         receivedLinkSignUpResponse linkSignUpResponse: LinkSignUpResponse
     ) {
-        // TODO(BANKCON-11476): Update apiClient to use new publishable key.
+        dataManager.consumerPublishableKey = linkSignUpResponse.publishableKey
         dataManager.consumerSession = linkSignUpResponse.consumerSession
     }
 

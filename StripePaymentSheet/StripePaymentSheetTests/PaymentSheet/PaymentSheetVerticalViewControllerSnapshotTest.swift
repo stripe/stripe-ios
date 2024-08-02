@@ -293,6 +293,13 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         self.verify(sut, identifier: "non_cvc_error")
     }
 
+    func testDisabledState() {
+        let loadResult = PaymentSheetLoader.LoadResult._testValue(paymentMethodTypes: ["card", "us_bank_account"], savedPaymentMethods: [._testCard()])
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: true), loadResult: loadResult, isFlowController: false, previousPaymentOption: nil)
+        sut.isUserInteractionEnabled = false
+        self.verify(sut)
+    }
+
     var mockConfirmResult: StripePaymentSheet.PaymentSheetResult = .canceled
 }
 

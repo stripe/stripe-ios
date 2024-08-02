@@ -233,3 +233,18 @@ extension PaymentSheet.Appearance {
         return appearance
     }
 }
+
+extension PaymentSheetLoader.LoadResult {
+    static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in }
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: paymentMethodTypes
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        return PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: savedPaymentMethods
+        )
+    }
+}

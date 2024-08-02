@@ -296,6 +296,19 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
+    func testCreateBilliePaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingDEPublishableKey)
+        let params = STPPaymentMethodParams(billie: STPPaymentMethodBillieParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .billie)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
     func testCreateMultibancoPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let billingDetails = STPPaymentMethodBillingDetails()
