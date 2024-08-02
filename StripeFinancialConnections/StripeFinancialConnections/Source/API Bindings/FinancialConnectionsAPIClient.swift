@@ -22,8 +22,8 @@ final class FinancialConnectionsAPIClient {
     /// Returns the `consumerPublishableKey` for scenarios where it is valid to do so. That is;
     /// - `canUseConsumerKey` must be `true`. This is a flag passed in by each API request.
     /// - `isLinkWithStripe` must be `true`. This represents whether we're in the Instant Debits flow.
-    /// - `consumerSession` must be verfied. This represents whether we have a verified Link user.
-    private func consumerPublishableKeyProvider(canUseConsumerKey: Bool) -> String? {
+    /// - `consumerSession` must be verified. This represents whether we have a verified Link user.
+    func consumerPublishableKeyProvider(canUseConsumerKey: Bool) -> String? {
         guard canUseConsumerKey, isLinkWithStripe, consumerSession?.isVerified == true else {
             return nil
         }
