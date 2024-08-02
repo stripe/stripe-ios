@@ -59,13 +59,6 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: String) {
-        if !AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown {
-            AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = true
-            logPaymentSheetEvent(event: .paymentSheetFormInteracted, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
-        }
-    }
-
     func logPaymentSheetConfirmButtonTapped(
         paymentMethodTypeIdentifier: String,
         linkContext: String? = nil

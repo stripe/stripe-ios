@@ -83,7 +83,8 @@ class PaymentMethodFormViewController: UIViewController {
                 configuration: .paymentSheet(configuration),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
-                linkAccount: LinkAccountContext.shared.account
+                linkAccount: LinkAccountContext.shared.account,
+                analyticsHelper: analyticsHelper
             ).make()
             self.formCache[type] = form
         }
@@ -139,7 +140,7 @@ extension PaymentMethodFormViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: paymentMethodType.identifier)
+        analyticsHelper.logFormInteracted(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         delegate?.didUpdate(self)
         animateHeightChange()
     }

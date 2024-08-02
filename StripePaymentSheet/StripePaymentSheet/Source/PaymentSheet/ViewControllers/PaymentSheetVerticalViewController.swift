@@ -734,7 +734,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: .paymentSheet(configuration),
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
-            linkAccount: LinkAccountContext.shared.account
+            linkAccount: LinkAccountContext.shared.account, 
+            analyticsHelper: analyticsHelper
         ).make().collectsUserInput
     }
 

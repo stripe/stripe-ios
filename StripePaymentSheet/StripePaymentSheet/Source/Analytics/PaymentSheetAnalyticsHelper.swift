@@ -160,13 +160,13 @@ final class PaymentSheetAnalyticsHelper {
         AnalyticsHelper.shared.startTimeMeasurement(.formShown)
         log(event: .paymentSheetFormShown, selectedLPM: paymentMethodTypeIdentifier)
     }
-//
-//    func logFormInteracted(paymentMethodTypeIdentifier: String) {
-//        if !AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown {
-//            AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = true
-//            log(event: .paymentSheetFormInteracted, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
-//        }
-//    }
+
+    func logFormInteracted(paymentMethodTypeIdentifier: String) {
+        if !AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown {
+            AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = true
+            log(event: .paymentSheetFormInteracted, selectedLPM: paymentMethodTypeIdentifier)
+        }
+    }
 
 //    func logConfirmButtonTapped(
 //        paymentMethodTypeIdentifier: String,
