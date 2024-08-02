@@ -295,13 +295,23 @@ final class LinkAccountPickerViewController: UIViewController {
             footerView?.showLoadingView(true)
             dataSource
                 .markConsentAcquired()
-                .observe { [weak self] _ in
+                .observe { [weak self] result in
                     guard let self = self else { return }
                     footerView?.showLoadingView(false)
-                    self.presentAccountUpdateRequiredDrawer(
-                        drawerOnSelection: drawerOnSelection,
-                        partnerAccount: selectedAccount.partnerAccount
-                    )
+                    switch result {
+                    case .success:
+                        self.presentAccountUpdateRequiredDrawer(
+                            drawerOnSelection: drawerOnSelection,
+                            partnerAccount: selectedAccount.partnerAccount
+                        )
+                    case .failure(let error):
+                        self.dataSource.analyticsClient.logUnexpectedError(
+                            error,
+                            errorName: "ConsentAcquiredError",
+                            pane: .linkAccountPicker
+                        )
+                        self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
+                    }
                 }
         } else if nextPane == .success {
             footerView?.showLoadingView(true)
@@ -389,10 +399,21 @@ final class LinkAccountPickerViewController: UIViewController {
             footerView?.showLoadingView(true)
             dataSource
                 .markConsentAcquired()
-                .observe { [weak self] _ in
+                .observe { [weak self] result in
                     guard let self = self else { return }
                     footerView?.showLoadingView(false)
-                    pushToNextPane()
+                    switch result {
+                    case .success:
+                        pushToNextPane()
+                    case .failure(let error):
+                        self.dataSource.analyticsClient.logUnexpectedError(
+                            error,
+                            errorName: "ConsentAcquiredError",
+                            pane: .linkAccountPicker
+                        )
+                        self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
+                    }
+
                 }
         } else {
             pushToNextPane()
