@@ -137,7 +137,7 @@ private func CreateBodyView(subtitle: String?, theme: FinancialConnectionsTheme)
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.medium),
             textColor: .textDefault,
-            alignCenter: true
+            alignment: .center
         )
         subtitleLabel.setText(subtitle)
         labelVerticalStackView.addArrangedSubview(subtitleLabel)

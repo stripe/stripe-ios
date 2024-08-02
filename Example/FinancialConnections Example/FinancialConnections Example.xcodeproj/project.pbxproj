@@ -24,6 +24,7 @@
 		6A5997162BC5C9D9002A44CB /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5997152BC5C9D9002A44CB /* UserDefaults.swift */; };
 		6A6C23172BBCC6210083FF66 /* XCUIGestureVelocity+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C23162BBCC6210083FF66 /* XCUIGestureVelocity+Extensions.swift */; };
 		6A6C23192BBF4BE30083FF66 /* PlaygroundConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C23182BBF4BE30083FF66 /* PlaygroundConfiguration.swift */; };
+		6A870D092C5308A500ED4DDC /* XCUIElementQuery+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A870D082C5308A500ED4DDC /* XCUIElementQuery+Extensions.swift */; };
 		6AC6B40D2B880EEA000A4B32 /* XCTestCase+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC6B40C2B880EEA000A4B32 /* XCTestCase+Extensions.swift */; };
 		6AF9C66D47F81DD9B103FB64 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03E7365D673694C8D7EDFB20 /* StripeCore.framework */; };
 		828A3C3A555F9B2ABAEF3E95 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FBE9DBF6CBB07AE2D5B1DA /* WebViewViewController.swift */; };
@@ -105,6 +106,7 @@
 		6A5997152BC5C9D9002A44CB /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		6A6C23162BBCC6210083FF66 /* XCUIGestureVelocity+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIGestureVelocity+Extensions.swift"; sourceTree = "<group>"; };
 		6A6C23182BBF4BE30083FF66 /* PlaygroundConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundConfiguration.swift; sourceTree = "<group>"; };
+		6A870D082C5308A500ED4DDC /* XCUIElementQuery+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIElementQuery+Extensions.swift"; sourceTree = "<group>"; };
 		6AC6B40C2B880EEA000A4B32 /* XCTestCase+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Extensions.swift"; sourceTree = "<group>"; };
 		701003016E153D5DF2B00442 /* FinancialConnections-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FinancialConnections-Example-Debug.xcconfig"; sourceTree = "<group>"; };
 		74959BBB33DB4A570E2B4FD3 /* FinancialConnectionsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsUITests.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				01EFB9C0699FEB532FFE57D9 /* XCUIElement+Extensions.swift */,
 				6AC6B40C2B880EEA000A4B32 /* XCTestCase+Extensions.swift */,
 				6A6C23162BBCC6210083FF66 /* XCUIGestureVelocity+Extensions.swift */,
+				6A870D082C5308A500ED4DDC /* XCUIElementQuery+Extensions.swift */,
 			);
 			path = FinancialConnectionsUITests;
 			sourceTree = "<group>";
@@ -385,6 +388,7 @@
 				E180626EEE466989BE92D5B7 /* FinancialConnectionsNetworkingUITests.swift in Sources */,
 				DE4B6A7CCEBD39684733A892 /* FinancialConnectionsUITests.swift in Sources */,
 				6AC6B40D2B880EEA000A4B32 /* XCTestCase+Extensions.swift in Sources */,
+				6A870D092C5308A500ED4DDC /* XCUIElementQuery+Extensions.swift in Sources */,
 				09B82E32FC066FC442BD945D /* XCUIApplication+Extensions.swift in Sources */,
 				82D499E3F32FB4663D26EBA6 /* XCUIElement+Extensions.swift in Sources */,
 				6A6C23172BBCC6210083FF66 /* XCUIGestureVelocity+Extensions.swift in Sources */,

@@ -36,10 +36,17 @@ final class AuthFlowHelpers {
         url: URL,
         pane: FinancialConnectionsSessionManifest.NextPane,
         analyticsClient: FinancialConnectionsAnalyticsClient,
-        handleStripeScheme: (_ urlHost: String?) -> Void
+        handleURL: (_ urlHost: String?, _ nextPaneOrDrawerOnSecondaryCta: String?) -> Void
     ) {
-        if let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true),
-            let eventName = urlParameters.queryItems?.first(where: { $0.name == "eventName" })?.value
+        let internalLinkToPaneId: [String: String] = [
+            "manual-entry": "manual_entry"
+        ]
+        let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        if
+            let urlParameters,
+            let eventName = urlParameters.queryItems?.first(
+                where: { $0.name == "eventName" }
+            )?.value
         {
             analyticsClient
                 .log(
@@ -48,8 +55,18 @@ final class AuthFlowHelpers {
                 )
         }
 
+        var nextPaneOrDrawerOnSecondaryCta: String?
+        if
+            let urlParameters,
+            let _nextPaneOrDrawerOnSecondaryCta = urlParameters.queryItems?.first(
+                where: { $0.name == "nextPaneOrDrawerOnSecondaryCta" }
+            )?.value
+        {
+            nextPaneOrDrawerOnSecondaryCta = internalLinkToPaneId[_nextPaneOrDrawerOnSecondaryCta]
+        }
+
         if url.scheme == "stripe" {
-            handleStripeScheme(url.host)
+            handleURL(url.host, nextPaneOrDrawerOnSecondaryCta)
         } else {
             SFSafariViewController.present(url: url)
         }

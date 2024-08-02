@@ -12,7 +12,11 @@ import SafariServices
 import UIKit
 
 protocol ConsentViewControllerDelegate: AnyObject {
-    func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController)
+    func consentViewController(
+        _ viewController: ConsentViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        nextPaneOrDrawerOnSecondaryCta: String?
+    )
     func consentViewController(
         _ viewController: ConsentViewController,
         didConsentWithManifest manifest: FinancialConnectionsSessionManifest
@@ -30,7 +34,7 @@ class ConsentViewController: UIViewController {
             boldFont: .heading(.extraLarge),
             linkFont: .heading(.extraLarge),
             textColor: .textDefault,
-            alignCenter: true
+            alignment: .center
         )
         titleLabel.setText(
             dataSource.consent.title,
@@ -163,9 +167,13 @@ class ConsentViewController: UIViewController {
             url: url,
             pane: .consent,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { urlHost in
+            handleURL: { urlHost, nextPaneOrDrawerOnSecondaryCta in
                 if urlHost == "manual-entry" {
-                    delegate?.consentViewControllerDidSelectManuallyVerify(self)
+                    delegate?.consentViewController(
+                        self,
+                        didRequestNextPane: .manualEntry,
+                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+                    )
                 } else if urlHost == "data-access-notice" {
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
@@ -187,6 +195,12 @@ class ConsentViewController: UIViewController {
                         }
                     )
                     legalDetailsNoticeViewController.present(on: self)
+                } else if urlHost == "link-login" {
+                    delegate?.consentViewController(
+                        self,
+                        didRequestNextPane: .networkingLinkLoginWarmup,
+                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+                    )
                 }
             }
         )

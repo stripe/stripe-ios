@@ -31,9 +31,7 @@ final class LinkAccountPickerFooterView: UIView {
 
     init(
         defaultCta: String,
-        isStripeDirect: Bool,
-        businessName: String?,
-        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        aboveCta: String?,
         singleAccount: Bool,
         theme: FinancialConnectionsTheme,
         didSelectConnectAccount: @escaping () -> Void,
@@ -45,21 +43,22 @@ final class LinkAccountPickerFooterView: UIView {
         self.didSelectConnectAccount = didSelectConnectAccount
         super.init(frame: .zero)
 
-        let verticalStackView = HitTestStackView(
-            arrangedSubviews: [
-                MerchantDataAccessView(
-                    isStripeDirect: isStripeDirect,
-                    businessName: businessName,
-                    permissions: permissions,
-                    isNetworking: true,
-                    font: .label(.small),
-                    boldFont: .label(.smallEmphasized),
-                    alignCenter: true,
-                    didSelectLearnMore: didSelectMerchantDataAccessLearnMore
-                ),
-                connectAccountButton,
-            ]
-        )
+        let verticalStackView = HitTestStackView()
+        if let aboveCta {
+            let merchantDataAccessLabel = AttributedTextView(
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                linkFont: .label(.small),
+                textColor: .textDefault,
+                alignment: .center
+            )
+            merchantDataAccessLabel.setText(
+                aboveCta,
+                action: didSelectMerchantDataAccessLearnMore
+            )
+            verticalStackView.addArrangedSubview(merchantDataAccessLabel)
+        }
+        verticalStackView.addArrangedSubview(connectAccountButton)
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         verticalStackView.isLayoutMarginsRelativeArrangement = true

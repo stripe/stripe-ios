@@ -42,7 +42,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
             boldFont: .label(.smallEmphasized),
             linkFont: .label(.small),
             textColor: .textDefault,
-            alignCenter: true
+            alignment: .center
         )
         termsAndPrivacyPolicyLabel.setText(
             aboveCtaText,

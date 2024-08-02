@@ -21,22 +21,26 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    private let nextPaneOrDrawerOnSecondaryCta: String?
 
     init(
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        nextPaneOrDrawerOnSecondaryCta: String?
     ) {
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.nextPaneOrDrawerOnSecondaryCta = nextPaneOrDrawerOnSecondaryCta
     }
 
     func disableNetworking() -> Future<FinancialConnectionsSessionManifest> {
         return apiClient.disableNetworking(
             disabledReason: "returning_consumer_opt_out",
+            clientSuggestedNextPaneOnDisableNetworking: nextPaneOrDrawerOnSecondaryCta,
             clientSecret: clientSecret
         )
     }

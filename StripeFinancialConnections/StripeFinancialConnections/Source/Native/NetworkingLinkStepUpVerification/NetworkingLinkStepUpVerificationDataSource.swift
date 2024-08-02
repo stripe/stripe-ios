@@ -67,7 +67,8 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         return apiClient.selectNetworkedAccounts(
             selectedAccountIds: selectedAccountIds,
             clientSecret: clientSecret,
-            consumerSessionClientSecret: consumerSession.clientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret,
+            consentAcquired: nil
         )
     }
 }

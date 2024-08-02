@@ -167,6 +167,7 @@ extension NativeFlowController {
 
     private func pushPane(
         _ pane: FinancialConnectionsSessionManifest.NextPane,
+        parameters: CreatePaneParameters? = nil,
         animated: Bool,
         // useful for cases where we want to prevent the user from navigating back
         //
@@ -181,6 +182,7 @@ extension NativeFlowController {
         } else {
             let paneViewController = CreatePaneViewController(
                 pane: pane,
+                parameters: parameters,
                 nativeFlowController: self,
                 dataManager: dataManager
             )
@@ -217,10 +219,12 @@ extension NativeFlowController {
     }
 
     private func presentPaneAsSheet(
-        _ pane: FinancialConnectionsSessionManifest.NextPane
+        _ pane: FinancialConnectionsSessionManifest.NextPane,
+        parameters: CreatePaneParameters? = nil
     ) {
         let paneViewController = CreatePaneViewController(
             pane: pane,
+            parameters: parameters,
             nativeFlowController: self,
             dataManager: dataManager,
             panePresentationStyle: .sheet
@@ -513,8 +517,19 @@ extension NativeFlowController: ConsentViewControllerDelegate {
         }
     }
 
-    func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {
-        pushPane(.manualEntry, animated: true)
+    func consentViewController(
+        _ viewController: ConsentViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        nextPaneOrDrawerOnSecondaryCta: String?
+    ) {
+        let parameters = CreatePaneParameters(
+            nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+        )
+        if nextPane == .networkingLinkLoginWarmup {
+            presentPaneAsSheet(nextPane, parameters: parameters)
+        } else {
+            pushPane(nextPane, parameters: parameters, animated: true)
+        }
     }
 }
 
@@ -965,7 +980,7 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
 
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution
+        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?
     ) {
         dataManager.institution = institution
         pushPane(.success, animated: true)
@@ -1044,6 +1059,7 @@ extension NativeFlowController: ErrorViewControllerDelegate {
 
 private func CreatePaneViewController(
     pane: FinancialConnectionsSessionManifest.NextPane,
+    parameters: CreatePaneParameters? = nil,
     nativeFlowController: NativeFlowController,
     dataManager: NativeFlowDataManager,
     panePresentationStyle: PanePresentationStyle = .fullscreen
@@ -1167,30 +1183,26 @@ private func CreatePaneViewController(
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
             manifest: dataManager.manifest,
-            analyticsClient: dataManager.analyticsClient
+            analyticsClient: dataManager.analyticsClient,
+            consumerSessionClientSecret: dataManager.consumerSession?.clientSecret
         )
         let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
         manualEntryViewController.delegate = nativeFlowController
         viewController = manualEntryViewController
     case .networkingLinkSignupPane:
-        if let selectedAccounts = dataManager.linkedAccounts {
-            let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
-                manifest: dataManager.manifest,
-                selectedAccounts: selectedAccounts,
-                returnURL: dataManager.returnURL,
-                apiClient: dataManager.apiClient,
-                clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient
-            )
-            let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
-                dataSource: networkingLinkSignupDataSource
-            )
-            networkingLinkSignupViewController.delegate = nativeFlowController
-            viewController = networkingLinkSignupViewController
-        } else {
-            assertionFailure("Code logic error. Missing parameters for \(pane).")
-            viewController = nil
-        }
+        let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
+            manifest: dataManager.manifest,
+            selectedAccounts: dataManager.linkedAccounts,
+            returnURL: dataManager.returnURL,
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
+        )
+        let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
+            dataSource: networkingLinkSignupDataSource
+        )
+        networkingLinkSignupViewController.delegate = nativeFlowController
+        viewController = networkingLinkSignupViewController
     case .networkingLinkVerification:
         let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress
         let consumerSessionEmailAddress = dataManager.consumerSession?.emailAddress
@@ -1211,13 +1223,12 @@ private func CreatePaneViewController(
         }
     case .networkingSaveToLinkVerification:
         if
-            let consumerSession = dataManager.consumerSession,
-            let selectedAccounts = dataManager.linkedAccounts
+            let consumerSession = dataManager.consumerSession
         {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
                 manifest: dataManager.manifest,
                 consumerSession: consumerSession,
-                selectedAccounts: selectedAccounts,
+                selectedAccounts: dataManager.linkedAccounts,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient
@@ -1318,7 +1329,8 @@ private func CreatePaneViewController(
             manifest: dataManager.manifest,
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
-            analyticsClient: dataManager.analyticsClient
+            analyticsClient: dataManager.analyticsClient,
+            nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
             dataSource: networkingLinkWarmupDataSource,

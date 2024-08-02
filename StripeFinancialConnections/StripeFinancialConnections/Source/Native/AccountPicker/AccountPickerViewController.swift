@@ -110,7 +110,7 @@ final class AccountPickerViewController: UIViewController {
                                 url: url,
                                 pane: .accountPicker,
                                 analyticsClient: self.dataSource.analyticsClient,
-                                handleStripeScheme: { _ in }
+                                handleURL: { _, _ in }
                             )
                         }
                     )

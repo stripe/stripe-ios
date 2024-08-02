@@ -71,6 +71,7 @@ final class AccountPickerRowLabelView: UIView {
     func set(
         title: String,
         subtitle: String?,
+        underlineSubtitle: Bool = false,
         balanceString: String? = nil
     ) {
         titleLabel.text = title
@@ -79,7 +80,10 @@ final class AccountPickerRowLabelView: UIView {
         subtitleLabel.removeFromSuperview()
         subtitleBalanceView.removeFromSuperview()
         if let subtitle = subtitle {
-            subtitleLabel.text = subtitle
+            subtitleLabel.setText(
+                subtitle,
+                underline: underlineSubtitle
+            )
             horizontalSubtitleStackView.addArrangedSubview(subtitleLabel)
         }
 

@@ -69,7 +69,8 @@ protocol FinancialConnectionsAPIClient {
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
-        routingNumber: String
+        routingNumber: String,
+        consumerSessionClientSecret: String?
     ) -> Future<FinancialConnectionsPaymentAccountResource>
 
     func attachLinkedAccountIdToLinkAccountSession(
@@ -89,7 +90,7 @@ protocol FinancialConnectionsAPIClient {
 
     func saveAccountsToNetworkAndLink(
         shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
@@ -102,6 +103,7 @@ protocol FinancialConnectionsAPIClient {
 
     func disableNetworking(
         disabledReason: String?,
+        clientSuggestedNextPaneOnDisableNetworking: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest>
 
@@ -113,7 +115,8 @@ protocol FinancialConnectionsAPIClient {
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
-        consumerSessionClientSecret: String
+        consumerSessionClientSecret: String,
+        consentAcquired: Bool?
     ) -> Future<FinancialConnectionsInstitutionList>
 
     func markLinkStepUpAuthenticationVerified(
@@ -400,12 +403,14 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
-        routingNumber: String
+        routingNumber: String,
+        consumerSessionClientSecret: String?
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return attachPaymentAccountToLinkAccountSession(
             clientSecret: clientSecret,
             accountNumber: accountNumber,
-            routingNumber: routingNumber
+            routingNumber: routingNumber,
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
@@ -431,6 +436,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         var body: [String: Any] = [
             "client_secret": clientSecret,
         ]
+        body["consumer_session_client_secret"] = consumerSessionClientSecret  // optional for Link
         if let accountNumber = accountNumber, let routingNumber = routingNumber {
             body["type"] = "bank_account"
             body["bank_account"] = [
@@ -442,7 +448,6 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             body["linked_account"] = [
                 "id": linkedAccountId,
             ]
-            body["consumer_session_client_secret"] = consumerSessionClientSecret  // optional for Link
         } else {
             assertionFailure()
             return Promise(
@@ -499,7 +504,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func saveAccountsToNetworkAndLink(
         shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
@@ -517,7 +522,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 emailAddress: emailAddress,
                 phoneNumber: phoneNumber,
                 country: country,
-                selectedAccountIds: selectedAccounts.map({ $0.id }),
+                selectedAccountIds: selectedAccounts?.map({ $0.id }),
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 clientSecret: clientSecret
             )
@@ -530,8 +535,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 )
             }
         }
-        let linkedAccountIds = selectedAccounts.compactMap({ $0.linkedAccountId })
         if
+            let linkedAccountIds = selectedAccounts?.compactMap({ $0.linkedAccountId }),
             shouldPollAccounts,
             !linkedAccountIds.isEmpty
         {
@@ -552,6 +557,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 case .failure(let error):
                     self.disableNetworking(
                         disabledReason: "account_numbers_not_available",
+                        clientSuggestedNextPaneOnDisableNetworking: nil,
                         clientSecret: clientSecret
                     ).observe { _ in } // ignoring return is intentional
 
@@ -596,15 +602,15 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
-        selectedAccountIds: [String],
+        selectedAccountIds: [String]?,
         consumerSessionClientSecret: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         var body: [String: Any] = [
             "client_secret": clientSecret,
-            "selected_accounts": selectedAccountIds,
             "expand": ["active_auth_session"],
         ]
+        body["selected_accounts"] = selectedAccountIds // null for manual entry
         body["email_address"] = emailAddress?
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
@@ -617,6 +623,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func disableNetworking(
         disabledReason: String?,
+        clientSuggestedNextPaneOnDisableNetworking: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         var body: [String: Any] = [
@@ -624,6 +631,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "expand": ["active_auth_session"],
         ]
         body["disabled_reason"] = disabledReason
+        body["client_requested_next_pane_on_disable_networking"] = clientSuggestedNextPaneOnDisableNetworking
         return post(resource: APIEndpointDisableNetworking, parameters: body)
     }
 
@@ -652,13 +660,15 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
-        consumerSessionClientSecret: String
+        consumerSessionClientSecret: String,
+        consentAcquired: Bool?
     ) -> Future<FinancialConnectionsInstitutionList> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "selected_accounts": selectedAccountIds,
             "client_secret": clientSecret,
             "consumer_session_client_secret": consumerSessionClientSecret,
         ]
+        parameters["consent_acquired"] = consentAcquired
         return post(resource: APIEndpointShareNetworkedAccount, parameters: parameters)
     }
 
