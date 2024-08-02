@@ -131,10 +131,20 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows)
+        let spacerView = UIView(frame: .zero)
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+
+        let heightConstraint = spacerView.heightAnchor.constraint(equalToConstant: 0)
+        heightConstraint.priority = UILayoutPriority(rawValue: 1)
+        heightConstraint.isActive = true
+
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [spacerView])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
+        if let lastPaymentMethodRow = paymentMethodRows.last {
+            stackView.setCustomSpacing(0, after: lastPaymentMethodRow)
+        }
         return stackView
     }()
 
@@ -181,7 +191,13 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
+
         view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+
+        // Add a height constraint to the view to ensure a minimum height of 200
+        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height)
+        minHeightConstraint.priority = .defaultHigh
+        minHeightConstraint.isActive = true
     }
 
     @objc func didSelectEditSavedPaymentMethodsButton() {
