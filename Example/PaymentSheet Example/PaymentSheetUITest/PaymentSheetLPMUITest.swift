@@ -182,6 +182,22 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 
+    func testSatispayPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.merchantCountryCode = .IT
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Satispay
+        tapPaymentMethod("Satispay")
+
+        // Pay
+        app.buttons["Pay €50.99"].waitForExistenceAndTap()
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
+
     func testZipPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
