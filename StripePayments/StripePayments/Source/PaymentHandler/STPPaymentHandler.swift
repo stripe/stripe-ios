@@ -732,6 +732,7 @@ public class STPPaymentHandler: NSObject {
             .alma,
             .sunbit,
             .billie,
+            .satispay,
             .konbini,
             .promptPay,
             .swish,

@@ -36,5 +36,4 @@ class STPPaymentMethodSunbitTests: XCTestCase {
 
         wait(for: [retrieveJSON], timeout: STPTestingNetworkRequestTimeout)
     }
-
 }

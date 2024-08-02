@@ -852,6 +852,33 @@
         }
     },
     {
+        "type": "satispay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-97b6153a7a1e191ffdfda3ca9162343f.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-ab245f01010002d6ff7755323c1613a2.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-eca5006db20571e80caec1509c680c27.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-c01fc432e3c7b334f0204d011879bb1a.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },      
+    {
         "type": "mobilepay",
         "async": false,
         "fields": [],

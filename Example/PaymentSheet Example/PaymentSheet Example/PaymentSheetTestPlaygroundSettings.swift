@@ -134,6 +134,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case BR
         case TH
         case DE
+<<<<<<< HEAD
+=======
+        case IT
+>>>>>>> 3151de0fa2 (Add the Satispay payment method)
     }
 
     enum APMSEnabled: String, PickerEnum {
