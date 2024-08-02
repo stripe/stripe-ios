@@ -78,6 +78,19 @@ class SavedPaymentOptionsViewController: UIViewController {
                 return paymentMethod
             }
         }
+
+        var analyticsValue: String {
+            switch self {
+            case .add:
+                return "add"
+            case .saved:
+                return "saved"
+            case .applePay:
+                return "applePay"
+            case .link:
+                return "link"
+            }
+        }
     }
 
     struct Configuration {
@@ -559,7 +572,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               error: Error.paymentOptionCellDidSelectRemoveOnNonSavedItem,
                                               additionalNonPIIParams: [
                                                 "indexPathRow": collectionView.indexPath(for: paymentOptionCell)?.row ?? "nil",
-                                                "viewModels": viewModels.map { $0.analyticsValue.rawValue },
+                                                "viewModels": viewModels.map { $0.analyticsValue },
                                               ]
             )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)

@@ -7,10 +7,8 @@ import Foundation
 
 @_spi(STP) public class AnalyticsHelper {
     @_spi(STP) public enum TimeMeasurement {
-        case checkout
         case linkSignup
         case linkPopup
-        case formShown
     }
 
     @_spi(STP) public static let shared = AnalyticsHelper()
@@ -20,9 +18,6 @@ import Foundation
     private let timeProvider: () -> Date
 
     private var startTimes: [TimeMeasurement: Date] = [:]
-
-    /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.
-    @_spi(STP) public var didSendPaymentSheetFormInteractedEventAfterFormShown: Bool = false
 
     init(timeProvider: @escaping () -> Date = Date.init) {
         self.timeProvider = timeProvider
@@ -45,10 +40,15 @@ import Foundation
         }
 
         let now = timeProvider()
-        let duration = now.timeIntervalSince(startTime)
+        return now.roundedTimeIntervalSince(startTime)
+    }
+}
+
+extension Date {
+    @_spi(STP) public func roundedTimeIntervalSince(_ date: Date) -> TimeInterval {
+        let duration = timeIntervalSince(date)
 
         // Round to 2 decimal places
         return round(duration * 100) / 100
     }
-
 }

@@ -159,7 +159,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     func testPaymentSheetLoadDeferredIntentFails() {
-        let analyticsClient = STPAnalyticsClient()
+        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: configuration, analyticsClient: STPAnalyticsClient())
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         // Test PaymentSheetLoader.load can load various IntentConfigurations
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
@@ -177,7 +177,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         ]
         loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: false) { result in
+            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsHelper: analyticsHelper, isFlowController: false) { result in
                 loadExpectation.fulfill()
                 switch result {
                 case .success:
@@ -186,7 +186,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     break
                 }
                 // Should send a load failure analytic
-                let analyticEvent = analyticsClient._testLogHistory.last
+                let analyticEvent = analyticsHelper.analyticsClient._testLogHistory.last
                 XCTAssertEqual(analyticEvent?["error_type"] as? String, "invalid_request_error")
                 XCTAssertNotNil(analyticEvent?["error_code"] as? String)
             }

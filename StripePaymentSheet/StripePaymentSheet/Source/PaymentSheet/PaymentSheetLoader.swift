@@ -95,7 +95,7 @@ final class PaymentSheetLoader {
                     orderedPaymentMethodTypes: paymentMethodTypes
                 )
                 if isFlowController {
-                    AnalyticsHelper.shared.startTimeMeasurement(.checkout)
+                    analyticsHelper.startTimeMeasurement(.checkout)
                 }
 
                 // Call completion
@@ -178,7 +178,7 @@ final class PaymentSheetLoader {
                                                                                                              clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                              configuration: configuration)
             } catch let error {
-                analyticsHelper.logLoadFailed(error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
                 paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
                 elementsSession = .makeBackupElementsSession(with: paymentIntent)
@@ -195,7 +195,7 @@ final class PaymentSheetLoader {
                                                                                                            clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                            configuration: configuration)
             } catch let error {
-                analyticsHelper.logLoadFailed(error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
                 setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
                 elementsSession = .makeBackupElementsSession(with: setupIntent)
@@ -215,7 +215,7 @@ final class PaymentSheetLoader {
                 // Most errors are useful and should be reported back to the merchant to help them debug their integration (e.g. bad connection, unknown parameter, invalid api key).
                 // If we get `stp_genericFailedToParseResponseError`, it means the request succeeded but we couldn't parse the response.
                 // In this case, fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
-                analyticsHelper.logLoadFailed(error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)

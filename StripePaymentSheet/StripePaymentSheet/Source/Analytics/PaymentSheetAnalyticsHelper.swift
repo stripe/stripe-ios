@@ -18,6 +18,7 @@ final class PaymentSheetAnalyticsHelper {
     var intent: Intent?
     var elementsSession: STPElementsSession?
     var loadingStartDate: Date?
+    private var startTimes: [TimeMeasurement: Date] = [:]
 
     init(
         isCustom: Bool,
@@ -31,7 +32,7 @@ final class PaymentSheetAnalyticsHelper {
 
     func logInitialized() {
         let event: STPAnalyticEvent = {
-            switch (configuration.customer == nil, configuration.applePay == nil) {
+            switch (configuration.customer != nil, configuration.applePay != nil) {
             case (false, false):
                 return isCustom ? .mcInitCustomDefault : .mcInitCompleteDefault
             case (true, false):
@@ -51,12 +52,16 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logLoadFailed(error: Error) {
-        assert(loadingStartDate != nil)
+        stpAssert(loadingStartDate != nil)
         let duration: TimeInterval = {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
-        log(event: .paymentSheetLoadFailed, duration: duration, error: error)
+        log(
+            event: .paymentSheetLoadFailed,
+            duration: duration,
+            error: error
+        )
     }
 
     func logLoadSucceeded(
@@ -65,7 +70,7 @@ final class PaymentSheetAnalyticsHelper {
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
         orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
     ) {
-        assert(loadingStartDate != nil)
+        stpAssert(loadingStartDate != nil)
         self.intent = intent
         self.elementsSession = elementsSession
         let defaultPaymentMethodAnalyticsValue: String = {
@@ -79,7 +84,7 @@ final class PaymentSheetAnalyticsHelper {
             case nil:
                 return "none"
             case .add:
-                assertionFailure("Caller should ensure that default payment method is `nil` in this case.")
+                stpAssertionFailure("Caller should ensure that default payment method is `nil` in this case.")
                 return "none"
             }
         }()
@@ -100,11 +105,8 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logShow(showingSavedPMList: Bool) {
-        assert(intent != nil)
-        assert(elementsSession != nil)
         if !isCustom {
-            // TODO: MOve over
-            AnalyticsHelper.shared.startTimeMeasurement(.checkout)
+            startTimeMeasurement(.checkout)
         }
         let event: STPAnalyticEvent = {
             switch showingSavedPMList {
@@ -117,13 +119,13 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-    func logSavedPMScreenOptionSelected(option: STPAnalyticsClient.AnalyticsPaymentMethodType) {
+    func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
         let event: STPAnalyticEvent = {
             if isCustom {
                 switch option {
-                case .newPM:
+                case .add:
                     return .mcOptionSelectCustomNewPM
-                case .savedPM:
+                case .saved:
                     return .mcOptionSelectCustomSavedPM
                 case .applePay:
                     return .mcOptionSelectCustomApplePay
@@ -132,9 +134,9 @@ final class PaymentSheetAnalyticsHelper {
                 }
             } else {
                 switch option {
-                case .newPM:
+                case .add:
                     return .mcOptionSelectCompleteNewPM
-                case .savedPM:
+                case .saved:
                     return .mcOptionSelectCompleteSavedPM
                 case .applePay:
                     return .mcOptionSelectCompleteApplePay
@@ -146,9 +148,11 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
+    /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.
+    var didSendPaymentSheetFormInteractedEventAfterFormShown: Bool = false
     func logFormShown(paymentMethodTypeIdentifier: String) {
-        AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = false
-        AnalyticsHelper.shared.startTimeMeasurement(.formShown)
+        didSendPaymentSheetFormInteractedEventAfterFormShown = false
+        startTimeMeasurement(.formShown)
         log(
             event: .paymentSheetFormShown,
             selectedLPM: paymentMethodTypeIdentifier
@@ -156,8 +160,8 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logFormInteracted(paymentMethodTypeIdentifier: String) {
-        if !AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown {
-            AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = true
+        if !didSendPaymentSheetFormInteractedEventAfterFormShown {
+            didSendPaymentSheetFormInteractedEventAfterFormShown = true
             log(
                 event: .paymentSheetFormInteracted,
                 selectedLPM: paymentMethodTypeIdentifier
@@ -166,7 +170,7 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logConfirmButtonTapped(paymentOption: PaymentOption) {
-        let duration = AnalyticsHelper.shared.getDuration(for: .formShown)
+        let duration = getDuration(for: .formShown)
         log(
             event: .paymentSheetConfirmButtonTapped,
             duration: duration,
@@ -180,6 +184,9 @@ final class PaymentSheetAnalyticsHelper {
         result: PaymentSheetResult,
         deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
     ) {
+        if NSClassFromString("XCTest") == nil {
+            stpAssert(intent != nil)
+        }
         var success: Bool
         switch result {
         case .canceled:
@@ -189,7 +196,11 @@ final class PaymentSheetAnalyticsHelper {
             success = false
         case .completed:
             success = true
-            assert(deferredIntentConfirmationType != nil, "Successful payments should always know the deferred intent confirm type")
+            if intent?.isDeferredIntent ?? true {
+                stpAssert(deferredIntentConfirmationType != nil, "Successful deferred intent payments should always know the deferred intent confirm type")
+            } else {
+                stpAssert(deferredIntentConfirmationType == nil, "Non-deferred intent should not send deferred intent confirm type")
+            }
         }
 
         let event: STPAnalyticEvent = {
@@ -219,7 +230,7 @@ final class PaymentSheetAnalyticsHelper {
         }()
 
         log(event: event,
-            duration: AnalyticsHelper.shared.getDuration(for: .checkout),
+            duration: getDuration(for: .checkout),
             error: result.error,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
             selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
@@ -236,20 +247,8 @@ final class PaymentSheetAnalyticsHelper {
         linkContext: String? = nil,
         params: [String: Any] = [:]
     ) {
-//        let additionalParams: [String: Codable] = [
-//            "duration": duration,
-//            "link_enabled": linkEnabled,
-//            "active_link_session": activeLinkSession,
-//            "link_session_type": linkSessionType?.rawValue,
-//            "locale": Locale.autoupdatingCurrent.identifier,
-//            "currency": currency,
-//            "is_decoupled": (intentConfig != nil),
-//            "deferred_intent_confirmation_type": deferredIntentConfirmationType?.rawValue,
-//            "selected_lpm": paymentMethodTypeAnalyticsValue,
-//            "link_context": linkContext
-//        ]//.compactMapValues { $0 }
-        let linkEnabled: Bool = {
-            guard let elementsSession else { return false }
+        let linkEnabled: Bool? = {
+            guard let elementsSession else { return nil }
             return PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         }()
         var additionalParams = [:] as [String: Any]
@@ -258,13 +257,11 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
         additionalParams["link_session_type"] = elementsSession?.linkPopupWebviewOption.rawValue
         additionalParams["mpe_config"] = configuration.analyticPayload
-        additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["selected_lpm"] = selectedLPM
         additionalParams["link_context"] = linkContext
-        additionalParams["ooc will this fail?"] = NSObject()
 
         if let error {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
@@ -278,32 +275,50 @@ final class PaymentSheetAnalyticsHelper {
     }
 }
 
+// MARK: - Time measurement helper
+extension PaymentSheetAnalyticsHelper {
+    enum TimeMeasurement {
+        case checkout
+        case formShown
+    }
+
+    func startTimeMeasurement(_ measurement: TimeMeasurement) {
+        startTimes[measurement] = Date()
+    }
+
+    func getDuration(for measurement: TimeMeasurement) -> TimeInterval? {
+        guard let startTime = startTimes[measurement] else {
+            // Return `nil` if the time measurement hasn't started.
+            return nil
+        }
+
+        return Date().roundedTimeIntervalSince(startTime)
+    }
+}
+
 extension STPAnalyticsClient {
     enum DeferredIntentConfirmationType: String {
         case server = "server"
         case client = "client"
         case none = "none"
     }
-
-    enum AnalyticsPaymentMethodType: String {
-        case newPM = "newpm"
-        case savedPM = "savedpm"
-        case applePay = "applepay"
-        case link = "link"
-    }
 }
 
-extension SavedPaymentOptionsViewController.Selection {
-    var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
-        switch self {
-        case .add:
-            return .newPM
-        case .saved:
-            return .savedPM
-        case .applePay:
-            return .applePay
-        case .link:
-            return .link
-        }
+extension PaymentSheet.Configuration {
+    /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
+    var analyticPayload: [String: Any] {
+        var payload = [String: Any]()
+        payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
+        payload["apple_pay_config"] = applePay != nil
+        payload["style"] = style.rawValue
+        payload["customer"] = customer != nil
+        payload["return_url"] = returnURL != nil
+        payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
+        payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
+        payload["appearance"] = appearance.analyticPayload
+        payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
+        payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
+        payload["payment_method_layout"] = paymentMethodLayout.description
+        return payload
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
+@_spi(STP) import StripeUICore
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
@@ -250,14 +251,10 @@ extension PaymentSheetLoader.LoadResult {
 }
 
 extension PaymentSheetAnalyticsHelper {
-    class TestHelper {
-
-    }
     static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
         return .init(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
     }
 }
-@_spi(STP) import StripeUICore
 
 extension PaymentSheetFormFactory {
     convenience init(

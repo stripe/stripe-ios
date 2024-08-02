@@ -540,7 +540,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection.analyticsValue)
+        analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection)
         if case .add = paymentMethodSelection {
             mode = .addingNew
             error = nil  // Clear any errors

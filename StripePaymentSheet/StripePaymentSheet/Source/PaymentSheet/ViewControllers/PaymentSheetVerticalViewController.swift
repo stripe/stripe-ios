@@ -529,12 +529,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return
         }
 
-        // If FlowController, simply close the sheet
-        if isFlowController {
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-            return
-        }
-
         // Otherwise, grab the payment option
         guard let selectedPaymentOption else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError, error: Error.noPaymentOptionOnBuyButtonTap)
@@ -546,6 +540,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
+        // If FlowController, simply close the sheet
+        if isFlowController {
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            return
+        }
+        
         // If the selected payment option is a saved card, CVC is enabled, and we are PS, handle CVC specially:
         if case let .saved(paymentMethod, _) = selectedPaymentOption, paymentMethod.type == .card, intent.cvcRecollectionEnabled, !isFlowController, !isRecollectingCVC {
             let cvcRecollectionViewController = CVCReconfirmationVerticalViewController(

@@ -430,7 +430,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         if let selectedPaymentOption {
             analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
         } else {
-            assertionFailure("didTapContinueButton called w/o a payment option")
+            stpAssertionFailure("didTapContinueButton called w/o a payment option")
         }
         switch mode {
         case .selectingSaved:
@@ -501,7 +501,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection.analyticsValue)
+        analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection)
         guard case Mode.selectingSaved = mode else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedFlowControllerViewControllerError,
                                               error: PaymentSheetFlowControllerViewControllerError.didUpdateSelectionWithInvalidMode,
