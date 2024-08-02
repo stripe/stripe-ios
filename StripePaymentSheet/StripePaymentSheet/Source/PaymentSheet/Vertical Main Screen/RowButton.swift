@@ -18,9 +18,7 @@ class RowButton: UIView {
     let label: UILabel
     let sublabel: UILabel?
     let shouldAnimateOnPress: Bool
-
     let appearance: PaymentSheet.Appearance
-
     typealias DidTapClosure = (RowButton) -> Void
     let didTap: DidTapClosure
     var isSelected: Bool = false {
@@ -29,26 +27,13 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
-
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
     var isEnabled: Bool = true {
         didSet {
             updateAccessibilityTraits()
         }
     }
-
     var heightConstraint: NSLayoutConstraint?
-
-    func updateAccessibilityTraits() {
-        var traits: UIAccessibilityTraits = [.button]
-        if isSelected {
-            traits.insert(.selected)
-        }
-        if !isEnabled {
-            traits.insert(.notEnabled)
-        }
-        shadowRoundedRect.accessibilityTraits = traits
-    }
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, didTap: @escaping DidTapClosure) {
         self.appearance = appearance
@@ -56,7 +41,7 @@ class RowButton: UIView {
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.imageView = imageView
-        self.label = UILabel.makeVerticalRowButtonLabel(text: text, appearance: appearance)
+        self.label = Self.makeVerticalRowButtonLabel(text: text, appearance: appearance)
         if let subtext {
             let sublabel = UILabel()
             sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
@@ -155,6 +140,28 @@ class RowButton: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+#if !canImport(CompositorServices)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        // Update the height so that RowButtons heights w/o subtext match those with subtext
+        heightConstraint?.isActive = false
+        heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance))
+        heightConstraint?.isActive = true
+        super.traitCollectionDidChange(previousTraitCollection)
+    }
+#endif
+
+    func updateAccessibilityTraits() {
+        var traits: UIAccessibilityTraits = [.button]
+        if isSelected {
+            traits.insert(.selected)
+        }
+        if !isEnabled {
+            traits.insert(.notEnabled)
+        }
+        shadowRoundedRect.accessibilityTraits = traits
+    }
+
+    // MARK: Tap handling
     @objc private func handleTap() {
         guard isEnabled else { return }
         if shouldAnimateOnPress {
@@ -172,7 +179,6 @@ class RowButton: UIView {
         [imageView, label, sublabel].compactMap { $0 }.forEach {
             $0.alpha = alpha
         }
-
     }
 
     @objc private func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
@@ -184,26 +190,27 @@ class RowButton: UIView {
             setContentViewAlpha(1.0)
         }
     }
+}
 
-#if !canImport(CompositorServices)
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        // Update the height so that RowButtons heights w/o subtext match those with subtext
-        heightConstraint?.isActive = false
-        heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance))
-        heightConstraint?.isActive = true
-        super.traitCollectionDidChange(previousTraitCollection)
-    }
-#endif
-
-    static func calculateTallestHeight(appearance: PaymentSheet.Appearance) -> CGFloat {
-        let imageView = UIImageView(image: Image.link_icon.makeImage())
-        imageView.contentMode = .scaleAspectFit
-        let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext") { _ in }
-        let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
-        return size.height
+// MARK: - EventHandler
+extension RowButton: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            label.alpha = 1
+            sublabel?.alpha = 1
+            imageView.alpha = 1
+        case .shouldDisableUserInteraction:
+            label.alpha = 0.5
+            sublabel?.alpha = 0.5
+            imageView.alpha = 0.5
+        default:
+            break
+        }
     }
 }
 
+// MARK: - UIGestureRecognizerDelegate
 extension RowButton: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         // Without this, the long press prevents you from scrolling or the tap gesture from triggering.
@@ -213,6 +220,25 @@ extension RowButton: UIGestureRecognizerDelegate {
 
 // MARK: - Helpers
 extension RowButton {
+    static func calculateTallestHeight(appearance: PaymentSheet.Appearance) -> CGFloat {
+        let imageView = UIImageView(image: Image.link_icon.makeImage())
+        imageView.contentMode = .scaleAspectFit
+        let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext") { _ in }
+        let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
+        return size.height
+    }
+
+    static func makeVerticalRowButtonLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
+        let label = UILabel()
+        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
+        label.adjustsFontSizeToFitWidth = true
+        label.adjustsFontForContentSizeCategory = true
+        label.text = text
+        label.numberOfLines = 1
+        label.textColor = appearance.colors.componentText
+        return label
+    }
+
     static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, savedPaymentMethodType: STPPaymentMethodType?, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
