@@ -1,5 +1,5 @@
 {
-  "originHash" : "5cb1595c502fe9165cbaf0b29307a3819aa186e76bcacc6f1dc006129597cb7e",
+  "originHash" : "2ad13697f5d60ad400147e34535361f52e72d2f7a280df77bb3c3521cc5623bc",
   "pins" : [
     {
       "identity" : "capture-core-sp",
@@ -20,6 +20,15 @@
       }
     },
     {
+      "identity" : "ocmock",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/erikdoe/ocmock",
+      "state" : {
+        "branch" : "master",
+        "revision" : "05cbc9d934e84ad32530fa53fd7d29c7966d5828"
+      }
+    },
+    {
       "identity" : "ohhttpstubs",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davidme-stripe/OHHTTPStubs",
@@ -29,5 +38,6 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }
+

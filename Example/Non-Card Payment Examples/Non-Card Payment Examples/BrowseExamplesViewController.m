@@ -376,7 +376,7 @@
             viewController = exampleVC;
             break;
         }
-        case 33: {
+        case 34: {
             SatispayExampleViewController *exampleVC = [SatispayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
