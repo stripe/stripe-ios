@@ -82,6 +82,8 @@ struct PaymentSheetComponent: Equatable, Hashable {
     let features: PaymentSheetComponentFeature?
 }
 
+/// Features on CustomerSessions when the paymentSheet component is enabled:
+/// https://docs.corp.stripe.com/api/customer_sessions/object#customer_session_object-components-payment_sheet-features
 struct PaymentSheetComponentFeature: Equatable, Hashable {
     let paymentMethodSave: Bool
     let paymentMethodRemove: Bool
