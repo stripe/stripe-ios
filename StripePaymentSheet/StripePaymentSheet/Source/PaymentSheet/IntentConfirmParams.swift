@@ -134,11 +134,7 @@ class IntentConfirmParams {
         } else {
             if isSettingUp {
                 // Checkbox is hidden
-                if let allowRedisplayOverride {
-                    paymentMethodParams.allowRedisplay = allowRedisplayOverride
-                } else {
-                    paymentMethodParams.allowRedisplay = .limited
-                }
+                paymentMethodParams.allowRedisplay = allowRedisplayOverride ?? .limited
             } else {
                 if saveForFutureUseCheckboxState == .selected {
                     paymentMethodParams.allowRedisplay = .always
