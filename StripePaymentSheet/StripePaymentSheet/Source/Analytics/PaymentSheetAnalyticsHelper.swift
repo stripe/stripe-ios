@@ -126,10 +126,10 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-    func logPaymentOptionSelect(paymentMethod: AnalyticsPaymentMethodType) {
+    func logSavedPMScreenOptionSelected(option: AnalyticsPaymentMethodType) {
         let event: STPAnalyticEvent = {
             if isCustom {
-                switch paymentMethod {
+                switch option {
                 case .newPM:
                     return .mcOptionSelectCustomNewPM
                 case .savedPM:
@@ -140,7 +140,7 @@ final class PaymentSheetAnalyticsHelper {
                     return .mcOptionSelectCustomLink
                 }
             } else {
-                switch paymentMethod {
+                switch option {
                 case .newPM:
                     return .mcOptionSelectCompleteNewPM
                 case .savedPM:

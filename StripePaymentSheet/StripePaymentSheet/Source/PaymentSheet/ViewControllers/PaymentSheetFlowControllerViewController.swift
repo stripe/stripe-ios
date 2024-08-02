@@ -497,10 +497,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: true,
-                                                                           paymentMethod: paymentMethodSelection.analyticsValue,
-                                                                           intentConfig: intent.intentConfig,
-                                                                           apiClient: configuration.apiClient)
+        analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection.analyticsValue)
         guard case Mode.selectingSaved = mode else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedFlowControllerViewControllerError,
                                               error: PaymentSheetFlowControllerViewControllerError.didUpdateSelectionWithInvalidMode,

@@ -553,12 +553,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(
-            isCustom: false,
-            paymentMethod: paymentMethodSelection.analyticsValue,
-            intentConfig: intent.intentConfig,
-            apiClient: configuration.apiClient
-        )
+        analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection.analyticsValue)
         if case .add = paymentMethodSelection {
             mode = .addingNew
             error = nil  // Clear any errors

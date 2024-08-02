@@ -156,13 +156,13 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             apiClient: .init()
         )
 
-        let event5 = XCTestExpectation(description: "mc_custom_paymentoption_applepay_select")
+        let event5 = XCTestExpectation(description: "mc_complete_paymentoption_applepay_select")
         client.registerExpectation(event5)
-        client.logPaymentSheetPaymentOptionSelect(isCustom: true, paymentMethod: .applePay, apiClient: .init())
+        analyticsHelper.logSavedPMScreenOptionSelected(option: .applePay)
 
         let event6 = XCTestExpectation(description: "mc_complete_paymentoption_newpm_select")
         client.registerExpectation(event6)
-        client.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: .newPM, apiClient: .init())
+        analyticsHelper.logSavedPMScreenOptionSelected(option: .newPM)
 
         wait(
             for: [event1, event2, event3, event4, event5, event6],

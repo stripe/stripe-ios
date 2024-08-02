@@ -59,20 +59,6 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPaymentSheetPaymentOptionSelect(
-        isCustom: Bool,
-        paymentMethod: AnalyticsPaymentMethodType,
-        intentConfig: PaymentSheet.IntentConfiguration? = nil,
-        apiClient: STPAPIClient
-    ) {
-        logPaymentSheetEvent(event: paymentSheetPaymentOptionSelectEventValue(
-                             isCustom: isCustom,
-                             paymentMethod: paymentMethod),
-                             intentConfig: intentConfig,
-                             apiClient: apiClient
-        )
-    }
-
     func logPaymentSheetFormShown(paymentMethodTypeIdentifier: String, apiClient: STPAPIClient) {
         AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = false
         AnalyticsHelper.shared.startTimeMeasurement(.formShown)
@@ -264,7 +250,7 @@ extension PaymentSheetViewController.Mode {
 }
 
 extension SavedPaymentOptionsViewController.Selection {
-    var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
+    var analyticsValue: PaymentSheetAnalyticsHelper.AnalyticsPaymentMethodType {
         switch self {
         case .add:
             return .newPM
