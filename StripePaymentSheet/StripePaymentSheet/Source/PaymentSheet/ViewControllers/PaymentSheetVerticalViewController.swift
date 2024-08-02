@@ -472,20 +472,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) { [self] in
-                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
-                    isCustom: false,
-                    paymentMethod: paymentOption.analyticsValue,
+                analyticsHelper.logPayment(
+                    paymentOption: paymentOption,
                     result: result,
-                    linkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
-                    activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    linkSessionType: elementsSession.linkPopupWebviewOption,
-                    currency: intent.currency,
-                    intentConfig: intent.intentConfig,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType,
-                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
-                    error: result.error,
-                    linkContext: paymentOption.linkContextAnalyticsValue,
-                    apiClient: configuration.apiClient
+                    deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
 
                 self.isPaymentInFlight = false
@@ -495,13 +485,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
-                    #if !canImport(CompositorServices)
+#if !canImport(CompositorServices)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
-                    #endif
+#endif
 
                     let nsError = error as NSError
                     let isCVCError = nsError.domain == STPError.stripeDomain && nsError.userInfo[STPError.errorParameterKey] as? String == "cvc"
-                    if isRecollectingCVC, !isCVCError {
+                    if isRecollectingCVC,
+                       !isCVCError {
                         // If we're recollecting CVC, pop back to the main list unless the error is for the cvc field
                         sheetNavigationBarDidBack(navigationBar)
                     }
@@ -551,7 +542,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stpAssertionFailure("Tapped buy button while adding without paymentOption")
             return
         }
-        
+
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
@@ -733,7 +724,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: .paymentSheet(configuration),
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
-            linkAccount: LinkAccountContext.shared.account, 
+            linkAccount: LinkAccountContext.shared.account,
             analyticsHelper: analyticsHelper
         ).make().collectsUserInput
     }

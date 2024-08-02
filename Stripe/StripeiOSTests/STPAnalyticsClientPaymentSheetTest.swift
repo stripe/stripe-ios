@@ -130,32 +130,18 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
         let event3 = XCTestExpectation(description: "mc_complete_payment_savedpm_success")
         client.registerExpectation(event3)
-        client.logPaymentSheetPayment(
-            isCustom: false,
-            paymentMethod: .savedPM,
+        analyticsHelper.logPayment(
+            paymentOption: .saved(paymentMethod: STPFixtures.paymentMethod(), confirmParams: nil),
             result: .completed,
-            linkEnabled: false,
-            activeLinkSession: false,
-            linkSessionType: .ephemeral,
-            currency: "USD",
-            deferredIntentConfirmationType: nil,
-            apiClient: .init()
+            deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType.none
         )
-
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
         client.registerExpectation(event4)
-        client.logPaymentSheetPayment(
-            isCustom: true,
-            paymentMethod: .applePay,
-            result: .failed(error: PaymentSheetError.unknown(debugDescription: "Error")),
-            linkEnabled: false,
-            activeLinkSession: false,
-            linkSessionType: .ephemeral,
-            currency: "USD",
-            deferredIntentConfirmationType: nil,
-            apiClient: .init()
+        analyticsHelper.logPayment(
+            paymentOption: .applePay,
+            result: .failed(error: NSError(domain: "", code: 0, userInfo: nil)),
+            deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType.none
         )
-
         let event5 = XCTestExpectation(description: "mc_complete_paymentoption_applepay_select")
         client.registerExpectation(event5)
         analyticsHelper.logSavedPMScreenOptionSelected(option: .applePay)
@@ -229,18 +215,11 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let intent: Intent = .deferredIntent(intentConfig: .init(mode: .setup(currency: nil, setupFutureUsage: .onSession), confirmHandler: { _, _, _ in }))
         analyticsHelper.logLoadSucceeded(intent: intent, elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), defaultPaymentMethod: nil, orderedPaymentMethodTypes: [.stripe(.card)])
         analyticsHelper.logShow(showingSavedPMList: false)
-        client.logPaymentSheetPayment(
-            isCustom: false,
-            paymentMethod: .savedPM,
+        analyticsHelper.logPayment(
+            paymentOption: .saved(paymentMethod: STPFixtures.paymentMethod(), confirmParams: nil),
             result: .completed,
-            linkEnabled: false,
-            activeLinkSession: false,
-            linkSessionType: .ephemeral,
-            currency: "USD",
-            deferredIntentConfirmationType: nil,
-            apiClient: .init()
+            deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType.none
         )
-
         let duration = client.lastPayload?["duration"] as? TimeInterval
         XCTAssertNotNil(duration)
     }

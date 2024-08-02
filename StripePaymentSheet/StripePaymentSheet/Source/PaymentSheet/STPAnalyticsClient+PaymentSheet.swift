@@ -12,66 +12,6 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension STPAnalyticsClient {
-    // MARK: - Log events
-    func logPaymentSheetPayment(
-        isCustom: Bool,
-        paymentMethod: AnalyticsPaymentMethodType,
-        result: PaymentSheetResult,
-        linkEnabled: Bool,
-        activeLinkSession: Bool,
-        linkSessionType: LinkSettings.PopupWebviewOption?,
-        currency: String?,
-        intentConfig: PaymentSheet.IntentConfiguration? = nil,
-        deferredIntentConfirmationType: DeferredIntentConfirmationType?,
-        paymentMethodTypeAnalyticsValue: String? = nil,
-        error: Error? = nil,
-        linkContext: String? = nil,
-        apiClient: STPAPIClient
-    ) {
-        var success = false
-        switch result {
-        case .canceled:
-            // We don't report these to analytics, bail out.
-            return
-        case .failed:
-            success = false
-        case .completed:
-            success = true
-        }
-
-        logPaymentSheetEvent(
-            event: paymentSheetPaymentEventValue(
-                isCustom: isCustom,
-                paymentMethod: paymentMethod,
-                success: success
-            ),
-            duration: AnalyticsHelper.shared.getDuration(for: .checkout),
-            linkEnabled: linkEnabled,
-            activeLinkSession: activeLinkSession,
-            linkSessionType: linkSessionType,
-            currency: currency,
-            intentConfig: intentConfig,
-            error: error,
-            deferredIntentConfirmationType: deferredIntentConfirmationType,
-            paymentMethodTypeAnalyticsValue: paymentMethodTypeAnalyticsValue,
-            linkContext: linkContext,
-            apiClient: apiClient
-        )
-    }
-
-    enum DeferredIntentConfirmationType: String {
-        case server = "server"
-        case client = "client"
-        case none = "none"
-    }
-
-    // MARK: - String builders
-    enum AnalyticsPaymentMethodType: String {
-        case newPM = "newpm"
-        case savedPM = "savedpm"
-        case applePay = "applepay"
-        case link = "link"
-    }
 
     func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
         -> STPAnalyticEvent
@@ -220,37 +160,6 @@ extension PaymentSheetViewController.Mode {
             return .newPM
         case .selectingSaved:
             return .savedPM
-        }
-    }
-}
-
-extension SavedPaymentOptionsViewController.Selection {
-    var analyticsValue: PaymentSheetAnalyticsHelper.AnalyticsPaymentMethodType {
-        switch self {
-        case .add:
-            return .newPM
-        case .saved:
-            return .savedPM
-        case .applePay:
-            return .applePay
-        case .link:
-            return .link
-        }
-    }
-}
-
-extension PaymentSheet.PaymentOption {
-    // TODO: Delete
-    var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
-        switch self {
-        case .applePay:
-            return .applePay
-        case .new, .external:
-            return .newPM
-        case .saved:
-            return .savedPM
-        case .link:
-            return .link
         }
     }
 }

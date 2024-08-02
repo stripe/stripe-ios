@@ -390,22 +390,12 @@ extension PaymentSheet {
                     paymentOption: paymentOption,
                     paymentHandler: paymentHandler,
                     isFlowController: true
-                ) { [intent, elementsSession, configuration] result, deferredIntentConfirmationType in
-                    STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
-                        isCustom: true,
-                        paymentMethod: paymentOption.analyticsValue,
+                ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
+                    analyticsHelper.logPayment(
+                        paymentOption: paymentOption,
                         result: result,
-                        linkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
-                        activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                        linkSessionType: elementsSession.linkPopupWebviewOption,
-                        currency: intent.currency,
-                        intentConfig: intent.intentConfig,
-                        deferredIntentConfirmationType: deferredIntentConfirmationType,
-                        paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
-                        error: result.error,
-                        apiClient: configuration.apiClient
+                        deferredIntentConfirmationType: deferredIntentConfirmationType
                     )
-
                     if case .completed = result, case .link = paymentOption {
                         // Remember Link as default payment method for users who just created an account.
                         CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)

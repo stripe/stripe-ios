@@ -445,22 +445,11 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) {
-                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
-                    isCustom: false,
-                    paymentMethod: paymentOption.analyticsValue,
+                self.analyticsHelper.logPayment(
+                    paymentOption: paymentOption,
                     result: result,
-                    linkEnabled: self.isLinkEnabled,
-                    activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    linkSessionType: self.elementsSession.linkPopupWebviewOption,
-                    currency: self.intent.currency,
-                    intentConfig: self.intent.intentConfig,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType,
-                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
-                    error: result.error,
-                    linkContext: paymentOption.linkContextAnalyticsValue,
-                    apiClient: self.configuration.apiClient
+                    deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
-
                 self.isPaymentInFlight = false
                 switch result {
                 case .canceled:
