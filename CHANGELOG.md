@@ -6,6 +6,7 @@
 * [Fixed] Fixed an issue where the keyboard could focus on a hidden phone number field.
 * [Added] Support for Sunbit (Private Beta) with PaymentIntents.
 * [Added] Support for Billie (Private Beta) with PaymentIntents.
+* [Fixed] Fixed an issue where saved payment method UI wouldn't respect `PaymentSheet.Configuration.style` when selected.
 
 ### Payments
 * [Added] Support for Sunbit (Private Beta) bindings.
