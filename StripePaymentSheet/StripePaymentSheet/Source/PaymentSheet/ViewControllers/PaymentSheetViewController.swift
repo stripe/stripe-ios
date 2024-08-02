@@ -72,6 +72,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             elementsSession: elementsSession,
             configuration: configuration,
             formCache: formCache,
+            analyticsHelper: analyticsHelper,
             delegate: self
         )
     }()

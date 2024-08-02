@@ -155,11 +155,11 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-//    func logFormShown(paymentMethodTypeIdentifier: String, apiClient: STPAPIClient) {
-//        AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = false
-//        AnalyticsHelper.shared.startTimeMeasurement(.formShown)
-//        log(event: .paymentSheetFormShown, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier, apiClient: apiClient)
-//    }
+    func logFormShown(paymentMethodTypeIdentifier: String) {
+        AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = false
+        AnalyticsHelper.shared.startTimeMeasurement(.formShown)
+        log(event: .paymentSheetFormShown, selectedLPM: paymentMethodTypeIdentifier)
+    }
 //
 //    func logFormInteracted(paymentMethodTypeIdentifier: String) {
 //        if !AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown {
@@ -269,7 +269,7 @@ final class PaymentSheetAnalyticsHelper {
         duration: TimeInterval? = nil,
         error: Error? = nil,
         deferredIntentConfirmationType: DeferredIntentConfirmationType? = nil,
-        paymentMethodTypeAnalyticsValue: String? = nil,
+        selectedLPM: String? = nil,
         linkContext: String? = nil,
         params: [String: Any] = [:]
     ) {
@@ -296,7 +296,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
-        additionalParams["selected_lpm"] = paymentMethodTypeAnalyticsValue
+        additionalParams["selected_lpm"] = selectedLPM
         additionalParams["link_context"] = linkContext
 
         if let error {

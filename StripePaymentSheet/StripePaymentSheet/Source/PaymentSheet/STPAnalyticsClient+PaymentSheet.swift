@@ -59,12 +59,6 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPaymentSheetFormShown(paymentMethodTypeIdentifier: String, apiClient: STPAPIClient) {
-        AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = false
-        AnalyticsHelper.shared.startTimeMeasurement(.formShown)
-        logPaymentSheetEvent(event: .paymentSheetFormShown, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier, apiClient: apiClient)
-    }
-
     func logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: String) {
         if !AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown {
             AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = true

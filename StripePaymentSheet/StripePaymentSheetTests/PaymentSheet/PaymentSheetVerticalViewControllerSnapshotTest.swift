@@ -295,7 +295,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
 
     func testDisabledState() {
         let loadResult = PaymentSheetLoader.LoadResult._testValue(paymentMethodTypes: ["card", "us_bank_account"], savedPaymentMethods: [._testCard()])
-        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: true), loadResult: loadResult, isFlowController: false, previousPaymentOption: nil)
+        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: true), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         sut.isUserInteractionEnabled = false
         self.verify(sut)
     }

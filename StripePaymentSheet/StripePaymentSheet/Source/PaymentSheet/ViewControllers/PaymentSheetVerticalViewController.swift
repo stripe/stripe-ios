@@ -722,6 +722,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             formCache: formCache,
             configuration: configuration,
             headerView: headerView,
+            analyticsHelper: analyticsHelper,
             delegate: self
         )
     }
