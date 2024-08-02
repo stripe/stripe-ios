@@ -59,28 +59,6 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPaymentSheetShow(
-        isCustom: Bool,
-        paymentMethod: AnalyticsPaymentMethodType,
-        linkEnabled: Bool,
-        activeLinkSession: Bool,
-        currency: String?,
-        intentConfig: PaymentSheet.IntentConfiguration? = nil,
-        apiClient: STPAPIClient
-    ) {
-        if !isCustom {
-            AnalyticsHelper.shared.startTimeMeasurement(.checkout)
-        }
-        logPaymentSheetEvent(
-            event: paymentSheetShowEventValue(isCustom: isCustom, paymentMethod: paymentMethod),
-            linkEnabled: linkEnabled,
-            activeLinkSession: activeLinkSession,
-            currency: currency,
-            intentConfig: intentConfig,
-            apiClient: apiClient
-        )
-    }
-
     func logPaymentSheetPaymentOptionSelect(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
@@ -92,39 +70,6 @@ extension STPAnalyticsClient {
                              paymentMethod: paymentMethod),
                              intentConfig: intentConfig,
                              apiClient: apiClient
-        )
-    }
-
-    func logPaymentSheetLoadSucceeded(loadingStartDate: Date,
-                                      linkEnabled: Bool,
-                                      defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
-                                      intentAnalyticsValue: String,
-                                      orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]) {
-        let defaultPaymentMethodAnalyticsValue: String = {
-            switch defaultPaymentMethod {
-            case .applePay:
-                return "apple_pay"
-            case .link:
-                return "link"
-            case .saved(paymentMethod: let paymentMethod):
-                return paymentMethod.type.identifier
-            case nil:
-                return "none"
-            case .add:
-                assertionFailure("Caller should ensure that default payment method is `nil` in this case.")
-                return "none"
-            }
-        }()
-        let params = ["selected_lpm": defaultPaymentMethodAnalyticsValue,
-                      "intent_type": intentAnalyticsValue,
-                      "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
-        ] as [String: Any]
-
-        logPaymentSheetEvent(
-            event: .paymentSheetLoadSucceeded,
-            duration: Date().timeIntervalSince(loadingStartDate),
-            linkEnabled: linkEnabled,
-            params: params
         )
     }
 
@@ -198,36 +143,6 @@ extension STPAnalyticsClient {
             }
 
             return .mcInitCompleteCustomerApplePay
-        }
-    }
-
-    func paymentSheetShowEventValue(
-        isCustom: Bool,
-        paymentMethod: AnalyticsPaymentMethodType
-    ) -> STPAnalyticEvent
-    {
-        if isCustom {
-            switch paymentMethod {
-            case .newPM:
-                return .mcShowCustomNewPM
-            case .savedPM:
-                return .mcShowCustomSavedPM
-            case .applePay:
-                return .mcShowCustomApplePay
-            case .link:
-                return .mcShowCustomLink
-            }
-        } else {
-            switch paymentMethod {
-            case .newPM:
-                return .mcShowCompleteNewPM
-            case .savedPM:
-                return .mcShowCompleteSavedPM
-            case .applePay:
-                return .mcShowCompleteApplePay
-            case .link:
-                return .mcShowCompleteLink
-            }
         }
     }
 
@@ -338,17 +253,6 @@ extension STPAnalyticsClient {
 }
 
 extension PaymentSheetViewController.Mode {
-    var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
-        switch self {
-        case .addingNew:
-            return .newPM
-        case .selectingSaved:
-            return .savedPM
-        }
-    }
-}
-
-extension PaymentSheetFlowControllerViewController.Mode {
     var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
         switch self {
         case .addingNew:

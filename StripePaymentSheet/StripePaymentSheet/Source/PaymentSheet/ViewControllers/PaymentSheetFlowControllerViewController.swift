@@ -20,6 +20,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let elementsSession: STPElementsSession
     let configuration: PaymentSheet.Configuration
     let formCache: PaymentMethodFormCache = .init()
+    let analyticsHelper: PaymentSheetAnalyticsHelper
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -161,6 +162,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     required init(
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         previousPaymentOption: PaymentOption? = nil
     ) {
         self.intent = loadResult.intent
@@ -168,6 +170,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         self.configuration = configuration
+        self.analyticsHelper = analyticsHelper
 
         // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
         // Caveats:
@@ -272,15 +275,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetShow(
-            isCustom: true,
-            paymentMethod: mode.analyticsValue,
-            linkEnabled: isLinkEnabled,
-            activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-            currency: intent.currency,
-            intentConfig: intent.intentConfig,
-            apiClient: configuration.apiClient
-        )
+        analyticsHelper.logShow(showingSavedPMList: mode == .selectingSaved)
     }
 
     // MARK: - Private Methods

@@ -27,6 +27,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
         let sut = PaymentSheetViewController(
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
+            analyticsHelper: ._testValue(),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
@@ -40,6 +41,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
         let sut = PaymentSheetViewController(
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
+            analyticsHelper: ._testValue(),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
@@ -53,6 +55,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
         let sut = PaymentSheetViewController(
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
+            analyticsHelper: ._testValue(),
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)

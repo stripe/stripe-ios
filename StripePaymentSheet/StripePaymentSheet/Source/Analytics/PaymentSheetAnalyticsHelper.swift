@@ -108,7 +108,7 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
-    func logShow(paymentMethod: AnalyticsPaymentMethodType) {
+    func logShow(showingSavedPMList: Bool) {
         assert(intent != nil)
         assert(elementsSession != nil)
         if !isCustom {
@@ -116,16 +116,11 @@ final class PaymentSheetAnalyticsHelper {
             AnalyticsHelper.shared.startTimeMeasurement(.checkout)
         }
         let event: STPAnalyticEvent = {
-            switch paymentMethod {
-            case .newPM:
-                return isCustom ? .mcShowCustomNewPM : .mcShowCompleteNewPM
-            case .savedPM:
+            switch showingSavedPMList {
+            case true:
                 return isCustom ? .mcShowCustomSavedPM : .mcShowCompleteSavedPM
-            case .applePay:
-                return isCustom ? .mcShowCustomApplePay : .mcShowCompleteApplePay
-            case .link:
-                // TODO: Can't show link or apple pay...??
-                return isCustom ? .mcShowCustomLink : .mcShowCompleteLink
+            case false:
+                return isCustom ? .mcShowCustomNewPM : .mcShowCompleteNewPM
             }
         }()
         log(event: event)

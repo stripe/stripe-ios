@@ -108,27 +108,25 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
     func testVariousPaymentSheetEvents() {
         let client = STPTestingAnalyticsClient()
-        let event1 = XCTestExpectation(description: "mc_custom_sheet_newpm_show")
+        let event1 = XCTestExpectation(description: "mc_complete_sheet_newpm_show")
         client.registerExpectation(event1)
-        client.logPaymentSheetShow(
-            isCustom: true,
-            paymentMethod: .newPM,
-            linkEnabled: false,
-            activeLinkSession: false,
-            currency: "USD",
-            apiClient: .init()
+        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: client)
+        analyticsHelper.logInitialized()
+        analyticsHelper.logLoadStarted()
+        let pi = STPFixtures.paymentIntent()
+        analyticsHelper.logLoadSucceeded(
+            intent: .paymentIntent(pi),
+            elementsSession: .makeBackupElementsSession(with: pi),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)]
+        )
+        analyticsHelper.logShow(
+            showingSavedPMList: false
         )
 
         let event2 = XCTestExpectation(description: "mc_complete_sheet_savedpm_show")
         client.registerExpectation(event2)
-        client.logPaymentSheetShow(
-            isCustom: false,
-            paymentMethod: .savedPM,
-            linkEnabled: false,
-            activeLinkSession: false,
-            currency: "USD",
-            apiClient: .init()
-        )
+        analyticsHelper.logShow(showingSavedPMList: true)
 
         let event3 = XCTestExpectation(description: "mc_complete_payment_savedpm_success")
         client.registerExpectation(event3)
@@ -226,16 +224,11 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
     func testLogPaymentSheetPayment_shouldIncludeDuration() throws {
         let client = STPTestingAnalyticsClient()
-
-        client.logPaymentSheetShow(
-            isCustom: false,
-            paymentMethod: .newPM,
-            linkEnabled: false,
-            activeLinkSession: false,
-            currency: "USD",
-            apiClient: .init()
-        )
-
+        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: client)
+        analyticsHelper.logLoadStarted()
+        let intent: Intent = .deferredIntent(intentConfig: .init(mode: .setup(currency: nil, setupFutureUsage: .onSession), confirmHandler: { _, _, _ in }))
+        analyticsHelper.logLoadSucceeded(intent: intent, elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), defaultPaymentMethod: nil, orderedPaymentMethodTypes: [.stripe(.card)])
+        analyticsHelper.logShow(showingSavedPMList: false)
         client.logPaymentSheetPayment(
             isCustom: false,
             paymentMethod: .savedPM,

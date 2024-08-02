@@ -185,7 +185,7 @@ extension PaymentSheet {
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
-            self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult)
+            self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper)
             self.viewController.flowControllerDelegate = self
         }
 
@@ -453,6 +453,7 @@ extension PaymentSheet {
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,
                         loadResult: loadResult,
+                        analyticsHelper: analyticsHelper,
                         previousPaymentOption: self._paymentOption
                     )
                     self.viewController.flowControllerDelegate = self
@@ -490,6 +491,7 @@ extension PaymentSheet {
         static func makeViewController(
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
+            analyticsHelper: PaymentSheetAnalyticsHelper,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             switch configuration.paymentMethodLayout {
@@ -497,6 +499,7 @@ extension PaymentSheet {
                 return PaymentSheetFlowControllerViewController(
                     configuration: configuration,
                     loadResult: loadResult,
+                    analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical:
@@ -504,6 +507,7 @@ extension PaymentSheet {
                     configuration: configuration,
                     loadResult: loadResult,
                     isFlowController: true,
+                    analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
             }
