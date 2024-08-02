@@ -28,6 +28,7 @@ protocol NativeFlowDataManager: AnyObject {
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get set }
     var accountNumberLast4: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
+    var consumerPublishableKey: String? { get set }
     var saveToLinkWithStripeSucceeded: Bool? { get set }
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneMessage: String? { get set }
@@ -80,10 +81,21 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var errorPaneReferrerPane: FinancialConnectionsSessionManifest.NextPane?
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     var accountNumberLast4: String?
-    var consumerSession: ConsumerSessionData?
     var saveToLinkWithStripeSucceeded: Bool?
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
     var customSuccessPaneMessage: String?
+
+    var consumerSession: ConsumerSessionData? {
+        didSet {
+            apiClient.consumerSession = consumerSession
+        }
+    }
+
+    var consumerPublishableKey: String? {
+        didSet {
+            apiClient.consumerPublishableKey = consumerPublishableKey
+        }
+    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -125,6 +137,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
 
     private func didUpdateManifest() {
+        apiClient.isLinkWithStripe = manifest.isLinkWithStripe == true
         analyticsClient.setAdditionalParameters(fromManifest: manifest)
     }
 }

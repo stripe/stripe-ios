@@ -52,7 +52,7 @@ final class HostViewController: UIViewController {
 
     private let analyticsClientV1: STPAnalyticsClientProtocol
     private let clientSecret: String
-    private let apiClient: STPAPIClient
+    private let apiClient: FinancialConnectionsAPIClient
     private let returnURL: String?
 
     private var lastError: Error?
@@ -63,7 +63,7 @@ final class HostViewController: UIViewController {
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
-        apiClient: STPAPIClient,
+        apiClient: FinancialConnectionsAPIClient,
         delegate: HostViewControllerDelegate?
     ) {
         self.analyticsClientV1 = analyticsClientV1
@@ -106,7 +106,7 @@ extension HostViewController {
 
         analyticsClientV1.log(
             analytic: FinancialConnectionsSheetInitialSynchronizeStarted(clientSecret: clientSecret),
-            apiClient: apiClient
+            apiClient: apiClient.backingAPIClient
         )
 
         apiClient
@@ -123,7 +123,7 @@ extension HostViewController {
                         success: result.success,
                         possibleError: result.error
                     ),
-                    apiClient: apiClient
+                    apiClient: apiClient.backingAPIClient
                 )
 
                 switch result {
