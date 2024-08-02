@@ -59,18 +59,6 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPaymentSheetConfirmButtonTapped(
-        paymentMethodTypeIdentifier: String,
-        linkContext: String? = nil
-    ) {
-        let duration = AnalyticsHelper.shared.getDuration(for: .formShown)
-        logPaymentSheetEvent(
-            event: .paymentSheetConfirmButtonTapped,
-            duration: duration, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier,
-            linkContext: linkContext
-        )
-    }
-
     enum DeferredIntentConfirmationType: String {
         case server = "server"
         case client = "client"
@@ -252,6 +240,7 @@ extension SavedPaymentOptionsViewController.Selection {
 }
 
 extension PaymentSheet.PaymentOption {
+    // TODO: Delete
     var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
         switch self {
         case .applePay:

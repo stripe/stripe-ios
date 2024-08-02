@@ -65,7 +65,7 @@ extension PaymentSheet {
         // Both "Link" and "Instant Debits" use the same payment method type
         // of "link." To differentiate between the two in metrics, we sometimes
         // need a "link_context."
-        var linkContext: String? {
+        var linkContextAnalyticsValue: String? {
             if case .link = self {
                 return "wallet"
             } else if

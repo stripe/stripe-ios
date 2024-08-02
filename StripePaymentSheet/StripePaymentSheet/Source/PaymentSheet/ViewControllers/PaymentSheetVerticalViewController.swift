@@ -484,7 +484,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     deferredIntentConfirmationType: deferredIntentConfirmationType,
                     paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
                     error: result.error,
-                    linkContext: paymentOption.linkContext,
+                    linkContext: paymentOption.linkContextAnalyticsValue,
                     apiClient: configuration.apiClient
                 )
 
@@ -538,10 +538,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return
         }
 
-        // Send analytic when primary button is tapped
-        let paymentMethodType = selectedPaymentMethodType ?? .stripe(.unknown)
-        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentMethodType.identifier, linkContext: selectedPaymentOption?.linkContext)
-
         // If FlowController, simply close the sheet
         if isFlowController {
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
@@ -555,6 +551,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stpAssertionFailure("Tapped buy button while adding without paymentOption")
             return
         }
+        
+        // Send analytic when primary button is tapped
+        analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
         // If the selected payment option is a saved card, CVC is enabled, and we are PS, handle CVC specially:
         if case let .saved(paymentMethod, _) = selectedPaymentOption, paymentMethod.type == .card, intent.cvcRecollectionEnabled, !isFlowController, !isRecollectingCVC {

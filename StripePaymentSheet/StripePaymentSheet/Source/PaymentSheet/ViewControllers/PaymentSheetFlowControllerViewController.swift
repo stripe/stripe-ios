@@ -107,7 +107,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             callToAction: callToAction,
             appearance: configuration.appearance,
             didTap: { [weak self] in
-                self?.didTapAddButton()
+                self?.didTapContinueButton()
             }
         )
         return button
@@ -426,9 +426,12 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     @objc
-    private func didTapAddButton() {
-        let paymentMethodType = selectedPaymentMethodType ?? .stripe(.unknown)
-        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentMethodType.identifier)
+    private func didTapContinueButton() {
+        if let selectedPaymentOption {
+            analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
+        } else {
+            assertionFailure("didTapContinueButton called w/o a payment option")
+        }
         switch mode {
         case .selectingSaved:
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
@@ -601,7 +604,7 @@ extension PaymentSheet.PaymentMethodType {
 
 extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
     func walletHeaderViewApplePayButtonTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        // no-op
+        assertionFailure("Should never show Apple Pay in FlowController")
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {

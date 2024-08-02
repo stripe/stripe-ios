@@ -168,17 +168,15 @@ final class PaymentSheetAnalyticsHelper {
         }
     }
 
-//    func logConfirmButtonTapped(
-//        paymentMethodTypeIdentifier: String,
-//        linkContext: String? = nil
-//    ) {
-//        let duration = AnalyticsHelper.shared.getDuration(for: .formShown)
-//        log(
-//            event: .paymentSheetConfirmButtonTapped,
-//            duration: duration, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier,
-//            linkContext: linkContext
-//        )
-//    }
+    func logConfirmButtonTapped(paymentOption: PaymentOption) {
+        let duration = AnalyticsHelper.shared.getDuration(for: .formShown)
+        log(
+            event: .paymentSheetConfirmButtonTapped,
+            duration: duration, 
+            selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
+            linkContext: paymentOption.linkContextAnalyticsValue
+        )
+    }
 
     func paymentSheetPaymentEventValue(
         isCustom: Bool,
