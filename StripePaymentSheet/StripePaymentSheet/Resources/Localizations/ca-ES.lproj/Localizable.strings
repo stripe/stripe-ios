@@ -1,3 +1,4 @@
+/* test */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
 "%1$d interest-free payments of %2$@" = "%1$li pagaments sense interessos de %2$@";
