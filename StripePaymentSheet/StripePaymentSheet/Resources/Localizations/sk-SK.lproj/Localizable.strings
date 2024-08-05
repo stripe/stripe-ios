@@ -22,6 +22,8 @@
 
 "Back" = "Späť";
 
+"Bank" = "Banka";
+
 "Bank account" = "Bankový účet";
 
 "Buy now or pay later with Klarna" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna";
@@ -43,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračovaním oprávňujete spoločnosť %1$@, aby zaúčtovala túto platbu a budúce platby na debet vášho účtu Cash App v súlade s podmienkami spoločnosti %2$@, až do odvolania tohto oprávnenia. Toto oprávnenie môžete kedykoľvek zmeniť v nastaveniach aplikácie Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením k službe Link súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Poskytnutím podrobností o svojom bankovom účte a potvrdením tejto platby súhlasíte s touto požiadavkou na inkaso a <terms>zmluvou o službách požiadaviek na inkaso</terms> a autorizujete spoločnosť Stripe Payments Australia Pty Ltd ACN 160 180 343 ID používateľa inkasa 507156 („Stripe“) na inkaso vášho účtu prostredníctvom systému Bulk Electronic Clearing System (BECS) v mene %@ (ďalej len „obchodník“) pre všetky sumy, ktoré vám boli oznámené osobitne obchodníkom. Potvrdzujete, že ste buď majiteľom účtu alebo autorizovaným signatárom na vyššie uvedenom účte.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poskytnutím informácií o karte povolíte spoločnosti %@ účtovať na vašej karte budúce platby v súlade s ich podmienkami.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svojho e-mailu súhlasíte s vytvorením účtu Link a s uložením svojich platobných informácií do služby Link podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
 
@@ -166,11 +172,15 @@
 
 "Simple, secure one-click payments" = "Jednoduché, bezpečné platby jedným kliknutím";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Pri prepájaní vášho účtu došlo k chybe.\nSkúste to znova neskôr.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie uloženia svojho účtu prostredníctvom %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie platby spoločnosti %@.";
 
 "The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadaný IBAN je neplatný, „%@“ nie je podporovaný kód krajiny.";
 
 "Update" = "Aktualizovať";
 
