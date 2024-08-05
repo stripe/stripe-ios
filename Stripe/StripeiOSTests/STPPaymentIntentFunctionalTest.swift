@@ -1247,7 +1247,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
         XCTAssertNotNil(clientSecret)
 
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let client = STPAPIClient(publishableKey: STPTestingDEPublishableKey)
         let expectation = self.expectation(description: "Payment Intent confirm")
 
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret!)
