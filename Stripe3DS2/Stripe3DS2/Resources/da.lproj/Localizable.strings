@@ -1,4 +1,6 @@
 /* The text for warning when a debugger is currently attached to the process. */
+
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Et fejlfindingsprogram er vedhæftet appen.";
 
 /* The text for warning when an emulator is being used to run the application. */
