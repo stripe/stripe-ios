@@ -472,6 +472,10 @@ extension PlaygroundController {
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
             body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
         }
+        if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
+            body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
+        }
+
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, reload again
             if settingsToLoad != self.settings {

@@ -108,7 +108,10 @@ struct PaymentSheetTestPlayground: View {
                                         .bold()
                                     Spacer()
                                 }
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodSave)
+                                SettingPickerView(setting: paymentMethodSaveBinding)
+                                if playgroundController.settings.paymentMethodSave == .disabled {
+                                    SettingPickerView(setting: $playgroundController.settings.allowRedisplayOverride)
+                                }
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
                                 SettingPickerView(setting: paymentMethodRedisplayBinding)
                                 if playgroundController.settings.paymentMethodRedisplay == .enabled {
@@ -155,7 +158,16 @@ struct PaymentSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
-
+    var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
+        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
+            return playgroundController.settings.paymentMethodSave
+        } set: { newValue in
+            if playgroundController.settings.paymentMethodSave != newValue {
+                playgroundController.settings.allowRedisplayOverride = .notSet
+            }
+            playgroundController.settings.paymentMethodSave = newValue
+        }
+    }
     var customCTABinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.customCtaLabel ?? ""
