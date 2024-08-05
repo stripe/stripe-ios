@@ -354,7 +354,7 @@ public class STPPaymentHandler: NSObject {
         let paymentIntentID = paymentIntent.stripeId
         let paymentMethod = paymentIntent.paymentMethod
         if shouldSendAnalytic {
-            logHandleNextActionStarted(intentID: paymentIntentID, paymentMethod: paymentIntent.paymentMethod)
+            logHandleNextActionStarted(intentID: paymentIntentID, paymentMethod: paymentMethod)
         }
         // Overwrite completion to send an analytic before calling the caller-supplied completion
         let completion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self] status, paymentIntent, error in
