@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
+@_spi(STP) import StripeUICore
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
@@ -245,6 +246,35 @@ extension PaymentSheetLoader.LoadResult {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods
+        )
+    }
+}
+
+extension PaymentSheetAnalyticsHelper {
+    static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
+        return .init(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+    }
+}
+
+extension PaymentSheetFormFactory {
+    convenience init(
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        configuration: PaymentSheetFormFactoryConfig,
+        paymentMethod: PaymentSheet.PaymentMethodType,
+        previousCustomerInput: IntentConfirmParams? = nil,
+        addressSpecProvider: AddressSpecProvider = .shared,
+        linkAccount: PaymentSheetLinkAccount? = nil
+    ) {
+        self.init(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            paymentMethod: paymentMethod,
+            previousCustomerInput: previousCustomerInput,
+            addressSpecProvider: addressSpecProvider,
+            linkAccount: linkAccount,
+            analyticsHelper: ._testValue()
         )
     }
 }

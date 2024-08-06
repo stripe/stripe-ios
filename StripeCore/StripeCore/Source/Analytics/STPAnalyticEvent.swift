@@ -78,12 +78,8 @@ import Foundation
     // MARK: - PaymentSheet Show
     case mcShowCustomNewPM = "mc_custom_sheet_newpm_show"
     case mcShowCustomSavedPM = "mc_custom_sheet_savedpm_show"
-    case mcShowCustomApplePay = "mc_custom_sheet_applepay_show"
-    case mcShowCustomLink = "mc_custom_sheet_link_show"
     case mcShowCompleteNewPM = "mc_complete_sheet_newpm_show"
     case mcShowCompleteSavedPM = "mc_complete_sheet_savedpm_show"
-    case mcShowCompleteApplePay = "mc_complete_sheet_applepay_show"
-    case mcShowCompleteLink = "mc_complete_sheet_link_show"
 
     // MARK: - PaymentSheet Payment
     case mcPaymentCustomNewPMSuccess = "mc_custom_payment_newpm_success"

@@ -37,7 +37,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
-            analyticsClient: analyticsClient,
+            analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
             isFlowController: true
         ) { result in
             switch result {
@@ -74,7 +74,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
-            analyticsClient: analyticsClient,
+            analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
             isFlowController: true
         ) { result in
             switch result {
@@ -104,10 +104,12 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\"")
 
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
         let loaded = expectation(description: "Loaded")
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            configuration: configuration,
+            analyticsHelper: .init(isCustom: false, configuration: configuration),
             isFlowController: true
         ) { result in
             switch result {
@@ -133,11 +135,13 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
 
         let loaded = expectation(description: "Loaded")
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            configuration: configuration,
+            analyticsHelper: .init(isCustom: false, configuration: configuration),
             isFlowController: true
         ) { result in
             switch result {
@@ -184,7 +188,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
             configuration: configuration,
-            analyticsClient: analyticsClient,
+            analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
             isFlowController: false
         ) { result in
             loaded.fulfill()
@@ -246,7 +250,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret("seti_1234_secret_1234"),
             configuration: configuration,
-            analyticsClient: analyticsClient,
+            analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
             isFlowController: false
         ) { result in
             loaded.fulfill()
@@ -306,7 +310,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
-            analyticsClient: analyticsClient,
+            analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
             isFlowController: false
         ) { result in
             loaded.fulfill()
@@ -349,7 +353,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
-            analyticsClient: analyticsClient,
+            analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
             isFlowController: false
         ) { result in
             loaded2.fulfill()
@@ -401,7 +405,12 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             XCTFail("Confirm handler shouldn't be called.")
         }
         let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 0, currency: "USD"), confirmHandler: confirmHandler)
-        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: ._testValue_MostPermissive(), analyticsClient: analyticsClient, isFlowController: false) { result in
+        PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: ._testValue_MostPermissive(),
+            analyticsHelper: .init(isCustom: false, configuration: ._testValue_MostPermissive(), analyticsClient: analyticsClient),
+            isFlowController: false
+        ) { result in
             loadExpectation.fulfill()
             switch result {
             case .success:

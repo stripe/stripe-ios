@@ -26,7 +26,7 @@ final class CardSectionElement: ContainerElement {
     lazy var view: UIView = {
         #if !canImport(CompositorServices)
         if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
-            return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme)
+            return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme, analyticsHelper: analyticsHelper)
         } else {
             return cardSection.view
         }
@@ -35,6 +35,7 @@ final class CardSectionElement: ContainerElement {
         #endif
     }()
     let cardSection: SectionElement
+    let analyticsHelper: PaymentSheetAnalyticsHelper
 
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
@@ -66,10 +67,12 @@ final class CardSectionElement: ContainerElement {
         preferredNetworks: [STPCardBrand]? = nil,
         cardBrandChoiceEligible: Bool = false,
         hostedSurface: HostedSurface,
-        theme: ElementsUITheme = .default
+        theme: ElementsUITheme = .default,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.hostedSurface = hostedSurface
         self.theme = theme
+        self.analyticsHelper = analyticsHelper
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(

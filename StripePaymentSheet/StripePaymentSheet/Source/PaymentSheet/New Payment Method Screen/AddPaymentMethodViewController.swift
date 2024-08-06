@@ -67,6 +67,7 @@ class AddPaymentMethodViewController: UIViewController {
     private let elementsSession: STPElementsSession
     private let configuration: PaymentSheet.Configuration
     private let formCache: PaymentMethodFormCache
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
     var previousCustomerInput: IntentConfirmParams?
 
     private var paymentMethodFormElement: PaymentMethodElement {
@@ -75,7 +76,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, delegate: self)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, delegate: self)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -107,6 +108,7 @@ class AddPaymentMethodViewController: UIViewController {
         configuration: PaymentSheet.Configuration,
         previousCustomerInput: IntentConfirmParams? = nil,
         formCache: PaymentMethodFormCache,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: AddPaymentMethodViewControllerDelegate? = nil
     ) {
         self.configuration = configuration
@@ -115,6 +117,7 @@ class AddPaymentMethodViewController: UIViewController {
         self.previousCustomerInput = previousCustomerInput
         self.delegate = delegate
         self.formCache = formCache
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -161,6 +164,7 @@ class AddPaymentMethodViewController: UIViewController {
                 formCache: formCache,
                 configuration: configuration,
                 headerView: nil,
+                analyticsHelper: analyticsHelper,
                 delegate: self
             )
         }

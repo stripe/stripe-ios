@@ -37,7 +37,7 @@ class PaymentSheetFormFactory {
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
-    let analyticsClient: STPAnalyticsClient
+    let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
@@ -67,7 +67,7 @@ class PaymentSheetFormFactory {
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -97,7 +97,7 @@ class PaymentSheetFormFactory {
                   amount: intent.amount,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
-                  analyticsClient: analyticsClient)
+                  analyticsHelper: analyticsHelper)
     }
 
     required init(
@@ -114,7 +114,7 @@ class PaymentSheetFormFactory {
         amount: Int?,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -134,7 +134,7 @@ class PaymentSheetFormFactory {
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
-        self.analyticsClient = analyticsClient
+        self.analyticsHelper = analyticsHelper
     }
 
     func make() -> PaymentMethodElement {
@@ -188,7 +188,7 @@ class PaymentSheetFormFactory {
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
                 stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-                analyticsClient.log(analytic: errorAnalytic)
+                analyticsHelper.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
             }
             if paymentMethod == .iDEAL {
