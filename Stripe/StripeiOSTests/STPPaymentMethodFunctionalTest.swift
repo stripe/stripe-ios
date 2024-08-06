@@ -144,7 +144,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
                                                                                                merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        let elementSession = try await client.retrieveElementsSession(
+        let elementSession = try await client.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
                                     confirmHandler: { _, _, _ in
                                         // no-op
@@ -277,6 +277,48 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertNil(error)
             XCTAssertNotNil(paymentMethod)
             XCTAssertEqual(paymentMethod?.type, .alma)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testCreateSunbitPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let params = STPPaymentMethodParams(sunbit: STPPaymentMethodSunbitParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .sunbit)
+            XCTAssertNotNil(paymentMethod?.sunbit, "The `sunbit` property must be populated")
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testCreateBilliePaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingDEPublishableKey)
+        let params = STPPaymentMethodParams(billie: STPPaymentMethodBillieParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .billie)
+            XCTAssertNotNil(paymentMethod?.billie, "The `billie` property must be populated")
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testCreateSatispayPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingITPublishableKey)
+        let params = STPPaymentMethodParams(satispay: STPPaymentMethodSatispayParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .satispay)
+            XCTAssertNotNil(paymentMethod?.satispay, "The `satispay` property must be populated")
             expectation.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)

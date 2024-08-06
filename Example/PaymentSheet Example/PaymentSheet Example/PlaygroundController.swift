@@ -447,6 +447,7 @@ extension PlaygroundController {
             "customer": customerIdOrType,
             "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
+            "amount": settings.amount.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
@@ -471,6 +472,10 @@ extension PlaygroundController {
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
             body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
         }
+        if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
+            body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
+        }
+
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, reload again
             if settingsToLoad != self.settings {
@@ -624,7 +629,7 @@ extension PlaygroundController {
             return
         case .deferred_csc:
             if settings.integrationType == .deferred_csc {
-                DispatchQueue.global(qos: .background).async {
+                DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
                     intentCreationCallback(.success(self.clientSecret!))
                 }
             }

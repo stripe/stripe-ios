@@ -12,8 +12,6 @@
 
 "Bancontact" = "Bancontact";
 
-"Bank" = "Institution financière";
-
 "Boleto" = "Boleto";
 
 "Card" = "Carte";
@@ -52,7 +50,7 @@
 
 "UPI" = "UPI";
 
-"US Bank Account" = "Compte bancaire aux États-Unis";
+"US bank account" = "Compte bancaire américain";
 
 "Unknown" = "Inconnu";
 

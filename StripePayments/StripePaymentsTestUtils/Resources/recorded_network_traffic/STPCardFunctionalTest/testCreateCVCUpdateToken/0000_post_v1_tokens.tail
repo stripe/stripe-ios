@@ -13,26 +13,27 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_g8v9KNcgc6MrYW
+request-id: req_zvEL7or82BD7gf
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 186
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:34:44 GMT
-original-request: req_g8v9KNcgc6MrYW
+Date: Wed, 31 Jul 2024 02:09:40 GMT
+original-request: req_zvEL7or82BD7gf
 stripe-version: 2020-08-27
-idempotency-key: 05066b53-27d4-4ae6-bb55-ca1c41689807
+idempotency-key: d99188fd-0b51-4dd1-af74-055c72e00dfb
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: cvc_update\[cvc]=1234&guid=.*&muid=.*&payment_user_agent=.*&sid=.*
 
 {
   "object" : "token",
-  "id" : "cvctok_1PePNwFY0qyl6XeWQQxobj1z",
+  "id" : "cvctok_1PiRyyFY0qyl6XeWMGs8h9pk",
   "livemode" : false,
   "client_ip" : "136.24.137.206",
-  "created" : 1721428484,
+  "created" : 1722391780,
   "used" : false,
   "type" : "cvc_update"
 }

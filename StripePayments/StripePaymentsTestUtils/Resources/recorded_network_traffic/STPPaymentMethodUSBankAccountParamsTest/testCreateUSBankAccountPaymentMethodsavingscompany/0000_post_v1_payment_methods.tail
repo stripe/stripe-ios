@@ -13,23 +13,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_hh2M3QZaf4lFR3
+request-id: req_zYgPL4jbooxvya
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 861
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:52:16 GMT
-original-request: req_hh2M3QZaf4lFR3
+Date: Wed, 31 Jul 2024 02:11:18 GMT
+original-request: req_zYgPL4jbooxvya
 stripe-version: 2020-08-27
-idempotency-key: 31891e38-0013-4141-89d1-dc70f2f4efcd
+idempotency-key: 3499bc72-9c2a-48f5-a2d2-73fd409fcf48
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=tester%40example\.com&billing_details\[name]=iOS%20CI%20Tester&payment_user_agent=.*&type=us_bank_account&us_bank_account\[account_holder_type]=company&us_bank_account\[account_number]=000123456789&us_bank_account\[account_type]=savings&us_bank_account\[routing_number]=110000000
 
 {
   "object" : "payment_method",
-  "id" : "pm_1PePeuFY0qyl6XeWb4QOgdr9",
+  "id" : "pm_1PiS0YFY0qyl6XeWVYIpijic",
   "billing_details" : {
     "email" : "tester@example.com",
     "phone" : null,
@@ -60,7 +61,7 @@ x-content-type-options: nosniff
     "status_details" : null,
     "account_type" : "savings"
   },
-  "created" : 1721429536,
+  "created" : 1722391878,
   "allow_redisplay" : "unspecified",
   "type" : "us_bank_account",
   "customer" : null

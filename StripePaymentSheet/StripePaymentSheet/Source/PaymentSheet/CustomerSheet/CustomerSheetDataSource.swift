@@ -60,9 +60,9 @@ class CustomerSheetDataSource {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try customerAdapter.fetchSelectedPaymentOption()
-                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes,
-                                                                                                                           clientDefaultPaymentMethod: nil,
-                                                                                                                           customerSessionClientSecret: nil)
+                async let elementsSessionResult = try self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes,
+                                                                                                                                   clientDefaultPaymentMethod: nil,
+                                                                                                                                   customerSessionClientSecret: nil)
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
@@ -134,6 +134,16 @@ extension CustomerSheetDataSource {
             return try await customerAdapter.setupIntentClientSecretForCustomerAttach()
         case .customerSession(let customerSessionAdapter):
             return try await customerSessionAdapter.intentConfiguration.setupIntentClientSecretProvider()
+        }
+    }
+    func fetchElementsSession(setupIntentClientSecret: String) async throws -> (STPSetupIntent, STPElementsSession) {
+        switch dataSource {
+        case .customerAdapter:
+            return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: setupIntentClientSecret,
+                                                                                              clientDefaultPaymentMethod: nil,
+                                                                                              configuration: .init())
+        case .customerSession(let customerSessionAdapter):
+           return try await customerSessionAdapter.elementsSession(setupIntentClientSecret: setupIntentClientSecret)
         }
     }
 

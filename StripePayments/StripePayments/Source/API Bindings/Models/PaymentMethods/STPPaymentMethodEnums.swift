@@ -76,6 +76,12 @@ import Foundation
     case amazonPay
     /// An Alma payment method
     case alma
+    /// A Sunbit payment method
+    case sunbit
+    /// A Billie payment method
+    case billie
+    /// A Satispay payment method
+    case satispay
     /// A MobilePay payment method
     case mobilePay
     /// A Konbini payment method
@@ -162,6 +168,12 @@ import Foundation
             return "Amazon Pay"
         case .alma:
             return "Alma"
+        case .sunbit:
+            return "Sunbit"
+        case .billie:
+            return "Billie"
+        case .satispay:
+            return "Satispay"
         case .mobilePay:
             return "MobilePay"
         case .konbini:
@@ -251,6 +263,12 @@ import Foundation
             return "amazon_pay"
         case .alma:
             return "alma"
+        case .sunbit:
+            return "sunbit"
+        case .billie:
+            return "billie"
+        case .satispay:
+            return "satispay"
         case .mobilePay:
             return "mobilepay"
         case .konbini:

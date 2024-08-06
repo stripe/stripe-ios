@@ -985,6 +985,42 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
     }
 }
 
+// MARK: - LinkLoginViewControllerDelegate
+
+extension NativeFlowController: LinkLoginViewControllerDelegate {
+    func linkLoginViewController(
+        _ viewController: LinkLoginViewController,
+        foundReturningUserWith lookupConsumerSessionResponse: LookupConsumerSessionResponse
+    ) {
+        dataManager.consumerPublishableKey = lookupConsumerSessionResponse.publishableKey
+        dataManager.consumerSession = lookupConsumerSessionResponse.consumerSession
+        pushPane(.networkingLinkVerification, animated: true)
+    }
+
+    func linkLoginViewController(
+        _ viewController: LinkLoginViewController,
+        receivedLinkSignUpResponse linkSignUpResponse: LinkSignUpResponse
+    ) {
+        dataManager.consumerPublishableKey = linkSignUpResponse.publishableKey
+        dataManager.consumerSession = linkSignUpResponse.consumerSession
+    }
+
+    func linkLoginViewController(
+        _ viewController: LinkLoginViewController,
+        signedUpAttachedAndSynchronized synchronizePayload: FinancialConnectionsSynchronize
+    ) {
+        dataManager.manifest = synchronizePayload.manifest
+        pushPane(synchronizePayload.manifest.nextPane, animated: true)
+    }
+
+    func linkLoginViewController(
+        _ viewController: LinkLoginViewController,
+        didReceiveTerminalError error: any Error
+    ) {
+        showTerminalError(error)
+    }
+}
+
 // MARK: - ErrorViewControllerDelegate
 
 extension NativeFlowController: ErrorViewControllerDelegate {
@@ -1111,8 +1147,16 @@ private func CreatePaneViewController(
         assertionFailure("Not supported")
         viewController = nil
     case .linkLogin:
-        assertionFailure("Not supported")
-        viewController = nil
+        let linkLoginDataSource = LinkLoginDataSourceImplementation(
+            manifest: dataManager.manifest,
+            analyticsClient: dataManager.analyticsClient,
+            clientSecret: dataManager.clientSecret,
+            returnURL: dataManager.returnURL,
+            apiClient: dataManager.apiClient
+        )
+        let linkLoginViewController = LinkLoginViewController(dataSource: linkLoginDataSource)
+        linkLoginViewController.delegate = nativeFlowController
+        viewController = linkLoginViewController
     case .manualEntry:
         nativeFlowController.delegate?.nativeFlowController(
             nativeFlowController,
@@ -1148,7 +1192,9 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkVerification:
-        if let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress {
+        let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress
+        let consumerSessionEmailAddress = dataManager.consumerSession?.emailAddress
+        if let accountholderCustomerEmailAddress = accountholderCustomerEmailAddress ?? consumerSessionEmailAddress {
             let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
                 accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
                 manifest: dataManager.manifest,

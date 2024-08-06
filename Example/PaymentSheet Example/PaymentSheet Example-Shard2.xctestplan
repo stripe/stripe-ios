@@ -33,12 +33,23 @@
       "skippedTests" : [
         "CustomerSheetSnapshotTests",
         "CustomerSheetUITest",
+        "LinkPaymentControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
+        "PaymentSheetDeferredUIBankAccountTests",
+        "PaymentSheetDeferredUITests",
         "PaymentSheetGDPRUITests",
         "PaymentSheetLinkUITests",
+        "PaymentSheetStandardLPMUICBCTests",
+        "PaymentSheetStandardLPMUICase",
+        "PaymentSheetStandardLPMUIOneTests",
+        "PaymentSheetStandardLPMUITests",
+        "PaymentSheetStandardLPMUIThreeTests",
+        "PaymentSheetStandardLPMUITwoTests",
+        "PaymentSheetStandardUITests",
+        "PaymentSheetUITestCase",
         "PaymentSheet_AddressTests"
       ],
       "target" : {

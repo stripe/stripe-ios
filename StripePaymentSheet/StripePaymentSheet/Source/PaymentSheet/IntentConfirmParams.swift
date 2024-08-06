@@ -108,6 +108,7 @@ class IntentConfirmParams {
         }
     }
     func setAllowRedisplay(paymentMethodSave: Bool?,
+                           allowRedisplayOverride: STPPaymentMethodAllowRedisplay?,
                            isSettingUp: Bool) {
         guard let paymentMethodSave else {
             // Legacy Ephemeral Key
@@ -133,7 +134,7 @@ class IntentConfirmParams {
         } else {
             if isSettingUp {
                 // Checkbox is hidden
-                paymentMethodParams.allowRedisplay = .limited
+                paymentMethodParams.allowRedisplay = allowRedisplayOverride ?? .limited
             } else {
                 if saveForFutureUseCheckboxState == .selected {
                     paymentMethodParams.allowRedisplay = .always

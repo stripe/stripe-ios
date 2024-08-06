@@ -38,28 +38,25 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
         let types = ["ideal", "card", "bancontact", "sofort"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
-        PaymentMethodFormViewController.formCache = [.stripe(.card): FormElement(elements: [])]
         // Given a PaymentIntent client secret...
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, isFlowController: false) { result in
             expectation.fulfill()
             switch result {
             case .success(let loadResult):
                 // ...PaymentSheet should successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
+                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
                 // Sanity check that the ElementsSession object contain the types in the PI
                 XCTAssertEqual(
-                    Set(elementsSession.orderedPaymentMethodTypes.map { $0.identifier }),
+                    Set(loadResult.elementsSession.orderedPaymentMethodTypes.map { $0.identifier }),
                     Set(types)
                 )
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(loadResult.isApplePayEnabled)
-                // Ensure the form cache was cleared
-                XCTAssertTrue(PaymentMethodFormViewController.formCache.isEmpty)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
@@ -80,11 +77,11 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(loadResult.intent.recommendedPaymentMethodTypes),
+                    Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                     Set(expected)
                 )
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail()
@@ -123,7 +120,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     func testPaymentSheetLoadDeferredIntentSucceeds() {
-        let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         // Test PaymentSheetLoader.load can load various IntentConfigurations
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
             XCTFail("Confirm handler shouldn't be called.")
@@ -140,24 +136,24 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             // Setup config w/o currency
             .init(mode: .setup(), confirmHandler: confirmHandler),
         ]
-        loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
+            let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
             PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, isFlowController: true) { result in
-                loadExpectation.fulfill()
                 switch result {
                 case .success(let loadResult):
                     guard case .deferredIntent = loadResult.intent else {
                         XCTFail()
                         return
                     }
-                    XCTAssertTrue(loadResult.isApplePayEnabled)
+                    XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
                 case .failure(let error):
                     XCTFail("Test case at index \(index) failed: \(error)")
                     print(error)
                 }
+                loadExpectation.fulfill()
             }
+            wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
         }
-        wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testPaymentSheetLoadDeferredIntentFails() {
@@ -258,23 +254,23 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let loadResult):
                 // ...PaymentSheet should successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
+                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
                 // ...and elements sessions response should contain the configured external payment methods
                 XCTAssertEqual(
-                    elementsSession.externalPaymentMethods.map { $0.type },
+                    loadResult.elementsSession.externalPaymentMethods.map { $0.type },
                     ["external_paypal"]
                 )
                 XCTAssertEqual(
-                    elementsSession.externalPaymentMethods.first?.label,
+                    loadResult.elementsSession.externalPaymentMethods.first?.label,
                     "PayPal"
                 )
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
@@ -299,17 +295,17 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let loadResult):
                 // ...PaymentSheet should *still* successfully load
-                guard case let .paymentIntent(elementsSession, paymentIntent) = loadResult.intent else {
+                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
                     return
                 }
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(loadResult.isApplePayEnabled)
+                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
                 // ...with an empty `externalPaymentMethods` property
-                XCTAssertTrue(elementsSession.externalPaymentMethods.isEmpty)
+                XCTAssertTrue(loadResult.elementsSession.externalPaymentMethods.isEmpty)
                 // ...and shouldn't send a load failure analytic
                 let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
                 XCTAssertFalse(analyticEvents.contains(where: { dict in

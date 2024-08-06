@@ -13,26 +13,27 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=mono-bapi-srv"}],"include_subdomains":true}
-request-id: req_i8NcUIU1erOJAV
+request-id: req_hmOU9Nk23VTrbs
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1536
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:36:55 GMT
-original-request: req_i8NcUIU1erOJAV
+Date: Wed, 31 Jul 2024 02:11:33 GMT
+original-request: req_hmOU9Nk23VTrbs
 stripe-version: 2020-08-27
-idempotency-key: 1ffd8425-e5d6-4e54-bbc5-f2db7982891d
+idempotency-key: 9ac331c0-de61-4ace-9889-0b72cd73cdd7
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: currency=eur&guid=.*&metadata\[foo]=bar&muid=.*&owner\[address]\[city]=Berlin&owner\[address]\[country]=DE&owner\[address]\[line1]=Nollendorfstra%C3%9Fe%2027&owner\[address]\[postal_code]=10777&owner\[name]=Jenny%20Rosen&payment_user_agent=.*&sepa_debit\[iban]=DE89370400440532013000&sid=.*&type=sepa_debit
 
 {
-  "id" : "src_1PePQ3FY0qyl6XeWUlCmGXIR",
+  "id" : "src_1PiS0nFY0qyl6XeWjW6GEwL7",
   "mandate" : {
     "amount" : null,
-    "reference" : "G0CNNWV3DNTMSTZR",
-    "url" : "https:\/\/hooks.stripe.com\/adapter\/sepa_debit\/file\/src_1PePQ3FY0qyl6XeWUlCmGXIR\/src_client_secret_dEQhPanNaxCgDuJeZolgIXnD",
+    "reference" : "YPAW1R0GCELVHSLT",
+    "url" : "https:\/\/hooks.stripe.com\/adapter\/sepa_debit\/file\/src_1PiS0nFY0qyl6XeWjW6GEwL7\/src_client_secret_E3jQ2xd1vvLKdZgJDEB43kIn",
     "acceptance" : {
       "online" : null,
       "status" : "pending",
@@ -69,8 +70,8 @@ x-content-type-options: nosniff
   "statement_descriptor" : null,
   "type" : "sepa_debit",
   "object" : "source",
-  "created" : 1721428615,
-  "client_secret" : "src_client_secret_dEQhPanNaxCgDuJeZolgIXnD",
+  "created" : 1722391893,
+  "client_secret" : "src_client_secret_E3jQ2xd1vvLKdZgJDEB43kIn",
   "flow" : "none",
   "currency" : "eur",
   "status" : "chargeable",
@@ -78,9 +79,9 @@ x-content-type-options: nosniff
     "branch_code" : null,
     "country" : "DE",
     "fingerprint" : "MamVJqscD6xUvxgA",
-    "mandate_url" : "https:\/\/hooks.stripe.com\/adapter\/sepa_debit\/file\/src_1PePQ3FY0qyl6XeWUlCmGXIR\/src_client_secret_dEQhPanNaxCgDuJeZolgIXnD",
+    "mandate_url" : "https:\/\/hooks.stripe.com\/adapter\/sepa_debit\/file\/src_1PiS0nFY0qyl6XeWjW6GEwL7\/src_client_secret_E3jQ2xd1vvLKdZgJDEB43kIn",
     "last4" : "3000",
-    "mandate_reference" : "G0CNNWV3DNTMSTZR",
+    "mandate_reference" : "YPAW1R0GCELVHSLT",
     "bank_code" : "37040044"
   }
 }

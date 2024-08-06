@@ -518,12 +518,12 @@ extension STPPaymentMethodBillingDetails {
     }
 }
 extension PaymentSheet.CustomerConfiguration {
-    func ephemeralKeySecretBasedOn(intent: Intent?) -> String? {
+    func ephemeralKeySecretBasedOn(elementsSession: STPElementsSession?) -> String? {
         switch customerAccessProvider {
         case .legacyCustomerEphemeralKey(let legacy):
             return legacy
         case .customerSession:
-            return intent?.elementsSession.customer?.customerSession.apiKey
+            return elementsSession?.customer?.customerSession.apiKey
         }
     }
 }

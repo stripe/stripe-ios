@@ -4,7 +4,7 @@
 //
 
 import Foundation
-
+@_spi(STP) import StripePayments
 /// CustomerSession information, delivered in the `v1/elements/sessions` response.
 /// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/api/lib/customer_session/resource/customer_session_client_resource.rb
 struct CustomerSession: Equatable, Hashable {
@@ -41,9 +41,16 @@ struct CustomerSession: Equatable, Hashable {
                   let paymentMethodRemove = paymentSheetFeaturesDict["payment_method_remove"] as? String else {
                 return nil
             }
+
+            var allowRedisplayOverrideValue: STPPaymentMethodAllowRedisplay?
+            if let allowRedisplayOverride = paymentSheetFeaturesDict["payment_method_save_allow_redisplay_override"] as? String {
+                allowRedisplayOverrideValue = STPPaymentMethod.allowRedisplay(from: allowRedisplayOverride)
+            }
+
             paymentSheetComponent = PaymentSheetComponent(enabled: true,
                                                           features: PaymentSheetComponentFeature(paymentMethodSave: paymentMethodSave == "enabled",
-                                                                                                 paymentMethodRemove: paymentMethodRemove == "enabled"))
+                                                                                                 paymentMethodRemove: paymentMethodRemove == "enabled",
+                                                                                                 paymentMethodSaveAllowRedisplayOverride: allowRedisplayOverrideValue))
         } else {
             paymentSheetComponent = PaymentSheetComponent(enabled: false, features: nil)
         }
@@ -75,9 +82,12 @@ struct PaymentSheetComponent: Equatable, Hashable {
     let features: PaymentSheetComponentFeature?
 }
 
+/// Features on CustomerSessions when the paymentSheet component is enabled:
+/// https://docs.corp.stripe.com/api/customer_sessions/object#customer_session_object-components-payment_sheet-features
 struct PaymentSheetComponentFeature: Equatable, Hashable {
     let paymentMethodSave: Bool
     let paymentMethodRemove: Bool
+    let paymentMethodSaveAllowRedisplayOverride: STPPaymentMethodAllowRedisplay?
 }
 
 struct CustomerSheetComponent: Equatable, Hashable {

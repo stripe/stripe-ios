@@ -38,20 +38,22 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-15: {}
-    - test-builds-xcode-15-release: {}
     - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
     - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
-    - framework-tests: {}
+    - framework-tests-no-mocks: {}
     - test-builds-xcode-15: {}
+    - test-builds-xcode-15-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
@@ -60,6 +62,8 @@ stages:
     - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
@@ -67,6 +71,7 @@ stages:
     - integration-all: {}
   stage-nightly-all:
     workflows:
+    - test-builds-xcode-15-release: {}
     - basic-integration-tests: {}
     - framework-tests-no-mocks: {}
     - check-docs: {}
@@ -125,14 +130,15 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-            SourcePackages
     - script@1:
         inputs:
         - content: git fetch origin
@@ -277,6 +283,12 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCore
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeConnect
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -536,17 +548,19 @@ workflows:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@6:
+    - git-clone@8.2:
         inputs:
         - clone_depth: "1"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-    - restore-spm-cache@1: {}
+    - restore-spm-cache@2.1: {}
   size-report:
     steps:
     - script@1:
@@ -558,14 +572,15 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-            SourcePackages
     - script@1:
         inputs:
         - content: git fetch origin
@@ -614,6 +629,42 @@ workflows:
       bitrise.io:
         stack: osx-xcode-15.0.x
         machine_type_id: g2-m1-max.5core
+  ui-tests-3:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard3
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1-max.5core
+  ui-tests-4:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard4
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1-max.5core                
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:

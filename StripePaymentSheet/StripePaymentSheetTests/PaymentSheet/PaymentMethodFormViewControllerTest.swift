@@ -16,7 +16,6 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             FormSpecProvider.shared.load { _ in
-                PaymentMethodFormViewController.clearFormCache()
                 expectation.fulfill()
             }
         }
@@ -35,7 +34,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...and no default billing address...
         XCTAssertEqual(configuration.defaultBillingDetails, PaymentSheet.Configuration().defaultBillingDetails)
         // ...PaymentMethodFormVC...
-        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, headerView: nil, delegate: self)
+        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), elementsSession: ._testCardValue(), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, delegate: self)
 
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
@@ -59,9 +58,11 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             // ..using cash app as an example b/c it contains a SimpleMandateTextView that we can inspect to test behavior below...
             type: .stripe(.cashApp),
             intent: ._testPaymentIntent(paymentMethodTypes: [.cashApp], setupFutureUsage: .offSession),
+            elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
             previousCustomerInput: nil,
+            formCache: .init(),
             configuration: ._testValue_MostPermissive(),
-            isLinkEnabled: false,
+
             headerView: nil,
             delegate: self
         )
@@ -74,6 +75,35 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         XCTAssertTrue(mandate.mandateTextView.viewDidAppear)
         // ...and notify the delegate
         XCTAssertTrue(didUpdateDelegateMethodCalled)
+    }
+
+    func testFormCache() {
+        let formCache = PaymentMethodFormCache()
+        let firstSUT = PaymentMethodFormViewController(
+            type: .stripe(.card),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
+            elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
+            previousCustomerInput: nil,
+            formCache: formCache,
+            configuration: ._testValue_MostPermissive(),
+
+            headerView: nil,
+            delegate: self
+        )
+        firstSUT.form.getTextFieldElement("ZIP").setText("12345")
+
+        let secondSUT = PaymentMethodFormViewController(
+            type: .stripe(.card),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
+            elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
+            previousCustomerInput: nil,
+            formCache: formCache,
+            configuration: ._testValue_MostPermissive(),
+
+            headerView: nil,
+            delegate: self
+        )
+        XCTAssertEqual(secondSUT.form.getTextFieldElement("ZIP").text, "12345")
     }
 }
 

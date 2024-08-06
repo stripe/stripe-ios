@@ -128,7 +128,7 @@ extension STPAnalyticsClient {
         }()
         let params = ["selected_lpm": defaultPaymentMethodAnalyticsValue,
                       "intent_type": intentAnalyticsValue,
-                      "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }),
+                      "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
         ] as [String: Any]
 
         logPaymentSheetEvent(
@@ -486,7 +486,7 @@ extension Intent {
             return "payment_intent"
         case .setupIntent:
             return "setup_intent"
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
             case .payment:
                 return "deferred_payment_intent"

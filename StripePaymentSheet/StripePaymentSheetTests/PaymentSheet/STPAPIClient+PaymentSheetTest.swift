@@ -68,8 +68,8 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(deferredIntent["setup_future_usage"] as? String, "off_session")
     }
 
-    func testMakeElementsSessionsParamsForCustomerSheet() throws {
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParamsForCustomerSheet(
+    func testMakeDeferredElementsSessionsParamsForCustomerSheet() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
             paymentMethodTypes: ["card"],
             clientDefaultPaymentMethod: "pm_12345",
             customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
@@ -84,8 +84,8 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(deferredIntent["payment_method_types"] as? [String], ["card"])
 
     }
-    func testMakeElementsSessionsParamsForCustomerSheet_nilable() throws {
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParamsForCustomerSheet(
+    func testMakeDeferredElementsSessionsParamsForCustomerSheet_nilable() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
             paymentMethodTypes: nil,
             clientDefaultPaymentMethod: nil,
             customerSessionClientSecret: nil)
@@ -98,6 +98,32 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as?  [String: Any])
         XCTAssertEqual(deferredIntent["mode"] as? String, "setup")
         XCTAssertNil(deferredIntent["payment_method_types"])
+    }
 
+    func testMakeElementsSessionsParamsForCustomerSheet() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParamsForCustomerSheet(
+            setupIntentClientSecret: "seti_123456",
+            clientDefaultPaymentMethod: "pm_12345",
+            customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
+
+        XCTAssertEqual(parameters["type"] as? String, "setup_intent")
+        XCTAssertEqual(parameters["client_secret"] as? String, "seti_123456")
+
+        XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
+        XCTAssertEqual(parameters["customer_session_client_secret"] as? String, "cuss_54321")
+        XCTAssertEqual(parameters["client_default_payment_method"] as? String, "pm_12345")
+    }
+    func testMakeElementsSessionsParamsForCustomerSheet_nilable() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParamsForCustomerSheet(
+            setupIntentClientSecret: "seti_123456",
+            clientDefaultPaymentMethod: nil,
+            customerSessionClientSecret: nil)
+
+        XCTAssertEqual(parameters["type"] as? String, "setup_intent")
+        XCTAssertEqual(parameters["client_secret"] as? String, "seti_123456")
+
+        XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
+        XCTAssertNil(parameters["customer_session_client_secret"])
+        XCTAssertNil(parameters["client_default_payment_method"])
     }
 }

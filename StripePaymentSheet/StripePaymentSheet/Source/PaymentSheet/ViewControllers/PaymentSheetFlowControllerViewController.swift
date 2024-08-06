@@ -17,7 +17,9 @@ import UIKit
 class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewControllerProtocol {
     // MARK: - Internal Properties
     let intent: Intent
+    let elementsSession: STPElementsSession
     let configuration: PaymentSheet.Configuration
+    let formCache: PaymentMethodFormCache = .init()
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -84,7 +86,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private var isHackyLinkButtonSelected: Bool = false
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
     // MARK: - Views
@@ -162,8 +164,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         previousPaymentOption: PaymentOption? = nil
     ) {
         self.intent = loadResult.intent
-        self.isApplePayEnabled = loadResult.isApplePayEnabled
-        self.isLinkEnabled = loadResult.isLinkEnabled
+        self.elementsSession = loadResult.elementsSession
+        self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         self.configuration = configuration
 
         // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
@@ -200,18 +203,19 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-                allowsRemovalOfPaymentMethods: self.intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+                allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
             appearance: configuration.appearance,
-            cbcEligible: intent.cardBrandChoiceEligible
+            cbcEligible: elementsSession.isCardBrandChoiceEligible
         )
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
+            elementsSession: elementsSession,
             configuration: configuration,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
-            isLinkEnabled: isLinkEnabled
+            formCache: formCache
         )
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self

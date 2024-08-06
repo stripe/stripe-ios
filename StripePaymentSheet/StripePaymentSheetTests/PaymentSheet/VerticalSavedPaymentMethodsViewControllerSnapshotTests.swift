@@ -35,7 +35,8 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
-                                                            intent: Intent._testPaymentIntent(paymentMethodTypes: [.card]))
+                                                            elementsSession: ._testCardValue()
+        )
         let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         bottomSheet.view.autosizeHeight(width: 375)
 

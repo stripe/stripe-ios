@@ -32,7 +32,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, intent: Intent._testPaymentIntent(paymentMethodTypes: [.card]))
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testCardValue())
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams())
 
@@ -48,20 +48,19 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "cuss_test")
 
-        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card],
-                                         customerSessionData: [
-                                             "payment_sheet": [
-                                                 "enabled": true,
-                                                 "features": ["payment_method_save": "enabled",
-                                                              "payment_method_remove": "enabled",
-                                                             ],
-                                             ],
-                                             "customer_sheet": [
-                                                 "enabled": false
-                                             ],
-                                         ])
+        let elementsSession: STPElementsSession = ._testValue(paymentMethodTypes: ["card"], customerSessionData: [
+            "payment_sheet": [
+                "enabled": true,
+                "features": ["payment_method_save": "enabled",
+                             "payment_method_remove": "enabled",
+                            ],
+            ],
+            "customer_sheet": [
+                "enabled": false
+            ],
+        ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams())
 
@@ -78,7 +77,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, intent: Intent._testPaymentIntent(paymentMethodTypes: [.card]))
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testValue(paymentMethodTypes: ["card"]))
         sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [expectation], timeout: 5.0)
@@ -94,7 +93,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let detachExpectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                         ephemeralKey: "ek_12345")
 
-        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card],
+        let elementsSession: STPElementsSession = ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
                                              "payment_sheet": [
                                                  "enabled": true,
@@ -107,7 +106,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
                                              ],
                                          ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
         sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)

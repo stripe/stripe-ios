@@ -70,7 +70,8 @@ extension STPPaymentMethod: STPPaymentOption {
             .przelewy24, .bancontact,
             .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik,
             .weChatPay, .boleto, .klarna, .affirm, .cashApp, .paynow, .zip, .revolutPay, .amazonPay,
-            .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco,
+            .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco, .sunbit, .billie,
+            .satispay,
             .unknown:
             return false
 

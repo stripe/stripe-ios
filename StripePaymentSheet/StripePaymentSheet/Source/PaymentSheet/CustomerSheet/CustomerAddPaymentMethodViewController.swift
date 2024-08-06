@@ -35,7 +35,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
-            params.setAllowRedisplayForCustomerSheet(savePaymentMethodConsentBehavior)
             return .new(confirmParams: params)
         }
         return nil
@@ -238,10 +237,9 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethod: type,
             previousCustomerInput: nil,
             addressSpecProvider: .shared,
-            offerSaveToLinkWhenSupported: false,
+            showLinkInlineCardSignup: false,
             linkAccount: nil,
             cardBrandChoiceEligible: cbcEligible,
-            supportsLinkCard: false,
             isPaymentIntent: false,
             isSettingUp: true,
             currency: nil,

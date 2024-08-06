@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1PePS9FY0qyl6XeWcnkdOFxW&client_secret=pi_3PePSrFY0qyl6XeW1C7I9oO6_secret_G5waolzkydsd0eSIFONORn1Ie&expand%5B0%5D=payment_method_preference\.payment_intent\.payment_method&external_payment_methods%5B0%5D=external_paypal&locale=en-US&type=payment_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1PiS2zFY0qyl6XeWlMKBbYVV&client_secret=pi_3PiS3jFY0qyl6XeW0Fv2wThr_secret_zyM4jaalppKBp66eYGN5FVvuf&expand%5B0%5D=payment_method_preference\.payment_intent\.payment_method&external_payment_methods%5B0%5D=external_paypal&locale=en-US&type=payment_intent$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
-request-id: req_dXZTDdEwm7clff
-Content-Length: 20359
+request-id: req_CFr8NL8RnBNnVV
+Content-Length: 20119
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:39:49 GMT
+Date: Wed, 31 Jul 2024 02:14:36 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -45,8 +45,7 @@ x-content-type-options: nosniff
       ],
       "payment_element_passthrough_mode" : [
         "link_not_enabled_on_payment_config",
-        "not_gated_into_enable_m2_passthrough_mode",
-        "gated_into_elements_saved_payment_methods"
+        "not_gated_into_enable_m2_passthrough_mode"
       ]
     },
     "link_elements_is_crypto_onramp" : false,
@@ -60,7 +59,6 @@ x-content-type-options: nosniff
     "link_enable_instant_debits_in_testmode" : false,
     "link_global_holdback_on" : false,
     "link_session_storage_login_enabled" : false,
-    "link_card_art_and_metadata" : false,
     "link_payment_element_enable_webauthn_login" : false,
     "link_payment_method_nicknames" : false,
     "link_authenticated_change_event_enabled" : false,
@@ -77,7 +75,6 @@ x-content-type-options: nosniff
     "link_no_code_default_values_usage" : false,
     "link_hcaptcha_site_key" : "20000000-ffff-ffff-ffff-000000000002",
     "link_crypto_onramp_force_cvc_reverification" : false,
-    "link_no_code_default_values_dashboard_setting" : false,
     "link_email_verification_login_enabled" : false,
     "link_only_for_payment_method_types_enabled" : false,
     "link_bank_incentives_enabled" : false,
@@ -320,7 +317,7 @@ x-content-type-options: nosniff
       }
     }
   ],
-  "session_id" : "elements_session_096StkBcniT",
+  "session_id" : "elements_session_0NExRwvCNri",
   "shipping_address_settings" : {
     "autocomplete_allowed" : false
   },
@@ -355,8 +352,8 @@ x-content-type-options: nosniff
         "amount_tax" : 0
       },
       "payment_method" : null,
-      "client_secret" : "pi_3PePSrFY0qyl6XeW1C7I9oO6_secret_G5waolzkydsd0eSIFONORn1Ie",
-      "id" : "pi_3PePSrFY0qyl6XeW1C7I9oO6",
+      "client_secret" : "pi_3PiS3jFY0qyl6XeW0Fv2wThr_secret_zyM4jaalppKBp66eYGN5FVvuf",
+      "id" : "pi_3PiS3jFY0qyl6XeW0Fv2wThr",
       "confirmation_method" : "automatic",
       "amount_details" : {
         "tip" : {
@@ -372,7 +369,7 @@ x-content-type-options: nosniff
         "sofort"
       ],
       "setup_future_usage" : null,
-      "created" : 1721428789,
+      "created" : 1722392075,
       "description" : null
     },
     "ordered_payment_method_types" : [
@@ -384,7 +381,7 @@ x-content-type-options: nosniff
     "type" : "payment_intent"
   },
   "experiments_data" : {
-    "arb_id" : "958c7214-f52b-4fd8-9da1-27cbe0e103a0",
+    "arb_id" : "0b6e652f-6012-46ac-b5cd-87656c425604",
     "experiment_assignments" : {
       "elements_link_longterm_holdback_v2" : "control",
       "elements_merchant_ui_api_srv" : "control",
@@ -434,7 +431,6 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_paidy" : false,
     "elements_enable_write_allow_redisplay" : false,
     "elements_enable_external_payment_method_online_banking_thailand" : false,
-    "link_card_art_and_metadata" : false,
     "elements_enable_external_payment_method_momo" : false,
     "elements_enable_external_payment_method_payrexx" : false,
     "elements_enable_external_payment_method_walley" : false,
@@ -473,7 +469,7 @@ x-content-type-options: nosniff
     "financial_connections_enable_deferred_intent_flow" : true,
     "elements_enable_external_payment_method_hands_in" : false,
     "elements_enable_external_payment_method_younitedpay" : false,
-    "elements_enable_passive_captcha_on_payment_intent_update" : false,
+    "elements_enable_passive_captcha_on_payment_intent_update" : true,
     "elements_enable_br_card_installments" : false,
     "elements_enable_external_payment_method_atome" : false,
     "elements_enable_external_payment_method_mercado_pago" : false,
@@ -532,7 +528,6 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_online_banking_slovakia" : false,
     "elements_enable_external_payment_method_interac" : false,
     "link_new_learn_more_modal_enabled" : false,
-    "elements_saved_payment_methods" : true,
     "use_link_views" : false,
     "elements_enable_external_payment_method_mybank" : false
   },

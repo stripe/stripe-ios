@@ -39,7 +39,7 @@ class HostController {
 
     // MARK: - Properties
 
-    private let apiClient: STPAPIClient
+    private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let returnURL: String?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -60,7 +60,7 @@ class HostController {
     // MARK: - Init
 
     init(
-        apiClient: STPAPIClient,
+        apiClient: FinancialConnectionsAPIClient,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
@@ -112,7 +112,7 @@ extension HostController: HostViewControllerDelegate {
                 flow: flow,
                 killswitchActive: flowRouter.killswitchActive
             ),
-            apiClient: apiClient
+            apiClient: apiClient.backingAPIClient
         )
 
         switch flow {

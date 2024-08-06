@@ -184,21 +184,19 @@ public class CustomerSheet {
             loadSpecsPromise.resolve(with: ())
         }
 
-        loadSpecsPromise.observe { _ in
-            DispatchQueue.main.async {
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
-                let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
-                                                                                    selectedPaymentMethodOption: selectedPaymentMethodOption,
-                                                                                    merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
-                                                                                    configuration: self.configuration,
-                                                                                    customerSheetDataSource: customerSheetDataSource,
-                                                                                    isApplePayEnabled: isApplePayEnabled,
-                                                                                    paymentMethodRemove: paymentMethodRemove,
-                                                                                    cbcEligible: cbcEligible,
-                                                                                    csCompletion: self.csCompletion,
-                                                                                    delegate: self)
-                self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
-            }
+        loadSpecsPromise.observe(on: .main) { _ in
+            let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
+            let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
+                                                                                selectedPaymentMethodOption: selectedPaymentMethodOption,
+                                                                                merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
+                                                                                configuration: self.configuration,
+                                                                                customerSheetDataSource: customerSheetDataSource,
+                                                                                isApplePayEnabled: isApplePayEnabled,
+                                                                                paymentMethodRemove: paymentMethodRemove,
+                                                                                cbcEligible: cbcEligible,
+                                                                                csCompletion: self.csCompletion,
+                                                                                delegate: self)
+            self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
         }
     }
 
@@ -221,7 +219,7 @@ public class CustomerSheet {
 }
 
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent, elementsSession: STPElementsSession, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
         guard case .setupIntent = intent else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                               error: InternalError.expectedSetupIntent)
@@ -230,7 +228,7 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
             completion(.failed(error: CustomerSheetError.unknown(debugDescription: "No setup intent available")))
             return
         }
-        self.confirmIntent(intent: intent, paymentOption: paymentOption) { result in
+        self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption) { result in
             completion(result)
         }
     }

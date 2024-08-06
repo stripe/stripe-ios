@@ -1,10 +1,18 @@
-## X.Y.Z X-Y-Z
+## 23.29.0 2024-08-05
 ### PaymentSheet
 * [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
 * [Added] When a card is saved (ie you're using a PaymentIntent + setup_future_usage or SetupIntent), legal disclaimer text now appears below the form indicating the card can be charged for future payments.
 * [Fixed] iOS 18 Compatibility with removing multiple saved payment methods
 * [Fixed] Fixed an issue where the keyboard could focus on a hidden phone number field.
+* [Added] Support for Sunbit (Private Beta) with PaymentIntents.
+* [Added] Support for Billie (Private Beta) with PaymentIntents.
+* [Fixed] Fixed an issue where saved payment method UI wouldn't respect `PaymentSheet.Configuration.style` when selected.
+* [Added] Support for Satispay (Private Beta) with PaymentIntents.
 
+### Payments
+* [Added] Support for Sunbit (Private Beta) bindings.
+* [Added] Support for Billie (Private Beta) bindings.
+* [Added] Support for Satispay (Private Beta) bindings.
 
 ## 23.28.1 2024-07-16
 ### Payments

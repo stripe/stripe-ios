@@ -40,9 +40,18 @@ import XCTest
             return
         }
 
+        // Set some default FraudDetectionData
+        FraudDetectionData.shared.sid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.muid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.guid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.sidCreationDate = Date()
+
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
         STPTestingAPIClient.shared.sessionConfig =
             StripeAPIConfiguration.sharedUrlSessionConfiguration
+
+        // Enable the Debug Params headers. We'll record these and include them in the header list.
+        StripeAPIConfiguration.includeDebugParamsHeader = true
 
         // [self name] returns a string like `-[STPMyTestCase testThing]` - this transforms it into the recorded path `recorded_network_traffic/STPMyTestCase/testThing`.
         let rawComponents = name.components(separatedBy: " ")
@@ -80,8 +89,17 @@ import XCTest
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
                     return NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
                 }
+                recorder?.postBodyTransformBlock = { _, postBody in
+                    // Regex filter these:
+                    let escapedBody = NSRegularExpression.escapedPattern(for: postBody ?? "")
+                    // Then remove any params that may contain UUIDs or other random data
+                    return replaceNondeterministicParams(escapedBody)
+                }
             } else {
                 recorder?.urlRegexPatternBlock = nil
+                recorder?.postBodyTransformBlock = { _, _ in
+                    return ""
+                }
             }
             recorder?.followRedirects = followRedirects
             recorder?.fileNamingBlock = { request, _, _ in
@@ -177,4 +195,31 @@ import XCTest
         // Don't accidentally keep any stubs around during the next test run
         HTTPStubs.removeAllStubs()
     }
+}
+
+// Function to filter out some common UUIDs or other request parameters that may change
+private func replaceNondeterministicParams(_ input: String) -> String {
+    let componentsToFilter = [
+        "guid=", // Fraud detection data
+        "muid=",
+        "sid=",
+        "[guid]=",
+        "[muid]=",
+        "[sid]=",
+        "app_version_key", // Current version of Xcode, for Alipay
+
+        "payment_user_agent", // Contains the SDK version number
+        "pk_token_transaction_id", // Random string
+    ]
+    var components = input.components(separatedBy: "&")
+
+    for (index, component) in components.enumerated() {
+        if componentsToFilter.first(where: { component.contains($0) }) != nil {
+            let parts = component.components(separatedBy: "=")
+            XCTAssertEqual(parts.count, 2, "Invalid portion of query string: index\(index), component: \(component)")
+            components[index] = "\(parts[0])=.*"
+        }
+    }
+
+    return components.joined(separator: "&")
 }

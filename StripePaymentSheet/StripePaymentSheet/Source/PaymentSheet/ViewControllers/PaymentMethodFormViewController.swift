@@ -18,20 +18,19 @@ protocol PaymentMethodFormViewControllerDelegate: AnyObject {
 class PaymentMethodFormViewController: UIViewController {
     let form: PaymentMethodElement
     let intent: Intent
+    let elementsSession: STPElementsSession
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheet.Configuration
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
         // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have a divergent path for link. Where is the setDefaultBillingDetailsIfNecessary call, for example?
         if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
-            return linkEnabledElement.makePaymentOption(intent: intent)
+            return linkEnabledElement.makePaymentOption(intent: intent, elementsSession: elementsSession)
         }
 
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = form.updateParams(params: params) {
-            params.setAllowRedisplay(paymentMethodSave: intent.elementsSession.customerSessionPaymentSheetPaymentMethodSave(),
-                                     isSettingUp: intent.isSettingUp)
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
@@ -48,38 +47,43 @@ class PaymentMethodFormViewController: UIViewController {
     }()
     let headerView: UIView?
 
+    /// This caches forms for payment methods so that customers don't have to re-enter details
+    /// This assumes the form generated for a given PM type _does not change_ at any point after load.
+    let formCache: PaymentMethodFormCache
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(type: PaymentSheet.PaymentMethodType, intent: Intent, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, headerView: UIView?, delegate: PaymentMethodFormViewControllerDelegate) {
+    init(
+        type: PaymentSheet.PaymentMethodType,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        previousCustomerInput: IntentConfirmParams?,
+        formCache: PaymentMethodFormCache,
+        configuration: PaymentSheet.Configuration,
+        headerView: UIView?,
+        delegate: PaymentMethodFormViewControllerDelegate
+    ) {
         self.paymentMethodType = type
         self.intent = intent
+        self.elementsSession = elementsSession
         self.delegate = delegate
         self.configuration = configuration
         self.headerView = headerView
-        let shouldOfferLinkSignup: Bool = {
-            guard isLinkEnabled && !intent.disableLinkSignup else {
-                return false
-            }
-
-            let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
-        }()
-
-        // TODO: Inject form cache, make it come from LoadResult, maybe move cache to FormFactory so that shouldDisplayForm checks don't initialize this vc and set the form delegate
-        if let form = Self.formCache[type] {
+        self.formCache = formCache
+        if let form = self.formCache[type] {
             self.form = form
         } else {
             self.form = PaymentSheetFormFactory(
                 intent: intent,
+                elementsSession: elementsSession,
                 configuration: .paymentSheet(configuration),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
-                offerSaveToLinkWhenSupported: shouldOfferLinkSignup,
                 linkAccount: LinkAccountContext.shared.account
             ).make()
-            Self.formCache[type] = form
+            self.formCache[type] = form
         }
 
         super.init(nibName: nil, bundle: nil)
@@ -149,13 +153,18 @@ extension PaymentMethodFormViewController: PresentingViewControllerDelegate {
 
 // MARK: - Form cache
 
-extension PaymentMethodFormViewController {
-    /// This caches forms for payment methods so that customers don't have to re-enter details
-    /// This class expects the formCache to be invalidated (cleared) when we load PaymentSheet; we assume the form generated for a given PM type _does not change_ at any point after load.
-    static var formCache: [PaymentSheet.PaymentMethodType: PaymentMethodElement] = [:]
+/// This caches forms for payment methods so that customers don't have to re-enter details.
+/// ⚠️ Make sure you invalidate the cache appropriately e.g. changing the Intent should invalidate the cache.
+class PaymentMethodFormCache {
+    private var cache: [PaymentSheet.PaymentMethodType: PaymentMethodElement] = [:]
 
-    static func clearFormCache() {
-        formCache = [:]
+    subscript(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodElement? {
+        get {
+            return cache[paymentMethodType]
+        }
+        set {
+            cache[paymentMethodType] = newValue
+        }
     }
 }
 
@@ -275,7 +284,7 @@ extension PaymentMethodFormViewController {
             "hosted_surface": "payment_element",
         ]
         switch intent {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
@@ -285,7 +294,7 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent(_, let setupIntent):
+        case .setupIntent(let setupIntent):
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
@@ -295,7 +304,7 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case let .deferredIntent(elementsSession, intentConfig):
+        case let .deferredIntent(intentConfig):
             let amount: Int?
             let currency: String?
             switch intentConfig.mode {
@@ -365,7 +374,7 @@ extension PaymentMethodFormViewController {
             "hosted_surface": "payment_element",
         ]
         switch intent {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
@@ -375,7 +384,7 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent(_, let setupIntent):
+        case .setupIntent(let setupIntent):
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,

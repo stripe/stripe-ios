@@ -1,0 +1,94 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3PiTJ2FY0qyl6XeW09FXlvBW\?client_secret=pi_3PiTJ2FY0qyl6XeW09FXlvBW_secret_d7Cuum3tTAFlU5Ma8KUR5dVZf&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_intents%2F%3Aintent; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_FYe2mwZHlA5W0q
+Content-Length: 1633
+Vary: Origin
+Date: Wed, 31 Jul 2024 03:34:30 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "eur",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_QZcYZd8pRZc4I0jIjnYBkkZcTtjrQJW"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "sofort" : {
+      "country" : "AT"
+    },
+    "id" : "pm_1PiTJ3FY0qyl6XeWjCpFM9ps",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1722396869,
+    "allow_redisplay" : "unspecified",
+    "type" : "sofort",
+    "customer" : null
+  },
+  "client_secret" : "pi_3PiTJ2FY0qyl6XeW09FXlvBW_secret_d7Cuum3tTAFlU5Ma8KUR5dVZf",
+  "id" : "pi_3PiTJ2FY0qyl6XeW09FXlvBW",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "sofort"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1722396868,
+  "description" : null
+}

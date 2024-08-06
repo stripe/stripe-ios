@@ -84,6 +84,22 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case customerSession = "customer_session"
     }
 
+    enum Amount: Int, PickerEnum {
+        static var enumName: String { "Amount" }
+
+        case _5099 = 5099
+        case _10000 = 10000
+
+        var displayName: String {
+            switch self {
+            case ._5099:
+                return "50.99"
+            case ._10000:
+                return "100.00"
+            }
+        }
+    }
+
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
 
@@ -117,6 +133,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case JP
         case BR
         case TH
+        case DE
+        case IT
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -163,6 +181,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case enabled
         case disabled
     }
+    enum AllowRedisplayOverride: String, PickerEnum {
+        static var enumName: String { "AllowRedisplayOverride" }
+
+        case always
+        case limited
+        case unspecified
+        case notSet
+    }
+
     enum PaymentMethodRemove: String, PickerEnum {
         static var enumName: String { "PaymentMethodRemove" }
 
@@ -383,6 +410,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
+    var amount: Amount
     var merchantCountryCode: MerchantCountry
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
@@ -392,6 +420,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var paymentMethodSave: PaymentMethodSave
+    var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodRedisplay: PaymentMethodRedisplay
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
@@ -423,6 +452,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
+            amount: ._5099,
             merchantCountryCode: .US,
             apmsEnabled: .on,
             shippingInfo: .off,
@@ -430,6 +460,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
             paymentMethodSave: .enabled,
+            allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,
             paymentMethodRedisplay: .enabled,
             paymentMethodAllowRedisplayFilters: .always,

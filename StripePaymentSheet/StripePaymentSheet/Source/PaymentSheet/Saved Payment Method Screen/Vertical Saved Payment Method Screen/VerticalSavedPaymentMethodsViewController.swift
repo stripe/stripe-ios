@@ -31,7 +31,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
     private let configuration: PaymentSheet.Configuration
-    private let intent: Intent
+    private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let isCBCEligible: Bool
 
@@ -97,7 +97,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
     /// Determines if the we should operate in "Remove Only Mode". This mode is enabled under the following conditions:
@@ -131,10 +131,20 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows)
+        let spacerView = UIView(frame: .zero)
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+
+        let heightConstraint = spacerView.heightAnchor.constraint(equalToConstant: 0)
+        heightConstraint.priority = UILayoutPriority(rawValue: 1)
+        heightConstraint.isActive = true
+
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [spacerView])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
+        if let lastPaymentMethodRow = paymentMethodRows.last {
+            stackView.setCustomSpacing(0, after: lastPaymentMethodRow)
+        }
         return stackView
     }()
 
@@ -143,11 +153,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(configuration: PaymentSheet.Configuration,
          selectedPaymentMethod: STPPaymentMethod?,
          paymentMethods: [STPPaymentMethod],
-         intent: Intent) {
+         elementsSession: STPElementsSession) {
         self.configuration = configuration
-        self.intent = intent
-        self.paymentMethodRemove = intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
-        self.isCBCEligible = intent.cardBrandChoiceEligible
+        self.elementsSession = elementsSession
+        self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         // Put in remove only mode and don't show the option to update PMs if:
         // 1. We only have 1 payment method
         // 2. The customer can't update the card brand 
@@ -181,7 +191,13 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
+
         view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+
+        // Add a height constraint to the view to ensure a minimum height of 200
+        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height)
+        minHeightConstraint.priority = .defaultHigh
+        minHeightConstraint.isActive = true
     }
 
     @objc func didSelectEditSavedPaymentMethodsButton() {
@@ -208,6 +224,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func completeSelection(afterDelay: TimeInterval = 0.0) {
+        // Note this dispatch async gives a brief delay, even when `afterDelay` is 0
         DispatchQueue.main.asyncAfter(deadline: .now() + afterDelay) { [weak self] in
             guard let self = self else { return }
             // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `completeSelection` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
@@ -267,9 +284,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         self.view.isUserInteractionEnabled = false
         self.navigationBar.isUserInteractionEnabled = false
 
-        // Give time for new selected row to show it has been selected before dismissing
-        // Makes UX feel a little nicer
-        self.completeSelection(afterDelay: 0.3)
+        self.completeSelection()
     }
 
     func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {

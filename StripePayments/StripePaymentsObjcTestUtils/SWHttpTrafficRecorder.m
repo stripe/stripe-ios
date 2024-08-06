@@ -410,6 +410,11 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
         [tail appendFormat:@"%@: %@\n", key, (NSString*)[response.allHeaderFields objectForKey:key]];
     }
     
+    NSString *postBodyRequest = [self postBodyRequestStringForRequest:request];
+    if (postBodyRequest != nil) {
+        [tail appendFormat:@"X-Stripe-Mock-Request: %@\n", postBodyRequest];
+    }
+    
     [tail appendString:@"\n"];
     
     data = [self doBase64:data request:request response:response];
@@ -429,6 +434,20 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     [self createFileAt:filePath usingData:[tail dataUsingEncoding:NSUTF8StringEncoding] completionHandler:^(BOOL created) {
         [self.class updateRecorderProgressDelegate:(created ? SWHTTPTrafficRecordingProgressRecorded : SWHTTPTrafficRecordingProgressFailedToRecord) userInfo: userInfo];
     }];
+}
+
+-(NSString *)postBodyRequestStringForRequest:(NSURLRequest *)request {
+    NSString *postBody = [request valueForHTTPHeaderField:@"X-Stripe-Mock-Request"];
+    if (postBody != nil && [postBody length] > 0) {
+        NSString *(^postBodyTransformBlock)(NSURLRequest *request, NSString *postBody) = [SWHttpTrafficRecorder sharedRecorder].postBodyTransformBlock;
+        
+        if(postBodyTransformBlock){
+            postBody = postBodyTransformBlock(request, postBody);
+        }
+
+        return postBody;
+    }
+    return nil;
 }
 
 -(NSData *)replaceRegexWithTokensInData: (NSData *) data {

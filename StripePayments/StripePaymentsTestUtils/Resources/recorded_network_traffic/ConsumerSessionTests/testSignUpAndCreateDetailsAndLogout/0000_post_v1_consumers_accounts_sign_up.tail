@@ -1,5 +1,5 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/consumers\/accounts\/sign_up$
+/v1/consumers/accounts/sign_up$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,22 +13,23 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
-request-id: req_FTWNHFTa7zBgNh
+request-id: req_qhf5bq3gPyDF79
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1424
 Vary: Origin
-Date: Fri, 19 Jul 2024 23:24:44 GMT
-original-request: req_FTWNHFTa7zBgNh
+Date: Wed, 31 Jul 2024 02:08:50 GMT
+original-request: req_qhf5bq3gPyDF79
 stripe-version: 2020-08-27
-idempotency-key: 2fe2fbcb-944a-480d-8a5c-8dd16ce6553d
+idempotency-key: 19bb486d-e368-4a5c-acc2-3be6a2d39f26
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
+X-Stripe-Mock-Request: 
 
 {
-  "publishable_key" : "pk_test_51PGTtoEw1fUsa06uR4btLOCG87ZmRXUgBTnjJ9XfSLSWgW7WcZBHza7wdMLJJ0mGDf1HOLrgmXUtzcuUhOj5RxKr00f3SDkzHD",
+  "publishable_key" : "pk_test_51PNlGbC40Oy4de1NJgp6GSi80JEj4sO4nFgJu9Y6LIHpK4Ih6MEdF0gVYcJwutISCr3OAwsb96g85zfnPFXs3cZg00wj9e7J6w",
   "consumer_session" : {
     "unredacted_phone_number" : null,
     "redacted_phone_number" : "+1********34",
@@ -43,13 +44,13 @@ x-content-type-options: nosniff
         "verification_token" : null
       }
     ],
-    "client_secret" : "pscs_AVsCY5UnfNrlGK87PslJO76JLE1SNTm-6yX34111lopKU34khtxepKhgFl4nqY4gt8xXQMh7LYzgP3FO5NdsGEBx-2CmkCmtB2mlXmmrrdvQtKCCWnB2D1B3k4DIZ-yqlBg_sjY4Sl0SzsF6CXYlBrxuXophKBd26kCXU-gLROmY4gTRsD6J64hXxbTJOSZsEFmMoWRw0fsdm39hJRGOVyYqsHQu7N5cOiVCzpHnNaFjl7e9omxOL3PO8plxcIruRVFxXJ0p5cIY320dpQGU4gka7bfRl4YhEsfkwC1tJRRP0zQAr_xbDiUldVk97u0k_tUSnjLjuWEqAlBJ2bnHyADgH3QHKjOLd7aGJozgCl-9neqmaJEsskFCJJVfHpJF6e6JveI8e8nnB6jIMrBYOBhc2yCmAYBEmMsdisLDRVq9daKLBKniA-BPwlQ",
+    "client_secret" : "pscs_AVsCY5VSHWCnNEc1MHWqrdBOkZznPskf5nvedkE0qy6vVjthveBvQJLDPnuskghizsVwWzncoIwbMDJqHGU8Y1xllyI1MeXAGO2YT6WwX77MMYlJyvDFdEbpogbdOdIUSHR-ik_qypDkvLwoHO7AquEc7Vrf3mu9oL706S9bEnJDBEbj-gDmdToL6c8ojXMfODe7ush9pQSZA3eRZ0L6FAeMGfvhANRhSi8PUT6RaBTQxgbJvSTpWJr4b7VkxC24Pzv87W8E3Y-Y_PxAwRkf72-LmX_Gs3pvk5NPHKaSXbfPKw-DpJ4D9QVFK_CRX0tyHyLAynVqP1jHdywf5ct8G8Wfk4JGHXDmzcy4wdE4RKj6ll9vLq1mtM4v_fSuk9Wvcj4rgAWVpO7yrJG9VgxUzq9LDZM1ASQPyKF3ZrqEDFFlVSUmBDClHGArFmo",
     "support_payment_details_types" : [
       "CARD",
       "BANK_ACCOUNT"
     ],
-    "email_address" : "mobile-payments-sdk-ci+a954d11e-4cef-4ebf-883b-fbbeafa8ffed@stripe.com"
+    "email_address" : "mobile-payments-sdk-ci+874e9b29-df47-4a14-be39-be257a89dccb@stripe.com"
   },
-  "account_id" : "acct_1PGTtoEw1fUsa06u",
-  "auth_session_client_secret" : "ascs_COoBEjxjYXNhc19Id3dKckpGLTR0dlV3UkwhM3dqbDh2T0R0WmNpRGwhWW0xcG8hcE94VDlJI0dnVUk2Z0VZQVEaJGNiYjU3NGVhLTg1MWUtNGUxNS04ZGM2LTA1Zjc2ZmZlZmMxZiIIQWJCWlFibXg"
+  "account_id" : "acct_1PNlGbC40Oy4de1N",
+  "auth_session_client_secret" : "ascs_COoBEjxjYXNhc18yTXFiMkJOY094WmZ0eXkhZlMzYjNXNnpQMFd3ZjAtYkxydGh6UEdNNmNFI0dnVUk2Z0VZQVEaJDZkNGIxYjU5LTQzOWQtNGU0Ny1iYmRlLWIzMDNjMzViNGNlOCIIQWJCWlFibXk"
 }

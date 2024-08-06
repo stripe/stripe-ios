@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1PePS9FY0qyl6XeWcnkdOFxW&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1PiS2zFY0qyl6XeWlMKBbYVV&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&type=deferred_intent$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
-request-id: req_iy43JvEYD1v0pS
-Content-Length: 14518
+request-id: req_quipptABt20EtI
+Content-Length: 14278
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:39:32 GMT
+Date: Wed, 31 Jul 2024 02:14:18 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -46,8 +46,7 @@ x-content-type-options: nosniff
       "payment_element_passthrough_mode" : [
         "automatic_payment_methods_enabled",
         "link_not_enabled_on_payment_config",
-        "not_gated_into_enable_m2_passthrough_mode",
-        "gated_into_elements_saved_payment_methods"
+        "not_gated_into_enable_m2_passthrough_mode"
       ]
     },
     "link_elements_is_crypto_onramp" : false,
@@ -61,7 +60,6 @@ x-content-type-options: nosniff
     "link_enable_instant_debits_in_testmode" : false,
     "link_global_holdback_on" : false,
     "link_session_storage_login_enabled" : false,
-    "link_card_art_and_metadata" : false,
     "link_payment_element_enable_webauthn_login" : false,
     "link_payment_method_nicknames" : false,
     "link_authenticated_change_event_enabled" : false,
@@ -78,7 +76,6 @@ x-content-type-options: nosniff
     "link_no_code_default_values_usage" : false,
     "link_hcaptcha_site_key" : "20000000-ffff-ffff-ffff-000000000002",
     "link_crypto_onramp_force_cvc_reverification" : false,
-    "link_no_code_default_values_dashboard_setting" : false,
     "link_email_verification_login_enabled" : false,
     "link_only_for_payment_method_types_enabled" : false,
     "link_bank_incentives_enabled" : false,
@@ -139,7 +136,7 @@ x-content-type-options: nosniff
       }
     }
   ],
-  "session_id" : "elements_session_1EaH79ZOs2R",
+  "session_id" : "elements_session_1duo4UU2VTk",
   "shipping_address_settings" : {
     "autocomplete_allowed" : false
   },
@@ -156,13 +153,13 @@ x-content-type-options: nosniff
     "type" : "deferred_intent",
     "ordered_payment_method_types" : [
       "card",
-      "amazon_pay",
       "cashapp",
+      "amazon_pay",
       "us_bank_account"
     ]
   },
   "experiments_data" : {
-    "arb_id" : "9ef9dfda-bf6d-4158-8403-9772242ab975",
+    "arb_id" : "d09294c6-994b-49e8-affb-f180b56de67b",
     "experiment_assignments" : {
       "elements_merchant_ui_api_srv" : "control",
       "link_popup_webview_option_ios" : "control"
@@ -211,7 +208,6 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_paidy" : false,
     "elements_enable_write_allow_redisplay" : false,
     "elements_enable_external_payment_method_online_banking_thailand" : false,
-    "link_card_art_and_metadata" : false,
     "elements_enable_external_payment_method_momo" : false,
     "elements_enable_external_payment_method_payrexx" : false,
     "elements_enable_external_payment_method_walley" : false,
@@ -250,7 +246,7 @@ x-content-type-options: nosniff
     "financial_connections_enable_deferred_intent_flow" : true,
     "elements_enable_external_payment_method_hands_in" : false,
     "elements_enable_external_payment_method_younitedpay" : false,
-    "elements_enable_passive_captcha_on_payment_intent_update" : false,
+    "elements_enable_passive_captcha_on_payment_intent_update" : true,
     "elements_enable_br_card_installments" : false,
     "elements_enable_external_payment_method_atome" : false,
     "elements_enable_external_payment_method_mercado_pago" : false,
@@ -309,14 +305,13 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_online_banking_slovakia" : false,
     "elements_enable_external_payment_method_interac" : false,
     "link_new_learn_more_modal_enabled" : false,
-    "elements_saved_payment_methods" : true,
     "use_link_views" : false,
     "elements_enable_external_payment_method_mybank" : false
   },
   "external_payment_method_data" : null,
   "unactivated_payment_method_types" : [
-    "amazon_pay",
     "cashapp",
+    "amazon_pay",
     "us_bank_account"
   ],
   "lpm_promotions" : null,
@@ -348,9 +343,9 @@ x-content-type-options: nosniff
   "ordered_payment_method_types_and_wallets" : [
     "card",
     "apple_pay",
-    "amazon_pay",
     "cashapp",
     "google_pay",
+    "amazon_pay",
     "us_bank_account"
   ]
 }

@@ -62,12 +62,15 @@
 		495539EE2C484DC200543D18 /* FinancialConnectionsTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */; };
 		496A6AE72C29E0BB00D34F8E /* testmode@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496A6AE62C29E0BB00D34F8E /* testmode@3x.png */; };
 		497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497142BB2C514B08000DFA64 /* FlowRouterTests.swift */; };
+		49A0B5862C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */; };
 		49AC518C2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */; };
+		49C911372C597EAF00589E0D /* LinkLoginDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C911332C597EAF00589E0D /* LinkLoginDataSource.swift */; };
+		49C911392C597EAF00589E0D /* LinkLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C911352C597EAF00589E0D /* LinkLoginViewController.swift */; };
+		49C9113B2C59932300589E0D /* LinkSignupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C9113A2C59932300589E0D /* LinkSignupFormView.swift */; };
 		4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */; };
 		4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */; };
 		4DC8EB63806434ABF4C9CC43 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782A419DCF59BE6AB6439D04 /* add@3x.png */; };
 		54B51EA1F75B9607D7C29B08 /* NetworkingLinkSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDEF702710EEA29BA3DC653 /* NetworkingLinkSignupViewController.swift */; };
-		5F3C86F23B65CAC56FDDEC90 /* NetworkingLinkSignupBodyFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041EFAE37D8F7E96DD4A4435 /* NetworkingLinkSignupBodyFormView.swift */; };
 		645D6FF67167263F9A1C2BB0 /* bullet@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07BCA9D23511A3494C82B632 /* bullet@3x.png */; };
 		648FA50974B14CC861B08ECB /* APIPollingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF54EDA6123C7E4E78D9D56B /* APIPollingHelper.swift */; };
 		6744CB1B182C5F7220B0B804 /* AuthFlowHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC0D3ED86914DC4216CCCA /* AuthFlowHelpersTests.swift */; };
@@ -258,7 +261,6 @@
 
 /* Begin PBXFileReference section */
 		0281E0221BDE01D0845DC0F9 /* ConsentLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentLogoView.swift; sourceTree = "<group>"; };
-		041EFAE37D8F7E96DD4A4435 /* NetworkingLinkSignupBodyFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkSignupBodyFormView.swift; sourceTree = "<group>"; };
 		064D0E3A3AC71FAA60B54FC5 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		07526E95D85120F6492E78AE /* FinancialConnectionsLegalDetailsNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLegalDetailsNotice.swift; sourceTree = "<group>"; };
 		07BCA9D23511A3494C82B632 /* bullet@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bullet@3x.png"; sourceTree = "<group>"; };
@@ -319,7 +321,11 @@
 		495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsTheme.swift; sourceTree = "<group>"; };
 		496A6AE62C29E0BB00D34F8E /* testmode@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testmode@3x.png"; sourceTree = "<group>"; };
 		497142BB2C514B08000DFA64 /* FlowRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowRouterTests.swift; sourceTree = "<group>"; };
+		49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClientTests.swift; sourceTree = "<group>"; };
 		49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLinkLoginPane.swift; sourceTree = "<group>"; };
+		49C911332C597EAF00589E0D /* LinkLoginDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkLoginDataSource.swift; sourceTree = "<group>"; };
+		49C911352C597EAF00589E0D /* LinkLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkLoginViewController.swift; sourceTree = "<group>"; };
+		49C9113A2C59932300589E0D /* LinkSignupFormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LinkSignupFormView.swift; path = StripeFinancialConnections/Source/Native/NetworkingLinkSignupPane/LinkSignupFormView.swift; sourceTree = SOURCE_ROOT; };
 		4A7B146AA6BF44921A249DB8 /* EmptyFinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyFinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_accounts.json; sourceTree = "<group>"; };
 		4BFCD9C339634B71FC8F85E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -659,6 +665,15 @@
 			path = FinancialConnectionsSDK;
 			sourceTree = "<group>";
 		};
+		49C911362C597EAF00589E0D /* LinkLogin */ = {
+			isa = PBXGroup;
+			children = (
+				49C911332C597EAF00589E0D /* LinkLoginDataSource.swift */,
+				49C911352C597EAF00589E0D /* LinkLoginViewController.swift */,
+			);
+			path = LinkLogin;
+			sourceTree = "<group>";
+		};
 		53C3F536D69FCBC77C3E7D5F /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -937,6 +952,7 @@
 		BF0B937496C645C3ED6E265E /* Native */ = {
 			isa = PBXGroup;
 			children = (
+				49C911362C597EAF00589E0D /* LinkLogin */,
 				6ABFE5532B7446C70037437C /* Error */,
 				5A844A24E4E9F4B7E3802DA9 /* AccountPicker */,
 				7BFDCD3B61A38A4BA3466780 /* AttachLinkedPaymentAccount */,
@@ -992,6 +1008,7 @@
 				6A13B9832B48BF4300FFA327 /* AccountPickerRowLabelView.swift */,
 				6A13B9F92B4E182A00FFA327 /* SpinnerView.swift */,
 				6A732C992B61C51C00828CB1 /* ShimmeringView.swift */,
+				49C9113A2C59932300589E0D /* LinkSignupFormView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1038,6 +1055,7 @@
 				73AB8A480620B5C3567F453C /* FinancialConnectionsAnalyticsTest.swift */,
 				E05C2C5CDAA55CE700662040 /* FinancialConnectionsSessionTests.swift */,
 				20E7725EF317C3BD62ADF845 /* FinancialConnectionsSheetTests.swift */,
+				49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */,
 				4BFCD9C339634B71FC8F85E9 /* Info.plist */,
 				F8C7FDF59D906EA5C6B7A514 /* ManualEntryValidatorTests.swift */,
 				4E7D318EE807701AB3FCA17D /* MarkdownBoldAttributedStringTests.swift */,
@@ -1072,7 +1090,6 @@
 		F4F0179DDFE793873C22E918 /* NetworkingLinkSignupPane */ = {
 			isa = PBXGroup;
 			children = (
-				041EFAE37D8F7E96DD4A4435 /* NetworkingLinkSignupBodyFormView.swift */,
 				40ECB2B008FC082B4D38D2FE /* NetworkingLinkSignupBodyView.swift */,
 				D688616FDC435586025D2023 /* NetworkingLinkSignupDataSource.swift */,
 				72A74B9F667A3BF48253045E /* NetworkingLinkSignupFooterView.swift */,
@@ -1251,6 +1268,7 @@
 			files = (
 				648FA50974B14CC861B08ECB /* APIPollingHelper.swift in Sources */,
 				6A732C9A2B61C51C00828CB1 /* ShimmeringView.swift in Sources */,
+				49C911392C597EAF00589E0D /* LinkLoginViewController.swift in Sources */,
 				BCEA321423DF0E7674C2544C /* APIVersion.swift in Sources */,
 				6A732CA22B69821300828CB1 /* RoundedTextField.swift in Sources */,
 				11FB97AC840FEB5B5BF85BF9 /* FinancialConnectionsAPIClient.swift in Sources */,
@@ -1326,6 +1344,7 @@
 				6A1D43032B16B3DC005A1EB0 /* InstitutionCellView.swift in Sources */,
 				6A1D43072B17AE37005A1EB0 /* RoundedIconView.swift in Sources */,
 				6A26A3AB2B991A4D00215510 /* FeedbackGeneratorAdapter.swift in Sources */,
+				49C9113B2C59932300589E0D /* LinkSignupFormView.swift in Sources */,
 				716E12A9AC0B790F14FB72C6 /* AccountNumberRetrievalErrorView.swift in Sources */,
 				3446145FCA3278D51A9D4B80 /* AttachLinkedPaymentAccountDataSource.swift in Sources */,
 				E3F62D2F9C344A1178030E8E /* AttachLinkedPaymentAccountViewController.swift in Sources */,
@@ -1359,7 +1378,6 @@
 				FFD76E78070ECBB283D43D5E /* NetworkingLinkLoginWarmupBodyView.swift in Sources */,
 				1E0C39EB65B8CB04F218D0BD /* NetworkingLinkLoginWarmupDataSource.swift in Sources */,
 				F7C10A1AB247D0F6E111DE36 /* NetworkingLinkLoginWarmupViewController.swift in Sources */,
-				5F3C86F23B65CAC56FDDEC90 /* NetworkingLinkSignupBodyFormView.swift in Sources */,
 				6A044E482BB3866A00D73A3E /* AccountUpdateRequiredViewController.swift in Sources */,
 				95B2A73AC5DA9FA64017B3CB /* NetworkingLinkSignupBodyView.swift in Sources */,
 				6A05FB432BCF153F0001D128 /* InstantDebitsLinkedBankImplementation.swift in Sources */,
@@ -1396,6 +1414,7 @@
 				0375F8C6D79947C992C32362 /* NetworkingOTPDataSource.swift in Sources */,
 				40FF444E6CF20E9DA7D90448 /* NetworkingOTPView.swift in Sources */,
 				444884F264D13FF654EA7471 /* PaneLayoutView.swift in Sources */,
+				49C911372C597EAF00589E0D /* LinkLoginDataSource.swift in Sources */,
 				6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */,
 				99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */,
 				AA80602323C28AFAC391358D /* TimeInterval+Extensions.swift in Sources */,
@@ -1435,6 +1454,7 @@
 				846D1D7429B9E414744DEC99 /* FinancialConnectionsSheetTests.swift in Sources */,
 				C19996D0AC7E046DA87B6B32 /* ManualEntryValidatorTests.swift in Sources */,
 				779C729BB49FD4B99DCD517B /* MarkdownBoldAttributedStringTests.swift in Sources */,
+				49A0B5862C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift in Sources */,
 				BF5F964E1CA6312755D4161E /* SessionFetcherTests.swift in Sources */,
 				ED818E10F37230678B9B73CC /* SoftLinkTests.swift in Sources */,
 				D9F35B3B31CA2E52055D6B1D /* StringExtensionsTests.swift in Sources */,

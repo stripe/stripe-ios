@@ -116,7 +116,20 @@ extension RowButton {
             true
         }
     }
+}
 
+// MARK: - EventHandler
+extension RowButton.RightAccessoryButton: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            alpha = 1
+        case .shouldDisableUserInteraction:
+            alpha = 0.5
+        default:
+            break
+        }
+    }
 }
 
 extension RowButton.RightAccessoryButton {

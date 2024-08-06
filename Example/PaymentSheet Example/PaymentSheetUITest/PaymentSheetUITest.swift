@@ -47,9 +47,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     func testPaymentSheetStandard() throws {
         app.launch()
         app.staticTexts["PaymentSheet"].tap()
-        let buyButton = app.staticTexts["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
-        buyButton.tap()
+        app.staticTexts["Buy"].waitForExistenceAndTap(timeout: 60)
 
         try! fillCardData(app)
         app.buttons["Pay €9.73"].tap()
@@ -446,6 +444,45 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
     }
+
+    func testPreservesFormDetails() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .setup
+        settings.uiStyle = .paymentSheet
+        settings.layout = .horizontal
+        loadPlayground(app, settings)
+
+        // Add a card first so we can test saved screen
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.buttons["Set up"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        app.buttons["Reload"].tap()
+
+        func _testHorizontalPreservesFormDetails() {
+            // Typing something into the card form...
+            let numberField = app.textFields["Card number"]
+            numberField.waitForExistenceAndTap()
+            app.typeText("4")
+            // ...and tapping to a different form and back...
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Cash App Pay")?.waitForExistenceAndTap() ?? false)
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Card")?.waitForExistenceAndTap() ?? false)
+            // ...should preserve the card form
+            XCTAssertEqual(numberField.value as? String, "4, Your card number is incomplete.")
+            // ...tapping to the saved PM screen and back should do the same
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["+ Add"].waitForExistenceAndTap()
+            XCTAssertEqual(numberField.value as? String, "4, Your card number is incomplete.")
+            // Exit
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["Close"].waitForExistenceAndTap()
+        }
+        // PaymenSheet + Horizontal
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        _testHorizontalPreservesFormDetails()
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
@@ -655,315 +692,6 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         app.buttons["Confirm"].tap()
 
         payWithApplePay()
-    }
-}
-
-// MARK: GDPR Compliance (allow_redisplay tests)
-class PaymentSheetGDPRUITests: PaymentSheetUITestCase {
-    func testAllowRedisplayValue_unspecified_PI_legacy() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-        settings.mode = .payment
-        settings.customerKeyType = .legacy
-        loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
-        try! fillCardData(app)
-        _ensureStateOfCheckbox(app, .checked)
-
-        // Complete payment
-        app.buttons["Pay $50.99"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-
-        // Change to CustomerSessions
-        app.buttons["customer_session"].waitForExistenceAndTap()
-
-        // Switch to see only unspecified payment methods
-        app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
-        app.buttons["unspecified"].waitForExistenceAndTap()
-
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
-        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
-        // Assert there is only a single payment method using CustomerSession
-        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
-        app.buttons["Close"].waitForExistenceAndTap()
-    }
-
-    func testAllowRedisplayValue_unspecified_SI_legacy() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-        settings.mode = .setup
-        settings.customerKeyType = .legacy
-        loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
-        try! fillCardData(app)
-
-        app.buttons["Set up"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-
-        // Change to CustomerSessions
-        app.buttons["customer_session"].waitForExistenceAndTap()
-
-        // Switch to see only unspecified payment methods
-        app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
-        app.buttons["unspecified"].waitForExistenceAndTap()
-
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
-        XCTAssertTrue(app.buttons["Set up"].waitForExistence(timeout: 10))
-        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
-        app.buttons["Close"].waitForExistenceAndTap()
-    }
-
-    func testAllowRedisplayValue_SI_saveDisabled_checkbox_hidden() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .setup
-        settings.paymentMethodSave = .disabled // .disabled == hides checkbox when SI or PI+SFU
-        let checkboxBehavior: CheckboxBehavior = .hidden
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .limited,
-                                              cardIsAttachedToCustomer: true)
-    }
-    func testAllowRedisplayValue_PISFU_saveDisabled_checkbox_hidden() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .paymentWithSetup
-        settings.paymentMethodSave = .disabled // hidden checkbox when SI or PI+SFU
-        let checkboxBehavior: CheckboxBehavior = .hidden
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .limited,
-                                              cardIsAttachedToCustomer: true)
-    }
-
-    func testAllowRedisplayValue_PI_saveDisabled_checkbox_unchecked() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .payment
-        settings.paymentMethodSave = .disabled // checkbox is shown, when PI
-        let checkboxBehavior: CheckboxBehavior = .unchecked
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .unspecified_limited_always,
-                                              cardIsAttachedToCustomer: false)
-    }
-
-    func testAllowRedisplayValue_PI_saveDisabled_checkbox_checked() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .payment
-        settings.paymentMethodSave = .disabled // checkbox is shown, when PI
-        let checkboxBehavior: CheckboxBehavior = .checked
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .always,
-                                              cardIsAttachedToCustomer: true)
-    }
-
-    func testAllowRedisplayValue_PI_saveEnabled_checked() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .payment
-        settings.paymentMethodSave = .enabled
-        let checkboxBehavior: CheckboxBehavior = .checked
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .always,
-                                              cardIsAttachedToCustomer: true)
-    }
-    func testAllowRedisplayValue_PI_saveEnabled_unchecked() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .payment
-        settings.paymentMethodSave = .enabled
-        let checkboxBehavior: CheckboxBehavior = .unchecked
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .unspecified_limited_always,
-                                              cardIsAttachedToCustomer: false)
-    }
-    func testAllowRedisplayValue_PISFU_saveEnabled_checked() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .paymentWithSetup
-        settings.paymentMethodSave = .enabled
-        let checkboxBehavior: CheckboxBehavior = .checked
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .always,
-                                              cardIsAttachedToCustomer: true)
-    }
-    func testAllowRedisplayValue_PISFU_saveEnabled_unchecked() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .paymentWithSetup
-        settings.paymentMethodSave = .enabled
-        let checkboxBehavior: CheckboxBehavior = .unchecked
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .limited,
-                                              cardIsAttachedToCustomer: true)
-    }
-    func testAllowRedisplayValue_SI_saveEnabled_checked() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .setup
-        settings.paymentMethodSave = .enabled
-        let checkboxBehavior: CheckboxBehavior = .checked
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .always,
-                                              cardIsAttachedToCustomer: true)
-    }
-    func testAllowRedisplayValue_SI_saveEnabled_unchecked() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.currency = .usd
-        settings.merchantCountryCode = .US
-
-        settings.customerKeyType = .customerSession
-        settings.mode = .setup
-        settings.paymentMethodSave = .enabled
-        let checkboxBehavior: CheckboxBehavior = .unchecked
-
-        loadPlayground(app, settings)
-        _testAllowRedisplayByAddingSingleCard(settings: settings,
-                                              checkboxBehavior: checkboxBehavior,
-                                              allowRedisplayValue: .limited,
-                                              cardIsAttachedToCustomer: true)
-    }
-
-    enum CheckboxBehavior {
-        case checked
-        case unchecked
-        case hidden
-    }
-
-    func _testAllowRedisplayByAddingSingleCard(settings: PaymentSheetTestPlaygroundSettings,
-                                               checkboxBehavior: CheckboxBehavior,
-                                               allowRedisplayValue: PaymentSheetTestPlaygroundSettings.PaymentMethodAllowRedisplayFilters,
-                                               cardIsAttachedToCustomer: Bool) {
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
-        try! fillCardData(app)
-
-        _ensureStateOfCheckbox(app, checkboxBehavior)
-
-        switch settings.mode {
-        case .setup:
-            app.buttons["Set up"].tap()
-        case .payment, .paymentWithSetup:
-            app.buttons["Pay $50.99"].tap()
-        }
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-
-        let paymentMethodRedisplayFilters = app.buttons["PaymentMethodRedisplayFilters, always"]
-        XCTAssertNotNil(scrollDown(scrollView: app.scrollViews.firstMatch, toFindElement: paymentMethodRedisplayFilters))
-
-        // Switch to see only unspecified payment methods
-        if allowRedisplayValue != .always  {
-            app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap()
-            app.buttons[allowRedisplayValue.rawValue].waitForExistenceAndTap()
-            // Implicitly reloads here
-        } else {
-            reload(app, settings: settings)
-        }
-
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        switch settings.mode {
-        case .setup:
-            XCTAssertTrue(app.buttons["Set up"].waitForExistence(timeout: 10))
-        case .payment, .paymentWithSetup:
-            XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
-        }
-
-        if cardIsAttachedToCustomer {
-            // Assert there is only a single payment method using CustomerSession
-            XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
-        } else {
-            // No payments attached to customer
-            XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 0)
-        }
-        app.buttons["Close"].waitForExistenceAndTap()
-    }
-
-    func _ensureStateOfCheckbox(_ app: XCUIApplication, _ behavior: CheckboxBehavior) {
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        switch behavior {
-        case .checked:
-            if !saveThisCardToggle.isSelected {
-                saveThisCardToggle.tap()
-            }
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-        case .unchecked:
-            if saveThisCardToggle.isSelected {
-                saveThisCardToggle.tap()
-            }
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        case .hidden:
-            XCTAssertFalse(saveThisCardToggle.waitForExistence(timeout: 2.0))
-        }
     }
 }
 
@@ -1380,8 +1108,10 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Should still show "+ Add" and Link
         XCTAssertEqual(app.cells.count, 2)
     }
+}
 
-    // MARK: - External PayPal 
+class PaymentSheetExternalPMUITests: PaymentSheetUITestCase {
+    // MARK: - External PayPal
     func testExternalPaypalPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.externalPaymentMethods = .paypal
@@ -1442,6 +1172,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.alerts.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
+}
+class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
     // MARK: - Customer Session
     func testDedupedPaymentMethods_paymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -1691,6 +1423,9 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
     }
 
+}
+
+class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
     // MARK: - PaymentMethodRemoval w/ CBC
     func testPSPaymentMethodRemoveTwoCards() {
 
@@ -1814,7 +1549,9 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 10))
     }
+}
 
+class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
     func testCVCRecollectionFlowController_deferredCSC() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
