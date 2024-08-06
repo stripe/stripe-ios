@@ -7,6 +7,8 @@
 
 import Foundation
 
-struct PaymentDetailsShareResponse: Decodable {
+struct PaymentDetailsShareResponse: UnknownFieldsDecodable {
+    var _allResponseFieldsStorage: StripeCore.NonEncodableParameters?
+    
     let paymentMethod: String
 }

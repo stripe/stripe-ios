@@ -808,9 +808,9 @@
 			baseConfigurationReference = 4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = FN3AN9CHDF;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example.davidme";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -831,9 +831,9 @@
 			baseConfigurationReference = EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = FN3AN9CHDF;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example.davidme";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";

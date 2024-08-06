@@ -536,7 +536,7 @@ workflows:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@6:
+    - git-clone@8.2:
         inputs:
         - clone_depth: "1"
     - cache-pull@2: {}
