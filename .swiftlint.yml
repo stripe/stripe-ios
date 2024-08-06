@@ -79,7 +79,7 @@ identifier_name:
   allowed_symbols: _
   min_length: 1
   max_length: 100
-  validates_start_with_lowercase: false
+  validates_start_with_lowercase: off
 
 large_tuple:
   warning: 4                # It would be nice to lower this number
@@ -94,7 +94,7 @@ type_name:
   allowed_symbols: _`
   min_length: 1
   max_length: 100
-  validates_start_with_lowercase: false
+  validates_start_with_lowercase: off
 
 vertical_whitespace:
   max_empty_lines: 1

@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             PlaygroundController.resetCustomer()
 
             // Speed up animations for quicker CI times
-            UIApplication.shared.keyWindow?.layer.speed = 100
+            UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.layer.speed = 100
         }
         #endif
 

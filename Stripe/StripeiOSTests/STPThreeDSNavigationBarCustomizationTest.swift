@@ -18,7 +18,7 @@ class STPThreeDSNavigationBarCustomizationTest: XCTestCase {
         customization.font = UIFont.italicSystemFont(ofSize: 1)
         customization.textColor = UIColor.blue
         customization.barTintColor = UIColor.red
-        customization.barStyle = UIBarStyle.blackOpaque
+        customization.barStyle = UIBarStyle.black
         customization.translucent = false
         customization.headerText = "foo"
         customization.buttonText = "bar"
@@ -33,7 +33,7 @@ class STPThreeDSNavigationBarCustomizationTest: XCTestCase {
         XCTAssertEqual(UIColor.red, stdsCustomization.barTintColor)
         XCTAssertEqual(stdsCustomization.barTintColor, customization.barTintColor)
 
-        XCTAssertEqual(UIBarStyle.blackOpaque, stdsCustomization.barStyle)
+        XCTAssertEqual(UIBarStyle.black, stdsCustomization.barStyle)
         XCTAssertEqual(stdsCustomization.barStyle, customization.barStyle)
 
         XCTAssertEqual(false, stdsCustomization.translucent)
