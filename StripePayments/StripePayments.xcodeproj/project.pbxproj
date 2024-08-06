@@ -223,6 +223,8 @@
 		CAB989BD2C58776100DF9851 /* STPPaymentMethodBillieParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB989BC2C58776100DF9851 /* STPPaymentMethodBillieParams.swift */; };
 		CAB989BF2C5877FE00DF9851 /* STPPaymentMethodBillie.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB989BE2C5877FE00DF9851 /* STPPaymentMethodBillie.swift */; };
 		CAC3A0302C2E127B007BC888 /* STPPaymentMethodSunbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC3A02F2C2E127B007BC888 /* STPPaymentMethodSunbit.swift */; };
+		CAC80EC32C333646001E3D0D /* STPPaymentMethodSatispay.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC80EC22C333646001E3D0D /* STPPaymentMethodSatispay.swift */; };
+		CAC80EC52C33368E001E3D0D /* STPPaymentMethodSatispayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC80EC42C33368E001E3D0D /* STPPaymentMethodSatispayParams.swift */; };
 		CB99BCA5D74904829DDF5A25 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 719D0377278FA11F93E19637 /* StripeCore.framework */; };
 		CBFB5A1330C916D5DC95F6FF /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086AC53333729531A067E435 /* STPLocalizedString.swift */; };
 		CCB5BAB2A22D94DE02938573 /* STPPaymentMethodMobilePayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A9741EA9B8FD4301DEB5FD /* STPPaymentMethodMobilePayParams.swift */; };
@@ -635,6 +637,8 @@
 		CAB989BC2C58776100DF9851 /* STPPaymentMethodBillieParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBillieParams.swift; sourceTree = "<group>"; };
 		CAB989BE2C5877FE00DF9851 /* STPPaymentMethodBillie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBillie.swift; sourceTree = "<group>"; };
 		CAC3A02F2C2E127B007BC888 /* STPPaymentMethodSunbit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSunbit.swift; sourceTree = "<group>"; };
+		CAC80EC22C333646001E3D0D /* STPPaymentMethodSatispay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSatispay.swift; sourceTree = "<group>"; };
+		CAC80EC42C33368E001E3D0D /* STPPaymentMethodSatispayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSatispayParams.swift; sourceTree = "<group>"; };
 		CEFD8715EEA4EECD411465FB /* STPPaymentMethodCardWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardWallet.swift; sourceTree = "<group>"; };
 		D07382674619AEF657397B21 /* STPThreeDSUICustomization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPThreeDSUICustomization.swift; sourceTree = "<group>"; };
 		D093EFAC2C8F0B310EBD10C4 /* STPPaymentMethodSofortParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSofortParams.swift; sourceTree = "<group>"; };
@@ -1292,6 +1296,8 @@
 				CAB989BA2C58771100DF9851 /* STPPaymentMethodSunbitParams.swift */,
 				CAB989BC2C58776100DF9851 /* STPPaymentMethodBillieParams.swift */,
 				CAB989BE2C5877FE00DF9851 /* STPPaymentMethodBillie.swift */,
+				CAC80EC22C333646001E3D0D /* STPPaymentMethodSatispay.swift */,
+				CAC80EC42C33368E001E3D0D /* STPPaymentMethodSatispayParams.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -1650,6 +1656,7 @@
 				81273890FC0D587732E7B16E /* STPCollectBankAccountParams.swift in Sources */,
 				7C851B7E1C3B36D18BB15706 /* STPConfirmAlipayOptions.swift in Sources */,
 				0E5EF1AFCCA0D7B932D173F8 /* STPConfirmBLIKOptions.swift in Sources */,
+				CAC80EC32C333646001E3D0D /* STPPaymentMethodSatispay.swift in Sources */,
 				1A15D7B4A9F15422B62B2774 /* STPConfirmCardOptions.swift in Sources */,
 				7562CFED8ADBBEBA2F759EEF /* STPConfirmKonbiniOptions.swift in Sources */,
 				E856CEE7FFF917C1A7FFA07E /* STPConfirmPaymentMethodOptions.swift in Sources */,
@@ -1843,6 +1850,7 @@
 				B472CF82B4F1CE69F308DC68 /* Analytic+Payments.swift in Sources */,
 				8021C790E703EE5BF74DD2C5 /* STPAnalyticsClient+Payments.swift in Sources */,
 				6541526D2141523AF9567D55 /* NSArray+Stripe.swift in Sources */,
+				CAC80EC52C33368E001E3D0D /* STPPaymentMethodSatispayParams.swift in Sources */,
 				9893D9DC84A0AB2AA2230555 /* NSDecimalNumber+Stripe_Currency.swift in Sources */,
 				84DF21A5711A6CB12B2EDBCA /* NSDictionary+Stripe.swift in Sources */,
 				BBC2EEFCD179683318E96CF0 /* NSString+Stripe.swift in Sources */,
