@@ -139,7 +139,7 @@ class IntentConfirmParamsTest: XCTestCase {
         intentConfirmParams.setAllowRedisplay(paymentSheetFeatures: .init(paymentMethodSave: false, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: .limited),
                                               isSettingUp: false)
 
-        // Ensure that allowRedisplayOverride doesn't override: (hidden checkbox and not attahced to customer)
+        // Ensure that allowRedisplayOverride doesn't override: (hidden checkbox and not attached to customer)
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
 
