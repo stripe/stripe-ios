@@ -506,10 +506,15 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
 }
 
 - (void)_applicationWillEnterForeground:(NSNotification *)notification {
-    if (self.response.acsUIType == STDSACSUITypeOOB && self.response.challengeAdditionalInfoText) {
-        // [Req 316] When Challenge Additional Information Text is present, the SDK would replace the Challenge Information Text and Challenge Information Text Indicator with the Challenge Additional Information Text when the 3DS Requestor App is moved to the foreground.
-        self.challengeInformationView.challengeInformationText = self.response.challengeAdditionalInfoText;
-        self.challengeInformationView.textIndicatorImage = nil;
+    if (self.response.acsUIType == STDSACSUITypeOOB) {
+        if (self.response.challengeAdditionalInfoText) {
+            // [Req 316] When Challenge Additional Information Text is present, the SDK would replace the Challenge Information Text and Challenge Information Text Indicator with the Challenge Additional Information Text when the 3DS Requestor App is moved to the foreground.
+            self.challengeInformationView.challengeInformationText = self.response.challengeAdditionalInfoText;
+            self.challengeInformationView.textIndicatorImage = nil;
+        }
+
+        // [REQ 70]
+        [self submit:self.response.acsUIType];
     } else if (self.response.acsUIType == STDSACSUITypeHTML && self.response.acsHTMLRefresh) {
         // [Req 317] When the ACS HTML Refresh element is present, the SDK replaces the ACS HTML with the contents of ACS HTML Refresh when the 3DS Requestor App is moved to the foreground.
         [self.webView loadExternalResourceBlockingHTMLString:self.response.acsHTMLRefresh];
@@ -533,9 +538,10 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [self.delegate challengeResponseViewControllerDidRequestResend:self];
 }
 
-- (void)_actionButtonTapped:(UIButton *)sender {
+- (void)submit:(STDSACSUIType)type {
     [self.textChallengeView endEditing:NO];
-    switch (self.response.acsUIType) {
+
+    switch (type) {
         case STDSACSUITypeNone:
             break;
         case STDSACSUITypeText: {
@@ -559,6 +565,10 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
             // No action button in this case, see WKNavigationDelegate.
             break;
     }
+}
+
+- (void)_actionButtonTapped:(UIButton *)sender {
+    [self submit:self.response.acsUIType];
 }
 
 #pragma mark - WKNavigationDelegate
