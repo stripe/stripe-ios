@@ -137,7 +137,7 @@ class IntentConfirmParams {
             if isSettingUp {
                 paymentMethodParams.allowRedisplay = allowRedisplayOverride ?? .limited
             } else {
-                // Payment won't be attached to customer
+                // PaymentMethod won't be attached to customer
                 paymentMethodParams.allowRedisplay = .unspecified
             }
         }
