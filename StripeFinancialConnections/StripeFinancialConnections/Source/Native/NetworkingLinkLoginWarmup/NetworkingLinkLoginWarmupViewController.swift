@@ -13,6 +13,9 @@ protocol NetworkingLinkLoginWarmupViewControllerDelegate: AnyObject {
     func networkingLinkLoginWarmupViewControllerDidSelectContinue(
         _ viewController: NetworkingLinkLoginWarmupViewController
     )
+    func networkingLinkLoginWarmupViewControllerDidSelectCancel(
+        _ viewController: NetworkingLinkLoginWarmupViewController
+    )
     func networkingLinkLoginWarmupViewController(
         _ viewController: NetworkingLinkLoginWarmupViewController,
         didSelectSkipWithManifest manifest: FinancialConnectionsSessionManifest
@@ -39,6 +42,18 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let footerSecondaryButtonTitle: String
+        if dataSource.manifest.isProductInstantDebits {
+            footerSecondaryButtonTitle = STPLocalizedString(
+                "Cancel",
+                "A button title. This button, when pressed, will simply dismiss the warmup pane, as it is required to continue with Link in the Instant Debits flow."
+            )
+        } else {
+            footerSecondaryButtonTitle = STPLocalizedString(
+                "Not now",
+                "A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider)."
+            )
+        }
         setup(
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
@@ -73,10 +88,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     }
                 ),
                 secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: STPLocalizedString(
-                        "Not now",
-                        "A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider)."
-                    ),
+                    title: footerSecondaryButtonTitle,
                     action: { [weak self] in
                         self?.didSelectSkip()
                     }
@@ -95,29 +107,33 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
     }
 
     private func didSelectSkip() {
-        dataSource.analyticsClient.log(
-            eventName: "click.skip_sign_in",
-            pane: .networkingLinkLoginWarmup
-        )
-        dataSource.disableNetworking()
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let manifest):
-                    self.delegate?.networkingLinkLoginWarmupViewController(
-                        self,
-                        didSelectSkipWithManifest: manifest
-                    )
-                case .failure(let error):
-                    self.dataSource
-                        .analyticsClient
-                        .logUnexpectedError(
-                            error,
-                            errorName: "DisableNetworkingError",
-                            pane: .networkingLinkLoginWarmup
+        if dataSource.manifest.isProductInstantDebits {
+            delegate?.networkingLinkLoginWarmupViewControllerDidSelectCancel(self)
+        } else {
+            dataSource.analyticsClient.log(
+                eventName: "click.skip_sign_in",
+                pane: .networkingLinkLoginWarmup
+            )
+            dataSource.disableNetworking()
+                .observe { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let manifest):
+                        self.delegate?.networkingLinkLoginWarmupViewController(
+                            self,
+                            didSelectSkipWithManifest: manifest
                         )
-                    self.delegate?.networkingLinkLoginWarmupViewController(self, didReceiveTerminalError: error)
+                    case .failure(let error):
+                        self.dataSource
+                            .analyticsClient
+                            .logUnexpectedError(
+                                error,
+                                errorName: "DisableNetworkingError",
+                                pane: .networkingLinkLoginWarmup
+                            )
+                        self.delegate?.networkingLinkLoginWarmupViewController(self, didReceiveTerminalError: error)
+                    }
                 }
-            }
+        }
     }
 }
