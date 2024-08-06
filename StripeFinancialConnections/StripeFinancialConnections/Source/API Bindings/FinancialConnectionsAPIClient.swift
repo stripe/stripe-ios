@@ -278,7 +278,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointFeaturedInstitutions,
             parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -306,7 +306,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessions,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -403,7 +403,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAuthSessionsAccounts,
                     parameters: body,
-                    useConsumerPublishableKeyIfNeeded: false
+                    useConsumerPublishableKeyIfNeeded: true
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSessionAccounts>.PollTimingOptions(
@@ -427,7 +427,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsSelectedAccounts,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -555,7 +555,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAttachPaymentAccount,
                     parameters: body,
-                    useConsumerPublishableKeyIfNeeded: false
+                    useConsumerPublishableKeyIfNeeded: true
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsPaymentAccountResource>.PollTimingOptions(
