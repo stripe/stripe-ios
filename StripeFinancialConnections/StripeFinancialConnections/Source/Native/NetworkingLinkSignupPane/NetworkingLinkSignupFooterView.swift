@@ -63,6 +63,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     private lazy var saveToLinkButton: StripeUICore.Button = {
         let saveToLinkButton = Button.primary(theme: theme)
         saveToLinkButton.title = saveToLinkButtonText
+        saveToLinkButton.accessibilityIdentifier = "networking_link_signup_footer_view.save_to_link_button"
         saveToLinkButton.addTarget(self, action: #selector(didSelectSaveToLinkButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
