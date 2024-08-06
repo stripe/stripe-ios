@@ -1194,7 +1194,7 @@ private func CreatePaneViewController(
     case .networkingLinkVerification:
         let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress
         let consumerSessionEmailAddress = dataManager.consumerSession?.emailAddress
-        if let accountholderCustomerEmailAddress = accountholderCustomerEmailAddress ?? consumerSessionEmailAddress {
+        if let accountholderCustomerEmailAddress = consumerSessionEmailAddress ?? accountholderCustomerEmailAddress {
             let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
                 accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
                 manifest: dataManager.manifest,
