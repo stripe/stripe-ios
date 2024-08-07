@@ -108,7 +108,19 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     private func didSelectSkip() {
         if dataSource.manifest.isProductInstantDebits {
-            delegate?.networkingLinkLoginWarmupViewControllerDidSelectCancel(self)
+            guard let delegate else {
+                dataSource
+                    .analyticsClient
+                    .logUnexpectedError(
+                        FinancialConnectionsSheetError.unknown(
+                            debugDescription: "Unexpected nil delegate in the NetworkLinkLoginWarmup pane when selecting Cancel."
+                        ),
+                        errorName: "InstantDebitsCancelError",
+                        pane: .networkingLinkLoginWarmup
+                    )
+                return
+            }
+            delegate.networkingLinkLoginWarmupViewControllerDidSelectCancel(self)
         } else {
             dataSource.analyticsClient.log(
                 eventName: "click.skip_sign_in",
