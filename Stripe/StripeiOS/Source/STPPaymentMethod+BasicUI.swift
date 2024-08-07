@@ -16,7 +16,7 @@ extension STPPaymentMethod: STPPaymentOption {
     // MARK: - STPPaymentOption
     @objc public var image: UIImage {
         if type == .card, let card = card {
-            return STPImageLibrary.cardBrandImage(for: card.brand)
+            return STPImageLibrary.cardBrandImage(for: card.preferredDisplayBrand)
         } else {
             return STPImageLibrary.cardBrandImage(for: .unknown)
         }
@@ -24,7 +24,7 @@ extension STPPaymentMethod: STPPaymentOption {
 
     @objc public var templateImage: UIImage {
         if type == .card, let card = card {
-            return STPImageLibrary.templatedBrandImage(for: card.brand)
+            return STPImageLibrary.templatedBrandImage(for: card.preferredDisplayBrand)
         } else {
             return STPImageLibrary.templatedBrandImage(for: .unknown)
         }
@@ -34,7 +34,7 @@ extension STPPaymentMethod: STPPaymentOption {
         switch type {
         case .card:
             if let card = card {
-                let brand = STPCardBrandUtilities.stringFrom(card.brand)
+                let brand = STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand)
                 return "\(brand ?? "") \(card.last4 ?? "")"
             } else {
                 return STPCardBrandUtilities.stringFrom(.unknown) ?? ""
@@ -69,13 +69,26 @@ extension STPPaymentMethod: STPPaymentOption {
             .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal,
             .przelewy24, .bancontact,
             .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik,
-            .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm, .cashApp, .paynow, .zip, .revolutPay, .amazonPay,
-            .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco,
+            .weChatPay, .boleto, .klarna, .affirm, .cashApp, .paynow, .zip, .revolutPay, .amazonPay,
+            .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco, .sunbit, .billie,
+            .satispay,
             .unknown:
             return false
 
         @unknown default:
             return false
         }
+    }
+}
+
+extension String {
+    var toCardBrand: STPCardBrand? {
+        return STPCard.brand(from: self)
+    }
+}
+
+extension STPPaymentMethodCard {
+    var preferredDisplayBrand: STPCardBrand {
+        return networks?.preferred?.toCardBrand ?? displayBrand?.toCardBrand ?? brand
     }
 }

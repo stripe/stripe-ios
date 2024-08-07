@@ -12,6 +12,16 @@ import StripeCoreTestUtils
 import XCTest
 
 final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
+    override func setUp() {
+        super.setUp()
+        let expectation = expectation(description: "Specs loaded")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+    }
 
     func testCard_AutomaticFields_NoDefaults() {
         let configuration = PaymentSheet.Configuration()
@@ -20,16 +30,17 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testCard_AutomaticFields_DefaultAddress() {
         let defaultAddress = PaymentSheet.Address(
-            city: "San Francisco",
-            country: "US",
-            line1: "510 Townsend St.",
+            city: "Vancouver",
+            country: "CA",
+            line1: "1200 Waterfront Center",
             line2: "Line 2",
-            postalCode: "94102",
-            state: "CA"
+            postalCode: "V7X 1T2",
+            state: "BC"
         )
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.address = defaultAddress
@@ -38,6 +49,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testCard_AllFields_NoDefaults() {
@@ -51,6 +63,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testCard_AllFields_WithDefaults() {
@@ -76,6 +89,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testCard_CardInfoOnly() {
@@ -89,6 +103,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testCard_CardInfoWithName() {
@@ -102,6 +117,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testUSBankAccount_AutomaticFields_NoDefaults() {
@@ -111,6 +127,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testUSBankAccount_AutomaticFields_WithDefaults() {
@@ -123,6 +140,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
     }
 
     func testUSBankAccount_AllFields_NoDefaults() {
@@ -136,6 +154,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testUSBankAccount_AllFields_WithDefaults() {
@@ -161,6 +180,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
     }
 
     func testUSBankAccount_NoFields() {
@@ -177,6 +197,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
     }
 
     func testUpi_AutomaticFields() {
@@ -186,6 +207,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testUpi_AllFields_NoDefaults() {
@@ -199,6 +221,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testUpi_AllFields_WithDefaults() {
@@ -224,6 +247,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testUpi_SomeFields_NoDefaults() {
@@ -238,11 +262,10 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testLpm_Afterpay_AutomaticFields_NoDefaults() {
-        loadSpecs()
-
         let configuration = PaymentSheet.Configuration()
         let factory = factory(
             for: .afterpayClearpay,
@@ -251,10 +274,10 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testLpm_Afterpay_AllFields_NoDefaults() {
-        loadSpecs()
 
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .always
@@ -268,11 +291,10 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testLpm_Afterpay_AllFields_WithDefaults() {
-        loadSpecs()
-
         let defaultAddress = PaymentSheet.Address(
             city: "San Francisco",
             country: "US",
@@ -297,11 +319,10 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
     }
 
     func testLpm_Afterpay_MinimalFields() {
-        loadSpecs()
-
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .never
         configuration.billingDetailsCollectionConfiguration.email = .never
@@ -314,11 +335,10 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
     }
 
     func testLpm_Klarna_AutomaticFields_NoDefaults() {
-        loadSpecs()
-
         let configuration = PaymentSheet.Configuration()
         let factory = factory(
             for: .klarna,
@@ -327,11 +347,10 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testLpm_Klarna_AllFields_NoDefaults() {
-        loadSpecs()
-
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .always
         configuration.billingDetailsCollectionConfiguration.email = .always
@@ -344,11 +363,10 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testLpm_Klarna_AllFields_WithDefaults() {
-        loadSpecs()
-
         let defaultAddress = PaymentSheet.Address(
             city: "San Francisco",
             country: "US",
@@ -373,11 +391,10 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
     }
 
     func testLpm_Klarna_MinimalFields() {
-        loadSpecs()
-
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .never
         configuration.billingDetailsCollectionConfiguration.email = .never
@@ -390,43 +407,22 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
     }
 
 }
 
 extension PaymentSheetFormFactorySnapshotTest {
-    private func usAddressSpecProvider() -> AddressSpecProvider {
-        let specProvider = AddressSpecProvider()
-        specProvider.addressSpecs = [
-            "US": AddressSpec(
-                format: "NOACSZ",
-                require: "ACSZ",
-                cityNameType: .city,
-                stateNameType: .state,
-                zip: "",
-                zipNameType: .zip
-            ),
-        ]
-        return specProvider
-    }
-
     private func factory(
         for paymentMethodType: STPPaymentMethodType,
         configuration: PaymentSheet.Configuration
     ) -> PaymentSheetFormFactory {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [paymentMethodType])
         return PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]),
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
             configuration: .paymentSheet(configuration),
-            paymentMethod: .stripe(paymentMethodType),
-            addressSpecProvider: usAddressSpecProvider()
+            paymentMethod: .stripe(paymentMethodType)
         )
-    }
-
-    private func loadSpecs() {
-        let expectation = expectation(description: "FormSpecs loaded")
-        FormSpecProvider.shared.load { _ in
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 5.0)
     }
 }

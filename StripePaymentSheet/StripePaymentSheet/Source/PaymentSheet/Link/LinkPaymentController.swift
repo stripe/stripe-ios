@@ -91,7 +91,6 @@ import UIKit
     private init(intentSecret: PaymentSheet.InitializationMode, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
         self.mode = intentSecret
         var configuration = PaymentSheet.Configuration()
-        configuration.linkPaymentMethodsOnly = true
         configuration.returnURL = returnURL
         if let billingDetails = billingDetails {
             configuration.defaultBillingDetails = billingDetails

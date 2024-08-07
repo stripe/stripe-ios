@@ -51,7 +51,9 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
             consumerSession: nil,
             apiClient: apiClient,
             clientSecret: clientSecret,
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            isTestMode: manifest.isTestMode,
+            theme: manifest.theme
         )
         self.networkingOTPDataSource = networkingOTPDataSource
         networkingOTPDataSource.delegate = self

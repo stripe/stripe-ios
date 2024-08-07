@@ -28,7 +28,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     weak var delegate: NetworkingSaveToLinkVerificationViewControllerDelegate?
 
     private lazy var loadingView: SpinnerView = {
-        return SpinnerView()
+        return SpinnerView(theme: dataSource.manifest.theme)
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -84,7 +84,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                             customSuccessPaneMessage: nil
                         )
                     }
-                ) : nil
+                ) : nil,
+                theme: dataSource.manifest.theme
             ).footerView
         )
         paneLayoutView.addTo(view: view)

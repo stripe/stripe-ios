@@ -1,0 +1,40 @@
+DELETE
+https:\/\/luxurious-alpine-devourer\.glitch\.me\/delete\?$
+200
+application/json
+access-control-allow-credentials: true
+Date: Wed, 31 Jul 2024 02:08:47 GMT
+Content-Type: application/json
+Content-Length: 959
+Server: gunicorn/19.2.0
+Access-Control-Allow-Origin: *
+
+{
+  "json" : null,
+  "origin" : "136.24.137.206,::ffff:10.10.10.154,::ffff:10.10.89.203",
+  "url" : "https,http,http:\/\/luxurious-alpine-devourer.glitch.me\/delete",
+  "data" : "",
+  "headers" : {
+    "X-Forwarded-Host" : "luxurious-alpine-devourer.glitch.me",
+    "Connection" : "close",
+    "Accept-Encoding" : "gzip, deflate, br",
+    "Stripe-Version" : "2020-08-27",
+    "User-Agent" : "xctest\/22719 CFNetwork\/1406.0.4 Darwin\/23.5.0",
+    "Authorization" : "Bearer",
+    "X-Stripe-User-Agent" : "{\"vendor_identifier\":\"6B9BD889-FE40-4D9D-BD6E-CA93E8B754A3\",\"model\":\"iPhone\",\"type\":\"arm64\",\"os_version\":\"16.4\",\"bindings_version\":\"23.28.1\",\"lang\":\"objective-c\"}",
+    "Host" : "luxurious-alpine-devourer.glitch.me",
+    "Traceparent" : "00-adea1112fa374e4ebe6007f30c66ab1e-54e24023044f40d1-01",
+    "Accept-Language" : "en-US,en;q=0.9",
+    "Accept" : "*\/*",
+    "Content-Length" : "0"
+  },
+  "args" : {
+
+  },
+  "files" : {
+
+  },
+  "form" : {
+
+  }
+}

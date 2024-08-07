@@ -7,6 +7,7 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -16,7 +17,7 @@ import StripeCoreTestUtils
 
 private var kAUBECSDebitPaymentIntentClientSecret =
     "pi_1GaRLjF7QokQdxByYgFPQEi0_secret_z76otRQH2jjOIEQYsA9vxhuKn"
-class STPPaymentMethodAUBECSDebitTests: XCTestCase {
+class STPPaymentMethodAUBECSDebitTests: STPNetworkStubbingTestCase {
     private(set) var auBECSDebitJSON: [AnyHashable: Any]?
 
     func _retrieveAUBECSDebitJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

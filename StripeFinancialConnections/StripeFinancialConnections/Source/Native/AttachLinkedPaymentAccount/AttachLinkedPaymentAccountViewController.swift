@@ -81,7 +81,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
     }
 
     private func attachLinkedAccountIdToLinkAccountSession() {
-        let loadingView = SpinnerView()
+        let loadingView = SpinnerView(theme: dataSource.manifest.theme)
         view.addAndPinSubviewToSafeArea(loadingView)
 
         let pollingStartDate = Date()
@@ -127,6 +127,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                     {
                         let errorView = AccountNumberRetrievalErrorView(
                             institution: self.dataSource.institution,
+                            theme: self.dataSource.manifest.theme,
                             didSelectAnotherBank: self.didSelectAnotherBank,
                             didSelectEnterBankDetailsManually: self.didSelectManualEntry
                         )
@@ -142,6 +143,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                         // something unknown happened here, allow a retry
                         let errorView = AccountPickerAccountLoadErrorView(
                             institution: self.dataSource.institution,
+                            theme: self.dataSource.manifest.theme,
                             didSelectAnotherBank: self.didSelectAnotherBank,
                             didSelectTryAgain: self.didSelectTryAgain,
                             didSelectEnterBankDetailsManually: self.didSelectManualEntry

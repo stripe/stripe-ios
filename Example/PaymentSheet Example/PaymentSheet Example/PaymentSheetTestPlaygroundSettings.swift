@@ -34,6 +34,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    enum Layout: String, PickerEnum {
+        static var enumName: String { "Layout" }
+        case horizontal
+        case vertical
+    }
+
     enum IntegrationType: String, PickerEnum {
         static var enumName: String { "Type" }
 
@@ -78,6 +84,22 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case customerSession = "customer_session"
     }
 
+    enum Amount: Int, PickerEnum {
+        static var enumName: String { "Amount" }
+
+        case _5099 = 5099
+        case _10000 = 10000
+
+        var displayName: String {
+            switch self {
+            case ._5099:
+                return "50.99"
+            case ._10000:
+                return "100.00"
+            }
+        }
+    }
+
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
 
@@ -111,6 +133,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case JP
         case BR
         case TH
+        case DE
+        case IT
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -150,6 +174,57 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case on
         case off
+    }
+    enum PaymentMethodSave: String, PickerEnum {
+        static var enumName: String { "PaymentMethodSave" }
+
+        case enabled
+        case disabled
+    }
+    enum AllowRedisplayOverride: String, PickerEnum {
+        static var enumName: String { "AllowRedisplayOverride" }
+
+        case always
+        case limited
+        case unspecified
+        case notSet
+    }
+
+    enum PaymentMethodRemove: String, PickerEnum {
+        static var enumName: String { "PaymentMethodRemove" }
+
+        case enabled
+        case disabled
+    }
+    enum PaymentMethodRedisplay: String, PickerEnum {
+        static var enumName: String { "PaymentMethodRedisplay" }
+
+        case enabled
+        case disabled
+    }
+    enum PaymentMethodAllowRedisplayFilters: String, PickerEnum {
+        static var enumName: String { "PaymentMethodRedisplayFilters" }
+
+        case always
+        case limited
+        case unspecified
+        case unspecified_limited_always
+        case notSet
+
+        func arrayValue() -> [String]? {
+            switch self {
+            case .always:
+                return ["always"]
+            case .limited:
+                return ["limited"]
+            case .unspecified:
+                return ["unspecified"]
+            case .unspecified_limited_always:
+                return ["unspecified", "limited", "always"]
+            case .notSet:
+                return nil
+            }
+        }
     }
 
     enum DefaultBillingAddress: String, PickerEnum {
@@ -329,18 +404,26 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     var uiStyle: UIStyle
+    var layout: Layout
     var mode: Mode
     var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
+    var amount: Amount
     var merchantCountryCode: MerchantCountry
     var apmsEnabled: APMSEnabled
+    var supportedPaymentMethods: String?
 
     var shippingInfo: ShippingInfo
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
+    var paymentMethodSave: PaymentMethodSave
+    var allowRedisplayOverride: AllowRedisplayOverride
+    var paymentMethodRemove: PaymentMethodRemove
+    var paymentMethodRedisplay: PaymentMethodRedisplay
+    var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
     var linkEnabled: LinkEnabled
@@ -363,17 +446,24 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
+            layout: .horizontal,
             mode: .payment,
             customerKeyType: .legacy,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
+            amount: ._5099,
             merchantCountryCode: .US,
             apmsEnabled: .on,
             shippingInfo: .off,
             applePayEnabled: .on,
             applePayButtonType: .buy,
-            allowsDelayedPMs: .off,
+            allowsDelayedPMs: .on,
+            paymentMethodSave: .enabled,
+            allowRedisplayOverride: .notSet,
+            paymentMethodRemove: .enabled,
+            paymentMethodRedisplay: .enabled,
+            paymentMethodAllowRedisplayFilters: .always,
             defaultBillingAddress: .off,
             customEmail: nil,
             linkEnabled: .off,

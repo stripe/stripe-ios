@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Back of identity card";
 
+"Back of identity document" = "Back of identity document";
+
 "Camera permission" = "Camera permission";
 
 "Camera unavailable" = "Camera unavailable";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
 
 "Front of identity card" = "Front of identity card";
+
+"Front of identity document" = "Front of identity document";
 
 "Get ready to scan your photo ID" = "Get ready to scan your photo ID";
 

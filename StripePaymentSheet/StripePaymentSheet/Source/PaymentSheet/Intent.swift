@@ -19,29 +19,9 @@ import UIKit
 
 /// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
 enum Intent {
-    case paymentIntent(elementsSession: STPElementsSession, paymentIntent: STPPaymentIntent)
-    case setupIntent(elementsSession: STPElementsSession, setupIntent: STPSetupIntent)
-    case deferredIntent(elementsSession: STPElementsSession, intentConfig: PaymentSheet.IntentConfiguration)
-
-    var elementsSession: STPElementsSession {
-        switch self {
-        case .paymentIntent(let elementsSession, _):
-            return elementsSession
-        case .setupIntent(let elementsSession, _):
-            return elementsSession
-        case .deferredIntent(let elementsSession, _):
-            return elementsSession
-        }
-    }
-
-    var unactivatedPaymentMethodTypes: [STPPaymentMethodType] {
-        return elementsSession.unactivatedPaymentMethodTypes
-    }
-
-    /// A sorted list of payment method types supported by the Intent and PaymentSheet, ordered from most recommended to least recommended.
-    var recommendedPaymentMethodTypes: [STPPaymentMethodType] {
-        return elementsSession.orderedPaymentMethodTypes
-    }
+    case paymentIntent(STPPaymentIntent)
+    case setupIntent(STPSetupIntent)
+    case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
 
     var isPaymentIntent: Bool {
         switch self {
@@ -49,7 +29,7 @@ enum Intent {
             return true
         case .setupIntent:
             return false
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
             case .payment:
                 return true
@@ -59,9 +39,20 @@ enum Intent {
         }
     }
 
+    var isDeferredIntent: Bool {
+        switch self {
+        case .paymentIntent:
+            return false
+        case .setupIntent:
+            return false
+        case .deferredIntent:
+            return true
+        }
+    }
+
     var intentConfig: PaymentSheet.IntentConfiguration? {
         switch self {
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             return intentConfig
         default:
             return nil
@@ -70,9 +61,9 @@ enum Intent {
 
     var cvcRecollectionEnabled: Bool {
         switch self {
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             return intentConfig.isCVCRecollectionEnabledCallback()
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
         case .setupIntent:
             return false
@@ -81,11 +72,11 @@ enum Intent {
 
     var currency: String? {
         switch self {
-        case .paymentIntent(_, let pi):
+        case .paymentIntent(let pi):
             return pi.currency
         case .setupIntent:
             return nil
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
             case .payment(_, let currency, _, _):
                 return currency
@@ -97,11 +88,11 @@ enum Intent {
 
     var amount: Int? {
         switch self {
-        case .paymentIntent(_, let pi):
+        case .paymentIntent(let pi):
             return pi.amount
         case .setupIntent:
             return nil
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
             case .payment(let amount, _, _, _):
                 return amount
@@ -114,11 +105,11 @@ enum Intent {
     /// True if this is a PaymentIntent with sfu not equal to none or a SetupIntent
     var isSettingUp: Bool {
         switch self {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             return paymentIntent.setupFutureUsage != .none
         case .setupIntent:
             return true
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
             case .payment(_, _, let setupFutureUsage, _):
                 return setupFutureUsage != nil
@@ -126,13 +117,5 @@ enum Intent {
                 return true
             }
         }
-    }
-
-    var cardBrandChoiceEligible: Bool {
-        return elementsSession.cardBrandChoice?.eligible ?? false
-    }
-
-    var isApplePayEnabled: Bool {
-        return elementsSession.isApplePayEnabled
     }
 }

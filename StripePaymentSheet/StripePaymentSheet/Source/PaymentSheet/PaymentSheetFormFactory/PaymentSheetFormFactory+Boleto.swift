@@ -33,10 +33,7 @@ extension PaymentSheetFormFactory {
             theme: theme
         )
         let addressSection = configuration.billingDetailsCollectionConfiguration.address != .never
-            ? makeBillingAddressSection(
-                collectionMode: .noCountry,
-                countries: ["BR"]
-            )
+            ? makeBillingAddressSection(countries: ["BR"])
             : nil
         let allElements: [Element?] = [contactInfoSection, taxIdSection, addressSection]
         let elements = allElements.compactMap { $0 }

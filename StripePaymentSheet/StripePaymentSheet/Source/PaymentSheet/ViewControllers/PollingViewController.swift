@@ -211,8 +211,8 @@ class PollingViewController: UIViewController {
                                   repeats: true)
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.intentPoller.beginPolling()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+            self?.intentPoller.beginPolling()
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -280,7 +280,7 @@ class PollingViewController: UIViewController {
             self.cancelButton.isHidden = true
             self.titleLabel.text = .Localized.payment_failed
             self.instructionLabel.text = .Localized.please_go_back
-            self.navigationBar.setStyle(.back)
+            self.navigationBar.setStyle(.back(showAdditionalButton: false))
             self.intentPoller.suspendPolling()
             self.oneSecondTimer?.invalidate()
 
@@ -324,10 +324,6 @@ extension PollingViewController: BottomSheetContentViewController {
     var requiresFullScreen: Bool {
         return false
     }
-
-    func didFinishAnimatingHeight() {
-        // no-op
-    }
 }
 
 // MARK: SheetNavigationBarDelegate
@@ -352,10 +348,7 @@ extension PollingViewController: IntentStatusPollerDelegate {
             setErrorStateWorkItem.cancel() // cancel the error work item incase it was scheduled
             currentAction.paymentIntent = paymentIntent // update the local copy of the intent with the latest from the server
             dismiss {
-                // Wait a short amount of time before completing the action to ensure smooth animations
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.currentAction.complete(with: .succeeded, error: nil)
-                }
+                self.currentAction.complete(with: .succeeded, error: nil)
             }
         } else if paymentIntent.status != .requiresAction {
             // an error occured to take the intent out of requires action

@@ -16,31 +16,24 @@ import UIKit
  
  Think of this as a light-weight, specialized view controller.
  */
-@_spi(STP) public protocol Element: AnyObject {
-    /**
-     - Note: This is set by your parent.
-     */
+@_spi(STP) public protocol Element: AnyObject, CustomDebugStringConvertible {
+    /// - Note: This is set by your parent.
     var delegate: ElementDelegate? { get set }
 
-    /**
-     Return your UIView instance.
-     */
+    /// Return your UIView instance.
     var view: UIView { get }
 
-    /**
-     - Returns: Whether or not this Element began editing.
-     */
+    /// - Returns: Whether or not this Element began editing.
     func beginEditing() -> Bool
 
-    /**
-     Whether this element contains valid user input or not.
-     */
+    /// Whether this element contains valid user input or not.
     var validationState: ElementValidationState { get }
 
-    /**
-     Text to display to the user under the item, if any.
-     */
+    /// Text to display to the user under the item, if any.
     var subLabelText: String? { get }
+
+    /// Whether or not this Element collects user input (e.g. a text field, dropdown, picker, checkbox).
+    var collectsUserInput: Bool { get }
 }
 
 public extension Element {
@@ -86,18 +79,6 @@ public extension Element {
     func presentViewController(viewController: UIViewController, completion: (() -> Void)?)
 }
 
-extension Element {
-    /// A poorly named convenience method that returns all Elements underneath this Element, including this Element.
-    public func getAllSubElements() -> [Element] {
-        switch self {
-        case let container as ContainerElement:
-            return [container] + container.elements.flatMap { $0.getAllSubElements() }
-        default:
-            return [self]
-        }
-    }
-}
-
 @_spi(STP) @frozen public enum ElementValidationState {
     case valid
     case invalid(error: ElementValidationError, shouldDisplay: Bool)
@@ -113,4 +94,10 @@ extension Element {
 
 @_spi(STP) public protocol ElementValidationError: Error {
     var localizedDescription: String { get }
+}
+
+extension Element {
+    public var debugDescription: String {
+        return "<\(type(of: self)): \(Unmanaged.passUnretained(self).toOpaque())>"
+    }
 }

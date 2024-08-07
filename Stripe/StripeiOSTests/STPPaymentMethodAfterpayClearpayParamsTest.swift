@@ -8,8 +8,9 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodAfterpayClearpayParamsTest: XCTestCase {
+class STPPaymentMethodAfterpayClearpayParamsTest: STPNetworkStubbingTestCase {
     func testCreateAfterpayClearpayPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let afterpayClearpayParams = STPPaymentMethodAfterpayClearpayParams()

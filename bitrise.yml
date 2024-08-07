@@ -38,20 +38,22 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-15: {}
-    - test-builds-xcode-15-release: {}
     - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
     - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
-    - framework-tests: {}
+    - framework-tests-no-mocks: {}
     - test-builds-xcode-15: {}
+    - test-builds-xcode-15-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
@@ -60,6 +62,8 @@ stages:
     - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
@@ -67,12 +71,13 @@ stages:
     - integration-all: {}
   stage-nightly-all:
     workflows:
+    - test-builds-xcode-15-release: {}
     - basic-integration-tests: {}
+    - framework-tests-no-mocks: {}
     - check-docs: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
-    - data-theorem-sast: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
 workflows:
@@ -113,32 +118,6 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-  data-theorem-sast:
-    steps:
-    - script@1:
-        inputs:
-        - content: bundle config set path 'vendor/bundle'
-        is_always_run: true
-        title: Set Bundler to use local vendor directory
-    - script@1:
-        inputs:
-        - content: bundle config set without 'development'
-        title: Set bundler to ignore development and test gems
-    - git-clone@6: {}
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
-        inputs:
-        - compress_archive: "true"
-        - cache_paths: |
-            vendor
-            SourcePackages
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/push_dt.rb "$BITRISE_GIT_BRANCH" "$DT_UPLOAD_API_KEY"
-        title: Submit app to Data Theorem for SAST
-    after_run:
-    - notify_ci
   deploy-docs:
     steps:
     - activate-ssh-key@4: {}
@@ -151,14 +130,15 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-            SourcePackages
     - script@1:
         inputs:
         - content: git fetch origin
@@ -308,6 +288,12 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
+        - scheme: StripeConnect
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
         - scheme: StripeIdentity
     - xcode-test@4:
         inputs:
@@ -338,6 +324,28 @@ workflows:
     before_run:
     - prep_all
     after_run: []
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
+  framework-tests-no-mocks:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: preflight
+        title: fastlane preflight
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: AllStripeFrameworks-NoMocks
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
+    before_run:
+    - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -380,7 +388,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.2.x-edge
+        stack: osx-xcode-15.2.x
         machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
@@ -540,17 +548,19 @@ workflows:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@6:
+    - git-clone@8.2:
         inputs:
         - clone_depth: "1"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-    - restore-spm-cache@1: {}
+    - restore-spm-cache@2.1: {}
   size-report:
     steps:
     - script@1:
@@ -562,14 +572,15 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
+    - restore-cache@2.4:
         inputs:
-        - compress_archive: "true"
-        - cache_paths: |
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
             vendor
-            SourcePackages
     - script@1:
         inputs:
         - content: git fetch origin
@@ -592,14 +603,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.8core
+        machine_type_id: g2-m1-max.5core
   ui-tests-2:
     steps:
     - xcode-test@4:
@@ -610,14 +621,50 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.8core
+        machine_type_id: g2-m1-max.5core
+  ui-tests-3:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard3
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1-max.5core
+  ui-tests-4:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard4
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1-max.5core                
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:

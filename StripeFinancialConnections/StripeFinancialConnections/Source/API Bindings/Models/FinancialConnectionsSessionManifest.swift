@@ -63,46 +63,186 @@ struct FinancialConnectionsSessionManifest: Decodable {
         }
     }
 
+    enum Theme: String, SafeEnumCodable, Equatable {
+        case light = "light"
+        case dashboardLight = "dashboard_light"
+        case linkLight = "link_light"
+        case unparsable
+    }
+
     // MARK: - Properties
 
+    let accountholderCustomerEmailAddress: String?
     let accountholderIsLinkConsumer: Bool?
+    let accountholderPhoneNumber: String?
+    let accountholderToken: String?
+    let accountDisconnectionMethod: AccountDisconnectionMethod?
+    let activeAuthSession: FinancialConnectionsAuthSession?
     let activeInstitution: FinancialConnectionsInstitution?
     let allowManualEntry: Bool
+    let assignmentEventId: String?
     let businessName: String?
+    let cancelUrl: String?
     let consentRequired: Bool
     let customManualEntryHandling: Bool
     let disableLinkMoreAccounts: Bool
+    let displayText: DisplayText?
+    let experimentAssignments: [String: String]?
+    let features: [String: Bool]?
     let hostedAuthUrl: String?
-    let successUrl: String?
-    let cancelUrl: String?
-    let activeAuthSession: FinancialConnectionsAuthSession?
     let initialInstitution: FinancialConnectionsInstitution?
     let instantVerificationDisabled: Bool
     let institutionSearchDisabled: Bool
+    let isEndUserFacing: Bool?
     let isLinkWithStripe: Bool?
     let isNetworkingUserFlow: Bool?
     let isStripeDirect: Bool?
     let livemode: Bool
+    let manualEntryMode: ManualEntryMode
     let manualEntryUsesMicrodeposits: Bool
     let nextPane: NextPane
-    let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
-    let singleAccount: Bool
     let paymentMethodType: FinancialConnectionsPaymentMethodType?
-    let accountDisconnectionMethod: AccountDisconnectionMethod?
-    let isEndUserFacing: Bool?
+    let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     let product: String
-    let accountholderToken: String?
-    let features: [String: Bool]?
-    let experimentAssignments: [String: String]?
-    let assignmentEventId: String?
+    let singleAccount: Bool
     let skipSuccessPane: Bool?
-    let manualEntryMode: ManualEntryMode
-    let accountholderCustomerEmailAddress: String?
-    let accountholderPhoneNumber: String?
     let stepUpAuthenticationRequired: Bool?
-    let displayText: DisplayText?
+    let successUrl: String?
+
+    private let _theme: Theme?
+    var theme: FinancialConnectionsTheme {
+        FinancialConnectionsTheme(from: _theme)
+    }
 
     var shouldAttachLinkedPaymentMethod: Bool {
         return (paymentMethodType != nil)
+    }
+
+    var isProductInstantDebits: Bool {
+        return (product == "instant_debits")
+    }
+
+    var isTestMode: Bool {
+        !livemode
+    }
+
+    init(
+        accountholderCustomerEmailAddress: String? = nil,
+        accountholderIsLinkConsumer: Bool? = nil,
+        accountholderPhoneNumber: String? = nil,
+        accountholderToken: String? = nil,
+        accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod? = nil,
+        activeAuthSession: FinancialConnectionsAuthSession? = nil,
+        activeInstitution: FinancialConnectionsInstitution? = nil,
+        allowManualEntry: Bool,
+        assignmentEventId: String? = nil,
+        businessName: String? = nil,
+        cancelUrl: String? = nil,
+        consentRequired: Bool,
+        customManualEntryHandling: Bool,
+        disableLinkMoreAccounts: Bool,
+        displayText: FinancialConnectionsSessionManifest.DisplayText? = nil,
+        experimentAssignments: [String: String]? = nil,
+        features: [String: Bool]? = nil,
+        hostedAuthUrl: String? = nil,
+        initialInstitution: FinancialConnectionsInstitution? = nil,
+        instantVerificationDisabled: Bool,
+        institutionSearchDisabled: Bool,
+        isEndUserFacing: Bool? = nil,
+        isLinkWithStripe: Bool? = nil,
+        isNetworkingUserFlow: Bool? = nil,
+        isStripeDirect: Bool? = nil,
+        livemode: Bool,
+        manualEntryMode: FinancialConnectionsSessionManifest.ManualEntryMode,
+        manualEntryUsesMicrodeposits: Bool,
+        nextPane: FinancialConnectionsSessionManifest.NextPane,
+        paymentMethodType: FinancialConnectionsPaymentMethodType? = nil,
+        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        product: String,
+        singleAccount: Bool,
+        skipSuccessPane: Bool? = nil,
+        stepUpAuthenticationRequired: Bool? = nil,
+        successUrl: String? = nil,
+        _theme: FinancialConnectionsSessionManifest.Theme? = nil
+    ) {
+        self.accountholderCustomerEmailAddress = accountholderCustomerEmailAddress
+        self.accountholderIsLinkConsumer = accountholderIsLinkConsumer
+        self.accountholderPhoneNumber = accountholderPhoneNumber
+        self.accountholderToken = accountholderToken
+        self.accountDisconnectionMethod = accountDisconnectionMethod
+        self.activeAuthSession = activeAuthSession
+        self.activeInstitution = activeInstitution
+        self.allowManualEntry = allowManualEntry
+        self.assignmentEventId = assignmentEventId
+        self.businessName = businessName
+        self.cancelUrl = cancelUrl
+        self.consentRequired = consentRequired
+        self.customManualEntryHandling = customManualEntryHandling
+        self.disableLinkMoreAccounts = disableLinkMoreAccounts
+        self.displayText = displayText
+        self.experimentAssignments = experimentAssignments
+        self.features = features
+        self.hostedAuthUrl = hostedAuthUrl
+        self.initialInstitution = initialInstitution
+        self.instantVerificationDisabled = instantVerificationDisabled
+        self.institutionSearchDisabled = institutionSearchDisabled
+        self.isEndUserFacing = isEndUserFacing
+        self.isLinkWithStripe = isLinkWithStripe
+        self.isNetworkingUserFlow = isNetworkingUserFlow
+        self.isStripeDirect = isStripeDirect
+        self.livemode = livemode
+        self.manualEntryMode = manualEntryMode
+        self.manualEntryUsesMicrodeposits = manualEntryUsesMicrodeposits
+        self.nextPane = nextPane
+        self.paymentMethodType = paymentMethodType
+        self.permissions = permissions
+        self.product = product
+        self.singleAccount = singleAccount
+        self.skipSuccessPane = skipSuccessPane
+        self.stepUpAuthenticationRequired = stepUpAuthenticationRequired
+        self.successUrl = successUrl
+        self._theme = _theme
+    }
+
+    // MARK: - Coding Keys
+
+    enum CodingKeys: String, CodingKey {
+        case accountholderCustomerEmailAddress
+        case accountholderIsLinkConsumer
+        case accountholderPhoneNumber
+        case accountholderToken
+        case accountDisconnectionMethod
+        case activeAuthSession
+        case activeInstitution
+        case allowManualEntry
+        case assignmentEventId
+        case businessName
+        case cancelUrl
+        case consentRequired
+        case customManualEntryHandling
+        case disableLinkMoreAccounts
+        case displayText
+        case experimentAssignments
+        case features
+        case hostedAuthUrl
+        case initialInstitution
+        case instantVerificationDisabled
+        case institutionSearchDisabled
+        case isEndUserFacing
+        case isLinkWithStripe
+        case isNetworkingUserFlow
+        case isStripeDirect
+        case livemode
+        case manualEntryMode
+        case manualEntryUsesMicrodeposits
+        case nextPane
+        case paymentMethodType
+        case permissions
+        case product
+        case singleAccount
+        case skipSuccessPane
+        case stepUpAuthenticationRequired
+        case successUrl
+        case _theme = "theme"
     }
 }

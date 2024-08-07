@@ -34,11 +34,12 @@ final class NetworkingLinkSignupViewController: UIViewController {
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var loadingView: SpinnerView = {
-        return SpinnerView()
+        return SpinnerView(theme: dataSource.manifest.theme)
     }()
-    private lazy var formView: NetworkingLinkSignupBodyFormView = {
-        let formView = NetworkingLinkSignupBodyFormView(
-            accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber
+    private lazy var formView: LinkSignupFormView = {
+        let formView = LinkSignupFormView(
+            accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber,
+            theme: dataSource.manifest.theme
         )
         formView.delegate = self
         return formView
@@ -111,6 +112,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             aboveCtaText: networkingLinkSignup.aboveCta,
             saveToLinkButtonText: networkingLinkSignup.cta,
             notNowButtonText: networkingLinkSignup.skipCta,
+            theme: dataSource.manifest.theme,
             didSelectSaveToLink: { [weak self] in
                 self?.didSelectSaveToLink()
             },
@@ -166,6 +168,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
         if let emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(emailAddress)
+        } else {
+            formView.beginEditingEmailAddressField()
         }
 
         assert(self.footerView != nil, "footer view should be initialized as part of displaying content")
@@ -194,9 +198,9 @@ final class NetworkingLinkSignupViewController: UIViewController {
             )
 
         dataSource.saveToLink(
-            emailAddress: formView.emailTextField.text,
-            phoneNumber: formView.phoneTextField.phoneNumber?.string(as: .e164) ?? "",
-            countryCode: formView.phoneTextField.phoneNumber?.countryCode ?? "US"
+            emailAddress: formView.email,
+            phoneNumber: formView.phoneNumber,
+            countryCode: formView.countryCode
         )
         .observe { [weak self] result in
             guard let self = self else { return }
@@ -239,6 +243,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 if urlHost == "legal-details-notice", let legalDetailsNotice {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNotice,
+                        theme: dataSource.manifest.theme,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(
                                 url,
@@ -267,10 +272,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }
 }
 
-extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDelegate {
+extension NetworkingLinkSignupViewController: LinkSignupFormViewDelegate {
 
-    func networkingLinkSignupBodyFormView(
-        _ bodyFormView: NetworkingLinkSignupBodyFormView,
+    func linkSignupFormView(
+        _ bodyFormView: LinkSignupFormView,
         didEnterValidEmailAddress emailAddress: String
     ) {
         bodyFormView.emailTextField.showLoadingView(true)
@@ -304,37 +309,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             pane: .networkingLinkSignupPane
                         )
 
-                        let didShowPhoneNumberFieldForTheFirstTime = self.formView.showPhoneNumberFieldIfNeeded()
-                        // in case user needs to slowly re-type the e-mail,
-                        // we want to only jump to the phone number the
-                        // first time they enter the e-mail
-                        if didShowPhoneNumberFieldForTheFirstTime {
-                            let didPrefillPhoneNumber = (self.formView.phoneTextField.phoneNumber?.number ?? "").count > 1
-                            // if the phone number is pre-filled, we don't focus on the phone number field
-                            if !didPrefillPhoneNumber {
-                                let didPrefillEmailAddress = {
-                                    if
-                                        let accountholderCustomerEmailAddress = self.dataSource.manifest.accountholderCustomerEmailAddress,
-                                        !accountholderCustomerEmailAddress.isEmpty
-                                    {
-                                        return true
-                                    } else {
-                                        return false
-                                    }
-                                }()
-                                // we don't want to auto-focus the phone number field if we pre-filled the email
-                                if !didPrefillEmailAddress {
-                                    // this disables the "Phone" label animating (we don't want that animation here)
-                                    UIView.performWithoutAnimation {
-                                        self.formView.beginEditingPhoneNumberField()
-                                    }
-                                }
-                            } else {
-                                // user is done with e-mail AND phone number, so dismiss the keyboard
-                                // so they can see the "Save to Link" button
-                                self.formView.endEditingEmailAddressField()
-                            }
-                        }
+                        self.formView.showAndEditPhoneNumberFieldIfNeeded()
                     }
                 case .failure(let error):
                     self.dataSource.analyticsClient.logUnexpectedError(
@@ -351,7 +326,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
             }
     }
 
-    func networkingLinkSignupBodyFormViewDidUpdateFields(_ view: NetworkingLinkSignupBodyFormView) {
+    func linkSignupFormViewDidUpdateFields(_ view: LinkSignupFormView) {
         adjustSaveToLinkButtonDisabledState()
     }
 }

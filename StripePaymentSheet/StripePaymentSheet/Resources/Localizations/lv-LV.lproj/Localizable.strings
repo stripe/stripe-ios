@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li %2$@ bezprocentu maksājumi";
+
 "+ Add" = "+ Pievienot";
+
+"Add US bank account" = "Pievienot ASV bankas kontu";
 
 "Add a card" = "Pievienot karti";
 
 "Add a payment method" = "Pievienot maksājuma veidu";
 
-"Add bank account" = "Pievienot bankas kontu";
+"Add card" = "Pievienot karti";
+
+"Add new card" = "Pievienot jaunu karti";
 
 "Add new payment method" = "Pievienot jaunu maksājuma veidu";
 
@@ -16,9 +22,11 @@
 
 "Back" = "Atpakaļ";
 
+"Bank" = "Banka";
+
 "Bank account" = "Bankas konts";
 
-"Buy now or pay later with Klarna." = "Pērciet tagad vai maksājiet vēlāk ar Klarna.";
+"Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
 "Buy using a UPI ID" = "Pirkt, izmantojot UPI ID";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Sniedzot savu bankas konta informāciju un apstiprinot šo maksājumu, jūs piekrītat šim tiešā debeta pieprasījumam un <terms>tiešā debeta pieprasīšanas pakalpojumu sniegšanas līgumam</terms>, kā arī pilnvarojat uzņēmumu Stripe Payments Australia Pty Ltd ACN 160 180 343, tiešā debeta lietotāja ID numurs 507156 (turpmāk – „Stripe”) izmantot lielapjoma elektronisko klīringa sistēmu (BECS), lai uzņēmuma %@ (turpmāk – „Tirgotājs”) vārdā debitētu jūsu kontu par jebkādām summām, par kurām Tirgotājs jums ir atsevišķi ziņojis. Jūs apliecināt, ka esat vai nu iepriekš minētā konta turētājs, vai tā pilnvarota persona ar paraksta tiesībām.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Norādot savas kartes informāciju, jūs atļaujat uzņēmumam %@ saskaņā ar viņu noteikumiem iekasēt no jūsu kartes turpmākus maksājumus.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu e-pastu, es piekrītu izveidot Link kontu un saglabāt savu maksājuma informāciju Link, ievērojot Link <terms>noteikumus</terms> un <privacy>Konfidencialitātes politiku</privacy>.";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Pārvaldīt maksājuma veidu";
+
+"Manage payment methods" = "Pārvaldīt maksājuma veidus";
+
 "Manage your payment methods" = "Pārvaldīt savus maksājuma veidus";
 
 "Name on card" = "Uz kartes norādītais vārds";
+
+"New card" = "Jauna karte";
+
+"New payment method" = "Jauns maksājumu veids";
 
 "Open your UPI app to approve your payment within %@" = "Atveriet UPI lietotni, lai apstiprinātu savu maksājumu %@";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "Noņemt karti?";
 
+"Remove payment method" = "Noņemt maksājumu veidu";
+
 "Save" = "Saglabāt";
 
 "Save a new payment method" = "Saglabāt jaunu maksājuma veidu";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Saglabāt jūsu informāciju, lai nodrošinātu norēķināšanos Link ar 1 klikšķi";
 
+"Saved" = "Saglabāts";
+
+"Select card" = "Atlasīt karti";
+
+"Select payment method" = "Atlasīt maksājuma veidu";
+
 "Select your payment method" = "Izvēlēties savu maksājuma veidu";
 
 "Set up" = "Iestatīt";
@@ -142,13 +170,23 @@
 
 "Show menu" = "Rādīt izvēlni";
 
+"Simple, secure one-click payments" = "Vienkārši, droši 1 klikšķa maksājumi";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Savienojot jūsu kontu, radās problēma.\nLūdzu, vēlāk mēģiniet vēlreiz.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe uz jūsu kontu 1–2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt bankas konta saglabāšanu ar %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe uz jūsu kontu 1-2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt maksājumu ar %@.";
 
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 
-"Update card" = "Atjaunināt karti";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, „%@” nav atbalstīts valsts kods.";
+
+"Update" = "Atjaunināt";
+
+"Update card brand" = "Atjaunināt kartes zīmolu";
+
+"View more" = "Skatīt vairāk";
 
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 

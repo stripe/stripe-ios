@@ -28,7 +28,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     weak var delegate: NetworkingLinkVerificationViewControllerDelegate?
 
     private lazy var loadingView: UIView = {
-        return SpinnerView()
+        return SpinnerView(theme: dataSource.manifest.theme)
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)

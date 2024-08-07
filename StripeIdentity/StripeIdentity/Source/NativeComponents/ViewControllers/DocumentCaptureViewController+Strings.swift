@@ -14,12 +14,12 @@ extension DocumentCaptureViewController {
     func titleText(for side: DocumentSide) -> String {
         if side == .front {
             return STPLocalizedString(
-                "Front of identity card",
+                "Front of identity document",
                 "Title of ID document scanning screen when scanning the front of an identity card"
             )
         } else {
             return STPLocalizedString(
-                "Back of identity card",
+                "Back of identity document",
                 "Title of ID document scanning screen when scanning the back of an identity card"
             )
         }
@@ -52,15 +52,6 @@ extension DocumentCaptureViewController {
             case (_, true, .tooFar):
                 return String.Localized.move_closer
             }
-        case .some(.modern(_, _, _, _, _, let mbResult)):
-            guard case let .capturing(captureFeedback) = mbResult else {
-                if side == .front {
-                    return String.Localized.position_in_center
-                } else {
-                    return String.Localized.flip_to_other_side
-                }
-            }
-            return captureFeedback.getFeedbackMessage()
         }
     }
 

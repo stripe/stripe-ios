@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li khoản thanh toán không lãi suất %2$@";
+
 "+ Add" = "+ Thêm";
+
+"Add US bank account" = "Thêm tài khoản ngân hàng Hoa Kỳ";
 
 "Add a card" = "Thêm một thẻ";
 
 "Add a payment method" = "Thêm phương thức thanh toán";
 
-"Add bank account" = "Thêm tài khoản ngân hàng";
+"Add card" = "Thêm thẻ";
+
+"Add new card" = "Thêm thẻ mới";
 
 "Add new payment method" = "Thêm phương thức thanh toán mới";
 
@@ -16,9 +22,11 @@
 
 "Back" = "Quay lại";
 
+"Bank" = "Ngân hàng";
+
 "Bank account" = "Tài khoản ngân hàng";
 
-"Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
+"Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
 "Buy using a UPI ID" = "Mua bằng cách sử dụng ID UPI";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Bằng cách tiếp tục, quý vị ủy quyền cho %1$@ ghi nợ tài khoản Cash App của quý vị cho khoản thanh toán này và các khoản thanh toán trong tương lai theo các điều khoản của %2$@, cho đến khi ủy quyền này bị thu hồi. Quý vị có thể thay đổi điều này bất cứ lúc nào trong mục Cài đặt của Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Bằng việc cung cấp chi tiết tài khoản ngân hàng của bạn và xác nhận thanh toán này, bạn đồng ý với Yêu cầu Ghi nợ Trực tiếp này và <terms>thỏa thuận dịch vụ Yêu cầu Ghi nợ Trực tiếp</terms> và cho phép Stripe Payments Australia Pty Ltd ACN 160 180 343 ID người dùng Ghi nợ Trực tiếp số 507156 (“Stripe”) ghi nợ tài khoản của bạn thông qua Bulk Electronic Clearing System (BECS) thay mặt %@ (\"Người bán\") cho bất kỳ số tiền nào được Người bán liên lạc riêng với bạn. Bạn chứng nhận rằng bạn là chủ tài khoản hoặc người ký kết được ủy quyền trên tài khoản được liệt kê ở trên.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Bằng việc cung cấp thông tin thẻ, bạn cho phép %@ tính phí thẻ của bạn cho các khoản thanh toán trong tương lai theo điều khoản của họ.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp email, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Quản lý phương thức thanh toán";
+
+"Manage payment methods" = "Quản lý các phương thức thanh toán";
+
 "Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
 
 "Name on card" = "Tên trên thẻ";
+
+"New card" = "Thẻ mới";
+
+"New payment method" = "Phương thức thanh toán mới";
 
 "Open your UPI app to approve your payment within %@" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "Xóa thẻ?";
 
+"Remove payment method" = "Gỡ bỏ phương thức thanh toán";
+
 "Save" = "Lưu";
 
 "Save a new payment method" = "Lưu một phương thức thanh toán mới";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Lưu thông tin của bạn để thanh toán an toàn bằng 1 cú nhấp chuột với Link";
 
+"Saved" = "Đã lưu";
+
+"Select card" = "Chọn thẻ";
+
+"Select payment method" = "Chọn phương thức thanh toán";
+
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
 
 "Set up" = "Cài đặt";
@@ -142,13 +170,23 @@
 
 "Show menu" = "Hiển thị trình đơn";
 
+"Simple, secure one-click payments" = "Thanh toán đơn giản, an toàn chỉ bằng một cú nhấp chuột";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Đã xảy ra lỗi khi liên kết tài khoản của bạn.\nVui lòng thử lại sau.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe sẽ gửi 0,01 đô la vào tài khoản của bạn sau 1-2 ngày làm việc. Sau đó, bạn sẽ nhận được email kèm theo hướng dẫn để hoàn tất quá trình lưu tài khoản ngân hàng với %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
 
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
-"Update card" = "Cập nhật thẻ";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN bạn đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
+
+"Update" = "Cập nhật";
+
+"Update card brand" = "Cập nhật thương hiệu thẻ";
+
+"View more" = "Xem thêm";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 

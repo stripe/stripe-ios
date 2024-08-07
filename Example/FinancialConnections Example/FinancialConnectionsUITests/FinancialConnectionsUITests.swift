@@ -19,7 +19,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -47,7 +47,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -60,11 +60,9 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
-        let successAccountRow = app.scrollViews.staticTexts["Success"]
-        XCTAssertTrue(successAccountRow.waitForExistence(timeout: 60.0))
-        successAccountRow.tap()
-
+        // "Success" institution is automatically selected as the first one
         app.fc_nativeConnectAccountsButton.tap()
+
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -78,7 +76,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -122,13 +120,40 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssert(app.fc_playgroundSuccessAlertView.exists)
     }
 
+    func testPaymentTestModeManualEntryAutofill() throws {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        let manuallyVerifyLabel = app
+            .otherElements["consent_manually_verify_label"]
+            .links
+            .firstMatch
+        XCTAssertTrue(manuallyVerifyLabel.waitForExistence(timeout: 10.0))
+        manuallyVerifyLabel.tap()
+
+        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
+        XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
+        testModeAutofillButton.tap()
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+    }
+
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -181,8 +206,8 @@ final class FinancialConnectionsUITests: XCTestCase {
             // check that the WebView loaded
             var predicateString = "label CONTAINS '\(institutionName)'"
             if institutionName == "Chase" {
-                // Chase does not contain the word "Chase" on their log-in page
-                predicateString = "label CONTAINS 'username' OR label CONTAINS 'password'"
+                // Chase (usually) does not contain the word "Chase" on their log-in page
+                predicateString = "label CONTAINS '\(institutionName)' OR label CONTAINS 'username' OR label CONTAINS 'password'"
             }
             let institutionWebViewText = app.webViews
                 .staticTexts
@@ -222,7 +247,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"data","sdk_type":"web","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"data","experience":"financial_connections","sdk_type":"web","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -313,7 +338,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
-{"use_case":"payment_intent","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":false,"merchant":"default","payment_method_permission":true}
 """
         )
 
@@ -365,6 +390,29 @@ final class FinancialConnectionsUITests: XCTestCase {
 
             // 'cancel' the test as the bank is under the maintenance
         }
+    }
+
+    func testWebInstantDebitsFlow() throws {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"instant_debits","sdk_type":"web","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        let usesLinkText = app.webViews
+            .staticTexts
+            .containing(NSPredicate(format: "label CONTAINS 'uses Link to connect your account'"))
+            .firstMatch
+        XCTAssertTrue(usesLinkText.waitForExistence(timeout: 120.0))  // glitch app can take time to load
+
+        app.fc_secureWebViewCancelButton.tap()
+
+        let playgroundCancelAlert = app.alerts["Cancelled"]
+        XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
 }
 

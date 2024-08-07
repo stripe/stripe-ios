@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li rentevrije betalingen van %2$@";
+
 "+ Add" = "+ Toevoegen";
+
+"Add US bank account" = "Amerikaanse bankrekening toevoegen";
 
 "Add a card" = "Een kaart toevoegen";
 
 "Add a payment method" = "Een betaalmethode toevoegen";
 
-"Add bank account" = "Bankrekening toevoegen";
+"Add card" = "Kaart toevoegen";
+
+"Add new card" = "Nieuwe betaalkaart toevoegen";
 
 "Add new payment method" = "Nieuwe betaalmethode toevoegen";
 
@@ -16,9 +22,11 @@
 
 "Back" = "Terug";
 
+"Bank" = "Bank";
+
 "Bank account" = "Bankrekening";
 
-"Buy now or pay later with Klarna." = "Koop nu of betaal later met Klarna.";
+"Buy now or pay later with Klarna" = "Koop nu of betaal later met Klarna";
 
 "Buy using a UPI ID" = "Kopen met een UPI-ID";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Als je doorgaat, geef je %1$@ toestemming om deze betaling en toekomstige betalingen in rekening te brengen op je Cash App-account, in overeenstemming met de voorwaarden van %2$@, totdat je deze toestemming intrekt. Je kunt dit op elk moment wijzigen via je Cash App-instellingen.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Door je bankrekeninggegevens te verstrekken en deze betaling te bevestigen ga je akkoord met deze aanvraag voor automatische incasso en de <terms>Direct Debit Request-serviceovereenkomst</terms>, en autoriseer je Stripe Payments Australia Pty Ltd ACN 160 180 343 met gebruikers-ID voor automatische incasso's 507156 (“Stripe”) om bedragen van je rekening af te schrijven via het BECS-systeem (Bulk Electronic Clearing System) namens %@ (de \"Verkoper\") voor bedragen die afzonderlijk door de verkoper aan je kenbaar worden gemaakt. Je verklaart dat je de rekeninghouder bent van of bevoegd bent om te tekenen voor de hierboven vermelde rekening.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Door je kaartgegevens te verstrekken geef je %@ toestemming om toekomstige betalingen af te schrijven van je betaalkaart in overeenstemming met hun voorwaarden.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je e-mailadres te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt en dat je betaalgegevens worden opgeslagen naar Link, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Betaalmethode beheren";
+
+"Manage payment methods" = "Betaalmethoden beheren";
+
 "Manage your payment methods" = "Uw betaalmethoden beheren";
 
 "Name on card" = "Naam op betaalkaart";
+
+"New card" = "Nieuwe betaalkaart";
+
+"New payment method" = "Nieuwe betaalmethode";
 
 "Open your UPI app to approve your payment within %@" = "Open de UPI-app om je betaling goed te keuren binnen %@";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "Betaalkaart verwijderen?";
 
+"Remove payment method" = "Betaalmethode verwijderen";
+
 "Save" = "Opslaan";
 
 "Save a new payment method" = "Een nieuwe betaalmethode opslaan";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Bewaar je gegevens zodat je veilig met één klik kunt afrekenen met Link";
 
+"Saved" = "Opgeslagen";
+
+"Select card" = "Betaalkaart selecteren";
+
+"Select payment method" = "Betaalmethode selecteren";
+
 "Select your payment method" = "Betaalmethode selecteren";
 
 "Set up" = "Instellen";
@@ -142,13 +170,23 @@
 
 "Show menu" = "Menu weergeven";
 
+"Simple, secure one-click payments" = "Betaal eenvoudig en veilig met één klik";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Er is iets misgegaan bij het koppelen van je account.\nProbeer het later nog eens.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Binnen 1 à 2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies om het instellen van je bankrekening bij %@ te voltooien.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Binnen 1-2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies over hoe je de betaling aan %@ kunt voltooien.";
 
 "The IBAN you entered is incomplete." = "Het opgegeven IBAN-nummer is onvolledig.";
 
-"Update card" = "Betaalkaart bijwerken";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Het opgegeven IBAN-nummer is ongeldig: \"%@\" is geen ondersteunde landcode.";
+
+"Update" = "Bijwerken";
+
+"Update card brand" = "Merk van betaalkaart bijwerken";
+
+"View more" = "Meer weergeven";
 
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
 

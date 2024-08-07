@@ -209,7 +209,7 @@ final class APIPollingHelperTests: XCTestCase {
 
         // the `nil` happens after DispatchQueue.main.async, so wait a little bit
         let nilExpectation = expectation(description: "")
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             nilExpectation.fulfill()
         }
         wait(for: [nilExpectation], timeout: 1)

@@ -7,9 +7,10 @@
 
 @testable import Stripe
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPPaymentMethodAlmaTests: XCTestCase {
+class STPPaymentMethodAlmaTests: STPNetworkStubbingTestCase {
 
     static let almaPaymentIntentClientSecret = "pi_3Oz1AfKG6vc7r7YC0VaP6KiE_secret_SxVptpJ5PaAceAYCGetQh8FVv"
 

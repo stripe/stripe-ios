@@ -1,8 +1,8 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(STP)@testable import StripeCore
-@_spi(STP)@testable import StripePaymentSheet
 import StripeCoreTestUtils
+@_spi(STP)@testable import StripePaymentSheet
 //
 //  DownloadManagerTest.swift
 //  StripeCoreTests
@@ -101,7 +101,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         )
 
         XCTAssertEqual(image.size, placeholderImageSize)
-        waitForExpectations(timeout: 0.5)
+        waitForExpectations(timeout: 0.1)
     }
 
     func testAsync_validImage_avoidDeadLockInCallback() {
@@ -147,7 +147,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         downloadExpectation.expectedFulfillmentCount = 3 // Assuming 3 concurrent requests
 
         stub(condition: isHost("js.stripe.com") && isPath("/validImage.png")) { _ in
-            return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil).responseTime(0.5) // Simulate network delay
+            return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil).responseTime(0.05) // Simulate network delay
         }
 
         // Start 3 concurrent download tasks for the same URL

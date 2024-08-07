@@ -14,6 +14,8 @@
 
 "BSB number" = "Številka BSB";
 
+"Bank account •••• %@" = "Bančni račun •••• %@";
+
 "Billing address is same as shipping" = "Naslov za obračunavanje je isti kot dostavni naslov";
 
 "Cancel" = "Prekliči";
@@ -94,9 +96,7 @@
 
 "Remove" = "Odstrani";
 
-"Remove bank account" = "Odstranjevanje bančnega računa";
-
-"Remove bank account ending in %@" = "Odstranite bančni račun, ki se konča s števkami %@";
+"Remove bank account?" = "Ali želite odstraniti bančni račun?";
 
 "Remove card" = "Odstrani kartico";
 

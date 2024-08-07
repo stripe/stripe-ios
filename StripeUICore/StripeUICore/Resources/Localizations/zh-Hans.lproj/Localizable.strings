@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB 号码";
 
+"Bank account •••• %@" = "银行账户 •••• %@";
+
 "Billing address is same as shipping" = "账单地址与收货地址相同";
 
 "Cancel" = "取消";
@@ -94,9 +96,7 @@
 
 "Remove" = "移除";
 
-"Remove bank account" = "移除银行账户";
-
-"Remove bank account ending in %@" = "移除尾号为 %@ 的银行账户";
+"Remove bank account?" = "移除银行账户？";
 
 "Remove card" = "移除卡";
 

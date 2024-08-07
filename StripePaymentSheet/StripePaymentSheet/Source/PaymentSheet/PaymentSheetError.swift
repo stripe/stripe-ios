@@ -62,12 +62,6 @@ public enum PaymentSheetError: Error, LocalizedError {
 }
 
 extension PaymentSheetError: CustomDebugStringConvertible {
-    /// Returns true if the error is un-fixable; e.g. no amount of retrying or customer action will result in something different
-    static func isUnrecoverable(error: Error) -> Bool {
-        // TODO: Expired ephemeral key
-        return false
-    }
-
     /// A string that can safely be logged to our analytics service that does not contain any PII
     public var safeLoggingString: String {
         switch self {

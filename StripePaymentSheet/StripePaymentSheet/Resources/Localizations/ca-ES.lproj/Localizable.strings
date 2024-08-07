@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li pagaments sense interessos de %2$@";
+
 "+ Add" = "+ Afegir";
+
+"Add US bank account" = "Afegeix un compte bancari dels EUA";
 
 "Add a card" = "Afegir una targeta";
 
 "Add a payment method" = "Afegeix un mètode de pagament";
 
-"Add bank account" = "Afegir compte bancari";
+"Add card" = "Afegir targeta";
+
+"Add new card" = "Afegeix una targeta nova";
 
 "Add new payment method" = "Afegir nou mètode de pagament";
 
@@ -16,9 +22,11 @@
 
 "Back" = "Tornar";
 
+"Bank" = "Banc";
+
 "Bank account" = "Compte bancari";
 
-"Buy now or pay later with Klarna." = "Compra ara o paga més endavant amb Klarna.";
+"Buy now or pay later with Klarna" = "Compra ara o paga més endavant amb Klarna";
 
 "Buy using a UPI ID" = "Compra amb un ID d'UPI";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuar, autoritzeu %1$@ a carregar aquest pagament i els pagaments futurs al compte de Cash App segons les condicions de %2$@ fins que es revoqui l'autorització. Podeu canviar això en qualsevol moment a la configuració de Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Quan t'incorpores a Link, acceptes els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "En facilitar-nos les dades bancàries i confirmar aquest pagament, esteu d'acord amb aquesta Sol·licitud de Domiciliació Bancària i amb el <terms>Servei de Sol·licitud de Domiciliació Bancària</terms>, i autoritzeu Stripe Payments Australia Pty Ltd ACN 160 180 343, amb número d'identificador d'usuari de domiciliació bancària 507156 («Stripe») a carregar el vostre compte mitjançant el Sistema de Compensació Electrònica a gran escala (BECS per les seves sigles en anglès) en nom de %@ (el «Venedor») per qualsevol import que se us hagi comunicat de manera separada per part del Venedor. Certifiqueu que sou el titular del compte o un signatari autoritzat del compte indicat anteriorment.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Si proporcioneu la informació de la targeta, permeteu que %@ hi faci càrrecs per a pagaments en el futur d'acord amb les seves condicions.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En proporcionar el correu electrònic, accepteu crear un compte de Link i desar la vostra informació de pagament a Link d'acord amb els <terms>Termes</terms> i <privacy>Política de privadesa</privacy> de Link.";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Gestiona el mètode de pagament";
+
+"Manage payment methods" = "Administra els mètodes de pagament";
+
 "Manage your payment methods" = "Administreu els vostres mètodes de pagament";
 
 "Name on card" = "Nom a la targeta";
+
+"New card" = "Nova targeta";
+
+"New payment method" = "Nou mètode de pagament";
 
 "Open your UPI app to approve your payment within %@" = "Obriu l'aplicació UPI per aprovar el pagament en un termini de %@";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "Voleu eliminar la targeta?";
 
+"Remove payment method" = "Elimina el mètode de pagament";
+
 "Save" = "Desa";
 
 "Save a new payment method" = "Deseu un nou mètode de pagament";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Deseu la vostra informació per al pagament segur amb 1 clic amb Link";
 
+"Saved" = "Desat";
+
+"Select card" = "Selecciona una targeta";
+
+"Select payment method" = "Selecciona el mètode de pagament";
+
 "Select your payment method" = "Selecciona el teu mètode de pagament";
 
 "Set up" = "Configuració";
@@ -142,13 +170,23 @@
 
 "Show menu" = "Mostra el menú";
 
+"Simple, secure one-click payments" = "Pagaments senzills i segurs amb un toc";
+
+"Something went wrong when linking your account.\nPlease try again later." = "S'ha produït un error en vincular el compte.\nTorneu-ho a intentar més tard.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per acabar de desar el vostre compte bancari amb %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per completar el pagament a %@.";
 
 "The IBAN you entered is incomplete." = "L'BAN és incomplet.";
 
-"Update card" = "Actualitza la targeta";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L'IBAN no és vàlid, %@ no és un codi de país compatible.";
+
+"Update" = "Actualitza";
+
+"Update card brand" = "Actualitza la marca de la targeta";
+
+"View more" = "Visualitza més";
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 

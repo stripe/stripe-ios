@@ -132,16 +132,19 @@ class SheetNavigationBar: UIView {
     // MARK: -
     enum Style {
         case close(showAdditionalButton: Bool)
-        case back
+        case back(showAdditionalButton: Bool)
         case none
     }
 
     func setStyle(_ style: Style) {
         switch style {
-        case .back:
+        case .back(let showAdditionalButton):
             closeButtonLeft.isHidden = true
             closeButtonRight.isHidden = true
-            additionalButton.isHidden = true
+            additionalButton.isHidden = !showAdditionalButton
+            if showAdditionalButton {
+                bringSubviewToFront(additionalButton)
+            }
             backButton.isHidden = false
             bringSubviewToFront(backButton)
         case .close(let showAdditionalButton):
@@ -165,5 +168,16 @@ class SheetNavigationBar: UIView {
         layer.shadowOpacity = isHidden ? 0 : 0.1
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
+    }
+}
+
+extension UIButton {
+    func configureCommonEditButton(isEditingPaymentMethods: Bool, appearance: PaymentSheet.Appearance) {
+        let title = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
+        setTitle(title, for: .normal)
+        titleLabel?.adjustsFontForContentSizeCategory = true
+        titleLabel?.textAlignment = .right
+        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
+        accessibilityIdentifier = "edit_saved_button"
     }
 }

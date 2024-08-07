@@ -8,8 +8,9 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodGiropayParamsTests: XCTestCase {
+class STPPaymentMethodGiropayParamsTests: STPNetworkStubbingTestCase {
     func testCreateGiropayPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let giropayParams = STPPaymentMethodGiropayParams()

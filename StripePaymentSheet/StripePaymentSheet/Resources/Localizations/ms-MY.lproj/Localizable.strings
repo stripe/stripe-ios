@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li pembayaran tanpa faedah sebanyak %2$@";
+
 "+ Add" = "+ Tambah";
+
+"Add US bank account" = "Tambah akaun bank AS";
 
 "Add a card" = "Tambah kad";
 
 "Add a payment method" = "Tambah kaedah pembayaran";
 
-"Add bank account" = "Tambah akaun bank";
+"Add card" = "Tambah kad";
+
+"Add new card" = "Tambah kad baharu";
 
 "Add new payment method" = "Tambah kaedah pembayaran baharu";
 
@@ -16,9 +22,11 @@
 
 "Back" = "Undur";
 
+"Bank" = "Bank";
+
 "Bank account" = "Akaun bank";
 
-"Buy now or pay later with Klarna." = "Beli sekarang atau bayar kemudian dengan Klarna.";
+"Buy now or pay later with Klarna" = "Beli sekarang atau bayar kemudian dengan Klarna";
 
 "Buy using a UPI ID" = "Beli menggunakan ID UPI";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Dengan memberikan butiran akaun bank anda dan mengesahkan pembayaran ini, anda bersetuju dengan Permintaan Debit Terus ini dan <terms>perjanjian perkhidmatan Permintaan Debit Terus</terms>, serta memberikan kuasa kepada Stripe Payments Australia Pty Ltd ACN 160 180 343 ID Pengguna Debit Terus bernombor 507156 (“Stripe”) untuk mendebitkan akaun anda melalui Sistem Penjelasan Elektronik Pukal (Bulk Electronic Clearing System, BECS) bagi pihak %@ (\"Peniaga\") untuk sebarang amaun yang dikomunikasikan kepada anda secara berasingan oleh Peniaga. Anda memperakui bahawa anda merupakan sama ada pemegang akaun atau penandatangan yang dibenarkan bagi akaun yang tersenarai di atas.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Dengan memberikan maklumat kad anda, anda membenarkan %@ mengecaj kad anda bagi pembayaran masa hadapan menurut terma mereka.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan e-mel anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Urus kaedah pembayaran";
+
+"Manage payment methods" = "Urus kaedah pembayaran";
+
 "Manage your payment methods" = "Urus kaedah pembayaran anda";
 
 "Name on card" = "Nama pada kad";
+
+"New card" = "Kad baharu";
+
+"New payment method" = "Kaedah pembayaran baharu";
 
 "Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI untuk meluluskan pembayaran anda dalam masa %@";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "Alih keluar kad?";
 
+"Remove payment method" = "Alih keluar kaedah pembayaran";
+
 "Save" = "Simpan";
 
 "Save a new payment method" = "Simpan kaedah pembayaran baharu";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Simpan maklumat anda untuk proses bayar dan keluar dengan sekali klik yang selamat dengan Link";
 
+"Saved" = "Disimpan";
+
+"Select card" = "Pilih kad";
+
+"Select payment method" = "Pilih kaedah pembayaran";
+
 "Select your payment method" = "Pilih kaedah pembayaran anda";
 
 "Set up" = "Sediakan";
@@ -142,13 +170,23 @@
 
 "Show menu" = "Paparkan menu";
 
+"Simple, secure one-click payments" = "Pembayaran dengan sekali klik yang mudah dan selamat";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Ada sesuatu yang tidak kena ketika memautkan akaun anda.\nSila cuba lagi kemudian.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan proses menyimpan akaun bank anda dengan %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan pembayaran kepada %@.";
 
 "The IBAN you entered is incomplete." = "IBAN yang anda masukkan tidak lengkap.";
 
-"Update card" = "Kemas kinikan kad";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang anda masukkan tidak sah, \"%@\" bukanlah kod negara yang disokong.";
+
+"Update" = "Kemas kinikan";
+
+"Update card brand" = "Kemas kinikan jenama kad";
+
+"View more" = "Lihat lebih banyak";
 
 "Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
 

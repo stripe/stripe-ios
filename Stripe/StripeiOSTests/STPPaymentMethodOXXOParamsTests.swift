@@ -9,8 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodOXXOParamsTests: XCTestCase {
+class STPPaymentMethodOXXOParamsTests: STPNetworkStubbingTestCase {
     func testCreateOXXOPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let oxxoParams = STPPaymentMethodOXXOParams()

@@ -59,7 +59,7 @@ private func CreateAvatarView(email: String) -> UIView {
     let diameter: CGFloat = 36
 
     let circleView = UIView()
-    circleView.backgroundColor = .linkBrand200
+    circleView.backgroundColor = .linkGreen200
     circleView.layer.cornerRadius = diameter / 2
     circleView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
@@ -69,7 +69,7 @@ private func CreateAvatarView(email: String) -> UIView {
 
     let letterLabel = AttributedLabel(
         font: .body(.small),
-        textColor: .linkBrand600
+        textColor: .linkGreen900
     )
     letterLabel.setText(String(email.uppercased().first ?? "E"))
     circleView.addSubview(letterLabel)

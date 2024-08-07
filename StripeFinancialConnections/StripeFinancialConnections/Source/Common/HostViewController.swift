@@ -43,12 +43,14 @@ final class HostViewController: UIViewController {
         return item
     }()
 
-    private let loadingView = LoadingView(frame: .zero)
+    // We haven't loaded the manifest yet, so we use a nil theme to show a neutral-colored spinner.
+    private let loadingView = LoadingView(frame: .zero, theme: nil)
 
     // MARK: - Properties
 
     weak var delegate: HostViewControllerDelegate?
 
+    private let analyticsClientV1: STPAnalyticsClientProtocol
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
     private let returnURL: String?
@@ -58,11 +60,13 @@ final class HostViewController: UIViewController {
     // MARK: - Init
 
     init(
+        analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         delegate: HostViewControllerDelegate?
     ) {
+        self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
         self.apiClient = apiClient
@@ -99,6 +103,12 @@ extension HostViewController {
     private func getManifest() {
         loadingView.errorView.isHidden = true
         loadingView.showLoading(true)
+
+        analyticsClientV1.log(
+            analytic: FinancialConnectionsSheetInitialSynchronizeStarted(clientSecret: clientSecret),
+            apiClient: apiClient.backingAPIClient
+        )
+
         apiClient
             .synchronize(
                 clientSecret: clientSecret,
@@ -106,6 +116,16 @@ extension HostViewController {
             )
             .observe { [weak self] result in
                 guard let self = self else { return }
+
+                analyticsClientV1.log(
+                    analytic: FinancialConnectionsSheetInitialSynchronizeCompleted(
+                        clientSecret: clientSecret,
+                        success: result.success,
+                        possibleError: result.error
+                    ),
+                    apiClient: apiClient.backingAPIClient
+                )
+
                 switch result {
                 case .success(let synchronizePayload):
                     self.lastError = nil

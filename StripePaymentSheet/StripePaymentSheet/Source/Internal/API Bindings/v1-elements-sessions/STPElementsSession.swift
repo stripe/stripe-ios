@@ -181,3 +181,69 @@ extension STPElementsSession: STPAPIResponseDecodable {
         )
     }
 }
+
+// MARK: - Extensions
+extension STPElementsSession {
+    var isCardBrandChoiceEligible: Bool {
+        return cardBrandChoice?.eligible ?? false
+    }
+
+    func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
+        var allowsRemovalOfPaymentMethods = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.paymentSheetComponent.enabled,
+               let features = customerSession.paymentSheetComponent.features {
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+            }
+        } else {
+            allowsRemovalOfPaymentMethods = true
+        }
+        return allowsRemovalOfPaymentMethods
+    }
+
+    func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
+        var allowsRemovalOfPaymentMethods = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.customerSheetComponent.enabled,
+               let features = customerSession.customerSheetComponent.features {
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+            }
+        } else {
+            allowsRemovalOfPaymentMethods = true
+        }
+        return allowsRemovalOfPaymentMethods
+    }
+}
+
+extension STPElementsSession {
+    var savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        guard let paymentMethodSave = customerSessionPaymentSheetFeatures?.paymentMethodSave else {
+            return .legacy
+        }
+        return paymentMethodSave
+        ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+        : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
+    }
+
+    var customerSessionPaymentSheetFeatures: PaymentSheetComponentFeature? {
+        guard let customerSession = customer?.customerSession,
+              customerSession.paymentSheetComponent.enabled else {
+            return nil
+        }
+        return customerSession.paymentSheetComponent.features
+    }
+}
+
+extension STPElementsSession {
+    func savePaymentMethodConsentBehaviorForCustomerSheet() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        return customerSessionCustomerSheet() ? .customerSheetWithCustomerSession : .legacy
+    }
+
+    func customerSessionCustomerSheet() -> Bool {
+        guard let customerSession = customer?.customerSession,
+              customerSession.customerSheetComponent.enabled else {
+            return false
+        }
+        return true
+    }
+}

@@ -17,20 +17,25 @@ extension STPTestingAPIClient {
     func fetchPaymentIntent(
         types: [String],
         currency: String = "eur",
+        amount: Int? = nil,
         merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
+        shouldSavePM: Bool = false,
         customerID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:],
         completion: @escaping (Result<(String), Error>) -> Void
     ) {
         var params = [String: Any]()
-        params["amount"] = 5050
+        params["amount"] = amount ?? 5050
         params["currency"] = currency
         params["payment_method_types"] = types
         params["confirm"] = confirm
         if let paymentMethodID {
             params["payment_method"] = paymentMethodID
+        }
+        if shouldSavePM {
+            params["payment_method_options"] = ["card": ["setup_future_usage": "off_session"]]
         }
         if let customerID {
             params["customer"] = customerID
@@ -55,8 +60,10 @@ extension STPTestingAPIClient {
     func fetchPaymentIntent(
         types: [String],
         currency: String = "eur",
+        amount: Int? = nil,
         merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
+        shouldSavePM: Bool = false,
         customerID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:]
@@ -65,8 +72,10 @@ extension STPTestingAPIClient {
             fetchPaymentIntent(
                 types: types,
                 currency: currency,
+                amount: amount,
                 merchantCountry: merchantCountry,
                 paymentMethodID: paymentMethodID,
+                shouldSavePM: shouldSavePM,
                 customerID: customerID,
                 confirm: confirm,
                 otherParams: otherParams
@@ -141,6 +150,7 @@ extension STPTestingAPIClient {
         ]
         return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
     }
+
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(

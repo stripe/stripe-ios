@@ -14,7 +14,7 @@ extension STPPaymentMethodParams: STPPaymentOption {
     // MARK: - STPPaymentOption
     @objc public var image: UIImage {
         if type == .card && card != nil {
-            let brand = STPCardValidator.brand(forNumber: card?.number ?? "")
+            let brand = card?.preferredDisplayBrand ?? .unknown
             return STPImageLibrary.cardBrandImage(for: brand)
         } else {
             return STPImageLibrary.cardBrandImage(for: .unknown)
@@ -23,7 +23,7 @@ extension STPPaymentMethodParams: STPPaymentOption {
 
     @objc public var templateImage: UIImage {
         if type == .card && card != nil {
-            let brand = STPCardValidator.brand(forNumber: card?.number ?? "")
+            let brand = card?.preferredDisplayBrand ?? .unknown
             return STPImageLibrary.templatedBrandImage(for: brand)
         } else if type == .FPX {
             return STPImageLibrary.bankIcon()
@@ -38,12 +38,19 @@ extension STPPaymentMethodParams: STPPaymentOption {
             return true
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
-            .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm, .cashApp, .paynow,
-            .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .twint, .multibanco,
+            .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .affirm, .cashApp, .paynow,
+            .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .twint,
+            .multibanco, .sunbit, .billie, .satispay,
             .unknown:
             return false
         @unknown default:
             return false
         }
+    }
+}
+
+extension STPPaymentMethodCardParams {
+    var preferredDisplayBrand: STPCardBrand {
+        return networks?.preferred?.toCardBrand ?? STPCardValidator.brand(forNumber: number ?? "")
     }
 }

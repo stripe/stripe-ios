@@ -130,6 +130,7 @@ import UIKit
 // MARK: - Element
 
 extension TextFieldElement: Element {
+    public var collectsUserInput: Bool { true }
     public var view: UIView {
         return textFieldView
     }
@@ -179,5 +180,12 @@ extension TextFieldElement: TextFieldViewDelegate {
     func textFieldViewContinueToNextField(view: TextFieldView) {
         isEditing = view.isEditing
         delegate?.continueToNextField(element: self)
+    }
+}
+
+// MARK: - DebugDescription
+extension TextFieldElement {
+    public var debugDescription: String {
+        return "<TextFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(configuration.label); text = \(text); validationState = \(validationState)"
     }
 }

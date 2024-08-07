@@ -158,6 +158,12 @@ FOUNDATION_EXPORT NSString * const SWHttpTrafficRecorderErrorDomain;
 @property(nonatomic, readonly, assign) BOOL isRecording;
 
 /**
+ *  A Boolean value indicating whether to follow HTTP redirects.
+ *  If NO, the recorder will only record the body of the redirect instead of the redirect itself.
+ */
+@property(nonatomic, assign) BOOL followRedirects;
+
+/**
  *  A Enum value which indicates the format the recording is using to record traffic.
  */
 @property(nonatomic, assign) SWHTTPTrafficRecordingFormat recordingFormat;
@@ -196,5 +202,10 @@ FOUNDATION_EXPORT NSString * const SWHttpTrafficRecorderErrorDomain;
  *  The optional block (if provided) to be applied to every request to create the recorded file when the recording format is custom. It takes a NSURLRequest, its response, a body data and a filePath as parameters and be expected to create the recorded file at the filePath.
  */
 @property(nonatomic, copy) NSString*(^createFileInCustomFormatBlock)(NSURLRequest *request, NSURLResponse *response, NSData *bodyData, NSString *filePath);
+
+/**
+ *  The optional block (if provided) to transform the HTTP request body, which will be stored in the `X-Stripe-Mock-Request` header of the Mocktail.
+ */
+@property(nonatomic, copy) NSString*(^postBodyTransformBlock)(NSURLRequest *request, NSString *postBody);
 
 @end

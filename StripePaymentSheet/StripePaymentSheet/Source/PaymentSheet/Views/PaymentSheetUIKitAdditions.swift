@@ -28,7 +28,7 @@ enum PaymentSheetUI {
     static let defaultMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, trailing: defaultPadding)
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
-        leading: defaultPadding, bottom: 36, trailing: defaultPadding)
+        leading: defaultPadding, bottom: 40, trailing: defaultPadding)
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
     static let defaultAnimationDuration: TimeInterval = 0.2
     static let quickAnimationDuration: TimeInterval = 0.1
@@ -37,7 +37,7 @@ enum PaymentSheetUI {
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
     static let minimumHitArea = CGSize(width: 44, height: 44)
 
-    static func makeHeaderLabel(appearance: PaymentSheet.Appearance) -> UILabel {
+    static func makeHeaderLabel(title: String? = nil, appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()
         header.textColor = appearance.colors.text
         header.numberOfLines = 2
@@ -45,6 +45,7 @@ enum PaymentSheetUI {
         header.accessibilityTraits = [.header]
         header.adjustsFontSizeToFitWidth = true
         header.adjustsFontForContentSizeCategory = true
+        header.text = title
         return header
     }
 }
@@ -61,7 +62,9 @@ extension PKPaymentButtonStyle {
 
 extension UIViewController {
     func switchContentIfNecessary(
-        to toVC: UIViewController, containerView: DynamicHeightContainerView
+        to toVC: UIViewController,
+        containerView: DynamicHeightContainerView,
+        contentOffsetPercentage: CGFloat? = nil
     ) {
         if children.count > 1 {
             let from_vc_name = NSStringFromClass(children.first!.classForCoder)
@@ -82,6 +85,7 @@ extension UIViewController {
             }
 
             // Add the new one
+            toVC.beginAppearanceTransition(true, animated: true)
             self.addChild(toVC)
             toVC.view.alpha = 0
             containerView.addPinnedSubview(toVC.view)
@@ -98,24 +102,37 @@ extension UIViewController {
                     fromVC.view.alpha = 0
                     toVC.view.alpha = 1
                 },
+                postLayoutAnimations: {
+                    if let contentOffsetPercentage {
+                        self.bottomSheetController?.contentOffsetPercentage = contentOffsetPercentage
+                    }
+                },
                 completion: { _ in
-                    // Remove the old one
-                    self.remove(childViewController: fromVC)
+                    toVC.endAppearanceTransition()
+                    // Finish removing the old one
+                    fromVC.view.removeFromSuperview()
+                    fromVC.didMove(toParent: nil)
                     UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
                 }
             )
         } else {
-            addChild(toVC)
-            containerView.addPinnedSubview(toVC.view)
-            containerView.updateHeight()
-            toVC.didMove(toParent: self)
+            add(childViewController: toVC, containerView: containerView)
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
             UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
         }
     }
 
+    func add(childViewController: UIViewController, containerView: DynamicHeightContainerView) {
+        addChild(childViewController)
+        containerView.addPinnedSubview(childViewController.view)
+        containerView.updateHeight()
+        childViewController.didMove(toParent: self)
+    }
+
     func remove(childViewController: UIViewController) {
+        childViewController.willMove(toParent: nil)
+        childViewController.removeFromParent()
         childViewController.view.removeFromSuperview()
         childViewController.didMove(toParent: nil)
     }
@@ -139,5 +156,19 @@ extension UIFont {
         let descriptor = UIFontDescriptor(fontAttributes: attributes)
 
         return UIFont(descriptor: descriptor, size: pointSize)
+    }
+}
+
+extension UIStackView {
+    /// Convenience DRY method that creates a stackview for use in horizontal "row button" content
+    static func makeRowButtonContentStackView(arrangedSubviews: [UIView]) -> UIStackView {
+        let margin = 12.0
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.directionalLayoutMargins = .init(top: margin, leading: margin, bottom: margin, trailing: margin)
+        stackView.spacing = margin
+        stackView.isLayoutMarginsRelativeArrangement = true
+        return stackView
     }
 }

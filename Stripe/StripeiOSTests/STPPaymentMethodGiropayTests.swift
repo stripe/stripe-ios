@@ -11,9 +11,10 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentMethodGiropayTests: XCTestCase {
+class STPPaymentMethodGiropayTests: STPNetworkStubbingTestCase {
     private(set) var giropayJSON: [AnyHashable: Any]?
 
     func _retrieveGiropayDebitJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

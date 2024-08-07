@@ -391,6 +391,11 @@ extension STPAPIClient {
                 "application/x-www-form-urlencoded",
                 forHTTPHeaderField: "Content-Type"
             )
+            #if DEBUG
+            if StripeAPIConfiguration.includeDebugParamsHeader {
+                request.setValue(URLEncoder.queryString(from: parameters), forHTTPHeaderField: "X-Stripe-Mock-Request")
+            }
+            #endif
         }
 
         request.httpMethod = method.rawValue
@@ -522,7 +527,7 @@ extension STPAPIClient {
     }
 
     /// Decodes request data to see if it can be parsed as a Stripe error.
-    private static func decodeStripeErrorResponse(
+    static func decodeStripeErrorResponse(
         data: Data,
         response: URLResponse?
     ) -> StripeError? {
@@ -534,6 +539,8 @@ extension STPAPIClient {
             var apiError = decodedErrorResponse.error
         {
             apiError.statusCode = (response as? HTTPURLResponse)?.statusCode
+            apiError.requestID = (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "request-id")
+
             decodedError = StripeError.apiError(apiError)
         }
 

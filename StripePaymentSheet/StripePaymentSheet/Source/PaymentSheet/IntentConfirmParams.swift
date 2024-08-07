@@ -26,6 +26,7 @@ class IntentConfirmParams {
 
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
+    /// ⚠️ Usage of this is *not compatible* with server-side confirmation!
     let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
     /// True if the customer opts to save their payment method for future payments.
@@ -33,12 +34,11 @@ class IntentConfirmParams {
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
 
-    var linkedBank: LinkedBank?
+    var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
+    var instantDebitsLinkedBank: InstantDebitsLinkedBank?
 
     var paymentSheetLabel: String {
-        if let linkedBank = linkedBank,
-            let last4 = linkedBank.last4
-        {
+        if let last4 = (financialConnectionsLinkedBank?.last4 ?? instantDebitsLinkedBank?.last4) {
             return "••••\(last4)"
         } else {
             return paymentMethodParams.paymentSheetLabel
@@ -46,9 +46,7 @@ class IntentConfirmParams {
     }
 
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
-        if let linkedBank = linkedBank,
-            let bankName = linkedBank.bankName
-        {
+        if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {
             return paymentMethodParams.makeIcon(updateHandler: updateImageHandler)
@@ -67,6 +65,9 @@ class IntentConfirmParams {
             // 2. Reuse existing form state restoration code in PaymentSheetFlowController, which depends on the previous state being encoded in an IntentConfirmParams.
             let params = STPPaymentMethodParams(type: .unknown)
             params.rawTypeString = externalPaymentMethod.type
+            self.init(params: params, type: type)
+        case .instantDebits:
+            let params = STPPaymentMethodParams(type: .link)
             self.init(params: params, type: type)
         }
     }
@@ -91,7 +92,7 @@ class IntentConfirmParams {
 
     private func setDefaultBillingDetailsIfNecessary(defaultBillingDetails: PaymentSheet.BillingDetails, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration) {
         guard billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-           return
+            return
         }
         if let name = defaultBillingDetails.name {
             paymentMethodParams.nonnil_billingDetails.name = name
@@ -104,6 +105,51 @@ class IntentConfirmParams {
         }
         if defaultBillingDetails.address != .init() {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
+        }
+    }
+    func setAllowRedisplay(paymentMethodSave: Bool?,
+                           allowRedisplayOverride: STPPaymentMethodAllowRedisplay?,
+                           isSettingUp: Bool) {
+        guard let paymentMethodSave else {
+            // Legacy Ephemeral Key
+            paymentMethodParams.allowRedisplay = .unspecified
+            return
+        }
+
+        // Customer Session is enabled
+        if paymentMethodSave {
+            if isSettingUp {
+                if saveForFutureUseCheckboxState == .selected {
+                    paymentMethodParams.allowRedisplay = .always
+                } else if saveForFutureUseCheckboxState == .deselected {
+                    paymentMethodParams.allowRedisplay = .limited
+                }
+            } else {
+                if saveForFutureUseCheckboxState == .selected {
+                    paymentMethodParams.allowRedisplay = .always
+                } else if saveForFutureUseCheckboxState == .deselected {
+                    paymentMethodParams.allowRedisplay = .unspecified
+                }
+            }
+        } else {
+            if isSettingUp {
+                // Checkbox is hidden
+                paymentMethodParams.allowRedisplay = allowRedisplayOverride ?? .limited
+            } else {
+                if saveForFutureUseCheckboxState == .selected {
+                    paymentMethodParams.allowRedisplay = .always
+                } else if saveForFutureUseCheckboxState == .deselected {
+                    paymentMethodParams.allowRedisplay = .unspecified
+                }
+            }
+        }
+    }
+
+    func setAllowRedisplayForCustomerSheet(_ savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior) {
+        if savePaymentMethodConsentBehavior == .legacy {
+            paymentMethodParams.allowRedisplay = .unspecified
+        } else if savePaymentMethodConsentBehavior == .customerSheetWithCustomerSession {
+            paymentMethodParams.allowRedisplay = .always
         }
     }
 }

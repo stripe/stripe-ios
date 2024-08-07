@@ -6,13 +6,13 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import CaptureCore
 import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCore
 import XCTest
 
+import CoreMedia
 @testable import StripeIdentity
 
 final class ImageScannerMock<Output>: ImageScanner {

@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Személyazonosító igazolvány hátlapja";
 
+"Back of identity document" = "Személyazonosító okmány hátulja";
+
 "Camera permission" = "Kameraengedély";
 
 "Camera unavailable" = "A kamera nem érhető el";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Személyazonosító igazolvány előlapfotója sikeresen feltöltve";
 
 "Front of identity card" = "Személyazonosító igazolvány előlapja";
+
+"Front of identity document" = "Személyazonosító okmány eleje";
 
 "Get ready to scan your photo ID" = "Készítse elő fényképes igazolványát a beolvasásra";
 

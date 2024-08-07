@@ -8,9 +8,10 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPPIIFunctionalTest: XCTestCase {
+class STPPIIFunctionalTest: STPNetworkStubbingTestCase {
     func testCreatePersonallyIdentifiableInformationToken() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 

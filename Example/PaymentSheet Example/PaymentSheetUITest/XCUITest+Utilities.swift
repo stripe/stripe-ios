@@ -33,6 +33,11 @@ extension XCUIElement {
 
     @discardableResult
     func waitForExistenceAndTap(timeout: TimeInterval = 4.0) -> Bool {
+        if exists {
+            forceTapElement()
+            return true
+        }
+
         guard waitForExistence(timeout: timeout) else {
             return false
         }
@@ -44,6 +49,32 @@ extension XCUIElement {
         return descendants(matching: .any).matching(
             NSPredicate(format: "label == %@", label)
         ).firstMatch
+    }
+
+    func clearText() {
+        guard let stringValue = value as? String, !stringValue.isEmpty else {
+            return
+        }
+
+        // offset tap location a bit so cursor is at end of string
+        let offsetTapLocation = coordinate(withNormalizedOffset: CGVector(dx: 0.6, dy: 0.6))
+        offsetTapLocation.tap()
+
+        let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: stringValue.count)
+        self.typeText(deleteString)
+    }
+
+    /// Scrolls a picker wheel up by one option.
+    func selectNextOption() {
+        let startCoord = self.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let endCoord = startCoord.withOffset(CGVector(dx: 0.0, dy: 30.0)) // 30pts = height of picker item
+        endCoord.tap()
+    }
+}
+
+extension Dictionary {
+    subscript(string key: Key) -> String? {
+        return self[key] as? String
     }
 }
 
@@ -59,6 +90,20 @@ extension XCUIApplication {
         for key in text {
             self.keys[String(key)].tap()
         }
+    }
+
+    func waitForButtonOrStaticText(_ identifier: String, timeout: TimeInterval = 10.0) -> XCUIElement {
+        if buttons[identifier].waitForExistence(timeout: timeout) {
+            return buttons[identifier]
+        }
+        return staticTexts[identifier]
+    }
+
+    func tapCoordinate(at point: CGPoint) {
+        let normalized = coordinate(withNormalizedOffset: .zero)
+        let offset = CGVector(dx: point.x, dy: point.y)
+        let coordinate = normalized.withOffset(offset)
+        coordinate.tap()
     }
 }
 
@@ -107,7 +152,29 @@ func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElemen
 
         // Then, we do a scroll right on the scrollview
         let startCoordinate = collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
-        startCoordinate.press(forDuration: 0.01, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
+        startCoordinate.press(forDuration: 0.1, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
+    }
+    return nil
+}
+func scrollDown(scrollView: XCUIElement, toFindElement element: XCUIElement, maxTimesToScroll: Int = 1) -> XCUIElement? {
+    guard scrollView.elementType == .scrollView else {
+        fatalError("XCUIElement is not a scrollview.")
+    }
+
+    if element.isHittable {
+        return element
+    }
+
+    var numTimesScrolled = 0
+    while numTimesScrolled < maxTimesToScroll {
+
+        let startCoordinate = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
+        startCoordinate.press(forDuration: 0.01, thenDragTo: scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)))
+        numTimesScrolled += 1
+
+        if element.isHittable {
+            return element
+        }
     }
     return nil
 }
@@ -154,7 +221,7 @@ extension XCTestCase {
 
         // Dismiss keyboard, otherwise we can not see the next field
         // This is only an artifact in the (test) native version of the flow
-        app.scrollViews.firstMatch.swipeUp()
+        app.tapCoordinate(at: .init(x: 150, y: 150))
 
         let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"]
         acctConfirmField.forceTapWhenHittableInTestCase(self)
@@ -162,7 +229,7 @@ extension XCTestCase {
 
         // Dismiss keyboard again otherwise we can not see the continue button
         // This is only an artifact in the (test) native version of the flow
-        app.scrollViews.firstMatch.swipeUp()
+        app.tapCoordinate(at: .init(x: 150, y: 150))
     }
     func fillSepaData(_ app: XCUIApplication,
                       container: XCUIElement? = nil) throws {

@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li räntefria betalningar på %2$@";
+
 "+ Add" = "+ Lägg till";
+
+"Add US bank account" = "Lägg till amerikanskt bankkonto";
 
 "Add a card" = "Lägg till ett kort";
 
 "Add a payment method" = "Lägg till en betalningsmetod";
 
-"Add bank account" = "Lägg till bankkonto";
+"Add card" = "Lägg till kort";
+
+"Add new card" = "Lägg till nytt kort";
 
 "Add new payment method" = "Lägg till ny betalningsmetod";
 
@@ -16,9 +22,11 @@
 
 "Back" = "Tillbaka";
 
+"Bank" = "Bank";
+
 "Bank account" = "Bankkonto";
 
-"Buy now or pay later with Klarna." = "Köp nu eller betala senare med Klarna.";
+"Buy now or pay later with Klarna" = "Köp nu eller betala senare med Klarna";
 
 "Buy using a UPI ID" = "Köp med ett UPI ID";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Genom att fortsätta godkänner du att %1$@ debiterar ditt Cash App-konto för den här betalningen och framtida betalningar i enlighet med %2$@s villkor, tills detta godkännande återkallas. Du kan när som helst ändra detta i dina Cash App-inställningar.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>integritetspolicy</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Genom att tillhandahålla dina bankkontouppgifter och bekräfta denna betalning samtycker du till denna begäran om autogiro och <terms>användaravtalet för begäran om autogiro</terms>, och godkänner att Stripe Payments Australia Pty Ltd ACN 160 180 343 Användar-ID för autogiro 507156 (\"Stripe\") debiterar ditt konto via Bulk Electronic Clearing System (BECS) på uppdrag av %@ (\"Handlaren\") för alla belopp som separat meddelats till dig av Handlaren. Du intygar att du antingen är kontoinnehavare eller auktoriserad undertecknare på det konto som anges ovan.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Genom att tillhandahålla kortinformationen ger du %@ tillåtelse att debitera ditt kort för framtida betalningar enligt deras villkor.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att tillhandahålla din e-postadress godkänner du att skapa ett Link-konto och spara dina betalningsuppgifter hos Link, i enlighet med Links <terms>villkor</terms> och <privacy>integritetspolicy</privacy>.";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Hantera betalningsmetod";
+
+"Manage payment methods" = "Hantera betalningsmetoder";
+
 "Manage your payment methods" = "Hantera dina betalningsmetoder";
 
 "Name on card" = "Namn på kortet";
+
+"New card" = "Nytt kort";
+
+"New payment method" = "Ny betalningsmetod";
 
 "Open your UPI app to approve your payment within %@" = "Öppna UPI-appen för att godkänna din betalning inom %@";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "Ta bort kort?";
 
+"Remove payment method" = "Ta bort betalningsmetod";
+
 "Save" = "Spara";
 
 "Save a new payment method" = "Spara en ny betalningsmetod";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Spara dina uppgifter för säker betalning med ett klick med Link";
 
+"Saved" = "Sparad";
+
+"Select card" = "Välj kort";
+
+"Select payment method" = "Välj betalningsmetod";
+
 "Select your payment method" = "Välj din betalningsmetod";
 
 "Set up" = "Konfigurera";
@@ -142,13 +170,23 @@
 
 "Show menu" = "Visa meny";
 
+"Simple, secure one-click payments" = "Enkla och säkra betalningar med ett klick";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Något gick fel när ditt konto skulle länkas.\nFörsök igen senare.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe kommer att sätta in 0,01 USD på ditt konto om 1–2 arbetsdagar. Därefter får du ett e-postmeddelande med instruktioner om hur du slutför sparandet av ditt bankkonto hos %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sätter in 0,01 USD på ditt konto inom 1–2 arbetsdagar. Sedan får du ett e-postmeddelande med instruktioner för att slutföra betalningen till %@.";
 
 "The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
 
-"Update card" = "Uppdatera kort";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Angivet IBAN är ogiltigt, \"%@\" är inte en giltig landskod.";
+
+"Update" = "Uppdatera";
+
+"Update card brand" = "Uppdatera kortvarumärke";
+
+"View more" = "Visa mer";
 
 "Your IBAN should start with a two-letter country code." = "Ditt IBAN ska börja med en landskod (två bokstäver).";
 

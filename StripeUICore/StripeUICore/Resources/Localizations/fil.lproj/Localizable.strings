@@ -14,6 +14,8 @@
 
 "BSB number" = "Numero ng BSB";
 
+"Bank account •••• %@" = "Account sa bangko •••• %@";
+
 "Billing address is same as shipping" = "Ang address sa billing ay kapareho ng sa pagpapadala";
 
 "Cancel" = "Kanselahin";
@@ -94,9 +96,7 @@
 
 "Remove" = "Alisin";
 
-"Remove bank account" = "Alisin ang account sa bangko";
-
-"Remove bank account ending in %@" = "Alisin ang account sa bangko na nagtatapos sa %@";
+"Remove bank account?" = "Alisin ang account sa bangko?";
 
 "Remove card" = "Alisin ang kard";
 

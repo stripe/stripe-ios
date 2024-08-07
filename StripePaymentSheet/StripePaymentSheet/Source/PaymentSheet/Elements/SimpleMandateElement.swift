@@ -9,9 +9,12 @@
 import UIKit
 
 class SimpleMandateElement: PaymentMethodElement {
+    let collectsUserInput: Bool = false
+
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         // Per the contract of the `updateParams(params:)` API (see its docstring), we should only return a non-nil params if we are valid.
         // We are only valid if the customer saw the mandate - either our view was displayed *or* the customer already saw the view
+        // This handles edge cases around the payment method being updated to include or not include a mandate e.g. going from payment -> setup mode. See the `testAppliesPreviousCustomerInput_for_mandate` test for an example.
         if customerAlreadySawMandate || mandateTextView.viewDidAppear {
             params.didDisplayMandate = true
             return params

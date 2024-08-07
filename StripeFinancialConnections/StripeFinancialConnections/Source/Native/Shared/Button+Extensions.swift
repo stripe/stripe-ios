@@ -9,9 +9,9 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension Button {
-    static func primary() -> StripeUICore.Button {
-        let button = Button(configuration: .financialConnectionsPrimary)
+extension StripeUICore.Button {
+    static func primary(theme: FinancialConnectionsTheme) -> StripeUICore.Button {
+        let button = Button(configuration: .financialConnectionsPrimary(theme: theme))
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
         button.layer.shadowOpacity = 0.25
@@ -30,25 +30,25 @@ extension Button {
     }
 }
 
-extension Button.Configuration {
+extension StripeUICore.Button.Configuration {
 
-    fileprivate static var financialConnectionsPrimary: Button.Configuration {
+    fileprivate static func financialConnectionsPrimary(theme: FinancialConnectionsTheme) -> StripeUICore.Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         primaryButtonConfiguration.cornerRadius = 12.0
         // default
-        primaryButtonConfiguration.backgroundColor = .brand500
-        primaryButtonConfiguration.foregroundColor = .white
+        primaryButtonConfiguration.backgroundColor = theme.primaryColor
+        primaryButtonConfiguration.foregroundColor = theme.primaryAccentColor
         // disabled
-        primaryButtonConfiguration.disabledBackgroundColor = .brand500
-        primaryButtonConfiguration.disabledForegroundColor = .neutral0.withAlphaComponent(0.4)
+        primaryButtonConfiguration.disabledBackgroundColor = theme.primaryColor
+        primaryButtonConfiguration.disabledForegroundColor = theme.primaryAccentColor.withAlphaComponent(0.4)
         // pressed
         primaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.23)  // this tries to simulate `brand600`
         primaryButtonConfiguration.colorTransforms.highlightedForeground = nil
         return primaryButtonConfiguration
     }
 
-    fileprivate static var financialConnectionsSecondary: Button.Configuration {
+    fileprivate static var financialConnectionsSecondary: StripeUICore.Button.Configuration {
         var secondaryButtonConfiguration = Button.Configuration.secondary()
         secondaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         secondaryButtonConfiguration.cornerRadius = 12.0
@@ -92,3 +92,63 @@ private final class ButtonFeedbackGeneratorHandler: NSObject {
         )
     }
 }
+
+#if DEBUG
+
+import SwiftUI
+
+private struct PrimaryButtonViewRepresentable: UIViewRepresentable {
+    let theme: FinancialConnectionsTheme
+    let enabled: Bool
+
+    func makeUIView(context: Context) -> StripeUICore.Button {
+        let button = StripeUICore.Button.primary(theme: theme)
+        button.title = "primary | \(theme.rawValue) | \(enabled ? "enabled" : "disabled")"
+        return button
+    }
+
+    func updateUIView(_ uiView: StripeUICore.Button, context: Context) {
+        uiView.isEnabled = enabled
+    }
+}
+
+private struct SecondaryButtonViewRepresentable: UIViewRepresentable {
+    let enabled: Bool
+
+    func makeUIView(context: Context) -> StripeUICore.Button {
+        let button = StripeUICore.Button.secondary()
+        button.title = "secondary | \(enabled ? "enabled" : "disabled")"
+        return button
+    }
+
+    func updateUIView(_ uiView: StripeUICore.Button, context: Context) {
+        uiView.isEnabled = enabled
+    }
+}
+
+struct ButtonViewRepresentable_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack(spacing: 20) {
+            PrimaryButtonViewRepresentable(theme: .light, enabled: true)
+                .frame(height: 64)
+                .padding()
+            PrimaryButtonViewRepresentable(theme: .light, enabled: false)
+                .frame(height: 64)
+                .padding()
+            PrimaryButtonViewRepresentable(theme: .linkLight, enabled: true)
+                .frame(height: 64)
+                .padding()
+            PrimaryButtonViewRepresentable(theme: .linkLight, enabled: false)
+                .frame(height: 64)
+                .padding()
+            SecondaryButtonViewRepresentable(enabled: true)
+                .frame(height: 64)
+                .padding()
+            SecondaryButtonViewRepresentable(enabled: false)
+                .frame(height: 64)
+                .padding()
+        }
+    }
+}
+
+#endif

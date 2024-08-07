@@ -12,6 +12,7 @@ import UIKit
  A inert wrapper around a view.
  */
 @_spi(STP) public class StaticElement: Element {
+    public let collectsUserInput: Bool = false
     weak public var delegate: ElementDelegate?
     public let view: UIView
     public var isHidden: Bool = false {

@@ -47,7 +47,7 @@ extension PaymentSheet {
     public enum SavePaymentMethodOptInBehavior {
 
         /// (Default) The SDK will apply opt-out behavior for supported countries.
-        /// Currently, this behavior is supported in the US.
+        /// Currently, we use requiresOptIn for all countries.
         case automatic
 
         /// The control will always default to unselected and users
@@ -61,8 +61,7 @@ extension PaymentSheet {
         var isSelectedByDefault: Bool {
             switch self {
             case .automatic:
-                // only enable the save checkbox by default for US
-                return Locale.current.stp_regionCode == "US"
+                return false
             case .requiresOptIn:
                 return false
             case .requiresOptOut:
@@ -167,9 +166,6 @@ extension PaymentSheet {
         /// Initializes a Configuration with default values
         public init() {}
 
-        // MARK: Internal
-        internal var linkPaymentMethodsOnly: Bool = false
-
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
 
@@ -196,11 +192,33 @@ extension PaymentSheet {
         /// If true (the default), the customer can delete all saved payment methods.
         /// If false, the customer can't delete if they only have one saved payment method remaining.
         @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
+
+        /// The layout of payment methods in PaymentSheet. Defaults to `.horizontal`.
+        /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
+        @_spi(STP) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
+    }
+
+    /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
+    @_spi(STP) public enum PaymentMethodLayout {
+        /// Payment methods are arranged horizontally. Users can swipe left or right to navigate through different payment methods.
+        case horizontal
+
+        /// Payment methods are arranged vertically. Users can scroll up or down to navigate through different payment methods.
+        case vertical
     }
 
     internal enum CustomerAccessProvider {
         case legacyCustomerEphemeralKey(String)
         case customerSession(String)
+
+        var analyticValue: String {
+            switch self {
+            case .legacyCustomerEphemeralKey:
+                return "legacy"
+            case .customerSession:
+                return "customer_session"
+            }
+        }
     }
 
     /// Configuration related to the Stripe Customer
@@ -227,6 +245,11 @@ extension PaymentSheet {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
             self.ephemeralKeySecret = ""
+
+            stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
+                      "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+            stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
+                      "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
         }
     }
 
@@ -471,7 +494,8 @@ extension PaymentSheet {
 }
 
 extension PaymentSheet.Configuration {
-    func isUsingBillingAddressCollection() -> Bool {
+    /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
+    func requiresBillingDetailCollection() -> Bool {
         return billingDetailsCollectionConfiguration.name == .always
         || billingDetailsCollectionConfiguration.phone == .always
         || billingDetailsCollectionConfiguration.email == .always
@@ -494,12 +518,12 @@ extension STPPaymentMethodBillingDetails {
     }
 }
 extension PaymentSheet.CustomerConfiguration {
-    func ephemeralKeySecretBasedOn(intent: Intent?) -> String? {
+    func ephemeralKeySecretBasedOn(elementsSession: STPElementsSession?) -> String? {
         switch customerAccessProvider {
         case .legacyCustomerEphemeralKey(let legacy):
             return legacy
         case .customerSession:
-            return intent?.elementsSession.customer?.customerSession.apiKey
+            return elementsSession?.customer?.customerSession.apiKey
         }
     }
 }
