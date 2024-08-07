@@ -8,7 +8,7 @@
 
 import Foundation
 import ObjectiveC
-import PassKit
+@preconcurrency import PassKit
 @_spi(STP) import StripeCore
 
 /// :nodoc:
@@ -118,9 +118,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         paymentRequest: PKPaymentRequest,
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
-        Task {
-            await STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
-        }
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
         let canMakePayments: Bool = {
             if #available(iOS 15.0, *) {
                 // On iOS 15+, Apple Pay can be displayed even though there are no cards because Apple added the ability for customers to add cards in the payment sheet (see WWDC '21 "What's new in Wallet and Apple Pay")
@@ -502,7 +500,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     // MARK: - Helpers
-    func _completePayment(
+    @objc func _completePayment(
         with payment: PKPayment,
         completion: @escaping (PKPaymentAuthorizationStatus, Swift.Error?) -> Void
     ) {
@@ -539,9 +537,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             case .pending, .notStarted:
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
                                                   error: Error.invalidFinalState)
-                Task {
-                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                }
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 stpAssertionFailure("Invalid final state")
                 return
             }
@@ -576,40 +572,26 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
                 if StripeAPI.SetupIntentConfirmParams.isClientSecretValid(clientSecret) {
                     // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
-                    StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
-                    {
-                        result in
-                        guard let setupIntent = try? result.get(),
-                            self.authorizationController != nil
-                        else {
-                            if case .failure(let error) = result {
-                                handleFinalState(.error, error)
-                            } else {
-                                handleFinalState(.error, nil)
-                            }
-                            return
-                        }
+                    
+                    Task {
+                        do {
+                            let setupIntent = try await StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
+                            
+                            switch setupIntent.status {
+                            case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
+                                self.confirmType = .client
+                                // 4a. Confirm the SetupIntent
+                                self.paymentState = .pending  // After this point, we can't cancel
+                                var confirmParams = StripeAPI.SetupIntentConfirmParams(
+                                    clientSecret: clientSecret
+                                )
+                                confirmParams.paymentMethod = paymentMethod.id
+                                confirmParams.useStripeSdk = true
+                                confirmParams.returnUrl = self.returnUrl
 
-                        switch setupIntent.status {
-                        case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
-                            self.confirmType = .client
-                            // 4a. Confirm the SetupIntent
-                            self.paymentState = .pending  // After this point, we can't cancel
-                            var confirmParams = StripeAPI.SetupIntentConfirmParams(
-                                clientSecret: clientSecret
-                            )
-                            confirmParams.paymentMethod = paymentMethod.id
-                            confirmParams.useStripeSdk = true
-                            confirmParams.returnUrl = self.returnUrl
-
-                            StripeAPI.SetupIntent.confirm(
-                                apiClient: self.apiClient,
-                                params: confirmParams
-                            ) {
-                                result in
-                                guard let setupIntent = try? result.get(),
-                                    self.authorizationController != nil,
-                                    setupIntent.status == .succeeded
+                                let confirmedSetupIntent = try await StripeAPI.SetupIntent.confirm(apiClient: self.apiClient, params: confirmParams)
+                                guard self.authorizationController != nil,
+                                      confirmedSetupIntent.status == .succeeded
                                 else {
                                     if case .failure(let error) = result {
                                         handleFinalState(.error, error)
@@ -618,20 +600,21 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                     }
                                     return
                                 }
-
+                            case .succeeded:
+                                self.confirmType = .server
                                 handleFinalState(.success, nil)
-                            }
-                        case .succeeded:
-                            self.confirmType = .server
-                            handleFinalState(.success, nil)
-                        case .canceled, .processing, .unknown, .unparsable, .none:
-                            handleFinalState(
-                                .error,
-                                Self.makeUnknownError(
-                                    message:
-                                        "The SetupIntent is in an unexpected state: \(setupIntent.status!)"
+                            case .canceled, .processing, .unknown, .unparsable, .none:
+                                handleFinalState(
+                                    .error,
+                                    Self.makeUnknownError(
+                                        message:
+                                            "The SetupIntent is in an unexpected state: \(setupIntent.status!)"
+                                    )
                                 )
-                            )
+                            }
+                            
+                        } catch {
+                            handleFinalState(.error, error)
                         }
                     }
                 } else {

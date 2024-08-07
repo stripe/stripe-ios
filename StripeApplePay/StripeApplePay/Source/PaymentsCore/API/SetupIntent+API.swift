@@ -21,7 +21,7 @@ import Foundation
     /// - Parameters:
     ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
-    @_spi(STP) public static func get(
+    @_spi(STP) private static func get(
         apiClient: STPAPIClient = .shared,
         clientSecret: String,
         completion: @escaping SetupIntentCompletionBlock
@@ -38,6 +38,23 @@ import Foundation
         let parameters: [String: String] = ["client_secret": clientSecret]
 
         apiClient.get(resource: endpoint, parameters: parameters, completion: completion)
+    }
+    
+    @_spi(STP) public static func get(
+        apiClient: STPAPIClient = .shared,
+        clientSecret: String
+    ) async throws -> StripeAPI.SetupIntent {
+        return try await withCheckedThrowingContinuation({ continuation in
+            get(apiClient: apiClient, clientSecret: clientSecret) { result in
+                switch result {
+                case .success(let setupIntent):
+                    continuation.resume(returning: setupIntent)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            
+        })
     }
 
     /// Confirms the SetupIntent object with the provided params object.
@@ -66,11 +83,9 @@ import Foundation
         let endpoint = "\(Resource)/\(identifier)/confirm"
 
         let type = params.paymentMethodData?.type.rawValue
-        Task {
-            await STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
-                paymentMethodType: type
-            )
-        }
+        STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
+            paymentMethodType: type
+        )
 
         // Add telemetry
         var paramsWithTelemetry = params
@@ -80,6 +95,23 @@ import Foundation
         }
 
         apiClient.post(resource: endpoint, object: paramsWithTelemetry, completion: completion)
+    }
+    
+    @_spi(STP) public static func confirm(
+        apiClient: STPAPIClient = .shared,
+        params: StripeAPI.SetupIntentConfirmParams
+    ) async throws -> StripeAPI.SetupIntent {
+        return try await withCheckedThrowingContinuation({ continuation in
+            confirm(apiClient: apiClient, params: params) { result in
+                switch result {
+                case .success(let setupIntent):
+                    continuation.resume(returning: setupIntent)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            
+        })
     }
 
     static let Resource = "setup_intents"

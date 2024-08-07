@@ -7,7 +7,7 @@
 
 import Foundation
 
-@AnalyticsActor
+@MainActor
 @_spi(STP) public class PaymentsSDKVariant {
     @_spi(STP) public static let variant: String = {
         if NSClassFromString("STPPaymentContext") != nil {

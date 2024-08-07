@@ -407,21 +407,20 @@ extension STPAPIClient {
 
     /// Make a POST request using the passed Encodable object.
     ///
-    /// - Returns: a promise that is fullfilled when the request is complete.
+    /// - Returns: a promise that is fulfilled when the request is complete.
     @_spi(STP) public func post<I: Encodable, O: Decodable>(
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil
     ) -> Promise<O> {
         let promise = Promise<O>()
-        // TODO FIX PROMISES
-//        self.post(
-//            resource: resource,
-//            object: object,
-//            ephemeralKeySecret: ephemeralKeySecret
-//        ) { result in
-//            promise.fullfill(with: result)
-//        }
+        self.post(
+            resource: resource,
+            object: object,
+            ephemeralKeySecret: ephemeralKeySecret
+        ) { result in
+            promise.fullfill(with: result)
+        }
         return promise
     }
 

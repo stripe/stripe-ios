@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension STPAPIClient {
-    @_spi(STP) @AnalyticsActor public class func paramsAddingPaymentUserAgent(
+    @_spi(STP) @MainActor public class func paramsAddingPaymentUserAgent(
         _ params: [String: Any]
     ) -> [String: Any] {
         var newParams = params

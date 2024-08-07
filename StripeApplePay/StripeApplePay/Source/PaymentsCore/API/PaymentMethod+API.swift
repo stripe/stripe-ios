@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import PassKit
+@preconcurrency import PassKit
 @_spi(STP) import StripeCore
 
 @MainActor extension StripeAPI.PaymentMethod {
@@ -15,7 +15,7 @@ import PassKit
     /// - Parameters:
     ///   - paymentMethod: The Stripe PaymentMethod from the response. Will be nil if an error occurs. - seealso: PaymentMethod
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(STP) public typealias PaymentMethodCompletionBlock = @Sendable (
+    @_spi(STP) public typealias PaymentMethodCompletionBlock = (
         Result<StripeAPI.PaymentMethod, Error>
     ) -> Void
 
@@ -24,11 +24,9 @@ import PassKit
         params: StripeAPI.PaymentMethodParams,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
-        Task {
-            await STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
+        STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
                 paymentMethodType: params.type.rawValue
-            )
-        }
+        )
         apiClient.post(resource: Resource, object: params, completion: completion)
     }
 
@@ -55,7 +53,10 @@ import PassKit
             let billingDetails = StripeAPI.BillingDetails(from: payment)
             var paymentMethodParams = StripeAPI.PaymentMethodParams(type: .card, card: cardParams)
             paymentMethodParams.billingDetails = billingDetails
-            Self.create(apiClient: apiClient, params: paymentMethodParams, completion: completion)
+            Task { @MainActor in
+                Self.create(apiClient: apiClient, params: paymentMethodParams, completion: completion)
+            }
+            
         }
     }
 

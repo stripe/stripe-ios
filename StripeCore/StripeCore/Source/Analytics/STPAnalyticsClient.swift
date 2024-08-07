@@ -13,7 +13,7 @@ import UIKit
     static var stp_analyticsIdentifier: String { get }
 }
 
-@AnalyticsActor
+@MainActor
 @_spi(STP) public protocol STPAnalyticsClientProtocol {
     func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type)
     func log(analytic: Analytic, apiClient: STPAPIClient?)
@@ -24,11 +24,7 @@ import UIKit
     func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any])
 }
 
-@globalActor @_spi(STP) public actor AnalyticsActor {
-    @_spi(STP) public static var shared = AnalyticsActor()
-}
-
-@AnalyticsActor
+@MainActor
 @_spi(STP) public final class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol, Sendable {
     @objc public static let sharedClient = STPAnalyticsClient()
     /// When this class logs a payload in an XCTestCase, it's added to `_testLogHistory` instead of being sent over the network.
@@ -95,7 +91,7 @@ import UIKit
     ///   - analytic: The analytic to log.
     ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
     ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
-    @AnalyticsActor
+    @MainActor
     func payload(from analytic: Analytic, apiClient: STPAPIClient? = nil) async -> [String: Sendable] {
         let apiClient = await MainActor.run {
              apiClient ?? .shared
@@ -115,7 +111,7 @@ import UIKit
     ///   - analytic: The analytic to log.
     ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
     ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
-    @AnalyticsActor
+    @MainActor
     public func log(analytic: Analytic, apiClient: STPAPIClient? = nil) {
         Task {
             let apiClient = await MainActor.run {
@@ -149,7 +145,7 @@ extension STPAnalyticsClient {
         var payload: [String: Sendable] = [:]
         payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
         payload["analytics_ua"] = "analytics.stripeios-1.0"
-        let version = await UIDevice.current.systemVersion
+        let version = UIDevice.current.systemVersion
         if !version.isEmpty {
             payload["os_version"] = version
         }
@@ -161,8 +157,8 @@ extension STPAnalyticsClient {
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
         payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue
-        payload["publishable_key"] = await apiClient.sanitizedPublishableKey ?? "unknown"
-        payload["session_id"] = await AnalyticsHelper.shared.sessionID
+        payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
+        payload["session_id"] = AnalyticsHelper.shared.sessionID
         if STPAnalyticsClient.isSimulatorOrTest {
             payload["is_development"] = true
         }

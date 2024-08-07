@@ -69,11 +69,8 @@ extension StripeAPI.PaymentIntent {
         let endpoint = "\(Resource)/\(identifier)/confirm"
 
         let type = params.paymentMethodData?.type.rawValue
-        Task {
-            await STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
-                paymentMethodType: type
-            )
-        }
+        STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
+            paymentMethodType: type)
         // Add telemetry
         var paramsWithTelemetry = params
         if let pmAdditionalParams = paramsWithTelemetry.paymentMethodData?.additionalParameters {

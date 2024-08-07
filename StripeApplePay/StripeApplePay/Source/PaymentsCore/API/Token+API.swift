@@ -15,7 +15,7 @@ import PassKit
     /// - Parameters:
     ///   - token: The Stripe token from the response. Will be nil if an error occurs. - seealso: STPToken
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(StripeApplePayTokenization) public typealias TokenCompletionBlock = (Result<StripeAPI.Token, Error>) -> Void
+    @_spi(StripeApplePayTokenization) public typealias TokenCompletionBlock = @Sendable (Result<StripeAPI.Token, Error>) -> Void
 
     /// Converts a PKPayment object into a Stripe token using the Stripe API.
     /// - Parameters:
@@ -53,7 +53,7 @@ import PassKit
 }
 
 extension PKPayment {
-    func stp_tokenParameters(apiClient: STPAPIClient) -> [String: Any] {
+    @MainActor func stp_tokenParameters(apiClient: STPAPIClient) -> [String: Any] {
         let paymentString = String(data: self.token.paymentData, encoding: .utf8)
         var payload: [String: Any] = [:]
         payload["pk_token"] = paymentString
@@ -61,9 +61,12 @@ extension PKPayment {
             payload["card"] = billingContact.addressParams
         }
 
+        // Evaluate the condition before using it in assert
+        let isPublishableKeyLive = apiClient.publishableKey?.hasPrefix("pk_live") ?? false
+        let isPaymentStringEmpty = (paymentString?.count ?? 0) == 0
+
         assert(
-            !((paymentString?.count ?? 0) == 0
-                && apiClient.publishableKey?.hasPrefix("pk_live") ?? false),
+            !(isPaymentStringEmpty && isPublishableKeyLive),
             "The pk_token is empty. Using Apple Pay with an iOS Simulator while not in Stripe Test Mode will always fail."
         )
 

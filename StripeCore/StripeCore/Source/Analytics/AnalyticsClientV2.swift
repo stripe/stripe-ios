@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Dependency-injectable protocol for `AnalyticsClientV2`.
-@AnalyticsActor
+@MainActor
 @_spi(STP) public protocol AnalyticsClientV2Protocol {
     var clientId: String { get }
     func log(eventName: String, parameters: [String: Sendable])
@@ -19,7 +19,7 @@ import UIKit
 /// Logs analytics to `r.stripe.com`.
 ///
 /// To log analytics to the legacy `q.stripe.com`, use `STPAnalyticsClient`.
-@AnalyticsActor
+@MainActor
 @_spi(STP) public class AnalyticsClientV2: AnalyticsClientV2Protocol {
 
     static let loggerUrl = URL(string: "https://r.stripe.com/0")!
@@ -112,7 +112,7 @@ import UIKit
 }
 
 extension AnalyticsClientV2Protocol {
-    @AnalyticsActor
+    @MainActor
     public func makeCommonPayload() async -> [String: Sendable] {
         var payload: [String: Sendable] = [:]
 
@@ -122,8 +122,7 @@ extension AnalyticsClientV2Protocol {
         payload["created"] = Date().timeIntervalSince1970
 
         // Common payload
-        // TODO: Don't await to the main thread here, maybe hold it on our thread? If that's even meaningful?
-        let version = await UIDevice.current.systemVersion
+        let version = UIDevice.current.systemVersion
         if !version.isEmpty {
             payload["os_version"] = version
         }
@@ -143,7 +142,7 @@ extension AnalyticsClientV2Protocol {
         return payload
     }
 
-    @AnalyticsActor
+    @MainActor
     public func payload(withEventName eventName: String, parameters: [String: Sendable]) async -> [String: Any]
     {
         var payload = await makeCommonPayload()
