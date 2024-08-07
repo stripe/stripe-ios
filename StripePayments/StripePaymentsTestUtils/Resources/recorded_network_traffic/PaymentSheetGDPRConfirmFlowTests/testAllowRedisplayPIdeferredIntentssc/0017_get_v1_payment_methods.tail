@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_QZbH6sGUXeB75V&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_Qahl1QJP8dXKNh&type=card$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_jOqUo9GZrlMWqm
-Content-Length: 1270
+request-id: req_P2JffCtjdO7QCL
+Content-Length: 89
 Vary: Origin
-Date: Wed, 31 Jul 2024 02:16:09 GMT
+Date: Sat, 03 Aug 2024 01:02:04 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -28,54 +28,7 @@ x-content-type-options: nosniff
   "has_more" : false,
   "object" : "list",
   "data" : [
-    {
-      "object" : "payment_method",
-      "id" : "pm_1PiS5CFY0qyl6XeWiSuUXGHm",
-      "billing_details" : {
-        "email" : null,
-        "phone" : null,
-        "name" : null,
-        "address" : {
-          "state" : null,
-          "country" : "US",
-          "line2" : null,
-          "city" : null,
-          "line1" : null,
-          "postal_code" : "65432"
-        }
-      },
-      "card" : {
-        "fingerprint" : "96sroMqLCHmUdUpL",
-        "last4" : "4242",
-        "funding" : "credit",
-        "generated_from" : null,
-        "networks" : {
-          "available" : [
-            "visa"
-          ],
-          "preferred" : null
-        },
-        "brand" : "visa",
-        "checks" : {
-          "address_postal_code_check" : null,
-          "cvc_check" : null,
-          "address_line1_check" : null
-        },
-        "three_d_secure_usage" : {
-          "supported" : true
-        },
-        "wallet" : null,
-        "display_brand" : "visa",
-        "exp_month" : 12,
-        "exp_year" : 2032,
-        "country" : "US"
-      },
-      "livemode" : false,
-      "created" : 1722392167,
-      "allow_redisplay" : "always",
-      "type" : "card",
-      "customer" : "cus_QZbH6sGUXeB75V"
-    }
+
   ],
   "url" : "\/v1\/payment_methods"
 }

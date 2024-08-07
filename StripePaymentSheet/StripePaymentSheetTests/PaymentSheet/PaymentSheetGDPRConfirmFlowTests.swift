@@ -83,12 +83,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         try await _testAndAssert(intentKind: .paymentIntent_intentFirst_csc,
                                  elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .checked,
-                                 expectedAllowRedisplay: .attached(.always))
-
-        try await _testAndAssert(intentKind: .paymentIntent_intentFirst_csc,
-                                 elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .unchecked,
+                                 checkbox: .hidden,
                                  expectedAllowRedisplay: .unattached)
     }
 
@@ -105,12 +100,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_csc,
                                  elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .checked,
-                                 expectedAllowRedisplay: .attached(.always))
-
-        try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_csc,
-                                 elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .unchecked,
+                                 checkbox: .hidden,
                                  expectedAllowRedisplay: .unattached)
     }
 
@@ -126,11 +116,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_ssc,
                                  elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .checked,
-                                 expectedAllowRedisplay: .attached(.always))
-        try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_ssc,
-                                 elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .unchecked,
+                                 checkbox: .hidden,
                                  expectedAllowRedisplay: .unattached)
     }
 
