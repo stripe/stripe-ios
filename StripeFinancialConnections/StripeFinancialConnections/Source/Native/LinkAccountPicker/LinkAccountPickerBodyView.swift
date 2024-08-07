@@ -72,6 +72,7 @@ final class LinkAccountPickerBodyView: UIView {
         let newAccountRowView = LinkAccountPickerNewAccountRowView(
             title: addNewAccount.body,
             imageUrl: addNewAccount.icon?.default,
+            theme: theme,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.linkAccountPickerBodyViewSelectedNewBankAccount(self)
