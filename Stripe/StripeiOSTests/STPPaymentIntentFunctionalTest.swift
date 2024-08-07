@@ -57,9 +57,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertNil(paymentIntent?.paymentMethodId)
                 XCTAssertEqual(paymentIntent?.status, .canceled)
                 XCTAssertEqual(paymentIntent?.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(paymentIntent?.nextSourceAction)
+            XCTAssertNil(paymentIntent?.perform(NSSelectorFromString("nextSourceAction")))
             // #pragma clang diagnostic pop
             XCTAssertNil(paymentIntent!.nextAction)
 

@@ -28,10 +28,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
             XCTAssertNil(params.sourceParams)
             XCTAssertNil(params.sourceId)
             XCTAssertNil(params.receiptEmail)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(params.saveSourceToCustomer)
-            // #pragma clang diagnostic pop
+            XCTAssertNil(params.perform(NSSelectorFromString("saveSourceToCustomer")))
             XCTAssertNil(params.savePaymentMethod)
             XCTAssertNil(params.returnURL)
             XCTAssertNil(params.setupFutureUsage)
@@ -55,25 +52,25 @@ class STPPaymentIntentParamsTest: XCTestCase {
         let params = STPPaymentIntentParams()
 
         XCTAssertNil(params.returnURL)
-        XCTAssertNil(params.returnUrl)
+        XCTAssertNil(params.perform(NSSelectorFromString("returnUrl")))
 
         params.returnURL = "set via new name"
-        XCTAssertEqual(params.returnUrl, "set via new name")
+        XCTAssertEqual(params.perform(NSSelectorFromString("returnUrl")).takeUnretainedValue() as? NSString, "set via new name")
 
-        params.returnUrl = "set via old name"
+        params.perform(NSSelectorFromString("setReturnUrl:"), with: "set via old name")
         XCTAssertEqual(params.returnURL, "set via old name")
     }
 
     func testSaveSourceToCustomerRenaming() {
         let params = STPPaymentIntentParams()
 
-        XCTAssertNil(params.saveSourceToCustomer)
+        XCTAssertNil(params.perform(NSSelectorFromString("saveSourceToCustomer")))
         XCTAssertNil(params.savePaymentMethod)
 
         params.savePaymentMethod = NSNumber(value: false)
-        XCTAssertEqual(params.saveSourceToCustomer, NSNumber(value: false))
+        XCTAssertEqual(params.perform(NSSelectorFromString("saveSourceToCustomer")).takeUnretainedValue() as? NSNumber, NSNumber(value: false))
 
-        params.saveSourceToCustomer = NSNumber(value: true)
+        params.perform(NSSelectorFromString("setSaveSourceToCustomer:"), with: NSNumber(value: true))
         XCTAssertEqual(params.savePaymentMethod, NSNumber(value: true))
     }
 
