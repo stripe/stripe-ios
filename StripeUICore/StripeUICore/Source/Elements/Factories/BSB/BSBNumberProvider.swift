@@ -33,7 +33,9 @@ import Foundation
             guard let url = bundle.url(forResource: self.bsbDataFilename, withExtension: ".json") else {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreBSBNumberProvider,
                                                   error: Error.bsbLoadFailure)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                Task {
+                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
                 completion?()
                 return
             }
@@ -54,7 +56,9 @@ import Foundation
             } catch {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreBSBNumberProvider,
                                                   error: error)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                Task {
+                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
                 completion?()
             }
         }

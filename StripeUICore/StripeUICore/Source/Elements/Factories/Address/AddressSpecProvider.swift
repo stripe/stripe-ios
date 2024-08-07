@@ -39,7 +39,9 @@ let addressDataFilename = "localized_address_data"
             guard let url = bundle.url(forResource: addressDataFilename, withExtension: ".json") else {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreAddressSpecProvider,
                                                   error: Error.loadSpecsFailure)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                Task {
+                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
                 completion?()
                 return
             }
@@ -52,7 +54,9 @@ let addressDataFilename = "localized_address_data"
             } catch {
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreAddressSpecProvider,
                                                   error: error)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                Task {
+                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
                 completion?()
             }
         }
