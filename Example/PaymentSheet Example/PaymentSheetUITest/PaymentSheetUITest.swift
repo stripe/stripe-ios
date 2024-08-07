@@ -2276,12 +2276,12 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
             app.buttons["Continue"].tap()
             app.buttons["Confirm"].waitForExistenceAndTap()
         }
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         // Roundabout way to validate that signup completed successfully
         let signupCompleteAnalytic = analyticsLog.first { payload in
             payload["event"] as? String == "link.signup.complete"
         }
         XCTAssertNotNil(signupCompleteAnalytic)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
     private func assertLinkInlineSignupNotShown() {

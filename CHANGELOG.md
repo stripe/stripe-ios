@@ -1,3 +1,7 @@
+## X.Y.Z 2024-XX-YY
+### PaymentSheet
+* [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
+
 ## 23.29.0 2024-08-05
 ### PaymentSheet
 * [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
