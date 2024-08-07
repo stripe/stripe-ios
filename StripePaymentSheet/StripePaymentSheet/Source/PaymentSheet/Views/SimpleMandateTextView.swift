@@ -14,20 +14,33 @@ import UIKit
 class SimpleMandateTextView: UIView {
     private let theme: ElementsUITheme
     var viewDidAppear: Bool = false
-    lazy var label: UILabel = {
-        let label = UILabel()
-        label.font = theme.fonts.caption
-        label.textColor = theme.colors.secondaryText
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        return label
-    }()
+    let textView: UITextView = UITextView()
+    var attributedText: NSAttributedString? {
+        get {
+            textView.attributedText
+        }
+        set {
+            textView.attributedText = newValue
+            // Re-apply textView styling; otherwise certain things like insets get reset
+            applyTextViewStyle()
+        }
+    }
 
-    init(mandateText: String, theme: ElementsUITheme = .default) {
+    convenience init(mandateText: NSAttributedString, theme: ElementsUITheme) {
+        self.init(theme: theme)
+        textView.attributedText = mandateText
+    }
+
+    convenience init(mandateText: String, theme: ElementsUITheme) {
+        self.init(theme: theme)
+        textView.text = mandateText
+    }
+
+    required init(theme: ElementsUITheme) {
         self.theme = theme
         super.init(frame: .zero)
-        label.text = mandateText
         installConstraints()
+        applyTextViewStyle()
         self.accessibilityIdentifier = "mandatetextview"
     }
 
@@ -36,7 +49,20 @@ class SimpleMandateTextView: UIView {
     }
 
     fileprivate func installConstraints() {
-        addAndPinSubview(label)
+        addAndPinSubview(textView)
+    }
+
+    fileprivate func applyTextViewStyle() {
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.font = theme.fonts.caption
+        textView.backgroundColor = .clear
+        textView.textColor = theme.colors.secondaryText
+        textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
+        // These two lines remove insets that are on UITextViews by default
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.textAlignment = .natural
     }
 }
 

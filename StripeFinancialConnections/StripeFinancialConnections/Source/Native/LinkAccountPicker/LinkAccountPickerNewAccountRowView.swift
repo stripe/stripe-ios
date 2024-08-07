@@ -16,6 +16,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
     init(
         title: String,
         imageUrl: String?,
+        theme: FinancialConnectionsTheme,
         didSelect: @escaping () -> Void
     ) {
         self.didSelect = didSelect
@@ -24,7 +25,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
         let horizontalStackView = CreateHorizontalStackView()
         if let imageUrl = imageUrl {
             horizontalStackView.addArrangedSubview(
-                CreateIconView(imageUrl: imageUrl)
+                CreateIconView(imageUrl: imageUrl, theme: theme)
             )
         }
         horizontalStackView.addArrangedSubview(
@@ -51,30 +52,12 @@ final class LinkAccountPickerNewAccountRowView: UIView {
     }
 }
 
-private func CreateIconView(imageUrl: String) -> UIView {
-    let roundedSquareView = UIView()
-    roundedSquareView.backgroundColor = .brand25
-    roundedSquareView.layer.cornerRadius = 12
-    let roundedSquareViewDiameter: CGFloat = 56
-    roundedSquareView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        roundedSquareView.widthAnchor.constraint(equalToConstant: roundedSquareViewDiameter),
-        roundedSquareView.heightAnchor.constraint(equalToConstant: roundedSquareViewDiameter),
-    ])
-
-    let iconImageView = UIImageView()
-    iconImageView.contentMode = .scaleAspectFit
-    iconImageView.setImage(with: imageUrl)
-    roundedSquareView.addSubview(iconImageView)
-    let iconDiameter: CGFloat = 20
-    iconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        iconImageView.widthAnchor.constraint(equalToConstant: iconDiameter),
-        iconImageView.heightAnchor.constraint(equalToConstant: iconDiameter),
-        iconImageView.centerXAnchor.constraint(equalTo: roundedSquareView.centerXAnchor),
-        iconImageView.centerYAnchor.constraint(equalTo: roundedSquareView.centerYAnchor),
-    ])
-    return roundedSquareView
+private func CreateIconView(imageUrl: String, theme: FinancialConnectionsTheme) -> UIView {
+    RoundedIconView(
+        image: .imageUrl(imageUrl),
+        style: .rounded,
+        theme: theme
+    )
 }
 
 private func CreateTitleLabelView(title: String) -> UIView {
@@ -110,11 +93,13 @@ private struct LinkAccountPickerNewAccountRowViewUIViewRepresentable: UIViewRepr
 
     let title: String
     let imageUrl: String?
+    let theme: FinancialConnectionsTheme
 
     func makeUIView(context: Context) -> LinkAccountPickerNewAccountRowView {
         return LinkAccountPickerNewAccountRowView(
             title: title,
             imageUrl: imageUrl,
+            theme: theme,
             didSelect: {}
         )
     }
@@ -129,13 +114,22 @@ struct LinkAccountPickerNewAccountRowView_Previews: PreviewProvider {
                 VStack(spacing: 10) {
                     LinkAccountPickerNewAccountRowViewUIViewRepresentable(
                         title: "New bank account",
-                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png"
+                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png",
+                        theme: .light
                     )
                         .frame(height: 88)
 
                     LinkAccountPickerNewAccountRowViewUIViewRepresentable(
                         title: "New bank account",
-                        imageUrl: nil
+                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png",
+                        theme: .linkLight
+                    )
+                        .frame(height: 88)
+
+                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
+                        title: "New bank account",
+                        imageUrl: nil,
+                        theme: .light
                     )
                         .frame(height: 88)
                 }

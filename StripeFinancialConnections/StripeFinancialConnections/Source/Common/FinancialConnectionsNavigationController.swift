@@ -147,51 +147,70 @@ extension FinancialConnectionsNavigationController {
     static func configureNavigationItemForNative(
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
-        shouldHideStripeLogo: Bool,
-        shouldLeftAlignStripeLogo: Bool
+        shouldHideLogo: Bool,
+        theme: FinancialConnectionsTheme,
+        isTestMode: Bool
     ) {
-        if !shouldHideStripeLogo {
-            let stripeLogoView: UIView = {
-                let stripeLogoImageView = UIImageView(
-                    image: {
-                        if shouldLeftAlignStripeLogo {
-                            return Image
-                                .stripe_logo
-                                .makeImage(template: true)
-                                .withInsets(UIEdgeInsets(top: 0, left: 3, bottom: 0, right: 0))
-                        } else {
-                            return Image
-                                .stripe_logo
-                                .makeImage(template: true)
-                        }
-                    }()
-                )
-                stripeLogoImageView.tintColor = UIColor.textActionPrimary
-                stripeLogoImageView.contentMode = .scaleAspectFit
-                stripeLogoImageView.sizeToFit()
-                stripeLogoImageView.frame = CGRect(
-                    x: 0,
-                    y: 0,
-                    width: stripeLogoImageView.bounds.width * (20 / max(1, stripeLogoImageView.bounds.height)),
-                    height: 20
-                )
-                // If `titleView` is directly set to the `UIImageView`
-                // we can't control the sizing...so we create a `containerView`
-                // so we can control `UIImageView` sizing.
-                let containerView = UIView()
-                containerView.frame = stripeLogoImageView.bounds
-                containerView.addSubview(stripeLogoImageView)
+        let iconHeight: CGFloat = 20
+        var testModeImageViewWidth: CGFloat = 0
+        var logoImageViewWidth: CGFloat = 0
 
-                stripeLogoImageView.center = containerView.center
-                return containerView
-            }()
+        let testModeBadgeView: UIImageView? = {
+            guard isTestMode else { return nil }
 
-            if shouldLeftAlignStripeLogo {
-                navigationItem?.leftBarButtonItem = UIBarButtonItem(customView: stripeLogoView)
-            } else {
-                navigationItem?.titleView = stripeLogoView
-            }
-        }
+            let testModeImage = UIImageView(image: Image.testmode.makeImage())
+            testModeImage.contentMode = .scaleAspectFit
+            testModeImage.sizeToFit()
+            testModeImageViewWidth = testModeImage.bounds.width * (iconHeight / max(1, testModeImage.bounds.height))
+            testModeImage.frame = CGRect(
+                x: 0,
+                y: 0,
+                width: testModeImageViewWidth,
+                height: iconHeight
+            )
+            return testModeImage
+        }()
+
+        let logoView: UIImageView? = {
+            guard !shouldHideLogo else { return nil }
+
+            let logoImage = UIImageView(image: theme.logo.makeImage(template: true))
+            logoImage.tintColor = theme.logoColor
+            logoImage.contentMode = .scaleAspectFit
+            logoImage.sizeToFit()
+
+            logoImageViewWidth = logoImage.bounds.width * (iconHeight / max(1, logoImage.bounds.height))
+            logoImage.frame = CGRect(
+                x: 0,
+                y: 0,
+                width: logoImageViewWidth,
+                height: iconHeight
+            )
+            return logoImage
+        }()
+
+        let spacing: CGFloat = 6
+        let imageViews = [logoView, testModeBadgeView].compactMap { $0.self }
+        let stackView = UIStackView(arrangedSubviews: imageViews)
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = spacing
+        stackView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: logoImageViewWidth + testModeImageViewWidth + spacing,
+            height: iconHeight
+        )
+
+        // If `titleView` is directly set to the custom view
+        // we can't control the sizing...so we create a `containerView`
+        // so we can control its sizing.
+        let containerView = UIView()
+        containerView.frame = stackView.bounds
+        containerView.addSubview(stackView)
+        stackView.center = containerView.center
+
+        navigationItem?.titleView = stackView
         navigationItem?.backButtonTitle = ""
         navigationItem?.rightBarButtonItem = closeItem
     }

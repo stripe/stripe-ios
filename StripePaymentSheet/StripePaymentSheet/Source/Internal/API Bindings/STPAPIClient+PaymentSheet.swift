@@ -15,6 +15,7 @@ extension STPAPIClient {
 
     func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode,
                                     epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
+                                    clientDefaultPaymentMethod: String?,
                                     customerAccessProvider: PaymentSheet.CustomerAccessProvider?) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
@@ -22,6 +23,9 @@ extension STPAPIClient {
         ]
         if case .customerSession(let clientSecret) = customerAccessProvider {
             parameters["customer_session_client_secret"] = clientSecret
+        }
+        if let clientDefaultPaymentMethod {
+            parameters["client_default_payment_method"] = clientDefaultPaymentMethod
         }
         switch mode {
         case .deferredIntent(let intentConfig):
@@ -62,6 +66,7 @@ extension STPAPIClient {
 
     func retrieveElementsSession(
         paymentIntentClientSecret: String,
+        clientDefaultPaymentMethod: String?,
         configuration: PaymentSheet.Configuration
     ) async throws -> (STPPaymentIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
@@ -69,6 +74,7 @@ extension STPAPIClient {
             endpoint: APIEndpointElementsSessions,
             parameters: makeElementsSessionsParams(mode: .paymentIntentClientSecret(paymentIntentClientSecret),
                                                    epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                   clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                    customerAccessProvider: configuration.customer?.customerAccessProvider)
         )
         // The v1/elements/sessions response contains a PaymentIntent hash that we parse out into a PaymentIntent
@@ -83,6 +89,7 @@ extension STPAPIClient {
 
     func retrieveElementsSession(
         setupIntentClientSecret: String,
+        clientDefaultPaymentMethod: String?,
         configuration: PaymentSheet.Configuration
     ) async throws -> (STPSetupIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
@@ -90,6 +97,7 @@ extension STPAPIClient {
             endpoint: APIEndpointElementsSessions,
             parameters: makeElementsSessionsParams(mode: .setupIntentClientSecret(setupIntentClientSecret),
                                                    epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                   clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                    customerAccessProvider: configuration.customer?.customerAccessProvider)
         )
         // The v1/elements/sessions response contains a SetupIntent hash that we parse out into a SetupIntent
@@ -102,12 +110,14 @@ extension STPAPIClient {
         return (setupIntent, elementsSession)
     }
 
-    func retrieveElementsSession(
+    func retrieveDeferredElementsSession(
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
+        clientDefaultPaymentMethod: String?,
         configuration: PaymentSheet.Configuration
     ) async throws -> STPElementsSession {
         let parameters = makeElementsSessionsParams(mode: .deferredIntent(intentConfig),
                                                     epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                     customerAccessProvider: configuration.customer?.customerAccessProvider)
         return try await APIRequest<STPElementsSession>.getWith(
             self,
@@ -116,7 +126,23 @@ extension STPAPIClient {
         )
     }
 
-    func retrieveElementsSessionForCustomerSheet(paymentMethodTypes: [String]?, customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
+    func retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
+                                                         clientDefaultPaymentMethod: String?,
+                                                         customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
+
+        let parameters = makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
+                                                                            clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                            customerSessionClientSecret: customerSessionClientSecret)
+        return try await APIRequest<STPElementsSession>.getWith(
+            self,
+            endpoint: APIEndpointElementsSessions,
+            parameters: parameters
+        )
+    }
+
+    func makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
+                                                            clientDefaultPaymentMethod: String?,
+                                                            customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
@@ -125,18 +151,50 @@ extension STPAPIClient {
             parameters["customer_session_client_secret"] = customerSessionClientSecret.clientSecret
         }
 
+        if let clientDefaultPaymentMethod {
+            parameters["client_default_payment_method"] = clientDefaultPaymentMethod
+        }
+
         var deferredIntent = [String: Any]()
         deferredIntent["mode"] = "setup"
         if let paymentMethodTypes {
             deferredIntent["payment_method_types"] = paymentMethodTypes
         }
         parameters["deferred_intent"] = deferredIntent
+        return parameters
+    }
 
+    func retrieveElementsSessionForCustomerSheet(setupIntentClientSecret: String,
+                                                 clientDefaultPaymentMethod: String?,
+                                                 customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
+        let parameters = makeElementsSessionsParamsForCustomerSheet(setupIntentClientSecret: setupIntentClientSecret,
+                                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                    customerSessionClientSecret: customerSessionClientSecret)
         return try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
+    }
+
+    func makeElementsSessionsParamsForCustomerSheet(setupIntentClientSecret: String,
+                                                    clientDefaultPaymentMethod: String?,
+                                                    customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
+        var parameters: [String: Any] = [:]
+        parameters["type"] = "setup_intent"
+        parameters["client_secret"] = setupIntentClientSecret
+        parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
+
+        parameters["locale"] = Locale.current.toLanguageTag()
+
+        if let customerSessionClientSecret {
+            parameters["customer_session_client_secret"] = customerSessionClientSecret.clientSecret
+        }
+
+        if let clientDefaultPaymentMethod {
+            parameters["client_default_payment_method"] = clientDefaultPaymentMethod
+        }
+        return parameters
     }
 }
 

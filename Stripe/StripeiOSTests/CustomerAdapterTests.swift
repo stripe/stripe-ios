@@ -140,25 +140,6 @@ class CustomerAdapterTests: APIStubbedTestCase {
         await fulfillment(of: [exp])
     }
 
-    func testGetOrCreateCustomerSessionErrorForwardedToFetchPMs() async throws {
-        let exp = expectation(description: "fetchPMs")
-
-        let sut = StripeCustomerAdapter(customerSessionClientSecretProvider: {
-            throw NSError(domain: "test", code: 123, userInfo: nil)
-        }, setupIntentClientSecretProvider: {
-            return "si_12345"
-        })
-
-        do {
-            _ = try await sut.fetchPaymentMethods()
-        } catch {
-            XCTAssertEqual((error as NSError?)?.domain, "test")
-            XCTAssertEqual((error as NSError?)?.code, 123)
-            exp.fulfill()
-        }
-        await fulfillment(of: [exp])
-    }
-
     let exampleKey = CustomerEphemeralKey(customerId: "abc123", ephemeralKeySecret: "ek_123")
 
     func testFetchPMs() async throws {
@@ -172,24 +153,6 @@ class CustomerAdapterTests: APIStubbedTestCase {
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey, apiClient: apiClient)
-        let pms = try await sut.fetchPaymentMethods()
-
-        XCTAssertEqual(pms.count, 1)
-        XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods[0].stripeId)
-    }
-
-    func testFetchPMs_customerSessions() async throws {
-        let expectedPaymentMethods = [STPFixtures.paymentMethod()]
-        let expectedPaymentMethodsJSON = [STPFixtures.paymentMethodJSON()]
-        let apiClient = stubbedAPIClient()
-
-        stubElementsSession(paymentMethodJSONs: expectedPaymentMethodsJSON)
-
-        let sut = StripeCustomerAdapter(customerSessionClientSecretProvider: {
-            return .init(customerId: "cus_12345", clientSecret: "cuss_54321")
-        }, setupIntentClientSecretProvider: {
-            return "si_12345"
-        }, apiClient: apiClient)
         let pms = try await sut.fetchPaymentMethods()
 
         XCTAssertEqual(pms.count, 1)
@@ -216,25 +179,6 @@ class CustomerAdapterTests: APIStubbedTestCase {
         XCTAssertEqual(pms.count, 2)
         XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods_card[0].stripeId)
         XCTAssertEqual(pms[1].stripeId, expectedPaymentMethods_usbank[0].stripeId)
-    }
-
-    func testFetchPMs_CardAndUSBankAccount_customerSessions() async throws {
-        let expectedPaymentMethods = [STPFixtures.paymentMethod(), STPFixtures.bankAccountPaymentMethod()]
-        let expectedPaymentMethodsJSON = [STPFixtures.paymentMethodJSON(), STPFixtures.bankAccountPaymentMethodJSON()]
-        let apiClient = stubbedAPIClient()
-
-        stubElementsSession(paymentMethodJSONs: expectedPaymentMethodsJSON)
-
-        let sut = StripeCustomerAdapter(customerSessionClientSecretProvider: {
-            return .init(customerId: "cus_12345", clientSecret: "cuss_54321")
-        }, setupIntentClientSecretProvider: {
-            return "si_12345"
-        }, apiClient: apiClient)
-        let pms = try await sut.fetchPaymentMethods()
-
-        XCTAssertEqual(pms.count, 2)
-        XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods[0].stripeId)
-        XCTAssertEqual(pms[1].stripeId, expectedPaymentMethods[1].stripeId)
     }
 
     func testAttachPM() async throws {

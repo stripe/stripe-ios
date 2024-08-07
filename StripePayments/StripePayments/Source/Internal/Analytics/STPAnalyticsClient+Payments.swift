@@ -159,15 +159,35 @@ extension STPAnalyticsClient {
 
     func logURLRedirectNextAction(
         with configuration: NSObject?,
-        intentID: String
+        intentID: String?,
+        usesWebAuthSession: Bool
     ) {
+        logURLRedirectNextAction(with: configuration, intentID: intentID, usesWebAuthSession: usesWebAuthSession, isComplete: false)
+    }
+
+    func logURLRedirectNextActionCompleted(
+        with configuration: NSObject?,
+        intentID: String?,
+        usesWebAuthSession: Bool
+    ) {
+        logURLRedirectNextAction(with: configuration, intentID: intentID, usesWebAuthSession: usesWebAuthSession, isComplete: true)
+    }
+
+    func logURLRedirectNextAction(
+        with configuration: NSObject?,
+        intentID: String?,
+        usesWebAuthSession: Bool,
+        isComplete: Bool
+    ) {
+        var params: [String: Any] = ["redirect_type": usesWebAuthSession ? "SFVC" : "ASWAS"]
+        if let intentID {
+            params["intent_id"] = intentID
+        }
         log(
             analytic: GenericPaymentAnalytic(
-                event: .urlRedirectNextAction,
+                event: isComplete ? .urlRedirectNextActionCompleted : .urlRedirectNextAction,
                 paymentConfiguration: configuration,
-                additionalParams: [
-                    "intent_id": intentID,
-                ]
+                additionalParams: params
             )
         )
     }

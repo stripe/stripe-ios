@@ -1,0 +1,30 @@
+{
+  "id": "pm_123456789",
+  "object": "payment_method",
+  "sepa_debit": {
+    "bank_code": "DE86213522400189569728",
+    "country": "DE",
+    "fingerprint": "j9brhn8f41Dh3As",
+    "last4": "1234",
+    "mandate_reference": "MR123",
+    "mandate_url": "https://stripe.com/mandate"
+  },
+  "billing_details": {
+    "address": {
+      "city": "Berlin",
+      "country": "DE",
+      "line1": "Straße des 17. Juni",
+      "line2": "135",
+      "postal_code": "10623",
+      "state": "Berlin"
+    },
+    "email": "test@test.com",
+    "name": "John Doe",
+    "phone": "1231231234"
+  },
+  "created": 1579820912,
+  "customer": "cus_123456789",
+  "livemode": true,
+  "metadata": {},
+  "type": "sepa_debit"
+}

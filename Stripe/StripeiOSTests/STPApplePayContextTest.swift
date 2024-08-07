@@ -15,6 +15,7 @@
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
+    var didChangeCouponCodeCalled: Bool = false
     func applePayContext(
         _ context: STPApplePayContext,
         didSelectShippingContact contact: PKContact,
@@ -29,6 +30,16 @@ class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
         handler completion: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
     ) {
         completion(PKPaymentRequestShippingMethodUpdate())
+    }
+
+    @available(iOS 15.0, *)
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didChangeCouponCode couponCode: String,
+        handler completion: @escaping (PKPaymentRequestCouponCodeUpdate) -> Void
+    ) {
+        didChangeCouponCodeCalled = true
+        completion(.init(errors: nil, paymentSummaryItems: [], shippingMethods: []))
     }
 
     func applePayContext(
@@ -98,6 +109,7 @@ class STPApplePayContextTest: XCTestCase {
 
         // ...and forward the PassKit delegate method to its delegate
         let vc: PKPaymentAuthorizationController = PKPaymentAuthorizationController()
+        // 1) ..didSelectShippingContact.. delegate method
         let contact = PKContact()
         let shippingContactExpectation = expectation(
             description: "didSelectShippingContact forwarded"
@@ -110,6 +122,7 @@ class STPApplePayContextTest: XCTestCase {
             }
         )
 
+        // 2) ..didSelectShippingMethod.. delegate method
         let method = PKShippingMethod()
         let shippingMethodExpectation = expectation(
             description: "didSelectShippingMethod forwarded"
@@ -121,6 +134,20 @@ class STPApplePayContextTest: XCTestCase {
                 shippingMethodExpectation.fulfill()
             }
         )
+
+        // 3) ..didChangeCouponCode.. delegate method
+        if #available(iOS 15.0, *) {
+            XCTAssertFalse(delegate.didChangeCouponCodeCalled)
+            let couponCodeExpectation = expectation(description: "didChangeCouponCode forwarded")
+            context.paymentAuthorizationController(vc, didChangeCouponCode: "coupon_123") { _ in
+                couponCodeExpectation.fulfill()
+            }
+            wait(for: [couponCodeExpectation], timeout: 1)
+            XCTAssertTrue(delegate.didChangeCouponCodeCalled)
+        } else {
+            // Fallback on earlier versions
+        }
+
         waitForExpectations(timeout: 2, handler: nil)
     }
 

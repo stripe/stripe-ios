@@ -24,6 +24,7 @@ struct PaymentSheetTestPlayground: View {
         //  (each view can hold 10 direct subviews)
         Group {
             SettingView(setting: $playgroundController.settings.uiStyle)
+            SettingView(setting: $playgroundController.settings.layout)
             SettingView(setting: $playgroundController.settings.shippingInfo)
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
@@ -91,9 +92,33 @@ struct PaymentSheetTestPlayground: View {
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
+                        SettingPickerView(setting: $playgroundController.settings.amount)
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
+                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
+                            .autocapitalization(.none)
+                    }
+                    Group {
+                        if playgroundController.settings.customerKeyType == .customerSession {
+                            VStack {
+                                HStack {
+                                    Text("Customer Session Settings")
+                                        .font(.subheadline)
+                                        .bold()
+                                    Spacer()
+                                }
+                                SettingPickerView(setting: paymentMethodSaveBinding)
+                                if playgroundController.settings.paymentMethodSave == .disabled {
+                                    SettingPickerView(setting: $playgroundController.settings.allowRedisplayOverride)
+                                }
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                                SettingPickerView(setting: paymentMethodRedisplayBinding)
+                                if playgroundController.settings.paymentMethodRedisplay == .enabled {
+                                    SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                                }
+                            }
+                        }
                     }
                     Divider()
                     Group {
@@ -133,7 +158,16 @@ struct PaymentSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
-
+    var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
+        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
+            return playgroundController.settings.paymentMethodSave
+        } set: { newValue in
+            if playgroundController.settings.paymentMethodSave != newValue {
+                playgroundController.settings.allowRedisplayOverride = .notSet
+            }
+            playgroundController.settings.paymentMethodSave = newValue
+        }
+    }
     var customCTABinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.customCtaLabel ?? ""
@@ -165,6 +199,16 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customerMode = newMode
         }
     }
+    var paymentMethodRedisplayBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
+        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
+            return playgroundController.settings.paymentMethodRedisplay
+        } set: { newPaymentMethodRedisplay in
+            if playgroundController.settings.paymentMethodRedisplay.rawValue != newPaymentMethodRedisplay.rawValue {
+                playgroundController.settings.paymentMethodAllowRedisplayFilters = .notSet
+            }
+            playgroundController.settings.paymentMethodRedisplay = newPaymentMethodRedisplay
+        }
+    }
     var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
         Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
             return playgroundController.settings.merchantCountryCode
@@ -177,6 +221,18 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
+    var supportedPaymentMethodsBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.supportedPaymentMethods ?? ""
+        } set: { newString in
+            playgroundController.settings.supportedPaymentMethods = (newString != "") ? newString : nil
+
+            // for supported payment methods to work, apms must be off
+            if playgroundController.settings.supportedPaymentMethods != nil {
+                playgroundController.settings.apmsEnabled = .off
+            }
+        }
+    }
 }
 
 @available(iOS 14.0, *)
@@ -213,7 +269,9 @@ struct PaymentSheetButtons: View {
                             .frame(alignment: .topLeading)
                         }
                     }.padding(.horizontal)
-                    if let ps = playgroundController.paymentSheet {
+
+                    if let ps = playgroundController.paymentSheet,
+                       playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
                         HStack {
                             Button {
                                 psIsPresented = true
@@ -261,7 +319,8 @@ struct PaymentSheetButtons: View {
                         }
                     }.padding(.horizontal)
                     HStack {
-                        if let psfc = playgroundController.paymentSheetFlowController {
+                        if let psfc = playgroundController.paymentSheetFlowController,
+                           playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
                             Button {
                                 psFCOptionsIsPresented = true
                             } label: {
@@ -296,6 +355,17 @@ struct PaymentSheetButtons: View {
                     }
                 }
             }
+        }
+    }
+}
+
+extension PaymentSheetResult {
+    func shouldAllowPresentingPaymentSheet() -> Bool {
+        switch self {
+        case .canceled, .failed:
+            return true
+        case .completed:
+            return false
         }
     }
 }

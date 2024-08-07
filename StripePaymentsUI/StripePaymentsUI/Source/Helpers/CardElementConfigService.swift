@@ -32,12 +32,15 @@ class CardElementConfigService {
     // change for an individual PK over the lifetime of a process.
     private var _configsForPK: [String: CardElementConfigFetchState] = [:]
 
-    var isCBCEligible: Bool {
+    func isCBCEligible(onBehalfOf: String? = nil) -> Bool {
         guard let publishableKey = apiClient.publishableKey else {
             // User has not yet initialized a PK, bail
             return false
         }
-        if let fetchState = _configsForPK[publishableKey] {
+
+        let cacheKey = publishableKey + (onBehalfOf ?? "")
+
+        if let fetchState = _configsForPK[cacheKey] {
             switch fetchState {
             case .fetching:
                 // Still waiting for a config, so we don't yet know if the user is CBC-eligible.
@@ -51,23 +54,28 @@ class CardElementConfigService {
         }
 
         // Kick off a fetch request
-        _configsForPK[publishableKey] = .fetching
+        _configsForPK[cacheKey] = .fetching
 
         let resultHandler: (Result<CardElementConfig, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let cardElementConfig):
                     // Cache the result for the next time the card element is presented
-                    self._configsForPK[publishableKey] = .cached(cardElementConfig)
+                    self._configsForPK[cacheKey] = .cached(cardElementConfig)
                 case .failure:
                     // Ignore failures, but send an analytic to the server
-                    self._configsForPK[publishableKey] = .failed
+                    self._configsForPK[cacheKey] = .failed
                     STPAnalyticsClient.sharedClient.logCardElementConfigLoadFailed()
                 }
             }
         }
 
-        apiClient.get(url: CardElementConfigEndpoint, parameters: [:], ephemeralKeySecret: nil, completion: resultHandler)
+        var parameters: [String: Any] = [:]
+        if let onBehalfOf {
+            parameters["on_behalf_of"] = onBehalfOf
+        }
+
+        apiClient.get(url: CardElementConfigEndpoint, parameters: parameters, ephemeralKeySecret: nil, completion: resultHandler)
 
         // No answer yet, so we don't know if the user is CBC-eligible
         return false

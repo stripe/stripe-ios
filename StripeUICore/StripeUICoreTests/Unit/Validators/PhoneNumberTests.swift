@@ -182,4 +182,18 @@ class PhoneNumberTests: XCTestCase {
         XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "ar_LB"))?.countryCode, "US")
     }
 
+    func testEquals() {
+        XCTAssertEqual(
+            PhoneNumber(number: "08022223333", countryCode: "JP"),
+            PhoneNumber(number: "08022223333", countryCode: "JP")
+        )
+        XCTAssertNotEqual(
+            PhoneNumber(number: "08022223333", countryCode: "JP"),
+            PhoneNumber(number: "08022223333", countryCode: "US")
+        )
+        XCTAssertEqual(
+            PhoneNumber(number: "+08022223333", countryCode: "US"),
+            PhoneNumber(number: "08022223333", countryCode: "US")
+        )
+    }
 }

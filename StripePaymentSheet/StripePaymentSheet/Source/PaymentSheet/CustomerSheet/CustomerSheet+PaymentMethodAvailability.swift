@@ -11,7 +11,7 @@ extension CustomerSheet {
 }
 
 extension Array where Element == STPPaymentMethodType {
-    func customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: CustomerAdapter,
+    func customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: Bool,
                                                         supportedPaymentMethods: [STPPaymentMethodType] = CustomerSheet.supportedPaymentMethods) -> [STPPaymentMethodType] {
         return self.filter { type in
             var isSupported = supportedPaymentMethods.contains(type)
@@ -22,7 +22,7 @@ extension Array where Element == STPPaymentMethodType {
                     #endif
                     isSupported = false
                 }
-                if !customerAdapter.canCreateSetupIntents {
+                if !canCreateSetupIntents {
                     #if DEBUG
                     print("[Stripe SDK]: CustomerSheet - customerAdapater must be able to create setupIntents")
                     #endif

@@ -11,17 +11,20 @@ import UIKit
 final class AccountUpdateRequiredViewController: SheetViewController {
 
     private let institution: FinancialConnectionsInstitution?
+    private let theme: FinancialConnectionsTheme
     private let didSelectContinue: () -> Void
     private let didSelectCancel: () -> Void
     private let willDismissSheet: () -> Void
 
     init(
         institution: FinancialConnectionsInstitution?,
+        theme: FinancialConnectionsTheme,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: @escaping () -> Void,
         willDismissSheet: @escaping () -> Void
     ) {
         self.institution = institution
+        self.theme = theme
         self.didSelectContinue = didSelectContinue
         self.didSelectCancel = didSelectCancel
         self.willDismissSheet = willDismissSheet
@@ -61,7 +64,8 @@ final class AccountUpdateRequiredViewController: SheetViewController {
                 secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
                     title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
                     action: didSelectCancel
-                )
+                ),
+                theme: theme
             ).footerView
         )
     }

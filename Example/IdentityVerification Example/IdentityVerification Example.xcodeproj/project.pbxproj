@@ -18,7 +18,6 @@
 		7E4B2DB2F2F91139B316669F /* ExampleVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5147C45F39A30B64BBCCB46 /* ExampleVerificationViewController.swift */; };
 		B45485CEA2574141EC53065D /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D1964BE2EC5DCFEB84A4CB20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A92DA0D8C6D744CA9629D3 /* AppDelegate.swift */; };
-		D44AE4EC2B9A670700446682 /* CaptureCore in Frameworks */ = {isa = PBXBuildFile; productRef = D44AE4EB2B9A670700446682 /* CaptureCore */; };
 		D782EED16A8D9E57A29120DF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37FB11661A885C509E590A5E /* MainViewController.swift */; };
 		DF48F0D08F6BA0BACAFF83EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95C6B55E7540A785E80BAB86 /* LaunchScreen.storyboard */; };
 		E42092C2333F56732BC546C7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FDB4292C7CFB1DCFF2395F2 /* Main.storyboard */; };
@@ -152,7 +151,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB0DCB24D8B0434C232A7A93 /* StripeCameraCore.framework in Frameworks */,
-				D44AE4EC2B9A670700446682 /* CaptureCore in Frameworks */,
 				63730E8D0F3F49EF116E11AE /* StripeCore.framework in Frameworks */,
 				F40A0A5D85C7D664264EC323 /* StripeIdentity.framework in Frameworks */,
 				1875377FB12B8BF4E0A40B71 /* StripeUICore.framework in Frameworks */,
@@ -262,7 +260,6 @@
 			);
 			name = "IdentityVerification Example";
 			packageProductDependencies = (
-				D44AE4EB2B9A670700446682 /* CaptureCore */,
 			);
 			productName = IdentityVerificationExample;
 			productReference = D20308A69311D54E2EB58609 /* IdentityVerificationExample.app */;
@@ -476,6 +473,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;
@@ -487,6 +485,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;
@@ -534,14 +533,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		D44AE4EB2B9A670700446682 /* CaptureCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D44AE4EA2B9A670700446682 /* XCRemoteSwiftPackageReference "capture-core-sp" */;
-			productName = CaptureCore;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4D2B674F033CFBC8B744669E /* Project object */;
 }

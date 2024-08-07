@@ -5,11 +5,12 @@
 
 import CoreGraphics
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
+// TODO: Refactor this API shape! https://github.com/stripe/stripe-ios/pull/3487#discussion_r1561337866
 @_spi(STP) public class DownloadManager: NSObject {
     public typealias UpdateImageHandler = (UIImage) -> Void
 

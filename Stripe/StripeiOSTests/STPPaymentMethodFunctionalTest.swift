@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 @testable @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 
-class STPPaymentMethodFunctionalTest: XCTestCase {
+class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
     func testCreateCardPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let card = STPPaymentMethodCardParams()
@@ -89,7 +89,7 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
          let testCustomerID = "cus_PTf9mhkFv9ZGXl"
 
          // Create a new EK for the Customer
-         let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
+         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
 
          // Create a new payment method
          let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
@@ -121,7 +121,7 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         // Create a new customer and new key
-        let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
 
         // Create a new payment method 1
         let paymentMethod1 = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
@@ -140,23 +140,29 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
                                    ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // Element/Sessions endpoint should de-dupe payment methods with CustomerSesssion
-        let cscs = try await STPTestingAPIClient().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
+        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
                                                                                                merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        let elementSession = try await client.retrieveElementsSession(withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic), confirmHandler: { _, _, _ in
-            // no-op
-        }), configuration: configuration)
+        let elementSession = try await client.retrieveDeferredElementsSession(
+            withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
+                                    confirmHandler: { _, _, _ in
+                                        // no-op
+                                    }),
+            clientDefaultPaymentMethod: paymentMethod2.stripeId,
+            configuration: configuration)
 
         // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
         XCTAssertEqual(elementSession.customer?.paymentMethods.count, 1)
+        XCTAssertEqual(elementSession.customer?.paymentMethods.first?.stripeId, paymentMethod2.stripeId)
+        XCTAssertEqual(elementSession.customer?.defaultPaymentMethod, paymentMethod2.stripeId)
 
         // Official endpoint should have two payment methods
         let fetchedPaymentMethods = try await fetchPaymentMethods(client: client, customerAndEphemeralKey: customerAndEphemeralKey)
         XCTAssertEqual(fetchedPaymentMethods.count, 2)
 
         // Clean up, detach both payment methods
-        try await client.detachPaymentMethodRemoveDuplicates(paymentMethod1.stripeId,
+        try await client.detachPaymentMethodRemoveDuplicates(paymentMethod2.stripeId,
                                              customerId: customerAndEphemeralKey.customer,
                                              fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret)
 
@@ -271,6 +277,48 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
             XCTAssertNil(error)
             XCTAssertNotNil(paymentMethod)
             XCTAssertEqual(paymentMethod?.type, .alma)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testCreateSunbitPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let params = STPPaymentMethodParams(sunbit: STPPaymentMethodSunbitParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .sunbit)
+            XCTAssertNotNil(paymentMethod?.sunbit, "The `sunbit` property must be populated")
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testCreateBilliePaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingDEPublishableKey)
+        let params = STPPaymentMethodParams(billie: STPPaymentMethodBillieParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .billie)
+            XCTAssertNotNil(paymentMethod?.billie, "The `billie` property must be populated")
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testCreateSatispayPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingITPublishableKey)
+        let params = STPPaymentMethodParams(satispay: STPPaymentMethodSatispayParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .satispay)
+            XCTAssertNotNil(paymentMethod?.satispay, "The `satispay` property must be populated")
             expectation.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)

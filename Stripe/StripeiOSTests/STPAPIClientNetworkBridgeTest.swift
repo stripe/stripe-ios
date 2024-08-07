@@ -9,15 +9,18 @@
 
 import PassKit
 import Stripe
+@testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
+@_spi(STP) import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
-class StripeAPIBridgeNetworkTest: XCTestCase {
+class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
     var client: STPAPIClient!
 
     override func setUp() {
-        client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         super.setUp()
+        client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     }
 
     // MARK: Bank Account
@@ -174,7 +177,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         let exp = expectation(description: "Fetch")
         let exp2 = expectation(description: "Fetch with expansion")
 
-        let testClient = STPTestingAPIClient()
+        let testClient = STPTestingAPIClient.shared()
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
@@ -197,7 +200,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
     func testConfirmPaymentIntent() {
         let exp = expectation(description: "Confirm")
         let exp2 = expectation(description: "Confirm with expansion")
-        let testClient = STPTestingAPIClient()
+        let testClient = STPTestingAPIClient.shared()
 
         let card = STPPaymentMethodCardParams()
         card.number = "4242424242424242"
@@ -234,12 +237,29 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testRefreshPaymentIntent() {
+        let exp = expectation(description: "Refresh")
+
+        let testClient = STPTestingAPIClient.shared()
+        testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
+            XCTAssertNil(error)
+
+            client?.refreshPaymentIntent(withClientSecret: clientSecret!) { pi, error2 in
+                XCTAssertNotNil(pi)
+                XCTAssertNil(error2)
+                exp.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+
     // MARK: Setup Intents
 
     func testRetrieveSetupIntent() {
         let exp = expectation(description: "Fetch")
 
-        let testClient = STPTestingAPIClient()
+        let testClient = STPTestingAPIClient.shared()
         testClient.createSetupIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
@@ -255,7 +275,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
 
     func testConfirmSetupIntent() {
         let exp = expectation(description: "Confirm")
-        let testClient = STPTestingAPIClient()
+        let testClient = STPTestingAPIClient.shared()
 
         let card = STPPaymentMethodCardParams()
         card.number = "4242424242424242"
@@ -270,6 +290,23 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmSetupIntent(with: params) { si, error2 in
+                XCTAssertNotNil(si)
+                XCTAssertNil(error2)
+                exp.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+
+    func testRefreshSetupIntent() {
+        let exp = expectation(description: "Refresh")
+
+        let testClient = STPTestingAPIClient.shared()
+        testClient.createSetupIntent(withParams: nil) { [self] clientSecret, error in
+            XCTAssertNil(error)
+
+            client?.refreshSetupIntent(withClientSecret: clientSecret!) { si, error2 in
                 XCTAssertNotNil(si)
                 XCTAssertNil(error2)
                 exp.fulfill()
@@ -305,6 +342,11 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
 
     func testCreateRadarSession() {
         let exp = expectation(description: "Create session")
+
+        // Set fake SID/MUID to make this test replicable
+        FraudDetectionData.shared.sid = "123"
+        FraudDetectionData.shared.muid = "123"
+        FraudDetectionData.shared.sidCreationDate = Date()
 
         client?.createRadarSession { session, error in
             XCTAssertNotNil(session)

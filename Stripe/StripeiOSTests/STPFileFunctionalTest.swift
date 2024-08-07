@@ -8,9 +8,10 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPFileFunctionalTest: XCTestCase {
+class STPFileFunctionalTest: STPNetworkStubbingTestCase {
     func testImage() -> UIImage {
         return UIImage(
             named: "stp_test_upload_image.jpeg",

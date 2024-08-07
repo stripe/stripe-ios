@@ -12,9 +12,10 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentMethodCashAppParamsTests: XCTestCase {
+class STPPaymentMethodCashAppParamsTests: STPNetworkStubbingTestCase {
 
     func testCreateCashAppPaymentMethod() throws {
         let cashAppParams = STPPaymentMethodCashAppParams()

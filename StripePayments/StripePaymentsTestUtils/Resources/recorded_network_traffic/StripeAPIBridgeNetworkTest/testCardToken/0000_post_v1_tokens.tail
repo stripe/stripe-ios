@@ -1,0 +1,65 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/tokens$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Ftokens; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_8r9lLocqMhH1PB
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 791
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:11:35 GMT
+original-request: req_8r9lLocqMhH1PB
+stripe-version: 2020-08-27
+idempotency-key: 441a6c07-f77e-4691-88dc-fd271be0178e
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=42&card\[number]=4242424242424242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*
+
+{
+  "object" : "token",
+  "id" : "tok_1PiS0pFY0qyl6XeWY6Mg4EyV",
+  "card" : {
+    "address_line1_check" : null,
+    "dynamic_last4" : null,
+    "last4" : "4242",
+    "address_line2" : null,
+    "address_city" : null,
+    "address_zip_check" : null,
+    "address_zip" : null,
+    "country" : "US",
+    "object" : "card",
+    "address_line1" : null,
+    "address_state" : null,
+    "brand" : "Visa",
+    "cvc_check" : "unchecked",
+    "exp_month" : 12,
+    "networks" : {
+      "preferred" : null
+    },
+    "name" : null,
+    "funding" : "credit",
+    "id" : "card_1PiS0pFY0qyl6XeW2xGKPIKR",
+    "tokenization_method" : null,
+    "address_country" : null,
+    "wallet" : null,
+    "exp_year" : 2042
+  },
+  "client_ip" : "136.24.137.206",
+  "livemode" : false,
+  "created" : 1722391895,
+  "used" : false,
+  "type" : "card"
+}

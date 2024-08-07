@@ -1,0 +1,23 @@
+GET
+https:\/\/ppm\.stripe\.com\/content\?amount=1099&client=ios&country=US&currency=USD&locale=en-US&logo_color=black&payment_methods%5B0%5D=klarna&payment_methods%5B1%5D=afterpay_clearpay$
+404
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Date: Fri, 19 Jul 2024 22:38:31 GMT
+access-control-allow-credentials: true
+Content-Length: 199
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+x-content-type-options: nosniff
+Vary: Origin
+
+{
+  "error" : {
+    "message" : "Unrecognized request URL (GET: \/content). Please see https:\/\/stripe.com\/docs or we can help at https:\/\/support.stripe.com\/.",
+    "type" : "invalid_request_error"
+  }
+}

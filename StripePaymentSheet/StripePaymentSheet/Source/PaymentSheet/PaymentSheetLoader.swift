@@ -11,27 +11,22 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 final class PaymentSheetLoader {
-    /// `PaymentSheet.load()` result.
-    enum LoadingResult {
-        case success(
-            intent: Intent,
-            savedPaymentMethods: [STPPaymentMethod],
-            isLinkEnabled: Bool,
-            isApplePayEnabled: Bool
-        )
-        case failure(Error)
+    /// All the data that PaymentSheetLoader loaded.
+    struct LoadResult {
+        let intent: Intent
+        let elementsSession: STPElementsSession
+        let savedPaymentMethods: [STPPaymentMethod]
     }
 
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentSheet.Configuration,
-        analyticsClient: STPAnalyticsClient = .sharedClient,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         isFlowController: Bool,
-        completion: @escaping (LoadingResult) -> Void
+        completion: @escaping (Result<LoadResult, Error>) -> Void
     ) {
-        let loadingStartDate = Date()
-        analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
+        analyticsHelper.logLoadStarted()
 
         Task { @MainActor in
             do {
@@ -40,49 +35,49 @@ final class PaymentSheetLoader {
                     assertionFailure("Dashboard isn't supported in non-deferred intent flows")
                 }
 
-                // Fetch PaymentIntent, SetupIntent, or ElementsSession
-                async let _intent = fetchIntent(mode: mode, configuration: configuration, analyticsClient: analyticsClient)
+                // Fetch ElementsSession
+                async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper)
 
                 // Load misc singletons
                 await loadMiscellaneousSingletons()
 
-                let intent = try await _intent
+                let elementsSessionAndIntent = try await _elementsSessionAndIntent
+                let intent = elementsSessionAndIntent.intent
+                let elementsSession = elementsSessionAndIntent.elementsSession
                 // Overwrite the form specs that were already loaded from disk
                 switch intent {
-                case .paymentIntent(let elementsSession, _):
+                case .paymentIntent:
                     if !elementsSession.isBackupInstance {
                         _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                     }
                 case .setupIntent:
                     break // Not supported
-                case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
+                case .deferredIntent:
                     if !elementsSession.isBackupInstance {
                         _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                     }
                 }
 
                 // List the Customer's saved PaymentMethods
-                async let savedPaymentMethods = fetchSavedPaymentMethods(intent: intent, configuration: configuration)
+                async let savedPaymentMethods = fetchSavedPaymentMethods(elementsSession: elementsSession, configuration: configuration)
 
                 // Load link account session. Continue without Link if it errors.
-                let linkAccount = try? await lookupLinkAccount(intent: intent, configuration: configuration)
+                let linkAccount = try? await lookupLinkAccount(elementsSession: elementsSession, configuration: configuration)
                 LinkAccountContext.shared.account = linkAccount
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                 let filteredSavedPaymentMethods = try await savedPaymentMethods
-                    .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
+                    .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
                     .filter {
                         $0.supportsSavedPaymentMethod(
                             configuration: configuration,
-                            intent: intent
+                            intent: intent,
+                            elementsSession: elementsSession
                         )
                     }
 
-                // Determine if Link and Apple Pay are enabled
-                let isLinkEnabled = isLinkEnabled(intent: intent, configuration: configuration)
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay()
-                    && configuration.applePay != nil
-                    && intent.isApplePayEnabled
+                let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+                let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
                 // Send load finished analytic
                 // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
@@ -92,37 +87,29 @@ final class PaymentSheetLoader {
                     showApplePay: isFlowController ? isApplePayEnabled : false,
                     showLink: isFlowController ? isLinkEnabled : false
                 )
-                analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate,
-                                                             linkEnabled: intent.supportsLink, defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
+                let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: false)
+                analyticsHelper.logLoadSucceeded(
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
+                    orderedPaymentMethodTypes: paymentMethodTypes
+                )
                 if isFlowController {
-                    AnalyticsHelper.shared.startTimeMeasurement(.checkout)
+                    analyticsHelper.startTimeMeasurement(.checkout)
                 }
 
                 // Call completion
-                completion(
-                    .success(
-                        intent: intent,
-                        savedPaymentMethods: filteredSavedPaymentMethods,
-                        isLinkEnabled: isLinkEnabled,
-                        isApplePayEnabled: isApplePayEnabled
-                    )
+                let loadResult = LoadResult(
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    savedPaymentMethods: filteredSavedPaymentMethods
                 )
+                completion(.success(loadResult))
             } catch {
-                analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed,
-                                                                     duration: Date().timeIntervalSince(loadingStartDate),
-                                                                     error: error)
+                analyticsHelper.logLoadFailed(error: error)
                 completion(.failure(error))
             }
         }
-    }
-
-    // MARK: - Helpers
-
-    static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
-        guard intent.supportsLink else {
-            return false
-        }
-        return !configuration.isUsingBillingAddressCollection()
     }
 
     // MARK: - Helper methods that load things
@@ -144,9 +131,9 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func lookupLinkAccount(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
+    static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
         // Only lookup the consumer account if Link is supported
-        guard intent.supportsLink else {
+        guard PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
             return nil
         }
 
@@ -167,7 +154,7 @@ final class PaymentSheetLoader {
         if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
         } else if let customerID = configuration.customer?.id,
-                  let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
+                  let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
         {
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
             // If there's an error in this call we can just ignore it
@@ -177,16 +164,21 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsClient: STPAnalyticsClient) async throws -> Intent {
+    typealias ElementSessionAndIntent = (elementsSession: STPElementsSession, intent: Intent)
+    static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
         let intent: Intent
+        let elementsSession: STPElementsSession
+        let clientDefaultPaymentMethod = defaultStripePaymentMethodId(forCustomerID: configuration.customer?.id)
+
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):
             let paymentIntent: STPPaymentIntent
-            let elementsSession: STPElementsSession
             do {
-                (paymentIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(paymentIntentClientSecret: clientSecret, configuration: configuration)
+                (paymentIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(paymentIntentClientSecret: clientSecret,
+                                                                                                             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                                                             configuration: configuration)
             } catch let error {
-                analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
                 paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
                 elementsSession = .makeBackupElementsSession(with: paymentIntent)
@@ -195,14 +187,15 @@ final class PaymentSheetLoader {
                 // Error if the PaymentIntent is in a terminal state
                 throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
             }
-            intent = .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
+            intent = .paymentIntent(paymentIntent)
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
-            let elementsSession: STPElementsSession
             do {
-                (setupIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret, configuration: configuration)
+                (setupIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret,
+                                                                                                           clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                                                           configuration: configuration)
             } catch let error {
-                analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
                 setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
                 elementsSession = .makeBackupElementsSession(with: setupIntent)
@@ -211,43 +204,69 @@ final class PaymentSheetLoader {
                 // Error if the SetupIntent is in a terminal state
                 throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
-            intent = .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
+            intent = .setupIntent(setupIntent)
         case .deferredIntent(let intentConfig):
             do {
-                let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig, configuration: configuration)
-                intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+                elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(withIntentConfig: intentConfig,
+                                                                                                clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                                                configuration: configuration)
+                intent = .deferredIntent(intentConfig: intentConfig)
             } catch let error as NSError where error == NSError.stp_genericFailedToParseResponseError() {
                 // Most errors are useful and should be reported back to the merchant to help them debug their integration (e.g. bad connection, unknown parameter, invalid api key).
                 // If we get `stp_genericFailedToParseResponseError`, it means the request succeeded but we couldn't parse the response.
                 // In this case, fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
-                analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
-                intent = .deferredIntent(elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes), intentConfig: intentConfig)
+                elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
+                intent = .deferredIntent(intentConfig: intentConfig)
             }
         }
         // Ensure that there's at least 1 payment method type available for the intent and configuration.
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration, logAvailability: true)
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
         guard !paymentMethodTypes.isEmpty else {
-            throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)
+            throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
         }
         // Warn the merchant if we see unactivated payment method types in the Intent
-        if !intent.unactivatedPaymentMethodTypes.isEmpty {
+        if !elementsSession.unactivatedPaymentMethodTypes.isEmpty {
             let message = """
-            [Stripe SDK] Warning: Your Intent contains the following payment method types which are activated for test mode but not activated for live mode: \(intent.unactivatedPaymentMethodTypes.map({ $0.displayName }).joined(separator: ",")). These payment method types will not be displayed in live mode until they are activated. To activate these payment method types visit your Stripe dashboard.
+            [Stripe SDK] Warning: Your Intent contains the following payment method types which are activated for test mode but not activated for live mode: \(elementsSession.unactivatedPaymentMethodTypes.map({ $0.displayName }).joined(separator: ",")). These payment method types will not be displayed in live mode until they are activated. To activate these payment method types visit your Stripe dashboard.
             More information: https://support.stripe.com/questions/activate-a-new-payment-method
             """
             print(message)
         }
-        return intent
+        return (elementsSession, intent)
+    }
+
+    static func defaultStripePaymentMethodId(forCustomerID customerID: String?) -> String? {
+        guard let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID),
+              case .stripeId(let paymentMethodId) = defaultPaymentMethod else {
+            return nil
+        }
+        return paymentMethodId
     }
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
-    static func fetchSavedPaymentMethods(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
-        if let elementsSessionPaymentMethods = intent.elementsSession.customer?.paymentMethods {
-            return elementsSessionPaymentMethods
+    static func fetchSavedPaymentMethods(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
+        // Retrieve the payment methods from ElementsSession or by making direct API calls
+        var savedPaymentMethods: [STPPaymentMethod]
+        if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
+            savedPaymentMethods = elementsSessionPaymentMethods
         } else {
-            return try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration)
+            savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration)
         }
+
+        // Move default PM to front
+        if let customerID = configuration.customer?.id {
+            let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+            if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
+                $0.stripeId == defaultPaymentMethod?.value
+            }) {
+                let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
+                savedPaymentMethods.insert(defaultPM, at: 0)
+            }
+        }
+
+        return savedPaymentMethods
     }
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
@@ -260,7 +279,8 @@ final class PaymentSheetLoader {
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
                 using: ephemeralKey,
-                types: savedPaymentMethodTypes
+                types: savedPaymentMethodTypes,
+                limit: 100
             ) { paymentMethods, error in
                 guard var paymentMethods, error == nil else {
                     let error = error ?? PaymentSheetError.fetchPaymentMethodsFailure

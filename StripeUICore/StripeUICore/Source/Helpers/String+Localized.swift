@@ -254,15 +254,15 @@ import Foundation
         STPLocalizedString("The account number you entered is incomplete.", "Error description for incomplete account number")
     }
 
-    static var removeBankAccountEndingIn: String {
+    static var bank_account_xxxx: String {
         STPLocalizedString(
-            "Remove bank account ending in %@",
-            "Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242'")
+            "Bank account •••• %@",
+            "Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242'")
     }
 
     static var removeBankAccount: String {
         STPLocalizedString(
-            "Remove bank account",
+            "Remove bank account?",
             "Title for confirmation alert to remove a saved bank account payment method")
     }
 
@@ -305,6 +305,13 @@ import Foundation
         STPLocalizedString(
             "Use rotor to access links",
             "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783"
+        )
+    }
+
+    static var edit: String {
+        STPLocalizedString(
+            "Edit",
+            "Button title to enter editing mode"
         )
     }
 

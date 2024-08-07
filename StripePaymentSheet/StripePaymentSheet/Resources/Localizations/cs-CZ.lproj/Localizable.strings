@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li  bezúročné platby ve výši %2$@";
+
 "+ Add" = "+ Přidat";
+
+"Add US bank account" = "Přidat bankovní účet v USA";
 
 "Add a card" = "Přidat kartu";
 
 "Add a payment method" = "Přidat způsob platby";
 
-"Add bank account" = "Přidat bankovní účet";
+"Add card" = "Přidat kartu";
+
+"Add new card" = "Přidat novou kartu";
 
 "Add new payment method" = "Nová platební metoda";
 
@@ -16,9 +22,11 @@
 
 "Back" = "Zpět";
 
+"Bank" = "Banka";
+
 "Bank account" = "Bankovní účet";
 
-"Buy now or pay later with Klarna." = "Kupte nyní nebo zaplaťte později pomocí Klarna";
+"Buy now or pay later with Klarna" = "Koupit nyní nebo zaplatit pomocí Klarna";
 
 "Buy using a UPI ID" = "Koupit pomocí UPI ID";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračováním povolujete, %1$@ aby odepisovala z vašeho účtu Cash App tuto platbu a budoucí platby v souladu s podmínkami společnosti %2$@, dokud toto oprávnění neodvoláte. Toto oprávnění můžete kdykoli změnit v nastavení aplikace Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Připojením se ke službám Link vyjadřujete zároveň svůj souhlas s <terms>Podmínkami</terms> a <privacy>Zásadami ochrany osobních údajů</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Souhlasíte s touto žádostí o přímé inkaso a <terms>smlouvou o službách žádosti o přímé inkaso</terms>a udělujete společnosti Stripe Payments Australia Pty Ltd ACN 160 180 343 identifikační číslo uživatele přímého inkasa 507156 ( „Stripe“) připsat k tíží na váš účet prostřednictvím elektronického systému hromadného zúčtování (BECS) jménem společnosti %@ („Obchodník“) jakoukoli částku, kterou vám Obchodník sdělí. Potvrzujete, že jste vlastníkem účtu nebo osobou s podpisovými právy k výše uvedenému účtu.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poskytnutím údajů o vaší kartě povolujete společnosti %@, aby si v souladu se svými podmínkami strhla z vaší karty poplatky za budoucí platby.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svého e-mailu souhlasíte s vytvořením účtu Link a uložením vašich platebních informací v rámci služby Link, a to v souladu s <terms>Podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy>.";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Spravovat způsob platby";
+
+"Manage payment methods" = "Spravovat způsoby platby";
+
 "Manage your payment methods" = "Spravujte své platební metody";
 
 "Name on card" = "Jméno na kartě";
+
+"New card" = "Nová karta";
+
+"New payment method" = "Nová platební metoda";
 
 "Open your UPI app to approve your payment within %@" = "Otevřete aplikaci UPI, abyste mohli platbu schválit do %@";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "Odebrat kartu?";
 
+"Remove payment method" = "Odebrat způsob platby";
+
 "Save" = "Uložit";
 
 "Save a new payment method" = "Uložte novou platební metodu";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Uložte své údaje pro pro bezpečné odbavení 1 kliknutím u Link";
 
+"Saved" = "Uloženo";
+
+"Select card" = "Vybrat kartu";
+
+"Select payment method" = "Vybrat způsob platby";
+
 "Select your payment method" = "Vyberte svou platební metodu";
 
 "Set up" = "Nastavit";
@@ -142,13 +170,23 @@
 
 "Show menu" = "Zobrazit nabídku";
 
+"Simple, secure one-click payments" = "Jednoduché a bezpečné platby jedním kliknutím";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Při propojování účtu se něco pokazilo.\nZkuste to prosím znovu.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe vloží 0,01 USD na váš účet během 1 až 2 pracovních dnů. Poté obdržíte e-mail s pokyny k dokončení ukládání na bankovní účet u %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V průběhu 1 až 2 pracovních dnů vloží Stripe na váš účet vklad ve výšce 0,01 USD. Potom dostanete e-mail s instrukcemi k dokončení platby společnosti %@.";
 
 "The IBAN you entered is incomplete." = "Číslo IBAN, které jste zadali, je neúplné.";
 
-"Update card" = "Aktualizovat kartu";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadané číslo IBAN je neplatné, \"%@\" není podporovaný kód země.";
+
+"Update" = "Aktualizovat";
+
+"Update card brand" = "Aktualizovat značku karty";
+
+"View more" = "Zobrazit více";
 
 "Your IBAN should start with a two-letter country code." = "Číslo IBAN by mělo začínat dvěma písmeny kódu země.";
 

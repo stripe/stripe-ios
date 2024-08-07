@@ -11,10 +11,16 @@ import UIKit
 
 final class SpinnerView: UIView {
 
-    private let imageView = UIImageView(image: Image.spinner.makeImage())
+    private let theme: FinancialConnectionsTheme?
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView(image: Image.spinner.makeImage(template: true))
+        imageView.tintColor = theme.spinnerColor
+        return imageView
+    }()
     private let animationKey = "animation_key"
 
-    init(shouldStartAnimating: Bool = true) {
+    init(theme: FinancialConnectionsTheme?, shouldStartAnimating: Bool = true) {
+        self.theme = theme
         super.init(frame: .zero)
         addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -51,9 +57,10 @@ final class SpinnerView: UIView {
 import SwiftUI
 
 private struct SpinnerViewUIViewRepresentable: UIViewRepresentable {
+    let theme: FinancialConnectionsTheme?
 
     func makeUIView(context: Context) -> SpinnerView {
-        SpinnerView()
+        SpinnerView(theme: theme)
     }
 
     func updateUIView(_ uiView: SpinnerView, context: Context) {}
@@ -61,7 +68,11 @@ private struct SpinnerViewUIViewRepresentable: UIViewRepresentable {
 
 struct SpinnerView_Previews: PreviewProvider {
     static var previews: some View {
-        SpinnerViewUIViewRepresentable()
+        VStack {
+            SpinnerViewUIViewRepresentable(theme: .light)
+            SpinnerViewUIViewRepresentable(theme: .linkLight)
+            SpinnerViewUIViewRepresentable(theme: nil)
+        }
     }
 }
 

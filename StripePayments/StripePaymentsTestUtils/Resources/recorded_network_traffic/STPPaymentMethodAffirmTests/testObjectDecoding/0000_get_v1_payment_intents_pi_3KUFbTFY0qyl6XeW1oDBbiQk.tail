@@ -1,0 +1,101 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3KUFbTFY0qyl6XeW1oDBbiQk\?client_secret=pi_3KUFbTFY0qyl6XeW1oDBbiQk_secret_8kdpLx37oa5WMrI2xoXThCK9s&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_intents%2F%3Aintent; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_KbiSGILNisFh1s
+Content-Length: 1651
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:10:49 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 6099,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : {
+    "tracking_number" : null,
+    "phone" : null,
+    "carrier" : null,
+    "name" : "TestName",
+    "address" : {
+      "state" : "NY",
+      "country" : "US",
+      "line2" : "#3B",
+      "city" : "New York",
+      "line1" : "55 John St",
+      "postal_code" : "10002"
+    }
+  },
+  "status" : "succeeded",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 6099,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "affirm" : {
+
+    },
+    "id" : "pm_1KUFbUFY0qyl6XeW4Q7VNCTj",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1645125924,
+    "allow_redisplay" : "unspecified",
+    "type" : "affirm",
+    "customer" : null
+  },
+  "client_secret" : "pi_3KUFbTFY0qyl6XeW1oDBbiQk_secret_8kdpLx37oa5WMrI2xoXThCK9s",
+  "id" : "pi_3KUFbTFY0qyl6XeW1oDBbiQk",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "affirm"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1645125923,
+  "description" : "Example PaymentIntent"
+}

@@ -14,6 +14,8 @@
 
 "BSB number" = "Numero BSB";
 
+"Bank account •••• %@" = "Conto bancario •••• %@";
+
 "Billing address is same as shipping" = "L'indirizzo di fatturazione è uguale all'indirizzo di spedizione";
 
 "Cancel" = "Annulla";
@@ -94,9 +96,7 @@
 
 "Remove" = "Rimuovi";
 
-"Remove bank account" = "Rimuovi conto bancario";
-
-"Remove bank account ending in %@" = "Rimuovi conto bancario che termina con %@";
+"Remove bank account?" = "Desideri rimuovere il conto bancario?";
 
 "Remove card" = "Rimuovi la carta";
 

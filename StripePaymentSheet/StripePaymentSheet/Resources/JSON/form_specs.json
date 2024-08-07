@@ -796,7 +796,88 @@
                 }
             }
         }
-    },   
+    },
+    {
+        "type": "sunbit",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-942781207fa04c8c6244490ed648c86d.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-5c93adf3d043d1510fcdd449afa032de.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-2ebac8e19b555f2081c16591e8fe4d4a.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-031a417a99538497bc892f11a15dd1cb.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "billie",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-e8200232ef6c1a997eb8705685917dcd.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-81eb72c63b66f9e68b15287526918836.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-12c7376f5623c109996ff8cd2f6d7a05.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-6c8ac5db6e80d5c186b280da0ccd0a5b.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+          },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "satispay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-97b6153a7a1e191ffdfda3ca9162343f.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-ab245f01010002d6ff7755323c1613a2.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-eca5006db20571e80caec1509c680c27.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-c01fc432e3c7b334f0204d011879bb1a.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },      
     {
         "type": "mobilepay",
         "async": false,

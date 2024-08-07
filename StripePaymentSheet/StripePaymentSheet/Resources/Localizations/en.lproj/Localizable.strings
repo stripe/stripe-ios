@@ -1,6 +1,9 @@
 /* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
+"%1$d interest-free payments of %2$@" = "%1$d interest-free payments of %2$@";
+
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
@@ -10,11 +13,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
 "Add a payment method" = "Add a payment method";
 
-/* Button prompt to add a bank account as a payment method. */
-"Add bank account" = "Add bank account";
+/* Title shown above a view allowing the customer to save their first card. */
+"Add card" = "Add card";
+
+/* Title shown above a view allowing the customer to save a card. */
+"Add new card" = "Add new card";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Add new payment method";
+
+/* Title shown above a view allowing the customer to add a US bank account. */
+"Add US bank account" = "Add US bank account";
 
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Add your payment information";
@@ -25,11 +34,14 @@
 /* Text for back button */
 "Back" = "Back";
 
+/* A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card. */
+"Bank" = "Bank";
+
 /* Title for collected bank account information */
 "Bank account" = "Bank account";
 
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
+/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+"Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
 /* Header text shown above a UPI ID text field */
 "Buy using a UPI ID" = "Buy using a UPI ID";
@@ -61,6 +73,9 @@
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.";
 
+/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.";
+
 /* Legal text shown when creating a Link account. */
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
@@ -82,8 +97,7 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
-/* A button used to confirm selecting a saved payment method
-   A button used to confirm the CVC/CVV */
+/* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
 
 /* Text for alert message when user needs to confirm payment in their banking app */
@@ -122,11 +136,23 @@
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
 
+/* Title shown above a view containing the customer's payment method that they can delete or update */
+"Manage payment method" = "Manage payment method";
+
+/* Title shown above a view containing the customer's payment methods that they can delete or update */
+"Manage payment methods" = "Manage payment methods";
+
 /* Title shown above a carousel containing the customer's payment methods */
 "Manage your payment methods" = "Manage your payment methods";
 
 /* Label for name on card field */
 "Name on card" = "Name on card";
+
+/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
+"New card" = "New card";
+
+/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
+"New payment method" = "New payment method";
 
 /* Countdown timer text on a screen asking the user to approve a payment */
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
@@ -187,6 +213,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for confirmation alert to remove a card */
 "Remove card?" = "Remove card?";
 
+/* Title shown above a view containing a customer's payment method that they can delete */
+"Remove payment method" = "Remove payment method";
+
 /* A button used for saving a new payment method */
 "Save" = "Save";
 
@@ -212,6 +241,15 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 to be saved and used in future checkout sessions. */
 "Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
 
+/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
+"Saved" = "Saved";
+
+/* Title shown above a view containing the customer's card payment methods */
+"Select card" = "Select card";
+
+/* Title shown above a view containing the customer's payment methods */
+"Select payment method" = "Select payment method";
+
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
 
@@ -224,6 +262,9 @@ is not supported by the merchant */
 
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";
+
+/* Subtitle shown on a button allowing a user to select to pay with Link. */
+"Simple, secure one-click payments" = "Simple, secure one-click payments";
 
 /* Error message when an error case happens when linking your account */
 "Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
@@ -240,9 +281,14 @@ is not supported by the merchant */
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
-/* Title for a button that when tapped, presents a screen for updating a card. Also
-the heading the screen itself. */
-"Update card" = "Update card";
+/* Title for a button that when tapped, updates a card brand. */
+"Update" = "Update";
+
+/* Title for a screen for updating a card brand. */
+"Update card brand" = "Update card brand";
+
+/* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
+"View more" = "View more";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";

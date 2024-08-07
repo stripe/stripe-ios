@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%2$@ の無利息の %1$li 回払い";
+
 "+ Add" = "+ 追加";
+
+"Add US bank account" = "アメリカの銀行口座を追加";
 
 "Add a card" = "カードを追加";
 
 "Add a payment method" = "決済手段を追加";
 
-"Add bank account" = "銀行口座を追加する";
+"Add card" = "カードを追加";
+
+"Add new card" = "新しいカードを追加";
 
 "Add new payment method" = "新たな支払い方法を追加";
 
@@ -16,9 +22,11 @@
 
 "Back" = "戻る";
 
+"Bank" = "銀行";
+
 "Bank account" = "銀行口座";
 
-"Buy now or pay later with Klarna." = "Klarna で後払いします。";
+"Buy now or pay later with Klarna" = "Klarna で後払い";
 
 "Buy using a UPI ID" = "UPI ID を使って購入";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "銀行口座情報を提供し、この支払いを確定すると、お客様はこの口座引き落とし依頼および<terms>ダイレクトデビットリクエスト利用規約</terms>に同意し、Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (「Stripe」) が %@ (「加盟店」) に代わって、加盟店から別途連絡された金額をバルク電子決済システム (BECS) 経由で口座から引き落とすことを承認することになります。お客様が上記の口座の口座名義人または承認された署名者であることを保証したものとみなされます。";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "カード情報を提供すると、%@ がその規約に従って今後の支払いをお客様のカードに請求することを許可することになります。";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "メールアドレスを入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "支払い方法の管理";
+
+"Manage payment methods" = "決済手段を管理する";
+
 "Manage your payment methods" = "決済手段を管理する";
 
 "Name on card" = "カード名義人";
+
+"New card" = "新しいカード";
+
+"New payment method" = "新しい決済手段";
 
 "Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "カードを削除しますか？";
 
+"Remove payment method" = "決済手段の削除";
+
 "Save" = "保存";
 
 "Save a new payment method" = "新しい決済手段を保存する";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Link を使用して安全なワンクリック決済の情報を保存する";
 
+"Saved" = "保存済み";
+
+"Select card" = "カードを選択する";
+
+"Select payment method" = "決済手段を選択する";
+
 "Select your payment method" = "支払い方法を選択してください";
 
 "Set up" = "設定";
@@ -142,13 +170,23 @@
 
 "Show menu" = "メニューを表示";
 
+"Simple, secure one-click payments" = "シンプルで安全なワンクリック決済";
+
+"Something went wrong when linking your account.\nPlease try again later." = "口座を関連付けるときに問題が発生しました。\n後でもう一度お試しください。";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe は 1 ～ 2 営業日後に口座に $0.01 を入金します。その後、%@ で銀行口座の保存を完了させるための手順が記載されたメールが送信されます。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
 
 "The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
 
-"Update card" = "カードを更新";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。「%@」はサポートされている国コードではありません。";
+
+"Update" = "更新する";
+
+"Update card brand" = "カードブランドを更新する";
+
+"View more" = "さらに表示";
 
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 

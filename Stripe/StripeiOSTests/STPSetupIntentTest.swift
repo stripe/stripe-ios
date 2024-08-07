@@ -82,4 +82,23 @@ class STPSetupIntentTest: XCTestCase {
         XCTAssertNotNil(setupIntent.lastSetupError?.paymentMethod)
         XCTAssertEqual(setupIntent.lastSetupError?.type, STPSetupIntentLastSetupErrorType.invalidRequest)
     }
+
+    // MARK: STPSetupIntentStatus extension tests
+
+    func testStringFromStatus() {
+        let expected: [STPSetupIntentStatus: String] = [
+            .requiresPaymentMethod: "requires_payment_method",
+            .requiresConfirmation: "requires_confirmation",
+            .requiresAction: "requires_action",
+            .processing: "processing",
+            .succeeded: "succeeded",
+            .canceled: "canceled",
+            .unknown: "unknown",
+        ]
+
+        for (status, expectedString) in expected {
+            let resultString = STPSetupIntentStatus.string(from: status)
+            XCTAssertEqual(resultString, expectedString, "Expected \(status) to map to string '\(expectedString)', but got '\(resultString)'")
+        }
+    }
 }

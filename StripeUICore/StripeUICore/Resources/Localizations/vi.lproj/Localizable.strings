@@ -14,6 +14,8 @@
 
 "BSB number" = "Số BSB";
 
+"Bank account •••• %@" = "Tài khoản ngân hàng •••• %@";
+
 "Billing address is same as shipping" = "Địa chỉ xuất hóa đơn giống địa chỉ chuyển hàng";
 
 "Cancel" = "Hủy";
@@ -94,9 +96,7 @@
 
 "Remove" = "Xóa";
 
-"Remove bank account" = "Bỏ tài khoản ngân hàng";
-
-"Remove bank account ending in %@" = "Bỏ tài khoản ngân hàng có các số cuối là %@";
+"Remove bank account?" = "Bỏ tài khoản ngân hàng?";
 
 "Remove card" = "Xóa thẻ";
 

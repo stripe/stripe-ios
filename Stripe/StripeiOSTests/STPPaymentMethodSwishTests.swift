@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import StripePaymentsTestUtils
 
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 
-class STPPaymentMethodSwishTests: XCTestCase {
+class STPPaymentMethodSwishTests: STPNetworkStubbingTestCase {
 
     static let swishPaymentIntentClientSecret =
         "pi_3Nsu6oKG6vc7r7YC1FJJPNjg_secret_wQtTkgmjgOMSqN7lje5RCtzrm"

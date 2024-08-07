@@ -43,16 +43,6 @@ protocol DocumentUploaderProtocol: AnyObject {
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     )
 
-    /// Upload images from Microblink Detector without cropping
-    func uploadImagesFromMB(
-        for side: DocumentSide,
-        originalImage: CGImage,
-        croppedImage: CGImage,
-        documentScannerOutput: DocumentScannerOutput?,
-        exifMetadata: CameraExifMetadata?,
-        method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
-    )
-
     func reset()
 }
 
@@ -178,52 +168,6 @@ final class DocumentUploader: DocumentUploaderProtocol {
         case .back:
             self.backUploadFuture = uploadFuture
         }
-    }
-
-    /// Uploads a oritinal and cropped images as low and high resolution image for a specific side of the
-    /// document and updates either `frontUploadFuture` or `backUploadFuture`.
-    /// - Note: Used for uploading images from Microblink SDK with already cropped image.
-    /// - Parameters:
-    ///   - side: The side of the image (front or back) to upload.
-    ///   - originalImage: The original image captured by Microblink SDK.
-    ///   - croppedImage: The cropped image captured by Microblink SDK.
-    ///   - documentScannerOutput: The output from the DocumentScanner.
-    ///   - exifMetadata: Camera details.
-    ///   - method: The method the image was obtained.
-    func uploadImagesFromMB(
-        for side: DocumentSide,
-        originalImage: CGImage,
-        croppedImage: CGImage,
-        documentScannerOutput: DocumentScannerOutput?,
-        exifMetadata: StripeCameraCore.CameraExifMetadata?,
-        method: StripeCore.StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
-    ) {
-        let fileNamePrefix = "\(imageUploader.apiClient.verificationSessionId)_\(side.rawValue)"
-
-        let uploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData> =
-            imageUploader.uploadLowAndHighResImagesNoCropping(
-                highResImage: croppedImage,
-                lowResImage: originalImage,
-                highResFileName: fileNamePrefix,
-                lowResFileName: "\(fileNamePrefix)_full_frame"
-            ).chained { (lowResFile, highResFile) in
-                return Promise(
-                    value: StripeAPI.VerificationPageDataDocumentFileData(
-                        documentScannerOutput: documentScannerOutput,
-                        highResImage: highResFile.id,
-                        lowResImage: lowResFile.id,
-                        exifMetadata: exifMetadata,
-                        uploadMethod: method
-                    )
-                )
-            }
-        switch side {
-        case .front:
-            self.frontUploadFuture = uploadFuture
-        case .back:
-            self.backUploadFuture = uploadFuture
-        }
-
     }
 
     /// Uploads both a high and low resolution image

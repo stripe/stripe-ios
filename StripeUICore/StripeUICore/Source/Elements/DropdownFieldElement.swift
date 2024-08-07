@@ -15,8 +15,7 @@ import UIKit
  
  For internal SDK use only
  */
-@objc(STP_Internal_DropdownFieldElement)
-@_spi(STP) public class DropdownFieldElement: NSObject {
+@_spi(STP) public final class DropdownFieldElement {
     public typealias DidPresent = () -> Void
     public typealias DidUpdateSelectedIndex = (Int) -> Void
     public typealias DidTapClose = () -> Void
@@ -81,7 +80,7 @@ import UIKit
 #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
     private(set) lazy var pickerView: UIButton = {
         let button = UIButton()
-        let action = { (action: UIAction) -> Void in
+        let action = { (action: UIAction) in
             self.selectedIndex = Int(action.identifier.rawValue) ?? 0
         }
 
@@ -102,8 +101,8 @@ import UIKit
 #else
     private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
-        picker.delegate = self
-        picker.dataSource = self
+        picker.delegate = pickerViewDelegate
+        picker.dataSource = pickerViewDelegate
         return picker
     }()
 #endif
@@ -128,6 +127,7 @@ import UIKit
     private var previouslySelectedIndex: Int
     private let disableDropdownWithSingleElement: Bool
     private let isOptional: Bool
+    lazy var pickerViewDelegate: PickerViewDelegate = { PickerViewDelegate(self) }()
 
     /**
      - Parameters:
@@ -172,7 +172,6 @@ import UIKit
             self.selectedIndex = defaultIndex
         }
         self.previouslySelectedIndex = selectedIndex
-        super.init()
 
         if !items.isEmpty {
             updatePickerField()
@@ -219,6 +218,8 @@ private extension DropdownFieldElement {
 // MARK: Element
 
 extension DropdownFieldElement: Element {
+    public var collectsUserInput: Bool { true }
+
     public var view: UIView {
         return pickerFieldView
     }
@@ -228,33 +229,43 @@ extension DropdownFieldElement: Element {
     }
 }
 
-// MARK: UIPickerViewDelegate
+// MARK: UIPickerViewDelegate & UIPickerViewDataSource
 
-extension DropdownFieldElement: UIPickerViewDelegate {
+extension DropdownFieldElement {
+    // A silly bridge class to work around the fact that UIPickerViewDelegate must be an NSObject
+    class PickerViewDelegate: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
+        weak var dropdownFieldElement: DropdownFieldElement?
+        init(_ dropdownFieldElement: DropdownFieldElement?) {
+            self.dropdownFieldElement = dropdownFieldElement
+        }
 
-    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let item = items[row]
+        public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+            guard let dropdownFieldElement else { return nil }
+            let item = dropdownFieldElement.items[row]
 
-        guard item.isPlaceholder else { return item.pickerDisplayName }
+            guard item.isPlaceholder else { return item.pickerDisplayName }
 
-        // If this item is marked as a placeholder, apply placeholder text color
-        let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: theme.colors.placeholderText]
-        let placeholderString = NSAttributedString(string: item.pickerDisplayName.string, attributes: attributes)
-        return placeholderString
+            // If this item is marked as a placeholder, apply placeholder text color
+            let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: dropdownFieldElement.theme.colors.placeholderText]
+            let placeholderString = NSAttributedString(string: item.pickerDisplayName.string, attributes: attributes)
+            return placeholderString
+        }
+
+        public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+            dropdownFieldElement?.pickerView(pickerView, didSelectRow: row, inComponent: component)
+        }
+
+        public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return 1
+        }
+
+        public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            return dropdownFieldElement?.items.count ?? 0
+        }
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedIndex = row
-    }
-}
-
-extension DropdownFieldElement: UIPickerViewDataSource {
-    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return items.count
     }
 }
 
@@ -284,5 +295,12 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
         // Reset to previously selected index when canceling
         selectedIndex = previouslySelectedIndex
         didTapClose?()
+    }
+}
+
+// MARK: - DebugDescription
+extension DropdownFieldElement {
+    public var debugDescription: String {
+        return "<DropdownFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(label ?? "nil"); validationState = \(validationState); rawData = \(rawData)"
     }
 }

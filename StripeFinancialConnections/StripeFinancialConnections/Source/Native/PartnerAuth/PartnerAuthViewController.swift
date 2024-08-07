@@ -135,6 +135,7 @@ final class PartnerAuthViewController: SheetViewController {
                 prepaneModel: prepaneModel,
                 isRepairSession: false, // TODO(kgaidis): change this for repair sessions
                 panePresentationStyle: panePresentationStyle,
+                theme: dataSource.manifest.theme,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
                 },
@@ -188,7 +189,7 @@ final class PartnerAuthViewController: SheetViewController {
         // note that this is purposefully separate from `showLoadingView`
         // function because it avoids animation glitches where
         // `showLoadingView(false)` can remove the loading view
-        let loadingView = SpinnerView()
+        let loadingView = SpinnerView(theme: dataSource.manifest.theme)
         self.legacyLoadingView = loadingView
         view.addAndPinSubviewToSafeArea(loadingView)
     }
@@ -289,6 +290,7 @@ final class PartnerAuthViewController: SheetViewController {
         }
         let continueStateViews = ContinueStateViews(
             institutionImageUrl: institution.icon?.default,
+            theme: dataSource.manifest.theme,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
                 self.dataSource.analyticsClient.log(
@@ -532,7 +534,7 @@ final class PartnerAuthViewController: SheetViewController {
             continueStateViews?.showLoadingView(show)
         } else {
             if show {
-                let loadingView = SpinnerView()
+                let loadingView = SpinnerView(theme: dataSource.manifest.theme)
                 self.loadingView = loadingView
                 view.addAndPinSubviewToSafeArea(loadingView)
             }
@@ -550,6 +552,7 @@ final class PartnerAuthViewController: SheetViewController {
                     if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNoticeModel,
+                            theme: dataSource.manifest.theme,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }

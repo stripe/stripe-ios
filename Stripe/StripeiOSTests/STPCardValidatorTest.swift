@@ -17,6 +17,10 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPCardValidatorTest: XCTestCase {
+    override class func setUp() {
+        STPBINController.shared.reset()
+    }
+
     static let cardData: [(STPCardBrand, String, STPCardValidationState)] = {
         return [
             (

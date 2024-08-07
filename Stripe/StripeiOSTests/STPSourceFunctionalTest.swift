@@ -10,9 +10,10 @@
 @_spi(STP) @testable import StripeCore
 @testable import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
-class STPSourceFunctionalTest: XCTestCase {
+class STPSourceFunctionalTest: STPNetworkStubbingTestCase {
     func testCreateSource_bancontact() {
         let params = STPSourceParams.bancontactParams(
             withAmount: 1099,
@@ -49,7 +50,7 @@ class STPSourceFunctionalTest: XCTestCase {
         let card = STPCardParams()
         card.number = "4242 4242 4242 4242"
         card.expMonth = 6
-        card.expYear = 2024
+        card.expYear = 2050
         card.currency = "usd"
         card.name = "Jenny Rosen"
         card.address.line1 = "123 Fake Street"
@@ -80,38 +81,6 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(address?.state, card.address.state)
             XCTAssertEqual(address?.country, card.address.country)
             XCTAssertEqual(address?.postalCode, card.address.postalCode)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
-
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-    }
-
-    func testCreateSource_giropay() {
-        let params = STPSourceParams.giropayParams(
-            withAmount: 1099,
-            name: "Jenny Rosen",
-            returnURL: "https://shop.example.com/crtABC",
-            statementDescriptor: "ORDER AT123")
-        params.metadata = [
-            "foo": "bar",
-        ]
-
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let expectation = self.expectation(description: "Source creation")
-        client.createSource(with: params) { source, error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(source)
-            XCTAssertEqual(source?.type, STPSourceType.giropay)
-            XCTAssertEqual(source?.amount, params.amount)
-            XCTAssertEqual(source?.currency, params.currency)
-            XCTAssertEqual(source?.owner?.name, params.owner?["name"] as? String)
-            XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
-            XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
-            XCTAssertNotNil(source?.redirect?.url)
             // #pragma clang diagnostic push
             // #pragma clang diagnostic ignored "-Wdeprecated"
             XCTAssertNil(source?.metadata, "Metadata is not returned.")

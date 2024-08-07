@@ -4,6 +4,7 @@
 //
 //
 
+@_spi(STP) import StripeCore
 import SwiftUI
 
 extension View {
@@ -16,7 +17,8 @@ extension View {
         customerSheet: CustomerSheet,
         onCompletion: @escaping (CustomerSheet.CustomerSheetResult) -> Void
     ) -> some View {
-        self.modifier(
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+        return self.modifier(
             CustomerSheet.CustomerSheetPresentationModifier(
                 isPresented: isPresented,
                 customerSheet: customerSheet,

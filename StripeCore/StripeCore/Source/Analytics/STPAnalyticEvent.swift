@@ -28,6 +28,7 @@ import Foundation
     case _3DS2AuthenticationAttempt = "stripeios.3ds2_authenticate"
     case _3DS2FrictionlessFlow = "stripeios.3ds2_frictionless_flow"
     case urlRedirectNextAction = "stripeios.url_redirect_next_action"
+    case urlRedirectNextActionCompleted = "stripeios.url_redirect_next_action_completed"
     case _3DS2ChallengeFlowPresented = "stripeios.3ds2_challenge_flow_presented"
     case _3DS2ChallengeFlowTimedOut = "stripeios.3ds2_challenge_flow_timed_out"
     case _3DS2ChallengeFlowUserCanceled = "stripeios.3ds2_challenge_flow_canceled"
@@ -60,6 +61,9 @@ import Foundation
     case financialConnectionsSheetPresented = "stripeios.financialconnections.sheet.presented"
     case financialConnectionsSheetClosed = "stripeios.financialconnections.sheet.closed"
     case financialConnectionsSheetFailed = "stripeios.financialconnections.sheet.failed"
+    case financialConnectionsSheetFlowDetermined = "stripeios.financialconnections.sheet.flow_determined"
+    case financialConnectionsSheetInitialSynchronizeStarted = "stripeios.financialconnections.sheet.initial_synchronize.started"
+    case financialConnectionsSheetInitialSynchronizeCompleted = "stripeios.financialconnections.sheet.initial_synchronize.completed"
 
     // MARK: - PaymentSheet Init
     case mcInitCustomCustomer = "mc_custom_init_customer"
@@ -74,12 +78,8 @@ import Foundation
     // MARK: - PaymentSheet Show
     case mcShowCustomNewPM = "mc_custom_sheet_newpm_show"
     case mcShowCustomSavedPM = "mc_custom_sheet_savedpm_show"
-    case mcShowCustomApplePay = "mc_custom_sheet_applepay_show"
-    case mcShowCustomLink = "mc_custom_sheet_link_show"
     case mcShowCompleteNewPM = "mc_complete_sheet_newpm_show"
     case mcShowCompleteSavedPM = "mc_complete_sheet_savedpm_show"
-    case mcShowCompleteApplePay = "mc_complete_sheet_applepay_show"
-    case mcShowCompleteLink = "mc_complete_sheet_link_show"
 
     // MARK: - PaymentSheet Payment
     case mcPaymentCustomNewPMSuccess = "mc_custom_payment_newpm_success"
@@ -137,7 +137,6 @@ import Foundation
 
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"
-    case luxeUnknownActionsFailure = "luxe_unknown_actions_failure"
     case luxeSpecSerializeFailure = "luxe_spec_serialize_failure"
 
     case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
@@ -259,4 +258,12 @@ import Foundation
 
     // MARK: - Misc. errors
     case stripePaymentSheetDownloadManagerError = "stripepaymentsheet.downloadmanager.error"
+
+    // MARK: - Refresh Endpoint
+    case refreshPaymentIntentStarted = "stripeios.refresh_payment_intent_started"
+    case refreshSetupIntentStarted = "stripeios.refresh_setup_intent_started"
+    case refreshPaymentIntentSuccess = "stripeios.refresh_payment_intent_success"
+    case refreshSetupIntentSuccess = "stripeios.refresh_setup_intent_success"
+    case refreshPaymentIntentFailed = "stripeios.refresh_payment_intent_failed"
+    case refreshSetupIntentFailed = "stripeios.refresh_setup_intent_failed"
 }

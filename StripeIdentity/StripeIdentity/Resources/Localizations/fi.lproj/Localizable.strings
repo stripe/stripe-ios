@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Henkilökortin takapuoli";
 
+"Back of identity document" = "Henkilötodistuksen takapuoli";
+
 "Camera permission" = "Kameran käyttöoikeus";
 
 "Camera unavailable" = "Kamera ei käytössä";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Henkilökortin etupuolen kuva ladattu onnistuneesti";
 
 "Front of identity card" = "Henkilökortin etupuoli";
+
+"Front of identity document" = "Henkilötodistuksen etupuoli";
 
 "Get ready to scan your photo ID" = "Valmistaudu skannaamaan kuvallinen henkilöllisyystodistus";
 

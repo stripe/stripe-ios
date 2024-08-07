@@ -133,7 +133,8 @@ final class ErrorViewController: UIViewController {
                                 guard let self = self else { return }
                                 self.delegate?.errorViewControllerDidSelectManualEntry(self)
                             }
-                        ) : nil
+                        ) : nil,
+                        theme: dataSource.manifest.theme
                     ).footerView
                 ).createView()
                 dataSource.analyticsClient.logExpectedError(
@@ -176,7 +177,8 @@ final class ErrorViewController: UIViewController {
                                 guard let self else { return }
                                 self.delegate?.errorViewControllerDidSelectManualEntry(self)
                             }
-                        ) : nil
+                        ) : nil,
+                        theme: dataSource.manifest.theme
                     ).footerView
                 ).createView()
                 dataSource.analyticsClient.logExpectedError(
@@ -198,6 +200,7 @@ final class ErrorViewController: UIViewController {
             // what's wrong, so show a generic error
             errorView = TerminalErrorView(
                 allowManualEntry: dataSource.manifest.allowManualEntry,
+                theme: dataSource.manifest.theme,
                 didSelectManualEntry: { [weak self] in
                     guard let self else { return }
                     self.delegate?.errorViewControllerDidSelectManualEntry(self)

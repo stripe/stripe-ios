@@ -23,6 +23,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let cbcEligible: Bool
+    let savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior
 
     // MARK: - Read-only Properties
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
@@ -67,6 +68,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         switch overrideBuyButtonBehavior {
         case .LinkUSBankAccount:
             return usBankAccountFormElement?.canLinkAccount ?? false
+        case .instantDebits:
+            return false // instant debits is not supported for customer sheet
         }
     }
 
@@ -119,6 +122,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         configuration: CustomerSheet.Configuration,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         cbcEligible: Bool,
+        savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior,
         delegate: CustomerAddPaymentMethodViewControllerDelegate
     ) {
         self.configuration = configuration
@@ -131,6 +135,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.paymentMethodTypes = paymentMethodTypes
         self.cbcEligible = cbcEligible
+        self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
     }
@@ -139,6 +144,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodScreenPresented()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        sendEventToSubviews(.viewDidAppear, from: view)
     }
 
     override func viewDidLoad() {
@@ -227,16 +237,17 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethod: type,
             previousCustomerInput: nil,
             addressSpecProvider: .shared,
-            offerSaveToLinkWhenSupported: false,
+            showLinkInlineCardSignup: false,
             linkAccount: nil,
             cardBrandChoiceEligible: cbcEligible,
-            supportsLinkCard: false,
             isPaymentIntent: false,
             isSettingUp: true,
             currency: nil,
             amount: nil,
-            countryCode: nil)
-            .make()
+            countryCode: nil,
+            savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
+            analyticsHelper: .init(isCustom: false, configuration: .init()) // Just use a dummy analytics helper; we don't look at these analytics.
+        ).make()
         formElement.delegate = self
         return formElement
     }
@@ -249,6 +260,8 @@ extension CustomerAddPaymentMethodViewController {
         switch behavior {
         case .LinkUSBankAccount:
             handleCollectBankAccount(from: viewController, clientSecret: clientSecret)
+        case .instantDebits:
+            assertionFailure("instant debits is not supported for customer sheet")
         }
     }
     func handleCollectBankAccount(from viewController: UIViewController, clientSecret: String) {
@@ -292,16 +305,24 @@ extension CustomerAddPaymentMethodViewController {
             switch financialConnectionsResult {
             case .cancelled:
                 break
-            case .completed(let linkedBank):
-                usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+            case .completed(let completedResult):
+                if case .financialConnections(let linkedBank) = completedResult {
+                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+                } else {
+                    self.delegate?.updateErrorLabel(for: genericError)
+                }
             case .failed:
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
 
+        let additionalParameters: [String: Any] = [
+            "hosted_surface": "customer_sheet",
+        ]
         client.collectBankAccountForSetup(
             clientSecret: clientSecret,
             returnURL: configuration.returnURL,
+            additionalParameters: additionalParameters,
             onEvent: nil,
             params: params,
             from: viewController,

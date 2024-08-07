@@ -106,6 +106,7 @@ class STPE2ETest: XCTestCase {
     // In this test, a PaymentIntent object is created from an example merchant backend,
     // confirmed by the iOS SDK, and then retrieved to validate that the original amount,
     // currency, and merchant are the same as the original inputs.
+    // (Don't network mock this one!)
     func testE2E() throws {
         continueAfterFailure = false
         let backend = E2EBackend()

@@ -24,7 +24,7 @@ class BottomSheet3DS2ViewController: UIViewController {
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: appearance)
-        navBar.setStyle(.back)
+        navBar.setStyle(.back(showAdditionalButton: false))
         navBar.delegate = self
         return navBar
     }()
@@ -86,10 +86,6 @@ extension BottomSheet3DS2ViewController: BottomSheetContentViewController {
 
     var requiresFullScreen: Bool {
         return true
-    }
-
-    func didFinishAnimatingHeight() {
-        // no-op
     }
 }
 

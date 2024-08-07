@@ -8,6 +8,7 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
@@ -16,7 +17,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPSetupIntentFunctionalTestSwift: XCTestCase {
+class STPSetupIntentFunctionalTestSwift: STPNetworkStubbingTestCase {
 
     // MARK: - US Bank Account
     func createAndConfirmSetupIntentWithUSBankAccount(completion: @escaping (String?) -> Void) {

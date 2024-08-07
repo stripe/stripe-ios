@@ -17,6 +17,7 @@ import XCTest
 class LinkURLGeneratorTests: XCTestCase {
     let testParams = LinkURLParams(paymentObject: .link_payment_method,
                                    publishableKey: "pk_test_123",
+                                   stripeAccount: "acct_1234",
                                    paymentUserAgent: "test",
                                    merchantInfo: LinkURLParams.MerchantInfo(businessName: "Test test", country: "US"),
                                    customerInfo: LinkURLParams.CustomerInfo(country: "US", email: "test@example.com"),
@@ -31,7 +32,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLCreation() {
         let url = try! LinkURLGenerator.url(params: testParams)
-        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJjdXN0b21lckluZm8iOnsiY291bnRyeSI6IlVTIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0sImV4cGVyaW1lbnRzIjp7fSwiZmxhZ3MiOnt9LCJpbnRlZ3JhdGlvblR5cGUiOiJtb2JpbGUiLCJpbnRlbnRNb2RlIjoicGF5bWVudCIsImxvY2FsZSI6ImVuLVVTIiwibG9nZ2VyTWV0YWRhdGEiOnt9LCJtZXJjaGFudEluZm8iOnsiYnVzaW5lc3NOYW1lIjoiVGVzdCB0ZXN0IiwiY291bnRyeSI6IlVTIn0sInBhdGgiOiJtb2JpbGVfcGF5IiwicGF5bWVudEluZm8iOnsiYW1vdW50IjoxMDAsImN1cnJlbmN5IjoiVVNEIn0sInBheW1lbnRPYmplY3QiOiJsaW5rX3BheW1lbnRfbWV0aG9kIiwicGF5bWVudFVzZXJBZ2VudCI6InRlc3QiLCJwdWJsaXNoYWJsZUtleSI6InBrX3Rlc3RfMTIzIiwic2V0dXBGdXR1cmVVc2FnZSI6ZmFsc2V9")
+        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJjdXN0b21lckluZm8iOnsiY291bnRyeSI6IlVTIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0sImV4cGVyaW1lbnRzIjp7fSwiZmxhZ3MiOnt9LCJpbnRlZ3JhdGlvblR5cGUiOiJtb2JpbGUiLCJpbnRlbnRNb2RlIjoicGF5bWVudCIsImxvY2FsZSI6ImVuLVVTIiwibG9nZ2VyTWV0YWRhdGEiOnt9LCJtZXJjaGFudEluZm8iOnsiYnVzaW5lc3NOYW1lIjoiVGVzdCB0ZXN0IiwiY291bnRyeSI6IlVTIn0sInBhdGgiOiJtb2JpbGVfcGF5IiwicGF5bWVudEluZm8iOnsiYW1vdW50IjoxMDAsImN1cnJlbmN5IjoiVVNEIn0sInBheW1lbnRPYmplY3QiOiJsaW5rX3BheW1lbnRfbWV0aG9kIiwicGF5bWVudFVzZXJBZ2VudCI6InRlc3QiLCJwdWJsaXNoYWJsZUtleSI6InBrX3Rlc3RfMTIzIiwic2V0dXBGdXR1cmVVc2FnZSI6ZmFsc2UsInN0cmlwZUFjY291bnQiOiJhY2N0XzEyMzQifQ==")
     }
 
     func testURLCreationRegularUnicode() {
@@ -47,13 +48,13 @@ class LinkURLGeneratorTests: XCTestCase {
             // Nothing
         }
         config.apiClient.publishableKey = "pk_123"
-        let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
 
         // Create a session ID
         AnalyticsHelper.shared.generateSessionID()
         let sessionID = AnalyticsHelper.shared.sessionID!
 
-        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent)
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .emptyElementsSession)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
                                            publishableKey: config.apiClient.publishableKey!,

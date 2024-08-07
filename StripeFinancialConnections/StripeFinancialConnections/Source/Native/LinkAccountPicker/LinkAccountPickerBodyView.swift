@@ -25,7 +25,8 @@ final class LinkAccountPickerBodyView: UIView {
 
     init(
         accountTuples: [FinancialConnectionsAccountTuple],
-        addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount
+        addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount,
+        theme: FinancialConnectionsTheme
     ) {
         super.init(frame: .zero)
 
@@ -37,6 +38,7 @@ final class LinkAccountPickerBodyView: UIView {
         accountTuples.forEach { accountTuple in
             let accountRowView = AccountPickerRowView(
                 isDisabled: !accountTuple.accountPickerAccount.allowSelection,
+                theme: theme,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(
@@ -70,6 +72,7 @@ final class LinkAccountPickerBodyView: UIView {
         let newAccountRowView = LinkAccountPickerNewAccountRowView(
             title: addNewAccount.body,
             imageUrl: addNewAccount.icon?.default,
+            theme: theme,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.linkAccountPickerBodyViewSelectedNewBankAccount(self)
@@ -193,7 +196,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                 icon: FinancialConnectionsImage(
                     default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png"
                 )
-            )
+            ),
+            theme: .light
         )
     }
 

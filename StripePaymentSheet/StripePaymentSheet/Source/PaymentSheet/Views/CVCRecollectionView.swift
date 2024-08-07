@@ -15,15 +15,16 @@ class CVCRecollectionView: UIView {
     lazy var errorLabel: UILabel = {
         return ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
     }()
+    let textFieldView: UIView
 
     lazy var stackView: UIStackView = {
         let stackView = mode == .detailedWithInput
         ? UIStackView(arrangedSubviews: [
             cvcPaymentMethodInformationView,
-            textFieldElement.view,
+            textFieldView,
         ])
         : UIStackView(arrangedSubviews: [
-            textFieldElement.view,
+            textFieldView,
         ])
 
         stackView.distribution = .fillEqually
@@ -41,23 +42,6 @@ class CVCRecollectionView: UIView {
         return paymentMethodInfoView
     }()
 
-    lazy var textFieldElement: TextFieldElement = {
-        let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration, theme: appearance.asElementsTheme)
-        textFieldElement.delegate = elementDelegate
-        textFieldElement.view.backgroundColor = appearance.colors.componentBackground
-        textFieldElement.view.layer.maskedCorners = mode == .detailedWithInput
-        ? [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-        : [.layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner, .layerMinXMaxYCorner]
-        textFieldElement.view.layer.cornerRadius = appearance.cornerRadius
-        return textFieldElement
-    }()
-
-    lazy var cvcElementConfiguration: TextFieldElement.CVCConfiguration = {
-        return TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) { [weak self] in
-            return self?.paymentMethod.card?.brand ?? .unknown
-        }
-    }()
-
     let defaultValues: CVCRecollectionElement.DefaultValues
     var paymentMethod: STPPaymentMethod
     let mode: CVCRecollectionElement.Mode
@@ -72,12 +56,12 @@ class CVCRecollectionView: UIView {
          paymentMethod: STPPaymentMethod,
          mode: CVCRecollectionElement.Mode,
          appearance: PaymentSheet.Appearance,
-         elementDelegate: ElementDelegate) {
+         textFieldView: UIView) {
         self.defaultValues = defaultValues
         self.paymentMethod = paymentMethod
         self.mode = mode
         self.appearance = appearance
-        self.elementDelegate = elementDelegate
+        self.textFieldView = textFieldView
         super.init(frame: .zero)
 
         self.titleLabel.isHidden = mode == .detailedWithInput
@@ -89,10 +73,7 @@ class CVCRecollectionView: UIView {
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, stackView, errorLabel])
         if mode == .inputOnly {
-            let spacerView = UIView(frame: .zero)
-            spacerView.translatesAutoresizingMaskIntoConstraints = false
-            spacerView.heightAnchor.constraint(equalToConstant: 10).isActive = true
-            stack.insertArrangedSubview(spacerView, at: 0)
+            stack.insertArrangedSubview(.makeSpacerView(height: 10), at: 0)
         }
         stack.axis = .vertical
         stack.spacing = 4
@@ -105,15 +86,4 @@ class CVCRecollectionView: UIView {
         self.stackView.layer.borderColor = appearance.colors.componentBorder.cgColor
     }
     #endif
-
-    func update() {
-        if case let .invalid(error, shouldDisplay) = textFieldElement.validationState, shouldDisplay {
-            errorLabel.text = error.localizedDescription
-            errorLabel.isHidden = false
-            errorLabel.textColor = appearance.asElementsTheme.colors.danger
-        } else {
-            errorLabel.text = nil
-            errorLabel.isHidden = true
-        }
-    }
 }

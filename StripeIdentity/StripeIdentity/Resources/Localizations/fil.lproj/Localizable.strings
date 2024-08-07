@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Likod ng kard ng pagkakakilanlan";
 
+"Back of identity document" = "Likod ng dokumento ng pagkakakilanlan";
+
 "Camera permission" = "Pahintulot ng kamera";
 
 "Camera unavailable" = "Hindi magamit ang kamera";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng harap ng kard ng pagkakakilanlan";
 
 "Front of identity card" = "Harap ng card ng pagkakakilanlan";
+
+"Front of identity document" = "Harap ng dokumento ng pagkakakilanlan";
 
 "Get ready to scan your photo ID" = "Maghandang i-scan ang iyong photo ID";
 

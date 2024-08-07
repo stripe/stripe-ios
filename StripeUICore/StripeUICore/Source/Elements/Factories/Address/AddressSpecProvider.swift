@@ -58,15 +58,6 @@ let addressDataFilename = "localized_address_data"
         }
     }
 
-    /// Loads address specs with a promise
-    public func loadAddressSpecs() -> Promise<Void> {
-        let promise = Promise<Void>()
-        loadAddressSpecs {
-            promise.resolve(with: ())
-        }
-        return promise
-    }
-
     func addressSpec(for country: String) -> AddressSpec {
         guard let spec = addressSpecs[country] else {
             return AddressSpec.default

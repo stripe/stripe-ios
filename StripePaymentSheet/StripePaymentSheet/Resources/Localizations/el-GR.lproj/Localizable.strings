@@ -1,12 +1,18 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
+"%1$d interest-free payments of %2$@" = "%1$li άτοκες δόσεις των %2$@";
+
 "+ Add" = "+ Προσθήκη";
+
+"Add US bank account" = "Προσθήκη τραπεζικού λογαριασμού στις Ηνωμένες Πολιτείες";
 
 "Add a card" = "Προσθήκη μιας κάρτας";
 
 "Add a payment method" = "Προσθέστε μια μέθοδο πληρωμής";
 
-"Add bank account" = "Προσθήκη τραπεζικού λογαριασμού";
+"Add card" = "Προσθήκη κάρτας";
+
+"Add new card" = "Προσθήκη νέας κάρτας";
 
 "Add new payment method" = "Προσθέστε νέα μέθοδο πληρωμής";
 
@@ -16,9 +22,11 @@
 
 "Back" = "Πίσω";
 
+"Bank" = "Τράπεζα";
+
 "Bank account" = "Τραπεζικός λογαριασμός";
 
-"Buy now or pay later with Klarna." = "Αγορά τώρα ή πληρωμή αργότερα με Klarna.";
+"Buy now or pay later with Klarna" = "Αγορά τώρα ή πληρωμή αργότερα με Klarna";
 
 "Buy using a UPI ID" = "Αγορά με χρήση αναγνωριστικού UPI";
 
@@ -37,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Συνεχίζοντας, εξουσιοδοτείτε την %1$@ να χρεώσει τον λογαριασμό σας Cash App για αυτήν την πληρωμή και μελλοντικές πληρωμές σύμφωνα με τους όρους της %2$@, μέχρι να ανακληθεί αυτή η εξουσιοδότηση. Μπορείτε να αλλάξετε αυτήν την επιλογή οποιαδήποτε στιγμή στις ρυθμίσεις Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Παρέχοντας τα στοιχεία του τραπεζικού λογαριασμού σας και επιβεβαιώνοντας αυτήν την πληρωμή, συμφωνείτε με το παρόν Αίτημα άμεσης χρέωσης και τη <terms>Σύμβαση παροχής υπηρεσιών Αιτήματος Άμεσης Χρέωσης</terms> και εξουσιοδοτείτε τη Stripe Payments Australia Pty Ltd, με εταιρικό αριθμό ACN 160 180 343 και Αναγνωριστικό αριθμό χρήστη άμεσης χρέωσης 507156 («Stripe») να χρεώνει τον λογαριασμό σας μέσω του Bulk Electronic Clearing System (BECS) εκ μέρους της %@ (ο «Έμπορος») για οποιαδήποτε ποσά, για τα οποία θα σας ενημερώνει χωριστά ο Έμπορος. Βεβαιώνετε ότι είστε δικαιούχος λογαριασμού ή εξουσιοδοτημένος υπογράφων για τον λογαριασμό που εμφανίζεται παραπάνω.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Με την παροχή των στοιχείων της κάρτας σας, επιτρέπετε στην %@ να χρεώνει την κάρτα σας για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Αν παράσχετε το email σας, συμφωνείτε να δημιουργηθεί ένας λογαριασμός στο Link και να αποθηκευτούν τα στοιχεία πληρωμής σας στο Link, σύμφωνα με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του Link.";
 
@@ -76,9 +88,17 @@
 
 "IBAN" = "IBAN";
 
+"Manage payment method" = "Διαχείριση μεθόδου πληρωμής";
+
+"Manage payment methods" = "Διαχείριση μεθόδων πληρωμής";
+
 "Manage your payment methods" = "Διαχειριστείτε τις μεθόδους πληρωμής σας";
 
 "Name on card" = "Όνομα στην κάρτα";
+
+"New card" = "Νέα κάρτα";
+
+"New payment method" = "Νέα μέθοδος πληρωμής";
 
 "Open your UPI app to approve your payment within %@" = "Ανοίξτε την εφαρμογή UPI για να εγκρίνετε την πληρωμή σας σε %@";
 
@@ -118,6 +138,8 @@
 
 "Remove card?" = "Αφαίρεση κάρτας;";
 
+"Remove payment method" = "Αφαίρεση μεθόδου πληρωμής";
+
 "Save" = "Αποθήκευση";
 
 "Save a new payment method" = "Αποθήκευση νέας μεθόδου πληρωμής";
@@ -134,6 +156,12 @@
 
 "Save your info for secure 1-click checkout with Link" = "Αποθήκευση των στοιχείων σας για ασφαλή ολοκλήρωση αγοράς με 1 κλικ μέσω Link";
 
+"Saved" = "Αποθηκεύτηκε";
+
+"Select card" = "Επιλέξτε κάρτα";
+
+"Select payment method" = "Επιλέξτε μέθοδο πληρωμής";
+
 "Select your payment method" = "Επιλέξτε τη μέθοδο πληρωμής σας";
 
 "Set up" = "Διαμόρφωση";
@@ -142,13 +170,23 @@
 
 "Show menu" = "Εμφάνιση μενού";
 
+"Simple, secure one-click payments" = "Απλές και ασφαλείς πληρωμές με ένα κλικ";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Παρουσιάστηκε κάποιο πρόβλημα κατά τη σύνδεση του λογαριασμού σας.\nΔοκιμάστε ξανά αργότερα.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Η Stripe θα καταθέσει 0,01 $ στον λογαριασμό σας σε 1-2 εργάσιμες ημέρες. Στη συνέχεια, θα λάβετε email με οδηγίες για να ολοκληρώσετε την αποθήκευση του τραπεζικού λογαριασμού σας με την %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Η Stripe θα καταθέσει 0,01 $ στον λογαριασμό σας σε 1-2 εργάσιμες ημέρες. Στη συνέχεια, θα λάβετε email με οδηγίες για να ολοκληρώσετε την πληρωμή στην %@.";
 
 "The IBAN you entered is incomplete." = "Ο κωδικός IBAN που εισαγάγατε είναι ελλιπής.";
 
-"Update card" = "Ενημέρωση κάρτας";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ο κωδικός IBAN που εισαγάγατε δεν είναι έγκυρος, ο κωδικός «%@» δεν είναι υποστηριζόμενος κωδικός χώρας.";
+
+"Update" = "Ενημέρωση";
+
+"Update card brand" = "Ενημέρωση επωνυμίας κάρτας";
+
+"View more" = "Προβολή περισσότερων";
 
 "Your IBAN should start with a two-letter country code." = "Ο κωδικός IBAN σας πρέπει να αρχίζει με έναν διψήφιο κωδικό χώρας.";
 

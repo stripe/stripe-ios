@@ -11,6 +11,8 @@ import UIKit
 
 /**
  A class that wraps an Element and adds a `paramsUpdater` closure, provided at initialization, used to implement `PaymentMethodElement.updateParams`
+ 
+ This exists because `IntentConfirmParams` is a type specific to `StripePaymentSheet`, whereas `Element` is shared
  */
 class PaymentMethodElementWrapper<WrappedElementType: Element> {
     typealias DefaultsApplier = (WrappedElementType, IntentConfirmParams) -> IntentConfirmParams
@@ -67,6 +69,9 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
         self.init(textFieldElement, defaultsApplier: defaultsApplier, paramsUpdater: paramsUpdater)
     }
 
+    public var debugDescription: String {
+        return String(describing: element)
+    }
 }
 
 // MARK: - PaymentMethodElement
@@ -81,6 +86,10 @@ extension PaymentMethodElementWrapper: PaymentMethodElement {
 
 // MARK: - Element
 extension PaymentMethodElementWrapper: Element {
+    var collectsUserInput: Bool {
+        return element.collectsUserInput
+    }
+
     var view: UIView {
         return element.view
     }
@@ -110,12 +119,14 @@ extension PaymentMethodElementWrapper: ElementDelegate {
 }
 
 extension Element {
+    /// A convenience method that returns this element plus any children elements if this is a `ContainerElement`.
+    /// Automatically unwraps any Elements wrapped in `PaymentMethodElementWrapper`.
     public func getAllUnwrappedSubElements() -> [Element] {
         switch self {
-        case let container as ContainerElement:
-            return [container] + container.elements.flatMap { $0.getAllUnwrappedSubElements() }
         case let wrapper as AnyPaymentMethodElementWrapper:
             return wrapper.anyElement.getAllUnwrappedSubElements()
+        case let container as ContainerElement:
+            return [container] + container.elements.flatMap { $0.getAllUnwrappedSubElements() }
         default:
             return [self]
         }

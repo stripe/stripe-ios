@@ -62,7 +62,7 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         inlineSignupElement.delegate = self
     }
 
-    func makePaymentOption() -> PaymentOption? {
+    func makePaymentOption(intent: Intent, elementsSession: STPElementsSession) -> PaymentOption? {
         guard let params = updateParams(params: .init(type: .stripe(paymentMethodType))) else {
             return nil
         }

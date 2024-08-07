@@ -103,8 +103,6 @@ import UIKit
         var payload = await commonPayload(apiClient)
 
         payload["event"] = analytic.event.rawValue
-        payload["additional_info"] = additionalInfo()
-        payload["product_usage"] = productUsage.sorted()
 
         payload.mergeAssertingOnOverwrites(analytic.params)
         return payload
@@ -168,7 +166,9 @@ extension STPAnalyticsClient {
         if STPAnalyticsClient.isSimulatorOrTest {
             payload["is_development"] = true
         }
-
+        payload["locale"] = Locale.autoupdatingCurrent.identifier
+        payload["additional_info"] = additionalInfo()
+        payload["product_usage"] = productUsage.sorted()
         return payload
     }
 }

@@ -6,7 +6,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import CaptureCore
 import Foundation
 @_spi(STP) import StripeCameraCore
 
@@ -16,14 +15,10 @@ import Foundation
 enum DocumentScannerOutput: Equatable {
     // Result with legacy detectors
     case legacy(IDDetectorOutput, BarcodeDetectorOutput?, MotionBlurDetector.Output, CameraSession.DeviceProperties?, LaplacianBlurDetector.Output)
-    // Result with MBDetector and IDDetector
-    case modern(IDDetectorOutput, BarcodeDetectorOutput?, MotionBlurDetector.Output, CameraSession.DeviceProperties?, LaplacianBlurDetector.Output, MBDetector.DetectorResult)
 
     var idDetectorOutput: IDDetectorOutput {
         switch self {
         case .legacy(let detectorOutput, _, _, _, _):
-            return detectorOutput
-        case .modern(let detectorOutput, _, _, _, _, _):
             return detectorOutput
         }
     }
@@ -32,16 +27,12 @@ enum DocumentScannerOutput: Equatable {
         switch self {
         case .legacy(_, _, _, let cameraProperties, _):
             return cameraProperties
-        case .modern(_, _, _, let cameraProperties, _, _):
-            return cameraProperties
         }
     }
 
     var barcode: BarcodeDetectorOutput? {
         switch self {
         case .legacy(_, let barcode, _, _, _):
-            return barcode
-        case .modern(_, let barcode, _, _, _, _):
             return barcode
         }
     }
@@ -56,13 +47,6 @@ enum DocumentScannerOutput: Equatable {
         switch self {
         case let .legacy(idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult):
             return checkWithDetectorResults(side, idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult)
-        case let .modern(idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult, mbResult):
-            // Return true if either mbResult captured the correct side or the all the other detectors check passes.
-            if case let .captured(_, _, mbSide) = mbResult, mbSide == side {
-                return true
-            } else {
-                return checkWithDetectorResults(side, idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult)
-            }
         }
 
     }

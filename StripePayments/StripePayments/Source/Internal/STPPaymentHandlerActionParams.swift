@@ -6,6 +6,7 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+import AuthenticationServices
 import Foundation
 @_spi(STP) import StripeCore
 
@@ -13,7 +14,7 @@ import Foundation
     import Stripe3DS2
 #endif
 
-@_spi(STP) public protocol STPPaymentHandlerActionParams: NSObject {
+@_spi(STP) public protocol STPPaymentHandlerActionParams: NSObject, ASWebAuthenticationPresentationContextProviding {
     var threeDS2Service: STDSThreeDS2Service? { get }
     var threeDS2Transaction: STDSTransaction? { get set }
     var authenticationContext: STPAuthenticationContext { get }
@@ -28,7 +29,6 @@ import Foundation
 
 @_spi(STP)
 public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHandlerActionParams {
-
     private var serviceInitialized = false
 
     @_spi(STP) public let authenticationContext: STPAuthenticationContext
@@ -101,6 +101,11 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
 
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         paymentIntentCompletion(status, paymentIntent, error)
+    }
+
+    // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
+    public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        return authenticationContext.authenticationPresentingViewController().view.window ?? ASPresentationAnchor()
     }
 }
 
@@ -176,5 +181,10 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         setupIntentCompletion(status, setupIntent, error)
+    }
+
+    // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
+    public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        return authenticationContext.authenticationPresentingViewController().view.window ?? ASPresentationAnchor()
     }
 }

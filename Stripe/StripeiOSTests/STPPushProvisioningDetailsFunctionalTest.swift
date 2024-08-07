@@ -8,17 +8,17 @@
 
 import Stripe
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPushProvisioningDetailsFunctionalTest: STPNetworkStubbingTestCase {
-    override func setUp() {
-        super.setUp()
-    }
+class STPPushProvisioningDetailsFunctionalTest: APIStubbedTestCase {
 
     func testRetrievePushProvisioningDetails() {
         // this API requires a secret key - replace the key below if you need to re-record the network traffic.
@@ -36,6 +36,22 @@ class STPPushProvisioningDetailsFunctionalTest: STPNetworkStubbingTestCase {
             Data(base64Encoded: cert2, options: [])!,
         ]
         let expectation = self.expectation(description: "Push provisioning details")
+
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/issuing/cards/ic_1C0Xig4JYtv6MPZK91WoXa9u/push_provisioning_details") ?? false
+        } response: { _ in
+            let pushDetailsResponseJSON = """
+                {
+                  "activation_data" : "TUJQQUMtMS1GSy00MDU1NTEuMS0tVERFQS1FNUVCNUJCQjhGMENDMjdCQjU5MUNCRTdCMTVDN0U2RjBENTQ5RDM1NkZERTRDQUZBNDBGOUNCMTA1MzI5NUQ4N0RBRTk0MTE0QTQyNENDQTY0NDAxRTFCQTExOTRBRDM=",
+                  "object" : "issuing.push_provisioning_details",
+                  "ephemeral_public_key" : "BHdLb5BNpoPrh9Btay8LwQ5oELoziQwJL7HagE3xB5mrbdgLa5iiwogu34Y32\\/xBEviaN31s\\/ONRXSetYT745ig=",
+                  "card" : "ic_1C0Xig4JYtv6MPZK91WoXa9u",
+                  "contents" : "UYeMxRqiYrjVzwqKcCGRVbgFXRspbDIKkWWly8e55caWkHYmO2DNnFtqD3y5S6bvGbe+bkNPCIkT1UzQQChCQOkb0P+cbVDBLaFGaDeJW0Mhca8\\/6GwbUx9lp4H3czqszG504PkiA89dNvnbtwUmlQOpk+B\\/IAMnkaXjD2xUBUtPX9xEr5EvckkDSHHFmpy5rbGfqnWsPbJNPwUiE+6mYbt643DqF9RpmgdFN84DImuMU1W0xshbkN7voq63L\\/6UgTW7liTzWVzKUT36TtaTw5TGKVf1Niqu5CHNu2NpDEnzrvcwUCgphxRVgezJyFfq1NjhZVlGA2nUKZuRvc\\/XjBwdE0fr4Enw5XfHbRQHorpv\\/S2rX4Cmn4VHJE1JDHWK3Wrn4HmMOCH+psVi+T5hPvy6+\\/v+0zRRmGGeFKQEx0soItHiQauN2\\/zO4QoC2DCQOAKGj1KSzqHhTgdxBcBu4TIOQRsIXu6zk1ItenHIdq4thD8vF8m3wgJ8Y3KcG3TwwgbjomxOjO4rX0AA9q2V6w0TXWQ1eWC8WfX11J30Zt\\/SbyYHoU8KrIdM2ANcOvIFHENnUNBcL7AO0+tjv9lVO7M9w7hKMiVJOnDGMeH2OQfnTBOJI8SEHGm2kDRNw\\/5+VGJ7pHA1wZ9y2IS6EvY8IeNhqZ7HdBXhn18X4AWThZqmNvGuZoEU\\/ZlPmfed\\/c0BgqSw5x6K9GuC5G9Nyee3O1E6wETf4Z3goNbFnRYNJ8m+A4DxUKbvhhRSNva4d\\/lRkoNuQj2ztPiLSAPVt1H7Dk3ryeyXCrqprHsjn5T35jXFOlm5whuyeGgeXWt3DUxsYXZGTiohZyU3bZELqW3EUSwjwQ=="
+                }
+                """
+            return HTTPStubsResponse(data: pushDetailsResponseJSON.data(using: .utf8)!, statusCode: 200, headers: nil)
+        }
+
         let params = STPPushProvisioningDetailsParams(
             cardId: "ic_1C0Xig4JYtv6MPZK91WoXa9u",
             certificates: certs,

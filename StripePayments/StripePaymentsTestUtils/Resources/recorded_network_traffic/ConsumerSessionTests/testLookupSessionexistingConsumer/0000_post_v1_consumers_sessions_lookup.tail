@@ -1,0 +1,109 @@
+POST
+/v1/consumers/sessions/lookup$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fconsumers%2Fsessions%2Flookup; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=ocs-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
+request-id: req_gOhgD3Y1ylLvkP
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 3754
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:08:49 GMT
+original-request: req_gOhgD3Y1ylLvkP
+stripe-version: 2020-08-27
+idempotency-key: db20b7d2-9a07-48b6-8f3a-88183cc45e55
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: 
+
+{
+  "exists" : true,
+  "experiments" : [
+    {
+      "response_id" : "",
+      "experiment_name" : "link_payment_element_recollection_flow",
+      "event_id" : "fabc9a9a-b10d-4b16-851d-7958edb73c89",
+      "variant" : "control"
+    }
+  ],
+  "error_message" : null,
+  "publishable_key" : "pk_test_51KZhvGBYgp8ftBq2dMntfdpGRvSoOFbaFnXa9ByFi3Lk9EqqAcQVuJUGwaQub9zFPwRLMuHViAYlaGnBjOWQvp4T00oRtbLrHO",
+  "consumer_session" : {
+    "unredacted_phone_number" : null,
+    "redacted_phone_number" : "+1********34",
+    "available_verification_factors" : [
+      {
+        "id" : "casvf_kB-9yHDtoi0xY6qz5pP_o5TIb-0EWH00ctY1sc0XZVyOtaO8NfFdn0-op6m5irQ0InYXBYEzuAHt9dh2BBw2w5r1DBghrtgrxjKYqLSUgeRKxQa7jKorHJ9D6Hn5-nPr01oTixi5tKOxKVcm44P3vv3_E1adcXrkD2UNlFbQ_tVOsl5YWL_WK9KzP4TTH504FsBSquv7tC_0jlSaHRmpMM_D",
+        "auto_prompt_login" : true,
+        "type" : "SMS"
+      },
+      {
+        "id" : "casvf_G5jhMkSpPz9njeW2Fj1nrR7XLlnTLO7pC8sl6W6ven2IqkyXsgIdKj_XZyGGKtdvugSvCK0cMWSGHriG0qLJD7VIijLfiZN6SF3ucIRJcQzD3GzUom_roaaBckI0NgdLFYaQf5mkngaSPoe16QoFaiQmBT27MpAsUhXJeDNoSO66XSI4jeUKIL-WXiX0QDZL98QyIF9S7aShWojpzLUibGi_",
+        "auto_prompt_login" : true,
+        "type" : "EMAIL"
+      },
+      {
+        "id" : "casvf_nrLLvKRFYIjwrs73fLr2GlDregxK7yNx1u5_QAMy8uhxzvz5OXgF1myj0ZPY5oGhX1OziJ8Iq6h3webTTz9Ob0411VHK5MmjHB_8ivvSss3AbuifLcwbl-rGLgNHvdWO9zWqgPdtXMGg1ihwxlojVgq_ataY9Ba_aiEev-PLv0i7jBGy4f2ZEx3LS_kyNYED4dm-uDvpja25r_CyS_w_pRL6",
+        "auto_prompt_login" : true,
+        "type" : "PHONE_MATCH"
+      },
+      {
+        "id" : "casvf_kqwVR55MIrSuVs6zBedYhfzcRQYwRIzRUo1FWj8JTbyzuakhkgB_AovWYFhMtf51MGCC9QS5lzrTSJacT9iuXAFmYvpRNiDDZn-kdRrAQ1Ju8VmZ_HaKwsGgs5blSiYOiGWFJ_TOvFkT_DOabgU8Gfh-UVZwI6aWXVGgJoSWhaSjelfSmf1A_0UuRg-a1IBCp_b5VpI11xedFlQhNpmKOwr8",
+        "auto_prompt_login" : true,
+        "type" : "PHONE_BY_LINK"
+      },
+      {
+        "id" : "casvf_8kdvYiTXs9_GKERLUKC6kYp_TVl1TADVDz3kLl8KW6YzvIER6T85Gr9Eg5SySWV9ifV3wHWfKtwOvScYgbnqM9kC1-hgmyLwdaf5WleQKn-j1OX8vFjMd6R9JjjeHI8oqOz6aJlCSjFjg25NPDP8O3mHKLWjFoI3enjb-4zBOEr3_drsKC290j_ztg3_FzVv9i_-dhiQVkLmKdiJjxERND2o",
+        "auto_prompt_login" : true,
+        "type" : "EMAIL_BY_LINK"
+      },
+      {
+        "id" : "casvf_k6YDvycKxPtvAVDDyvqsRtLxWtSiDobDYk5bVaeH8PwGiA8KR2DREHJMsUmLJ1PpIT8ULgSE-cTslQbdW2pHylLANQtDz-BVluOwNdtNgEprbT1OzJ2eGNKrTHmZZfl8vm_W-knwg7HEUk3bvDY96CpIEPsiIzvmvyS2Cz4-vQDHkfOJIgiZk7b1c1NXcOr0NGyE-wmzhLE_nE65lCcZ7lax",
+        "auto_prompt_login" : true,
+        "type" : "SNA"
+      }
+    ],
+    "phone_number_country" : null,
+    "redacted_formatted_phone_number" : "(***) *** **34",
+    "verification_sessions" : [
+
+    ],
+    "client_secret" : "pscs_AVsCY5VBeuX6TihAjz85esPT1N11orLsyf_jIbEQ4WSye3Nn94Wj53zMJvjKSa-k1suZnk8ubd6xZB3IyKwj9fdP4icKvaooizQWitNCS23lmgR-rx8iRm8ybcSeEGdUKEJp-C4D0bqCa1wAADVsn_DfkgqoY3nNRONzkAOSXk-bsf1Zf4g6DuHDzWmtQoFERVp50sl6zAWDRHVab2VC8BDSHo1EGtGQKuyLKa_aIucAUzbLFWCpv5C9Hd8Tl3JNqcvUS1AprTamncSnhqTc4DwilUNEuDKh0VGgiOUs5og5dpm6GSDRPbBEnJylysleKfvtU95fLOfiZpvWW-EW7coa8W1BsuDahxmFGFNg4syotW9cpf1IOsp1_fYgGcn-UzVrZDdmsBQBU1D7-7bv162s4hEHIUk1koR5ss8XwOKkIb2FOyMq1ldvMPg",
+    "support_payment_details_types" : [
+      "CARD",
+      "BANK_ACCOUNT"
+    ],
+    "email_address" : "mobile-payments-sdk-ci+a-consumer@stripe.com"
+  },
+  "redacted_payment_details" : [
+
+  ],
+  "shipping_addresses" : [
+
+  ],
+  "settings" : {
+    "link_app_redirect_token" : null,
+    "email_otp_verify_phone_despite_sms_otp" : true,
+    "link_card_program_names_enabled" : false,
+    "found_using_partial_cookie" : false,
+    "full_name_collection_required" : false,
+    "has_previous_merchant_relationship" : false,
+    "purchase_protections_holdback" : null,
+    "has_passkey" : false,
+    "email_otp_requires_additional_info" : true
+  },
+  "auth_session_client_secret" : null,
+  "account_id" : "acct_1KZhvGBYgp8ftBq2"
+}

@@ -83,6 +83,10 @@ extension UIColor {
         return UIColor(red: 254 / 255.0, green: 249 / 255.0, blue: 218 / 255.0, alpha: 1)  // #fef9da
     }
 
+    static var attention300: UIColor {
+        return UIColor(red: 247 / 255.0, green: 135 / 255.0, blue: 15 / 255.0, alpha: 1)  // #f7870f
+    }
+
     static var neutral0: UIColor {
         return .white
     }
@@ -139,7 +143,7 @@ extension UIColor {
         return UIColor(red: 103 / 255.0, green: 93 / 255.0, blue: 255 / 255.0, alpha: 1)  // #675dff
     }
 
-    private static var brand600: UIColor {
+    static var brand600: UIColor {
         return UIColor(red: 83 / 255.0, green: 58 / 255.0, blue: 253 / 255.0, alpha: 1)  // #533afd
     }
 
@@ -159,12 +163,20 @@ extension UIColor {
         return UIColor(red: 34 / 255.0, green: 132 / 255.0, blue: 3 / 255.0, alpha: 1)  // #228403
     }
 
-    static var linkBrand200: UIColor {
-        return UIColor(red: 166 / 255.0, green: 251 / 255.0, blue: 221 / 255.0, alpha: 1)  // #a6fbdd
+    static var linkGreen50: UIColor {
+        return UIColor(red: 230 / 255.0, green: 255 / 255.0, blue: 237 / 255.0, alpha: 1)  // #e6ffed
     }
 
-    static var linkBrand600: UIColor {
-        return UIColor(red: 26 / 255.0, green: 197 / 255.0, blue: 155 / 255.0, alpha: 1)  // #1ac59b
+    static var linkGreen200: UIColor {
+        return UIColor(red: 0 / 255.0, green: 214 / 255.0, blue: 111 / 255.0, alpha: 1)  // #00D66F
+    }
+
+    static var linkGreen500: UIColor {
+        return UIColor(red: 0 / 255.0, green: 133 / 255.0, blue: 69 / 255.0, alpha: 1)  // #008545
+    }
+
+    static var linkGreen900: UIColor {
+        return UIColor(red: 1 / 255.0, green: 30 / 255.0, blue: 15 / 255.0, alpha: 1)  // #011E0F
     }
 
     static func dynamic(light: UIColor, dark: UIColor) -> UIColor {

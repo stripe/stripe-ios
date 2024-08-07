@@ -31,6 +31,42 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Experience
+
+    enum Experience: String, CaseIterable, Identifiable, Hashable {
+        case financialConnections = "financial_connections"
+        case instantDebits = "instant_debits"
+
+        var displayName: String {
+            switch self {
+            case .financialConnections: "Financial Connections"
+            case .instantDebits: "Instant Debits"
+            }
+        }
+
+        var id: String {
+            return rawValue
+        }
+    }
+
+    private static let experienceKey = "experience"
+
+    var experience: Experience {
+        get {
+            if
+                let sdkTypeString = configurationStore[Self.experienceKey] as? String,
+                let sdkType = Experience(rawValue: sdkTypeString)
+            {
+                return sdkType
+            } else {
+                return .financialConnections
+            }
+        }
+        set {
+            configurationStore[Self.experienceKey] = newValue.rawValue
+        }
+    }
+
     // MARK: - SDK Type
 
     enum SDKType: String, CaseIterable, Identifiable, Hashable {
@@ -202,6 +238,7 @@ final class PlaygroundConfiguration {
     enum UseCase: String, CaseIterable, Identifiable, Hashable {
         case data = "data"
         case paymentIntent = "payment_intent"
+        case token = "token"
 
         var id: String {
             return rawValue
@@ -237,6 +274,20 @@ final class PlaygroundConfiguration {
         }
         set {
             configurationStore[Self.emailKey] = newValue
+        }
+    }
+
+    private static let phoneKey = "phone"
+    var phone: String {
+        get {
+            if let phone = configurationStore[Self.phoneKey] as? String {
+                return phone
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationStore[Self.phoneKey] = newValue
         }
     }
 
@@ -320,6 +371,7 @@ final class PlaygroundConfiguration {
             let dictionary = jsonObject as? [String: Any]
         else {
             // this prevents anyone from overriding the configuration with something wrong
+            assertionFailure("failed to update configuration string")
             return
         }
 
@@ -330,6 +382,15 @@ final class PlaygroundConfiguration {
             self.sdkType = sdkType
         } else {
             self.sdkType = .native
+        }
+
+        if
+            let experienceString = dictionary[Self.experienceKey] as? String,
+            let experience = Experience(rawValue: experienceString)
+        {
+            self.experience = experience
+        } else {
+            self.experience = .financialConnections
         }
 
         if
@@ -373,6 +434,12 @@ final class PlaygroundConfiguration {
             self.email = email
         } else {
             self.email = ""
+        }
+
+        if let phone = dictionary[Self.phoneKey] as? String {
+            self.phone = phone
+        } else {
+            self.phone = ""
         }
 
         if let balancesPermission = dictionary[Self.balancesPermissionKey] as? Bool {

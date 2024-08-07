@@ -17,16 +17,18 @@ final class InstitutionTableFooterView: UIView {
         title: String,
         subtitle: String?,
         image: Image,
+        theme: FinancialConnectionsTheme,
         didSelect: @escaping () -> Void
     ) {
         self.didSelect = didSelect
         super.init(frame: .zero)
 
-        let institutionCellView = InstitutionCellView()
+        let institutionCellView = InstitutionCellView(theme: theme)
         institutionCellView.customize(
             iconView: RoundedIconView(
                 image: .image(image),
-                style: .rounded
+                style: .rounded,
+                theme: theme
             ),
             title: title,
             subtitle: subtitle
@@ -75,12 +77,14 @@ private struct InstitutionTableFooterViewUIViewRepresentable: UIViewRepresentabl
     let title: String
     let subtitle: String
     let image: Image
+    let theme: FinancialConnectionsTheme
 
     func makeUIView(context: Context) -> InstitutionTableFooterView {
         InstitutionTableFooterView(
             title: title,
             subtitle: subtitle,
             image: image,
+            theme: theme,
             didSelect: {}
         )
     }
@@ -96,14 +100,24 @@ struct InstitutionTableFooterView_Previews: PreviewProvider {
             InstitutionTableFooterViewUIViewRepresentable(
                 title: "Don't see your bank?",
                 subtitle: "Enter your bank account and routing numbers",
-                image: .search
+                image: .search,
+                theme: .light
             )
             .frame(maxHeight: 100)
 
             InstitutionTableFooterViewUIViewRepresentable(
                 title: "No results",
                 subtitle: "Double check your spelling and search terms",
-                image: .cancel_circle
+                image: .cancel_circle,
+                theme: .light
+            )
+            .frame(maxHeight: 100)
+
+            InstitutionTableFooterViewUIViewRepresentable(
+                title: "No results",
+                subtitle: "Double check your spelling and search terms",
+                image: .cancel_circle,
+                theme: .linkLight
             )
             .frame(maxHeight: 100)
 

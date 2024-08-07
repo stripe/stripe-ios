@@ -28,6 +28,7 @@ protocol NativeFlowDataManager: AnyObject {
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get set }
     var accountNumberLast4: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
+    var consumerPublishableKey: String? { get set }
     var saveToLinkWithStripeSucceeded: Bool? { get set }
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneMessage: String? { get set }
@@ -38,13 +39,6 @@ protocol NativeFlowDataManager: AnyObject {
 
 class NativeFlowAPIDataManager: NativeFlowDataManager {
 
-    private lazy var consentCombinedLogoExperiment: ExperimentHelper = {
-        return ExperimentHelper(
-            experimentName: "connections_consent_combined_logo",
-            manifest: manifest,
-            analyticsClient: analyticsClient
-        )
-    }()
     var manifest: FinancialConnectionsSessionManifest {
         didSet {
             didUpdateManifest()
@@ -57,21 +51,16 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         return visualUpdate.reducedBranding
     }
     var merchantLogo: [String]? {
-        if consentCombinedLogoExperiment.isEnabled(logExposure: true) {
-            let merchantLogo = visualUpdate.merchantLogo
-            if merchantLogo.isEmpty || merchantLogo.count == 2 || merchantLogo.count == 3 {
-                // show merchant logo inside of consent pane
-                return visualUpdate.merchantLogo
-            } else {
-                // if `merchantLogo.count > 3`, that is an invalid case
-                //
-                // we want to log experiment exposure regardless because
-                // if experiment is not working fine (ex. returns 1 or 4 logos)
-                // then the "cost" of those bugs should show up in the `treatment` data
-                return nil
-            }
+        let merchantLogo = visualUpdate.merchantLogo
+        if merchantLogo.isEmpty || merchantLogo.count == 2 || merchantLogo.count == 3 {
+            // show merchant logo inside of consent pane
+            return visualUpdate.merchantLogo
         } else {
-            // show the "control" experience of showing logo in the nav bar
+            // if `merchantLogo.count > 3`, that is an invalid case
+            //
+            // we want to log experiment exposure regardless because
+            // if experiment is not working fine (ex. returns 1 or 4 logos)
+            // then the "cost" of those bugs should show up in the `treatment` data
             return nil
         }
     }
@@ -92,10 +81,21 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var errorPaneReferrerPane: FinancialConnectionsSessionManifest.NextPane?
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     var accountNumberLast4: String?
-    var consumerSession: ConsumerSessionData?
     var saveToLinkWithStripeSucceeded: Bool?
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
     var customSuccessPaneMessage: String?
+
+    var consumerSession: ConsumerSessionData? {
+        didSet {
+            apiClient.consumerSession = consumerSession
+        }
+    }
+
+    var consumerPublishableKey: String? {
+        didSet {
+            apiClient.consumerPublishableKey = consumerPublishableKey
+        }
+    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -137,6 +137,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
 
     private func didUpdateManifest() {
+        apiClient.isLinkWithStripe = manifest.isLinkWithStripe == true
         analyticsClient.setAdditionalParameters(fromManifest: manifest)
     }
 }

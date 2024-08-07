@@ -1,4 +1,64 @@
-## x.x.x x-x-x
+## 23.29.0 2024-08-05
+### PaymentSheet
+* [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
+* [Added] When a card is saved (ie you're using a PaymentIntent + setup_future_usage or SetupIntent), legal disclaimer text now appears below the form indicating the card can be charged for future payments.
+* [Fixed] iOS 18 Compatibility with removing multiple saved payment methods
+* [Fixed] Fixed an issue where the keyboard could focus on a hidden phone number field.
+* [Added] Support for Sunbit (Private Beta) with PaymentIntents.
+* [Added] Support for Billie (Private Beta) with PaymentIntents.
+* [Fixed] Fixed an issue where saved payment method UI wouldn't respect `PaymentSheet.Configuration.style` when selected.
+* [Added] Support for Satispay (Private Beta) with PaymentIntents.
+
+### Payments
+* [Added] Support for Sunbit (Private Beta) bindings.
+* [Added] Support for Billie (Private Beta) bindings.
+* [Added] Support for Satispay (Private Beta) bindings.
+
+## 23.28.1 2024-07-16
+### Payments
+* [Fixed] Improved reliability when paying or setting up with Cash App Pay.
+* [Fixed] Pass stripeAccount context when presenting PayWithLinkWebController for connected accounts
+
+## 23.28.0 2024-07-08
+
+### Payments
+* [Fixed] An issue where the correct card brand was not being displayed for card brand choice in STPPaymentOptionsViewController and STPPaymentContext.
+* [Added] Adds coupon support to STPApplePayContext with a new `didChangeCouponCode` delegate method (h/t @JoeyLeeMEA).
+* [Fixed] Fixed an issue where successful TWINT payments were sometimes incorrectly considered 'canceled'.
+
+## PaymentSheet
+* [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
+* [Fixed] Fixed an issue where amounts with currency=IDR were displayed as-is, instead of dropping the last two digits.
+* [Fixed] Fixed an issue where some payment method images in the horizontal scrollview could briefly flash.
+
+## 23.27.6 2024-06-25
+### All
+* [Fixed] Improved reliability when paying with Swish.
+
+## 23.27.5 2024-06-20
+### PaymentSheet
+* [Fixed] An issue that was preventing users from completing checkout with SetupIntents and PaymentIntents using `setup_future_usage` for the following payment method types: Amazon Pay, Cash App Pay, PayPal, and Revolut Pay.
+
+## 23.27.4 2024-06-18
+### PaymentSheet
+* [Fixed] Fixed an issue where when displaying an LPM with no input fields, the sheet would take up the entire height of the screen.
+
+## 23.27.3 2024-06-14
+### PaymentSheet
+* [Fixed] Fixed an issue where changing the country of a phone number would not update the UI when the phone number's validity changed.
+* [Changed] The "save this card" checkbox is now unchecked by default. To change this behavior, set your PaymentSheet.Configuration.savePaymentMethodOptInBehavior to `.requiresOptOut`.
+* [Fixed] Fixed an issue where PaymentSheet would not present in the iOS 18 beta when using SwiftUI.
+* [Fixed] Fixed an issue in PaymentSheet.FlowController that could lead to the CVC recollection form being shown on presentPaymentOptions()
+
+### CustomerSheet
+* [Fixed] Fixed an issue where CustomerSheet would not present in the iOS 18 beta when using SwiftUI.
+
+### Payments
+* [Added] Updated support for MobilePay bindings.
+* [Changed] Some Payment Methods (including Klarna and PayPal) may now authenticate using ASWebAuthenticationSession, enabling these payment methods to share session storage across apps.
+* [Fixed] Fixed printing spurious STPAssertionFailure warnings.
+
+## 23.27.2 2024-05-06
 ### CardScan
 * [Changed] ScannedCard to allow access for expiryMonth, expiryYear and name.
 
@@ -18,6 +78,9 @@
 
 ### Apple Pay
 * [Changed] Apple Pay additionalEnabledApplePayNetworks are now in front of the supported network list.
+
+### PaymentsUI
+* [Added] Added support for `onBehalfOf` to STPPaymentCardTextField and STPCardFormView. This parameter may be required when setting a connected account as the merchant of record for a payment. For more information, see the [Connect docs](https://docs.stripe.com/connect/charges#on_behalf_of).
 
 ## 23.27.0 2024-04-08
 ### Payments

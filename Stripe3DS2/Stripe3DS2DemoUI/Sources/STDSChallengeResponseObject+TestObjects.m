@@ -183,15 +183,16 @@
 }
 
 + (id<STDSChallengeResponseImage>)issuerImage {
-    return [[STDSChallengeResponseImageObject alloc] initWithMediumDensityURL:[NSURL URLWithString:@"https://via.placeholder.com/150.png?text=150+ISSUER"]
-                                                               highDensityURL:[NSURL URLWithString:@"https://via.placeholder.com/300.png?text=300+ISSUER"]
-                                                          extraHighDensityURL:[NSURL URLWithString:@"https://via.placeholder.com/450.png?text=450+ISSUER"]];
+    return [[STDSChallengeResponseImageObject alloc] initWithMediumDensityURL:
+            [[NSBundle mainBundle] URLForResource:@"150-issuer" withExtension:@"png"]
+                                                               highDensityURL:[[NSBundle mainBundle] URLForResource:@"300-issuer" withExtension:@"png"]
+                                                          extraHighDensityURL:[[NSBundle mainBundle] URLForResource:@"450-issuer" withExtension:@"png"]];
 }
 
 + (id<STDSChallengeResponseImage>)paymentImage {
-    return [[STDSChallengeResponseImageObject alloc] initWithMediumDensityURL:[NSURL URLWithString:@"https://via.placeholder.com/150.png?text=150+PAYMENT"]
-                                                               highDensityURL:[NSURL URLWithString:@"https://via.placeholder.com/300.png?text=300+PAYMENT"]
-                                                          extraHighDensityURL:[NSURL URLWithString:@"https://via.placeholder.com/450.png?text=450+PAYMENT"]];
+    return [[STDSChallengeResponseImageObject alloc] initWithMediumDensityURL:[[NSBundle mainBundle] URLForResource:@"150-payment" withExtension:@"png"]
+                                                               highDensityURL:[[NSBundle mainBundle] URLForResource:@"300-payment" withExtension:@"png"]
+                                                          extraHighDensityURL:[[NSBundle mainBundle] URLForResource:@"450-payment" withExtension:@"png"]];
 }
 
 @end

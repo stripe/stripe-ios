@@ -32,15 +32,14 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             STPPaymentMethod._testUSBankAccount(),
             STPPaymentMethod._testSEPA(),
         ]
-        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false)
-        let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession,
-                                           intentConfig: .init(mode: .payment(amount: 0, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic), confirmHandler: { _, _, _ in }))
+        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true)
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 0, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic), confirmHandler: { _, _, _ in }))
         let sut = SavedPaymentOptionsViewController(savedPaymentMethods: paymentMethods,
                                                     configuration: config,
                                                     paymentSheetConfiguration: PaymentSheet.Configuration(),
                                                     intent: intent,
                                                     appearance: appearance)
-        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        let testWindow = UIWindow()
         testWindow.isHidden = false
         if darkMode {
             testWindow.overrideUserInterfaceStyle = .dark

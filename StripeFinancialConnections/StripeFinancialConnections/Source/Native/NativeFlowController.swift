@@ -106,6 +106,7 @@ class NativeFlowController {
         }
         if showConfirmationAlert {
             let closeConfirmationViewController = CloseConfirmationViewController(
+                theme: dataManager.manifest.theme,
                 didSelectClose: {
                     finishClosingAuthFlow()
                 }
@@ -151,13 +152,13 @@ extension NativeFlowController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
                     closeItem: self.navigationBarCloseBarButtonItem,
-                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    shouldLeftAlignStripeLogo: viewControllers.first == viewController
-                        && viewController is ConsentViewController
+                    theme: self.dataManager.manifest.theme,
+                    isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
             self.navigationController.setViewControllers(viewControllers, animated: animated)
@@ -198,12 +199,13 @@ extension NativeFlowController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
                     closeItem: self.navigationBarCloseBarButtonItem,
-                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    shouldLeftAlignStripeLogo: false  // if we `push`, this is not the first VC
+                    theme: self.dataManager.manifest.theme,
+                    isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
             } else {
@@ -983,6 +985,42 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
     }
 }
 
+// MARK: - LinkLoginViewControllerDelegate
+
+extension NativeFlowController: LinkLoginViewControllerDelegate {
+    func linkLoginViewController(
+        _ viewController: LinkLoginViewController,
+        foundReturningUserWith lookupConsumerSessionResponse: LookupConsumerSessionResponse
+    ) {
+        dataManager.consumerPublishableKey = lookupConsumerSessionResponse.publishableKey
+        dataManager.consumerSession = lookupConsumerSessionResponse.consumerSession
+        pushPane(.networkingLinkVerification, animated: true)
+    }
+
+    func linkLoginViewController(
+        _ viewController: LinkLoginViewController,
+        receivedLinkSignUpResponse linkSignUpResponse: LinkSignUpResponse
+    ) {
+        dataManager.consumerPublishableKey = linkSignUpResponse.publishableKey
+        dataManager.consumerSession = linkSignUpResponse.consumerSession
+    }
+
+    func linkLoginViewController(
+        _ viewController: LinkLoginViewController,
+        signedUpAttachedAndSynchronized synchronizePayload: FinancialConnectionsSynchronize
+    ) {
+        dataManager.manifest = synchronizePayload.manifest
+        pushPane(synchronizePayload.manifest.nextPane, animated: true)
+    }
+
+    func linkLoginViewController(
+        _ viewController: LinkLoginViewController,
+        didReceiveTerminalError error: any Error
+    ) {
+        showTerminalError(error)
+    }
+}
+
 // MARK: - ErrorViewControllerDelegate
 
 extension NativeFlowController: ErrorViewControllerDelegate {
@@ -1109,8 +1147,16 @@ private func CreatePaneViewController(
         assertionFailure("Not supported")
         viewController = nil
     case .linkLogin:
-        assertionFailure("Not supported")
-        viewController = nil
+        let linkLoginDataSource = LinkLoginDataSourceImplementation(
+            manifest: dataManager.manifest,
+            analyticsClient: dataManager.analyticsClient,
+            clientSecret: dataManager.clientSecret,
+            returnURL: dataManager.returnURL,
+            apiClient: dataManager.apiClient
+        )
+        let linkLoginViewController = LinkLoginViewController(dataSource: linkLoginDataSource)
+        linkLoginViewController.delegate = nativeFlowController
+        viewController = linkLoginViewController
     case .manualEntry:
         nativeFlowController.delegate?.nativeFlowController(
             nativeFlowController,
@@ -1146,7 +1192,9 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkVerification:
-        if let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress {
+        let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress
+        let consumerSessionEmailAddress = dataManager.consumerSession?.emailAddress
+        if let accountholderCustomerEmailAddress = consumerSessionEmailAddress ?? accountholderCustomerEmailAddress {
             let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
                 accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
                 manifest: dataManager.manifest,
@@ -1284,6 +1332,7 @@ private func CreatePaneViewController(
         let resetFlowDataSource = ResetFlowDataSourceImplementation(
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
+            manifest: dataManager.manifest,
             analyticsClient: dataManager.analyticsClient
         )
         let resetFlowViewController = ResetFlowViewController(
@@ -1295,7 +1344,8 @@ private func CreatePaneViewController(
         if let terminalError = dataManager.terminalError {
             let terminalErrorViewController = TerminalErrorViewController(
                 error: terminalError,
-                allowManualEntry: dataManager.manifest.allowManualEntry
+                allowManualEntry: dataManager.manifest.allowManualEntry,
+                theme: dataManager.manifest.theme
             )
             terminalErrorViewController.delegate = nativeFlowController
             viewController = terminalErrorViewController
@@ -1348,7 +1398,7 @@ private func CreatePaneViewController(
     return viewController
 }
 
-private func ShouldHideStripeLogoInNavigationBar(
+private func ShouldHideLogoInNavigationBar(
     forViewController viewController: UIViewController,
     reducedBranding: Bool,
     merchantLogo: [String]?

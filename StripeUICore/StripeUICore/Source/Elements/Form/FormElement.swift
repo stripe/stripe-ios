@@ -70,7 +70,7 @@ import UIKit
         self.elements.forEach { $0.delegate = self }
     }
 
-    public func setElements(_ elements: [Element], hidden: Bool, animated: Bool) {
+    public func toggleElements(_ elements: [Element], hidden: Bool, animated: Bool) {
         formView.setViews(elements.map({ $0.view }), hidden: hidden, animated: animated)
     }
 }

@@ -10,6 +10,8 @@
 
 "Back of identity card" = "Revers del document d'identitat";
 
+"Back of identity document" = "Dors del document d'identitat";
+
 "Camera permission" = "Permís de càmera";
 
 "Camera unavailable" = "Càmera no disponible";
@@ -33,6 +35,8 @@
 "Front identity card photo successfully uploaded" = "La foto de l'anvers del document d'identitat s'ha carregat correctament";
 
 "Front of identity card" = "Anvers del document d'identitat";
+
+"Front of identity document" = "Anvers del document d'identitat";
 
 "Get ready to scan your photo ID" = "Prepareu-vos per escanejar la vostra identificació amb foto";
 
