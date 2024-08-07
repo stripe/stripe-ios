@@ -10,6 +10,32 @@ import StripePaymentsTestUtils
 import XCTest
 
 class IntentConfirmParamsTest: XCTestCase {
+    func testAllCases() {
+        let testCases: [(IntentConfirmParams.SaveForFutureUseCheckboxState, PaymentSheetComponentFeature?, Bool, STPPaymentMethodAllowRedisplay)] = [
+            // Legacy
+            (saveForFutureUseCheckboxState: .hidden, paymentSheetComponentFeature: nil, isSettingUp: true, expectedResult: .unspecified),
+            (saveForFutureUseCheckboxState: .selected, paymentSheetComponentFeature: nil, isSettingUp: true, expectedResult: .unspecified),
+            (saveForFutureUseCheckboxState: .deselected, paymentSheetComponentFeature: nil, isSettingUp: false, expectedResult: .unspecified),
+
+            // MARK: CustomerSession, PI+SFU & SetupIntent
+            (saveForFutureUseCheckboxState: .selected, paymentSheetComponentFeature: .init(paymentMethodSave: true, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: nil), isSettingUp: true, expectedResult: .always),
+
+        ]
+        for (saveForFutureUseCheckboxState, paymentSheetComponentFeature, isSettingUp, expectedResult) in testCases {
+            XCTContext.runActivity(named: "checkboxState: \(saveForFutureUseCheckboxState), paymentSheetComponentFeatur isSettingUp: \(isSettingUp)") { activity in
+                
+                let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+
+                intentConfirmParams.saveForFutureUseCheckboxState = saveForFutureUseCheckboxState
+                intentConfirmParams.setAllowRedisplay(paymentSheetFeatures: paymentSheetComponentFeature, isSettingUp: isSettingUp)
+
+                XCTAssertEqual(expectedResult, intentConfirmParams.paymentMethodParams.allowRedisplay)
+            }
+        }
+
+
+    }
+
     // MARK: Legacy
     func testSetAllowRedisplay_legacySI() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
