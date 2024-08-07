@@ -1277,6 +1277,57 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    // MARK: - Satispay
+
+    func testConfirmPaymentIntentWithSatispay() {
+        var clientSecret: String?
+        let createExpectation = self.expectation(description: "Create PaymentIntent.")
+        STPTestingAPIClient.shared.createPaymentIntent(
+            withParams: [
+                "payment_method_types": ["satispay"],
+                "currency": "eur",
+                "amount": NSNumber(value: 6000),
+            ],
+            account: "it"
+        ) { createdClientSecret, creationError in
+            XCTAssertNotNil(createdClientSecret)
+            XCTAssertNil(creationError)
+            createExpectation.fulfill()
+            clientSecret = createdClientSecret
+        }
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        XCTAssertNotNil(clientSecret)
+
+        let client = STPAPIClient(publishableKey: STPTestingITPublishableKey)
+        let expectation = self.expectation(description: "Payment Intent confirm")
+
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret!)
+        paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
+            satispay: STPPaymentMethodSatispayParams(),
+            billingDetails: nil,
+            metadata: [
+                "test_key": "test_value",
+            ]
+        )
+
+        let options = STPConfirmPaymentMethodOptions()
+        paymentIntentParams.paymentMethodOptions = options
+        paymentIntentParams.returnURL = "example-app-scheme://unused"
+        client.confirmPaymentIntent(with: paymentIntentParams) { paymentIntent, error in
+            XCTAssertNil(error, "With valid key + secret, should be able to confirm the intent")
+            XCTAssertNotNil(paymentIntent)
+            XCTAssertEqual(paymentIntent?.stripeId, paymentIntentParams.stripeId)
+            XCTAssertFalse(paymentIntent!.livemode)
+            XCTAssertNotNil(paymentIntent?.paymentMethodId)
+
+            XCTAssertEqual(paymentIntent?.status, .requiresAction)
+            XCTAssertEqual(paymentIntent!.nextAction?.type, .redirectToURL)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+
     // MARK: - Multibanco
 
     func testConfirmPaymentIntentWithMultibanco() throws {

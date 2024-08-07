@@ -239,7 +239,7 @@ extension PaymentSheet {
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
-                        .sunbit, .billie:
+                        .sunbit, .billie, .satispay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -252,7 +252,7 @@ extension PaymentSheet {
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
-                            .mobilePay, .swish, .twint, .sunbit, .billie:
+                            .mobilePay, .swish, .twint, .sunbit, .billie, .satispay:
                         return [.returnURL]
                     case .USBankAccount:
                         return [

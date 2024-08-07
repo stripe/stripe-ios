@@ -346,7 +346,8 @@ extension CustomerSheet_ConfirmFlowTests {
                                                   currency: nil,
                                                   amount: nil,
                                                   countryCode: nil,
-                                                  savePaymentMethodConsentBehavior: .legacy)
+                                                  savePaymentMethodConsentBehavior: .legacy,
+                                                  analyticsHelper: ._testValue())
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view)

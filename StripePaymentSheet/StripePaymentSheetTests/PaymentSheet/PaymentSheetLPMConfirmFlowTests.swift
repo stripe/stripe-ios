@@ -37,6 +37,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         case FR = "fr"
         case TH = "th"
         case DE = "de"
+        case IT = "it"
 
         var publishableKey: String {
             switch self {
@@ -64,6 +65,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingTHPublishableKey
             case .DE:
                 return STPTestingDEPublishableKey
+            case .IT:
+                return STPTestingITPublishableKey
             }
         }
     }
@@ -210,6 +213,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .billie,
                                merchantCountry: .DE) { form in
             // Billie has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
+    func testSatispayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .satispay,
+                               merchantCountry: .IT) { form in
+            // Satispay has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
@@ -594,7 +607,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
         for (description, intent) in intents {
             // Make the form
-            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, delegate: self)
+            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
             let paymentMethodForm = formVC.form
 
             // Add to window to avoid layout errors due to zero size and presentation errors

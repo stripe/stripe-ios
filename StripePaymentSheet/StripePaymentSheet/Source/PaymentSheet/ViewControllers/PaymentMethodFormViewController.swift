@@ -21,6 +21,7 @@ class PaymentMethodFormViewController: UIViewController {
     let elementsSession: STPElementsSession
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheet.Configuration
+    let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
         // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have a divergent path for link. Where is the setDefaultBillingDetailsIfNecessary call, for example?
@@ -63,6 +64,7 @@ class PaymentMethodFormViewController: UIViewController {
         formCache: PaymentMethodFormCache,
         configuration: PaymentSheet.Configuration,
         headerView: UIView?,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: PaymentMethodFormViewControllerDelegate
     ) {
         self.paymentMethodType = type
@@ -81,11 +83,12 @@ class PaymentMethodFormViewController: UIViewController {
                 configuration: .paymentSheet(configuration),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
-                linkAccount: LinkAccountContext.shared.account
+                linkAccount: LinkAccountContext.shared.account,
+                analyticsHelper: analyticsHelper
             ).make()
             self.formCache[type] = form
         }
-
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -96,7 +99,7 @@ class PaymentMethodFormViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: paymentMethodType.identifier, apiClient: configuration.apiClient)
+        analyticsHelper.logFormShown(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         sendEventToSubviews(.viewDidAppear, from: view)
         // The form is cached and could have been shared across other instance of PaymentMethodFormViewController after this instance was initialized, so we set the delegate in viewDidAppear to ensure that the form's delegate is up to date.
         form.delegate = self
@@ -137,7 +140,7 @@ extension PaymentMethodFormViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: paymentMethodType.identifier)
+        analyticsHelper.logFormInteracted(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         delegate?.didUpdate(self)
         animateHeightChange()
     }

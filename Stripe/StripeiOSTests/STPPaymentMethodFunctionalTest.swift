@@ -304,6 +304,21 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertNil(error)
             XCTAssertNotNil(paymentMethod)
             XCTAssertEqual(paymentMethod?.type, .billie)
+            XCTAssertNotNil(paymentMethod?.billie, "The `billie` property must be populated")
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testCreateSatispayPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingITPublishableKey)
+        let params = STPPaymentMethodParams(satispay: STPPaymentMethodSatispayParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .satispay)
+            XCTAssertNotNil(paymentMethod?.satispay, "The `satispay` property must be populated")
             expectation.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)

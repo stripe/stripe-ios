@@ -10,10 +10,12 @@
 * [Added] Support for Sunbit (Private Beta) with PaymentIntents.
 * [Added] Support for Billie (Private Beta) with PaymentIntents.
 * [Fixed] Fixed an issue where saved payment method UI wouldn't respect `PaymentSheet.Configuration.style` when selected.
+* [Added] Support for Satispay (Private Beta) with PaymentIntents.
 
 ### Payments
 * [Added] Support for Sunbit (Private Beta) bindings.
 * [Added] Support for Billie (Private Beta) bindings.
+* [Added] Support for Satispay (Private Beta) bindings.
 
 ## 23.28.1 2024-07-16
 ### Payments
