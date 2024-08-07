@@ -14,7 +14,7 @@ extension StripeAPI.PaymentIntent {
     /// - Parameters:
     ///   - paymentIntent: The Stripe PaymentIntent from the response. Will be nil if an error occurs. - seealso: PaymentIntent
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(STP) public typealias PaymentIntentCompletionBlock = (
+    @_spi(STP) public typealias PaymentIntentCompletionBlock = @Sendable (
         Result<StripeAPI.PaymentIntent, Error>
     ) -> Void
 

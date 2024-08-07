@@ -9,12 +9,12 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI.SetupIntent {
+@MainActor extension StripeAPI.SetupIntent {
     /// A callback to be run with a SetupIntent response from the Stripe API.
     /// - Parameters:
     ///   - setupIntent: The Stripe SetupIntent from the response. Will be nil if an error occurs. - seealso: SetupIntent
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(STP) public typealias SetupIntentCompletionBlock = (Result<StripeAPI.SetupIntent, Error>)
+    @_spi(STP) public typealias SetupIntentCompletionBlock = @Sendable (Result<StripeAPI.SetupIntent, Error>)
         -> Void
 
     /// Retrieves the SetupIntent object using the given secret. - seealso: https://stripe.com/docs/api/setup_intents/retrieve
@@ -66,9 +66,11 @@ extension StripeAPI.SetupIntent {
         let endpoint = "\(Resource)/\(identifier)/confirm"
 
         let type = params.paymentMethodData?.type.rawValue
-        STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
-            paymentMethodType: type
-        )
+        Task {
+            await STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
+                paymentMethodType: type
+            )
+        }
 
         // Add telemetry
         var paramsWithTelemetry = params

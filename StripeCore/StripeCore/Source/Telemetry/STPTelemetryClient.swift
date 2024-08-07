@@ -25,8 +25,8 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     }
 
     @_spi(STP) public func paramsByAddingTelemetryFields(
-        toParams params: [String: Any]
-    ) -> [String: Any] {
+        toParams params: [String: Sendable]
+    ) -> [String: Sendable] {
         var mutableParams = params
         mutableParams["muid"] = fraudDetectionData.muid
         mutableParams["guid"] = fraudDetectionData.guid

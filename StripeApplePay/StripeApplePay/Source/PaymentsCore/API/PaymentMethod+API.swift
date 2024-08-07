@@ -10,12 +10,12 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeCore
 
-extension StripeAPI.PaymentMethod {
+@MainActor extension StripeAPI.PaymentMethod {
     /// A callback to be run with a PaymentMethod response from the Stripe API.
     /// - Parameters:
     ///   - paymentMethod: The Stripe PaymentMethod from the response. Will be nil if an error occurs. - seealso: PaymentMethod
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(STP) public typealias PaymentMethodCompletionBlock = (
+    @_spi(STP) public typealias PaymentMethodCompletionBlock = @Sendable (
         Result<StripeAPI.PaymentMethod, Error>
     ) -> Void
 
@@ -24,9 +24,11 @@ extension StripeAPI.PaymentMethod {
         params: StripeAPI.PaymentMethodParams,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
-        STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
-            paymentMethodType: params.type.rawValue
-        )
+        Task {
+            await STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
+                paymentMethodType: params.type.rawValue
+            )
+        }
         apiClient.post(resource: Resource, object: params, completion: completion)
     }
 

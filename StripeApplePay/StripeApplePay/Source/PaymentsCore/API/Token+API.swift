@@ -10,7 +10,7 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeCore
 
-extension StripeAPI.Token {
+@MainActor extension StripeAPI.Token {
     /// A callback to be run with a token response from the Stripe API.
     /// - Parameters:
     ///   - token: The Stripe token from the response. Will be nil if an error occurs. - seealso: STPToken

@@ -63,5 +63,5 @@ extension STPAnalyticsClient {
 
 struct PaymentAPIAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
-    let additionalParams: [String: Any]
+    let additionalParams: [String: Sendable]
 }
