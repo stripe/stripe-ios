@@ -513,8 +513,11 @@ extension NativeFlowController: ConsentViewControllerDelegate {
         }
     }
 
-    func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {
-        pushPane(.manualEntry, animated: true)
+    func consentViewController(
+        _ viewController: ConsentViewController,
+        shouldPushPane pane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        pushPane(pane, animated: true)
     }
 }
 
