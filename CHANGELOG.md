@@ -1,3 +1,6 @@
+## x.x.x y-y-y
+* [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
+
 ## 23.29.0 2024-08-05
 ### PaymentSheet
 * [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
