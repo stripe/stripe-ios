@@ -20,7 +20,7 @@ import Foundation
 
 /// A wrapper that only calls `assertionFailure` when the `ENABLE_STPASSERTIONFAILURE` compiler flag is set.
 /// Use this for assertions that should not trigger in merchant apps.
-@inlinable @_spi(STP) public func stpAssertionFailure(_ message: @autoclosure () -> String = String(), file: StaticString = #file, line: UInt = #line) {
+@inlinable @_spi(STP) public func stpAssertionFailure(_ message: @autoclosure @Sendable () -> String = String(), file: StaticString = #file, line: UInt = #line) {
     #if ENABLE_STPASSERTIONFAILURE
     // TODO: This is probably not safe!
     MainActor.assumeIsolated {

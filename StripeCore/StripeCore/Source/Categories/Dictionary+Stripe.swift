@@ -44,7 +44,9 @@ extension Dictionary {
         }
         return newDict
     }
+}
 
+extension Dictionary where Value: Sendable {
     public mutating func mergeAssertingOnOverwrites(_ other: [Key: Value]) {
         merge(other) { a, b in
             stpAssertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")

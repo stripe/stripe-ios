@@ -23,7 +23,7 @@ import Foundation
 }
 
 extension StripeError: AnalyticLoggableError {
-    public var additionalNonPIIErrorDetails: [String: Any] {
+    public var additionalNonPIIErrorDetails: [String: Sendable] {
         [:]
     }
     public var analyticsErrorCode: String {

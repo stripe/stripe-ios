@@ -15,7 +15,7 @@ import Foundation
 
     #if DEBUG
     /// If true, embed the params in an X-Stripe-Mock-Request header for network mocking.
-    @_spi(STP) public static var includeDebugParamsHeader = false
+    @_spi(STP) nonisolated(unsafe) public static var includeDebugParamsHeader = false
     #endif
 
 }
