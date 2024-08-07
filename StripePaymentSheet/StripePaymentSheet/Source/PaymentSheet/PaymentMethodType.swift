@@ -11,6 +11,7 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
+import Stripe
 
 extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {

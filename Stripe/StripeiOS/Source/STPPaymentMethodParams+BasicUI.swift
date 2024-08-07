@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 import UIKit
 
@@ -45,6 +46,30 @@ extension STPPaymentMethodParams: STPPaymentOption {
             return false
         @unknown default:
             return false
+        }
+    }
+
+    @objc public var label: String {
+        switch type {
+        case .card:
+            if let card = card {
+                let brand = STPCardValidator.brand(forNumber: card.number ?? "")
+                let brandString = STPCardBrandUtilities.stringFrom(brand)
+                return "\(brandString ?? "") \(card.last4 ?? "")"
+            } else {
+                return STPCardBrandUtilities.stringFrom(.unknown) ?? ""
+            }
+        case .FPX:
+            if let fpx = fpx {
+                return STPFPXBank.stringFrom(fpx.bank) ?? ""
+            } else {
+                return "FPX"
+            }
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .giropay, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .sofort, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .unknown:
+            // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
+            return type.displayName
+        @unknown default:
+            return STPLocalizedString("Unknown", "Default missing source type label")
         }
     }
 }
