@@ -94,6 +94,8 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     }
 
     private func attachConsumerToLinkAccountAndSynchronize(from view: NetworkingOTPView) {
+        view.showLoadingView(true)
+
         dataSource
             .attachConsumerToLinkAccountAndSynchronize()
             .observe { [weak self] result in
@@ -101,8 +103,8 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                 self.hideOTPLoadingViewAfterDelay(view)
 
                 switch result {
-                case .success(let synchronizePayload):
-                    self.requestNextPane(synchronizePayload.manifest.nextPane)
+                case .success:
+                    self.requestNextPane(.linkAccountPicker)
                 case .failure(let error):
                     self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
                 }
@@ -187,7 +189,10 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
     }
 
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
-        var shouldHideLoadingView = true
+        if dataSource.manifest.isProductInstantDebits {
+            attachConsumerToLinkAccountAndSynchronize(from: view)
+            return
+        }
 
         view.showLoadingView(true)
         dataSource.markLinkVerified()
@@ -195,16 +200,11 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    if self.dataSource.manifest.isProductInstantDebits {
-                        shouldHideLoadingView = false
-                        self.attachConsumerToLinkAccountAndSynchronize(from: view)
-                    } else {
-                        self.dataSource.analyticsClient.log(
-                            eventName: "networking.verification.success",
-                            pane: .networkingLinkVerification
-                        )
-                        self.requestNextPane(.linkAccountPicker)
-                    }
+                    self.dataSource.analyticsClient.log(
+                        eventName: "networking.verification.success",
+                        pane: .networkingLinkVerification
+                    )
+                    self.requestNextPane(.linkAccountPicker)
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
@@ -232,9 +232,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                     self.requestNextPane(nextPane)
                 }
 
-                if shouldHideLoadingView {
-                    self.hideOTPLoadingViewAfterDelay(view)
-                }
+                self.hideOTPLoadingViewAfterDelay(view)
             }
     }
 
