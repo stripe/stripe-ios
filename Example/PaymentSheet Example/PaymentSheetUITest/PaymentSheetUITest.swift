@@ -207,7 +207,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         try! fillCardData(app)
 
         // toggle save this card on and off
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -250,7 +250,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
         // toggle save this card on
-        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -1055,7 +1055,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try! fillCardData(app)
 
         // toggle save this card on and off
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1075,7 +1075,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
 
         // toggle save this card on
-        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -1530,7 +1530,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         try fillCardData(app)
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -1572,7 +1572,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         try! fillCardData(app)
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -1614,7 +1614,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1658,7 +1658,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1700,7 +1700,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1914,7 +1914,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
 
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1931,7 +1931,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
-        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1960,7 +1960,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
 
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -2073,7 +2073,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
 
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -2090,7 +2090,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
-        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -2144,7 +2144,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 

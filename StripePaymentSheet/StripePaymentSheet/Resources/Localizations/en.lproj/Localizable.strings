@@ -228,11 +228,11 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* The label of a switch indicating whether to save the payment method for future payments. */
 "Save for future payments" = "Save for future payments";
 
+/* The label of a switch indicating whether to save the user's payment details for future payment */
+"Save payment details to %@ for future purchases" = "Save payment details to %@ for future purchases";
+
 /* Prompt next to checkbox to save bank account. */
 "Save this account for future %@ payments" = "Save this account for future %@ payments";
-
-/* The label of a switch indicating whether to save the user's card for future payment */
-"Save this card for future %@ payments" = "Save this card for future %@ payments";
 
 /* US Bank Account copy title for Mobile payment element form */
 "Save your bank account in just a few steps." = "Save your bank account in just a few steps.";

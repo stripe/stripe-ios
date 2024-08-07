@@ -957,7 +957,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: 5))
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
