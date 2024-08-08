@@ -46,7 +46,7 @@ final public class CardImageVerificationSheet {
     /// - Parameters:
     ///   - presentingViewController: The view controller to present the card image verification sheet.
     ///   - completion: Called with the result of the card image verification flow after the sheet is dismissed.
-    public func present(
+    @MainActor public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (CardImageVerificationSheetResult) -> Void,
         animated: Bool = true
@@ -99,7 +99,7 @@ extension CardImageVerificationSheet {
     fileprivate typealias Result = Swift.Result
 
     /// Fetches the CIV optional card details
-    fileprivate func load(
+    @MainActor fileprivate func load(
         civId: String,
         civSecret: String,
         completion: @escaping ((Result<CardImageVerificationDetailsResponse, Error>) -> Void)

@@ -12,7 +12,7 @@ import UIKit
 extension CardImageVerificationSheet {
     public struct Configuration {
         /// The API client instance used to make requests to Stripe
-        public var apiClient: STPAPIClient = STPAPIClient.shared
+        @MainActor public var apiClient: STPAPIClient = STPAPIClient.shared
 
         /// The amount of frames that must have a centered, focused card before the
         /// scan is allowed to terminate. This is an `experimental` feature that should

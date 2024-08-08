@@ -580,3 +580,5 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         )
     }
 }
+
+extension CMSampleBuffer: @unchecked @retroactive Sendable {}

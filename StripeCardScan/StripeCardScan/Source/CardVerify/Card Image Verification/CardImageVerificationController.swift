@@ -71,7 +71,7 @@ class CardImageVerificationController {
         }
     }
 
-    func dismissWithResult(
+    @MainActor func dismissWithResult(
         _ presentingViewController: UIViewController,
         result: CardImageVerificationSheetResult
     ) {
@@ -102,7 +102,7 @@ class CardImageVerificationController {
 // MARK: Verify Card Add Delegate
 extension CardImageVerificationController: VerifyViewControllerDelegate {
     /// User scanned a card successfully. Submit verification frames data to complete verification flow
-    func verifyViewControllerDidFinish(
+    @MainActor func verifyViewControllerDidFinish(
         _ viewController: UIViewController,
         verificationFramesData: [VerificationFramesData],
         scannedCard: ScannedCard
@@ -119,19 +119,23 @@ extension CardImageVerificationController: VerifyViewControllerDelegate {
             case .success:
                 completionLoopTask.trackResult(.success)
                 ScanAnalyticsManager.shared.trackCompletionLoopDuration(task: completionLoopTask)
-
-                self?.dismissWithResult(
-                    viewController,
-                    result: .completed(scannedCard: scannedCard)
-                )
+                
+                Task { @MainActor in
+                    self?.dismissWithResult(
+                        viewController,
+                        result: .completed(scannedCard: scannedCard)
+                    )
+                }
             case .failure(let error):
                 completionLoopTask.trackResult(.failure)
                 ScanAnalyticsManager.shared.trackCompletionLoopDuration(task: completionLoopTask)
-
-                self?.dismissWithResult(
-                    viewController,
-                    result: .failed(error: error)
-                )
+                
+                Task { @MainActor in
+                    self?.dismissWithResult(
+                        viewController,
+                        result: .failed(error: error)
+                    )
+                }
             }
         }
     }

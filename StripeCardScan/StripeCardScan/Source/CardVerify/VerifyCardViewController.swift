@@ -14,20 +14,20 @@ protocol VerifyViewControllerDelegate: AnyObject {
     /// TODO(jaimepark): Change view controller type after consolidation
 
     /// The scanning portion of the flow finished. Finish off verification flow by submitting verification frames data.
-    func verifyViewControllerDidFinish(
+    @MainActor func verifyViewControllerDidFinish(
         _ viewController: UIViewController,
         verificationFramesData: [VerificationFramesData],
         scannedCard: ScannedCard
     )
 
     /// User canceled the verification flow
-    func verifyViewControllerDidCancel(
+    @MainActor func verifyViewControllerDidCancel(
         _ viewController: UIViewController,
         with reason: CancellationReason
     )
 
     /// The verification flow failed
-    func verifyViewControllerDidFail(
+    @MainActor func verifyViewControllerDidFail(
         _ viewController: UIViewController,
         with error: Error
     )
