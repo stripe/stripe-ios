@@ -798,6 +798,12 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
         pushPane(.networkingLinkVerification, animated: true)
     }
 
+    func networkingLinkLoginWarmupViewControllerDidSelectCancel(
+        _ viewController: NetworkingLinkLoginWarmupViewController
+    ) {
+        viewController.dismiss(animated: true)
+    }
+
     func networkingLinkLoginWarmupViewController(
         _ viewController: NetworkingLinkLoginWarmupViewController,
         didSelectSkipWithManifest manifest: FinancialConnectionsSessionManifest
