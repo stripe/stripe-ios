@@ -19,7 +19,7 @@ public extension SectionElement {
         public let elements: [Element]
         public let theme: ElementsUITheme
 
-        public init(_ elements: [Element], theme: ElementsUITheme = .default) {
+        @MainActor public init(_ elements: [Element], theme: ElementsUITheme = .default) {
             self.elements = elements
             self.theme = theme
             elements.forEach {

@@ -10,9 +10,9 @@
 import UIKit
 
 protocol PickerFieldViewDelegate: AnyObject {
-    func didBeginEditing(_ pickerFieldView: PickerFieldView)
-    func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool)
-    func didCancel(_ pickerFieldView: PickerFieldView)
+    @MainActor func didBeginEditing(_ pickerFieldView: PickerFieldView)
+    @MainActor func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool)
+    @MainActor func didCancel(_ pickerFieldView: PickerFieldView)
 }
 
 /**

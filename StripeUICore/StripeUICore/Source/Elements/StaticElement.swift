@@ -15,7 +15,7 @@ import UIKit
     public let collectsUserInput: Bool = false
     weak public var delegate: ElementDelegate?
     public let view: UIView
-    public var isHidden: Bool = false {
+    @MainActor public var isHidden: Bool = false {
         didSet {
             view.isHidden = isHidden
         }

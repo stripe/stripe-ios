@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 protocol TextFieldViewDelegate: AnyObject {
-    func textFieldViewDidUpdate(view: TextFieldView)
-    func textFieldViewContinueToNextField(view: TextFieldView)
+    @MainActor func textFieldViewDidUpdate(view: TextFieldView)
+    @MainActor func textFieldViewContinueToNextField(view: TextFieldView)
 }
 
 /**

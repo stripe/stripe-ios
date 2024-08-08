@@ -12,10 +12,10 @@ import Foundation
 @_spi(STP) public protocol TextOrDropdownElement: Element {
 
     /// The raw data for the element, e.g. the text of a textfield or raw data of a dropdown item
-    var rawData: String { get }
+    @MainActor var rawData: String { get }
 
     /// Sets the raw data for this element
-    func setRawData(_ rawData: String)
+    @MainActor func setRawData(_ rawData: String)
 }
 
 // MARK: Conformance

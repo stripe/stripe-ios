@@ -228,17 +228,12 @@ import UIKit
     }()
 
     private lazy var activityIndicator: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator()
+        let activityIndicator = ActivityIndicator(size: .medium)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
 
     private var dynamicConstraints: [NSLayoutConstraint] = []
-
-    /// Creates a button with the default configuration.
-    public convenience init() {
-        self.init(configuration: .primary())
-    }
 
     /// Creates a button with the default configuration and the given title.
     /// - Parameter title: Button title.

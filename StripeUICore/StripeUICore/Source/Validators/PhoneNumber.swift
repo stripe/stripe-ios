@@ -118,16 +118,10 @@ import UIKit
 }
 
 @_spi(STP) public extension PhoneNumber {
-    struct Metadata: RegionCodeProvider {
-
-        private static var metadataByCountryCodeCache: [String: Metadata] = [:]
+    struct Metadata: RegionCodeProvider, Sendable {
 
         public static func metadata(for countryCode: String) -> Metadata? {
-            if let cached = metadataByCountryCodeCache[countryCode] {
-                return cached
-            }
             if let metadata = allMetadata.first(where: { $0.regionCode == countryCode }) {
-                metadataByCountryCodeCache[countryCode] = metadata
                 return metadata
             }
             return nil

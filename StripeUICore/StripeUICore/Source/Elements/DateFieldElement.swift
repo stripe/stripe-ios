@@ -23,7 +23,7 @@ import UIKit
     }
 
     weak public var delegate: ElementDelegate?
-    private(set) lazy var datePickerView: UIDatePicker = {
+    @MainActor private(set) lazy var datePickerView: UIDatePicker = {
         let picker = UIDatePicker()
         if #available(iOS 13.4, *) {
             picker.preferredDatePickerStyle = .wheels
@@ -32,7 +32,7 @@ import UIKit
         picker.addTarget(self, action: #selector(didSelectDate), for: .valueChanged)
         return picker
     }()
-    private(set) lazy var pickerFieldView: PickerFieldView = {
+    @MainActor private(set) lazy var pickerFieldView: PickerFieldView = {
         let pickerFieldView = PickerFieldView(
             label: label,
             shouldShowChevron: false,
@@ -49,13 +49,13 @@ import UIKit
         formatter.timeStyle = .none
         return formatter
     }()
-    public private(set) var selectedDate: Date? {
+    @MainActor public private(set) var selectedDate: Date? {
         didSet {
             updateDisplayText()
         }
     }
     private var previouslySelectedDate: Date?
-    public var validationState: ElementValidationState {
+    @MainActor public var validationState: ElementValidationState {
         if selectedDate != nil {
             return .valid
         } else {
@@ -82,7 +82,7 @@ import UIKit
        - If a minimum or maximum date is provided and `defaultDate` is outside of of that range, then the given default is ignored.
        - `didUpdate` is not called if the user does not change their input before hitting "Done"
      */
-    public init(
+    @MainActor public init(
         label: String? = nil,
         defaultDate: Date? = nil,
         minimumDate: Date? = nil,
@@ -117,11 +117,11 @@ import UIKit
 
     // MARK: - Internal Methods
 
-    @objc func didSelectDate() {
+    @objc @MainActor func didSelectDate() {
         selectedDate = datePickerView.date
     }
 
-    private func updateDisplayText() {
+    @MainActor private func updateDisplayText() {
         let selectedDate = selectedDate.map { dateFormatter.string(from: $0) }
         pickerFieldView.displayText = NSAttributedString(string: selectedDate ?? "")
     }

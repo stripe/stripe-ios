@@ -61,10 +61,10 @@ import UIKit
     public var nonPlacerholderItems: [DropdownItem] {
         return items.filter({ !$0.isPlaceholder })
     }
-    public var selectedItem: DropdownItem {
+    @MainActor public var selectedItem: DropdownItem {
         return items[selectedIndex]
     }
-    public var selectedIndex: Int {
+    @MainActor public var selectedIndex: Int {
         didSet {
             updatePickerField()
         }
@@ -99,7 +99,7 @@ import UIKit
         return button
     }()
 #else
-    private(set) lazy var pickerView: UIPickerView = {
+    @MainActor private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
         picker.delegate = pickerViewDelegate
         picker.dataSource = pickerViewDelegate
@@ -107,7 +107,7 @@ import UIKit
     }()
 #endif
 
-    private(set) lazy var pickerFieldView: PickerFieldView = {
+    @MainActor private(set) lazy var pickerFieldView: PickerFieldView = {
         let pickerFieldView = PickerFieldView(
             label: label,
             shouldShowChevron: disableDropdownWithSingleElement ? items.count != 1 : true,
@@ -127,7 +127,7 @@ import UIKit
     private var previouslySelectedIndex: Int
     private let disableDropdownWithSingleElement: Bool
     private let isOptional: Bool
-    lazy var pickerViewDelegate: PickerViewDelegate = { PickerViewDelegate(self) }()
+    @MainActor lazy var pickerViewDelegate: PickerViewDelegate = { PickerViewDelegate(self) }()
 
     /**
      - Parameters:
@@ -141,7 +141,7 @@ import UIKit
      - If `defaultIndex` is outside of the bounds of the `items` array, then a default of `0` is used.
      - `didUpdate` is not called if the user does not change their input before hitting "Done"
      */
-    public init(
+    @MainActor public init(
         items: [DropdownItem],
         defaultIndex: Int = 0,
         label: String?,
@@ -178,12 +178,12 @@ import UIKit
         }
     }
 
-    public func select(index: Int, shouldAutoAdvance: Bool = true) {
+    @MainActor public func select(index: Int, shouldAutoAdvance: Bool = true) {
         selectedIndex = index
         didFinish(pickerFieldView, shouldAutoAdvance: shouldAutoAdvance)
     }
 
-    public func update(items: [DropdownItem]) {
+    @MainActor public func update(items: [DropdownItem]) {
         assert(!items.isEmpty, "`items` must contain at least one item")
         // Try to re-select the same item afer updating, if not possible default to the first item in the list
         let newSelectedIndex = items.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData }) ?? 0
@@ -195,7 +195,7 @@ import UIKit
 
 private extension DropdownFieldElement {
 
-    func updatePickerField() {
+    @MainActor func updatePickerField() {
         #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
         if #available(macCatalyst 14.0, *) {
             // Mark the enabled menu item as selected
@@ -264,7 +264,7 @@ extension DropdownFieldElement {
         }
     }
 
-    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    @MainActor public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedIndex = row
     }
 }
@@ -301,6 +301,6 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
 // MARK: - DebugDescription
 extension DropdownFieldElement {
     public var debugDescription: String {
-        return "<DropdownFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(label ?? "nil"); validationState = \(validationState); rawData = \(rawData)"
+        return "<DropdownFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(label ?? "nil"); validationState = \(validationState)"
     }
 }

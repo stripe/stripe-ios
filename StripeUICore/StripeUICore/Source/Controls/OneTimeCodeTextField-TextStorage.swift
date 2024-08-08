@@ -9,7 +9,7 @@
 import UIKit
 
 extension OneTimeCodeTextField {
-    final class TextStorage {
+    @MainActor final class TextStorage {
         var value: String = ""
 
         let capacity: Int
@@ -184,18 +184,14 @@ extension OneTimeCodeTextField {
         override var description: String {
             let props: [String] = [
                 String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
-                "start = \(String(describing: start))",
-                "end = \(String(describing: end))",
+//                "start = \(String(describing: start))",
+//                "end = \(String(describing: end))",
             ]
             return "<\(props.joined(separator: "; "))>"
         }
-
-        override func isEqual(_ object: Any?) -> Bool {
-            guard let other = object as? TextRange else {
-                return false
-            }
-
-            return self.start == other.start && self.end == other.end
+        
+        static func == (lhs: TextRange, rhs: TextRange) -> Bool {
+            return lhs.start == rhs.start && lhs.end == rhs.end
         }
 
         func contains(_ index: Int) -> Bool {

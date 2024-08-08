@@ -41,16 +41,16 @@ import UIKit
     var infoView: UIView?
 
     // MARK: - Public properties
-    public var phoneNumber: PhoneNumber? {
+    @MainActor public var phoneNumber: PhoneNumber? {
         return PhoneNumber(number: textFieldElement.text, countryCode: countryDropdownElement.selectedItem.rawData)
     }
 
-    public var hasBeenModified: Bool {
+    @MainActor public var hasBeenModified: Bool {
         return defaultPhoneNumber?.number != phoneNumber?.number ||
         defaultPhoneNumber?.countryCode != phoneNumber?.countryCode
     }
 
-    public var selectedCountryCode: String {
+    @MainActor public var selectedCountryCode: String {
         countryDropdownElement.selectedItem.rawData
     }
 
@@ -70,7 +70,7 @@ import UIKit
      
      - Note: The default parameters are not used as-is - we do extra logic!
      */
-    public init(
+    @MainActor public init(
         allowedCountryCodes: [String]? = nil,
         defaultCountryCode: String? = nil,
         defaultPhoneNumber: String? = nil,
@@ -101,14 +101,14 @@ import UIKit
         self.textFieldElement.delegate = self
     }
 
-    public func setSelectedCountryCode(_ countryCode: String, shouldUpdateDefaultNumber: Bool = false) {
+    @MainActor public func setSelectedCountryCode(_ countryCode: String, shouldUpdateDefaultNumber: Bool = false) {
         guard let index = countryDropdownElement.items.firstIndex(where: { $0.rawData == countryCode }) else {
             return
         }
         selectCountry(index: index, shouldUpdateDefaultNumber: shouldUpdateDefaultNumber)
     }
 
-    public func clearPhoneNumber() {
+    @MainActor public func clearPhoneNumber() {
         textFieldElement.setText("")
     }
 
@@ -149,7 +149,7 @@ import UIKit
         }
     }
 
-    func selectCountry(index: Int, shouldUpdateDefaultNumber: Bool = false) {
+    @MainActor func selectCountry(index: Int, shouldUpdateDefaultNumber: Bool = false) {
         countryDropdownElement.select(index: index)
 
         if shouldUpdateDefaultNumber {
@@ -160,7 +160,7 @@ import UIKit
 
 // MARK: - DropdownFieldElement helper
 extension DropdownFieldElement {
-    static func makeCountryCode(
+    @MainActor static func makeCountryCode(
         countryCodes: [String],
         defaultCountry: String? = nil,
         locale: Locale,

@@ -15,12 +15,12 @@ import UIKit
  */
 @_spi(STP) public final class SectionElement: ContainerElement {
     weak public var delegate: ElementDelegate?
-    lazy var sectionView: SectionView = {
+    @MainActor lazy var sectionView: SectionView = {
         isViewInitialized = true
         return SectionView(viewModel: viewModel)
     }()
     var isViewInitialized: Bool = false
-    var errorText: String? {
+    @MainActor var errorText: String? {
         // Find the first element that's 1. invalid and 2. has a displayable error
         for element in elements {
             if case let .invalid(error, shouldDisplay) = element.validationState, shouldDisplay {
@@ -29,7 +29,7 @@ import UIKit
         }
         return nil
     }
-    var viewModel: SectionViewModel {
+    @MainActor var viewModel: SectionViewModel {
         return ViewModel(
             views: elements.filter { !($0.view is HiddenElement.HiddenView) }.map({ $0.view }), // filter out hidden views to prevent showing the separator
             title: title,
@@ -51,7 +51,7 @@ import UIKit
     }
     let title: String?
 
-    var subLabel: String? {
+    @MainActor var subLabel: String? {
         elements.compactMap({ $0.subLabelText }).first
     }
 
@@ -69,7 +69,7 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(title: String? = nil, elements: [Element], theme: ElementsUITheme = .default) {
+    @MainActor public init(title: String? = nil, elements: [Element], theme: ElementsUITheme = .default) {
         self.title = title
         self.elements = elements
         self.theme = theme
@@ -78,7 +78,7 @@ import UIKit
         }
     }
 
-    public convenience init(_ element: Element, theme: ElementsUITheme = .default) {
+    @MainActor public convenience init(_ element: Element, theme: ElementsUITheme = .default) {
         self.init(title: nil, elements: [element], theme: theme)
     }
 }
@@ -107,10 +107,10 @@ extension SectionElement: ElementDelegate {
 
 extension SectionElement {
     /// A simple container element where the element's view is hidden
-    /// Useful when an element is a part of a section but it's view is embeded into another element
+    /// Useful when an element is a part of a section but it's view is embedded into another element
     /// E.g. card brand drop down embedded into the PAN textfield
     /// - Note: `HiddenElement`'s are skipped by the `ContainerElement`'s auto advance logic
-    @_spi(STP) public final class HiddenElement: ContainerElement {
+    @_spi(STP) @MainActor public final class HiddenElement: ContainerElement {
         final class HiddenView: UIView {}
 
         weak public var delegate: ElementDelegate?

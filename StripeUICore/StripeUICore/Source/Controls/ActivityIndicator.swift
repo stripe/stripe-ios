@@ -102,10 +102,6 @@ import UIKit
         return CGSize(width: size, height: size)
     }
 
-    public convenience init() {
-        self.init(size: .medium)
-    }
-
     /// Creates a new activity indicator.
     /// - Parameter size: Size of the activity indicator.
     public init(size: Size) {

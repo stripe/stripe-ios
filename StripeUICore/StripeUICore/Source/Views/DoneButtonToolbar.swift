@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public protocol DoneButtonToolbarDelegate: AnyObject {
+@_spi(STP) @MainActor public protocol DoneButtonToolbarDelegate: AnyObject {
     func didTapDone(_ toolbar: DoneButtonToolbar)
     func didTapCancel(_ toolbar: DoneButtonToolbar)
 }

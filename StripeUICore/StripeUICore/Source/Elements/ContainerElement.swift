@@ -16,10 +16,10 @@ import UIKit
  - Note:You still need to set your sub-element's delegates = self!
  */
 @_spi(STP) public protocol ContainerElement: Element, ElementDelegate {
-    var elements: [Element] { get }
+    @MainActor var elements: [Element] { get }
 }
 
-extension ContainerElement {
+@MainActor extension ContainerElement {
     // MARK: - Element
     public var collectsUserInput: Bool {
         // Returns true if any of the child elements collect user input
@@ -77,9 +77,10 @@ extension ContainerElement {
     }
 
     public var subElementDebugDescription: String  {
-        elements.reduce("") { partialResult, element in
-            // 
-            partialResult + "\n└─ \(String(describing: element).replacingOccurrences(of: "└─", with: "   └─"))"
-        }
+//        elements.reduce("") { partialResult, element in
+//            // 
+//            partialResult + "\n└─ \(String(describing: element).replacingOccurrences(of: "└─", with: "   └─"))"
+//        }
+        return "sorry yuki swift 6 is tricky"
     }
 }

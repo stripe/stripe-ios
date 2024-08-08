@@ -18,7 +18,7 @@ extension AddressSpec {
         ).makeElement(theme: theme)
     }
 
-    func makeStateElement(defaultValue: String?, stateDict: [String: String], theme: ElementsUITheme = .default) -> TextOrDropdownElement {
+    @MainActor func makeStateElement(defaultValue: String?, stateDict: [String: String], theme: ElementsUITheme = .default) -> TextOrDropdownElement {
         // If no state dict just use a textfield for state
         if stateDict.isEmpty {
             return TextFieldElement.Address.StateConfiguration(

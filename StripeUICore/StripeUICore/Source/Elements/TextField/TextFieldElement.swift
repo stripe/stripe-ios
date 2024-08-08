@@ -19,14 +19,10 @@ import UIKit
 
     // MARK: - Properties
     weak public var delegate: ElementDelegate?
-    lazy var textFieldView: TextFieldView = {
+    @MainActor lazy var textFieldView: TextFieldView = {
         return TextFieldView(viewModel: viewModel, delegate: self)
     }()
-    var configuration: TextFieldElementConfiguration {
-        didSet {
-            setText("")
-        }
-    }
+    private(set) var configuration: TextFieldElementConfiguration
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
@@ -42,7 +38,7 @@ import UIKit
     private let theme: ElementsUITheme
 
 #if !canImport(CompositorServices)
-    public var inputAccessoryView: UIView? {
+    @MainActor public var inputAccessoryView: UIView? {
         get {
             return textFieldView.textField.inputAccessoryView
         }
@@ -78,7 +74,7 @@ import UIKit
         let theme: ElementsUITheme
     }
 
-    var viewModel: ViewModel {
+    @MainActor var viewModel: ViewModel {
         let placeholder: String = {
             if !configuration.isOptional {
                 return configuration.label
@@ -108,7 +104,7 @@ import UIKit
     }
 
     /// Call this to manually set the text of the text field.
-    public func setText(_ text: String) {
+    @MainActor public func setText(_ text: String) {
         self.text = sanitize(text: text)
 
         // Since we're setting the text manually, disable any previous autofill
@@ -117,6 +113,11 @@ import UIKit
         // Glue: Update the view and our delegate
         textFieldView.updateUI(with: viewModel)
         delegate?.didUpdate(element: self)
+    }
+    
+    @MainActor public func setConfiguration(_ configuration: TextFieldElementConfiguration) {
+        self.configuration = configuration
+        setText("")
     }
 
     // MARK: - Helpers
@@ -141,7 +142,7 @@ extension TextFieldElement: Element {
     }
 
     @discardableResult
-    public func endEditing(_ force: Bool = false, continueToNextField: Bool = true) -> Bool {
+    @MainActor public func endEditing(_ force: Bool = false, continueToNextField: Bool = true) -> Bool {
         let didResign = textFieldView.endEditing(force)
         isEditing = textFieldView.isEditing
         if continueToNextField {

@@ -15,52 +15,39 @@ import Foundation
 
     private let bsbDataFilename = "au_becs_bsb"
 
-    @_spi(STP) public static var shared: BSBNumberProvider = BSBNumberProvider()
+    @_spi(STP) nonisolated(unsafe) public static var shared: BSBNumberProvider = BSBNumberProvider()
     var bsbNumberToNameMapping: [String: String] = [:]
-    private lazy var bsbNumberUpdateQueue: DispatchQueue = {
-        DispatchQueue(label: "com.stripe.BSB.BSBNumberProvider", qos: .userInitiated)
-    }()
+    
+    public func loadBSBData() async {
+        // Early exit if we have already loaded the BSBNumber mapping
+        if !bsbNumberToNameMapping.isEmpty {
+            return
+        }
 
-    public func loadBSBData(completion: (() -> Void)? = nil) {
-        bsbNumberUpdateQueue.async {
-            // Early exit if we have already loaded the BSBNumber mapping
-            guard self.bsbNumberToNameMapping.isEmpty else {
-                completion?()
-                return
-            }
+        let bundle = StripeUICoreBundleLocator.resourcesBundle
+        guard let url = bundle.url(forResource: self.bsbDataFilename, withExtension: ".json") else {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreBSBNumberProvider,
+                                              error: Error.bsbLoadFailure)
+            await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            return
+        }
 
-            let bundle = StripeUICoreBundleLocator.resourcesBundle
-            guard let url = bundle.url(forResource: self.bsbDataFilename, withExtension: ".json") else {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreBSBNumberProvider,
-                                                  error: Error.bsbLoadFailure)
-                Task {
-                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                }
-                completion?()
-                return
+        do {
+            let data = try Data(contentsOf: url)
+            let decodedBSBs = try JSONDecoder().decode([String: String].self, from: data)
+            #if DEBUG
+            var accumulator: [String: String] = ["00": "Stripe Test Bank"]
+            decodedBSBs.forEach { (key, value) in
+                accumulator[key] = value
             }
-
-            do {
-                let data = try Data(contentsOf: url)
-                let decodedBSBs = try JSONDecoder().decode([String: String].self, from: data)
-                #if DEBUG
-                var accumulator: [String: String] = ["00": "Stripe Test Bank"]
-                decodedBSBs.forEach { (key, value) in
-                    accumulator[key] = value
-                }
-                self.bsbNumberToNameMapping = accumulator
-                #else
-                self.bsbNumberToNameMapping = decodedBSBs
-                #endif
-                completion?()
-            } catch {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreBSBNumberProvider,
-                                                  error: error)
-                Task {
-                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                }
-                completion?()
-            }
+            self.bsbNumberToNameMapping = accumulator
+            #else
+            self.bsbNumberToNameMapping = decodedBSBs
+            #endif
+        } catch {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreBSBNumberProvider,
+                                              error: error)
+            await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
         }
     }
 

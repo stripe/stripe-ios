@@ -35,7 +35,7 @@ import UIKit
         )
     }()
 
-    public static func makeErrorLabel(theme: ElementsUITheme) -> UILabel {
+    @MainActor public static func makeErrorLabel(theme: ElementsUITheme) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.footnote
         label.textColor = theme.colors.danger
@@ -44,7 +44,7 @@ import UIKit
         return label
     }
 
-    public static func makeNoticeTextField(theme: ElementsUITheme) -> UITextView {
+    @MainActor public static func makeNoticeTextField(theme: ElementsUITheme) -> UITextView {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
@@ -55,7 +55,7 @@ import UIKit
         return textView
     }
 
-    public static func makeSectionTitleLabel(theme: ElementsUITheme) -> UILabel {
+    @MainActor public static func makeSectionTitleLabel(theme: ElementsUITheme) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.sectionHeader
         label.textColor = theme.colors.secondaryText
@@ -65,7 +65,7 @@ import UIKit
 }
 
 /// Describes the appearance of an Element
-@_spi(STP) public struct ElementsUITheme {
+@_spi(STP) public struct ElementsUITheme: Sendable {
 
     /// The default appearance used for Elements
     public static let `default` = ElementsUITheme()
@@ -83,7 +83,7 @@ import UIKit
     /// Checks if the theme is dark.
     public var isDark: Bool { !isBright }
 
-    public struct Font {
+    public struct Font: Sendable {
         public init() {}
 
         public var subheadline = ElementsUI.textFieldFont
@@ -96,7 +96,7 @@ import UIKit
         public var footnoteEmphasis = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
     }
 
-    public struct Color {
+    public struct Color: Sendable {
         public init() {}
 
         public var primary = UIColor.systemBlue
@@ -112,7 +112,7 @@ import UIKit
         public var danger = UIColor.systemRed
     }
 
-    public struct Shadow {
+    public struct Shadow: Sendable {
 
         public var color = UIColor.black
         public var opacity = CGFloat(0.05)

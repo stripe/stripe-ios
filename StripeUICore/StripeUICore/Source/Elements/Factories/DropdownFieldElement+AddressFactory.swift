@@ -16,7 +16,7 @@ import Foundation
 
         // MARK: - Country
 
-        public static func makeCountry(
+        @MainActor public static func makeCountry(
             label: String,
             countryCodes: [String],
             theme: ElementsUITheme = .default,

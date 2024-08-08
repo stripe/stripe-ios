@@ -18,22 +18,22 @@ import UIKit
  */
 @_spi(STP) public protocol Element: AnyObject, CustomDebugStringConvertible {
     /// - Note: This is set by your parent.
-    var delegate: ElementDelegate? { get set }
+    @MainActor var delegate: ElementDelegate? { get set }
 
     /// Return your UIView instance.
-    var view: UIView { get }
+    @MainActor  var view: UIView { get }
 
     /// - Returns: Whether or not this Element began editing.
-    func beginEditing() -> Bool
+    @MainActor func beginEditing() -> Bool
 
     /// Whether this element contains valid user input or not.
-    var validationState: ElementValidationState { get }
+    @MainActor var validationState: ElementValidationState { get }
 
     /// Text to display to the user under the item, if any.
     var subLabelText: String? { get }
 
     /// Whether or not this Element collects user input (e.g. a text field, dropdown, picker, checkbox).
-    var collectsUserInput: Bool { get }
+    @MainActor var collectsUserInput: Bool { get }
 }
 
 public extension Element {
@@ -60,13 +60,13 @@ public extension Element {
      This method is called whenever your public/internally visable state changes.
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
-    func didUpdate(element: Element)
+    @MainActor func didUpdate(element: Element)
 
     /**
      This method is called when the user finishes editing the caller e.g., by pressing the 'return' key.
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
-    func continueToNextField(element: Element)
+    @MainActor func continueToNextField(element: Element)
 }
 
 /**

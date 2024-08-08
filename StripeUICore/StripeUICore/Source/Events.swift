@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Sends the event down the view hierarchy
-@_spi(STP) public func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
+@_spi(STP) @MainActor public func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
     if let view = view as? EventHandler {
         view.handleEvent(event)
     }
@@ -26,5 +26,5 @@ import UIKit
 }
 
 @_spi(STP) public protocol EventHandler {
-    func handleEvent(_ event: STPEvent)
+    @MainActor func handleEvent(_ event: STPEvent)
 }

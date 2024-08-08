@@ -17,48 +17,34 @@ let addressDataFilename = "localized_address_data"
         case loadSpecsFailure
     }
 
-    @_spi(STP) public static var shared: AddressSpecProvider = AddressSpecProvider()
+    @_spi(STP) nonisolated(unsafe) public static var shared: AddressSpecProvider = AddressSpecProvider()
     var addressSpecs: [String: AddressSpec] = [:]
     public var countries: [String] {
         return addressSpecs.map { $0.key }
     }
-    private lazy var addressSpecsUpdateQueue: DispatchQueue = {
-        DispatchQueue(label: addressDataFilename, qos: .userInitiated)
-    }()
 
-    /// Loads address specs with a completion block
-    public func loadAddressSpecs(completion: (() -> Void)? = nil) {
-        addressSpecsUpdateQueue.async {
-            let bundle = StripeUICoreBundleLocator.resourcesBundle
-            // Early exit if we have already loaded the specs
-            guard self.addressSpecs.isEmpty else {
-                completion?()
-                return
-            }
+    public func loadAddressSpecs() async {
+        let bundle = StripeUICoreBundleLocator.resourcesBundle
+        // Early exit if we have already loaded the specs
+        guard self.addressSpecs.isEmpty else {
+            return
+        }
 
-            guard let url = bundle.url(forResource: addressDataFilename, withExtension: ".json") else {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreAddressSpecProvider,
-                                                  error: Error.loadSpecsFailure)
-                Task {
-                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                }
-                completion?()
-                return
-            }
+        guard let url = bundle.url(forResource: addressDataFilename, withExtension: ".json") else {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreAddressSpecProvider,
+                                              error: Error.loadSpecsFailure)
+            await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            return
+        }
 
-            do {
-                let data = try Data(contentsOf: url)
-                let addressSpecs = try JSONDecoder().decode([String: AddressSpec].self, from: data)
-                self.addressSpecs = addressSpecs
-                completion?()
-            } catch {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreAddressSpecProvider,
-                                                  error: error)
-                Task {
-                    await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                }
-                completion?()
-            }
+        do {
+            let data = try Data(contentsOf: url)
+            let addressSpecs = try JSONDecoder().decode([String: AddressSpec].self, from: data)
+            self.addressSpecs = addressSpecs
+        } catch {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedStripeUICoreAddressSpecProvider,
+                                              error: error)
+            await STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
         }
     }
 

@@ -19,7 +19,7 @@ import UIKit
     public typealias DidUpdateAddress = (AddressDetails) -> Void
 
     /// Describes an address to use as a default for AddressSectionElement
-    public struct AddressDetails: Equatable {
+    public struct AddressDetails: Equatable, Sendable {
         @_spi(STP) public static let empty = AddressDetails()
         public var name: String?
         public var phone: String?
@@ -32,7 +32,7 @@ import UIKit
             self.address = address
         }
 
-        public struct Address: Equatable {
+        public struct Address: Equatable, Sendable {
             /// City, district, suburb, town, or village.
             public var city: String?
 
@@ -101,7 +101,7 @@ import UIKit
     // MARK: Element protocol
     public let elements: [Element]
     public weak var delegate: ElementDelegate?
-    public lazy var view: UIView = {
+    @MainActor public lazy var view: UIView = {
         let vStack = UIStackView(arrangedSubviews: [addressSection.view, sameAsCheckbox.view].compactMap { $0 })
         vStack.axis = .vertical
         vStack.spacing = 16
@@ -122,14 +122,14 @@ import UIKit
     public let sameAsCheckbox: CheckboxElement
 
     // MARK: Other properties
-    public var collectionMode: CollectionMode {
+    @MainActor public var collectionMode: CollectionMode {
         didSet {
             if oldValue != collectionMode {
                 updateAddressFields(for: countryCodes[country.selectedIndex], address: nil)
             }
         }
     }
-    public var selectedCountryCode: String {
+    @MainActor public var selectedCountryCode: String {
         get {
             return countryCodes[country.selectedIndex]
         }
@@ -141,7 +141,7 @@ import UIKit
             )
         }
     }
-    var addressDetails: AddressDetails {
+    @MainActor var addressDetails: AddressDetails {
         let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.rawData)
         return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
     }
@@ -164,7 +164,7 @@ import UIKit
        - addressSpecProvider: Determines the list of address fields to display for a selected country
        - defaults: Default address to prepopulate address fields with
      */
-    public init(
+    @MainActor public init(
         title: String? = nil,
         countries: [String]? = nil,
         locale: Locale = .current,
@@ -255,7 +255,7 @@ import UIKit
 
     /// Updates the "Billing same as shipping" checkbox and the default address used.
     /// - Note: This is a very specific method to handle the case where the merchant-provided default shipping address is updated after the AddressSectionElement is rendered
-    public func updateBillingSameAsShippingDefaultAddress(_ defaultAddress: AddressDetails.Address) {
+    @MainActor public func updateBillingSameAsShippingDefaultAddress(_ defaultAddress: AddressDetails.Address) {
         // First, update the default address we use
         self.defaults.address = defaultAddress
 
@@ -280,7 +280,7 @@ import UIKit
     }
 
     /// - Parameter address: Populates the new fields with the provided defaults, or the current fields' text if `nil`.
-    private func updateAddressFields(
+    @MainActor private func updateAddressFields(
         for countryCode: String,
         address: AddressDetails.Address? = nil
     ) {
@@ -363,7 +363,7 @@ import UIKit
     }
 
     /// Returns `true` iff all **displayed** address fields match the given `address`, treating `nil` and "" as equal.
-    func displayedAddressEqualTo(address: AddressDetails.Address) -> Bool {
+    @MainActor func displayedAddressEqualTo(address: AddressDetails.Address) -> Bool {
         var allDisplayedFieldsEqual = true
         if let city = city, city.text.nonEmpty != address.city?.nonEmpty {
            allDisplayedFieldsEqual = false

@@ -75,7 +75,7 @@ import UIKit
      This could be the logo of a network, a bank, etc.
      - Returns: a view.
      */
-    func accessoryView(for text: String, theme: ElementsUITheme) -> UIView?
+    @MainActor func accessoryView(for text: String, theme: ElementsUITheme) -> UIView?
 
     /**
      Convenience method that creates a TextFieldElement using this Configuration

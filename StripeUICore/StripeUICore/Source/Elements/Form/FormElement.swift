@@ -16,7 +16,7 @@ import UIKit
  */
 @_spi(STP) public class FormElement: ContainerElement {
     weak public var delegate: ElementDelegate?
-    lazy var formView: FormView = {
+    @MainActor lazy var formView: FormView = {
         return FormView(viewModel: viewModel)
     }()
 
@@ -47,7 +47,7 @@ import UIKit
         }
     }
 
-    var viewModel: ViewModel {
+    @MainActor var viewModel: ViewModel {
         return ViewModel(elements: elements.map({ $0.view }), bordered: style == .bordered, theme: theme, customSpacing: customSpacing.map({ ($0.0.view, $0.1) }))
     }
 
@@ -58,11 +58,11 @@ import UIKit
     ///   - elements: The list of elements
     ///   - theme: The ElementsUITheme
     ///   - customSpacing: A list of Elements and a CGFloat of custom spacing to use after the element
-    public convenience init(elements: [Element?], theme: ElementsUITheme = .default, customSpacing: [(Element, CGFloat)] = []) {
+    @MainActor public convenience init(elements: [Element?], theme: ElementsUITheme = .default, customSpacing: [(Element, CGFloat)] = []) {
         self.init(elements: elements, style: .plain, theme: theme, customSpacing: customSpacing)
     }
 
-    public init(elements: [Element?], style: Style, theme: ElementsUITheme = .default, customSpacing: [(Element, CGFloat)] = []) {
+    @MainActor public init(elements: [Element?], style: Style, theme: ElementsUITheme = .default, customSpacing: [(Element, CGFloat)] = []) {
         self.elements = elements.compactMap { $0 }
         self.style = style
         self.theme = theme
@@ -70,7 +70,7 @@ import UIKit
         self.elements.forEach { $0.delegate = self }
     }
 
-    public func toggleElements(_ elements: [Element], hidden: Bool, animated: Bool) {
+    @MainActor public func toggleElements(_ elements: [Element], hidden: Bool, animated: Bool) {
         formView.setViews(elements.map({ $0.view }), hidden: hidden, animated: animated)
     }
 }
