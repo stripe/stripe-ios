@@ -601,7 +601,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
         let postalCodeRequested = viewModel.postalCodeRequested
         viewModel = STPPaymentCardTextFieldViewModel(brandUpdateHandler: { [weak self] in
-            self?.updateImage(for: .number)
+            guard let self else { return }
+            self.updateImage(for: .number)
+            self.delegate?.paymentCardTextFieldDidChange?(self)
         })
         viewModel.postalCodeRequested = postalCodeRequested
         onChange()
@@ -727,7 +729,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     @objc internal lazy var viewModel: STPPaymentCardTextFieldViewModel = {
         STPPaymentCardTextFieldViewModel(brandUpdateHandler: { [weak self] in
-            self?.updateImage(for: .number)
+            guard let self else { return }
+            self.updateImage(for: .number)
+            self.delegate?.paymentCardTextFieldDidChange?(self)
         })
     }()
 
