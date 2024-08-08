@@ -603,7 +603,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         viewModel = STPPaymentCardTextFieldViewModel(brandUpdateHandler: { [weak self] in
             guard let self else { return }
             self.updateImage(for: .number)
-            self.delegate?.paymentCardTextFieldDidChange?(self)
+            self.onChange()
         })
         viewModel.postalCodeRequested = postalCodeRequested
         onChange()
@@ -731,7 +731,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         STPPaymentCardTextFieldViewModel(brandUpdateHandler: { [weak self] in
             guard let self else { return }
             self.updateImage(for: .number)
-            self.delegate?.paymentCardTextFieldDidChange?(self)
+            onChange()
         })
     }()
 
