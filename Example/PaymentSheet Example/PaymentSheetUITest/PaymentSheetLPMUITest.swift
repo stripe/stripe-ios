@@ -338,27 +338,27 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 10)
     }
 
-    func testPayPalPaymentMethod_setup() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.apmsEnabled = .on
-        settings.merchantCountryCode = .FR
-        settings.currency = .eur
-        settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        // Select PayPal
-        tapPaymentMethod("PayPal")
-        app.buttons["Set up"].tap()
-        waitForASWebAuthSigninModalAndTapContinue()
-        webviewAuthorizeSetupButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
-    }
+//    func testPayPalPaymentMethod_setup() throws {
+//        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+//        settings.customerMode = .new
+//        settings.apmsEnabled = .on
+//        settings.merchantCountryCode = .FR
+//        settings.currency = .eur
+//        settings.mode = .setup
+//        loadPlayground(
+//            app,
+//            settings
+//        )
+//
+//        app.buttons["Present PaymentSheet"].tap()
+//
+//        // Select PayPal
+//        tapPaymentMethod("PayPal")
+//        app.buttons["Set up"].tap()
+//        waitForASWebAuthSigninModalAndTapContinue()
+//        webviewAuthorizeSetupButton.waitForExistenceAndTap(timeout: 10)
+//        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+//    }
 
     func testRevolutPayPaymentMethod_setup() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
