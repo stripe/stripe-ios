@@ -110,7 +110,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
                 to: CChar.self,
                 capacity: 1
             ) { ptr in
-                String.init(validatingUTF8: ptr)
+                String(validatingCString: ptr)
             }
         }
         return model ?? "Unknown"
