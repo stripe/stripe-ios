@@ -1344,11 +1344,11 @@ extension STPPaymentMethodParams {
     }
 }
 
+// MARK: - STPPaymentOption
+// This should be in `STPPaymentMethodParams+BasicUI.swift` but there's some module issue
 extension STPPaymentMethodParams {
     @objc public var label: String {
         switch type {
-        case .alipay:
-            return "Alipay"  // ? Why aren't these localized?
         case .card:
             if let card = card {
                 let brand = STPCardValidator.brand(forNumber: card.number ?? "")
@@ -1357,68 +1357,13 @@ extension STPPaymentMethodParams {
             } else {
                 return STPCardBrandUtilities.stringFrom(.unknown) ?? ""
             }
-        case .iDEAL:
-            return "iDEAL"
         case .FPX:
             if let fpx = fpx {
                 return STPFPXBank.stringFrom(fpx.bank) ?? ""
             } else {
                 return "FPX"
             }
-        case .SEPADebit:
-            return "SEPA Debit"
-        case .bacsDebit:
-            return "Bacs Debit"
-        case .AUBECSDebit:
-            return "AU BECS Debit"
-        case .giropay:
-            return "giropay"
-        case .przelewy24:
-            return "Przelewy24"
-        case .EPS:
-            return "EPS"
-        case .bancontact:
-            return "Bancontact"
-        case .netBanking:
-            return "NetBanking"
-        case .OXXO:
-            return "OXXO"
-        case .sofort:
-            return "Sofort"
-        case .UPI:
-            return "UPI"
-        case .grabPay:
-            return "GrabPay"
-        case .payPal:
-            return "PayPal"
-        case .afterpayClearpay:
-            return "Afterpay Clearpay"
-        case .blik:
-            return "BLIK"
-        case .weChatPay:
-            return "WeChat Pay"
-        case .boleto:
-            return "Boleto"
-        case .link:
-            return "Link"
-        case .klarna:
-            return "Klarna"
-        case .affirm:
-            return "Affirm"
-        case .USBankAccount:
-            return "US Bank Account"
-        case .cashApp:
-            return "Cash App Pay"
-        case .revolutPay:
-            return "Revolut Pay"
-        case.twint:
-            return "TWINT"
-        case .multibanco:
-            return "Multibanco"
-        case .cardPresent, .unknown:
-            return STPLocalizedString("Unknown", "Default missing source type label")
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish,
-             .sunbit, .billie, .satispay:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .giropay, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .sofort, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .unknown:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         @unknown default:
