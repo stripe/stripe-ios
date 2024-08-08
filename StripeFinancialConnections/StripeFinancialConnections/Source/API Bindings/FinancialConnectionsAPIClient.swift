@@ -208,6 +208,16 @@ protocol FinancialConnectionsAPI {
         linkAccountSession: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse>
+
+    func paymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentDetails>
+
+    func paymentMethods(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String
+    ) -> Future<FinancialConnectionsPaymentMethod>
 }
 
 extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
@@ -900,6 +910,46 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             useConsumerPublishableKeyIfNeeded: false
         )
     }
+
+    func paymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentDetails> {
+        let parameters: [String: Any] = [
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ],
+            "bank_account": [
+                "account": bankAccountId
+            ],
+            "type": "bank_account",
+        ]
+        return post(
+            resource: APIEndpointPaymentDetails,
+            parameters: parameters,
+            useConsumerPublishableKeyIfNeeded: true
+        )
+    }
+
+    func paymentMethods(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String
+    ) -> Future<FinancialConnectionsPaymentMethod> {
+        let parameters: [String: Any] = [
+            "link": [
+                "credentials": [
+                    "consumer_session_client_secret": consumerSessionClientSecret
+                ],
+                "payment_details_id": paymentDetailsId,
+            ],
+            "type": "link",
+        ]
+        return post(
+            resource: APIEndpointPaymentMethods,
+            parameters: parameters,
+            useConsumerPublishableKeyIfNeeded: true
+        )
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
@@ -928,5 +978,8 @@ private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts
 private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
 private let APIEndpointConsumerSessions = "connections/link_account_sessions/consumer_sessions"
 private let APIEndpointPollAccountNumbers = "link_account_sessions/poll_account_numbers"
+// Instant Debits
 private let APIEndpointLinkAccountsSignUp = "consumers/accounts/sign_up"
 private let APIEndpointAttachLinkConsumerToLinkAccountSession = "consumers/attach_link_consumer_to_link_account_session"
+private let APIEndpointPaymentDetails = "consumers/payment_details"
+private let APIEndpointPaymentMethods = "payment_methods"

@@ -33,6 +33,10 @@ protocol NativeFlowDataManager: AnyObject {
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneMessage: String? { get set }
 
+    func createPaymentMethod(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentMethod>
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
 }
@@ -118,6 +122,25 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         // If the server returns active institution use that, otherwise resort to initial institution.
         self.institution = manifest.activeInstitution ?? manifest.initialInstitution
         didUpdateManifest()
+    }
+
+    func createPaymentMethod(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentMethod> {
+        apiClient.paymentDetails(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            bankAccountId: bankAccountId
+        ).chained { [weak self] paymentDetails in
+            guard let self else {
+                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
+            }
+
+            return apiClient.paymentMethods(
+                consumerSessionClientSecret: consumerSessionClientSecret,
+                paymentDetailsId: paymentDetails.redactedPaymentDetails.id
+            )
+        }
     }
 
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession> {
