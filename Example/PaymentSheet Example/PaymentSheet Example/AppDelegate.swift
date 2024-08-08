@@ -19,7 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         Task {
-            await StripeAttest.shared.attest()
+//            StripeAttest.shared.resetKey()
+//            await StripeAttest.shared.attest()
+            await StripeAttest.shared.assert()
         }
         
         // Override point for customization after application launch.

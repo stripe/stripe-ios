@@ -8,6 +8,7 @@
 import Foundation
 import CryptoKit
 import DeviceCheck
+import UIKit
 
 @_spi(STP) public class StripeAttest {
     @_spi(STP) public static let shared = StripeAttest()
@@ -39,7 +40,7 @@ import DeviceCheck
         }
     }
     
-    func resetKey() {
+    @_spi(STP) public func resetKey() {
         UserDefaults.standard.set(nil, forKey: Self.keyPrefName)
     }
     
@@ -47,6 +48,21 @@ import DeviceCheck
 
         // Continue with server access.
         
+    }
+    
+    func getChallenge() async -> Data {
+        let url = URL(string: "https://funny-observant-antler.glitch.me/challenge")!
+        let deviceId = await UIDevice.current.identifierForVendor!.uuidString
+        let requestParams = [ "deviceId": deviceId ]
+        let clientData = try! JSONSerialization.data(withJSONObject: requestParams)
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = clientData
+
+        let (data, _) = try! await URLSession.shared.data(for: request)
+        Swift.assert(data.count == 16)
+        return data
     }
     
     @_spi(STP) public func attest() async {
@@ -58,13 +74,24 @@ import DeviceCheck
         }
         let service = DCAppAttestService.shared
 
-        let challenge = "abc123"
-        let hash = Data(SHA256.hash(data: challenge.data(using: .utf8)!))
+        let challenge = await getChallenge()
+        let hash = Data(SHA256.hash(data: challenge))
 
         do {
             let attestation = try await service.attestKey(keyId, clientDataHash: hash)
             print(attestation)
             // Send the attestation object to your server for verification.
+            let deviceId = await UIDevice.current.identifierForVendor!.uuidString
+            let requestParams = [ "deviceId": deviceId,
+                                  "challenge": challenge.base64EncodedString(),
+                            "attestation": attestation.base64EncodedString() ]
+            let clientData = try! JSONSerialization.data(withJSONObject: requestParams)
+            let url = URL(string: "https://funny-observant-antler.glitch.me/attest")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = clientData
+            let (data, _) = try! await URLSession.shared.data(for: request)
+            print(data)
         } catch {
 //             If error is 3, we need to generate a new key, as the key has already been attested or is otherwise corrupt.
             // Rate limit these attempts
@@ -72,10 +99,10 @@ import DeviceCheck
             print(error)
             // Failed
         }
-        await self.assert()
+//        await self.assert()
     }
     
-    func assert() async {
+    @_spi(STP) public func assert() async {
         guard #available(iOS 14.0, *),
               DCAppAttestService.shared.isSupported,
               let keyId = await self.getKeyID()
@@ -84,15 +111,26 @@ import DeviceCheck
         }
         let service = DCAppAttestService.shared
 
-        let challenge = "abc123"
+        let challenge = await getChallenge()
+        let deviceId = await UIDevice.current.identifierForVendor!.uuidString
         let request = [ "action": "getGameLevel",
                         "levelId": "1234",
-                        "challenge": challenge ]
-        guard let clientData = try? JSONEncoder().encode(request) else { return }
+                        "deviceId": deviceId,
+                        "challenge": challenge.base64EncodedString() ]
+        let clientData = try! JSONSerialization.data(withJSONObject: request)
         let clientDataHash = Data(SHA256.hash(data: clientData))
         do {
-            let attestation = try await service.generateAssertion(keyId, clientDataHash: clientDataHash)
-            print(attestation)
+            let assertion = try await service.generateAssertion(keyId, clientDataHash: clientDataHash)
+            print(assertion)
+            let url = URL(string: "https://funny-observant-antler.glitch.me/assert")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue(assertion.base64EncodedString(), forHTTPHeaderField: "X-Stripe-Apple-Assertion")
+            request.httpBody = clientData
+            let (data, _) = try! await URLSession.shared.data(for: request)
+            print(String(data: data, encoding: .utf8)!)
+
             // Send the attestation object to your server for verification.
         } catch {
             print(error)
@@ -100,4 +138,8 @@ import DeviceCheck
         }
         
     }
+}
+
+struct AttestationRequest: Codable {
+    let attestation: String
 }
