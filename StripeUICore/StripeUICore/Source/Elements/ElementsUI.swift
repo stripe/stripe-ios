@@ -43,7 +43,20 @@ import UIKit
         label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }
-
+    public static func makeMandateTextField(theme: ElementsUITheme) -> UITextView {
+        let textView = UITextView()
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.font = theme.fonts.caption
+        textView.backgroundColor = .clear
+        textView.textColor = theme.colors.secondaryText
+        textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
+        // These two lines remove insets that are on UITextViews by default
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.textAlignment = .natural
+        return textView
+    }
     public static func makeNoticeTextField(theme: ElementsUITheme) -> UITextView {
         let textView = UITextView()
         textView.isScrollEnabled = false

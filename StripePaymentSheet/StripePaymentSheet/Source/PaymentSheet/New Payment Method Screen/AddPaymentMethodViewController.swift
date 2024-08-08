@@ -62,6 +62,9 @@ class AddPaymentMethodViewController: UIViewController {
     var bottomNoticeAttributedString: NSAttributedString? {
         paymentMethodFormViewController.bottomNoticeAttributedString
     }
+    var mandateAttributedString: NSAttributedString? {
+        paymentMethodFormViewController.mandateAttributedString
+    }
 
     private let intent: Intent
     private let elementsSession: STPElementsSession

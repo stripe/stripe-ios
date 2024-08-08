@@ -228,6 +228,12 @@ extension PaymentMethodFormViewController {
         }
         return nil
     }
+    var mandateAttributedString: NSAttributedString? {
+        if let mandateForm = form as? MandateDetachable {
+            return mandateForm.mandateString()
+        }
+        return nil
+    }
 
     func didTapCallToActionButton(from viewController: UIViewController) {
         switch paymentMethodType {

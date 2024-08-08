@@ -110,3 +110,12 @@ extension LinkEnabledPaymentMethodElement: ElementDelegate {
     }
 
 }
+
+extension LinkEnabledPaymentMethodElement: MandateDetachable {
+    func mandateString() -> NSAttributedString? {
+        guard let mandateDetachable = paymentMethodElement as? MandateDetachable else {
+            return nil
+        }
+        return mandateDetachable.mandateString()
+    }
+}

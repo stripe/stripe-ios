@@ -81,34 +81,35 @@ extension PaymentSheetFormFactory {
             addressElement: billingAddressSection,
             phoneElement: phoneElement)
 
-        let mandate: SimpleMandateElement? = {
+        let mandate: String? = {
             if isSettingUp {
-                return .init(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
+                return String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName)
             }
             return nil
         }()
-
         let cardFormElement = FormElement(
             elements: [
                 optionalPhoneAndEmailInformationSection,
                 cardSection,
                 billingAddressSection,
-                shouldDisplaySaveCheckbox ? saveCheckbox : nil,
-                mandate,
+                shouldDisplaySaveCheckbox ? saveCheckbox : nil
             ],
             theme: theme)
+        let cardFormElementContainer = FormElementWithDetachedMandate(formElement: cardFormElement,
+                                                                      theme: theme,
+                                                                      detachedMandate: mandate)
 
         if case .paymentSheet(let configuration) = configuration, showLinkInlineSignup {
             return LinkEnabledPaymentMethodElement(
                 type: .card,
-                paymentMethodElement: cardFormElement,
+                paymentMethodElement: cardFormElementContainer,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode,
                 showCheckbox: !shouldDisplaySaveCheckbox
             )
         } else {
-            return cardFormElement
+            return cardFormElementContainer
         }
     }
 }

@@ -270,7 +270,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 if let bottomNoticeAttributedString = paymentMethodFormViewController?.bottomNoticeAttributedString {
                     return bottomNoticeAttributedString
                 }
-                // 3. If not, generate the form
+                // 3. For new PMs, see if we have a mandateAttributedString
+                if let mandateAttributedString = paymentMethodFormViewController?.mandateAttributedString {
+                    return mandateAttributedString
+                }
+                // 4. If not, generate the form
                 let form = makeFormVC(paymentMethodType: selectedPaymentMethodType).form
                 guard !form.collectsUserInput else {
                     // If it collects user input, the mandate will be displayed in the form and not here

@@ -115,6 +115,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private lazy var errorLabel: UILabel = {
         return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
+    private lazy var mandateTextView: UITextView = {
+        return ElementsUI.makeMandateTextField(theme: configuration.appearance.asElementsTheme)
+    }()
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
     }()
@@ -198,14 +201,15 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
-            headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
+            headerLabel, walletHeader, paymentContainerView, mandateTextView, errorLabel, buyButton, bottomNoticeTextField,
         ])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.bringSubviewToFront(headerLabel)
-        stackView.setCustomSpacing(32, after: paymentContainerView)
+        stackView.setCustomSpacing(LinkEnabledPaymentMethodElement.Constants.spacing, after: paymentContainerView)
+        stackView.setCustomSpacing(LinkEnabledPaymentMethodElement.Constants.spacing, after: mandateTextView)
         stackView.setCustomSpacing(0, after: buyButton)
 
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
@@ -350,7 +354,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             }
         }
 
-        // Notice
+        updateMandate()
         updateBottomNotice()
 
         if isPaymentInFlight {
@@ -381,6 +385,18 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             return .disabled
         }
         return .enabled
+    }
+
+    func updateMandate() {
+        switch mode {
+        case .selectingSaved:
+            self.mandateTextView.attributedText = nil
+        case .addingNew:
+            self.mandateTextView.attributedText = addPaymentMethodViewController.mandateAttributedString
+        }
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.mandateTextView.setHiddenIfNecessary(self.mandateTextView.attributedText?.length == 0)
+        }
     }
 
     func updateBottomNotice() {
