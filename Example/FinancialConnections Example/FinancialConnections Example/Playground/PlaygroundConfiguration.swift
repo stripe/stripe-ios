@@ -127,6 +127,8 @@ final class PlaygroundConfiguration {
             case partnerF = "partner_f"
             case partnerC = "partner_c"
             case bugBash = "bug_bash"
+            case abavVerification = "abav_verification"
+            case skipVerification = "skip_verification"
         }
     }
 
@@ -159,6 +161,16 @@ final class PlaygroundConfiguration {
         Merchant(
             customId: .bugBash,
             displayName: "Bug Bash",
+            isTestModeSupported: true
+        ),
+        Merchant(
+            customId: .abavVerification,
+            displayName: "ABAV Verification",
+            isTestModeSupported: true
+        ),
+        Merchant(
+            customId: .skipVerification,
+            displayName: "Skip Verification",
             isTestModeSupported: true
         ),
 
