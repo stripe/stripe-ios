@@ -22,21 +22,25 @@ final class PaneLayoutView {
     let scrollView: UIScrollView
 
     private var footerView: UIView?
-    private var safeAreaLayoutGuide: UILayoutGuide?
     private var footerViewBottomConstraint: NSLayoutConstraint?
+    private weak var presentingView: UIView?
 
-    static var shouldMoveFooterViewAboveKeyboard: Bool {
-        // Only move the footer view on iPhones.
-        // The entire sheet is already shifted up with the keyboard on iPads.
-        UIDevice.current.userInterfaceIdiom != .pad
+    /// Whether or not the sheet is currently presented as a form sheet (which only happens on iPad).
+    /// Unfortunately, the best way to know this is to check if the sheet's width is not equal to the window's width.
+    private var isPresentedAsFormSheet: Bool {
+        guard let window = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first else { return false }
+        guard let presentingView else { return false }
+        return window.frame.width != presentingView.frame.width
+    }
+
+    /// Only move the footer view when the sheet is not presented as a form sheet.
+    /// Form sheet positions are already adjusted when the keyboard is shown.
+    private var shouldMoveFooterViewAboveKeyboard: Bool {
+        !isPresentedAsFormSheet
     }
 
     /// Creates a PaneLayoutView with the provided content view and footer view.
-    /// In order to keep the footer view above the keyboard;
-    /// - Set `keepFooterAboveKeyboard: true`.
-    /// - Hold onto this instance of `PaneLayoutView` on the view controller presenting it.
-    /// This is required to prevent the keyboard observer notifications be removed.
-    init(contentView: UIView, footerView: UIView?, keepFooterAboveKeyboard: Bool = false) {
+    init(contentView: UIView, footerView: UIView?) {
         self.scrollViewContentView = contentView
         self.footerView = footerView
 
@@ -55,17 +59,18 @@ final class PaneLayoutView {
         verticalStackView.spacing = 0
         verticalStackView.axis = .vertical
         self.paneLayoutView = verticalStackView
-
-        if keepFooterAboveKeyboard, PaneLayoutView.shouldMoveFooterViewAboveKeyboard {
-            setupKeyboardObservers()
-        }
     }
 
-    func addTo(view: UIView) {
+    /// Adds this `PaneLayoutView` to the provided view.
+    /// In order to keep the footer view above the keyboard;
+    /// - Set `keepFooterAboveKeyboard: true`.
+    /// - Hold onto this instance of `PaneLayoutView` on the view controller presenting it.
+    /// This is required to prevent the keyboard observer notifications be removed.
+    func addTo(view: UIView, keepFooterAboveKeyboard: Bool = false) {
         // This function encapsulates an error-prone sequence where we
         // must add `paneLayoutView` (and all it's subviews) to the `view`
         // BEFORE we can add a constraint for `UIScrollView` content
-        self.safeAreaLayoutGuide = view.safeAreaLayoutGuide
+        self.presentingView = view
         view.addAndPinSubviewToSafeArea(paneLayoutView)
         scrollViewContentView?.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
 
@@ -78,6 +83,10 @@ final class PaneLayoutView {
             equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         scrollViewHeightConstraint.isActive = true
+
+        if keepFooterAboveKeyboard {
+            setupKeyboardObservers()
+        }
     }
 
     func createView() -> UIView {
@@ -103,6 +112,7 @@ final class PaneLayoutView {
     }
 
     @objc private func keyboardWillShow(_ notification: Notification) {
+        guard shouldMoveFooterViewAboveKeyboard else { return }
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
@@ -122,7 +132,7 @@ final class PaneLayoutView {
     }
 
     private func updateFooterViewConstraints(keyboardHeight: CGFloat) {
-        guard let safeAreaLayoutGuide, let footerView else { return }
+        guard let presentingView, let footerView else { return }
         let adjustedKeyboardHeight: CGFloat
         if keyboardHeight > 0 {
             // Removes additional padding applied to footer view when showing above the keyboard.
@@ -135,7 +145,7 @@ final class PaneLayoutView {
             existingConstraint.constant = -adjustedKeyboardHeight
         } else {
             footerViewBottomConstraint = footerView.bottomAnchor.constraint(
-                equalTo: safeAreaLayoutGuide.bottomAnchor,
+                equalTo: presentingView.safeAreaLayoutGuide.bottomAnchor,
                 constant: -adjustedKeyboardHeight
             )
             footerViewBottomConstraint?.isActive = true
