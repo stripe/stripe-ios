@@ -31,13 +31,13 @@ class HCaptchaResult: NSObject {
     }
 
     /**
-     - returns: The validation token uppon success.
+     - returns: The validation token upon success.
 
      Tries to unwrap the Result and retrieve the token if it's successful.
 
      - Throws: `HCaptchaError`
      */
-    @objc
+    @MainActor @objc
     func dematerialize() throws -> String {
         manager.resultHandled = true
 

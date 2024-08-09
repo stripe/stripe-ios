@@ -31,19 +31,21 @@ extension STPAPIClient {
                 completion(nil, error)
                 return
             case .success(let fraudDetectionDataData):
-                let paymentUserAgent = PaymentsSDKVariant.paymentUserAgent
-                let parameters = [
-                    "muid": fraudDetectionDataData.muid ?? "",
-                    "sid": fraudDetectionDataData.sid ?? "",
-                    "guid": fraudDetectionDataData.guid ?? "",
-                    "payment_user_agent": paymentUserAgent,
-                ]
-                APIRequest<STPRadarSession>.post(
-                    with: self,
-                    endpoint: APIEndpointRadarSession,
-                    parameters: parameters
-                ) { (radarSession, _, error) in
-                    completion(radarSession, error)
+                Task {@MainActor in
+                    let paymentUserAgent = PaymentsSDKVariant.paymentUserAgent
+                    let parameters = [
+                        "muid": fraudDetectionDataData.muid ?? "",
+                        "sid": fraudDetectionDataData.sid ?? "",
+                        "guid": fraudDetectionDataData.guid ?? "",
+                        "payment_user_agent": paymentUserAgent,
+                    ]
+                    APIRequest<STPRadarSession>.post(
+                        with: self,
+                        endpoint: APIEndpointRadarSession,
+                        parameters: parameters
+                    ) { (radarSession, _, error) in
+                        completion(radarSession, error)
+                    }
                 }
             }
         }

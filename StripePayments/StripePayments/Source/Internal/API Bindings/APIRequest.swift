@@ -17,10 +17,10 @@ let JSONKeyObject = "object"
 /// - Note: The shape of this class is only for backwards compatibility with `STPAPIResponseDecodable` public API bindings.
 ///         If you're not dealing with `STPAPIResponseDecodable` objects, use STPAPIClient's `get`, `post`, etc. methods.
 @_spi(STP) public class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
-    @_spi(STP) public typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) ->
+    @_spi(STP) public typealias STPAPIResponseBlock = @MainActor @Sendable (ResponseType?, HTTPURLResponse?, Error?) ->
         Void
 
-    @_spi(STP) public class func post(
+    @_spi(STP) @MainActor public class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -45,7 +45,7 @@ let JSONKeyObject = "object"
     }
 
     /// Async version
-    @_spi(STP) public class func post(
+    @_spi(STP) @MainActor public class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -57,12 +57,14 @@ let JSONKeyObject = "object"
                     continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                     return
                 }
-                continuation.resume(returning: responseObject)
+                // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
+                nonisolated(unsafe) let response = responseObject
+                continuation.resume(returning: response)
             }
         }
     }
 
-    @_spi(STP) public class func getWith(
+    @_spi(STP) @MainActor public class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -87,7 +89,7 @@ let JSONKeyObject = "object"
     }
 
     /// Async version
-    @_spi(STP) public class func getWith(
+    @_spi(STP) @MainActor public class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -99,12 +101,14 @@ let JSONKeyObject = "object"
                     continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                     return
                 }
-                continuation.resume(returning: responseObject)
+                // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
+                nonisolated(unsafe) let response = responseObject
+                continuation.resume(returning: response)
             }
         }
     }
 
-    @_spi(STP) public class func delete(
+    @_spi(STP) @MainActor public class func delete(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -132,7 +136,7 @@ let JSONKeyObject = "object"
         _ response: URLResponse?,
         body: Data?,
         error: Error?,
-        completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
+        completion: @escaping @MainActor @Sendable (ResponseType?, HTTPURLResponse?, Error?) -> Void
     ) {
         // Derive HTTP URL response
         var httpResponse: HTTPURLResponse?
@@ -141,9 +145,11 @@ let JSONKeyObject = "object"
         }
 
         // Wrap completion block with main thread dispatch
-        let safeCompletion: ((ResponseType?, Error?) -> Void) = { responseObject, responseError in
+        let safeCompletion: (@Sendable (ResponseType?, Error?) -> Void) = { responseObject, responseError in
+            // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
+            nonisolated(unsafe) let response = responseObject
             stpDispatchToMainThreadIfNecessary({
-                completion(responseObject, httpResponse, responseError)
+                completion(response, httpResponse, responseError)
             })
         }
 

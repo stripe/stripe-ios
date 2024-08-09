@@ -9,7 +9,7 @@
 import Foundation
 
 @_spi(STP) @objc public protocol STPURLCallbackListener: NSObjectProtocol {
-    func handleURLCallback(_ url: URL) -> Bool
+    @MainActor func handleURLCallback(_ url: URL) -> Bool
 }
 
 @MainActor

@@ -10,7 +10,7 @@ import UIKit
 
 @_spi(STP) public protocol FinancialConnectionsSDKInterface {
     init()
-    func presentFinancialConnectionsSheet(
+    @MainActor func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,

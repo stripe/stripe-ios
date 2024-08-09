@@ -47,6 +47,7 @@ extension StripeAPI {
 // These are included so Xcode can offer guidance on how to replace top-level Stripe usage.
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,
@@ -58,6 +59,7 @@ public func setDefaultPublishableKey(_ publishableKey: String) {
 }
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,
@@ -73,6 +75,7 @@ public var advancedFraudSignalsEnabled: Bool {
 }
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,
@@ -88,6 +91,7 @@ public var jcbPaymentNetworkSupported: Bool {
 }
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,
@@ -103,6 +107,7 @@ public var additionalEnabledApplePayNetworks: [PKPaymentNetwork] {
 }
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,
@@ -113,6 +118,7 @@ public func canSubmitPaymentRequest(_ paymentRequest: PKPaymentRequest) -> Bool 
 }
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,
@@ -123,6 +129,7 @@ public func deviceSupportsApplePay() -> Bool {
 }
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,
@@ -141,6 +148,7 @@ public func paymentRequest(
 }
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,
@@ -159,6 +167,7 @@ func paymentRequest(
 }
 
 /// :nodoc:
+@MainActor
 @available(
     *,
     deprecated,

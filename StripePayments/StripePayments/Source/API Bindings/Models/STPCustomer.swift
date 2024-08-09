@@ -12,7 +12,7 @@ import Foundation
 /// An `STPCustomer` represents a deserialized Customer object from the Stripe API.
 /// You shouldn't need to instantiate an `STPCustomer` – you should instead use
 /// `STPCustomerContext` to manage retrieving and updating a customer.
-public class STPCustomer: NSObject {
+public class STPCustomer: NSObject, @unchecked Sendable {
 
     /// The Stripe ID of the customer, e.g. `cus_1234`
     @objc public let stripeID: String

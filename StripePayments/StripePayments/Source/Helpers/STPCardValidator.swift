@@ -91,7 +91,7 @@ public class STPCardValidator: NSObject {
     /// STPCardValidationStateIncomplete if the number is a substring of a valid
     /// card (e.g. @"4242").
     @objc(validationStateForNumber:validatingCardBrand:)
-    public class func validationState(
+    @MainActor public class func validationState(
         forNumber cardNumber: String?,
         validatingCardBrand: Bool
     ) -> STPCardValidationState {
@@ -312,7 +312,7 @@ public class STPCardValidator: NSObject {
     /// STPCardValidationStateInvalid if any field is invalid, or
     /// STPCardValidationStateIncomplete if all fields are either incomplete or valid.
     @objc(validationStateForCard:)
-    public class func validationState(forCard card: STPCardParams) -> STPCardValidationState {
+    @MainActor public class func validationState(forCard card: STPCardParams) -> STPCardValidationState {
         return self.validationState(
             forCard: card,
             inCurrentYear: self.currentYear(),
@@ -363,7 +363,7 @@ public class STPCardValidator: NSObject {
         }
     }
 
-    class func validationState(
+   @MainActor class func validationState(
         forCard card: STPCardParams,
         inCurrentYear currentYear: Int,
         currentMonth: Int
@@ -426,8 +426,8 @@ public class STPCardValidator: NSObject {
     /// - Parameter card: The card details to validate.
     /// - Parameter completion: Will be called with the set of available STPCardBrands or an error.
     /// - seealso: https://stripe.com/docs/card-brand-choice
-    public class func possibleBrands(forCard cardParams: STPPaymentMethodCardParams,
-                                     completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+    @MainActor public class func possibleBrands(forCard cardParams: STPPaymentMethodCardParams,
+                                     completion: @Sendable @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
         guard let cardNumber = cardParams.number else {
             // If the number is nil or empty, any brand is possible.
             completion(.success(Set(STPCardBrand.allCases)))
@@ -436,8 +436,8 @@ public class STPCardValidator: NSObject {
         possibleBrands(forNumber: cardNumber, completion: completion)
     }
 
-    public class func possibleBrands(forNumber cardNumber: String,
-                                     completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+    @MainActor public class func possibleBrands(forNumber cardNumber: String,
+                                                completion: @Sendable @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
         // Hardcoded test cards that are in our docs but not supported by the card metadata service
         // https://stripe.com/docs/card-brand-choice#testing
         let testCards: [String: [STPCardBrand]] = ["4000002500001001": [.cartesBancaires, .visa],

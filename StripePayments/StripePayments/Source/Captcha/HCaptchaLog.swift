@@ -28,7 +28,7 @@ enum HCaptchaLogLevel: Int, CustomStringConvertible {
 
 /** Internal SDK logger
  */
-internal class HCaptchaLogger {
+@MainActor internal class HCaptchaLogger {
     static var minLevel: HCaptchaLogLevel = .debug
 
     static func debug(_ message: String, _ args: CVarArg...) {

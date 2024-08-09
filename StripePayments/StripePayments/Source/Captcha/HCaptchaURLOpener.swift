@@ -16,13 +16,13 @@ internal protocol HCaptchaURLOpener {
      Return true if url can be handled
      - parameter url: The URL to be checked
      */
-    func canOpenURL(_ url: URL) -> Bool
+    @MainActor func canOpenURL(_ url: URL) -> Bool
 
     /**
      Handle passed url
      - parameter url: The URL to be checked
      */
-    func openURL(_ url: URL)
+    @MainActor func openURL(_ url: URL)
 }
 
 /**

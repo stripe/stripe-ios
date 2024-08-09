@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public protocol InstantDebitsLinkedBank {
+@_spi(STP) public protocol InstantDebitsLinkedBank: Sendable {
     var paymentMethodId: String { get }
     var bankName: String? { get }
     var last4: String? { get }

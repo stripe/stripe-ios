@@ -8,9 +8,11 @@
 
 import Foundation
 
-@MainActor @_spi(STP) public func stpDispatchToMainThreadIfNecessary(_ block: @Sendable @escaping @MainActor () -> Void) {
+@_spi(STP) public func stpDispatchToMainThreadIfNecessary(_ block: @Sendable @escaping @MainActor () -> Void) {
     if Thread.isMainThread {
-        block()
+        Task { @MainActor in
+            block()
+        }
     } else {
         DispatchQueue.main.async(execute: block)
     }

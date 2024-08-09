@@ -339,15 +339,14 @@ extension STPAPIClient {
         resource: String
     ) -> Promise<T> {
         let promise = Promise<T>()
-//        self.request(
-//            method: method,
-//            parameters: parameters,
-//            ephemeralKeySecret: ephemeralKeySecret,
-//            resource: resource
-//        ) { result in
-//            TODO FIX PROMISES
-//            promise.fullfill(with: result)
-//        }
+        self.request(
+            method: method,
+            parameters: parameters,
+            ephemeralKeySecret: ephemeralKeySecret,
+            resource: resource
+        ) { result in
+            promise.fullfill(with: result)
+        }
         return promise
     }
 

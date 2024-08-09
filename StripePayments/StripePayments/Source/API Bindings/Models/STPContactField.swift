@@ -10,7 +10,7 @@ import Foundation
 import PassKit
 
 ///  Contains constants that represent different parts of a users contact/address information.
-@objc public class STPContactField: NSObject, RawRepresentable {
+@objc public final class STPContactField: NSObject, RawRepresentable, Sendable {
     public let rawValue: String
 
     public required init(

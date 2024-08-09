@@ -44,7 +44,7 @@ extension STPAPIClient {
                 let params = STPSourceParams()
                 params.type = .card
                 params.token = token?.tokenId
-                self.createSource(with: params, completion: completion)
+                Task {@MainActor in self.createSource(with: params, completion: completion) }
             }
         }
     }
@@ -84,12 +84,12 @@ extension STPAPIClient {
                     billingDetails: billingDetails,
                     metadata: metadata
                 )
-                self.createPaymentMethod(with: paymentMethodParams, completion: completion)
+                Task { @MainActor in self.createPaymentMethod(with: paymentMethodParams, completion: completion) }
             }
         }
     }
 
-    class func billingDetails(from payment: PKPayment) -> STPPaymentMethodBillingDetails? {
+    nonisolated class func billingDetails(from payment: PKPayment) -> STPPaymentMethodBillingDetails? {
         var billingDetails: STPPaymentMethodBillingDetails?
         if payment.billingContact != nil {
             billingDetails = STPPaymentMethodBillingDetails()
@@ -134,7 +134,7 @@ extension STPAPIClient {
 }
 
 extension PKPayment {
-    func stp_tokenParameters(apiClient: STPAPIClient) -> [String: Any] {
+    @MainActor func stp_tokenParameters(apiClient: STPAPIClient) -> [String: Any] {
         let paymentString = String(data: self.token.paymentData, encoding: .utf8)
         var payload: [String: Any] = [:]
         payload["pk_token"] = paymentString

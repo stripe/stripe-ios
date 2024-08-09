@@ -9,7 +9,7 @@
 import Foundation
 
 /// The various card brands to which a payment card can belong.
-@objc public enum STPCardBrand: Int {
+@objc public enum STPCardBrand: Int, Sendable {
     /// Visa card
     case visa
     /// American Express card

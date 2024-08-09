@@ -11,7 +11,7 @@ import Foundation
 /// An analytic that can be logged to our analytics system.
 @_spi(STP) public protocol Analytic {
     var event: STPAnalyticEvent { get }
-    var params: [String: Sendable] { get }
+    @MainActor var params: [String: Sendable] { get }
 }
 
 /// A generic analytic type.

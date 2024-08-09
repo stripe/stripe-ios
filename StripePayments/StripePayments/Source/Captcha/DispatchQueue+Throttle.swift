@@ -9,7 +9,7 @@
 import Foundation
 
 /// Adds throttling to dispatch queues
-extension DispatchQueue {
+@MainActor extension DispatchQueue {
     /// Stores a throttle DispatchWorkItem instance for a given context
     private static var workItems = [AnyHashable: DispatchWorkItem]()
 
@@ -50,7 +50,7 @@ extension DispatchQueue {
 
      Executes a closure and ensures no other executions will be made during the interval.
      */
-    func debounce(interval: Double, context: AnyHashable = nilContext, action: @escaping () -> Void) {
+    func debounce(interval: Double, context: AnyHashable = nilContext, action: @Sendable @escaping () -> Void) {
         let now = DispatchTime.now()
         if let last = DispatchQueue.lastDebounceCallTimes[context], last + interval > now {
             return

@@ -9,7 +9,7 @@
 import Foundation
 
 /// The type of entity that holds a bank account.
-@objc public enum STPBankAccountHolderType: Int {
+@objc public enum STPBankAccountHolderType: Int, Sendable {
     /// An individual holds this bank account.
     case individual
     /// A company holds this bank account.
@@ -57,7 +57,7 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
     }
 
     // MARK: - STPBankAccountHolderType
-    static var stringToAccountHolderTypeMapping: [String: STPBankAccountHolderType] = [
+    static let stringToAccountHolderTypeMapping: [String: STPBankAccountHolderType] = [
         "individual": .individual,
         "company": .company,
     ]

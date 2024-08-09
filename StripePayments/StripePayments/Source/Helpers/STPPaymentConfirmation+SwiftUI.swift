@@ -47,7 +47,7 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
 
         let uiViewController = UIViewController()
 
-        var presented: Bool = false {
+        @MainActor var presented: Bool = false {
             didSet {
                 if oldValue != presented {
                     presented ? presentConfirmationSheet() : forciblyDismissConfirmationSheet()
@@ -55,7 +55,7 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
             }
         }
 
-        private func presentConfirmationSheet() {
+        @MainActor private func presentConfirmationSheet() {
             if let params = self.parent.intentParams as? STPPaymentIntentParams,
                 let completion = self.parent.onCompletion
                     as? STPPaymentHandlerActionPaymentIntentCompletionBlock
@@ -80,7 +80,7 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
 
         }
 
-        private func forciblyDismissConfirmationSheet() {
+        @MainActor private func forciblyDismissConfirmationSheet() {
             if let sfvc = self.authenticationPresentingViewController().presentedViewController
                 as? SFSafariViewController,
                 !sfvc.isBeingDismissed

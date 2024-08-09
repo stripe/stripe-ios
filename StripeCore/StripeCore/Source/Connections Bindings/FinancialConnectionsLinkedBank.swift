@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public protocol FinancialConnectionsLinkedBank {
+@_spi(STP) public protocol FinancialConnectionsLinkedBank: Sendable {
     var sessionId: String { get }
     var accountId: String { get }
     var displayName: String? { get }

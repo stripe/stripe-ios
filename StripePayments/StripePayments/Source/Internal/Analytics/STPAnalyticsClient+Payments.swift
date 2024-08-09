@@ -179,7 +179,7 @@ extension STPAnalyticsClient {
         usesWebAuthSession: Bool,
         isComplete: Bool
     ) {
-        var params: [String: Any] = ["redirect_type": usesWebAuthSession ? "SFVC" : "ASWAS"]
+        var params: [String: Sendable] = ["redirect_type": usesWebAuthSession ? "SFVC" : "ASWAS"]
         if let intentID {
             params["intent_id"] = intentID
         }
@@ -367,11 +367,11 @@ extension STPAnalyticsClient {
 /// An analytic specific to payments that serializes payment-specific
 /// information into its params.
 @_spi(STP) public protocol PaymentAnalytic: Analytic {
-    var additionalParams: [String: Any] { get }
+    var additionalParams: [String: Sendable] { get }
 }
 
 @_spi(STP) extension PaymentAnalytic {
-    public var params: [String: Any] {
+    @MainActor public var params: [String: Sendable] {
         var params = additionalParams
 
         params["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())

@@ -20,7 +20,7 @@ extension STPPaymentHandlerActionStatus {
     }
 }
 
-extension STPPaymentHandler {
+@MainActor extension STPPaymentHandler {
     struct Analytic: StripeCore.Analytic {
         let event: StripeCore.STPAnalyticEvent
         let intentID: String?
@@ -29,8 +29,8 @@ extension STPPaymentHandler {
         let paymentMethodID: String?
         let error: Error?
 
-        var params: [String: Any] {
-            var params: [String: Any] = error?.serializeForV1Analytics() ?? [:]
+        var params: [String: Sendable] {
+            var params: [String: Sendable] = error?.serializeForV1Analytics() ?? [:]
             params["intent_id"] = intentID
             params["status"] = status?.stringValue
             params["payment_method_type"] = paymentMethodType

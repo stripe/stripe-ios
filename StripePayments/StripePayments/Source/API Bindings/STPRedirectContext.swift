@@ -38,7 +38,7 @@ import SafariServices
 /// that it was not. Currently the only possible error the context can know about
 /// is if SFSafariViewController fails its initial load (e.g. the user has no
 /// internet connection, or servers are down).
-public typealias STPRedirectContextSourceCompletionBlock = (String, String?, Error?) -> Void
+public typealias STPRedirectContextSourceCompletionBlock = @Sendable (String, String?, Error?) -> Void
 /// A callback that is executed when the context believes the redirect action has been completed.
 /// This type has been renamed to `STPRedirectContextSourceCompletionBlock` and deprecated.
 public typealias STPRedirectContextCompletionBlock = STPRedirectContextSourceCompletionBlock
@@ -47,12 +47,12 @@ public typealias STPRedirectContextCompletionBlock = STPRedirectContextSourceCom
 /// so you should re-fetch it using the clientSecret.
 /// - Parameters:
 ///   - clientSecret: The client secret of the PaymentIntent.
-///   - error: An error if one occured. Note that a lack of an error does not
+///   - error: An error if one occurred. Note that a lack of an error does not
 /// mean that the action was completed successfully, the presence of one confirms
 /// that it was not. Currently the only possible error the context can know about
 /// is if SFSafariViewController fails its initial load (e.g. the user has no
 /// internet connection, or servers are down).
-public typealias STPRedirectContextPaymentIntentCompletionBlock = (String, Error?) -> Void
+public typealias STPRedirectContextPaymentIntentCompletionBlock = @Sendable (String, Error?) -> Void
 
 // swift-format-ignore: DontRepeatTypeInStaticProperties
 /// This is a helper class for handling redirects associated with STPSource and
@@ -107,7 +107,7 @@ public class STPRedirectContext: NSObject,
     /// Initializer for context from an `STPSource`.
     /// @note You must ensure that the returnURL set up in the created source
     /// correctly goes to your app so that users can be returned once
-    /// they complete the redirect in the web broswer.
+    /// they complete the redirect in the web browser.
     /// - Parameters:
     ///   - source: The source that needs user redirect action to be taken.
     ///   - completion: A block to fire when the action is believed to have
@@ -344,7 +344,9 @@ public class STPRedirectContext: NSObject,
     }
 
     deinit {
-        unsubscribeFromNotificationsAndDismissPresentedViewControllers()
+        Task { @MainActor in
+            unsubscribeFromNotificationsAndDismissPresentedViewControllers()
+        }
     }
 
     // MARK: - UIViewControllerTransitioningDelegate
@@ -364,7 +366,7 @@ public class STPRedirectContext: NSObject,
     }
 
     // MARK: - Private methods -
-    func performAppRedirectIfPossible(withCompletion onCompletion: @escaping STPBoolCompletionBlock)
+   func performAppRedirectIfPossible(withCompletion onCompletion: @escaping STPBoolCompletionBlock)
     {
 
         let nativeURL = nativeRedirectURL
@@ -378,7 +380,9 @@ public class STPRedirectContext: NSObject,
                 nativeURL,
                 options: [:],
                 completionHandler: { success in
-                    onCompletion(success)
+                    Task { @MainActor in
+                        onCompletion(success)
+                    }
                 }
             )
         }
@@ -488,9 +492,11 @@ public class STPRedirectContext: NSObject,
     }
 
     // MARK: - STPSafariViewControllerDismissalDelegate -
-    func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController) {
-        completion(completionError)
-        completionError = nil
+    nonisolated func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController) {
+        MainActor.assumeIsolated {
+            completion(completionError)
+            completionError = nil
+        }
     }
 
     func isSafariVCPresented() -> Bool {
@@ -533,7 +539,7 @@ public class STPRedirectContext: NSObject,
     func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController)
 }
 
-typealias STPBoolCompletionBlock = (Bool) -> Void
+typealias STPBoolCompletionBlock = @MainActor @Sendable (Bool) -> Void
 // SFSafariViewController sometimes manages its own dismissal and does not currently provide
 // any easier API hooks to detect when the dismissal has completed. This machinery exists to
 // insert ourselves into the View Controller transitioning process and detect when a dismissal
@@ -552,11 +558,11 @@ class STPSafariViewControllerPresentationController: UIPresentationController {
 }
 
 protocol UIApplicationProtocol {
-    func _open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any], completionHandler: ((Bool) -> Void)?)
+    @MainActor func _open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any], completionHandler: (@Sendable (Bool) -> Void)?)
 }
 
 extension UIApplication: UIApplicationProtocol {
-    func _open(_ url: URL, options: [OpenExternalURLOptionsKey: Any], completionHandler completion: ((Bool) -> Void)?) {
+    func _open(_ url: URL, options: [OpenExternalURLOptionsKey: Any], completionHandler completion: (@Sendable (Bool) -> Void)?) {
         open(url, options: options, completionHandler: completion)
     }
 }
@@ -566,29 +572,31 @@ extension STPRedirectContext: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate -
     /// :nodoc:
     @objc
-    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        var manuallyClosedError: Error?
-        if returnURL != nil && state == .inProgress && completionError == nil {
-            manuallyClosedError = NSError(
-                domain: STPError.stripeDomain,
-                code: STPErrorCode.cancellationError.rawValue,
-                userInfo: [
-                    STPError.errorMessageKey:
-                        "User manually closed SFSafariViewController before redirect was completed.",
-                ]
-            )
+    nonisolated public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        MainActor.assumeIsolated {
+            var manuallyClosedError: Error?
+            if returnURL != nil && state == .inProgress && completionError == nil {
+                manuallyClosedError = NSError(
+                    domain: STPError.stripeDomain,
+                    code: STPErrorCode.cancellationError.rawValue,
+                    userInfo: [
+                        STPError.errorMessageKey:
+                            "User manually closed SFSafariViewController before redirect was completed.",
+                    ]
+                )
+            }
+            stpDispatchToMainThreadIfNecessary({
+                self.handleRedirectCompletionWithError(
+                    manuallyClosedError,
+                    shouldDismissViewController: false
+                )
+            })
         }
-        stpDispatchToMainThreadIfNecessary({
-            self.handleRedirectCompletionWithError(
-                manuallyClosedError,
-                shouldDismissViewController: false
-            )
-        })
     }
 
     /// :nodoc:
     @objc
-    public func safariViewController(
+    nonisolated public func safariViewController(
         _ controller: SFSafariViewController,
         didCompleteInitialLoad didLoadSuccessfully: Bool
     ) {
@@ -598,29 +606,33 @@ extension STPRedirectContext: SFSafariViewControllerDelegate {
         //     So, only report failures to complete the initial load if the host was a Stripe domain.
         //     Stripe uses 302 redirects, and this should catch local connection problems as well as
         //     server-side failures from Stripe.
-        if didLoadSuccessfully == false {
-            stpDispatchToMainThreadIfNecessary({
-                if self.lastKnownSafariVCURL?.host?.contains("stripe.com") ?? false {
-                    self.handleRedirectCompletionWithError(
-                        NSError.stp_genericConnectionError(),
-                        shouldDismissViewController: true
-                    )
-                }
-            })
+        MainActor.assumeIsolated {
+            if didLoadSuccessfully == false {
+                stpDispatchToMainThreadIfNecessary({
+                    if self.lastKnownSafariVCURL?.host?.contains("stripe.com") ?? false {
+                        self.handleRedirectCompletionWithError(
+                            NSError.stp_genericConnectionError(),
+                            shouldDismissViewController: true
+                        )
+                    }
+                })
+            }
         }
     }
 
     /// :nodoc:
     @objc
-    public func safariViewController(
+    nonisolated public func safariViewController(
         _ controller: SFSafariViewController,
         initialLoadDidRedirectTo URL: URL
     ) {
-        stpDispatchToMainThreadIfNecessary({
-            // This is only kept up to date during the "initial load", but we only need the value in
-            // `safariViewController:didCompleteInitialLoad:`, so that's fine.
-            self.lastKnownSafariVCURL = URL
-        })
+        MainActor.assumeIsolated {
+            stpDispatchToMainThreadIfNecessary({
+                // This is only kept up to date during the "initial load", but we only need the value in
+                // `safariViewController:didCompleteInitialLoad:`, so that's fine.
+                self.lastKnownSafariVCURL = URL
+            })
+        }
     }
 }
 #endif

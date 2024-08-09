@@ -10,8 +10,8 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-class STPSourcePoller: NSObject {
-    required init(
+class STPSourcePoller: NSObject, @unchecked Sendable {
+    @MainActor required init(
         apiClient: STPAPIClient,
         clientSecret: String,
         sourceID: String,
@@ -85,7 +85,7 @@ class STPSourcePoller: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func poll(after interval: TimeInterval, lastError error: Error?) {
+    @MainActor func poll(after interval: TimeInterval, lastError error: Error?) {
         let totalTime: TimeInterval = Date().timeIntervalSince(startTime)
         let shouldTimeout =
             requestCount > 0
@@ -109,7 +109,7 @@ class STPSourcePoller: NSObject {
         )
     }
 
-    @objc func _poll() {
+    @objc @MainActor func _poll() {
         timer = nil
         let application = UIApplication.shared
         var bgTaskID: UIBackgroundTaskIdentifier = .invalid
@@ -121,15 +121,17 @@ class STPSourcePoller: NSObject {
             withId: sourceID,
             clientSecret: clientSecret,
             responseCompletion: { source, response, error in
-                self._continue(with: source, response: response, error: error as NSError?)
-                self.requestCount += 1
-                application.endBackgroundTask(bgTaskID)
-                bgTaskID = .invalid
+                Task { @MainActor in
+                    self._continue(with: source, response: response, error: error as NSError?)
+                    self.requestCount += 1
+                    application.endBackgroundTask(bgTaskID)
+                    bgTaskID = .invalid
+                }
             }
         )
     }
 
-    func _continue(
+    @MainActor func _continue(
         with source: STPSource?,
         response: HTTPURLResponse?,
         error: NSError?
@@ -188,7 +190,7 @@ class STPSourcePoller: NSObject {
         return source?.status == .pending
     }
 
-    @objc func restartPolling() {
+    @objc @MainActor func restartPolling() {
         if pollingStopped {
             return
         }
@@ -207,7 +209,7 @@ class STPSourcePoller: NSObject {
         }
     }
 
-    func cleanupAndFireCompletion(
+    @MainActor func cleanupAndFireCompletion(
         with source: STPSource?,
         error: Error?
     ) {

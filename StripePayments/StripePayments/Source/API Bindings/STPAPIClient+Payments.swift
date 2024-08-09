@@ -149,7 +149,7 @@ extension STPAPIClient {
         purpose: STPFilePurpose,
         completion: STPFileCompletionBlock?
     ) {
-        uploadImage(image, purpose: StripeFile.Purpose(from: purpose).rawValue) { result in
+        uploadImage(image, purpose: StripeFile.Purpose(from: purpose).rawValue, fileName: nil) { result in
             switch result {
             case .success(let file):
                 completion?(file.toSTPFile, nil)
@@ -299,7 +299,7 @@ extension STPAPIClient {
     func retrieveSource(
         withId identifier: String,
         clientSecret secret: String,
-        responseCompletion completion: @escaping (STPSource?, HTTPURLResponse?, Error?) -> Void
+        responseCompletion completion: @MainActor @Sendable @escaping (STPSource?, HTTPURLResponse?, Error?) -> Void
     ) {
         let endpoint = "\(APIEndpointSources)/\(identifier)"
         let parameters = [
@@ -343,7 +343,9 @@ extension STPAPIClient {
             completion: completion
         )
         sourcePollersQueue?.async(execute: {
-            self.sourcePollers?[identifier] = poller
+            Task { @MainActor in
+                self.sourcePollers?[identifier] = poller
+            }
         })
     }
 
@@ -353,10 +355,12 @@ extension STPAPIClient {
     @objc(stopPollingSourceWithId:)
     public func stopPollingSource(withId identifier: String) {
         sourcePollersQueue?.async(execute: {
-            let poller = self.sourcePollers?[identifier] as? STPSourcePoller
-            if let poller = poller {
-                poller.stopPolling()
-                self.sourcePollers?[identifier] = nil
+            Task { @MainActor in
+                let poller = self.sourcePollers?[identifier] as? STPSourcePoller
+                if let poller = poller {
+                    poller.stopPolling()
+                    self.sourcePollers?[identifier] = nil
+                }
             }
         })
     }
@@ -463,15 +467,16 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { paymentIntent, _, error in
-
-            if let error = error {
-                let errorAnalytic = ErrorAnalytic(event: .refreshPaymentIntentFailed,
-                                                  error: error,
-                                                  additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            } else {
-                STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshPaymentIntentSuccess,
-                                                                              params: ["duration": Date().timeIntervalSince(startDate)]))
+            Task { @MainActor in
+                if let error = error {
+                    let errorAnalytic = ErrorAnalytic(event: .refreshPaymentIntentFailed,
+                                                      error: error,
+                                                      additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                } else {
+                    STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshPaymentIntentSuccess,
+                                                                                  params: ["duration": Date().timeIntervalSince(startDate)]))
+                }
             }
 
             completion(paymentIntent, error)
@@ -660,7 +665,7 @@ extension STPAPIClient {
                     continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                     return
                 }
-                continuation.resume(returning: setupIntent)
+                Task { @MainActor in continuation.resume(returning: setupIntent) }
             }
         }
     }
@@ -774,14 +779,16 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { setupIntent, _, error in
-            if let error = error {
-                let errorAnalytic = ErrorAnalytic(event: .refreshSetupIntentFailed,
-                                                  error: error,
-                                                  additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            } else {
-                STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshSetupIntentSuccess,
-                                                                              params: ["duration": Date().timeIntervalSince(startDate)]))
+            Task { @MainActor in
+                if let error = error {
+                    let errorAnalytic = ErrorAnalytic(event: .refreshSetupIntentFailed,
+                                                      error: error,
+                                                      additionalNonPIIParams: ["duration": Date().timeIntervalSince(startDate)])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                } else {
+                    STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .refreshSetupIntentSuccess,
+                                                                                  params: ["duration": Date().timeIntervalSince(startDate)]))
+                }
             }
 
             completion(setupIntent, error)
@@ -1049,7 +1056,7 @@ extension STPAPIClient {
         clientSecret: String,
         firstAmount: Int,
         secondAmount: Int,
-        completion: @escaping (T?, Error?) -> Void
+        completion: @MainActor @Sendable @escaping (T?, Error?) -> Void
     ) {
         verifyIntentWithMicrodeposits(
             clientSecret: clientSecret,
@@ -1062,7 +1069,7 @@ extension STPAPIClient {
     func verifyIntentWithMicrodeposits<T: STPAPIResponseDecodable>(
         clientSecret: String,
         descriptorCode: String,
-        completion: @escaping (T?, Error?) -> Void
+        completion: @MainActor @Sendable @escaping (T?, Error?) -> Void
     ) {
         verifyIntentWithMicrodeposits(
             clientSecret: clientSecret,
@@ -1076,7 +1083,7 @@ extension STPAPIClient {
         clientSecret: String,
         verificationKey: String,
         verificationData: Any,
-        completion: @escaping (T?, Error?) -> Void
+        completion: @escaping @MainActor @Sendable (T?, Error?) -> Void
     ) {
         var endpoint: String
         if T.self is STPPaymentIntent.Type {
@@ -1133,22 +1140,27 @@ extension STPAPIClient {
             if let limit {
                 params["limit"] = limit
             }
+            
             APIRequest<STPPaymentMethodListDeserializer>.getWith(
                 self,
                 endpoint: APIEndpointPaymentMethods,
                 additionalHeaders: header,
                 parameters: params as [String: Any]
             ) { deserializer, _, error in
+                let capturedPaymentMethods = deserializer?.paymentMethods ?? []
+
                 DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
                     // .barrier ensures we're the only thing writing to shared_ vars
-                    if let error = error {
-                        shared_lastError = error
+                    Task { @MainActor in
+                        if let error = error {
+                            shared_lastError = error
+                        }
+                        if !capturedPaymentMethods.isEmpty {
+                            // For unknown reasons, `append(contentsOf:` here sometimes causes an EXC_BAD_INSTRUCTION if you repeatedly run tests
+                            capturedPaymentMethods.forEach { shared_allPaymentMethods.append($0) }
+                        }
+                        group.leave()
                     }
-                    if let paymentMethods = deserializer?.paymentMethods {
-                        // For unknown reasons, `append(contentsOf:` here sometimes causes an EXC_BAD_INSTRUCTION if you repeatedly run tests
-                        paymentMethods.forEach { shared_allPaymentMethods.append($0) }
-                    }
-                    group.leave()
                 }
             }
         }
@@ -1179,30 +1191,14 @@ extension STPAPIClient {
                 }
             }
         }
-        let detachPaymentMethod: (String) async throws -> Void = { paymentMethodID in
-            try await withCheckedThrowingContinuation { continuation in
-                let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
-                APIRequest<STPPaymentMethod>.post(
-                    with: self,
-                    endpoint: endpoint,
-                    additionalHeaders: self.authorizationHeader(using: ephemeralKeySecret),
-                    parameters: [:]
-                ) { _, _, error in
-                    if let error {
-                        continuation.resume(throwing: error)
-                        return
-                    }
-                    continuation.resume()
-                }
-            }
-        }
+        
         let detachMultiplePaymentMethods: ([STPPaymentMethod]) async -> Error? = { allPaymentMethodsToDelete in
             var errors: [Error] = []
             await withTaskGroup(of: (Error?).self) { group in
                 for paymentMethod in allPaymentMethodsToDelete {
                     group.addTask {
                         do {
-                            try await detachPaymentMethod(paymentMethod.stripeId)
+                            try await self.detachPaymentMethod(paymentMethod.stripeId, fromCustomerUsing: ephemeralKeySecret)
                         } catch {
                             return error
                         }
@@ -1218,7 +1214,7 @@ extension STPAPIClient {
             if errors.isEmpty {
                 return nil
             } else {
-                // There could be more than on errors. For simplicity, throw the first one encoutered
+                // There could be more than on errors. For simplicity, throw the first one encountered
                 return errors.first
             }
         }
@@ -1228,7 +1224,7 @@ extension STPAPIClient {
                 let allCardPaymentMethods = try await fetchPaymentMethods(customerId)
                 let requestedPMToDelete = allCardPaymentMethods.filter({ $0.stripeId == paymentMethodID }).first
                 guard let requestedPMToDelete else {
-                    // Payment method doesnt exist anymore, nothing to do
+                    // Payment method doesn't exist anymore, nothing to do
                     completion(nil)
                     return
                 }

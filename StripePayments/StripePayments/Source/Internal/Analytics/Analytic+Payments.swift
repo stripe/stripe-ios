@@ -15,19 +15,19 @@ import Foundation
 struct GenericPaymentAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
     let paymentConfiguration: NSObject?
-    let additionalParams: [String: Any]
+    let additionalParams: [String: Sendable]
 }
 
 /// Represents a generic payment error analytic
 struct GenericPaymentErrorAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
     let paymentConfiguration: NSObject?
-    let additionalParams: [String: Any]
+    let additionalParams: [String: Sendable]
     let error: Error
 }
 
 extension GenericPaymentAnalytic {
-    var params: [String: Any] {
+    @MainActor var params: [String: Sendable] {
         var params = additionalParams
 
         params["company_name"] = Bundle.stp_applicationName() ?? ""

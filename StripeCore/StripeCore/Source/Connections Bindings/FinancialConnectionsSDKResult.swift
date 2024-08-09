@@ -7,12 +7,12 @@
 
 import Foundation
 
-@_spi(STP) @frozen public enum FinancialConnectionsSDKResult {
+@_spi(STP) @frozen public enum FinancialConnectionsSDKResult: Sendable {
     case completed(Completed)
     case cancelled
     case failed(error: Error)
 
-    @_spi(STP) public enum Completed {
+    @_spi(STP) public enum Completed: Sendable {
         case financialConnections(FinancialConnectionsLinkedBank)
         case instantDebits(InstantDebitsLinkedBank)
     }

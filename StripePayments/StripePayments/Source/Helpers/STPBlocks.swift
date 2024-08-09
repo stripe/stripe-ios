@@ -21,27 +21,27 @@ import PassKit
 
 /// A block that may optionally be called with an error.
 /// - Parameter error: The error that occurred, if any.
-public typealias STPErrorBlock = (Error?) -> Void
+public typealias STPErrorBlock = @Sendable (Error?) -> Void
 /// A block that contains a boolean success param and may optionally be called with an error.
 /// - Parameters:
 ///   - success:       Whether the task succeeded.
 ///   - error:         The error that occurred, if any.
-public typealias STPBooleanSuccessBlock = (Bool, Error?) -> Void
+public typealias STPBooleanSuccessBlock = @MainActor @Sendable (Bool, Error?) -> Void
 /// A callback to be run with a JSON response.
 /// - Parameters:
-///   - jsonResponse:  The JSON response, or nil if an error occured.
+///   - jsonResponse:  The JSON response, or nil if an error occurred.
 ///   - error:         The error that occurred, if any.
 public typealias STPJSONResponseCompletionBlock = ([AnyHashable: Any]?, Error?) -> Void
 /// A callback to be run with a token response from the Stripe API.
 /// - Parameters:
 ///   - token: The Stripe token from the response. Will be nil if an error occurs. - seealso: STPToken
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-public typealias STPTokenCompletionBlock = (STPToken?, Error?) -> Void
+public typealias STPTokenCompletionBlock = @MainActor @Sendable (STPToken?, Error?) -> Void
 /// A callback to be run with a source response from the Stripe API.
 /// - Parameters:
 ///   - source: The Stripe source from the response. Will be nil if an error occurs. - seealso: STPSource
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-public typealias STPSourceCompletionBlock = (STPSource?, Error?) -> Void
+public typealias STPSourceCompletionBlock = @MainActor @Sendable (STPSource?, Error?) -> Void
 /// A callback to be run with a source or card response from the Stripe API.
 /// - Parameters:
 ///   - source: The Stripe source from the response. Will be nil if an error occurs. - seealso: STPSourceProtocol
@@ -51,17 +51,17 @@ public typealias STPSourceProtocolCompletionBlock = (STPSourceProtocol?, Error?)
 /// - Parameters:
 ///   - paymentIntent: The Stripe PaymentIntent from the response. Will be nil if an error occurs. - seealso: STPPaymentIntent
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-public typealias STPPaymentIntentCompletionBlock = (STPPaymentIntent?, Error?) -> Void
+public typealias STPPaymentIntentCompletionBlock = @MainActor @Sendable (STPPaymentIntent?, Error?) -> Void
 /// A callback to be run with a PaymentIntent response from the Stripe API.
 /// - Parameters:
 ///   - setupIntent: The Stripe SetupIntent from the response. Will be nil if an error occurs. - seealso: STPSetupIntent
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-public typealias STPSetupIntentCompletionBlock = (STPSetupIntent?, Error?) -> Void
+public typealias STPSetupIntentCompletionBlock = @MainActor @Sendable (STPSetupIntent?, Error?) -> Void
 /// A callback to be run with a PaymentMethod response from the Stripe API.
 /// - Parameters:
 ///   - paymentMethod: The Stripe PaymentMethod from the response. Will be nil if an error occurs. - seealso: STPPaymentMethod
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-public typealias STPPaymentMethodCompletionBlock = (STPPaymentMethod?, Error?) -> Void
+public typealias STPPaymentMethodCompletionBlock = @MainActor @Sendable (STPPaymentMethod?, Error?) -> Void
 /// A callback to be run with an array of PaymentMethods response from the Stripe API.
 /// - Parameters:
 ///   - paymentMethods: An array of PaymentMethod from the response. Will be nil if an error occurs. - seealso: STPPaymentMethod
@@ -77,7 +77,7 @@ public typealias STPFileCompletionBlock = (STPFile?, Error?) -> Void
 /// - Parameters:
 ///   - customer:     The Stripe customer from the response, or nil if an error occurred. - seealso: STPCustomer
 ///   - error:        The error returned from the response, or nil if none occurs.
-public typealias STPCustomerCompletionBlock = (STPCustomer?, Error?) -> Void
+public typealias STPCustomerCompletionBlock = @Sendable (STPCustomer?, Error?) -> Void
 /// An enum representing the success and error states of PIN management
 @objc public enum STPPinStatus: Int {
     /// The verification object was already redeemed
@@ -90,23 +90,23 @@ public typealias STPCustomerCompletionBlock = (STPCustomer?, Error?) -> Void
     case errorVerificationExpired
     /// The verification object has been attempted too many times
     case errorVerificationTooManyAttempts
-    /// An error occured while retrieving the ephemeral key
+    /// An error occurred while retrieving the ephemeral key
     case ephemeralKeyError
-    /// An unknown error occured
+    /// An unknown error occurred
     case unknownError
 }
 
 /// A callback to be run with a card PIN response from the Stripe API.
 /// - Parameters:
 ///   - cardPin: The Stripe card PIN from the response. Will be nil if an error occurs. - seealso: STPIssuingCardPin
-///   - status: The status to help you sort between different error state, or STPPinSuccess when succesful. - seealso: STPPinStatus for possible values.
+///   - status: The status to help you sort between different error state, or STPPinSuccess when successful. - seealso: STPPinStatus for possible values.
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
 public typealias STPPinCompletionBlock = (STPIssuingCardPin?, STPPinStatus, Error?) -> Void
 /// A callback to be run with a 3DS2 authenticate response from the Stripe API.
 /// - Parameters:
 ///   - authenticateResponse:    The Stripe AuthenticateResponse. Will be nil if an error occurs. - seealso: STP3DS2AuthenticateResponse
 ///   - error:                   The error returned from the response, or nil if none occurs.
-typealias STP3DS2AuthenticateCompletionBlock = (STP3DS2AuthenticateResponse?, Error?) -> Void
+typealias STP3DS2AuthenticateCompletionBlock = @MainActor @Sendable (STP3DS2AuthenticateResponse?, Error?) -> Void
 /// A block called with a payment status and an optional error.
 /// - Parameter error: The error that occurred, if any.
 public typealias STPPaymentStatusBlock = (STPPaymentStatus, Error?) -> Void
@@ -115,8 +115,8 @@ public typealias STPPaymentStatusBlock = (STPPaymentStatus, Error?) -> Void
 ///
 /// - Parameters:
 ///    - radarSession: The RadarSession object.
-///    - error: The error that occured, if any.
-public typealias STPRadarSessionCompletionBlock = (STPRadarSession?, Error?) -> Void
+///    - error: The error that occurred, if any.
+public typealias STPRadarSessionCompletionBlock = @Sendable (STPRadarSession?, Error?) -> Void
 
 /// An empty block, called with no arguments, returning nothing.
-public typealias STPVoidBlock = () -> Void
+public typealias STPVoidBlock = @MainActor @Sendable () -> Void

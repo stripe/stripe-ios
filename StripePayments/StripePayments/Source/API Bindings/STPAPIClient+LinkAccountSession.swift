@@ -9,11 +9,11 @@ import Foundation
 @_spi(STP) import StripeCore
 
 @_spi(STP)
-public typealias STPLinkAccountSessionBlock = (LinkAccountSession?, Error?) -> Void
+public typealias STPLinkAccountSessionBlock = @MainActor @Sendable (LinkAccountSession?, Error?) -> Void
 @_spi(STP)
-public typealias STPLinkAccountSessionsAttachPaymentIntentBlock = (STPPaymentIntent?, Error?) -> Void
+public typealias STPLinkAccountSessionsAttachPaymentIntentBlock = @Sendable (STPPaymentIntent?, Error?) -> Void
 @_spi(STP)
-public typealias STPLinkAccountSessionsAttachSetupIntentBlock = (STPSetupIntent?, Error?) -> Void
+public typealias STPLinkAccountSessionsAttachSetupIntentBlock = @Sendable (STPSetupIntent?, Error?) -> Void
 
 @_spi(STP)
 public extension STPAPIClient {

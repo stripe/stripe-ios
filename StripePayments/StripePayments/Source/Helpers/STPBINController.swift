@@ -9,7 +9,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-@_spi(STP) public struct STPBINRange: Decodable, Equatable {
+@_spi(STP) public struct STPBINRange: Decodable, Equatable, @unchecked Sendable {
     @_spi(STP) public let panLength: UInt
     @_spi(STP) public let brand: STPCardBrand
     @_spi(STP) public let accountRangeLow: String
@@ -119,13 +119,13 @@ extension STPBINRange {
         var data: [STPBINRange]
     }
 
-    typealias BINRangeCompletionBlock = (Result<STPBINRangeResponse, Error>) -> Void
+    typealias BINRangeCompletionBlock = @Sendable (Result<STPBINRangeResponse, Error>) -> Void
 
     /// Converts a PKPayment object into a Stripe token using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    static func retrieve(
+    @MainActor static func retrieve(
         apiClient: STPAPIClient = .shared,
         forPrefix binPrefix: String,
         completion: @escaping BINRangeCompletionBlock
@@ -140,10 +140,10 @@ extension STPBINRange {
     }
 }
 
-@_spi(STP) public typealias STPRetrieveBINRangesCompletionBlock = (Result<[STPBINRange], Error>) ->
+@_spi(STP) public typealias STPRetrieveBINRangesCompletionBlock = @Sendable (Result<[STPBINRange], Error>) ->
     Void
 
-@_spi(STP) public class STPBINController {
+@_spi(STP) public final class STPBINController: @unchecked Sendable {
     @_spi(STP) public static let shared = STPBINController()
 
     /// For testing
@@ -259,7 +259,7 @@ extension STPBINRange {
     /// If this is disabled, we will *always* fetch and cache BIN information for the passed BIN.
     /// Use caution when disabling this: The BIN length information coming from the service may not be correct, which will
     /// cause issues when validating PAN length.
-    @_spi(STP) public func retrieveBINRanges(
+    @_spi(STP) @MainActor public func retrieveBINRanges(
         forPrefix binPrefix: String,
         recordErrorsAsSuccess: Bool = true,
         onlyFetchForVariableLengthBINs: Bool = true,
@@ -288,42 +288,46 @@ extension STPBINRange {
 
                 self.sPendingRequests[binPrefixKey] = [completion]
 
-                STPBINRange.retrieve(
-                    forPrefix: binPrefixKey,
-                    completion: { result in
-                        self._retrievalQueue.async(execute: {
-                            let ranges = result.map { $0.data }
-                            let completionBlocks = self.sPendingRequests[binPrefixKey]
-
-                            self.sPendingRequests.removeValue(forKey: binPrefixKey)
-
-                            if recordErrorsAsSuccess {
-                                // The following is a comment for STPCardFormView/STPPaymentCardTextField:
-                                // we'll record this response even if there was an error
-                                // this will prevent our validation from getting stuck thinking we don't
-                                // have enough info if the metadata service is down or unreachable
-                                // Could improve this in the future with "smart" retries
-                                self.sRetrievedRanges[binPrefixKey] = (try? ranges.get()) ?? []
-                            } else if let ranges = try? ranges.get(), !ranges.isEmpty {
-                                self.sRetrievedRanges[binPrefixKey] = ranges
-                            }
-                            self._performSync(withAllRangesLock: {
-                                self.sAllRanges =
-                                    self.sAllRanges + ((try? ranges.get()) ?? [])
-                            })
-
-                            if case .failure = ranges {
-                                STPAnalyticsClient.sharedClient.logCardMetadataResponseFailure()
-                            }
-
-                            DispatchQueue.main.async(execute: {
-                                for block in completionBlocks ?? [] {
-                                    block(ranges)
+                Task { @MainActor in
+                    STPBINRange.retrieve(
+                        forPrefix: binPrefixKey,
+                        completion: { result in
+                            self._retrievalQueue.async(execute: {
+                                let ranges = result.map { $0.data }
+                                let completionBlocks = self.sPendingRequests[binPrefixKey]
+                                
+                                self.sPendingRequests.removeValue(forKey: binPrefixKey)
+                                
+                                if recordErrorsAsSuccess {
+                                    // The following is a comment for STPCardFormView/STPPaymentCardTextField:
+                                    // we'll record this response even if there was an error
+                                    // this will prevent our validation from getting stuck thinking we don't
+                                    // have enough info if the metadata service is down or unreachable
+                                    // Could improve this in the future with "smart" retries
+                                    self.sRetrievedRanges[binPrefixKey] = (try? ranges.get()) ?? []
+                                } else if let ranges = try? ranges.get(), !ranges.isEmpty {
+                                    self.sRetrievedRanges[binPrefixKey] = ranges
                                 }
+                                self._performSync(withAllRangesLock: {
+                                    self.sAllRanges =
+                                    self.sAllRanges + ((try? ranges.get()) ?? [])
+                                })
+                                
+                                if case .failure = ranges {
+                                    Task { @MainActor in
+                                        STPAnalyticsClient.sharedClient.logCardMetadataResponseFailure()
+                                    }
+                                }
+                                
+                                DispatchQueue.main.async(execute: {
+                                    for block in completionBlocks ?? [] {
+                                        block(ranges)
+                                    }
+                                })
                             })
-                        })
-                    }
-                )
+                        }
+                    )
+                }
             }
         })
     }

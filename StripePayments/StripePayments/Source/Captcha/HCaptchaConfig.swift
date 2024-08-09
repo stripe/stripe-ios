@@ -209,7 +209,7 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
             let validationJS: String = "(function() { return \(customTheme) })()"
             let context = JSContext()!
             context.exceptionHandler = { _, err in
-                HCaptchaLogger.error("customTheme validation error: \(String(describing: err))")
+                
             }
             let result = context.evaluateScript(validationJS)
             if result?.isObject != true {
@@ -293,10 +293,12 @@ private extension HCaptchaConfig {
             return url
         }
 
-        HCaptchaLogger.warn("""
-                               ⚠️ WARNING! Protocol not found for HCaptcha domain (\(url))!
-                               You should add http:// or https:// to it!
-                            """)
+        Task { @MainActor in
+            HCaptchaLogger.warn("""
+                                   ⚠️ WARNING! Protocol not found for HCaptcha domain (\(url))!
+                                   You should add http:// or https:// to it!
+                                """)
+        }
 
         if let fixedURL = URL(string: "http://" + url.absoluteString) {
             return fixedURL

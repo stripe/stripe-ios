@@ -39,7 +39,7 @@ private func bundleShortVersion() -> String {
     return sdkBundleShortVer?.jsSanitize() ?? "unknown"
 }
 
-class HCaptchaDebugInfo {
+@MainActor class HCaptchaDebugInfo {
 
     static let json: String = HCaptchaDebugInfo.buildDebugInfoJson()
 

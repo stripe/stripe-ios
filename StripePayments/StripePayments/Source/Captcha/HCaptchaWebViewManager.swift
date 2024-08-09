@@ -5,9 +5,9 @@
 import Foundation
 import WebKit
 
-/** Handles comunications with the webview containing the HCaptcha challenge.
+/** Handles communications with the webview containing the HCaptcha challenge.
  */
-internal class HCaptchaWebViewManager: NSObject {
+@MainActor internal class HCaptchaWebViewManager: NSObject {
     enum JSCommand: String {
         case execute = "execute();"
         case reset = "reset();"
@@ -146,21 +146,23 @@ internal class HCaptchaWebViewManager: NSObject {
             self?.handle(result: result)
         }
         DispatchQueue.global(qos: .userInitiated).async {
-            let debugInfo = HCaptchaDebugInfo.json
-            Log.debug("WebViewManager.init after debug")
-            self.formattedHTML = String(format: html, arguments: ["apiKey": apiKey,
-                                                                  "endpoint": endpoint.absoluteString,
-                                                                  "size": size.rawValue,
-                                                                  "orientation": orientation.rawValue,
-                                                                  "rqdata": rqdata ?? "",
-                                                                  "theme": theme,
-                                                                  "debugInfo": debugInfo,
-                                                                 ])
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                guard !self.stopInitWebViewConfiguration else { return }
-
-                self.setupWebview(html: self.formattedHTML, url: baseURL)
+            Task { @MainActor in
+                let debugInfo = HCaptchaDebugInfo.json
+                Log.debug("WebViewManager.init after debug")
+                self.formattedHTML = String(format: html, arguments: ["apiKey": apiKey,
+                                                                      "endpoint": endpoint.absoluteString,
+                                                                      "size": size.rawValue,
+                                                                      "orientation": orientation.rawValue,
+                                                                      "rqdata": rqdata ?? "",
+                                                                      "theme": theme,
+                                                                      "debugInfo": debugInfo,
+                                                                     ])
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    guard !self.stopInitWebViewConfiguration else { return }
+                    
+                    self.setupWebview(html: self.formattedHTML, url: baseURL)
+                }
             }
         }
     }
@@ -327,7 +329,9 @@ fileprivate extension HCaptchaWebViewManager {
             ) { [weak self] notification in
                 guard let window = notification.object as? UIWindow else { return }
                 guard let slf = self else { return }
-                slf.setupWebview(on: window, html: html, url: url)
+                Task { @MainActor in
+                    slf.setupWebview(on: window, html: html, url: url)
+                }
             }
         }
     }
