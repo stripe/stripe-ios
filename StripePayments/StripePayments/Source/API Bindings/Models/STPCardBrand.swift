@@ -101,3 +101,9 @@ public class STPCardBrandUtilities: NSObject {
     }
 
 }
+
+extension STPCardBrand: Comparable {
+    public static func < (lhs: StripePayments.STPCardBrand, rhs: StripePayments.STPCardBrand) -> Bool {
+        return (STPCardBrandUtilities.stringFrom(lhs) ?? "") < (STPCardBrandUtilities.stringFrom(rhs) ?? "")
+    }
+}
