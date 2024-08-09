@@ -431,7 +431,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.10core
+        machine_type_id: g2-m1.8core
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   legacy-tests-15:
@@ -610,7 +610,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-2:
     steps:
     - xcode-test@4:
@@ -628,7 +628,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-3:
     steps:
     - xcode-test@4:
@@ -646,7 +646,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-4:
     steps:
     - xcode-test@4:
@@ -664,7 +664,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core                
+        machine_type_id: g2-m1.8core
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
