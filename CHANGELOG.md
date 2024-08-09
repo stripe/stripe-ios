@@ -1,6 +1,7 @@
 ## X.Y.Z 2024-xx-yy
 ### PaymentSheet
 * [Fixed] Fixed PaymentSheet.FlowController returning unlocalized labels for certain payment methods e.g. "AfterPay ClearPay" instead of "Afterpay" or "Clearpay" depending on locale.
+* [Added] `PaymentSheet.IntentConfiguration` now validates that its `amount` is non-zero.
 
 ## 23.29.0 2024-08-05
 ### PaymentSheet

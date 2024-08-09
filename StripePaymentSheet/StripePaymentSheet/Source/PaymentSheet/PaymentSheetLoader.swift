@@ -30,9 +30,14 @@ final class PaymentSheetLoader {
 
         Task { @MainActor in
             do {
+                // Validate inputs
                 if !mode.isDeferred && configuration.apiClient.publishableKeyIsUserKey {
                     // User keys can't pass payment_method_data directly to /confirm, which is what the non-deferred intent flows do
                     assertionFailure("Dashboard isn't supported in non-deferred intent flows")
+                }
+                if case .deferredIntent(let intentConfiguration) = mode,
+                   let error = intentConfiguration.validate() {
+                    throw error
                 }
 
                 // Fetch ElementsSession

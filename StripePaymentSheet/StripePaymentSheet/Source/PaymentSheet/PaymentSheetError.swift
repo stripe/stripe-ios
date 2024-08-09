@@ -39,6 +39,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case fetchPaymentMethodsFailure
 
     // MARK: Deferred intent errors
+    case intentConfigurationValidationFailed(message: String)
     case deferredIntentValidationFailed(message: String)
 
     // MARK: - Link errors
@@ -183,6 +184,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil"
             case .unexpectedNewPaymentMethod:
                 return "New payment method should not have been created yet"
+            case .intentConfigurationValidationFailed(message: let message):
+                return message
             }
         }()
 
