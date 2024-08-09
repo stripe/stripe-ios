@@ -63,66 +63,6 @@ public enum PaymentSheetError: Error, LocalizedError {
 }
 
 extension PaymentSheetError: CustomDebugStringConvertible {
-    /// A string that can safely be logged to our analytics service that does not contain any PII
-    public var safeLoggingString: String {
-        switch self {
-        case .unknown:
-            return "unknown"
-        case .missingClientSecret:
-            return "missingClientSecret"
-        case .invalidClientSecret:
-            return "invalidClientSecret"
-        case .unexpectedResponseFromStripeAPI:
-            return "unexpectedResponseFromStripeAPI"
-        case .applePayNotSupportedOrMisconfigured:
-            return "applePayNotSupportedOrMisconfigured"
-        case .alreadyPresented:
-            return "alreadyPresented"
-        case .flowControllerConfirmFailed:
-            return "flowControllerConfirmFailed"
-        case .errorHandlingNextAction:
-            return "errorHandlingNextAction"
-        case .unrecognizedHandlerStatus:
-            return "unrecognizedHandlerStatus"
-        case .accountLinkFailure:
-            return "accountLinkFailure"
-        case .setupIntentClientSecretProviderNil:
-            return "setupIntentClientSecretProviderNil"
-        case .noPaymentMethodTypesAvailable:
-            return "noPaymentMethodTypesAvailable"
-        case .paymentIntentInTerminalState:
-            return "paymentIntentInTerminalState"
-        case .setupIntentInTerminalState:
-            return "setupIntentInTerminalState"
-        case .fetchPaymentMethodsFailure:
-            return "fetchPaymentMethodsFailure"
-        case .deferredIntentValidationFailed:
-            return "deferredIntentValidationFailed"
-        case .linkSignUpNotRequired:
-            return "linkSignUpNotRequired"
-        case .linkCallVerifyNotRequired:
-            return "linkCallVerifyNotRequired"
-        case .linkingWithoutValidSession:
-            return "linkingWithoutValidSession"
-        case .savingWithoutValidLinkSession:
-            return "savingWithoutValidLinkSession"
-        case .payingWithoutValidLinkSession:
-            return "payingWithoutValidLinkSession"
-        case .deletingWithoutValidLinkSession:
-            return "deletingWithoutValidLinkSession"
-        case .updatingWithoutValidLinkSession:
-            return "updatingWithoutValidLinkSession"
-        case .linkLookupNotFound:
-            return "linkLookupNotFound"
-        case .failedToCreateLinkSession:
-            return "failedToCreateLinkSession"
-        case .linkNotAuthorized:
-            return "linkNotAuthorized"
-        case .unexpectedNewPaymentMethod:
-            return "unexpectedNewPaymentMethod"
-        }
-    }
-
     /// A description logged to a developer for debugging
     public var debugDescription: String {
         let errorMessageSuffix = {
