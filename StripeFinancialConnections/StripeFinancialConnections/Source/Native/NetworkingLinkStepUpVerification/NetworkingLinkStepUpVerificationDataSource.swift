@@ -15,7 +15,7 @@ protocol NetworkingLinkStepUpVerificationDataSource: AnyObject {
     var networkingOTPDataSource: NetworkingOTPDataSource { get }
 
     func markLinkStepUpAuthenticationVerified() -> Future<FinancialConnectionsSessionManifest>
-    func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList>
+    func selectNetworkedAccount() -> Future<ShareNetworkedAccountsResponse>
 }
 
 final class NetworkingLinkStepUpVerificationDataSourceImplementation: NetworkingLinkStepUpVerificationDataSource {
@@ -63,7 +63,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         return apiClient.markLinkStepUpAuthenticationVerified(clientSecret: clientSecret)
     }
 
-    func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList> {
+    func selectNetworkedAccount() -> Future<ShareNetworkedAccountsResponse> {
         return apiClient.selectNetworkedAccounts(
             selectedAccountIds: selectedAccountIds,
             clientSecret: clientSecret,

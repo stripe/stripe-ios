@@ -166,7 +166,7 @@ protocol FinancialConnectionsAPI {
         selectedAccountIds: [String],
         clientSecret: String,
         consumerSessionClientSecret: String
-    ) -> Future<FinancialConnectionsInstitutionList>
+    ) -> Future<ShareNetworkedAccountsResponse>
 
     func markLinkStepUpAuthenticationVerified(
         clientSecret: String
@@ -768,7 +768,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         selectedAccountIds: [String],
         clientSecret: String,
         consumerSessionClientSecret: String
-    ) -> Future<FinancialConnectionsInstitutionList> {
+    ) -> Future<ShareNetworkedAccountsResponse> {
         let parameters: [String: Any] = [
             "selected_accounts": selectedAccountIds,
             "client_secret": clientSecret,

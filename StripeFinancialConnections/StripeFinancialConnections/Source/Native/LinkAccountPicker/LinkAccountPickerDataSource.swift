@@ -28,7 +28,7 @@ protocol LinkAccountPickerDataSource: AnyObject {
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
     func selectNetworkedAccounts(
         _ selectedAccounts: [FinancialConnectionsPartnerAccount]
-    ) -> Future<FinancialConnectionsInstitutionList>
+    ) -> Future<ShareNetworkedAccountsResponse>
 }
 
 final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSource {
@@ -81,7 +81,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
 
     func selectNetworkedAccounts(
         _ selectedAccounts: [FinancialConnectionsPartnerAccount]
-    ) -> Future<FinancialConnectionsInstitutionList> {
+    ) -> Future<ShareNetworkedAccountsResponse> {
         return apiClient.selectNetworkedAccounts(
             selectedAccountIds: selectedAccounts.map({ $0.id }),
             clientSecret: clientSecret,
