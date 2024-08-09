@@ -168,13 +168,27 @@ class ConsentViewController: UIViewController {
             pane: .consent,
             analyticsClient: dataSource.analyticsClient,
             handleURL: { urlHost, nextPaneOrDrawerOnSecondaryCta in
-                if urlHost == "manual-entry" {
+                guard let urlHost, let address = StripeSchemeAddress(rawValue: urlHost) else {
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            FinancialConnectionsSheetError.unknown(
+                                debugDescription: "Unknown Stripe-scheme URL detected: \(urlHost ?? "nil")."
+                            ),
+                            errorName: "ConsentStripeURLError",
+                            pane: .consent
+                        )
+                    return
+                }
+
+                switch address {
+                case .manualEntry:
                     delegate?.consentViewController(
                         self,
                         didRequestNextPane: .manualEntry,
                         nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
                     )
-                } else if urlHost == "data-access-notice" {
+                case .dataAccessNotice:
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNotice,
@@ -185,7 +199,7 @@ class ConsentViewController: UIViewController {
                         )
                         dataAccessNoticeViewController.present(on: self)
                     }
-                } else if urlHost == "legal-details-notice" {
+                case .legalDatailsNotice:
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNoticeModel,
@@ -195,7 +209,13 @@ class ConsentViewController: UIViewController {
                         }
                     )
                     legalDetailsNoticeViewController.present(on: self)
-                } else if urlHost == "link-login" {
+                case .linkAccountPicker:
+                    delegate?.consentViewController(
+                        self,
+                        didRequestNextPane: .linkAccountPicker,
+                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+                    )
+                case .linkLogin:
                     delegate?.consentViewController(
                         self,
                         didRequestNextPane: .networkingLinkLoginWarmup,
