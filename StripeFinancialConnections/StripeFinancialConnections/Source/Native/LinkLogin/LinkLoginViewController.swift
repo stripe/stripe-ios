@@ -49,6 +49,7 @@ final class LinkLoginViewController: UIViewController {
         return formView
     }()
 
+    private var paneLayoutView: PaneLayoutView?
     private var footerButton: StripeUICore.Button?
 
     init(dataSource: LinkLoginDataSource) {
@@ -98,23 +99,26 @@ final class LinkLoginViewController: UIViewController {
         )
         self.footerButton = footerView.primaryButton
 
-        let paneLayoutView = PaneLayoutView(
+        self.paneLayoutView = PaneLayoutView(
             contentView: contentView,
             footerView: footerView.footerView
         )
 
-        paneLayoutView.addTo(view: view)
+        paneLayoutView?.addTo(view: view, keepFooterAboveKeyboard: true)
 
         #if !canImport(CompositorServices)
         // if user drags, dismiss keyboard so the CTA buttons can be shown
-        paneLayoutView.scrollView.keyboardDismissMode = .onDrag
+        paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif
 
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
         if let emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(emailAddress)
         } else {
-            formView.beginEditingEmailAddressField()
+            // Slightly delay opening the keyboard to avoid a janky animation.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+                self?.formView.beginEditingEmailAddressField()
+            }
         }
 
         setContinueWithLinkButtonDisabledState()
