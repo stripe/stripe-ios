@@ -654,7 +654,7 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
         saveToLinkWithStripeSucceeded: Bool?
     ) {
         dataManager.linkedAccounts = selectedAccounts
-        dataManager.customSuccessPaneMessage = customSuccessPaneMessage
+        dataManager.customSuccessPaneSubCaption = customSuccessPaneMessage
         if let saveToLinkWithStripeSucceeded {
             dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
         }
@@ -713,7 +713,7 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
         dataManager.accountNumberLast4 = accountNumberLast4
 
         if dataManager.manifest.manualEntryUsesMicrodeposits {
-            dataManager.customSuccessPaneMessage = String(
+            dataManager.customSuccessPaneSubCaption = String(
                 format: STPLocalizedString(
                     "You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions.",
                     "The subtitle/description of the success screen that appears when a user manually entered their bank account information. It informs the user that their bank account information will have to be verified."
@@ -787,7 +787,7 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
         withError error: Error?
     ) {
         if let customSuccessPaneMessage {
-            dataManager.customSuccessPaneMessage = customSuccessPaneMessage
+            dataManager.customSuccessPaneSubCaption = customSuccessPaneMessage
         }
         if saveToLinkWithStripeSucceeded != nil {
             dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
@@ -938,6 +938,17 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        customSuccessPaneCaption: String,
+        customSuccessPaneSubCaption: String
+    ) {
+        dataManager.customSuccessPaneCaption = customSuccessPaneCaption
+        dataManager.customSuccessPaneSubCaption = customSuccessPaneSubCaption
+        pushPane(nextPane, animated: true)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
@@ -962,7 +973,7 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
         if saveToLinkWithStripeSucceeded != nil {
             dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
         }
-        dataManager.customSuccessPaneMessage = customSuccessPaneMessage
+        dataManager.customSuccessPaneSubCaption = customSuccessPaneMessage
         pushPane(.success, animated: true)
     }
 
@@ -980,10 +991,15 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
 
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?
+        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?,
+        nextPane: FinancialConnectionsSessionManifest.NextPane,
+        customSuccessPaneCaption: String?,
+        customSuccessPaneSubCaption: String?
     ) {
         dataManager.institution = institution
-        pushPane(.success, animated: true)
+        dataManager.customSuccessPaneCaption = customSuccessPaneCaption
+        dataManager.customSuccessPaneSubCaption = customSuccessPaneSubCaption
+        pushPane(nextPane, animated: true)
     }
 
     func networkingLinkStepUpVerificationViewController(
@@ -1295,7 +1311,8 @@ private func CreatePaneViewController(
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient,
-            customSuccessPaneMessage: dataManager.customSuccessPaneMessage
+            customSuccessPaneCaption: dataManager.customSuccessPaneCaption,
+            customSuccessPaneSubCaption: dataManager.customSuccessPaneSubCaption
         )
         let successViewController = SuccessViewController(dataSource: successDataSource)
         successViewController.delegate = nativeFlowController

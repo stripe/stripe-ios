@@ -39,7 +39,11 @@ final class SuccessViewController: UIViewController {
         view.addSubview(contentView)
 
         let bodyView = CreateBodyView(
-            subtitle: dataSource.customSuccessPaneMessage ?? CreateSubtitleText(
+            title: dataSource.customSuccessPaneCaption ?? STPLocalizedString(
+                "Success",
+                "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
+            ),
+            subtitle: dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
                 // manual entry has "0" linked accounts count
                 isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
                 showSaveToLinkFailedNotice: showSaveToLinkFailedNotice
@@ -113,17 +117,16 @@ final class SuccessViewController: UIViewController {
     }
 }
 
-private func CreateBodyView(subtitle: String?, theme: FinancialConnectionsTheme) -> UIView {
+private func CreateBodyView(
+    title: String,
+    subtitle: String?,
+    theme: FinancialConnectionsTheme
+) -> UIView {
     let titleLabel = AttributedLabel(
         font: .heading(.extraLarge),
         textColor: .textDefault
     )
-    titleLabel.setText(
-        STPLocalizedString(
-            "Success",
-            "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
-        )
-    )
+    titleLabel.setText(title)
     let labelVerticalStackView = UIStackView(
         arrangedSubviews: [titleLabel]
     )
