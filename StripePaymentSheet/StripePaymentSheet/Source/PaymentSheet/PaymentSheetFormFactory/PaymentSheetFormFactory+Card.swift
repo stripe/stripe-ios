@@ -16,7 +16,7 @@ extension PaymentSheetFormFactory {
     func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let saveCheckbox = makeSaveCheckbox(
-            label: String.Localized.save_this_card_for_future_$merchant_payments(
+            label: String.Localized.save_payment_details_for_future_$merchant_payments(
                 merchantDisplayName: configuration.merchantDisplayName
             )
         )

@@ -47,11 +47,11 @@ extension String.Localized {
         )
     }
 
-    static func save_this_card_for_future_$merchant_payments(merchantDisplayName: String) -> String {
+    static func save_payment_details_for_future_$merchant_payments(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
-                "Save this card for future %@ payments",
-                "The label of a switch indicating whether to save the user's card for future payment"
+                "Save payment details to %@ for future purchases",
+                "The label of a switch indicating whether to save the user's payment details for future payment"
             ),
             merchantDisplayName
         )
