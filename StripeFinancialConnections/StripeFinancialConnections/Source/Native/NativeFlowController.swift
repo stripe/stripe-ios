@@ -1206,6 +1206,7 @@ private func CreatePaneViewController(
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
+                returnURL: dataManager.returnURL,
                 analyticsClient: dataManager.analyticsClient
             )
             let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
