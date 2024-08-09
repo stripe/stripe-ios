@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
+@_spi(STP) import StripeUICore
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
@@ -112,14 +113,10 @@ extension Intent {
         customerSessionData: [String: Any]? = nil
     ) -> Intent {
         let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: paymentMethodTypes)
-        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData)
         return .setupIntent(setupIntent)
     }
 
     static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType], setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil) -> Intent {
-        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: nil)
         return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage), confirmHandler: { _, _, _ in }))
     }
 }
@@ -245,6 +242,35 @@ extension PaymentSheetLoader.LoadResult {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods
+        )
+    }
+}
+
+extension PaymentSheetAnalyticsHelper {
+    static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
+        return .init(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+    }
+}
+
+extension PaymentSheetFormFactory {
+    convenience init(
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        configuration: PaymentSheetFormFactoryConfig,
+        paymentMethod: PaymentSheet.PaymentMethodType,
+        previousCustomerInput: IntentConfirmParams? = nil,
+        addressSpecProvider: AddressSpecProvider = .shared,
+        linkAccount: PaymentSheetLinkAccount? = nil
+    ) {
+        self.init(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            paymentMethod: paymentMethod,
+            previousCustomerInput: previousCustomerInput,
+            addressSpecProvider: addressSpecProvider,
+            linkAccount: linkAccount,
+            analyticsHelper: ._testValue()
         )
     }
 }

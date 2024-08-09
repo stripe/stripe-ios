@@ -798,6 +798,12 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
         pushPane(.networkingLinkVerification, animated: true)
     }
 
+    func networkingLinkLoginWarmupViewControllerDidSelectCancel(
+        _ viewController: NetworkingLinkLoginWarmupViewController
+    ) {
+        viewController.dismiss(animated: true)
+    }
+
     func networkingLinkLoginWarmupViewController(
         _ viewController: NetworkingLinkLoginWarmupViewController,
         didSelectSkipWithManifest manifest: FinancialConnectionsSessionManifest
@@ -1194,12 +1200,13 @@ private func CreatePaneViewController(
     case .networkingLinkVerification:
         let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress
         let consumerSessionEmailAddress = dataManager.consumerSession?.emailAddress
-        if let accountholderCustomerEmailAddress = accountholderCustomerEmailAddress ?? consumerSessionEmailAddress {
+        if let accountholderCustomerEmailAddress = consumerSessionEmailAddress ?? accountholderCustomerEmailAddress {
             let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
                 accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
+                returnURL: dataManager.returnURL,
                 analyticsClient: dataManager.analyticsClient
             )
             let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)

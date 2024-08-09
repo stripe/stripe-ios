@@ -46,7 +46,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         let mockAnalytic = MockAnalytic()
         let payload = client.payload(from: mockAnalytic)
 
-        XCTAssertEqual(payload.count, 16)
+        XCTAssertEqual(payload.count, 17)
 
         // Verify event name is included
         XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
@@ -66,6 +66,9 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
 
         // Verify is_development
         XCTAssertTrue(payload["is_development"] as? Bool ?? false)
+
+        // Verify locale
+        XCTAssertEqual(payload["locale"] as? String, Locale.autoupdatingCurrent.identifier)
     }
 
     // MARK: - Error tests

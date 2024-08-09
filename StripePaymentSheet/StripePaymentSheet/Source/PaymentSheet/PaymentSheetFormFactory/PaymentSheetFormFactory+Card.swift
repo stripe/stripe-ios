@@ -57,7 +57,8 @@ extension PaymentSheetFormFactory {
             preferredNetworks: configuration.preferredNetworks,
             cardBrandChoiceEligible: cardBrandChoiceEligible,
             hostedSurface: .init(config: configuration),
-            theme: theme
+            theme: theme,
+            analyticsHelper: analyticsHelper
         )
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {

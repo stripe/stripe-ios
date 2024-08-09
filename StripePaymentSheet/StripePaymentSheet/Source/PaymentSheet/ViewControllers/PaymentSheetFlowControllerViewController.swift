@@ -20,6 +20,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let elementsSession: STPElementsSession
     let configuration: PaymentSheet.Configuration
     let formCache: PaymentMethodFormCache = .init()
+    let analyticsHelper: PaymentSheetAnalyticsHelper
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -106,7 +107,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             callToAction: callToAction,
             appearance: configuration.appearance,
             didTap: { [weak self] in
-                self?.didTapAddButton()
+                self?.didTapContinueButton()
             }
         )
         return button
@@ -161,6 +162,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     required init(
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         previousPaymentOption: PaymentOption? = nil
     ) {
         self.intent = loadResult.intent
@@ -168,6 +170,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         self.configuration = configuration
+        self.analyticsHelper = analyticsHelper
 
         // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
         // Caveats:
@@ -215,7 +218,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             elementsSession: elementsSession,
             configuration: configuration,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
-            formCache: formCache
+            formCache: formCache,
+            analyticsHelper: analyticsHelper
         )
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self
@@ -272,15 +276,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetShow(
-            isCustom: true,
-            paymentMethod: mode.analyticsValue,
-            linkEnabled: isLinkEnabled,
-            activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-            currency: intent.currency,
-            intentConfig: intent.intentConfig,
-            apiClient: configuration.apiClient
-        )
+        analyticsHelper.logShow(showingSavedPMList: mode == .selectingSaved)
     }
 
     // MARK: - Private Methods
@@ -430,9 +426,12 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     @objc
-    private func didTapAddButton() {
-        let paymentMethodType = selectedPaymentMethodType ?? .stripe(.unknown)
-        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentMethodType.identifier)
+    private func didTapContinueButton() {
+        if let selectedPaymentOption {
+            analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
+        } else {
+            stpAssertionFailure("didTapContinueButton called w/o a payment option")
+        }
         switch mode {
         case .selectingSaved:
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
@@ -502,10 +501,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: true,
-                                                                           paymentMethod: paymentMethodSelection.analyticsValue,
-                                                                           intentConfig: intent.intentConfig,
-                                                                           apiClient: configuration.apiClient)
+        analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection)
         guard case Mode.selectingSaved = mode else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedFlowControllerViewControllerError,
                                               error: PaymentSheetFlowControllerViewControllerError.didUpdateSelectionWithInvalidMode,
@@ -608,7 +604,7 @@ extension PaymentSheet.PaymentMethodType {
 
 extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
     func walletHeaderViewApplePayButtonTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        // no-op
+        assertionFailure("Should never show Apple Pay in FlowController")
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {

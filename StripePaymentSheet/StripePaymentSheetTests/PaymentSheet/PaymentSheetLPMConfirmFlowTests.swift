@@ -607,7 +607,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
         for (description, intent) in intents {
             // Make the form
-            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, delegate: self)
+            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
             let paymentMethodForm = formVC.form
 
             // Add to window to avoid layout errors due to zero size and presentation errors

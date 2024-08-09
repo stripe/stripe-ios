@@ -11,7 +11,7 @@ import XCTest
 // Link mapping tests
 final class STPPaymentMethodBillingDetailsTests: XCTestCase {
     func testConsumersAPIParamsMapping() {
-        var billingDetails = STPPaymentMethodBillingDetails()
+        let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Name"
         billingDetails.email = "Email"
         billingDetails.phone = "Phone"

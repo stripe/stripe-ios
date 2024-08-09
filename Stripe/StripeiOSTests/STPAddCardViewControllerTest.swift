@@ -155,12 +155,10 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         }
     }
 
-    // #pragma clang diagnostic push
-    // #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     func testNextWithCreatePaymentMethodError() {
         let sut = buildAddCardViewController()!
         let expectedCardParams = STPFixtures.paymentMethodCardParams()
-        sut.paymentCell?.paymentField!.cardParams = expectedCardParams
+        sut.paymentCell?.paymentField!.perform(NSSelectorFromString("setCardParams:"), with: expectedCardParams)
 
         let exp = expectation(description: "createPaymentMethodWithCard network request")
         stub { urlRequest in
@@ -221,7 +219,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         let mockDelegate = MockDelegate()
         sut.apiClient = stubbedAPIClient()
         sut.delegate = mockDelegate
-        sut.paymentCell?.paymentField!.cardParams = expectedCardParams
+        sut.paymentCell?.paymentField!.perform(NSSelectorFromString("setCardParams:"), with: expectedCardParams)
 
         let didCreatePaymentMethodExp = expectation(description: "didCreatePaymentMethod")
 
@@ -271,7 +269,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         let mockDelegate = MockDelegate()
         sut.apiClient = stubbedAPIClient()
         sut.delegate = mockDelegate
-        sut.paymentCell?.paymentField!.cardParams = expectedCardParams
+        sut.paymentCell?.paymentField!.perform(NSSelectorFromString("setCardParams:"), with: expectedCardParams)
 
         let didCreatePaymentMethodExp = expectation(description: "didCreatePaymentMethod")
         mockDelegate.addCardViewControllerDidCreatePaymentMethodBlock = {

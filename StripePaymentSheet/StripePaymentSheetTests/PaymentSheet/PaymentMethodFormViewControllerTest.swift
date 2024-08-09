@@ -34,7 +34,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...and no default billing address...
         XCTAssertEqual(configuration.defaultBillingDetails, PaymentSheet.Configuration().defaultBillingDetails)
         // ...PaymentMethodFormVC...
-        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), elementsSession: ._testCardValue(), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, delegate: self)
+        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), elementsSession: ._testCardValue(), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
 
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
@@ -64,6 +64,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             configuration: ._testValue_MostPermissive(),
 
             headerView: nil,
+            analyticsHelper: ._testValue(),
             delegate: self
         )
         // ...when viewDidAppear is called...
@@ -88,6 +89,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             configuration: ._testValue_MostPermissive(),
 
             headerView: nil,
+            analyticsHelper: ._testValue(),
             delegate: self
         )
         firstSUT.form.getTextFieldElement("ZIP").setText("12345")
@@ -101,6 +103,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             configuration: ._testValue_MostPermissive(),
 
             headerView: nil,
+            analyticsHelper: ._testValue(),
             delegate: self
         )
         XCTAssertEqual(secondSUT.form.getTextFieldElement("ZIP").text, "12345")
