@@ -27,6 +27,7 @@ final class EmailTextField: UIView {
                 "Email address",
                 "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address."
             ),
+            showDoneToolbar: true,
             theme: theme
         )
         textField.textField.keyboardType = .emailAddress
