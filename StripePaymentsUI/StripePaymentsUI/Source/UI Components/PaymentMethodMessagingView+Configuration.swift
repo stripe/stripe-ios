@@ -15,7 +15,7 @@ import UIKit
     /// Configuration for the `PaymentMethodMessagingView` class.
     public struct Configuration {
         /// Initializes a `PaymentMethodMessagingView.Configuration`
-        public init(
+        @MainActor public init(
             apiClient: STPAPIClient = .shared,
             paymentMethods: [PaymentMethodMessagingView.Configuration.PaymentMethod],
             currency: String,
@@ -46,7 +46,7 @@ import UIKit
             case afterpayClearpay
         }
         /// The APIClient instance used to make requests to Stripe
-        public var apiClient: STPAPIClient = .shared
+        @MainActor public var apiClient: STPAPIClient = .shared
         /// The payment methods to display messaging for.
         public var paymentMethods: [PaymentMethod]
         /// The currency, as a three-letter ISO currency code.

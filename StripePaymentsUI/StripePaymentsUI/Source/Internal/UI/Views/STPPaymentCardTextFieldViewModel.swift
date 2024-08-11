@@ -17,13 +17,13 @@ import UIKit
     case postalCode
 }
 
-class STPPaymentCardTextFieldViewModel: NSObject {
+class STPPaymentCardTextFieldViewModel: NSObject, @unchecked Sendable {
     init(brandUpdateHandler: @escaping () -> Void) {
         self.cbcController = STPCBCController(updateHandler: brandUpdateHandler)
     }
 
     private var _cardNumber: String?
-    @objc dynamic var cardNumber: String? {
+    @objc @MainActor dynamic var cardNumber: String? {
         get {
             _cardNumber
         }
@@ -66,7 +66,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     private var _cvc: String?
-    @objc dynamic var cvc: String? {
+    @objc @MainActor dynamic var cvc: String? {
         get {
             _cvc
         }
@@ -115,7 +115,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
     let cbcController: STPCBCController
 
-    @objc dynamic var brand: STPCardBrand {
+    @MainActor @objc dynamic var brand: STPCardBrand {
         switch cbcController.brandState {
         case .brand(let brand):
             return brand
@@ -126,7 +126,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    @objc dynamic var isValid: Bool {
+    @objc @MainActor dynamic var isValid: Bool {
         return STPCardValidator.validationState(
             forNumber: cardNumber ?? "",
             validatingCardBrand: true
@@ -138,7 +138,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
     @objc dynamic private(set) var hasCompleteMetadataForCardNumber = false
 
-    var isNumberMaxLength: Bool {
+    @MainActor var isNumberMaxLength: Bool {
         return (cardNumber?.count ?? 0) == STPBINController.shared.maxCardNumberLength()
     }
 
@@ -146,7 +146,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         return "4242424242424242"
     }
 
-    func compressedCardNumber(withPlaceholder placeholder: String?) -> String? {
+    @MainActor func compressedCardNumber(withPlaceholder placeholder: String?) -> String? {
         var cardNumber = self.cardNumber
         if (cardNumber?.count ?? 0) == 0 {
             cardNumber = placeholder ?? defaultPlaceholder()
@@ -189,7 +189,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    func validationStateForCVC() -> STPCardValidationState {
+    @MainActor func validationStateForCVC() -> STPCardValidationState {
         return STPCardValidator.validationState(forCVC: cvc ?? "", cardBrand: cbcController.brandForCVC)
     }
 
@@ -201,17 +201,19 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    func validationStateForCardNumber(handler: @escaping (STPCardValidationState) -> Void) {
+    @MainActor func validationStateForCardNumber(handler: @escaping @Sendable (STPCardValidationState) -> Void) {
         STPBINController.shared.retrieveBINRanges(forPrefix: cardNumber ?? "") { _ in
-            self.hasCompleteMetadataForCardNumber = STPBINController.shared.hasBINRanges(
-                forPrefix: self.cardNumber ?? ""
-            )
-            handler(
-                STPCardValidator.validationState(
-                    forNumber: self.cardNumber ?? "",
-                    validatingCardBrand: true
+            Task {@MainActor in
+                self.hasCompleteMetadataForCardNumber = STPBINController.shared.hasBINRanges(
+                    forPrefix: self.cardNumber ?? ""
                 )
-            )
+                handler(
+                    STPCardValidator.validationState(
+                        forNumber: self.cardNumber ?? "",
+                        validatingCardBrand: true
+                    )
+                )
+            }
         }
     }
 

@@ -12,7 +12,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-class STPBSBNumberValidator: STPNumericStringValidator {
+@MainActor class STPBSBNumberValidator: STPNumericStringValidator {
     class func validationState(forText text: String) -> STPTextValidationState {
         let numericText = self.sanitizedNumericString(for: text)
         if numericText.count == 0 {

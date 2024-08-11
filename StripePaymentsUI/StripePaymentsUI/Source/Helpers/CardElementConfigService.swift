@@ -9,7 +9,7 @@ import Foundation
 
 private let CardElementConfigEndpoint = URL(string: "https://merchant-ui-api.stripe.com/elements/mobile-card-element-config")!
 
-class CardElementConfigService {
+@MainActor class CardElementConfigService {
     // The card element does not currently support non-singleton API clients, use the shared one for now.
     var apiClient = STPAPIClient.shared
 
@@ -56,7 +56,7 @@ class CardElementConfigService {
         // Kick off a fetch request
         _configsForPK[cacheKey] = .fetching
 
-        let resultHandler: (Result<CardElementConfig, Error>) -> Void = { result in
+        let resultHandler: @Sendable (Result<CardElementConfig, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let cardElementConfig):

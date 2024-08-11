@@ -1777,26 +1777,27 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 }
             } else {
                 viewModel.validationStateForCardNumber(handler: { state in
-                    if self.viewModel.cardNumber == number {
-                        self.updateCVCPlaceholder()
-                        self.cvcField.validText = self.viewModel.validationStateForCVC() != .invalid
-                        formTextField.validText = state != .invalid
-                        if state == .valid {
-                            // log that user entered full complete PAN before we got a network response
-                            STPAnalyticsClient.sharedClient
-                                .logUserEnteredCompletePANBeforeMetadataLoaded()
+                    Task { @MainActor in
+                        if self.viewModel.cardNumber == number {
+                            self.updateCVCPlaceholder()
+                            self.cvcField.validText = self.viewModel.validationStateForCVC() != .invalid
+                            formTextField.validText = state != .invalid
+                            if state == .valid {
+                                // log that user entered full complete PAN before we got a network response
+                                STPAnalyticsClient.sharedClient
+                                    .logUserEnteredCompletePANBeforeMetadataLoaded()
+                            }
+                            self.onChange()
                         }
-                        self.onChange()
+                        // Update image on response because we may want to remove the loading indicator
+                        if let tag = (self.currentFirstResponderField() ?? self.numberField)?.tag,
+                           let current = STPCardFieldType(rawValue: tag)
+                        {
+                            self.updateImage(for: current)
+                        }
+                        // no auto-advance
                     }
-                    // Update image on response because we may want to remove the loading indicator
-                    if let tag = (self.currentFirstResponderField() ?? self.numberField)?.tag,
-                        let current = STPCardFieldType(rawValue: tag)
-                    {
-                        self.updateImage(for: current)
-                    }
-                    // no auto-advance
                 })
-
                 if viewModel.isNumberMaxLength {
                     let isValidLuhn = STPCardValidator.stringIsValidLuhn(viewModel.cardNumber ?? "")
                     formTextField.validText = isValidLuhn
@@ -1806,6 +1807,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                         UIAccessibility.post(notification: .screenChanged, argument: nil)
                     }
                 }
+                    
             }
         case .expiration:
             let state = viewModel.validationStateForExpiration()
@@ -2001,8 +2003,10 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         switch cardType {
         case .number:
             viewModel.validationStateForCardNumber(handler: { state in
-                if state == .incomplete && !textField.isEditing {
-                    (textField as? STPFormTextField)?.validText = false
+                Task { @MainActor in
+                    if state == .incomplete && !textField.isEditing {
+                        (textField as? STPFormTextField)?.validText = false
+                    }
                 }
             })
             if delegate?.responds(
@@ -2418,7 +2422,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 /// This protocol allows a delegate to be notified when a payment text field's
 /// contents change, which can in turn be used to take further actions depending
 /// on the validity of its contents.
-@objc public protocol STPPaymentCardTextFieldDelegate: NSObjectProtocol {
+@objc @MainActor public protocol STPPaymentCardTextFieldDelegate: NSObjectProtocol {
     /// Called when either the card number, expiration, or CVC changes. At this point,
     /// one can call `isValid` on the text field to determine, for example,
     /// whether or not to enable a button to submit the form. Example:
@@ -2480,5 +2484,5 @@ private let kCardLoadingAnimationDelay: TimeInterval = 0.1
 
 /// :nodoc:
 @_spi(STP) extension STPPaymentCardTextField: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "STPPaymentCardTextField"
+    @_spi(STP) nonisolated public static let stp_analyticsIdentifier = "STPPaymentCardTextField"
 }

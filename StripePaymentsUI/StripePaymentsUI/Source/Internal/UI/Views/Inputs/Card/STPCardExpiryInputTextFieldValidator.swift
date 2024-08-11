@@ -16,7 +16,7 @@ class STPCardExpiryInputTextFieldValidator: STPInputTextFieldValidator {
         return String.Localized.your_cards_expiration_date_is_invalid
     }
 
-    public var expiryStrings: (month: String, year: String)? {
+    @MainActor public var expiryStrings: (month: String, year: String)? {
         guard let inputValue = inputValue else {
             return nil
         }

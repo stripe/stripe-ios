@@ -259,7 +259,7 @@ extension STPBINRange {
     /// If this is disabled, we will *always* fetch and cache BIN information for the passed BIN.
     /// Use caution when disabling this: The BIN length information coming from the service may not be correct, which will
     /// cause issues when validating PAN length.
-    @_spi(STP) @MainActor public func retrieveBINRanges(
+    @_spi(STP) public func retrieveBINRanges(
         forPrefix binPrefix: String,
         recordErrorsAsSuccess: Bool = true,
         onlyFetchForVariableLengthBINs: Bool = true,

@@ -12,28 +12,28 @@ import UIKit
 /// STPMultiFormFieldDelegate provides methods for a delegate to respond to editing and text changes.
 @objc protocol STPMultiFormFieldDelegate: NSObjectProtocol {
     /// Called when the text field becomes the first responder.
-    func formTextFieldDidStartEditing(
+    @MainActor func formTextFieldDidStartEditing(
         _ formTextField: STPFormTextField,
         inMultiForm multiFormField: STPMultiFormTextField
     )
     /// Called when the text field resigns from being the first responder.
-    func formTextFieldDidEndEditing(
+    @MainActor func formTextFieldDidEndEditing(
         _ formTextField: STPFormTextField,
         inMultiForm multiFormField: STPMultiFormTextField
     )
     /// Called when the text within the form text field changes.
-    func formTextFieldTextDidChange(
+    @MainActor func formTextFieldTextDidChange(
         _ formTextField: STPFormTextField,
         inMultiForm multiFormField: STPMultiFormTextField
     )
     /// Called to get any additional formatting from the delegate for the string input to the form text field.
-    func modifiedIncomingTextChange(
+    @MainActor func modifiedIncomingTextChange(
         _ input: NSAttributedString,
         for formTextField: STPFormTextField,
         inMultiForm multiFormField: STPMultiFormTextField
     ) -> NSAttributedString
     /// Delegates should implement this method so that STPMultiFormTextField when the contents of the form text field renders it complete.
-    func isFormFieldComplete(
+    @MainActor func isFormFieldComplete(
         _ formTextField: STPFormTextField,
         inMultiForm multiFormField: STPMultiFormTextField
     ) -> Bool

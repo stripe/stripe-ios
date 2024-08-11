@@ -12,9 +12,9 @@ import UIKit
 /// Base protocol to support manually backspacing between form inputs and
 /// responding to different inputs receiving/losing focus.
 protocol STPFormContainer: NSObjectProtocol {
-    func inputTextFieldDidBackspaceOnEmpty(_ textField: STPInputTextField)
-    func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField)
-    func inputTextFieldDidResignFirstResponder(_ textField: STPInputTextField)
+    @MainActor func inputTextFieldDidBackspaceOnEmpty(_ textField: STPInputTextField)
+    @MainActor func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField)
+    @MainActor func inputTextFieldDidResignFirstResponder(_ textField: STPInputTextField)
 }
 
 /// Internal version of `STPFormViewDelegate` that also includes additional methods for controlling
@@ -27,7 +27,7 @@ protocol STPFormContainer: NSObjectProtocol {
 
 /// Protocol for observing the state of a specific input field within an `STPFormView`.
 protocol STPFormInputValidationObserver: NSObjectProtocol {
-    func validationDidUpdate(
+    @MainActor func validationDidUpdate(
         to state: STPValidatedInputState,
         from previousState: STPValidatedInputState,
         for unformattedInput: String?,

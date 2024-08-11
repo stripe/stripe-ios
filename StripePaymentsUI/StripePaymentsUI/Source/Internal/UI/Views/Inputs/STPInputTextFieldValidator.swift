@@ -23,7 +23,7 @@ extension STPValidatedInputState: Equatable {
 
 class STPInputTextFieldValidator: NSObject {
 
-    var defaultErrorMessage: String? {
+    @MainActor var defaultErrorMessage: String? {
         return nil
     }
 
@@ -31,9 +31,9 @@ class STPInputTextFieldValidator: NSObject {
 
     weak var textField: STPInputTextField?
 
-    public var inputValue: String?
+    @MainActor public var inputValue: String?
 
-    var validationState: STPValidatedInputState = .unknown {
+    @MainActor var validationState: STPValidatedInputState = .unknown {
         didSet {
             updateObservers(with: validationState, previous: oldValue)
         }
@@ -49,7 +49,7 @@ class STPInputTextFieldValidator: NSObject {
         observersHash.remove(validationObserver)
     }
 
-    func updateObservers(with state: STPValidatedInputState, previous: STPValidatedInputState) {
+    @MainActor func updateObservers(with state: STPValidatedInputState, previous: STPValidatedInputState) {
         guard let textField = textField,
             observersHash.count > 0
         else {

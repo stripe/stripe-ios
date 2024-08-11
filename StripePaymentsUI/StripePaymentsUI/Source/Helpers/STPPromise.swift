@@ -9,7 +9,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-@_spi(STP) public class STPPromise<T>: NSObject {
+@_spi(STP) public class STPPromise<T: Sendable>: NSObject, @unchecked Sendable {
     @_spi(STP) public typealias STPPromiseErrorBlock = (Error) -> Void
 
     @_spi(STP) public typealias STPPromiseValueBlock = (T) -> Void
@@ -83,8 +83,10 @@ import Foundation
 
     @discardableResult @_spi(STP) public func onSuccess(_ callback: @escaping STPPromiseValueBlock) -> Self {
         if let value = value {
+            // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
+            nonisolated(unsafe) let capturedCallback = callback
             stpDispatchToMainThreadIfNecessary({
-                callback(value)
+                capturedCallback(value)
             })
         } else {
             successCallbacks = successCallbacks + [callback]
@@ -94,8 +96,10 @@ import Foundation
 
     @discardableResult @_spi(STP) public func onFailure(_ callback: @escaping STPPromiseErrorBlock) -> Self {
         if let error = error {
+            // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
+            nonisolated(unsafe) let capturedCallback = callback
             stpDispatchToMainThreadIfNecessary({
-                callback(error)
+                capturedCallback(error)
             })
         } else {
             errorCallbacks = errorCallbacks + [callback]

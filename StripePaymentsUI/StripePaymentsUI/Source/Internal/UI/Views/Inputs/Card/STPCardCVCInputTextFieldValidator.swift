@@ -10,7 +10,7 @@
 @_spi(STP) import StripePayments
 import UIKit
 
-class STPCardCVCInputTextFieldValidator: STPInputTextFieldValidator {
+@MainActor class STPCardCVCInputTextFieldValidator: STPInputTextFieldValidator {
 
     override var defaultErrorMessage: String? {
         return STPLocalizedString(

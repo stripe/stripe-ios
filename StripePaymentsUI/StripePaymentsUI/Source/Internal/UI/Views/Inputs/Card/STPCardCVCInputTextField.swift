@@ -36,7 +36,7 @@ import UIKit
         prefillDetails: STPCardFormView.PrefillDetails? = nil
     ) {
         self.init(
-            formatter: STPCardCVCInputTextFieldFormatter(),
+            formatter: STPCardCVCInputTextFieldFormatter(allowedFormattingCharacterSet: nil),
             validator: STPCardCVCInputTextFieldValidator()
         )
 

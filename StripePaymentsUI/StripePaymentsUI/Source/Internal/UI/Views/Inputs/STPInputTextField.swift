@@ -264,13 +264,14 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         for unformattedInput: String?,
         in input: STPFormInput
     ) {
-
-        guard input == self,
-            unformattedInput == text
-        else {
-            return
+        Task { @MainActor in
+            guard input == self,
+                  unformattedInput == text
+            else {
+                return
+            }
+            updateTextColor()
         }
-        updateTextColor()
     }
 }
 

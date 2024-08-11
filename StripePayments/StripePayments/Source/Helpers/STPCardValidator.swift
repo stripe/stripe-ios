@@ -91,7 +91,7 @@ public class STPCardValidator: NSObject {
     /// STPCardValidationStateIncomplete if the number is a substring of a valid
     /// card (e.g. @"4242").
     @objc(validationStateForNumber:validatingCardBrand:)
-    @MainActor public class func validationState(
+    public class func validationState(
         forNumber cardNumber: String?,
         validatingCardBrand: Bool
     ) -> STPCardValidationState {
@@ -116,7 +116,7 @@ public class STPCardValidator: NSObject {
                     && STPBINController.shared.isVariableLengthBINPrefix(sanitizedNumber)
                 {
                     // log that we didn't get a match in the metadata response so fell back to a hard coded response
-                    STPAnalyticsClient.sharedClient.logCardMetadataMissingRange()
+                    Task {@MainActor in STPAnalyticsClient.sharedClient.logCardMetadataMissingRange() }
                 }
                 return .valid
             } else {

@@ -19,10 +19,6 @@ class STPNumericDigitInputTextFormatter: STPInputTextFieldFormatter {
         super.init()
     }
 
-    override convenience init() {
-        self.init(allowedFormattingCharacterSet: nil)
-    }
-
     override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
         guard super.isAllowedInput(input, to: string, at: range) else {
             return false

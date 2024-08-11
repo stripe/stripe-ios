@@ -215,29 +215,30 @@ extension PaymentMethodMessagingView {
     ) async throws -> NSAttributedString {
         // <img> tags don't work with `NSAttributedString.loadFromHTML` on iOS 13/14. As a workaround, we'll replace <img> with <a href> in this String, and manually replace them with images later:
         // 1. Replace the <img> tags with <a href> and pull out the image URLs
-        let (html, imageURLs) = htmlReplacingImageTags(html: html)
-        // 2. Construct the attributed string
-        let css = makeCSS(for: configuration.font)
-        let (attributedString, _) = try await NSAttributedString.fromHTML(css + html, options: [:])
-        // 3. Fetch the images
-        var images = [URL: UIImage]()
-        for imageURL in imageURLs {
-            images[imageURL] = try await loadImage(url: imageURL, apiClient: configuration.apiClient)
-        }
-        // 4. Replace the links in the attributed string with image attachments
-        let mAttributedString = NSMutableAttributedString(attributedString: attributedString)
-        mAttributedString.enumerateAttribute(.link, in: NSRange(0..<mAttributedString.length)) { value, range, _ in
-            guard
-                let url = value as? URL,
-                let image = images[url]
-            else { return }
-            mAttributedString.deleteCharacters(in: range)
-            let textAttachment = NSTextAttachment() // Note: We don't use the NSTextAttachment(image: ) initializer b/c it has a bug where the image is always tinted to the foreground (text) color
-            textAttachment.image = image
-            let imageAttachment = NSAttributedString(attachment: textAttachment)
-            mAttributedString.insert(imageAttachment, at: range.lowerBound)
-        }
-        return mAttributedString.withFontSize(configuration.font.pointSize)
+//        let (html, imageURLs) = htmlReplacingImageTags(html: html)
+//        // 2. Construct the attributed string
+//        let css = makeCSS(for: configuration.font)
+//        let (attributedString, _) = try await NSAttributedString.fromHTML(css + html, options: [:])
+//        // 3. Fetch the images
+//        var images = [URL: UIImage]()
+//        for imageURL in imageURLs {
+//            images[imageURL] = try await loadImage(url: imageURL, apiClient: configuration.apiClient)
+//        }
+//        // 4. Replace the links in the attributed string with image attachments
+//        let mAttributedString = NSMutableAttributedString(attributedString: attributedString)
+//        mAttributedString.enumerateAttribute(.link, in: NSRange(0..<mAttributedString.length)) { value, range, _ in
+//            guard
+//                let url = value as? URL,
+//                let image = images[url]
+//            else { return }
+//            mAttributedString.deleteCharacters(in: range)
+//            let textAttachment = NSTextAttachment() // Note: We don't use the NSTextAttachment(image: ) initializer b/c it has a bug where the image is always tinted to the foreground (text) color
+//            textAttachment.image = image
+//            let imageAttachment = NSAttributedString(attachment: textAttachment)
+//            mAttributedString.insert(imageAttachment, at: range.lowerBound)
+//        }
+//        return mAttributedString.withFontSize(configuration.font.pointSize)
+        return NSAttributedString() // TODO(porter)
     }
 
     // MARK: - Network helpers
@@ -303,7 +304,7 @@ extension PaymentMethodMessagingView {
 
 // MARK: - STPAnalyticsProtocol
 extension PaymentMethodMessagingView: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "PaymentMethodMessagingView"
+    @_spi(STP) nonisolated public static let stp_analyticsIdentifier = "PaymentMethodMessagingView"
 }
 
 extension PaymentMethodMessagingView {
@@ -322,7 +323,7 @@ extension PaymentMethodMessagingView {
             case .tapped: return .paymentMethodMessagingViewTapped
             }
         }
-        var params: [String: Any] {
+        var params: [String: Sendable] {
             switch self {
             case .loadFailed(let duration), .loadSucceeded(let duration):
                 return [

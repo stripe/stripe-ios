@@ -10,7 +10,7 @@
 @_spi(STP) import StripePayments
 import UIKit
 
-class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
+@MainActor class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     private var inputMode = STPCardNumberInputTextField.InputMode.standard
 
     override var defaultErrorMessage: String? {
@@ -43,10 +43,10 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 validationState = .incomplete(description: nil)
                 return
             }
-            let updateValidationState = {
+            let updateValidationState: @MainActor @Sendable () -> Void = { [weak self] in
                 // Assume pan-locked is valid
-                if self.inputMode == .panLocked {
-                    self.validationState = .valid(message: nil)
+                if self?.inputMode == .panLocked {
+                    self?.validationState = .valid(message: nil)
                     return
                 }
 
@@ -57,11 +57,11 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 {
 
                 case .valid:
-                    self.validationState = .valid(message: nil)
+                    self?.validationState = .valid(message: nil)
                 case .invalid:
-                    self.validationState = .invalid(errorMessage: self.defaultErrorMessage)
+                    self?.validationState = .invalid(errorMessage: self?.defaultErrorMessage)
                 case .incomplete:
-                    self.validationState = .incomplete(
+                    self?.validationState = .incomplete(
                         description: !inputValue.isEmpty
                             ? String.Localized.your_card_number_is_incomplete : nil
                     )
@@ -72,7 +72,7 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
             } else {
                 STPBINController.shared.retrieveBINRanges(forPrefix: inputValue) { (_) in
                     // Needs better error handling and analytics https://jira.corp.stripe.com/browse/MOBILESDK-110
-                    updateValidationState()
+                    Task { @MainActor in updateValidationState() }
                 }
                 if STPBINController.shared.isLoadingCardMetadata(forPrefix: inputValue) {
                     validationState = .processing

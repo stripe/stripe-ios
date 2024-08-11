@@ -11,7 +11,7 @@ import UIKit
 class STPGenericInputTextField: STPInputTextField {
 
     class Validator: STPInputTextFieldValidator {
-        var optional: Bool = false {
+        @MainActor var optional: Bool = false {
             didSet {
                 updateValidationState()
             }
@@ -23,7 +23,7 @@ class STPGenericInputTextField: STPInputTextField {
             }
         }
 
-        func updateValidationState() {
+        @MainActor func updateValidationState() {
             validationState =
                 (inputValue?.count ?? 0 > 0 || optional)
                 ? .valid(message: nil) : .incomplete(description: nil)

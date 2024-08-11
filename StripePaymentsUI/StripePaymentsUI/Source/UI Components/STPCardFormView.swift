@@ -30,7 +30,7 @@ public protocol STPCardFormViewDelegate: NSObjectProtocol {
     /// Delegate method that is called when all of the form view's required inputs
     /// are complete or transition away from all being complete. These transitions
     /// correspond to `cardForView.cardParams` returning a nil value or not.
-    func cardFormView(_ form: STPCardFormView, didChangeToStateComplete complete: Bool)
+    @MainActor func cardFormView(_ form: STPCardFormView, didChangeToStateComplete complete: Bool)
 }
 
 /// Internal only delegate methods for STPCardFormView
@@ -624,7 +624,7 @@ public class STPCardFormView: STPFormView {
 
 /// :nodoc:
 extension STPCardFormView {
-    class BillingAddressSubForm: NSObject {
+    @MainActor class BillingAddressSubForm: NSObject {
         let formSection: STPFormView.Section
 
         let postalCodeField: STPPostalCodeInputTextField
@@ -787,7 +787,7 @@ extension STPCardFormView {
 
 /// :nodoc:
 @_spi(STP) extension STPCardFormView: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier: String = "STPCardFormView"
+    @_spi(STP) nonisolated public static let stp_analyticsIdentifier: String = "STPCardFormView"
 }
 
 extension STPCardFormView {

@@ -25,7 +25,7 @@ class STPAUBECSFormViewModel {
     var bsbNumber: String?
     var accountNumber: String?
 
-    var becsDebitParams: STPPaymentMethodAUBECSDebitParams? {
+    @MainActor var becsDebitParams: STPPaymentMethodAUBECSDebitParams? {
         guard areFieldsComplete(becsFieldsOnly: true) else {
             return nil
         }
@@ -39,7 +39,7 @@ class STPAUBECSFormViewModel {
         return params
     }
 
-    var paymentMethodParams: STPPaymentMethodParams? {
+    @MainActor var paymentMethodParams: STPPaymentMethodParams? {
         guard areFieldsComplete(becsFieldsOnly: false),
             let params = becsDebitParams
         else {
@@ -57,7 +57,7 @@ class STPAUBECSFormViewModel {
         )
     }
 
-    func formattedString(forInput input: String, in field: STPAUBECSFormViewField) -> String {
+    @MainActor func formattedString(forInput input: String, in field: STPAUBECSFormViewField) -> String {
         switch field {
         case .name:
             return input
@@ -74,7 +74,7 @@ class STPAUBECSFormViewModel {
         }
     }
 
-    func bsbLabel(
+    @MainActor func bsbLabel(
         forInput input: String?,
         editing: Bool,
         isErrorString: UnsafeMutablePointer<Bool>
@@ -97,11 +97,11 @@ class STPAUBECSFormViewModel {
         }
     }
 
-    func bankIcon(forInput input: String?) -> UIImage {
+    @MainActor func bankIcon(forInput input: String?) -> UIImage {
         return STPBSBNumberValidator.icon(forText: input)
     }
 
-    func isFieldComplete(
+    @MainActor func isFieldComplete(
         withInput input: String,
         in field: STPAUBECSFormViewField,
         editing: Bool
@@ -126,7 +126,7 @@ class STPAUBECSFormViewModel {
         }
     }
 
-    func isInputValid(_ input: String, for field: STPAUBECSFormViewField, editing: Bool) -> Bool {
+    @MainActor func isInputValid(_ input: String, for field: STPAUBECSFormViewField, editing: Bool) -> Bool {
         switch field {
         case .name:
             return true
@@ -155,7 +155,7 @@ class STPAUBECSFormViewModel {
         }
     }
 
-    private func areFieldsComplete(becsFieldsOnly: Bool) -> Bool {
+    @MainActor private func areFieldsComplete(becsFieldsOnly: Bool) -> Bool {
         var fields: [STPAUBECSFormViewField]
         if becsFieldsOnly {
             fields = [

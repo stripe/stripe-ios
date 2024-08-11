@@ -13,7 +13,7 @@ import UIKit
 
 extension DropdownFieldElement {
 
-    @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(),
+    @_spi(STP) @MainActor public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(),
                                                         theme: ElementsUITheme = .default,
                                                         includePlaceholder: Bool = true,
                                                         maxWidth: CGFloat? = nil,

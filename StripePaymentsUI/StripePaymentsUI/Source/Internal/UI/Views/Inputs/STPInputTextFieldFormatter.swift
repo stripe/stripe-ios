@@ -9,7 +9,7 @@
 import UIKit
 
 class STPInputTextFieldFormatter: NSObject {
-    func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
+    @MainActor func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
         return true
     }
 

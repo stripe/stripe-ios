@@ -32,7 +32,7 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
         }
     }
 
-    var countryCode: String? = Locale.autoupdatingCurrent.stp_regionCode {
+    @MainActor var countryCode: String? = Locale.autoupdatingCurrent.stp_regionCode {
         didSet {
             updateValidationState()
         }
@@ -47,7 +47,7 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
         super.init()
     }
 
-    private func updateValidationState() {
+    @MainActor private func updateValidationState() {
 
         switch STPPostalCodeValidator.validationState(
             forPostalCode: inputValue,
