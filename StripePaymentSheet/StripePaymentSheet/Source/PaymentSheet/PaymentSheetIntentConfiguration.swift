@@ -197,7 +197,7 @@ public extension PaymentSheet {
         @discardableResult
         func validate() -> Error? {
             let errorMessage: String
-            if case .payment(let amount, _, _, _) = mode, amount > 0 {
+            if case .payment(let amount, _, _, _) = mode, amount <= 0 {
                 errorMessage = "The amount in `PaymentSheet.IntentConfiguration` must be non-zero! See https://docs.stripe.com/api/payment_intents/create#create_payment_intent-amount"
                 return PaymentSheetError.intentConfigurationValidationFailed(message: errorMessage)
             }
