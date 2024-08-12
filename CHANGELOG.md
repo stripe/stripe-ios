@@ -1,4 +1,4 @@
-## X.Y.Z 2024-XX-YY
+## 23.29.1 2024-08-12
 ### PaymentSheet
 * [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
 * [Fixed] Fixed PaymentSheet.FlowController returning unlocalized labels for certain payment methods e.g. "AfterPay ClearPay" instead of "Afterpay" or "Clearpay" depending on locale.
