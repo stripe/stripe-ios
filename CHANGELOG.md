@@ -2,10 +2,10 @@
 ### PaymentSheet
 * [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
 * [Fixed] Fixed PaymentSheet.FlowController returning unlocalized labels for certain payment methods e.g. "AfterPay ClearPay" instead of "Afterpay" or "Clearpay" depending on locale.
+* [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
 
 ### PaymentsUI
 * [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed. 
-
 
 ## 23.29.0 2024-08-05
 ### PaymentSheet
