@@ -542,7 +542,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             return
         }
     }
-    
+
     func _completePayment(
         with payment: PKPayment,
         completion: @escaping @Sendable (PKPaymentAuthorizationStatus, Swift.Error?) -> Void
@@ -563,6 +563,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 let paymentMethodCompletion: STPIntentClientSecretCompletionBlock = {
                     clientSecret,
                     intentCreationError in
+                    print(clientSecret!)
+                    print(intentCreationError!)
+                    
                     guard let clientSecret = clientSecret, intentCreationError == nil,
                           self.authorizationController != nil
                     else {
@@ -578,23 +581,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                     
                     if StripeAPI.SetupIntentConfirmParams.isClientSecretValid(clientSecret) {
                         // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
-                        StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
-                        {
-                            result in
-                            Task { @MainActor in
-                                // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
-                                let sself = self
-                                guard let setupIntent = try? result.get(),
-                                      sself.authorizationController != nil
-                                else {
-                                    if case .failure(let error) = result {
-                                        self._handleFinalState(.error, error: error, completion: completion)
-                                    } else {
-                                        self._handleFinalState(.error, error: nil, completion: completion)
-                                    }
-                                    return
-                                }
-                                
+                        Task { @MainActor in
+                            do {
+                                let setupIntent = try await StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
                                 switch setupIntent.status {
                                 case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
                                     self.confirmType = .client
@@ -607,28 +596,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                     confirmParams.useStripeSdk = true
                                     confirmParams.returnUrl = self.returnUrl
                                     
-                                    StripeAPI.SetupIntent.confirm(
-                                        apiClient: self.apiClient,
-                                        params: confirmParams
-                                    ) {
-                                        result in
-                                        Task { @MainActor in
-                                            // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
-                                            let sself = self
-                                            guard let setupIntent = try? result.get(),
-                                                  sself.authorizationController != nil,
-                                                  setupIntent.status == .succeeded
-                                            else {
-                                                if case .failure(let error) = result {
-                                                    self._handleFinalState(.error, error: error, completion: completion)
-                                                } else {
-                                                    self._handleFinalState(.error, error: nil, completion: completion)
-                                                }
-                                                return
-                                            }
-                                            
-                                            self._handleFinalState(.success, error: nil, completion: completion)
-                                        }
+                                    let confirmedSetupIntent = try await StripeAPI.SetupIntent.confirm(apiClient: self.apiClient, params: confirmParams)
+                                    if confirmedSetupIntent.status == .succeeded, self.authorizationController != nil {
+                                        self._handleFinalState(.success, error: nil, completion: completion)
+                                    } else {
+                                        self._handleFinalState(.error, error: nil, completion: completion)
                                     }
                                 case .succeeded:
                                     self.confirmType = .server
@@ -643,28 +615,16 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                         completion: completion
                                     )
                                 }
+                            } catch {
+                                self._handleFinalState(.error, error: error, completion: completion)
                             }
                         }
                     } else {
-                        let paymentIntentClientSecret = clientSecret
-                        // 3b. Retrieve the PaymentIntent and see if we need to confirm it client-side
-                        StripeAPI.PaymentIntent.get(
-                            apiClient: self.apiClient,
-                            clientSecret: paymentIntentClientSecret
-                        ) { result in
-                            Task { @MainActor in
-                                // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
-                                let sself = self
-                                guard let paymentIntent = try? result.get(),
-                                      sself.authorizationController != nil
-                                else {
-                                    if case .failure(let error) = result {
-                                        self._handleFinalState(.error, error: error, completion: completion)
-                                    } else {
-                                        self._handleFinalState(.error, error: nil, completion: completion)
-                                    }
-                                    return
-                                }
+                        // Is PaymentIntent
+                        Task { @MainActor in
+                            do {
+                                // 3b. Retrieve the PaymentIntent and see if we need to confirm it client-side
+                                let paymentIntent = try await StripeAPI.PaymentIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
                                 
                                 if paymentIntent.confirmationMethod == .automatic
                                     && (paymentIntent.status == .requiresPaymentMethod
@@ -672,9 +632,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                 {
                                     self.confirmType = .client
                                     // 4b. Confirm the PaymentIntent
-                                    
+
                                     var paymentIntentParams = StripeAPI.PaymentIntentParams(
-                                        clientSecret: paymentIntentClientSecret
+                                        clientSecret: clientSecret
                                     )
                                     paymentIntentParams.paymentMethod = paymentMethod.id
                                     paymentIntentParams.useStripeSdk = true
@@ -683,35 +643,18 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                     if paymentIntent.shipping != self._shippingDetails(from: payment) {
                                         paymentIntentParams.shipping = self._shippingDetails(from: payment)
                                     }
-                                    
+
                                     self.paymentState = .pending  // After this point, we can't cancel
-                                    
+
                                     // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
-                                    StripeAPI.PaymentIntent.confirm(
-                                        apiClient: self.apiClient,
-                                        params: paymentIntentParams
-                                    ) {
-                                        result in
-                                        
-                                        Task { @MainActor in
-                                            // TODO(porter) https://forums.swift.org/t/why-does-sending-a-sendable-value-risk-causing-data-races/73074/6
-                                            let sself = self
-                                            guard let postConfirmPI = try? result.get(),
-                                                  postConfirmPI.status == .succeeded
-                                                    || postConfirmPI.status == .requiresCapture
-                                            else {
-                                                if case .failure(let error) = result {
-                                                    sself._handleFinalState(.error, error: error, completion: completion)
-                                                } else {
-                                                    self._handleFinalState(.error, error: nil, completion: completion)
-                                                }
-                                                return
-                                            }
-                                            self._handleFinalState(.success, error: nil, completion: completion)
-                                        }
+                                    let confirmedPaymentIntent = try await StripeAPI.PaymentIntent.confirm(apiClient: self.apiClient, params: paymentIntentParams)
+                                    if confirmedPaymentIntent.status == .succeeded || confirmedPaymentIntent.status == .requiresCapture {
+                                        self._handleFinalState(.success, error: nil, completion: completion)
+                                    } else {
+                                        self._handleFinalState(.error, error: nil, completion: completion)
                                     }
                                 } else if paymentIntent.status == .succeeded
-                                            || paymentIntent.status == .requiresCapture
+                                    || paymentIntent.status == .requiresCapture
                                 {
                                     self.confirmType = .server
                                     self._handleFinalState(.success, error: nil, completion: completion)
@@ -722,6 +665,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                     )
                                     self._handleFinalState(.error, error: unknownError, completion: completion)
                                 }
+                                
+                            } catch {
+                                self._handleFinalState(.error, error: error, completion: completion)
                             }
                         }
                     }

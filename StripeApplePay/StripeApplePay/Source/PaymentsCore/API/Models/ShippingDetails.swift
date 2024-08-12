@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension StripeAPI {
-    @_spi(STP) public struct ShippingDetails: UnknownFieldsCodable, Equatable {
+    @_spi(STP) public struct ShippingDetails: UnknownFieldsCodable, Equatable, Sendable {
         @_spi(STP) public init(
             address: StripeAPI.ShippingDetails.Address,
             name: String,
@@ -47,7 +47,7 @@ extension StripeAPI {
         @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
 
-        @_spi(STP) public struct Address: UnknownFieldsCodable, Equatable {
+        @_spi(STP) public struct Address: UnknownFieldsCodable, Equatable, Sendable {
             @_spi(STP) public init(
                 city: String? = nil,
                 country: String? = nil,

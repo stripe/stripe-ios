@@ -40,6 +40,21 @@ extension StripeAPI.PaymentIntent {
 
         apiClient.get(resource: endpoint, parameters: parameters, completion: completion)
     }
+    
+    @MainActor @_spi(STP) public static func get(
+        apiClient: STPAPIClient = .shared,
+        clientSecret: String) async throws -> StripeAPI.PaymentIntent {
+            return try await withCheckedThrowingContinuation({ continuation in
+                get(apiClient: apiClient, clientSecret: clientSecret) { result in
+                    switch result {
+                    case .success(let paymentIntent):
+                        continuation.resume(returning: paymentIntent)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            })
+        }
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
@@ -80,6 +95,21 @@ extension StripeAPI.PaymentIntent {
 
         apiClient.post(resource: endpoint, object: paramsWithTelemetry, completion: completion)
     }
+    
+    @MainActor @_spi(STP) public static func confirm(
+        apiClient: STPAPIClient = .shared,
+        params: StripeAPI.PaymentIntentParams) async throws -> StripeAPI.PaymentIntent {
+            return try await withCheckedThrowingContinuation({ continuation in
+                confirm(apiClient: apiClient, params: params) { result in
+                    switch result {
+                    case .success(let paymentIntent):
+                        continuation.resume(returning: paymentIntent)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            })
+        }
 
     static let Resource = "payment_intents"
 }

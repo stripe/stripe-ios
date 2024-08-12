@@ -58,6 +58,25 @@ extension StripeAPI.PaymentMethod {
             }
         }
     }
-
+    
+    /// Converts a PKPayment object into a Stripe Payment Method using the Stripe API.
+    /// - Parameters:
+    ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
+    @MainActor @_spi(STP) public static func create(
+        apiClient: STPAPIClient = .shared,
+        payment: PKPayment) async throws -> StripeAPI.PaymentMethod {
+            return try await withCheckedThrowingContinuation({ continuation in
+                create(apiClient: apiClient, payment: payment) { result in
+                    switch result {
+                    case .success(let paymentMethod):
+                        continuation.resume(returning: paymentMethod)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            })
+        }
+    
+    
     static let Resource = "payment_methods"
 }

@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension StripeAPI {
-    @_spi(STP) public struct PaymentIntent: UnknownFieldsDecodable {
+    @_spi(STP) public struct PaymentIntent: UnknownFieldsDecodable, Sendable {
         // TODO: (MOBILESDK-468) Add modern bindings for more PaymentIntent fields
         /// The Stripe ID of the PaymentIntent.
         @_spi(STP) public let id: String

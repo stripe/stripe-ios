@@ -39,6 +39,21 @@ extension StripeAPI.SetupIntent {
 
         apiClient.get(resource: endpoint, parameters: parameters, completion: completion)
     }
+    
+    @MainActor @_spi(STP) public static func get(
+        apiClient: STPAPIClient = .shared,
+        clientSecret: String) async throws -> StripeAPI.SetupIntent {
+            return try await withCheckedThrowingContinuation({ continuation in
+                get(apiClient: apiClient, clientSecret: clientSecret) { result in
+                    switch result {
+                    case .success(let setupIntent):
+                        continuation.resume(returning: setupIntent)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            })
+        }
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
@@ -79,6 +94,21 @@ extension StripeAPI.SetupIntent {
 
         apiClient.post(resource: endpoint, object: paramsWithTelemetry, completion: completion)
     }
+    
+    @MainActor @_spi(STP) public static func confirm(
+        apiClient: STPAPIClient = .shared,
+        params: StripeAPI.SetupIntentConfirmParams) async throws -> StripeAPI.SetupIntent {
+            return try await withCheckedThrowingContinuation({ continuation in
+                confirm(apiClient: apiClient, params: params) { result in
+                    switch result {
+                    case .success(let setupIntent):
+                        continuation.resume(returning: setupIntent)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            })
+        }
 
     static let Resource = "setup_intents"
 }
