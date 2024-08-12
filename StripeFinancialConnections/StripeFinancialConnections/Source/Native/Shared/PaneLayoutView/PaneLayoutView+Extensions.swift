@@ -219,9 +219,9 @@ extension PaneLayoutView {
         )
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 16,
+            top: Constants.Layout.defaultVerticalPadding,
             leading: Constants.Layout.defaultHorizontalMargin,
-            bottom: 16,
+            bottom: Constants.Layout.defaultVerticalPadding,
             trailing: Constants.Layout.defaultHorizontalMargin
         )
         return (paddingStackView, primaryButtonReference, secondaryButtonReference)

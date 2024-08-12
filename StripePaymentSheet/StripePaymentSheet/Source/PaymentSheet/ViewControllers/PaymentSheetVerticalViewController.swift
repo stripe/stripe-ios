@@ -348,9 +348,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
                 switch customerDefault {
                 case .applePay:
-                    return .applePay
+                    return isFlowController ? .applePay : nil // Only default to Apple Pay in flow controller mode
                 case .link:
-                    return .link
+                    return isFlowController ? .link : nil // Only default to Link in flow controller mode
                 case .stripeId, nil:
                     return savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
                 }

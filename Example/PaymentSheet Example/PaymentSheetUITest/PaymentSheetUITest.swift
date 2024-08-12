@@ -91,7 +91,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertNoThrow(postalField.typeText("12345"))
     }
 
-    func testPaymentSheetCustom() throws {
+    func testPaymentSheetFlowController() throws {
         app.launch()
 
         app.staticTexts["PaymentSheet.FlowController"].tap()
@@ -121,7 +121,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         okButton.tap()
     }
 
-    func testPaymentSheetCustomDeferred_update() throws {
+    func testPaymentSheetFlowControllerDeferred_update() throws {
         app.launch()
 
         app.staticTexts["PaymentSheet.FlowController (Deferred)"].tap()
@@ -182,7 +182,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         okButton.tap()
     }
 
-    func testPaymentSheetCustomSaveAndRemoveCard() throws {
+    func testPaymentSheetFlowControllerSaveAndRemoveCard() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.customerMode = .new
@@ -297,7 +297,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertNotNil(successText.label.range(of: "Success!"))
     }
 
-    func testPaymentSheetSwiftUICustom() throws {
+    func testPaymentSheetSwiftUIFlowController() throws {
         app.launch()
 
         app.staticTexts["PaymentSheet.FlowController (SwiftUI)"].tap()
@@ -672,7 +672,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
-    func testDeferredIntent_ApplePayCustomFlow_ClientSideConfirmation() throws {
+    func testDeferredIntent_ApplePayFlowControllerFlow_ClientSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
         settings.customerMode = .new
@@ -772,7 +772,7 @@ class PaymentSheetDeferredUIBankAccountTests: PaymentSheetUITestCase {
      }
      */
     /* Disable Link test
-     func testDeferredIntentLinkCustomFlow_ClientSideConfirmation() throws {
+     func testDeferredIntentLinkFlowControllerFlow_ClientSideConfirmation() throws {
      loadPlayground(
      app,
      settings: [
@@ -1035,7 +1035,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
-    func testPaymentSheetCustomSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
+    func testPaymentSheetFlowControllerSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePayEnabled = .off // disable Apple Pay
@@ -1806,7 +1806,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
      }
      */
     /* Disable Link test
-     func testDeferredIntentLinkCustomFlow_SeverSideConfirmation() throws {
+     func testDeferredIntentLinkFlowControllerFlow_SeverSideConfirmation() throws {
      loadPlayground(
      app,
      settings: [
@@ -2216,6 +2216,17 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
+    
+    func testLinkInlineSignup_deferred() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.integrationType = .deferred_ssc
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        fillLinkAndPay(mode: .checkbox)
+    }
 
     // MARK: Link test helpers
 
@@ -2266,6 +2277,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
             app.buttons["Confirm"].waitForExistenceAndTap()
         }
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        // Roundabout way to validate that signup completed successfully
+        let signupCompleteAnalytic = analyticsLog.first { payload in
+            payload["event"] as? String == "link.signup.complete"
+        }
+        XCTAssertNotNil(signupCompleteAnalytic)
     }
 
     private func assertLinkInlineSignupNotShown() {

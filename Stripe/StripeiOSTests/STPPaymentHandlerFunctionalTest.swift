@@ -329,7 +329,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
     func test_handle_next_action_2_payment_intent_sends_analytic() {
         // Calling handleNextAction(for:) with a STPPaymentIntent w/ an unknown next action...
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
-        var paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["card"], status: .requiresAction, paymentMethod: STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard), nextAction: .unknown)
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["card"], status: .requiresAction, paymentMethod: STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard), nextAction: .unknown)
 
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()

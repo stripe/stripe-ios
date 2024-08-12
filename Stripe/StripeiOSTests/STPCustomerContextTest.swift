@@ -599,9 +599,6 @@ class STPCustomerContextTests: APIStubbedTestCase {
     func testFiltersApplePaySourcesByDefault() {
         let customerKey = STPFixtures.ephemeralKey()
         let expectedCustomerJSON = STPFixtures.customerWithCardAndApplePaySourcesJSON()
-        let expectedPaymentMethods = [
-            STPFixtures.paymentMethod(), STPFixtures.applePayPaymentMethod(),
-        ]
         let expectedPaymentMethodsJSON = [
             STPFixtures.paymentMethodJSON(), STPFixtures.applePayPaymentMethodJSON(),
         ]

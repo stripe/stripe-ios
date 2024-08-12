@@ -133,8 +133,7 @@ extension PaymentSheet {
         case let .new(confirmParams):
             // Set allow_redisplay on params
             confirmParams.setAllowRedisplay(
-                paymentMethodSave: elementsSession.customerSessionPaymentSheetFeatures?.paymentMethodSave,
-                allowRedisplayOverride: elementsSession.customerSessionPaymentSheetFeatures?.paymentMethodSaveAllowRedisplayOverride,
+                paymentSheetFeatures: elementsSession.customerSessionPaymentSheetFeatures,
                 isSettingUp: intent.isSettingUp
             )
             switch intent {
@@ -417,8 +416,8 @@ extension PaymentSheet {
                                 // If passthrough mode, share payment details
                                 linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
                                     switch result {
-                                    case .success(let shareResponse):
-                                        confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod, type: .card), linkAccount, shouldSave)
+                                    case .success(let paymentDetailsShareResponse):
+                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
                                     case .failure(let error):
                                         STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
@@ -448,7 +447,6 @@ extension PaymentSheet {
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)

@@ -297,7 +297,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.currency, "eur")
         XCTAssertEqual(source?.flow, .redirect)
         XCTAssertEqual(source?.livemode, false)
-        XCTAssertNil(source?.metadata)
+        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
         XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
         XCTAssertNotNil(source?.receiver) // STPSourceReceiverTest
         XCTAssertNotNil(source?.redirect) // STPSourceRedirectTest
@@ -323,7 +323,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.currency, "usd")
         XCTAssertEqual(source?.flow, .redirect)
         XCTAssertEqual(source?.livemode, true)
-        XCTAssertNil(source?.metadata)
+        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
         XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
         XCTAssertNil(source?.receiver) // STPSourceReceiverTest
         XCTAssertNotNil(source?.redirect) // STPSourceRedirectTest
@@ -334,7 +334,7 @@ class STPSourceTest: XCTestCase {
         var alipayResponse = response!["alipay"] as? [AnyHashable: Any]
         alipayResponse?.removeValue(forKey: "native_url") // should be nil
         alipayResponse?.removeValue(forKey: "statement_descriptor") // should be nil
-        XCTAssertEqual(source?.details as! NSDictionary, alipayResponse as! NSDictionary)
+        XCTAssertEqual(source!.details! as NSDictionary, alipayResponse! as NSDictionary)
         XCTAssertNil(source?.cardDetails) // STPSourceCardDetailsTest
         XCTAssertNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
     }
@@ -349,7 +349,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertNil(source?.currency)
         XCTAssertEqual(source?.flow, STPSourceFlow.none)
         XCTAssertEqual(source?.livemode, false)
-        XCTAssertNil(source?.metadata)
+        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
         XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
         XCTAssertNil(source?.receiver) // STPSourceReceiverTest
         XCTAssertNil(source?.redirect) // STPSourceRedirectTest
@@ -357,7 +357,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.type, STPSourceType.card)
         XCTAssertEqual(source?.usage, STPSourceUsage.reusable)
         XCTAssertNil(source?.verification)
-        XCTAssertEqual(source?.details as! NSDictionary, response!["card"] as! NSDictionary)
+        XCTAssertEqual(source!.details! as NSDictionary, response!["card"] as! NSDictionary)
         XCTAssertNotNil(source?.cardDetails) // STPSourceCardDetailsTest
         XCTAssertNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
     }
@@ -372,7 +372,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.currency, "eur")
         XCTAssertEqual(source?.flow, .redirect)
         XCTAssertEqual(source?.livemode, true)
-        XCTAssertNil(source?.metadata)
+        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
         XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
         XCTAssertNil(source?.receiver) // STPSourceReceiverTest
         XCTAssertNotNil(source?.redirect) // STPSourceRedirectTest
@@ -380,7 +380,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.type, STPSourceType.iDEAL)
         XCTAssertEqual(source?.usage, STPSourceUsage.singleUse)
         XCTAssertNil(source?.verification)
-        XCTAssertEqual(source?.details as! NSDictionary, response!["ideal"] as! NSDictionary)
+        XCTAssertEqual(source!.details! as NSDictionary, response!["ideal"] as! NSDictionary)
         XCTAssertNil(source?.cardDetails) // STPSourceCardDetailsTest
         XCTAssertNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
     }
@@ -395,7 +395,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.currency, "eur")
         XCTAssertEqual(source?.flow, STPSourceFlow.none)
         XCTAssertEqual(source?.livemode, false)
-        XCTAssertNil(source?.metadata)
+        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
         XCTAssertEqual(source?.owner?.name, "Jenny Rosen")
         XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
         XCTAssertNil(source?.receiver) // STPSourceReceiverTest
@@ -405,7 +405,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.usage, STPSourceUsage.reusable)
         XCTAssertEqual(source?.verification?.attemptsRemaining, NSNumber(value: 5))
         XCTAssertEqual(source?.verification?.status, STPSourceVerificationStatus.pending)
-        XCTAssertEqual(source?.details as! NSDictionary, response!["sepa_debit"] as! NSDictionary)
+        XCTAssertEqual(source!.details! as NSDictionary, response!["sepa_debit"] as! NSDictionary)
         XCTAssertNil(source?.cardDetails) // STPSourceCardDetailsTest
         XCTAssertNotNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
     }

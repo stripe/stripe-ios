@@ -71,7 +71,7 @@
     confirmParams.returnURL = @"foo://bar";
 
     XCTestExpectation *e = [self expectationWithDescription:@""];
-    [paymentHandler confirmPayment:confirmParams withAuthenticationContext:self completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * __unused pi, __unused NSError * _Nullable error) {
+    [paymentHandler confirmPayment:confirmParams withAuthenticationContext:self completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * __unused _, __unused NSError * _Nullable error) {
         // ...shouldn't attempt to open the native URL (ie the alipay app)
         OCMReject([self.applicationMock openURL:[OCMArg any]
                                    options:[OCMArg any]

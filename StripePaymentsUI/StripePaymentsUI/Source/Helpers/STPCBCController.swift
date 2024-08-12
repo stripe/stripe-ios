@@ -146,11 +146,10 @@ class STPCBCController {
 
     var contextMenuConfiguration: UIContextMenuConfiguration {
         return UIContextMenuConfiguration(actionProvider: { _ in
-            let action = { (action: UIAction) -> Void in
+            let action = { (action: UIAction) in
                 let brand = STPCard.brand(from: action.identifier.rawValue)
                 // Set the selected brand if a brand is selected
                 self.selectedBrand = brand != .unknown ? brand : nil
-                self.updateHandler?()
             }
             let placeholderAction = UIAction(title: String.Localized.card_brand_dropdown_placeholder, attributes: .disabled, handler: action)
             let menu = UIMenu(children:
