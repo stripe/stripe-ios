@@ -16,12 +16,12 @@ import Foundation
 }
 
 @_spi(STP) extension PaymentAnalytic {
-    public var params: [String: Sendable] {
-        let params = additionalParams
+    @MainActor public var params: [String: Sendable] {
+        var params = additionalParams
 
-//        params["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
-//        params["ocr_type"] = PaymentsSDKVariant.ocrTypeString
-//        params["pay_var"] = PaymentsSDKVariant.variant
+        params["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
+        params["ocr_type"] = PaymentsSDKVariant.ocrTypeString
+        params["pay_var"] = PaymentsSDKVariant.variant
         return params
     }
 }

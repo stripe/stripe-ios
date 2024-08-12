@@ -10,22 +10,22 @@ import Foundation
 @preconcurrency import PassKit
 @_spi(STP) import StripeCore
 
-@MainActor extension StripeAPI.PaymentMethod {
+extension StripeAPI.PaymentMethod {
     /// A callback to be run with a PaymentMethod response from the Stripe API.
     /// - Parameters:
     ///   - paymentMethod: The Stripe PaymentMethod from the response. Will be nil if an error occurs. - seealso: PaymentMethod
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(STP) public typealias PaymentMethodCompletionBlock = (
+    @_spi(STP) public typealias PaymentMethodCompletionBlock = @Sendable (
         Result<StripeAPI.PaymentMethod, Error>
     ) -> Void
 
-    static func create(
+    @MainActor static func create(
         apiClient: STPAPIClient = .shared,
         params: StripeAPI.PaymentMethodParams,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
-                paymentMethodType: params.type.rawValue
+            paymentMethodType: params.type.rawValue
         )
         apiClient.post(resource: Resource, object: params, completion: completion)
     }
@@ -34,7 +34,7 @@ import Foundation
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
-    @_spi(STP) public static func create(
+    @MainActor @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         payment: PKPayment,
         completion: @escaping PaymentMethodCompletionBlock
@@ -56,7 +56,6 @@ import Foundation
             Task { @MainActor in
                 Self.create(apiClient: apiClient, params: paymentMethodParams, completion: completion)
             }
-            
         }
     }
 

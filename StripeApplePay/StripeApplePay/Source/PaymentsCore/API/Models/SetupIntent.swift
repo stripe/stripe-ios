@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension StripeAPI {
-    @_spi(STP) public struct SetupIntent: UnknownFieldsDecodable, Sendable {
+    @_spi(STP) public struct SetupIntent: UnknownFieldsDecodable {
         @_spi(STP) public let id: String
         // TODO: (MOBILESDK-467) Add modern bindings for more SetupIntent fields
         @_spi(STP) public let status: SetupIntentStatus?

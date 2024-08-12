@@ -9,7 +9,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-@MainActor extension StripeAPI.SetupIntent {
+extension StripeAPI.SetupIntent {
     /// A callback to be run with a SetupIntent response from the Stripe API.
     /// - Parameters:
     ///   - setupIntent: The Stripe SetupIntent from the response. Will be nil if an error occurs. - seealso: SetupIntent
@@ -21,7 +21,7 @@ import Foundation
     /// - Parameters:
     ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
-    @_spi(STP) private static func get(
+    @MainActor @_spi(STP) public static func get(
         apiClient: STPAPIClient = .shared,
         clientSecret: String,
         completion: @escaping SetupIntentCompletionBlock
@@ -39,23 +39,6 @@ import Foundation
 
         apiClient.get(resource: endpoint, parameters: parameters, completion: completion)
     }
-    
-    @_spi(STP) public static func get(
-        apiClient: STPAPIClient = .shared,
-        clientSecret: String
-    ) async throws -> StripeAPI.SetupIntent {
-        return try await withCheckedThrowingContinuation({ continuation in
-            get(apiClient: apiClient, clientSecret: clientSecret) { result in
-                switch result {
-                case .success(let setupIntent):
-                    continuation.resume(returning: setupIntent)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-            
-        })
-    }
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
@@ -65,7 +48,7 @@ import Foundation
     /// - Parameters:
     ///   - setupIntentParams:    The `SetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @_spi(STP) public static func confirm(
+    @MainActor @_spi(STP) public static func confirm(
         apiClient: STPAPIClient = .shared,
         params: StripeAPI.SetupIntentConfirmParams,
         completion: @escaping SetupIntentCompletionBlock
@@ -95,23 +78,6 @@ import Foundation
         }
 
         apiClient.post(resource: endpoint, object: paramsWithTelemetry, completion: completion)
-    }
-    
-    @_spi(STP) public static func confirm(
-        apiClient: STPAPIClient = .shared,
-        params: StripeAPI.SetupIntentConfirmParams
-    ) async throws -> StripeAPI.SetupIntent {
-        return try await withCheckedThrowingContinuation({ continuation in
-            confirm(apiClient: apiClient, params: params) { result in
-                switch result {
-                case .success(let setupIntent):
-                    continuation.resume(returning: setupIntent)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-            
-        })
     }
 
     static let Resource = "setup_intents"

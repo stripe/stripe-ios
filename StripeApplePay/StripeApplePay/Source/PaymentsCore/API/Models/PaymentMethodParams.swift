@@ -24,15 +24,11 @@ extension StripeAPI {
         @_spi(STP) public var billingDetails: BillingDetails?
 
         /// Used internally to identify the version of the SDK sending the request
-        @_spi(STP) public var paymentUserAgent: String? 
-        
-        init(type: PaymentMethod.PaymentMethodType, card: Card? = nil, billingDetails: BillingDetails? = nil, paymentUserAgent: String? = nil, _additionalParametersStorage: NonEncodableParameters? = nil) {
-            self.type = type
-            self.card = card
-            self.billingDetails = billingDetails
-            self.paymentUserAgent = paymentUserAgent
-            self._additionalParametersStorage = _additionalParametersStorage
-        }
+        @_spi(STP) public var paymentUserAgent: String? = {
+            MainActor.assumeIsolated {
+                return PaymentsSDKVariant.paymentUserAgent
+            }
+        }()
 
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {

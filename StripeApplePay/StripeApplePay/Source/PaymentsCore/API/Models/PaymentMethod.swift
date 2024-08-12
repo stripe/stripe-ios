@@ -12,7 +12,7 @@ import Foundation
 extension StripeAPI {
     /// PaymentMethod objects represent your customer's payment instruments. They can be used with PaymentIntents to collect payments.
     /// - seealso: https://stripe.com/docs/api/payment_methods
-    public struct PaymentMethod: UnknownFieldsDecodable {
+    public struct PaymentMethod: UnknownFieldsDecodable, @unchecked Sendable {
         /// The Stripe ID of the PaymentMethod.
         public let id: String
 
@@ -26,14 +26,12 @@ extension StripeAPI {
         public var type: PaymentMethodType?
 
         /// The type of the PaymentMethod.
-        @frozen public enum PaymentMethodType: String, SafeEnumCodable {
+        public enum PaymentMethodType: String, SafeEnumCodable {
             /// A card payment method.
             case card
             /// An unknown type.
             case unknown
             case unparsable
-            // TODO: This is @frozen because of a bug in the Xcode 12.2 Swift compiler.
-            // Remove @frozen after Xcode 12.2 support has been dropped.
         }
 
         /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.

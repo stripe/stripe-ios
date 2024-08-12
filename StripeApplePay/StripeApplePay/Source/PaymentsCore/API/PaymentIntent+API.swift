@@ -22,8 +22,7 @@ extension StripeAPI.PaymentIntent {
     /// - Parameters:
     ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
-    @MainActor
-    @_spi(STP) public static func get(
+    @MainActor @_spi(STP) public static func get(
         apiClient: STPAPIClient = .shared,
         clientSecret: String,
         completion: @escaping PaymentIntentCompletionBlock
@@ -50,8 +49,7 @@ extension StripeAPI.PaymentIntent {
     /// - Parameters:
     ///   - paymentIntentParams:  The `PaymentIntentParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @MainActor
-    @_spi(STP) public static func confirm(
+    @MainActor @_spi(STP) public static func confirm(
         apiClient: STPAPIClient = .shared,
         params: StripeAPI.PaymentIntentParams,
         completion: @escaping PaymentIntentCompletionBlock
@@ -70,7 +68,9 @@ extension StripeAPI.PaymentIntent {
 
         let type = params.paymentMethodData?.type.rawValue
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
-            paymentMethodType: type)
+            paymentMethodType: type
+        )
+
         // Add telemetry
         var paramsWithTelemetry = params
         if let pmAdditionalParams = paramsWithTelemetry.paymentMethodData?.additionalParameters {
