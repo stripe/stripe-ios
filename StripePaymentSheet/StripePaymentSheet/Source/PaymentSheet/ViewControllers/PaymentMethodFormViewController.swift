@@ -24,14 +24,15 @@ class PaymentMethodFormViewController: UIViewController {
     let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
-        // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have a divergent path for link. Where is the setDefaultBillingDetailsIfNecessary call, for example?
-        if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
-            return linkEnabledElement.makePaymentOption(intent: intent, elementsSession: elementsSession)
-        }
 
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
+
         if let params = form.updateParams(params: params) {
+            if let linkEnabledElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? LinkEnabledPaymentMethodElement }).first {
+                return linkEnabledElement.makePaymentOption(intentConfirmParams: params)
+            }
+
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }

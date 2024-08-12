@@ -10,7 +10,7 @@
 import UIKit
 
 final class LinkEnabledPaymentMethodElement: ContainerElement {
-    public lazy var elements: [Element] = { [paymentMethodElement, inlineSignupElement] }()
+    public lazy var elements: [Element] = { [inlineSignupElement] }()
 
     struct Constants {
         static let spacing: CGFloat = 12
@@ -24,7 +24,6 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
-            paymentMethodElement.view,
             inlineSignupElement.view,
         ])
         stackView.axis = .vertical
@@ -35,22 +34,14 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         return stackView
     }()
 
-    let paymentMethodType: STPPaymentMethodType
-
-    let paymentMethodElement: PaymentMethodElement
-
     let inlineSignupElement: LinkInlineSignupElement
 
     init(
-        type: STPPaymentMethodType,
-        paymentMethodElement: PaymentMethodElement,
         configuration: PaymentSheet.Configuration,
         linkAccount: PaymentSheetLinkAccount?,
         country: String?,
         showCheckbox: Bool
     ) {
-        self.paymentMethodType = type
-        self.paymentMethodElement = paymentMethodElement
         self.inlineSignupElement = LinkInlineSignupElement(
             configuration: configuration,
             linkAccount: linkAccount,
@@ -58,15 +49,10 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
             showCheckbox: showCheckbox
         )
 
-        paymentMethodElement.delegate = self
         inlineSignupElement.delegate = self
     }
 
-    func makePaymentOption(intent: Intent, elementsSession: STPElementsSession) -> PaymentOption? {
-        guard let params = updateParams(params: .init(type: .stripe(paymentMethodType))) else {
-            return nil
-        }
-
+    func makePaymentOption(intentConfirmParams params: IntentConfirmParams) -> PaymentOption? {
         switch inlineSignupElement.action {
         case .signupAndPay(let account, let phoneNumber, let legalName):
             return .link(
@@ -91,14 +77,6 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
 
 }
 
-extension LinkEnabledPaymentMethodElement: PaymentMethodElement {
-
-    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        return paymentMethodElement.updateParams(params: params)
-    }
-
-}
-
 extension LinkEnabledPaymentMethodElement: ElementDelegate {
 
     func didUpdate(element: Element) {
@@ -108,5 +86,4 @@ extension LinkEnabledPaymentMethodElement: ElementDelegate {
     func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: self)
     }
-
 }
