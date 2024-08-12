@@ -431,6 +431,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         ])
     }
 
+    var didSendLogShow: Bool = false
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !didSendLogShow {
+            // Only send this once to match the behavior of horizontal mode
+            didSendLogShow = true
+            analyticsHelper.logShow(showingSavedPMList: false) // We never show the saved PM list first
+        }
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isLinkWalletButtonSelected = false
@@ -589,7 +599,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             configuration: configuration,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
-            elementsSession: elementsSession
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)

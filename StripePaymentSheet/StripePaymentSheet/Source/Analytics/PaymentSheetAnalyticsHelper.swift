@@ -147,7 +147,7 @@ final class PaymentSheetAnalyticsHelper {
         }()
         log(event: event)
     }
-    
+
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
