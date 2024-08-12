@@ -545,7 +545,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
         }
-        
+
         // If the selected payment option is a saved card, CVC is enabled, and we are PS, handle CVC specially:
         if case let .saved(paymentMethod, _) = selectedPaymentOption, paymentMethod.type == .card, intent.cvcRecollectionEnabled, !isFlowController, !isRecollectingCVC {
             let cvcRecollectionViewController = CVCReconfirmationVerticalViewController(
@@ -653,6 +653,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) {
+        analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
         error = nil
 #if !canImport(CompositorServices)
         UISelectionFeedbackGenerator().selectionChanged()
