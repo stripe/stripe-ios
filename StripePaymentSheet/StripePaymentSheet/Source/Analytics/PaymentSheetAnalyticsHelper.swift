@@ -148,6 +148,10 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
+    func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
+        log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
+    }
+
     /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.
     var didSendPaymentSheetFormInteractedEventAfterFormShown: Bool = false
     func logFormShown(paymentMethodTypeIdentifier: String) {
