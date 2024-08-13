@@ -705,4 +705,5 @@ private func IsAccountUpdateRequired(
     return account.nextPaneOnSelection == .bankAuthRepair
     // supportability -- account requires re-sharing with additonal permissions
     || account.nextPaneOnSelection == .partnerAuth
+    || account.nextPaneOnSelection == .institutionPicker
 }
