@@ -29,8 +29,27 @@ class PaymentMethodFormViewController: UIViewController {
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
 
         if let params = form.updateParams(params: params) {
-            if let linkEnabledElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? LinkEnabledPaymentMethodElement }).first {
-                return linkEnabledElement.makePaymentOption(intentConfirmParams: params)
+            if let linkInlineSignupElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? LinkInlineSignupElement }).first {
+                switch linkInlineSignupElement.action {
+                case .signupAndPay(let account, let phoneNumber, let legalName):
+                    return .link(
+                        option: .signUp(
+                            account: account,
+                            phoneNumber: phoneNumber,
+                            consentAction: linkInlineSignupElement.viewModel.consentAction,
+                            legalName: legalName,
+                            intentConfirmParams: params
+                        )
+                    )
+                case .continueWithoutLink:
+                    return .new(confirmParams: params)
+                case .none:
+                    // Link is optional when in textFieldOnly mode
+                    if linkInlineSignupElement.viewModel.mode != .checkbox {
+                        return .new(confirmParams: params)
+                    }
+                    return nil
+                }
             }
 
             if case .external(let paymentMethod) = paymentMethodType {

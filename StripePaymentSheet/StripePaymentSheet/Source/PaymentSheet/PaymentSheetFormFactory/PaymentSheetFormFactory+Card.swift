@@ -89,13 +89,13 @@ extension PaymentSheetFormFactory {
         ]
 
         if case .paymentSheet(let configuration) = configuration, showLinkInlineSignup {
-            let linkEnabledPaymentMethodElement = LinkEnabledPaymentMethodElement(
+            let inlineSignupElement = LinkInlineSignupElement(
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode,
                 showCheckbox: !shouldDisplaySaveCheckbox
             )
-            elements.append(linkEnabledPaymentMethodElement)
+            elements.append(inlineSignupElement)
         }
 
         let mandate: SimpleMandateElement? = {
