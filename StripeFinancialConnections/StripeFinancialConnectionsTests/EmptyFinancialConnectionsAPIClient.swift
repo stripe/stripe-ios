@@ -163,8 +163,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         consumerSessionClientSecret: String,
         consentAcquired: Bool?
-    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsInstitutionList> {
-        return Promise<StripeFinancialConnections.FinancialConnectionsInstitutionList>()
+    ) -> StripeCore.Future<StripeFinancialConnections.ShareNetworkedAccountsResponse> {
+        return Promise<StripeFinancialConnections.ShareNetworkedAccountsResponse>()
     }
 
     func consumerSessionLookup(
