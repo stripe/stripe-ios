@@ -13,6 +13,10 @@ import UIKit
 protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
+        didReceiveConsumerPublishableKey consumerPublishableKey: String
+    )
+    func networkingLinkVerificationViewController(
+        _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
         consumerSession: ConsumerSessionData?,
         preventBackNavigation: Bool
@@ -125,6 +129,9 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 // MARK: - NetworkingOTPViewDelegate
 
 extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
+    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
+        delegate?.networkingLinkVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
+    }
 
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
         showLoadingView(true)
