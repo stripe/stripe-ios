@@ -14,7 +14,8 @@ protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData?
+        consumerSession: ConsumerSessionData?,
+        preventBackNavigation: Bool
     )
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
@@ -80,12 +81,13 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 
-    private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane) {
+    private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane, preventBackNavigation: Bool) {
         if let consumerSession = dataSource.consumerSession {
             delegate?.networkingLinkVerificationViewController(
                 self,
                 didRequestNextPane: pane,
-                consumerSession: consumerSession
+                consumerSession: consumerSession,
+                preventBackNavigation: preventBackNavigation
             )
         } else {
             assertionFailure("logic error: did not have consumerSession")
@@ -104,7 +106,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
                 switch result {
                 case .success:
-                    self.requestNextPane(.linkAccountPicker)
+                    self.requestNextPane(.linkAccountPicker, preventBackNavigation: true)
                 case .failure(let error):
                     self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
                 }
@@ -136,7 +138,12 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
             ],
             pane: .networkingLinkVerification
         )
-        delegate?.networkingLinkVerificationViewController(self, didRequestNextPane: .institutionPicker, consumerSession: nil)
+        delegate?.networkingLinkVerificationViewController(
+            self,
+            didRequestNextPane: .institutionPicker,
+            consumerSession: nil,
+            preventBackNavigation: false
+        )
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
     }
 
@@ -200,11 +207,15 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    self.dataSource.analyticsClient.log(
-                        eventName: "networking.verification.success",
-                        pane: .networkingLinkVerification
-                    )
-                    self.requestNextPane(.linkAccountPicker)
+                    if self.dataSource.manifest.isProductInstantDebits {
+                        self.attachConsumerToLinkAccountAndSynchronize(from: view)
+                    } else {
+                        self.dataSource.analyticsClient.log(
+                            eventName: "networking.verification.success",
+                            pane: .networkingLinkVerification
+                        )
+                        self.requestNextPane(.linkAccountPicker, preventBackNavigation: false)
+                    }
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
@@ -229,7 +240,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                     } else {
                         nextPane = .institutionPicker
                     }
-                    self.requestNextPane(nextPane)
+                    self.requestNextPane(nextPane, preventBackNavigation: false)
                 }
 
                 self.hideOTPLoadingViewAfterDelay(view)

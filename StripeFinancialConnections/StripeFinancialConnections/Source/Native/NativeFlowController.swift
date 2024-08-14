@@ -885,12 +885,11 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData?
+        consumerSession: ConsumerSessionData?,
+        preventBackNavigation: Bool
     ) {
-        if let consumerSession = consumerSession {
-            dataManager.consumerSession = consumerSession
-        }
-        pushPane(nextPane, animated: true)
+        dataManager.consumerSession = consumerSession
+        pushPane(nextPane, animated: true, clearNavigationStack: preventBackNavigation)
     }
 
     func networkingLinkVerificationViewController(
@@ -1017,7 +1016,7 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         signedUpAttachedAndSynchronized synchronizePayload: FinancialConnectionsSynchronize
     ) {
         dataManager.manifest = synchronizePayload.manifest
-        pushPane(synchronizePayload.manifest.nextPane, animated: true)
+        pushPane(synchronizePayload.manifest.nextPane, animated: true, clearNavigationStack: true)
     }
 
     func linkLoginViewController(
