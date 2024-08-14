@@ -42,6 +42,7 @@ final class ManualEntryFormView: UIView {
                 "Routing number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."
             ),
+            showDoneToolbar: true,
             theme: theme
         )
         routingNumberTextField.textField.keyboardType = .numberPad
@@ -55,6 +56,7 @@ final class ManualEntryFormView: UIView {
                 "Account number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number."
             ),
+            showDoneToolbar: true,
             theme: theme
         )
         accountNumberTextField.textField.keyboardType = .numberPad
@@ -68,6 +70,7 @@ final class ManualEntryFormView: UIView {
                 "Confirm account number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."
             ),
+            showDoneToolbar: true,
             theme: theme
         )
         accountNumberConfirmationTextField.textField.keyboardType = .numberPad

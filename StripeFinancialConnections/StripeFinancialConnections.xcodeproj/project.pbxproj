@@ -150,7 +150,6 @@
 		9E0044ABEC04E2A8C50E3658 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */; };
 		A10B5A3E5E8AE8767CF09C15 /* AccountPickerSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */; };
 		A156FACA60231988F247F6F4 /* FinancialConnectionsSession_only_both_missing.json in Resources */ = {isa = PBXBuildFile; fileRef = 1DF07A1AAD6B39033F0B86FD /* FinancialConnectionsSession_only_both_missing.json */; };
-		A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */; };
 		A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */; };
 		A573468B2800DABF384CAB43 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCC4356AE3295B4A2F4A28 /* Image.swift */; };
 		A79D6A26EE9FF96D24F4AC5C /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */; };
@@ -466,7 +465,6 @@
 		BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		C0430E0E195DD128FA2D5F86 /* NetworkingOTPDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingOTPDataSource.swift; sourceTree = "<group>"; };
 		C0467CE507A92557C72885DF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryFooterView.swift; sourceTree = "<group>"; };
 		C3BDFEB5860F73D4CD90907A /* NetworkingSaveToLinkVerificationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingSaveToLinkVerificationDataSource.swift; sourceTree = "<group>"; };
 		C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_arrow@3x.png"; sourceTree = "<group>"; };
 		C650E82A4195A7566AA54298 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -878,7 +876,6 @@
 			children = (
 				BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */,
 				C88FD9148F64D2AA8989D361 /* ManualEntryErrorView.swift */,
-				C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */,
 				73C03F4DDC67B50C5E1993F6 /* ManualEntryFormView.swift */,
 				F897F5AA6A684D0A370EA7BC /* ManualEntryValidator.swift */,
 				8301F7BA1FF90D131AE96E10 /* ManualEntryViewController.swift */,
@@ -1366,7 +1363,6 @@
 				6A78141A2B45D53700168992 /* DataAccessNoticeViewController.swift in Sources */,
 				2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */,
 				6ABFE5552B74479A0037437C /* ErrorViewController.swift in Sources */,
-				A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */,
 				6A732C9C2B61C56A00828CB1 /* InstitutionTableLoadingView.swift in Sources */,
 				6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */,
 				6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */,
