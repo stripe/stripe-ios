@@ -13,7 +13,7 @@ import UIKit
 protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
     func networkingSaveToLinkVerificationViewController(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
-        receivedConsumerPublishableKey consumerPublishableKey: String
+        didReceiveConsumerPublishableKey consumerPublishableKey: String
     )
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
@@ -151,7 +151,7 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
-        delegate?.networkingSaveToLinkVerificationViewController(self, receivedConsumerPublishableKey: consumerPublishableKey)
+        delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {

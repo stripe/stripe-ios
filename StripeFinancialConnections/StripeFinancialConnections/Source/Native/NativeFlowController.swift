@@ -881,7 +881,7 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
 // MARK: - NetworkingLinkVerificationViewControllerDelegate
 
 extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate {
-    func networkingLinkVerificationViewController(_ viewController: NetworkingLinkVerificationViewController, receivedConsumerPublishableKey consumerPublishableKey: String) {
+    func networkingLinkVerificationViewController(_ viewController: NetworkingLinkVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
         dataManager.consumerPublishableKey = consumerPublishableKey
     }
 
@@ -950,7 +950,7 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
 extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
 
-    func networkingSaveToLinkVerificationViewController(_ viewController: NetworkingSaveToLinkVerificationViewController, receivedConsumerPublishableKey consumerPublishableKey: String) {
+    func networkingSaveToLinkVerificationViewController(_ viewController: NetworkingSaveToLinkVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
         dataManager.consumerPublishableKey = consumerPublishableKey
     }
 
@@ -978,7 +978,7 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
 
 extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDelegate {
 
-    func networkingLinkStepUpVerificationViewController(_ viewController: NetworkingLinkStepUpVerificationViewController, receivedConsumerPublishableKey consumerPublishableKey: String) {
+    func networkingLinkStepUpVerificationViewController(_ viewController: NetworkingLinkStepUpVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
         dataManager.consumerPublishableKey = consumerPublishableKey
     }
 
