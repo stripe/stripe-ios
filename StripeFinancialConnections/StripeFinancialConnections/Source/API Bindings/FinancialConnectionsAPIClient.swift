@@ -173,7 +173,7 @@ protocol FinancialConnectionsAPI {
         clientSecret: String,
         consumerSessionClientSecret: String,
         consentAcquired: Bool?
-    ) -> Future<FinancialConnectionsInstitutionList>
+    ) -> Future<ShareNetworkedAccountsResponse>
 
     func markLinkStepUpAuthenticationVerified(
         clientSecret: String
@@ -779,7 +779,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         clientSecret: String,
         consumerSessionClientSecret: String,
         consentAcquired: Bool?
-    ) -> Future<FinancialConnectionsInstitutionList> {
+    ) -> Future<ShareNetworkedAccountsResponse> {
         var parameters: [String: Any] = [
             "selected_accounts": selectedAccountIds,
             "client_secret": clientSecret,

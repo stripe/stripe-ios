@@ -17,7 +17,10 @@ protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     )
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?
+        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?,
+        nextPane: FinancialConnectionsSessionManifest.NextPane,
+        customSuccessPaneCaption: String?,
+        customSuccessPaneSubCaption: String?
     )
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
@@ -218,7 +221,7 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
                         .observe { [weak self] result in
                             guard let self = self else { return }
                             switch result {
-                            case .success(let institutionList):
+                            case .success(let response):
                                 self.dataSource
                                     .analyticsClient
                                     .log(
@@ -226,10 +229,15 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
                                         pane: .networkingLinkStepUpVerification
                                     )
 
+                                let nextPane = response.nextPane ?? .success
+                                let successPane = response.displayText?.text?.succcessPane
                                 self.delegate?.networkingLinkStepUpVerificationViewController(
                                     self,
                                     // networking manual entry will not return an institution
-                                    didCompleteVerificationWithInstitution: institutionList.data.first
+                                    didCompleteVerificationWithInstitution: response.data.first,
+                                    nextPane: nextPane,
+                                    customSuccessPaneCaption: successPane?.caption,
+                                    customSuccessPaneSubCaption: successPane?.subCaption
                                 )
 
                                 // only hide loading view after animation
