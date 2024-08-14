@@ -208,7 +208,11 @@ final class LinkAccountPickerViewController: UIViewController {
         self.footerView = footerView
         footerContainerView.addAndPinSubview(footerView)
 
-        bodyView.selectAccounts([]) // activate the logic to list all accounts
+        let firstSelectableAccount = accountTuples.first { accountTuple in
+            accountTuple.accountPickerAccount.allowSelection && accountTuple.accountPickerAccount.drawerOnSelection == nil
+        }
+        let firstAccount = [firstSelectableAccount].compactMap({ $0.self })
+        bodyView.selectAccounts(firstAccount)
     }
 
     private func didSelectConnectAccounts() {
