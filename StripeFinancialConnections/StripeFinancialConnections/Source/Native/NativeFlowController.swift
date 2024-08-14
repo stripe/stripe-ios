@@ -922,9 +922,10 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        hideBackButtonOnNextPane: Bool
     ) {
-        pushPane(nextPane, animated: true)
+        pushPane(nextPane, animated: true, clearNavigationStack: hideBackButtonOnNextPane)
     }
 
     func linkAccountPickerViewController(

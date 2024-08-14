@@ -1,3 +1,7 @@
+## X.Y.Z 2024-XX-YY
+### PaymentSheet
+* [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
+
 ## 23.29.1 2024-08-12
 ### PaymentSheet
 * [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
@@ -6,7 +10,6 @@
 
 ### PaymentsUI
 * [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed. 
-
 
 ## 23.29.0 2024-08-05
 ### PaymentSheet
