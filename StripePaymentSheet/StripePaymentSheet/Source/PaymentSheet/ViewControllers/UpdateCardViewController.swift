@@ -64,7 +64,7 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: tapCard)
+        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: tapUpdateButton)
     }()
 
     private lazy var deleteButton: UIButton = {

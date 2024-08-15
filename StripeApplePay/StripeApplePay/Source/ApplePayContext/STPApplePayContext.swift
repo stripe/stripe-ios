@@ -80,7 +80,7 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
     /// - Parameters:
     ///   - status: The status of the payment
     ///   - error: The error that occurred, if any.
-    func applePayContext(
+    @MainActor func applePayContext(
         _ context: STPApplePayContext,
         didCompleteWith status: STPApplePayContext.PaymentStatus,
         error: Error?

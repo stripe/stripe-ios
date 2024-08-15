@@ -7,7 +7,7 @@ import Combine
 @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
-class CustomerSheetTestPlaygroundController: ObservableObject {
+@MainActor class CustomerSheetTestPlaygroundController: ObservableObject {
     static let defaultEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
 
     @Published var settings: CustomerSheetTestPlaygroundSettings

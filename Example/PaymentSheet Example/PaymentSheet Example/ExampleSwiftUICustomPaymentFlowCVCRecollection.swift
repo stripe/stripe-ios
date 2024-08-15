@@ -64,7 +64,7 @@ enum RecollectCVCEnabled: String, PickerEnum {
     case off
 }
 
-class MyCustomBackendCVCRecollectionModel: ObservableObject {
+@MainActor class MyCustomBackendCVCRecollectionModel: ObservableObject {
     private static let customerIdNSUserDefaultsKey = "com.stripe.PaymentSheetExample.ExampleSwiftUICustomPaymentFlowCVCRecollection.customerId"
     static let backendCheckoutEndpoint = "https://stripe-mobile-payment-sheet-custom-deferred-cvc.glitch.me"
     let backendInitUrl = URL(string: "\(backendCheckoutEndpoint)/init")!
@@ -118,7 +118,7 @@ class MyCustomBackendCVCRecollectionModel: ObservableObject {
 
                     let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
                                                                                confirmHandler: { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-                        self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
+                        Task { @MainActor in self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback) }
                     }, isCVCRecollectionEnabledCallback: { [weak self] in
                         return self?.isCVCRecollectionEnabledCallback() ?? false
                     })

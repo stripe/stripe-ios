@@ -18,7 +18,7 @@ import PassKit
 import SwiftUI
 import UIKit
 
-class PlaygroundController: ObservableObject {
+@MainActor class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
     @Published var settings: PaymentSheetTestPlaygroundSettings
@@ -200,9 +200,7 @@ class PlaygroundController: ObservableObject {
         if settings.apmsEnabled == .off {
             paymentMethodTypes = self.paymentMethodTypes
         }
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
-            self?.confirmHandler($0, $1, $2)
-        }
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = confirmHandler(_:_:_:)
         let isCVCRecollectionEnabledCallback = { [weak self] in
             return self?.settings.requireCVCRecollection == .on
         }

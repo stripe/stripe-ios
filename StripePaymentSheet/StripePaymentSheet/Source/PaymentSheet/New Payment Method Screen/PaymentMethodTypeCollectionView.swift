@@ -301,7 +301,7 @@ extension PaymentMethodTypeCollectionView {
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let currPaymentMethodType = self.paymentMethodType
             let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white) { [weak self] image in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     guard let self, currPaymentMethodType == self.paymentMethodType else {
                         return
                     }

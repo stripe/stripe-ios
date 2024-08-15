@@ -16,7 +16,7 @@ public extension PaymentSheet {
 
         /// Pass this into `intentCreationCallback` to force PaymentSheet to show success, dismiss the sheet, and return a PaymentSheetResult of `completed`.
         /// - Note: ⚠️ If provided, the SDK performs no action to complete the payment or setup - it doesn't confirm a PaymentIntent or SetupIntent or handle next actions.
-        ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful. 
+        ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful.
         @_spi(PaymentSheetSkipConfirmation) public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
 
         /// Called when the customer confirms payment.
@@ -31,13 +31,13 @@ public extension PaymentSheet {
         public typealias ConfirmHandler = (
             _ paymentMethod: STPPaymentMethod,
             _ shouldSavePaymentMethod: Bool,
-            _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
+            _ intentCreationCallback: @escaping @Sendable ((Result<String, Error>) -> Void)
         ) -> Void
 
         /// Callback to control when to recollect CVC for a saved card
         /// - Note: This only works for integrations that use `PaymentSheet.FlowController` with deferred intent creation.  See this [guide](https://stripe.com/docs/payments/accept-a-payment-deferred?platform=ios&integration=paymentsheet-flowcontroller).
         @_spi(EarlyAccessCVCRecollectionFeature)
-        public typealias CVCRecollectionEnabledCallback = () -> Bool
+        public typealias CVCRecollectionEnabledCallback = @Sendable () -> Bool
 
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
         /// - Parameters:
@@ -108,7 +108,7 @@ public extension PaymentSheet {
         @_spi(EarlyAccessCVCRecollectionFeature)
         public var isCVCRecollectionEnabledCallback: CVCRecollectionEnabledCallback
 
-        /// Controls when the funds will be captured. 
+        /// Controls when the funds will be captured.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
         public enum CaptureMethod: String {
             /// (Default) Stripe automatically captures funds when the customer authorizes the payment.
@@ -160,7 +160,7 @@ public extension PaymentSheet {
         }
 
         /// An async version of `ConfirmHandler`.
-        typealias AsyncConfirmHandler = (
+        typealias AsyncConfirmHandler = @MainActor @Sendable (
             _ paymentMethod: STPPaymentMethod,
             _ shouldSavePaymentMethod: Bool
         ) async throws -> String

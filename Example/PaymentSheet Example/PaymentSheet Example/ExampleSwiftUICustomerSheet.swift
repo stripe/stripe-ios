@@ -125,7 +125,7 @@ class MyBackendCustomerSheetModel: ObservableObject {
         return secret
     }
 
-    func configureCustomerSheet(response: [String: String]?) {
+    @MainActor func configureCustomerSheet(response: [String: String]?) {
         guard let json = response,
               let ephemeralKey = json["customerEphemeralKeySecret"], !ephemeralKey.isEmpty,
               let customerId = json["customerId"], !customerId.isEmpty,

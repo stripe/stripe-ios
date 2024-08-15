@@ -12,7 +12,7 @@ import UIKit
 @objc(STP_Internal_DownloadManager)
 // TODO: Refactor this API shape! https://github.com/stripe/stripe-ios/pull/3487#discussion_r1561337866
 @_spi(STP) public final class DownloadManager: NSObject, Sendable {
-    public typealias UpdateImageHandler = (UIImage) -> Void
+    public typealias UpdateImageHandler = @Sendable (UIImage) -> Void
 
     enum Error: Swift.Error {
         case failedToMakeImageFromData
@@ -62,13 +62,13 @@ extension DownloadManager {
     public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
         let placeholder = placeholder ?? DownloadManager.imagePlaceHolder()
         // If no `updateHandler` is provided use a blocking method to fetch the image
-//        guard let updateHandler else {
-//            return downloadImageBlocking(url: url, placeholder: placeholder)
-//        }
+        guard let updateHandler else {
+            return downloadImageBlocking(url: url, placeholder: placeholder)
+        }
 
-//        Task {
-//            await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
-//        }
+        Task {
+            await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
+        }
         // Immediately return a placeholder, when the download operation completes `updateHandler` will be called with the downloaded image
         return placeholder
     }
@@ -152,14 +152,14 @@ private class ImageBox: @unchecked Sendable {
 
 private extension DownloadManager {
     /// Unsafely awaits an async function from a synchronous context.
-    func _unsafeWait(_ downloadImage: @escaping () async -> UIImage) -> UIImage {
+    func _unsafeWait(_ downloadImage: @Sendable @escaping () async -> UIImage) -> UIImage {
         let imageBox = ImageBox()
-//        let sema = DispatchSemaphore(value: 0)
-//        Task { @MainActor in
-//            imageBox.image = await downloadImage()
-//            sema.signal()
-//        }
-//        sema.wait()
+        let sema = DispatchSemaphore(value: 0)
+        Task {
+            imageBox.image = await downloadImage()
+            sema.signal()
+        }
+        sema.wait()
         return imageBox.image
     }
 }
