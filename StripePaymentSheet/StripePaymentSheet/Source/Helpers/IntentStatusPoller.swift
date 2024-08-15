@@ -77,7 +77,8 @@ class IntentStatusPoller {
             guard let self = self else { return }
             guard let paymentIntent = paymentIntent else { return }
             completion?(paymentIntent.status)
-
+            print(paymentIntent.status)
+            print(clientSecret)
             // If latest status is different than last known status notify our delegate
             if paymentIntent.status != self.lastStatus,
                (self.isPolling || forceFetch) { // don't notify our delegate if polling is suspended, could happen if network request is in-flight
