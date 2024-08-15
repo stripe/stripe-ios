@@ -9,6 +9,21 @@ import XCTest
 
 // MARK: Vertical mode tests
 class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
+    
+    func testCanPayWithCard() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        
+        try! fillCardData(app)
+        app.buttons["Pay €50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+    
     func testFlowController_verticalMode() {
         // Sets the right paymentOption values
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
