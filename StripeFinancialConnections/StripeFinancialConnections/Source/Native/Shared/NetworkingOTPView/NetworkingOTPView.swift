@@ -17,6 +17,7 @@ protocol NetworkingOTPViewDelegate: AnyObject {
 
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView)
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData)
+    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String)
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error)
 
     func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView)
@@ -162,6 +163,9 @@ final class NetworkingOTPView: UIView {
                 switch result {
                 case .success(let lookupConsumerSessionResponse):
                     if lookupConsumerSessionResponse.exists {
+                        if let consumerPublishableKey = lookupConsumerSessionResponse.publishableKey {
+                            self.delegate?.networkingOTPView(self, didGetConsumerPublishableKey: consumerPublishableKey)
+                        }
                         self.startVerification()
                     } else {
                         self.delegate?.networkingOTPViewConsumerNotFound(self)
