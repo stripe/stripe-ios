@@ -212,8 +212,7 @@ final class LinkAccountPickerViewController: UIViewController {
             accountTuple.accountPickerAccount.allowSelection && accountTuple.accountPickerAccount.drawerOnSelection == nil
         }
         let firstAccount = [firstSelectableAccount].compactMap({ $0.self })
-        bodyView.selectAccounts(firstAccount)
-        footerView.didSelectAccounts(firstAccount)
+        dataSource.updateSelectedAccounts(firstAccount)
     }
 
     private func didSelectConnectAccounts() {
