@@ -31,13 +31,13 @@ public extension PaymentSheet {
         public typealias ConfirmHandler = (
             _ paymentMethod: STPPaymentMethod,
             _ shouldSavePaymentMethod: Bool,
-            _ intentCreationCallback: @escaping @Sendable ((Result<String, Error>) -> Void)
+            _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
         /// Callback to control when to recollect CVC for a saved card
         /// - Note: This only works for integrations that use `PaymentSheet.FlowController` with deferred intent creation.  See this [guide](https://stripe.com/docs/payments/accept-a-payment-deferred?platform=ios&integration=paymentsheet-flowcontroller).
         @_spi(EarlyAccessCVCRecollectionFeature)
-        public typealias CVCRecollectionEnabledCallback = @Sendable () -> Bool
+        public typealias CVCRecollectionEnabledCallback = () -> Bool
 
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
         /// - Parameters:
@@ -160,13 +160,13 @@ public extension PaymentSheet {
         }
 
         /// An async version of `ConfirmHandler`.
-        typealias AsyncConfirmHandler = @MainActor @Sendable (
+        typealias AsyncConfirmHandler = (
             _ paymentMethod: STPPaymentMethod,
             _ shouldSavePaymentMethod: Bool
         ) async throws -> String
 
         /// An async version of the initializer. See the other initializer for documentation.
-        init(
+       @MainActor init(
             mode: Mode,
             paymentMethodTypes: [String]? = nil,
             onBehalfOf: String? = nil,
