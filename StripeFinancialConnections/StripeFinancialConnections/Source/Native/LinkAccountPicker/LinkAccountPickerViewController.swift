@@ -213,6 +213,7 @@ final class LinkAccountPickerViewController: UIViewController {
         }
         let firstAccount = [firstSelectableAccount].compactMap({ $0.self })
         bodyView.selectAccounts(firstAccount)
+        footerView.didSelectAccounts(firstAccount)
     }
 
     private func didSelectConnectAccounts() {
