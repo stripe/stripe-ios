@@ -16,7 +16,7 @@ import UIKit
 /// viewController.transitioningDelegate = BottomSheetTransitioningDelegate.default
 /// ```
 @objc(STPBottomSheetTransitioningDelegate)
-class BottomSheetTransitioningDelegate: NSObject {
+@MainActor class BottomSheetTransitioningDelegate: NSObject {
 
     static var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
 

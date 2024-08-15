@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// The response returned by v1/elements/sessions
-final class STPElementsSession: NSObject {
+final class STPElementsSession: NSObject, @unchecked Sendable {
     #if DEBUG && targetEnvironment(simulator)
     public static let countryCodeOverride: String? = nil
     #endif
@@ -140,7 +140,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             }
             guard let customerJSON = response[customerDataKey] as? [AnyHashable: Any],
                   let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON) else {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerDeserializeFailed)
+                Task { @MainActor in STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerDeserializeFailed) }
                 return nil
             }
             return decoded
@@ -157,7 +157,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             else {
                 // We don't want to fail the entire v1/elements/sessions request if we fail to parse external_payment_methods_data
                 // Instead, fall back to an empty array and log an error.
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionEPMLoadFailed)
+                Task { @MainActor in STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionEPMLoadFailed) }
                 return []
             }
             return epms

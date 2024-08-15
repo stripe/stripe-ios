@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
-protocol AddPaymentMethodViewControllerDelegate: AnyObject {
+@MainActor protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: AddPaymentMethodViewController)
     func updateErrorLabel(for: Error?)
 }

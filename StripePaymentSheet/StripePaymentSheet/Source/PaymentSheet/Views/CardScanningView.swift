@@ -26,7 +26,7 @@ private class CardScanningEasilyTappableButton: UIButton {
 
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
-@objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
+@objc @MainActor protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
     func cardScanningView(
         _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
 }

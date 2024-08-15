@@ -10,17 +10,17 @@ import Foundation
 import StripeCore
 import StripePayments
 
-protocol IntentStatusPollerDelegate: AnyObject {
+@MainActor protocol IntentStatusPollerDelegate: AnyObject {
     func didUpdate(paymentIntent: STPPaymentIntent)
 }
 
-protocol PaymentIntentRetrievable {
+@MainActor protocol PaymentIntentRetrievable: Sendable {
     func retrievePaymentIntent(withClientSecret clientSecret: String, completion: @escaping STPPaymentIntentCompletionBlock)
 }
 
 extension STPAPIClient: PaymentIntentRetrievable {}
 
-class IntentStatusPoller {
+@MainActor final class IntentStatusPoller: Sendable {
     let retryInterval: TimeInterval
     let intentRetriever: PaymentIntentRetrievable
     let clientSecret: String
@@ -66,13 +66,13 @@ class IntentStatusPoller {
     /// retryInterval. Whether or not continuous polling in ongoing, `pollOnce()` immediately updates the
     /// status and informs the delegate if a change in status takes place.
     /// - Parameter completion: Called with the current status of the payment intent when the fetch completes
-    public func pollOnce(completion: ((STPPaymentIntentStatus) -> Void)? = nil) {
+    public func pollOnce(completion: (@Sendable (STPPaymentIntentStatus) -> Void)? = nil) {
         fetchStatus(forceFetch: true, completion: completion)
     }
 
     // MARK: - Private functions
 
-    private func fetchStatus(forceFetch: Bool = false, completion: ((STPPaymentIntentStatus) -> Void)? = nil) {
+    private func fetchStatus(forceFetch: Bool = false, completion: (@Sendable (STPPaymentIntentStatus) -> Void)? = nil) {
         intentRetriever.retrievePaymentIntent(withClientSecret: clientSecret) { [weak self] paymentIntent, _ in
             guard let self = self else { return }
             guard let paymentIntent = paymentIntent else { return }

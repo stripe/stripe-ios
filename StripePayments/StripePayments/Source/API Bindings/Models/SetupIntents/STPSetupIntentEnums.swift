@@ -9,7 +9,7 @@
 import Foundation
 
 /// Status types for an STPSetupIntent
-@objc public enum STPSetupIntentStatus: Int {
+@objc public enum STPSetupIntentStatus: Int, Sendable {
     /// Unknown status
     case unknown
     /// This SetupIntent requires a PaymentMethod

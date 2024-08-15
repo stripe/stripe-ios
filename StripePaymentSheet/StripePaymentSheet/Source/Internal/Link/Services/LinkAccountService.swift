@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 /// Provides a method for looking up Link accounts by email.
-protocol LinkAccountServiceProtocol {
+@MainActor protocol LinkAccountServiceProtocol {
     /// Looks up an account by email.
     ///
     /// The `email` parameter is optional and objects that conform to this protocol
@@ -26,7 +26,7 @@ protocol LinkAccountServiceProtocol {
     ///   - completion: Completion block.
     func lookupAccount(
         withEmail email: String?,
-        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+        completion: @escaping @Sendable (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
 }
 
@@ -42,44 +42,46 @@ final class LinkAccountService: LinkAccountServiceProtocol {
 
     func lookupAccount(
         withEmail email: String?,
-        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+        completion: @escaping @Sendable (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
         ConsumerSession.lookupSession(
             for: email,
             with: apiClient
         ) { [apiClient] result in
-            switch result {
-            case .success(let lookupResponse):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
-                switch lookupResponse.responseType {
-                case .found(let session):
-                    completion(.success(
-                        PaymentSheetLinkAccount(
-                            email: session.consumerSession.emailAddress,
-                            session: session.consumerSession,
-                            publishableKey: session.publishableKey,
-                            apiClient: apiClient
-                        )
-                    ))
-                case .notFound:
-                    if let email = email {
+            Task { @MainActor in
+                switch result {
+                case .success(let lookupResponse):
+                    STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
+                    switch lookupResponse.responseType {
+                    case .found(let session):
                         completion(.success(
                             PaymentSheetLinkAccount(
-                                email: email,
-                                session: nil,
-                                publishableKey: nil,
-                                apiClient: self.apiClient
+                                email: session.consumerSession.emailAddress,
+                                session: session.consumerSession,
+                                publishableKey: session.publishableKey,
+                                apiClient: apiClient
                             )
                         ))
-                    } else {
+                    case .notFound:
+                        if let email = email {
+                            completion(.success(
+                                PaymentSheetLinkAccount(
+                                    email: email,
+                                    session: nil,
+                                    publishableKey: nil,
+                                    apiClient: self.apiClient
+                                )
+                            ))
+                        } else {
+                            completion(.success(nil))
+                        }
+                    case .noAvailableLookupParams:
                         completion(.success(nil))
                     }
-                case .noAvailableLookupParams:
-                    completion(.success(nil))
+                case .failure(let error):
+                    STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
+                    completion(.failure(error))
                 }
-            case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
-                completion(.failure(error))
             }
         }
     }

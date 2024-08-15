@@ -45,7 +45,7 @@ class IntentConfirmParams {
         }
     }
 
-    func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    @MainActor func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {

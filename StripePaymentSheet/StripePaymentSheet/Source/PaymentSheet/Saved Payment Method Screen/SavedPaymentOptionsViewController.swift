@@ -13,7 +13,7 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
+@MainActor protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: SavedPaymentOptionsViewController)
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
@@ -694,7 +694,7 @@ extension STPPaymentMethod {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: Error.removalMessageUndefined,
                                               additionalNonPIIParams: ["payment_method_type": type.identifier])
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            Task { @MainActor in STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic) }
             stpAssertionFailure()
             return (title: "", message: "")
         }

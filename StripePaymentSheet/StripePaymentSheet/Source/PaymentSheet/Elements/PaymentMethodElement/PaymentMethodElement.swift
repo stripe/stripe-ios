@@ -17,14 +17,14 @@
  - Remark:In practice, only "leaf" Elements - text fields, drop downs, etc. - have any user data to update params with. These elements can be wrapped in `PaymentMethodElementWrapper`.
  Other elements can rely on the default implementation provided in this file.
  */
-protocol PaymentMethodElement: Element {
+@MainActor protocol PaymentMethodElement: Element {
     /// Modify the params according to your input, or return nil if invalid.
     /// - Note: This is called on the Element hierarchy in depth-first search order.
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams?
 }
 
 extension PaymentMethodElement {
-    func clearTextFields() {
+    @MainActor func clearTextFields() {
         for element in getAllUnwrappedSubElements() {
             if let element = element as? TextFieldElement {
                 element.setText("")
@@ -37,7 +37,7 @@ extension PaymentMethodElement {
 
 // MARK: - Default implementations
 extension ContainerElement {
-    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
+    @MainActor func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         return elements.filter({ $0.view.isHidden == false })
             .reduce(params) { (params: IntentConfirmParams?, element: Element) in
                 guard let params = params else {

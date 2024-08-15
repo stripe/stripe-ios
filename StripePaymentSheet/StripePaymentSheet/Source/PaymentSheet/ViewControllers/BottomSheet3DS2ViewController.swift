@@ -10,7 +10,7 @@
 @_spi(STP) import StripePaymentsUI
 import UIKit
 
-protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
+@MainActor protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
     func bottomSheet3DS2ViewControllerDidCancel(
         _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController)
 }

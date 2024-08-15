@@ -11,19 +11,19 @@ import UIKit
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
 // TODO: Refactor this API shape! https://github.com/stripe/stripe-ios/pull/3487#discussion_r1561337866
-@_spi(STP) public class DownloadManager: NSObject {
+@_spi(STP) public final class DownloadManager: NSObject, Sendable {
     public typealias UpdateImageHandler = (UIImage) -> Void
 
     enum Error: Swift.Error {
         case failedToMakeImageFromData
     }
 
-    public static let sharedManager = DownloadManager()
+    @MainActor public static let sharedManager = DownloadManager()
 
     private let session: URLSession
     private let analyticsClient: STPAnalyticsClient
 
-    public init(
+    @MainActor public init(
         urlSessionConfiguration: URLSessionConfiguration = .default,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
@@ -60,15 +60,15 @@ extension DownloadManager {
     ///
     /// - Returns: A `UIImage` instance. If `updateHandler` is `nil`, this would be the downloaded image, otherwise, this would be the placeholder image.
     public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
-        let placeholder = placeholder ?? imagePlaceHolder()
+        let placeholder = placeholder ?? DownloadManager.imagePlaceHolder()
         // If no `updateHandler` is provided use a blocking method to fetch the image
-        guard let updateHandler else {
-            return downloadImageBlocking(url: url, placeholder: placeholder)
-        }
+//        guard let updateHandler else {
+//            return downloadImageBlocking(url: url, placeholder: placeholder)
+//        }
 
-        Task {
-           await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
-        }
+//        Task {
+//            await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
+//        }
         // Immediately return a placeholder, when the download operation completes `updateHandler` will be called with the downloaded image
         return placeholder
     }
@@ -77,13 +77,13 @@ extension DownloadManager {
     private func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
         do {
             let (data, _) = try await session.data(from: url)
-            let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
+            let image = try await UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             return image
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .stripePaymentSheetDownloadManagerError,
                                               error: error,
                                               additionalNonPIIParams: ["url": url.absoluteString])
-            analyticsClient.log(analytic: errorAnalytic)
+            await analyticsClient.log(analytic: errorAnalytic)
             return placeholder
         }
     }
@@ -109,11 +109,11 @@ extension DownloadManager {
 
 // MARK: Image Placeholder
 extension DownloadManager {
-    public func imagePlaceHolder() -> UIImage {
+    public static func imagePlaceHolder() -> UIImage {
         return imageWithSize(size: CGSize(width: 1.0, height: 1.0))
     }
 
-    private func imageWithSize(size: CGSize) -> UIImage {
+    private static func imageWithSize(size: CGSize) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
         UIColor.clear.set()
@@ -130,7 +130,7 @@ private extension UIImage {
         return self.pngData() == image.pngData()
     }
 
-    static func from(imageData: Data) throws -> UIImage {
+    @MainActor static func from(imageData: Data) throws -> UIImage {
         #if canImport(CompositorServices)
         let scale = 1.0
         #else
@@ -146,20 +146,20 @@ private extension UIImage {
 
 // MARK: Workarounds for using Swift async from a sync context
 // https://forums.swift.org/t/using-async-functions-from-synchronous-functions-and-breaking-all-the-rules/59782/4
-private class ImageBox {
-    var image: UIImage = DownloadManager.sharedManager.imagePlaceHolder()
+private class ImageBox: @unchecked Sendable {
+    var image: UIImage = DownloadManager.imagePlaceHolder()
 }
 
 private extension DownloadManager {
     /// Unsafely awaits an async function from a synchronous context.
     func _unsafeWait(_ downloadImage: @escaping () async -> UIImage) -> UIImage {
         let imageBox = ImageBox()
-        let sema = DispatchSemaphore(value: 0)
-        Task {
-            imageBox.image = await downloadImage()
-            sema.signal()
-        }
-        sema.wait()
+//        let sema = DispatchSemaphore(value: 0)
+//        Task { @MainActor in
+//            imageBox.image = await downloadImage()
+//            sema.signal()
+//        }
+//        sema.wait()
         return imageBox.image
     }
 }

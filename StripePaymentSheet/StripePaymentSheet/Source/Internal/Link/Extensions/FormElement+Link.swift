@@ -14,7 +14,7 @@ import UIKit
 /// Animation utilities
 ///
 /// Provides better animations than default `UIStackView` arranged subview visibility toggles.
-extension FormElement {
+@MainActor extension FormElement {
 
     /// Toggles the visibility of a child element.
     /// - Parameters:

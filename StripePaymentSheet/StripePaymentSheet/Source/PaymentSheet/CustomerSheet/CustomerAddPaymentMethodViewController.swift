@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
+@MainActor protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
     func updateErrorLabel(for: Swift.Error?)
 }

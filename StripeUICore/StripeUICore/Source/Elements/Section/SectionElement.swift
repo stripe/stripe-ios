@@ -131,7 +131,7 @@ extension SectionElement {
 
 // MARK: - DebugDescription
 extension SectionElement {
-    public var debugDescription: String {
+    nonisolated public var debugDescription: String {
         return "<\(type(of: self)): \(Unmanaged.passUnretained(self).toOpaque())>; title = \(title ?? "nil")" + subElementDebugDescription
     }
 }

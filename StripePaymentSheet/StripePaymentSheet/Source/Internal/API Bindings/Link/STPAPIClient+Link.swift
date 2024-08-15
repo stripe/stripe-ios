@@ -15,7 +15,7 @@ import Foundation
 extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
-        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/lookup"
         var parameters: [String: Any] = [
@@ -51,7 +51,7 @@ extension STPAPIClient {
         legalName: String?,
         countryCode: String?,
         consentAction: String?,
-        completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
         let endpoint: String = "consumers/accounts/sign_up"
 
@@ -87,7 +87,7 @@ extension STPAPIClient {
         endpoint: String,
         parameters: [String: Any],
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         post(
             resource: endpoint,
@@ -104,7 +104,7 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
 
@@ -134,7 +134,7 @@ extension STPAPIClient {
         endpoint: String,
         parameters: [String: Any],
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerSession, Error>) -> Void
     ) {
         post(
             resource: endpoint,
@@ -148,7 +148,7 @@ extension STPAPIClient {
     func generatedLinkAccountSessionManifest(
         with clientSecret: String,
         emailAddress: String?,
-        completion: @escaping (Result<Manifest, Error>) -> Void
+        completion: @escaping @Sendable (Result<Manifest, Error>) -> Void
     ) {
         var params: [String: AnyHashable] = [
             "client_secret": clientSecret,
@@ -175,7 +175,7 @@ extension STPAPIClient {
     func createLinkAccountSession(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<LinkAccountSession, Error>) -> Void
+        completion: @escaping @Sendable (Result<LinkAccountSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/link_account_sessions"
 
@@ -200,7 +200,7 @@ extension STPAPIClient {
         id: String,
         consumerAccountPublishableKey: String?,
         cvc: String?,
-        completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
+        completion: @escaping @Sendable (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
 
@@ -225,7 +225,7 @@ extension STPAPIClient {
     func logout(
         consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/log_out"
 
@@ -246,14 +246,14 @@ extension STPAPIClient {
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.
-private extension APIRequest {
+@MainActor private extension APIRequest {
 
     class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
         parameters: [String: Any],
-        completion: @escaping (Result<ResponseType, Error>) -> Void
+        completion: @escaping @Sendable (Result<ResponseType, Error>) -> Void
     ) {
         post(
             with: apiClient,
@@ -276,7 +276,7 @@ private extension APIRequest {
         endpoint: String,
         additionalHeaders: [String: String] = [:],
         parameters: [String: Any],
-        completion: @escaping (Result<ResponseType, Error>) -> Void
+        completion: @escaping @Sendable (Result<ResponseType, Error>) -> Void
     ) {
         delete(
             with: apiClient,

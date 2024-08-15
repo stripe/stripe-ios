@@ -11,11 +11,11 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-protocol LinkInlineSignupViewModelDelegate: AnyObject {
+@MainActor protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
 }
 
-final class LinkInlineSignupViewModel {
+@MainActor final class LinkInlineSignupViewModel {
     enum Action: Equatable {
         case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
         case continueWithoutLink
@@ -45,7 +45,7 @@ final class LinkInlineSignupViewModel {
                 notifyUpdate()
 
                 if saveCheckboxChecked, mode == .checkbox {
-                    STPAnalyticsClient.sharedClient.logLinkSignupCheckboxChecked()
+                    Task { @MainActor in STPAnalyticsClient.sharedClient.logLinkSignupCheckboxChecked() }
                 }
             }
         }
@@ -101,7 +101,7 @@ final class LinkInlineSignupViewModel {
 
                 if let linkAccount = linkAccount,
                    !linkAccount.isRegistered {
-                        STPAnalyticsClient.sharedClient.logLinkSignupStart()
+                    Task { @MainActor in STPAnalyticsClient.sharedClient.logLinkSignupStart() }
                 }
             }
         }
@@ -205,7 +205,7 @@ final class LinkInlineSignupViewModel {
 
         if linkAccount?.isRegistered ?? false {
             // User already has a Link account, they can't sign up
-            STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()
+            Task { @MainActor in STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists() }
             // Don't bother them again
             UserDefaults.standard.markLinkAsUsed()
             return .continueWithoutLink
@@ -334,21 +334,23 @@ private extension LinkInlineSignupViewModel {
             self?.isLookingUpLinkAccount = true
 
             self?.accountService.lookupAccount(withEmail: emailAddress) { result in
-                // Check the requested email address against the current one. Handle
-                // email address changes while a lookup is in-flight.
-                guard emailAddress == self?.emailAddress else {
-                    // The email used for this lookup does not match the current address, so we ignore it
-                    return
-                }
-                self?.isLookingUpLinkAccount = false
-
-                switch result {
-                case .success(let account):
-                    self?.linkAccount = account
-                    self?.lookupFailed = false
-                case .failure:
-                    self?.linkAccount = nil
-                    self?.lookupFailed = true
+                Task { @MainActor in
+                    // Check the requested email address against the current one. Handle
+                    // email address changes while a lookup is in-flight.
+                    guard emailAddress == self?.emailAddress else {
+                        // The email used for this lookup does not match the current address, so we ignore it
+                        return
+                    }
+                    self?.isLookingUpLinkAccount = false
+                    
+                    switch result {
+                    case .success(let account):
+                        self?.linkAccount = account
+                        self?.lookupFailed = false
+                    case .failure:
+                        self?.linkAccount = nil
+                        self?.lookupFailed = true
+                    }
                 }
             }
         }

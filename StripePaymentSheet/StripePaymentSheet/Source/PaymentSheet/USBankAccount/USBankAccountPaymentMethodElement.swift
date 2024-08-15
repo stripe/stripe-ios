@@ -11,7 +11,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class USBankAccountPaymentMethodElement: ContainerElement {
+@MainActor final class USBankAccountPaymentMethodElement: ContainerElement {
     var elements: [Element] {
         return [formElement]
     }

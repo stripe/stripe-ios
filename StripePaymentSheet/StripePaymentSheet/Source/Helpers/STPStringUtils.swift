@@ -181,7 +181,7 @@ extension STPStringUtils {
                                                       additionalNonPIIParams: ["template": template,
                                                                                "tag_missing": tag,
                                                                               ])
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                    Task {@MainActor in STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic) }
                     stpAssertionFailure("Tag '<\(tag)>' not found")
                     continue
                 }
@@ -198,7 +198,7 @@ extension STPStringUtils {
                                               additionalNonPIIParams: ["template": template,
                                                                        "links": links,
                                                                       ])
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            Task {@MainActor in STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic) }
             stpAssertionFailure("Failed to apply links '\(links)' to '\(template)'")
         }
         return formattedString

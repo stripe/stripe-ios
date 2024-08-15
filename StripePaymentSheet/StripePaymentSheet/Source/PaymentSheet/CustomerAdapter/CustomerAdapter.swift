@@ -22,7 +22,7 @@ import UIKit
 /// - Warning:
 /// When implementing your own CustomerAdapter, ensure your application complies with
 /// all applicable laws and regulations, including data privacy and consumer protection.
-public protocol CustomerAdapter {
+@MainActor public protocol CustomerAdapter {
     /// Retrieves a list of Payment Methods attached to a customer.
     /// If you are implementing your own <CustomerAdapter>:
     /// Call the list method ( https://stripe.com/docs/api/payment_methods/list )
@@ -85,7 +85,7 @@ public protocol CustomerAdapter {
 }
 
 /// An ephemeral key for the Stripe Customer
-public struct CustomerEphemeralKey {
+public struct CustomerEphemeralKey: Sendable {
     /// The identifier of the Stripe Customer object.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
     public let id: String
@@ -127,7 +127,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
         self.paymentMethodTypes = paymentMethodTypes
     }
 
-    private struct CachedCustomerEphemeralKey {
+    private struct CachedCustomerEphemeralKey: Sendable {
         let customerEphemeralKey: CustomerEphemeralKey
         let cacheDate = Date()
     }
@@ -246,7 +246,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
 }
 
 @_spi(STP) extension StripeCustomerAdapter: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "StripeCustomerAdapter"
+    @_spi(STP) nonisolated public static let stp_analyticsIdentifier = "StripeCustomerAdapter"
 }
 
 /// Stores the key we use in NSUserDefaults to save a dictionary of Customer id to their last selected payment method ID

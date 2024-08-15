@@ -13,7 +13,7 @@ import UIKit
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
-protocol WalletHeaderViewDelegate: AnyObject {
+@MainActor protocol WalletHeaderViewDelegate: AnyObject {
     func walletHeaderViewApplePayButtonTapped(
         _ header: PaymentSheetViewController.WalletHeaderView
     )

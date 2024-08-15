@@ -43,7 +43,7 @@ import UIKit
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
-public class PaymentSheet {
+@MainActor public class PaymentSheet {
     enum InitializationMode {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
@@ -248,10 +248,10 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
         with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+        completion: @escaping @Sendable (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         let presentingViewController = paymentSheetViewController.presentingViewController
-        let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
+        let confirm: (@escaping @Sendable (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
             PaymentSheet.confirm(
                 configuration: self.configuration,
                 authenticationContext: self.bottomSheetViewController,
@@ -261,24 +261,26 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentHandler: self.paymentHandler,
                 isFlowController: false
             ) { result, deferredIntentConfirmationType in
-                if case let .failed(error) = result {
-                    self.mostRecentError = error
-                }
-
-                if case .link = paymentOption {
-                    // End special Link blur animation before calling completion
-                    switch result {
-                    case .canceled, .failed:
-                        self.bottomSheetViewController.removeBlurEffect(animated: true) {
-                            completion(result, deferredIntentConfirmationType)
-                        }
-                    case .completed:
-                        self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
-                            completion(result, deferredIntentConfirmationType)
-                        }
+                Task { @MainActor in
+                    if case let .failed(error) = result {
+                        self.mostRecentError = error
                     }
-                } else {
-                    completion(result, deferredIntentConfirmationType)
+                    
+                    if case .link = paymentOption {
+                        // End special Link blur animation before calling completion
+                        switch result {
+                        case .canceled, .failed:
+                            self.bottomSheetViewController.removeBlurEffect(animated: true) {
+                                completion(result, deferredIntentConfirmationType)
+                            }
+                        case .completed:
+                            self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
+                                completion(result, deferredIntentConfirmationType)
+                            }
+                        }
+                    } else {
+                        completion(result, deferredIntentConfirmationType)
+                    }
                 }
             }
         }
@@ -289,10 +291,12 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 confirm { result, deferredIntentConfirmationType in
                     if case .completed = result {
                     } else {
-                        // We dismissed the Payment Sheet to show the Apple Pay sheet
-                        // Bring it back if it didn't succeed
-                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
-                                                                  appearance: self.configuration.appearance)
+                        Task { @MainActor in
+                            // We dismissed the Payment Sheet to show the Apple Pay sheet
+                            // Bring it back if it didn't succeed
+                            presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
+                                                                           appearance: self.configuration.appearance)
+                        }
                     }
                     completion(result, deferredIntentConfirmationType)
                 }
@@ -333,7 +337,7 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 
 /// :nodoc:
 @_spi(STP) extension PaymentSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
+    @_spi(STP) nonisolated public static let stp_analyticsIdentifier: String = "PaymentSheet"
 }
 
 extension PaymentSheet: PayWithLinkWebControllerDelegate {
@@ -391,7 +395,7 @@ private extension PaymentSheet {
 
 // MARK: - PaymentSheetViewControllerProtocol
 
-internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
+@MainActor internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
 
@@ -399,11 +403,11 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
     func clearTextFields()
 }
 
-protocol PaymentSheetViewControllerDelegate: AnyObject {
+@MainActor protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
         with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+        completion: @escaping @Sendable (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
     func paymentSheetViewControllerDidFinish(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,

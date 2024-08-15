@@ -18,7 +18,7 @@ typealias ConsumerSessionWithPaymentDetails = (session: ConsumerSession, payment
  
  For internal SDK use only
  */
-final class ConsumerPaymentDetails: Decodable {
+final class ConsumerPaymentDetails: Decodable, Sendable {
     let stripeID: String
 
     init(stripeID: String) {

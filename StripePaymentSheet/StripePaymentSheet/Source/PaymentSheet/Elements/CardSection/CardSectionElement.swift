@@ -16,7 +16,7 @@ import UIKit
 /// A Element that contains a SectionElement for card details, whose view depends on the availability of card scanning:
 /// If card scanning is available, it uses a custom view that adds card scanning. Otherwise, it uses the default SectionElement view.
 /// It coordinates between the PAN and CVC fields.
-final class CardSectionElement: ContainerElement {
+@MainActor final class CardSectionElement: ContainerElement {
 
     var elements: [Element] {
         return [cardSection]
@@ -211,34 +211,36 @@ final class CardSectionElement: ContainerElement {
         var fetchedCardBrands = Set<STPCardBrand>()
         let hadBrands = !cardBrands.isEmpty
         STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let brands):
-                fetchedCardBrands = brands
-            case .failure:
-                // If we fail to fetch card brands fall back to normal card brand detection
-                fetchedCardBrands = Set<STPCardBrand>()
-            }
-
-            // If we had no brands but now have brands the CBC indicator will appear, log the analytic
-            if !hadBrands, !fetchedCardBrands.isEmpty {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
-            }
-
-            if self.cardBrands != fetchedCardBrands {
-                self.cardBrands = fetchedCardBrands
-                cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self.theme))
-
-                // If we didn't previously have brands but now have them select based on merchant preference
-                // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
-                if !hadBrands,
-                   let preferredNetworks = self.preferredNetworks,
-                   let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
-                   let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
-                    cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+            Task { @MainActor in
+                guard let self = self else { return }
+                switch result {
+                case .success(let brands):
+                    fetchedCardBrands = brands
+                case .failure:
+                    // If we fail to fetch card brands fall back to normal card brand detection
+                    fetchedCardBrands = Set<STPCardBrand>()
                 }
-
-                self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
+                
+                // If we had no brands but now have brands the CBC indicator will appear, log the analytic
+                if !hadBrands, !fetchedCardBrands.isEmpty {
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
+                }
+                
+                if self.cardBrands != fetchedCardBrands {
+                    self.cardBrands = fetchedCardBrands
+                    cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self.theme))
+                    
+                    // If we didn't previously have brands but now have them select based on merchant preference
+                    // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
+                    if !hadBrands,
+                       let preferredNetworks = self.preferredNetworks,
+                       let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
+                       let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
+                        cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+                    }
+                    
+                    self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
+                }
             }
         }
     }

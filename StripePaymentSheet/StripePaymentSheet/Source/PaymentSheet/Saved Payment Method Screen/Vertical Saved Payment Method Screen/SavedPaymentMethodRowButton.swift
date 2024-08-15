@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol SavedPaymentMethodRowButtonDelegate: AnyObject {
+@MainActor protocol SavedPaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
     func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)

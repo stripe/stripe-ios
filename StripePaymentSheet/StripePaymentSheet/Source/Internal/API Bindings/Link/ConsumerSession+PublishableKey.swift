@@ -9,7 +9,7 @@
 import Foundation
 
 extension ConsumerSession {
-    final class SessionWithPublishableKey: Decodable {
+    final class SessionWithPublishableKey: Decodable, Sendable {
         let consumerSession: ConsumerSession
         let publishableKey: String
 

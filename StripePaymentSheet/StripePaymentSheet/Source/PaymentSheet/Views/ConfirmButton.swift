@@ -158,7 +158,7 @@ class ConfirmButton: UIView {
         style: Style? = nil,
         callToAction: CallToActionType? = nil,
         animated: Bool = false,
-        completion: (() -> Void)? = nil
+        completion: (@MainActor @Sendable () -> Void)? = nil
     ) {
         update(
             state: state ?? self.state,
@@ -173,7 +173,7 @@ class ConfirmButton: UIView {
         style: Style,
         callToAction: CallToActionType,
         animated: Bool = false,
-        completion: (() -> Void)? = nil
+        completion: (@MainActor @Sendable () -> Void)? = nil
     ) {
         self.state = state
         self.style = style

@@ -11,7 +11,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
+@MainActor class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
     enum Error: Swift.Error {
         case missingPaymentMethodListViewController
         case missingContentViewController
@@ -514,7 +514,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
                             // Wait a bit before closing the sheet
-                            self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
+                            Task { @MainActor in self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed) }
                         }
                     }
                 }

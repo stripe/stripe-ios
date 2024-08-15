@@ -28,7 +28,7 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
     /**
      This only exists as a workaround to make initializers with a specific Element type e.g. TextFieldElement.
      */
-    fileprivate init(
+    @MainActor fileprivate init(
         privateElement element: WrappedElementType,
         defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
@@ -39,7 +39,7 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
         element.delegate = self
     }
 
-    convenience init(
+    @MainActor convenience init(
         _ element: WrappedElementType,
         defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
@@ -47,7 +47,7 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
         self.init(privateElement: element, defaultsApplier: defaultsApplier, paramsUpdater: paramsUpdater)
     }
 
-    convenience init(
+    @MainActor convenience init(
         _ element: TextFieldElement,
         defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
@@ -59,7 +59,7 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
             return paramsUpdater(textField, params)
         }
     }
-    convenience init(
+    @MainActor convenience init(
         _ textFieldElementConfiguration: TextFieldElementConfiguration,
         theme: ElementsUITheme,
         defaultsApplier: DefaultsApplier? = nil,
@@ -121,7 +121,7 @@ extension PaymentMethodElementWrapper: ElementDelegate {
 extension Element {
     /// A convenience method that returns this element plus any children elements if this is a `ContainerElement`.
     /// Automatically unwraps any Elements wrapped in `PaymentMethodElementWrapper`.
-    public func getAllUnwrappedSubElements() -> [Element] {
+    @MainActor public func getAllUnwrappedSubElements() -> [Element] {
         switch self {
         case let wrapper as AnyPaymentMethodElementWrapper:
             return wrapper.anyElement.getAllUnwrappedSubElements()

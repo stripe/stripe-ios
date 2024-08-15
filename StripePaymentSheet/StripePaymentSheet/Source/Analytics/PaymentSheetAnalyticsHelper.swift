@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-final class PaymentSheetAnalyticsHelper {
+@MainActor final class PaymentSheetAnalyticsHelper: @unchecked Sendable {
     let analyticsClient: STPAnalyticsClient
     let isCustom: Bool
     let configuration: PaymentSheet.Configuration
@@ -20,7 +20,7 @@ final class PaymentSheetAnalyticsHelper {
     var loadingStartDate: Date?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
-    init(
+   init(
         isCustom: Bool,
         configuration: PaymentSheet.Configuration,
         analyticsClient: STPAnalyticsClient = .sharedClient
@@ -88,7 +88,7 @@ final class PaymentSheetAnalyticsHelper {
                 return "none"
             }
         }()
-        let params: [String: Any] = [
+        let params: [String: Sendable] = [
             "selected_lpm": defaultPaymentMethodAnalyticsValue,
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
@@ -245,13 +245,13 @@ final class PaymentSheetAnalyticsHelper {
         deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType? = nil,
         selectedLPM: String? = nil,
         linkContext: String? = nil,
-        params: [String: Any] = [:]
+        params: [String: Sendable] = [:]
     ) {
         let linkEnabled: Bool? = {
             guard let elementsSession else { return nil }
             return PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         }()
-        var additionalParams = [:] as [String: Any]
+        var additionalParams = [:] as [String: Sendable]
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
@@ -262,11 +262,11 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["selected_lpm"] = selectedLPM
         additionalParams["link_context"] = linkContext
-
+        
         if let error {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
         }
-
+        
         for (param, param_value) in params {
             additionalParams[param] = param_value
         }
@@ -306,8 +306,8 @@ extension STPAnalyticsClient {
 
 extension PaymentSheet.Configuration {
     /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
-    var analyticPayload: [String: Any] {
-        var payload = [String: Any]()
+    @MainActor var analyticPayload: [String: Sendable] {
+        var payload = [String: Sendable]()
         payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
         payload["apple_pay_config"] = applePay != nil
         payload["style"] = style.rawValue

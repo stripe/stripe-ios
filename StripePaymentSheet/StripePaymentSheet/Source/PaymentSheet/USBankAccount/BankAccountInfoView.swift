@@ -9,7 +9,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol BankAccountInfoViewDelegate {
+@MainActor protocol BankAccountInfoViewDelegate {
     func didTapXIcon()
 }
 

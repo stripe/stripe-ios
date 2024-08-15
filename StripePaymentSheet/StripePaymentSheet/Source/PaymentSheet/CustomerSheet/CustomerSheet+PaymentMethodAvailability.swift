@@ -11,7 +11,7 @@ extension CustomerSheet {
 }
 
 extension Array where Element == STPPaymentMethodType {
-    func customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: Bool,
+    @MainActor func customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: Bool,
                                                         supportedPaymentMethods: [STPPaymentMethodType] = CustomerSheet.supportedPaymentMethods) -> [STPPaymentMethodType] {
         return self.filter { type in
             var isSupported = supportedPaymentMethods.contains(type)

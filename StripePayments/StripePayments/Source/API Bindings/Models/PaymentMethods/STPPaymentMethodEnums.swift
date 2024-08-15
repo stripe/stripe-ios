@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 /// The type of the PaymentMethod.
-@objc public enum STPPaymentMethodType: Int {
+@objc public enum STPPaymentMethodType: Int, Sendable {
     /// A card payment method.
     case card
     /// An Alipay payment method.

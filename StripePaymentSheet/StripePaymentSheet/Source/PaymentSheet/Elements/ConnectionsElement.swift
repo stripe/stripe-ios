@@ -10,7 +10,7 @@
 import UIKit
 
 /// Intentionally empty placeholder for Connections Element
-class ConnectionsElement: Element {
+@MainActor class ConnectionsElement: Element {
     let collectsUserInput: Bool = false
     var delegate: ElementDelegate?
     var view: UIView = UIView()

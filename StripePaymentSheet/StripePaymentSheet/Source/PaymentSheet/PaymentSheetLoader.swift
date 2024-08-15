@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-final class PaymentSheetLoader {
+@MainActor final class PaymentSheetLoader {
     /// All the data that PaymentSheetLoader loaded.
     struct LoadResult {
         let intent: Intent
@@ -116,19 +116,9 @@ final class PaymentSheetLoader {
 
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async {
-        await withCheckedContinuation { continuation in
-            Task {
-                AddressSpecProvider.shared.loadAddressSpecs {
-                    // Load form specs
-                    FormSpecProvider.shared.load { _ in
-                        // Load BSB data
-                        BSBNumberProvider.shared.loadBSBData {
-                            continuation.resume()
-                        }
-                    }
-                }
-            }
-        }
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        await FormSpecProvider.shared.load()
+        await BSBNumberProvider.shared.loadBSBData()
     }
 
     static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {

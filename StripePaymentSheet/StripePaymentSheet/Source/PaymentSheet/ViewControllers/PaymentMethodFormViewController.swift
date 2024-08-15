@@ -10,7 +10,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentMethodFormViewControllerDelegate: AnyObject {
+@MainActor protocol PaymentMethodFormViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: PaymentMethodFormViewController)
     func updateErrorLabel(for error: Error?)
 }

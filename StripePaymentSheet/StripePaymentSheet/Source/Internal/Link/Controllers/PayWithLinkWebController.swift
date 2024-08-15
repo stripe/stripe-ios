@@ -13,7 +13,7 @@ import AuthenticationServices
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-protocol PayWithLinkWebControllerDelegate: AnyObject {
+@MainActor protocol PayWithLinkWebControllerDelegate: AnyObject {
 
     func payWithLinkWebControllerDidComplete(
         _ payWithLinkWebController: PayWithLinkWebController,

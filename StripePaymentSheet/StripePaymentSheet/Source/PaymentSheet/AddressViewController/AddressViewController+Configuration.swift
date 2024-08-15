@@ -70,7 +70,7 @@ public extension AddressViewController {
     /// Configuration for an `AddressViewController` instance.
     struct Configuration {
         /// Initializes a Configuration
-        public init(
+        @MainActor public init(
             defaultValues: DefaultAddressDetails = .init(),
             additionalFields: AddressViewController.Configuration.AdditionalFields = .init(),
             allowedCountries: [String] = [],
@@ -148,7 +148,7 @@ public extension AddressViewController {
         public var allowedCountries: [String] = []
 
         /// Configuration for the look and feel of the UI
-        public var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
+        @MainActor public var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
 
         /// The title of the primary button displayed at the bottom of the screen. Defaults to "Save address".
         public var buttonTitle: String = .Localized.save_address
@@ -157,7 +157,7 @@ public extension AddressViewController {
         public var title: String = .Localized.shipping_address
 
         /// The APIClient instance used to make requests to Stripe
-        public var apiClient: STPAPIClient = .shared
+        @MainActor public var apiClient: STPAPIClient = .shared
 
         /// A list of two-letter country codes that support autocomplete
         /// Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.

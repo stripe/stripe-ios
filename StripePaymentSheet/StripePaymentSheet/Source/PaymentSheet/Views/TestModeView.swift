@@ -12,8 +12,8 @@ import Foundation
 import UIKit
 
 private extension UIColor {
-    static var testModeTextColor = UIColor(red: 0.65, green: 0.41, blue: 0.07, alpha: 1.00)
-    static var testModeBackgroundColor = UIColor(red: 1.00, green: 0.87, blue: 0.58, alpha: 1.00)
+    static let testModeTextColor = UIColor(red: 0.65, green: 0.41, blue: 0.07, alpha: 1.00)
+    static let testModeBackgroundColor = UIColor(red: 1.00, green: 0.87, blue: 0.58, alpha: 1.00)
 }
 
 /// A badge that indicates if the PaymentSheet is in test mode

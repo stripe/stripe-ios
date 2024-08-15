@@ -10,7 +10,7 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
+@MainActor protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
     func didUpdateSelection(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection)

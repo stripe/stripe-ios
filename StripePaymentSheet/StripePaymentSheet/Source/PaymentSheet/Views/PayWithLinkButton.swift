@@ -16,7 +16,7 @@ import UIKit
 /// A button for paying with Link.
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkButton)
-final class PayWithLinkButton: UIControl {
+@MainActor final class PayWithLinkButton: UIControl {
 
     struct Constants {
         static let defaultSize: CGSize = .init(width: 200, height: 44)
@@ -211,8 +211,8 @@ final class PayWithLinkButton: UIControl {
         return .noValidAccount
     }
 
-    init() {
-        super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         isAccessibilityElement = true
         self.linkAccount = LinkAccountContext.shared.account
         setupUI()
@@ -221,6 +221,7 @@ final class PayWithLinkButton: UIControl {
         // Listen for account changes
         LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
+    
     @objc
     func onAccountChange(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
@@ -228,8 +229,10 @@ final class PayWithLinkButton: UIControl {
         }
     }
     deinit {
-        // Stop listening for account changes
-        LinkAccountContext.shared.removeObserver(self)
+        Task { @MainActor in
+            // Stop listening for account changes
+            LinkAccountContext.shared.removeObserver(self)
+        }
     }
 
     required init?(coder: NSCoder) {

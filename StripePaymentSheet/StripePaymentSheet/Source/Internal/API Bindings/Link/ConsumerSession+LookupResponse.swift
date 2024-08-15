@@ -10,8 +10,8 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension ConsumerSession {
-    final class LookupResponse: Decodable {
-        enum ResponseType {
+    final class LookupResponse: Decodable, Sendable {
+        enum ResponseType: Sendable {
             case found(consumerSession: SessionWithPublishableKey)
 
             // errorMessage can be used internally to differentiate between

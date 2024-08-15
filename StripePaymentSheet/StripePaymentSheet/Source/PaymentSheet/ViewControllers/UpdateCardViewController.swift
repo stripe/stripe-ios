@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol UpdateCardViewControllerDelegate: AnyObject {
+@MainActor protocol UpdateCardViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdateCardViewController,
                    paymentMethod: STPPaymentMethod,
@@ -64,11 +64,7 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: {  [weak self] in
-            Task {
-                await self?.updateCard()
-            }
-        })
+        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: tapCard)
     }()
 
     private lazy var deleteButton: UIButton = {
@@ -206,6 +202,12 @@ final class UpdateCardViewController: UIViewController {
         }
 
         view.isUserInteractionEnabled = true
+    }
+    
+    nonisolated private func tapUpdateButton() {
+        Task { @MainActor in
+            await self.updateCard()
+        }
     }
 
 }

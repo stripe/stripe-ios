@@ -63,7 +63,7 @@ extension CustomerSheet {
             context.coordinator.presented = presented
         }
 
-        class Coordinator {
+        @MainActor class Coordinator {
 
             var parent: CustomerSheetPresenter
             let view = UIView()

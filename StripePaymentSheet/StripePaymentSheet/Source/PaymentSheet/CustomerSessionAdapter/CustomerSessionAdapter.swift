@@ -8,7 +8,7 @@ import Foundation
 
 private let CachedCustomerMaxAge: TimeInterval = 60 * 30 // 30 minutes, server-side timeout is 60
 
-class CustomerSessionAdapter {
+@MainActor class CustomerSessionAdapter {
     typealias CustomerSessionClientSecretProvider = () async throws -> CustomerSessionClientSecret
 
     let customerSessionClientSecretProvider: CustomerSessionClientSecretProvider
@@ -16,7 +16,7 @@ class CustomerSessionAdapter {
     let intentConfiguration: CustomerSheet.IntentConfiguration
     let configuration: CustomerSheet.Configuration
 
-    struct CachedCustomerSessionClientSecret {
+    struct CachedCustomerSessionClientSecret: Sendable {
         let customerSessionClientSecret: CustomerSessionClientSecret
         let apiKey: String
         let customerId: String
@@ -111,7 +111,7 @@ extension CustomerSessionAdapter {
         return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
     }
 
-    func detachPaymentMethod(paymentMethodId: String) async throws {
+    @MainActor func detachPaymentMethod(paymentMethodId: String) async throws {
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
         return try await withCheckedThrowingContinuation({ continuation in
             self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(paymentMethodId,

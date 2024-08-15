@@ -97,7 +97,7 @@ extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
 }
 
 // MARK: - CardFormElementViewDelegate
-protocol CardSectionWithScannerViewDelegate: AnyObject {
+@MainActor protocol CardSectionWithScannerViewDelegate: AnyObject {
     func didScanCard(cardParams: STPPaymentMethodCardParams)
 }
 

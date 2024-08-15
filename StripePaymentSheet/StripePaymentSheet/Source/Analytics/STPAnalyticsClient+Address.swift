@@ -16,7 +16,7 @@ extension STPAnalyticsClient {
         addressAnalyticData: AddressAnalyticData?,
         apiClient: STPAPIClient
     ) {
-        var additionalParams = [:] as [String: Any]
+        var additionalParams = [:] as [String: Sendable]
         additionalParams["address_data_blob"] = addressAnalyticData?.analyticsPayload
 
         let analytic = AddressAnalytic(event: event,
@@ -51,7 +51,7 @@ struct AddressAnalyticData {
     let autoCompleteResultedSelected: Bool?
     let editDistance: Int?
 
-    var analyticsPayload: [String: Any?] {
+    var analyticsPayload: [String: Sendable?] {
         return ["address_country_code": addressCountryCode,
                 "auto_complete_result_selected": autoCompleteResultedSelected,
                 "edit_distance": editDistance, ]
@@ -83,5 +83,5 @@ extension PaymentSheet.Address {
 
 struct AddressAnalytic: Analytic {
     let event: STPAnalyticEvent
-    let params: [String: Any]
+    let params: [String: Sendable]
 }

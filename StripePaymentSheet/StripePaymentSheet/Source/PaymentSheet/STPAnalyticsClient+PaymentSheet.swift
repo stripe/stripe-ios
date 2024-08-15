@@ -19,10 +19,10 @@ extension STPAnalyticsClient {
         linkSessionType: LinkSettings.PopupWebviewOption? = nil,
         error: Error? = nil,
         paymentMethodTypeAnalyticsValue: String? = nil,
-        params: [String: Any] = [:],
+        params: [String: Sendable] = [:],
         apiClient: STPAPIClient = .shared
     ) {
-        var additionalParams = [:] as [String: Any]
+        var additionalParams = [:] as [String: Sendable]
         additionalParams["duration"] = duration
         if let linkSessionType {
             additionalParams["link_session_type"] = linkSessionType.rawValue
@@ -44,7 +44,7 @@ extension STPAnalyticsClient {
 
 struct PaymentSheetAnalytic: StripePayments.PaymentAnalytic {
     let event: STPAnalyticEvent
-    let additionalParams: [String: Any]
+    let additionalParams: [String: Sendable]
 }
 
 extension PaymentSheet.SavePaymentMethodOptInBehavior {
@@ -61,7 +61,7 @@ extension PaymentSheet.SavePaymentMethodOptInBehavior {
 }
 
 extension PaymentSheet.Appearance {
-    var analyticPayload: [String: Bool] {
+    @MainActor var analyticPayload: [String: Bool] {
         var payload = [String: Bool]()
         payload["corner_radius"] = cornerRadius != PaymentSheet.Appearance.default.cornerRadius
         payload["border_width"] = borderWidth != PaymentSheet.Appearance.default.borderWidth
@@ -77,7 +77,7 @@ extension PaymentSheet.Appearance {
 }
 
 extension PaymentSheet.BillingDetailsCollectionConfiguration {
-    var analyticPayload: [String: Any] {
+    var analyticPayload: [String: Sendable] {
         return [
             "attach_defaults": attachDefaultsToPaymentMethod,
             "name": name.rawValue,

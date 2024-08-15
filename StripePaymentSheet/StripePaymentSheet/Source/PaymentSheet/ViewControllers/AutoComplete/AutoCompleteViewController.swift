@@ -12,7 +12,7 @@ import MapKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol AutoCompleteViewControllerDelegate: AnyObject {
+@MainActor protocol AutoCompleteViewControllerDelegate: AnyObject {
 
     /// Called when the user has selected an address from the auto complete suggestions
     /// - Parameter address: The address selected from the search results
@@ -215,22 +215,29 @@ extension AutoCompleteViewController: ElementDelegate {
 
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        self.results = completer.results
+    nonisolated func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        let results = completer.results
+        MainActor.assumeIsolated {
+            self.results = results
+        }
     }
 
-    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        let nsError = error as NSError
-
-        // Making a query with an empty string causes a server error and doesn't update search results
-        if completer.queryFragment.isEmpty && nsError.code == MKError.serverFailure.rawValue {
-            results.removeAll()
-            return
+    nonisolated func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        let queryFragmentEmpty = completer.queryFragment.isEmpty
+        MainActor.assumeIsolated {
+            let nsError = error as NSError
+            // Making a query with an empty string causes a server error and doesn't update search results
+            if queryFragmentEmpty && nsError.code == MKError.serverFailure.rawValue {
+                results.removeAll()
+                return
+            }
+            
+            self.latestError = error
         }
-
-        self.latestError = error
     }
 }
+
+extension MKLocalSearchCompletion: @unchecked @retroactive Sendable {}
 
 // MARK: TableView
 extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource {
@@ -272,7 +279,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         results[indexPath.row].asAddress { [weak self] address in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 self?.delegate?.didSelectAddress(address)
             }
         }

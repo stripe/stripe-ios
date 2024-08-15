@@ -24,8 +24,8 @@ extension CustomerSheet {
                 styleRawValue = newValue.rawValue
             }
         }
-        /// Describes the appearance of SavdPaymentMethodsSheet
-        public var appearance = PaymentSheet.Appearance.default
+        /// Describes the appearance of CustomerSheet
+        @MainActor public var appearance = PaymentSheet.Appearance.default
 
         /// Your customer-facing business name.
         /// This is used to display a "Pay \(merchantDisplayName)" line item in the Apple Pay sheet
@@ -37,7 +37,7 @@ extension CustomerSheet {
         public var returnURL: String?
 
         /// The APIClient instance used to make requests to Stripe
-        public var apiClient: STPAPIClient = STPAPIClient.shared
+        @MainActor public var apiClient: STPAPIClient = STPAPIClient.shared
 
         /// Whether to show Apple Pay as an option
         public var applePayEnabled: Bool = false
@@ -74,8 +74,7 @@ extension CustomerSheet {
         /// If false, the customer can't delete if they only have one saved payment method remaining.
         @_spi(STP) public var allowsRemovalOfLastSavedPaymentMethod = true
 
-        public init () {
-        }
+        @MainActor public init () {}
     }
 }
 

@@ -15,12 +15,12 @@ private let formSpecsURL = StripePaymentSheetBundleLocator.resourcesBundle.url(f
 /// Provides FormSpecs for a given a payment method type.
 /// - Note: You must `load(completion:)` to load the specs json file into memory before calling `formSpec(for:)`
 /// - To overwrite any of these specs use load(from:)
-class FormSpecProvider {
+@MainActor class FormSpecProvider {
     enum Error: Swift.Error {
         case failedToLoadSpecs
         case formSpecsNotReady
     }
-    static var shared: FormSpecProvider = FormSpecProvider()
+    @MainActor static var shared: FormSpecProvider = FormSpecProvider()
     fileprivate var formSpecs: [String: FormSpec] = [:]
 
     /// Loading from disk should take place on this serial queue.
@@ -35,27 +35,24 @@ class FormSpecProvider {
     var hasLoadedFromDisk: Bool = false
 
     /// Loads the JSON form spec from disk into memory
-    func load(completion: ((Bool) -> Void)? = nil) {
-        formSpecsUpdateQueue.async { [weak self] in
-            if self?.hasLoadedFromDisk == true {
-                completion?(true)
-                return
-            }
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            do {
-                let data = try Data(contentsOf: formSpecsURL)
-                let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
-                self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
-                self?.hasLoadedFromDisk = true
-                completion?(true)
-            } catch {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                                  error: Error.failedToLoadSpecs)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                completion?(false)
-                return
-            }
+    @discardableResult
+    func load() async -> Bool {
+        if self.hasLoadedFromDisk == true {
+            return true
+        }
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let data = try Data(contentsOf: formSpecsURL)
+            let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
+            self.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
+            self.hasLoadedFromDisk = true
+            return true
+        } catch {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.failedToLoadSpecs)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            return false
         }
     }
 

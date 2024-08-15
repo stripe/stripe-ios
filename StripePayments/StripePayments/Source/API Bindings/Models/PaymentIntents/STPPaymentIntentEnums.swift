@@ -9,7 +9,7 @@
 import Foundation
 
 /// Status types for an STPPaymentIntent
-@objc public enum STPPaymentIntentStatus: Int {
+@objc public enum STPPaymentIntentStatus: Int, Sendable {
     /// Unknown status
     case unknown
     /// This PaymentIntent requires a PaymentMethod or Source

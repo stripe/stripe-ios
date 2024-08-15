@@ -12,7 +12,7 @@
 
 import UIKit
 
-protocol LinkLegalTermsViewDelegate: AnyObject {
+@MainActor protocol LinkLegalTermsViewDelegate: AnyObject {
     /// Called when the user taps on a legal link.
     ///
     /// Implementation must return `true` if the link was handled. Returning `false`results in the link

@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
+@MainActor protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent,
                                                         elementsSession: STPElementsSession,
                                                         with paymentOption: PaymentOption,

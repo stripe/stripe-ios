@@ -312,14 +312,13 @@ extension AddressViewController {
     private func loadSpecsIfNeeded() {
         if addressSpecProvider.countries.isEmpty {
             activityIndicator.startAnimating()
-
+            let specProvider = self.addressSpecProvider
             // Load address specs
-            self.addressSpecProvider.loadAddressSpecs {
-                DispatchQueue.main.async {
-                    self.hasLoadedSpecs = true
-                    self.activityIndicator.stopAnimating()
-                    self.loadUI()
-                }
+            Task {
+                await specProvider.loadAddressSpecs()
+                self.hasLoadedSpecs = true
+                self.activityIndicator.stopAnimating()
+                self.loadUI()
             }
         } else {
             self.hasLoadedSpecs = true
@@ -444,5 +443,5 @@ extension AddressSectionElement.AdditionalFields {
 }
 
 @_spi(STP) extension AddressViewController: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "PaymentSheet.AddressController"
+    @_spi(STP) nonisolated public static let stp_analyticsIdentifier = "PaymentSheet.AddressController"
 }

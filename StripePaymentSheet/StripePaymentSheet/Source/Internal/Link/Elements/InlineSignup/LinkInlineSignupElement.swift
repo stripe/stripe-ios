@@ -9,7 +9,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class LinkInlineSignupElement: Element {
+@MainActor final class LinkInlineSignupElement: Element {
     let collectsUserInput: Bool = true
 
     private let signupView: LinkInlineSignupView

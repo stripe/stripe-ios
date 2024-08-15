@@ -223,7 +223,7 @@ extension PaymentSheet {
             context.coordinator.presented = presented
         }
 
-        class Coordinator {
+        @MainActor class Coordinator {
 
             var parent: PaymentSheetPresenter
             let view = UIView()
@@ -292,7 +292,7 @@ extension PaymentSheet {
             context.coordinator.presented = presented
         }
 
-        class Coordinator {
+        @MainActor class Coordinator {
             var parent: PaymentSheetFlowControllerPresenter
             let view = UIView()
 
@@ -330,8 +330,10 @@ extension PaymentSheet {
                 switch parent.action {
                 case .confirm:
                     parent.paymentSheetFlowController?.confirm(from: presenter) { (result) in
-                        self.parent.presented = false
-                        self.parent.paymentCompletion?(result)
+                        Task { @MainActor in
+                            self.parent.presented = false
+                            self.parent.paymentCompletion?(result)
+                        }
                     }
                 case .presentPaymentOptions:
                     parent.paymentSheetFlowController?.presentPaymentOptions(from: presenter) {
@@ -393,7 +395,7 @@ extension PaymentSheet {
 
 // MARK: - Helper functions
 
-func findViewControllerPresenter(from uiViewController: UIViewController) -> UIViewController {
+@MainActor func findViewControllerPresenter(from uiViewController: UIViewController) -> UIViewController {
     // Note: creating a UIViewController inside here results in a nil window
 
     // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
@@ -409,7 +411,7 @@ func findViewControllerPresenter(from uiViewController: UIViewController) -> UIV
     return presentingViewController
 }
 
-func findViewController(for uiView: UIView) -> UIViewController? {
+@MainActor func findViewController(for uiView: UIView) -> UIViewController? {
     if let nextResponder = uiView.next as? UIViewController {
         return nextResponder
     } else if let nextResponder = uiView.next as? UIView {
@@ -420,7 +422,7 @@ func findViewController(for uiView: UIView) -> UIViewController? {
     }
 }
 
-func topMostViewController() -> UIViewController? {
+@MainActor func topMostViewController() -> UIViewController? {
     guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
           let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return nil }
 

@@ -10,7 +10,7 @@ import Foundation
 
 /// A SetupIntent guides you through the process of setting up a customer's payment credentials for future payments.
 /// - seealso: https://stripe.com/docs/api/setup_intents
-public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
+public class STPSetupIntent: NSObject, STPAPIResponseDecodable, @unchecked Sendable {
     /// The Stripe ID of the SetupIntent.
     @objc public let stripeID: String
     /// The client secret of this SetupIntent. Used for client-side retrieval using a publishable key.

@@ -55,7 +55,7 @@ class SavedPaymentMethodCollectionView: UICollectionView {
 
 // MARK: - Cells
 
-protocol PaymentOptionCellDelegate: AnyObject {
+@MainActor protocol PaymentOptionCellDelegate: AnyObject {
     func paymentOptionCellDidSelectRemove(
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
     func paymentOptionCellDidSelectEdit(

@@ -75,31 +75,34 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         didCompleteWith status: STPApplePayContext.PaymentStatus,
         error: Error?
     ) {
-        let confirmType: STPAnalyticsClient.DeferredIntentConfirmationType? = {
-            guard
-                let confirmType = context.confirmType,
-                case .deferredIntent = intent
-            else {
-                return nil
+        
+        Task { @MainActor in
+            let confirmType: STPAnalyticsClient.DeferredIntentConfirmationType? = {
+                guard
+                    let confirmType = context.confirmType,
+                    case .deferredIntent = intent
+                else {
+                    return nil
+                }
+                switch confirmType {
+                case .server:
+                    return .server
+                case .client:
+                    return .client
+                case .none:
+                    return STPAnalyticsClient.DeferredIntentConfirmationType.none
+                }
+            }()
+            switch status {
+            case .success:
+                completion(.completed, confirmType)
+            case .error:
+                completion(.failed(error: error!), confirmType)
+            case .userCancellation:
+                completion(.canceled, confirmType)
             }
-            switch confirmType {
-            case .server:
-                return .server
-            case .client:
-                return .client
-            case .none:
-                return STPAnalyticsClient.DeferredIntentConfirmationType.none
-            }
-        }()
-        switch status {
-        case .success:
-            completion(.completed, confirmType)
-        case .error:
-            completion(.failed(error: error!), confirmType)
-        case .userCancellation:
-            completion(.canceled, confirmType)
+            selfRetainer = nil
         }
-        selfRetainer = nil
     }
 
     func applePayContext(

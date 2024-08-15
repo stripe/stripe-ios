@@ -28,7 +28,7 @@ extension PaymentSheet {
         /// PaymentSheet will always use colors appropriate for dark mode UI
         case alwaysDark
 
-        func configure(_ viewController: UIViewController) {
+        @MainActor func configure(_ viewController: UIViewController) {
             switch self {
             case .automatic:
                 break  // no-op
@@ -71,7 +71,7 @@ extension PaymentSheet {
     }
 
     /// Configuration for PaymentSheet
-    public struct Configuration {
+    public struct Configuration: @unchecked Sendable {
         // The text that shows in the header of the payment sheet when adding a card.
         // If nil default text will be used.
         @_spi(DashboardOnly) public var addCardHeaderText: String?
@@ -87,14 +87,14 @@ extension PaymentSheet {
         public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
 
         /// The APIClient instance used to make requests to Stripe
-        public var apiClient: STPAPIClient = STPAPIClient.shared
+        @MainActor public var apiClient: STPAPIClient = STPAPIClient.shared
 
         /// Configuration related to Apple Pay
         /// If set, PaymentSheet displays Apple Pay as a payment option
         public var applePay: ApplePayConfiguration?
 
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
-        public var primaryButtonColor: UIColor? {
+        @MainActor public var primaryButtonColor: UIColor? {
             get {
                 return appearance.primaryButton.backgroundColor
             }
@@ -146,7 +146,7 @@ extension PaymentSheet {
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
 
         /// Describes the appearance of PaymentSheet
-        public var appearance = PaymentSheet.Appearance.default
+        @MainActor public var appearance = PaymentSheet.Appearance.default
 
         /// A closure that returns the customer's shipping details.
         /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided
@@ -164,7 +164,7 @@ extension PaymentSheet {
         }
 
         /// Initializes a Configuration with default values
-        public init() {}
+        @MainActor public init() {}
 
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
@@ -335,7 +335,7 @@ extension PaymentSheet {
     }
 
     /// An address.
-    public struct Address: Equatable {
+    public struct Address: Equatable, Sendable {
         /// City, district, suburb, town, or village.
         /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var city: String?

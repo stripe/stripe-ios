@@ -205,7 +205,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
 }
 
 // MARK: - VerticalPaymentMethodListViewControllerDelegate
-protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
+@MainActor protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
     /// Called when a row is tapped, before `didTapPaymentMethod` is called.
     /// - Returns: Whether or not the payment method row button should appear selected.
     func shouldSelectPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool

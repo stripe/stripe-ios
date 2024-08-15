@@ -57,7 +57,7 @@ public extension Element {
  */
 @_spi(STP) public protocol ElementDelegate: AnyObject {
     /**
-     This method is called whenever your public/internally visable state changes.
+     This method is called whenever your public/internally visible state changes.
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
     @MainActor func didUpdate(element: Element)
@@ -72,7 +72,7 @@ public extension Element {
 /**
   An Element uses this delegate to present a view controller
  */
-@_spi(STP) public protocol PresentingViewControllerDelegate: ElementDelegate {
+@_spi(STP) @MainActor public protocol PresentingViewControllerDelegate: ElementDelegate {
     /**
      Elements will call this function to delegate presentation of a view controller
      */
@@ -97,7 +97,7 @@ public extension Element {
 }
 
 extension Element {
-    public var debugDescription: String {
+    nonisolated public var debugDescription: String {
         return "<\(type(of: self)): \(Unmanaged.passUnretained(self).toOpaque())>"
     }
 }

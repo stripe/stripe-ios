@@ -12,7 +12,7 @@ import UIKit
 /// An object representing parameters used to create a PaymentMethod object.
 /// @note To create a PaymentMethod from an Apple Pay PKPaymentToken, see `STPAPIClient createPaymentMethodWithPayment:completion:`
 /// - seealso: https://stripe.com/docs/api/payment_methods/create
-public class STPPaymentMethodParams: NSObject, STPFormEncodable {
+public class STPPaymentMethodParams: NSObject, STPFormEncodable, @unchecked Sendable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The type of payment method.  The associated property will contain additional information (e.g. `type == STPPaymentMethodTypeCard` means `card` should also be populated).

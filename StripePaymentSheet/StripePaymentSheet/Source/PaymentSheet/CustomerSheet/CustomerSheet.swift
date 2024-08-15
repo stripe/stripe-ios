@@ -20,7 +20,7 @@ internal enum InternalCustomerSheetResult {
     case failed(error: Error)
 }
 
-public class CustomerSheet {
+@MainActor public class CustomerSheet {
     internal enum InternalError: Error {
         case expectedSetupIntent
         case invalidStateOnConfirmation
@@ -179,12 +179,8 @@ public class CustomerSheet {
                  customerSheetDataSource: CustomerSheetDataSource,
                  paymentMethodRemove: Bool,
                  cbcEligible: Bool) {
-        let loadSpecsPromise = Promise<Void>()
-        AddressSpecProvider.shared.loadAddressSpecs {
-            loadSpecsPromise.resolve(with: ())
-        }
-
-        loadSpecsPromise.observe(on: .main) { _ in
+        Task { @MainActor in
+            await AddressSpecProvider.shared.loadAddressSpecs()
             let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
             let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
                                                                                 selectedPaymentMethodOption: selectedPaymentMethodOption,
@@ -257,7 +253,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
 }
 
 @_spi(STP) extension CustomerSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "CustomerSheet"
+    @_spi(STP) nonisolated public static let stp_analyticsIdentifier = "CustomerSheet"
 }
 
 extension StripeCustomerAdapter {
@@ -346,7 +342,7 @@ public extension CustomerSheet {
 }
 
 @_spi(CustomerSessionBetaAccess)
-public struct CustomerSessionClientSecret {
+public struct CustomerSessionClientSecret: Sendable {
     /// The identifier of the Stripe Customer object.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
     internal let customerId: String

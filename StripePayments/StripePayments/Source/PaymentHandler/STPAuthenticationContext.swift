@@ -12,11 +12,11 @@ import UIKit
 
 /// `STPAuthenticationContext` provides information required to present authentication challenges
 /// to a user.
-@objc public protocol STPAuthenticationContext: NSObjectProtocol {
+@objc @MainActor public protocol STPAuthenticationContext: NSObjectProtocol {
     /// The Stripe SDK will modally present additional view controllers on top
     /// of the `authenticationPresentingViewController` when required for user
     /// authentication, like in the Challenge Flow for 3DS2 transactions.
-    @MainActor func authenticationPresentingViewController() -> UIViewController
+    func authenticationPresentingViewController() -> UIViewController
 
     /// This method is called before presenting a UIViewController for authentication.
     /// @note `STPPaymentHandler` will not proceed until `completion` is called.

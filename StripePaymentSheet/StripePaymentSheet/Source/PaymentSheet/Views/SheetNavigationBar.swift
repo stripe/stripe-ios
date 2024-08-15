@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol SheetNavigationBarDelegate: AnyObject {
+@MainActor protocol SheetNavigationBarDelegate: AnyObject {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar)
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar)
 }

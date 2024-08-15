@@ -14,7 +14,7 @@ import UIKit
 
 extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
-    func makeIcon(
+    @MainActor func makeIcon(
         for traitCollection: UITraitCollection? = nil,
         updateImageHandler: DownloadManager.UpdateImageHandler?
     ) -> UIImage {
@@ -122,7 +122,7 @@ extension STPPaymentMethod {
 }
 
  extension STPPaymentMethodParams {
-    func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    @MainActor func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
             guard let card = card, let number = card.number else {

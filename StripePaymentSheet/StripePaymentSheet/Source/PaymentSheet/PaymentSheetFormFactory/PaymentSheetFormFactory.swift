@@ -17,7 +17,7 @@ import UIKit
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
  `IntentConfirmParams`.
  */
-class PaymentSheetFormFactory {
+@MainActor class PaymentSheetFormFactory {
     enum Error: Swift.Error {
         case missingFormSpec
         case missingV1FromSelectorSpec
@@ -826,7 +826,7 @@ extension PaymentSheetFormFactory {
 
 extension FormElement {
     /// Conveniently nests single TextField, PhoneNumber, and DropdownFields in a Section
-    convenience init(autoSectioningElements: [Element], theme: ElementsUITheme = .default) {
+    @MainActor convenience init(autoSectioningElements: [Element], theme: ElementsUITheme = .default) {
         let elements: [Element] = autoSectioningElements.map {
             if $0 is PaymentMethodElementWrapper<TextFieldElement>
                 || $0 is PaymentMethodElementWrapper<DropdownFieldElement>

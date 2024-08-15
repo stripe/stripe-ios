@@ -472,8 +472,10 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.buyButton.update(state: .succeeded, animated: true) {
-                            // Wait a bit before closing the sheet
-                            self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
+                            Task { @MainActor in
+                                // Wait a bit before closing the sheet
+                                self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
+                            }
                         }
                     }
                 }

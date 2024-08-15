@@ -18,7 +18,8 @@ extension PaymentSheet {
         case external(ExternalPaymentMethod)
         case instantDebits
 
-        static var analyticLogForIcon: Set<PaymentMethodType> = []
+        // Disabling concurrency checks for `analyticLogForIcon` as it is protected by `analyticLogForIconSemaphore`
+        nonisolated(unsafe) static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
         var displayName: String {
@@ -57,7 +58,7 @@ extension PaymentSheet {
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
-        func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+        @MainActor func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
@@ -101,7 +102,7 @@ extension PaymentSheet {
                     if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                         STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
                     }
-                    return DownloadManager.sharedManager.imagePlaceHolder()
+                    return DownloadManager.imagePlaceHolder()
                 }
             case .instantDebits:
                 return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
@@ -123,7 +124,7 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
-        static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
+        @MainActor static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
             var recommendedStripePaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
@@ -210,7 +211,7 @@ extension PaymentSheet {
         ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
-        static func supportsAdding(
+        @MainActor static func supportsAdding(
             paymentMethod: STPPaymentMethodType,
             configuration: PaymentSheet.Configuration,
             intent: Intent,
@@ -299,9 +300,9 @@ extension PaymentSheet {
             }
         }
 
-        /// Returns true if the passed configuration satsifies the passed in `requirements`
+        /// Returns true if the passed configuration satisfies the passed in `requirements`
         /// This function is to be used with dynamic payment method types that do not have bindings support and cannot be represented as a `STPPaymentMethodType`.
-        /// It's required for the client to specfiy dynamic payment method type requirements (rather than being server driven) because dynamically delivering new LPMS to clients that don't know about them is no longer/currently a priority.
+        /// It's required for the client to specify dynamic payment method type requirements (rather than being server driven) because dynamically delivering new LPMS to clients that don't know about them is no longer/currently a priority.
         /// - Note: Use this function over `configurationSupports` when the payment method does not have bindings support e.g. cannot be represented as
         /// a `STPPaymentMethodType`.
         /// - Parameters:
@@ -328,8 +329,8 @@ extension PaymentSheet {
         }
 
         /// Returns true if the passed configuration satisfies the passed in `requirements` and this payment method is in the list of supported payment methods
-        /// This function is to be used with payment method types thar have bindings support and can be represented as a `STPPaymentMethodType`
-        /// Use this function over `configurationSatisfiesRequirements` when the payment method in quesiton can be represented as a `STPPaymentMethodType`
+        /// This function is to be used with payment method types that have bindings support and can be represented as a `STPPaymentMethodType`
+        /// Use this function over `configurationSatisfiesRequirements` when the payment method in question can be represented as a `STPPaymentMethodType`
         /// - Parameters:
         ///   - paymentMethod: the payment method type in question
         ///   - requirements: a list of requirements to be satisfied
@@ -337,7 +338,7 @@ extension PaymentSheet {
         ///   - intent: an intent object
         ///   - supportedPaymentMethods: a list of supported payment method types
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method is supported
-        static func configurationSupports(
+        @MainActor static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
@@ -381,7 +382,7 @@ extension STPPaymentMethod {
     /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
     /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
     /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
-    func supportsSavedPaymentMethod(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) -> Bool {
+    @MainActor func supportsSavedPaymentMethod(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) -> Bool {
         let requirements: [PaymentMethodTypeRequirement] = {
             switch type {
             case .card:

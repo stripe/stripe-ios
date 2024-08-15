@@ -43,7 +43,7 @@ enum PaymentSheetFormFactoryConfig {
             return config.billingDetailsCollectionConfiguration
         }
     }
-    var appearance: PaymentSheet.Appearance {
+    @MainActor var appearance: PaymentSheet.Appearance {
         switch self {
         case .paymentSheet(let config):
             return config.appearance

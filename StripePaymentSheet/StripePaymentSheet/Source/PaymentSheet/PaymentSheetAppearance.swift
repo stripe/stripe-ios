@@ -14,7 +14,7 @@ public extension PaymentSheet {
     /// Describes the appearance of PaymentSheet
     struct Appearance: Equatable {
         /// The default appearance for PaymentSheet
-        public static let `default` = Appearance()
+        @MainActor public static let `default` = Appearance()
 
         /// Creates a `PaymentSheet.Appearance` with default values
         public init() {}

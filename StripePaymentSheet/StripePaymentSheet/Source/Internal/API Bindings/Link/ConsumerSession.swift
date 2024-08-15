@@ -12,7 +12,7 @@ import UIKit
 @_spi(STP) import StripePayments
 
 /// For internal SDK use only
-final class ConsumerSession: Decodable {
+final class ConsumerSession: Decodable, Sendable {
     let clientSecret: String
     let emailAddress: String
     let verificationSessions: [VerificationSession]
@@ -65,11 +65,11 @@ extension ConsumerSession {
 }
 
 // MARK: - API methods
-extension ConsumerSession {
+@MainActor extension ConsumerSession {
     class func lookupSession(
         for email: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         apiClient.lookupConsumerSession(for: email, completion: completion)
     }
@@ -82,7 +82,7 @@ extension ConsumerSession {
         countryCode: String?,
         consentAction: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
+        completion: @escaping @Sendable (Result<SessionWithPublishableKey, Error>) -> Void
     ) {
         apiClient.createConsumer(
             for: email,
@@ -96,10 +96,10 @@ extension ConsumerSession {
     }
 
     func createPaymentDetails(
-        paymentMethodParams: STPPaymentMethodParams,
+        paymentMethodParams: sending STPPaymentMethodParams,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard paymentMethodParams.type == .card,
               let cardParams = paymentMethodParams.card else {
@@ -129,7 +129,7 @@ extension ConsumerSession {
         id: String,
         cvc: String?,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
+        completion: @escaping @Sendable (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         apiClient.sharePaymentDetails(
             for: clientSecret,
@@ -142,7 +142,7 @@ extension ConsumerSession {
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+        completion: @escaping @Sendable (Result<ConsumerSession, Error>) -> Void
     ) {
         apiClient.logout(
             consumerSessionClientSecret: clientSecret,

@@ -12,7 +12,7 @@
 import UIKit
 
 /// Standalone Link controller
-final class PayWithLinkController {
+@MainActor final class PayWithLinkController {
 
     typealias CompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
@@ -66,8 +66,10 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
             paymentHandler: paymentHandler,
             isFlowController: false
         ) { result, deferredIntentConfirmationType in
-            self.completion?(result, deferredIntentConfirmationType)
-            self.selfRetainer = nil
+            Task { @MainActor in
+                self.completion?(result, deferredIntentConfirmationType)
+                self.selfRetainer = nil
+            }
         }
     }
 

@@ -301,7 +301,9 @@ class PollingViewController: UIViewController {
                 // If the last poll doesn't show a succeeded on the intent, show the error UI
                 // In the case of a success the delegate will be notified and the UI will be updated accordingly
                 if status != .succeeded {
-                    self?.pollingState = .error
+                    Task { @MainActor in
+                        self?.pollingState = .error
+                    }
                 }
             }
         }
@@ -351,7 +353,7 @@ extension PollingViewController: IntentStatusPollerDelegate {
                 self.currentAction.complete(with: .succeeded, error: nil)
             }
         } else if paymentIntent.status != .requiresAction {
-            // an error occured to take the intent out of requires action
+            // an error occurred to take the intent out of requires action
             // update polling state to indicate that we have encountered an error
             pollingState = .error
         }

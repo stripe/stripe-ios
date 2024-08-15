@@ -21,7 +21,7 @@ struct LinkPMDisplayDetails {
     let brand: STPCardBrand
 }
 
-class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
+class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol, @unchecked Sendable {
     enum SessionState: String {
         case requiresSignUp
         case requiresVerification
@@ -79,7 +79,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     private var currentSession: ConsumerSession?
 
-    init(
+    @MainActor init(
         email: String,
         session: ConsumerSession?,
         publishableKey: String?,
@@ -91,11 +91,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         self.apiClient = apiClient
     }
 
-    func signUp(
+    @MainActor func signUp(
         with phoneNumber: PhoneNumber,
         legalName: String?,
         consentAction: ConsentAction,
-        completion: @escaping (Result<Void, Error>) -> Void
+        completion: @escaping @Sendable (Result<Void, Error>) -> Void
     ) {
         signUp(
             with: phoneNumber.string(as: .e164),
@@ -106,15 +106,15 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         )
     }
 
-    func signUp(
+    @MainActor func signUp(
         with phoneNumber: String,
         legalName: String?,
         countryCode: String?,
         consentAction: ConsentAction,
-        completion: @escaping (Result<Void, Error>) -> Void
+        completion: @escaping @Sendable (Result<Void, Error>) -> Void
     ) {
         guard case .requiresSignUp = sessionState else {
-            STPAnalyticsClient.sharedClient.logLinkInvalidSessionState(sessionState: sessionState)
+            Task { @MainActor in STPAnalyticsClient.sharedClient.logLinkInvalidSessionState(sessionState: sessionState) }
             DispatchQueue.main.async {
                 completion(
                     .failure(
@@ -146,7 +146,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     func createPaymentDetails(
         with paymentMethodParams: STPPaymentMethodParams,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+        completion: @Sendable @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard let session = currentSession else {
             assertionFailure()
@@ -157,16 +157,18 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
 
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
-            session.createPaymentDetails(
-                paymentMethodParams: paymentMethodParams,
-                with: apiClient,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
+            Task { @MainActor in
+                session.createPaymentDetails(
+                    paymentMethodParams: paymentMethodParams,
+                    with: apiClient,
+                    consumerAccountPublishableKey: publishableKey,
+                    completion: completionWrapper
+                )
+            }
         }
     }
 
-    func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
+    func sharePaymentDetails(id: String, cvc: String?, completion: @Sendable @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
         guard let session = currentSession else {
             assertionFailure()
             return completion(
@@ -177,13 +179,15 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
 
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
-            session.sharePaymentDetails(
-                with: apiClient,
-                id: id,
-                cvc: cvc,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
+            Task { @MainActor in
+                session.sharePaymentDetails(
+                    with: apiClient,
+                    id: id,
+                    cvc: cvc,
+                    consumerAccountPublishableKey: publishableKey,
+                    completion: completionWrapper
+                )
+            }
         }
     }
 
@@ -191,8 +195,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         guard let session = currentSession else {
             return
         }
-        session.logout(with: apiClient, consumerAccountPublishableKey: publishableKey) { _ in
-            // We don't need to do anything if this fails, the key will expire automatically.
+        Task { @MainActor in
+            session.logout(with: apiClient, consumerAccountPublishableKey: publishableKey) { _ in
+                // We don't need to do anything if this fails, the key will expire automatically.
+            }
         }
     }
 }
@@ -201,7 +207,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
 extension PaymentSheetLinkAccount: Equatable {
 
-    static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
+    nonisolated static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
         return
             (lhs.email == rhs.email && lhs.currentSession == rhs.currentSession
             && lhs.publishableKey == rhs.publishableKey)
@@ -213,11 +219,11 @@ extension PaymentSheetLinkAccount: Equatable {
 
 private extension PaymentSheetLinkAccount {
 
-    typealias CompletionBlock<T> = (Result<T, Error>) -> Void
+    typealias CompletionBlock<T: Sendable> = @Sendable (Result<T, Error>) -> Void
 
     func retryingOnAuthError<T>(
         completion: @escaping CompletionBlock<T>,
-        apiCall: @escaping (@escaping CompletionBlock<T>) -> Void
+        apiCall: @escaping @Sendable (@escaping CompletionBlock<T>) -> Void
     ) {
         apiCall { [weak self] result in
             switch result {
@@ -228,12 +234,14 @@ private extension PaymentSheetLinkAccount {
                     (error.domain == STPError.stripeDomain && error.code == STPErrorCode.authenticationError.rawValue)
 
                 if isAuthError {
-                    self?.refreshSession { refreshSessionResult in
-                        switch refreshSessionResult {
-                        case .success:
-                            apiCall(completion)
-                        case .failure:
-                            completion(result)
+                    Task { @MainActor in
+                        self?.refreshSession { refreshSessionResult in
+                            switch refreshSessionResult {
+                            case .success:
+                                apiCall(completion)
+                            case .failure:
+                                completion(result)
+                            }
                         }
                     }
                 } else {
@@ -243,8 +251,8 @@ private extension PaymentSheetLinkAccount {
         }
     }
 
-    func refreshSession(
-        completion: @escaping (Result<Void, Error>) -> Void
+    @MainActor func refreshSession(
+        completion: @escaping @Sendable (Result<Void, Error>) -> Void
     ) {
         // The consumer session lookup endpoint currently serves as our endpoint for
         // refreshing the session. To refresh the session, we need to call this endpoint

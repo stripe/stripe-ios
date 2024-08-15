@@ -15,7 +15,7 @@ import UIKit
  
  For internal SDK use only
  */
-@_spi(STP) public final class DropdownFieldElement {
+@_spi(STP) public final class DropdownFieldElement: @unchecked Sendable {
     public typealias DidPresent = () -> Void
     public typealias DidUpdateSelectedIndex = (Int) -> Void
     public typealias DidTapClose = () -> Void
@@ -300,7 +300,7 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
 
 // MARK: - DebugDescription
 extension DropdownFieldElement {
-    public var debugDescription: String {
+    nonisolated public var debugDescription: String {
         return "<DropdownFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(label ?? "nil"); validationState = \(validationState)"
     }
 }

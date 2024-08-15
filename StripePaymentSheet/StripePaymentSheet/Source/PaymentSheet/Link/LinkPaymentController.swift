@@ -14,7 +14,7 @@ import UIKit
 
 /// `LinkPaymentController` encapsulates the Link payment flow, allowing you to let your customers pay with their Link account.
 /// This feature is currently invite-only. To accept payments, [use the Mobile Payment Element.](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet)
-@_spi(LinkOnly) public class LinkPaymentController: NSObject {
+@_spi(LinkOnly) @MainActor public class LinkPaymentController: NSObject {
     private let mode: PaymentSheet.InitializationMode
     private let configuration: PaymentSheet.Configuration
 
@@ -193,22 +193,24 @@ import UIKit
             instantDebitsOnlyAuthenticationSessionManager?
                 .start(manifest: manifest)
                 .observe { [weak self] result in
-                    guard let self = self else { return }
-                    switch result {
-                    case .success(let successResult):
-                        switch successResult {
-                        case .success(let details):
-                            self.paymentMethodId = details.paymentMethodID
-                            self.payWithLinkContinuation?.resume(returning: ())
-                        case.canceled:
+                    Task { @MainActor in
+                        guard let self = self else { return }
+                        switch result {
+                        case .success(let successResult):
+                            switch successResult {
+                            case .success(let details):
+                                self.paymentMethodId = details.paymentMethodID
+                                self.payWithLinkContinuation?.resume(returning: ())
+                            case.canceled:
+                                self.paymentMethodId = nil
+                                self.payWithLinkContinuation?.resume(throwing: Error.canceled)
+                            }
+                        case .failure(let error):
                             self.paymentMethodId = nil
-                            self.payWithLinkContinuation?.resume(throwing: Error.canceled)
+                            self.payWithLinkContinuation?.resume(throwing: error)
                         }
-                    case .failure(let error):
-                        self.paymentMethodId = nil
-                        self.payWithLinkContinuation?.resume(throwing: error)
+                        self.payWithLinkContinuation = nil
                     }
-                    self.payWithLinkContinuation = nil
                 }
         }
     }

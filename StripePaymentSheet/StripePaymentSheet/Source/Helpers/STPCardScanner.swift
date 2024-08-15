@@ -7,7 +7,7 @@
 //
 #if !canImport(CompositorServices)
 
-import AVFoundation
+@preconcurrency import AVFoundation
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -22,7 +22,7 @@ enum STPCardScannerError: Int {
 
 @available(macCatalyst 14.0, *)
 @objc protocol STPCardScannerDelegate: NSObjectProtocol {
-    @objc(cardScanner:didFinishWithCardParams:error:) func cardScanner(
+    @objc(cardScanner:didFinishWithCardParams:error:) @MainActor func cardScanner(
         _ scanner: STPCardScanner,
         didFinishWith cardParams:
         STPPaymentMethodCardParams?,
@@ -30,7 +30,7 @@ enum STPCardScannerError: Int {
 }
 
 @available(macCatalyst 14.0, *)
-@objc(STPCardScanner)
+@MainActor @objc(STPCardScanner)
 class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     static let cardScanningAvailableCameraHasUsageDescription = {
@@ -113,7 +113,9 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         captureSessionQueue?.async(execute: {
             #if targetEnvironment(simulator)
                 // Camera not supported on Simulator
+            Task { @MainActor in
                 self.stopWithError(STPCardScanner.stp_cardScanningError())
+            }
                 return
             #else
                 self.detectedNumbers = NSCountedSet()
@@ -257,29 +259,31 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     // MARK: Processing
-    func captureOutput(
+    nonisolated func captureOutput(
         _ output: AVCaptureOutput,
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
-        if !isScanning {
-            return
-        }
-        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        if pixelBuffer == nil {
-            return
-        }
-        textRequest?.recognitionLevel = .accurate
-        textRequest?.usesLanguageCorrection = false
-        textRequest?.regionOfInterest = regionOfInterest
-        var handler: VNImageRequestHandler?
-        if let pixelBuffer = pixelBuffer {
-            handler = VNImageRequestHandler(
-                cvPixelBuffer: pixelBuffer, orientation: textOrientation, options: [:])
-        }
-        do {
-            try handler?.perform([textRequest].compactMap { $0 })
-        } catch {
+        MainActor.assumeIsolated {
+            if !isScanning {
+                return
+            }
+            let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+            if pixelBuffer == nil {
+                return
+            }
+            textRequest?.recognitionLevel = .accurate
+            textRequest?.usesLanguageCorrection = false
+            textRequest?.regionOfInterest = regionOfInterest
+            var handler: VNImageRequestHandler?
+            if let pixelBuffer = pixelBuffer {
+                handler = VNImageRequestHandler(
+                    cvPixelBuffer: pixelBuffer, orientation: textOrientation, options: [:])
+            }
+            do {
+                try handler?.perform([textRequest].compactMap { $0 })
+            } catch {
+            }
         }
     }
 
@@ -381,9 +385,11 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             videoDataOutputQueue?.asyncAfter(
                 deadline: DispatchTime.now() + kSTPCardScanningTimeout,
                 execute: {
-                    let strongSelf = weakSelf
-                    if strongSelf?.isScanning ?? false {
-                        strongSelf?.finishIfReady()
+                    Task { @MainActor in
+                        let strongSelf = weakSelf
+                        if strongSelf?.isScanning ?? false {
+                            strongSelf?.finishIfReady()
+                        }
                     }
                 })
         }
@@ -485,7 +491,10 @@ let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 /// :nodoc:
 @available(macCatalyst 14.0, *)
 extension STPCardScanner: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPCardScanner"
+    nonisolated static let stp_analyticsIdentifier = "STPCardScanner"
 }
+
+// TODO(porter) Is this the best approach for Swift 6?
+extension CMSampleBuffer: @unchecked @retroactive Sendable {}
 
 #endif

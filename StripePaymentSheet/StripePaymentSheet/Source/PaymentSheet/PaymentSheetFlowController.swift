@@ -18,7 +18,7 @@ typealias PaymentOption = PaymentSheet.PaymentOption
 
 extension PaymentSheet {
     /// Represents the ways a customer can pay in PaymentSheet
-    enum PaymentOption {
+    enum PaymentOption: @unchecked Sendable {
         case applePay
         case saved(paymentMethod: STPPaymentMethod, confirmParams: IntentConfirmParams?)
         case new(confirmParams: IntentConfirmParams)
@@ -80,7 +80,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
-    public class FlowController {
+    @MainActor public class FlowController {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
         public struct PaymentOptionDisplayData {
@@ -98,7 +98,7 @@ extension PaymentSheet {
             /// - If this is Apple Pay, the value is "apple_pay"
             public let paymentMethodType: String
 
-            init(paymentOption: PaymentOption) {
+            @MainActor init(paymentOption: PaymentOption) {
                 image = paymentOption.makeIcon(updateImageHandler: nil)
                 switch paymentOption {
                 case .applePay:
@@ -331,7 +331,7 @@ extension PaymentSheet {
         /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed
         public func confirm(
             from presentingViewController: UIViewController,
-            completion: @escaping (PaymentSheetResult) -> Void
+            completion: @escaping @Sendable (PaymentSheetResult) -> Void
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
 
@@ -391,11 +391,13 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     isFlowController: true
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
-                    analyticsHelper.logPayment(
-                        paymentOption: paymentOption,
-                        result: result,
-                        deferredIntentConfirmationType: deferredIntentConfirmationType
-                    )
+                    Task { @MainActor in
+                        analyticsHelper.logPayment(
+                            paymentOption: paymentOption,
+                            result: result,
+                            deferredIntentConfirmationType: deferredIntentConfirmationType
+                        )
+                    }
                     if case .completed = result, case .link = paymentOption {
                         // Remember Link as default payment method for users who just created an account.
                         CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
@@ -507,7 +509,7 @@ extension PaymentSheet {
 
 // MARK: - FlowControllerViewControllerDelegate
 
-protocol FlowControllerViewControllerDelegate: AnyObject {
+@MainActor protocol FlowControllerViewControllerDelegate: AnyObject {
     func flowControllerViewControllerShouldClose(
         _ PaymentSheetFlowControllerViewController: FlowControllerViewControllerProtocol, didCancel: Bool)
 }
@@ -530,7 +532,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
 @_spi(STP) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
+    @_spi(STP) nonisolated public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }
 
 // MARK: - PaymentSheetAuthenticationContext
@@ -568,7 +570,7 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
 // MARK: - FlowControllerViewControllerProtocol
 
 /// All the things FlowController needs from its UIViewController.
-internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewController {
+@MainActor internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewController {
     var error: Error? { get }
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }

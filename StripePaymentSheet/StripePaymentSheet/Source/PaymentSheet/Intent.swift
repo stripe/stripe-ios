@@ -18,7 +18,7 @@ import UIKit
 // MARK: - Intent
 
 /// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
-enum Intent {
+enum Intent: @unchecked Sendable {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)

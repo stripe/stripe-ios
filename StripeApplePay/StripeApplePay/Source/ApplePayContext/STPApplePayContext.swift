@@ -105,7 +105,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// A special string that can be passed in place of a intent client secret to force showing success and return a PaymentState of `success`.
     /// - Note: ⚠️ If provided, the SDK performs no action to complete the payment or setup - it doesn't confirm a PaymentIntent or SetupIntent or handle next actions.
     ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful. 
-    @_spi(STP) public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
+    @_spi(STP) nonisolated public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
 
     /// Initializes this class.
     /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
@@ -730,7 +730,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     }
 
-    @_spi(STP) public static func makeUnknownError(message: String) -> NSError {
+    @_spi(STP) nonisolated public static func makeUnknownError(message: String) -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
             STPError.errorMessageKey: message,
@@ -743,7 +743,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     /// This is STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue, which we don't want to vend from this framework.
-    fileprivate static let STPPaymentHandlerErrorCodeIntentStatusErrorCode = 3
+    nonisolated fileprivate static let STPPaymentHandlerErrorCodeIntentStatusErrorCode = 3
 
     enum PaymentState {
         case notStarted
@@ -753,7 +753,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     /// An enum representing the status of a payment requested from the user.
-    @frozen public enum PaymentStatus {
+    @frozen public enum PaymentStatus: Sendable {
         /// The payment succeeded.
         case success
         /// The payment failed due to an unforeseen error, such as the user's Internet connection being offline.

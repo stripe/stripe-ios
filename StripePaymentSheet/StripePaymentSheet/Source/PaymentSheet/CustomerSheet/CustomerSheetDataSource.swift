@@ -5,7 +5,7 @@
 
 import Foundation
 
-class CustomerSheetDataSource {
+@MainActor class CustomerSheetDataSource {
     enum DataSource {
         case customerSession(CustomerSessionAdapter)
         case customerAdapter(CustomerAdapter)
@@ -56,11 +56,12 @@ class CustomerSheetDataSource {
     }
 
     func loadPaymentMethodInfo(customerAdapter: CustomerAdapter, completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
+        let paymentMethodTypes = customerAdapter.paymentMethodTypes
         Task {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try customerAdapter.fetchSelectedPaymentOption()
-                async let elementsSessionResult = try self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes,
+                async let elementsSessionResult = try self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
                                                                                                                                    clientDefaultPaymentMethod: nil,
                                                                                                                                    customerSessionClientSecret: nil)
 
@@ -80,13 +81,7 @@ class CustomerSheetDataSource {
     }
 
     func loadFormSpecs() async {
-        await withCheckedContinuation { continuation in
-            Task {
-                FormSpecProvider.shared.load { _ in
-                    continuation.resume()
-                }
-            }
-        }
+        await FormSpecProvider.shared.load()
     }
 }
 
@@ -136,7 +131,7 @@ extension CustomerSheetDataSource {
             return try await customerSessionAdapter.intentConfiguration.setupIntentClientSecretProvider()
         }
     }
-    func fetchElementsSession(setupIntentClientSecret: String) async throws -> (STPSetupIntent, STPElementsSession) {
+    @MainActor func fetchElementsSession(setupIntentClientSecret: String) async throws -> (STPSetupIntent, STPElementsSession) {
         switch dataSource {
         case .customerAdapter:
             return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: setupIntentClientSecret,

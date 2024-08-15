@@ -2501,7 +2501,7 @@ extension STPPaymentHandler {
 }
 
 /// Internal authentication context for PaymentSheet magic
-@_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
+@_spi(STP) @MainActor public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)

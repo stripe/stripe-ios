@@ -37,7 +37,7 @@ extension STPAnalyticsClient {
     }
 
     func logLinkSignupFailure(error: Error) {
-        var params: [String: Any] = [:]
+        var params: [String: Sendable] = [:]
         if let stripeError = error as? StripeError,
            case .apiError(let stripeAPIError) = stripeError,
            let message = stripeAPIError.message{
@@ -89,7 +89,7 @@ extension STPAnalyticsClient {
 
     func logLinkPopupError(error: Error?, returnURL: URL?, sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
-        var params: [String: Any] = [:]
+        var params: [String: Sendable] = [:]
         if let redactedURL = LinkPopupURLParser.redactedURLForLogging(url: returnURL) {
             params["returnURL"] = redactedURL
         }
@@ -109,7 +109,7 @@ extension STPAnalyticsClient {
         duration: TimeInterval? = nil,
         sessionType: LinkSettings.PopupWebviewOption,
         error: Error? = nil) {
-            var params: [String: Any] = [:]
+            var params: [String: Sendable] = [:]
             if let error = error {
                 params["error"] = error.localizedDescription
             }

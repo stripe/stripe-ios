@@ -9,7 +9,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class LinkEnabledPaymentMethodElement: ContainerElement {
+@MainActor final class LinkEnabledPaymentMethodElement: ContainerElement {
     public lazy var elements: [Element] = { [paymentMethodElement, inlineSignupElement] }()
 
     struct Constants {

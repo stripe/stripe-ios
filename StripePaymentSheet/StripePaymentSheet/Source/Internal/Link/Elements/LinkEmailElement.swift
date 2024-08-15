@@ -9,7 +9,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-class LinkEmailElement: Element {
+@MainActor class LinkEmailElement: Element {
     let collectsUserInput: Bool = true
 
     weak var delegate: ElementDelegate?
