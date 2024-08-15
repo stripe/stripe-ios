@@ -31,7 +31,15 @@ final class InstantDebitsUITests: XCTestCase {
 
         let phoneTextField = app.textFields["phone_text_field"]
         XCTAssertTrue(phoneTextField.waitForExistence(timeout: 10.0), "Failed to find phone text field")
-        phoneTextField.typeText("6135555555")
+
+        let countryCodeSelector = app.otherElements["phone_country_code_selector"]
+        XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
+        countryCodeSelector.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
+        app.toolbars.buttons["Done"].tap()
+
+        phoneTextField.tap()
+        phoneTextField.typeText("4015006000")
 
         let linkLoginCtaButton = app.buttons["link_login.primary_button"]
         XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
