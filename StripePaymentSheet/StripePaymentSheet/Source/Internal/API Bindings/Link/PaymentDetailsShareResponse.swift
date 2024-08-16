@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-final class PaymentDetailsShareResponse: NSObject, STPAPIResponseDecodable {
+final class PaymentDetailsShareResponse: NSObject, STPAPIResponseDecodable, @unchecked Sendable {
     static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard
             let response,
