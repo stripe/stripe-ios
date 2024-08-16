@@ -13,7 +13,8 @@ import UIKit
 protocol LinkAccountPickerViewControllerDelegate: AnyObject {
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        hideBackButtonOnNextPane: Bool
     )
 
     func linkAccountPickerViewController(
@@ -116,7 +117,15 @@ final class LinkAccountPickerViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let networkedAccountsResponse):
-                    if let returningNetworkingUserAccountPicker = networkedAccountsResponse.display?.text?.returningNetworkingUserAccountPicker {
+                    if networkedAccountsResponse.data.isEmpty {
+                        let nextPaneOnAddAccount = dataSource.nextPaneOnAddAccount ?? .institutionPicker
+                        // Don't show a back button on the next pane so they don't return to an empty list.
+                        self.delegate?.linkAccountPickerViewController(
+                            self,
+                            didRequestNextPane: nextPaneOnAddAccount,
+                            hideBackButtonOnNextPane: true
+                        )
+                    } else if let returningNetworkingUserAccountPicker = networkedAccountsResponse.display?.text?.returningNetworkingUserAccountPicker {
                         self.display(
                             partnerAccounts: networkedAccountsResponse.data,
                             networkingAccountPicker: returningNetworkingUserAccountPicker
@@ -137,7 +146,11 @@ final class LinkAccountPickerViewController: UIViewController {
                             errorName: "FetchNetworkedAccountsError",
                             pane: .linkAccountPicker
                         )
-                    self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
+                    self.delegate?.linkAccountPickerViewController(
+                        self,
+                        didRequestNextPane: .institutionPicker,
+                        hideBackButtonOnNextPane: false
+                    )
                 }
             }
     }
@@ -241,7 +254,8 @@ final class LinkAccountPickerViewController: UIViewController {
             // instead of having the user be stuck, we forward them to pick a bank instead
             delegate?.linkAccountPickerViewController(
                 self,
-                didRequestNextPane: .institutionPicker
+                didRequestNextPane: .institutionPicker,
+                hideBackButtonOnNextPane: false
             )
             return
         }
@@ -291,7 +305,8 @@ final class LinkAccountPickerViewController: UIViewController {
                     case .success:
                         self.delegate?.linkAccountPickerViewController(
                             self,
-                            didRequestNextPane: .success
+                            didRequestNextPane: .success,
+                            hideBackButtonOnNextPane: false
                         )
                     case .failure(let error):
                         self.dataSource
@@ -321,7 +336,8 @@ final class LinkAccountPickerViewController: UIViewController {
                     )
                 delegate?.linkAccountPickerViewController(
                     self,
-                    didRequestNextPane: .institutionPicker
+                    didRequestNextPane: .institutionPicker,
+                    hideBackButtonOnNextPane: false
                 )
             } else if nextPane == .bankAuthRepair {
                 dataSource
@@ -336,11 +352,16 @@ final class LinkAccountPickerViewController: UIViewController {
                     )
                 delegate?.linkAccountPickerViewController(
                     self,
-                    didRequestNextPane: .institutionPicker
+                    didRequestNextPane: .institutionPicker,
+                    hideBackButtonOnNextPane: false
                 )
             } else {
                 // non-sheet next pane -- likely step up
-                delegate?.linkAccountPickerViewController(self, didRequestNextPane: nextPane)
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    didRequestNextPane: nextPane,
+                    hideBackButtonOnNextPane: false
+                )
             }
         }
     }
@@ -461,7 +482,8 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                         } else {
                             self.delegate?.linkAccountPickerViewController(
                                 self,
-                                didRequestNextPane: .institutionPicker
+                                didRequestNextPane: .institutionPicker,
+                                hideBackButtonOnNextPane: false
                             )
                         }
                     }
@@ -479,7 +501,8 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                             )
                         delegate?.linkAccountPickerViewController(
                             self,
-                            didRequestNextPane: .institutionPicker
+                            didRequestNextPane: .institutionPicker,
+                            hideBackButtonOnNextPane: false
                         )
                     }
                 }
@@ -524,7 +547,8 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
             )
         delegate?.linkAccountPickerViewController(
             self,
-            didRequestNextPane: dataSource.nextPaneOnAddAccount ?? .institutionPicker
+            didRequestNextPane: dataSource.nextPaneOnAddAccount ?? .institutionPicker,
+            hideBackButtonOnNextPane: false
         )
     }
 }

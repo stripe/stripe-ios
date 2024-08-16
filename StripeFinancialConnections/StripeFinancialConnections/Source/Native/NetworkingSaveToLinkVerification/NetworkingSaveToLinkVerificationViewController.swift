@@ -11,6 +11,10 @@ import Foundation
 import UIKit
 
 protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
+    func networkingSaveToLinkVerificationViewController(
+        _ viewController: NetworkingSaveToLinkVerificationViewController,
+        didReceiveConsumerPublishableKey consumerPublishableKey: String
+    )
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         saveToLinkWithStripeSucceeded: Bool?,
@@ -144,6 +148,10 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false)
         showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
+        delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {

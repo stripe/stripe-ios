@@ -13,6 +13,10 @@ import UIKit
 protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
+        didReceiveConsumerPublishableKey consumerPublishableKey: String
+    )
+    func networkingLinkStepUpVerificationViewController(
+        _ viewController: NetworkingLinkStepUpVerificationViewController,
         didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution
     )
     func networkingLinkStepUpVerificationViewController(
@@ -131,6 +135,10 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
 // MARK: - NetworkingOTPViewDelegate
 
 extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDelegate {
+
+    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
+        delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
+    }
 
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
         if !didShowContent {

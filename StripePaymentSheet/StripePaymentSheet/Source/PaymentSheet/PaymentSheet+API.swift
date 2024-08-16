@@ -57,8 +57,8 @@ extension PaymentSheet {
             _preconfirmShim?(hostingController)
         } else if case let .saved(paymentMethod, _) = paymentOption,
                   paymentMethod.type == .card,
-                  intent.cvcRecollectionEnabled,
-                  isFlowController {
+                  isFlowController,
+                  intent.cvcRecollectionEnabled {
             // MARK: - CVC Recollection
             let presentingViewController = authenticationContext.authenticationPresentingViewController()
 
@@ -416,8 +416,8 @@ extension PaymentSheet {
                                 // If passthrough mode, share payment details
                                 linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
                                     switch result {
-                                    case .success(let shareResponse):
-                                        confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod, type: .card), linkAccount, shouldSave)
+                                    case .success(let paymentDetailsShareResponse):
+                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
                                     case .failure(let error):
                                         STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
@@ -447,7 +447,6 @@ extension PaymentSheet {
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)

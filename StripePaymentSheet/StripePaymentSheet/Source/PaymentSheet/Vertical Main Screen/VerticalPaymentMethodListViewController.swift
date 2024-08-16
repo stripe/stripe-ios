@@ -238,4 +238,17 @@ enum VerticalPaymentMethodListSelection: Equatable {
             return false
         }
     }
+
+    var analyticsIdentifier: String {
+        switch self {
+        case .applePay:
+            return "apple_pay"
+        case .link:
+            return "link"
+        case .saved:
+            return "saved"
+        case .new(paymentMethodType: let type):
+            return type.identifier
+        }
+    }
 }
