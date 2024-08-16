@@ -335,7 +335,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
             form.getTextFieldElement("MM / YY").setText("1232")
             form.getTextFieldElement("CVC").setText("123")
             form.getTextFieldElement("ZIP").setText("65432")
-            let saveCardForFuture = "Save this card for future"
+            let saveCardForFuture = "Save payment details to"
             switch checkbox {
             case .checked:
                 form.getCheckboxElement(startingWith: saveCardForFuture)!.isSelected = true

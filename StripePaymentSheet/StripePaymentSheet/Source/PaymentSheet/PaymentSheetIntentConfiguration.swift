@@ -80,10 +80,13 @@ public extension PaymentSheet {
             self.paymentMethodConfigurationId = paymentMethodConfigurationId
             self.confirmHandler = confirmHandler
             self.isCVCRecollectionEnabledCallback = isCVCRecollectionEnabledCallback ?? { return false }
+            validate()
         }
 
         /// Information about the payment (PaymentIntent) or setup (SetupIntent).
-        public var mode: Mode
+        public var mode: Mode {
+            didSet { validate() }
+        }
 
         /// A list of payment method types to display to the customer. If nil, we dynamically determine the payment methods using your Stripe Dashboard settings.
         public var paymentMethodTypes: [String]?
@@ -159,6 +162,8 @@ public extension PaymentSheet {
             )
         }
 
+        // MARK: - Internal
+
         /// An async version of `ConfirmHandler`.
         typealias AsyncConfirmHandler = (
             _ paymentMethod: STPPaymentMethod,
@@ -187,6 +192,16 @@ public extension PaymentSheet {
             }
             // TODO
             self.isCVCRecollectionEnabledCallback = { return false }
+        }
+
+        @discardableResult
+        func validate() -> Error? {
+            let errorMessage: String
+            if case .payment(let amount, _, _, _) = mode, amount <= 0 {
+                errorMessage = "The amount in `PaymentSheet.IntentConfiguration` must be non-zero! See https://docs.stripe.com/api/payment_intents/create#create_payment_intent-amount"
+                return PaymentSheetError.intentConfigurationValidationFailed(message: errorMessage)
+            }
+            return nil
         }
     }
 }

@@ -618,7 +618,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.buttons["Pay SGD 50.99"].tap()
         app.webViews.webViews.webViews.buttons["Simulate scan"].waitForExistenceAndTap(timeout: 15)
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25.0))
     }
 }
 
@@ -646,7 +646,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.buttons["Pay THB 50.99"].waitForExistenceAndTap(timeout: 5.0))
         app.webViews.webViews.webViews.buttons["Simulate scan"].waitForExistenceAndTap(timeout: 15)
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25.0))
     }
 
     func testSwishPaymentMethod() throws {
@@ -957,7 +957,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: 5))
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 

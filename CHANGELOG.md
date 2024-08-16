@@ -1,12 +1,15 @@
 ## X.Y.Z 2024-XX-YY
 ### PaymentSheet
 * [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
+* [Fixed] Fixed an issue in SwiftUI where setting `isPresented=false` wouldn't dismiss the sheet.
+
 
 ## 23.29.1 2024-08-12
 ### PaymentSheet
 * [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
 * [Fixed] Fixed PaymentSheet.FlowController returning unlocalized labels for certain payment methods e.g. "AfterPay ClearPay" instead of "Afterpay" or "Clearpay" depending on locale.
 * [Changed] Improved card scanner with auto lens selection and dynamic switching for better focus and image quality
+* [Added] `PaymentSheet.IntentConfiguration` now validates that its `amount` is non-zero.
 
 ### PaymentsUI
 * [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed. 
