@@ -1,6 +1,8 @@
 ## X.Y.Z 2024-XX-YY
 ### PaymentSheet
 * [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
+* [Fixed] Fixed an issue in SwiftUI where setting `isPresented=false` wouldn't dismiss the sheet.
+
 
 ## 23.29.1 2024-08-12
 ### PaymentSheet
