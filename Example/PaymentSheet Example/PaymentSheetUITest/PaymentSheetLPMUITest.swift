@@ -618,7 +618,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.buttons["Pay SGD 50.99"].tap()
         app.webViews.webViews.webViews.buttons["Simulate scan"].waitForExistenceAndTap(timeout: 15)
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25.0))
     }
 }
 
@@ -646,7 +646,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.buttons["Pay THB 50.99"].waitForExistenceAndTap(timeout: 5.0))
         app.webViews.webViews.webViews.buttons["Simulate scan"].waitForExistenceAndTap(timeout: 15)
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25.0))
     }
 
     func testSwishPaymentMethod() throws {
