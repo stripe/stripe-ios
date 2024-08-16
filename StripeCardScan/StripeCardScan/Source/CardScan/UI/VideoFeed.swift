@@ -85,32 +85,7 @@ class VideoFeed {
         session.beginConfiguration()
 
         do {
-            var defaultVideoDevice: AVCaptureDevice?
-
-            // Choose the back dual camera if available, otherwise default to a wide angle camera.
-            if let dualCameraDevice = AVCaptureDevice.default(
-                .builtInDualCamera,
-                for: .video,
-                position: .back
-            ) {
-                defaultVideoDevice = dualCameraDevice
-            } else if let backCameraDevice = AVCaptureDevice.default(
-                .builtInWideAngleCamera,
-                for: .video,
-                position: .back
-            ) {
-                // If the back dual camera is not available, default to the back wide angle camera.
-                defaultVideoDevice = backCameraDevice
-            } else if let frontCameraDevice = AVCaptureDevice.default(
-                .builtInWideAngleCamera,
-                for: .video,
-                position: .front
-            ) {
-                // In some cases where users break their phones, the back wide angle camera is not available.
-                // In this case, we should default to the front wide angle camera.
-                defaultVideoDevice = frontCameraDevice
-            }
-
+            var defaultVideoDevice: AVCaptureDevice? = getAvailableVideoDevice()   
             guard let myVideoDevice = defaultVideoDevice else {
                 setupResult = .configurationFailed
                 session.commitConfiguration()
@@ -219,6 +194,49 @@ class VideoFeed {
     func setTorchLevel(level: Float) {
         self.torch?.level = level
     }
+
+`import AVFoundation
+
+enum CameraError: Error {
+    case noAvailableCamera
+}
+
+private func getAvailableVideoDevice() throws -> AVCaptureDevice {
+    // Define a helper function to find a device from a list of device types
+    func findDevice(for deviceTypes: [AVCaptureDevice.DeviceType], position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+        return AVCaptureDevice.DiscoverySession(deviceTypes: deviceTypes, mediaType: .video, position: position).devices.first
+    }
+
+    // Attempt to find the best available back camera
+    if let device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back) {
+        return device
+    } else if let device = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
+        return device
+    } else if let device = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) {
+        return device
+    } else if let device = findDevice(for: [.builtInWideAngleCamera, .builtInTelephotoCamera], position: .back) {
+        return device
+    } else if let device = findDevice(for: [
+        .builtInDualCamera,
+        .builtInTripleCamera,
+        .builtInTelephotoCamera,
+        .builtInDualWideCamera,
+        .builtInTrueDepthCamera,
+        .builtInWideAngleCamera,
+        .builtInUltraWideCamera
+    ], position: .back) {
+        return device
+    }
+
+    // Fallback to front camera if no back camera is available
+    if let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
+        return frontCamera
+    }
+
+    // Throw an error if no cameras are available
+    throw CameraError.noAvailableCamera
+}
+
 
     // MARK: - VC Lifecycle Logic
     func willAppear() {
