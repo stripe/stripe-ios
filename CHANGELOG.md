@@ -8,6 +8,7 @@
 ### PaymentSheet
 * [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
 * [Fixed] Fixed PaymentSheet.FlowController returning unlocalized labels for certain payment methods e.g. "AfterPay ClearPay" instead of "Afterpay" or "Clearpay" depending on locale.
+* [Added] `PaymentSheet.IntentConfiguration` now validates that its `amount` is non-zero.
 
 ### PaymentsUI
 * [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed. 

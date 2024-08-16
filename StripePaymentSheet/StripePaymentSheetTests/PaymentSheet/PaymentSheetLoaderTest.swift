@@ -165,19 +165,19 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
             XCTFail("Confirm handler shouldn't be called.")
         }
-        let intentConfigTestcases: [PaymentSheet.IntentConfiguration] = [
+        let intentConfigTestcases: [(config: PaymentSheet.IntentConfiguration, expectedErrorType: String)] = [
             // Bad currency
-            .init(mode: .payment(amount: 1000, currency: "FOO"), confirmHandler: confirmHandler),
+            (.init(mode: .payment(amount: 1000, currency: "FOO"), confirmHandler: confirmHandler), "invalid_request_error"),
             // Bad amount
-            .init(mode: .payment(amount: 0, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler),
+            (.init(mode: .payment(amount: 0, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler), "StripePaymentSheet.PaymentSheetError"),
             // Bad pm type
-            .init(mode: .setup(currency: "USD"), paymentMethodTypes: ["card", "foo"], confirmHandler: confirmHandler),
+            (.init(mode: .setup(currency: "USD"), paymentMethodTypes: ["card", "foo"], confirmHandler: confirmHandler), "invalid_request_error"),
             // Bad OBO
-            .init(mode: .setup(currency: "USD"), paymentMethodTypes: ["card"], onBehalfOf: "foo", confirmHandler: confirmHandler),
+            (.init(mode: .setup(currency: "USD"), paymentMethodTypes: ["card"], onBehalfOf: "foo", confirmHandler: confirmHandler), "invalid_request_error")
         ]
         loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
-        for (index, intentConfig) in intentConfigTestcases.enumerated() {
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsHelper: analyticsHelper, isFlowController: false) { result in
+        for (index, testcase) in intentConfigTestcases.enumerated() {
+            PaymentSheetLoader.load(mode: .deferredIntent(testcase.config), configuration: self.configuration, analyticsHelper: analyticsHelper, isFlowController: false) { result in
                 loadExpectation.fulfill()
                 switch result {
                 case .success:
@@ -187,7 +187,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 }
                 // Should send a load failure analytic
                 let analyticEvent = analyticsHelper.analyticsClient._testLogHistory.last
-                XCTAssertEqual(analyticEvent?["error_type"] as? String, "invalid_request_error")
+                XCTAssertEqual(analyticEvent?["error_type"] as? String, testcase.expectedErrorType)
                 XCTAssertNotNil(analyticEvent?["error_code"] as? String)
             }
         }

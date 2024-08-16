@@ -404,7 +404,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
             XCTFail("Confirm handler shouldn't be called.")
         }
-        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 0, currency: "USD"), confirmHandler: confirmHandler)
+        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: ._testValue_MostPermissive(),
