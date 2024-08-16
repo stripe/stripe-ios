@@ -354,7 +354,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAuthSessionsOAuthResults,
                     parameters: body,
-                    useConsumerPublishableKeyIfNeeded: false
+                    useConsumerPublishableKeyIfNeeded: true
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsMixedOAuthParams>.PollTimingOptions(
@@ -379,7 +379,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsAuthorized,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
