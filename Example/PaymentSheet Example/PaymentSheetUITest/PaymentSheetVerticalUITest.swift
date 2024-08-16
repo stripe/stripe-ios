@@ -282,7 +282,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
-        app.switches["Save this card for future Example, Inc. payments"].waitForExistenceAndTap()
+        app.switches["Save payment details to Example, Inc. for future purchases"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
