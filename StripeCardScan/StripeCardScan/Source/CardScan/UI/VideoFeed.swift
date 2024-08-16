@@ -85,7 +85,7 @@ class VideoFeed {
         session.beginConfiguration()
 
         do {
-            var defaultVideoDevice: AVCaptureDevice? = getAvailableVideoDevice()
+            var defaultVideoDevice: AVCaptureDevice? = getAvailableCaptureDevice()
 
             guard let myVideoDevice = defaultVideoDevice else {
                 setupResult = .configurationFailed
@@ -195,51 +195,6 @@ class VideoFeed {
     func setTorchLevel(level: Float) {
         self.torch?.level = level
     }
-
-    private func getAvailableVideoDevice() -> AVCaptureDevice? {
-        var captureDevice: AVCaptureDevice? = {
-            if let device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back) {
-                return device
-            } else if let device = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
-                return device
-            } else if let device = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) {
-                return device
-            } else if let device = AVCaptureDevice.DiscoverySession(
-                deviceTypes: [
-                    .builtInWideAngleCamera,
-                    .builtInTelephotoCamera
-                ],
-                mediaType: .video,
-                position: .back
-            ).devices.first {
-                return device
-            } else {
-                return AVCaptureDevice.DiscoverySession(
-                    deviceTypes: [
-                        .builtInDualCamera,
-                        .builtInTripleCamera,
-                        .builtInTelephotoCamera,
-                        .builtInDualWideCamera,
-                        .builtInTrueDepthCamera,
-                        .builtInWideAngleCamera,
-                        .builtInUltraWideCamera
-                    ],
-                    mediaType: .video,
-                    position: .back
-                ).devices.first
-            }
-        }()
-        
-        if captureDevice == nil {
-            captureDevice = AVCaptureDevice.default(
-                .builtInWideAngleCamera,
-                for: .video,
-                position: .front
-            )
-        }
-        
-        return captureDevice
-    }
     
     // MARK: - VC Lifecycle Logic
     func willAppear() {
@@ -261,5 +216,92 @@ class VideoFeed {
                 self.isSessionRunning = self.session.isRunning
             }
         }
+    }
+}
+
+// MARK: - Capture Device
+
+private extension VideoFeed {
+    
+    /// Retrieves the most suitable video capture device based on a prioritized list of back camera types.
+    /// - Returns: The most appropriate `AVCaptureDevice` if found; otherwise, returns a fallback front camera device.
+    ///
+    func getAvailableCaptureDevice() -> AVCaptureDevice? {
+        // Try to get the preferred back camera first
+        if let preferredBackCamera = getPreferredBackCamera() {
+            return preferredBackCamera
+        }
+        
+        // Fallback to any available back camera if preferred types are not found
+        if let fallbackBackCamera = getFallbackBackCamera() {
+            return fallbackBackCamera
+        }
+        
+        /// If no back-facing camera is available, defaults to the front wide-angle camera.
+        return getFallbackFrontCamera()
+    }
+
+    /// Attempts to find the most suitable back camera from a prioritized list of preferred types.
+    /// - Returns: The first available `AVCaptureDevice` from the list of preferred types, or `nil` if none are found.
+    ///
+    func getPreferredBackCamera() -> AVCaptureDevice? {
+        let preferredBackCameraTypes: [AVCaptureDevice.DeviceType] = [
+            .builtInTripleCamera,
+            .builtInDualCamera,
+            .builtInDualWideCamera,
+            .builtInWideAngleCamera,
+            .builtInTelephotoCamera
+        ]
+        
+        return findCaptureDevice(for: .video, position: .back, preferredTypes: preferredBackCameraTypes)
+    }
+
+    /// Attempts to find any available back camera from a broader list of types.
+    /// - Returns: The first available `AVCaptureDevice` from a comprehensive list of device types, or `nil` if none are found.
+    ///
+    func getFallbackBackCamera() -> AVCaptureDevice? {
+        let fallbackBackCameraTypes: [AVCaptureDevice.DeviceType] = [
+            .builtInDualCamera,
+            .builtInTripleCamera,
+            .builtInTelephotoCamera,
+            .builtInDualWideCamera,
+            .builtInTrueDepthCamera,
+            .builtInWideAngleCamera,
+            .builtInUltraWideCamera
+        ]
+        
+        return findFirstAvailableCaptureDevice(for: .video, position: .back, types: fallbackBackCameraTypes)
+    }
+
+    /// Provides a fallback option by returning the front wide-angle camera.
+    /// - Returns: The front wide-angle `AVCaptureDevice`, or `nil` if unavailable.
+    ///
+    func getFallbackFrontCamera() -> AVCaptureDevice? {
+        return AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+    }
+
+    /// Searches for the first available `AVCaptureDevice` that matches any of the provided types.
+    /// - Parameters:
+    ///   - mediaType: The media type, typically `.video`.
+    ///   - position: The desired position of the camera, such as `.back` or `.front`.
+    ///   - preferredTypes: A prioritized list of `AVCaptureDevice.DeviceType` to search for.
+    /// - Returns: The first available `AVCaptureDevice` matching one of the preferred types, or `nil` if none are found.
+    ///
+    func findCaptureDevice(for mediaType: AVMediaType, position: AVCaptureDevice.Position, preferredTypes: [AVCaptureDevice.DeviceType]) -> AVCaptureDevice? {
+        return preferredTypes.compactMap {
+            AVCaptureDevice.default($0, for: mediaType, position: position)
+        }.first
+    }
+
+    /// Searches for the first available `AVCaptureDevice` using a discovery session.
+    /// - Parameters:
+    ///   - mediaType: The media type, typically `.video`.
+    ///   - position: The desired position of the camera, such as `.back` or `.front`.
+    ///   - types: A list of `AVCaptureDevice.DeviceType` to include in the discovery session.
+    /// - Returns: The first available `AVCaptureDevice` discovered, or `nil` if none are found.
+    ///
+    func findFirstAvailableCaptureDevice(for mediaType: AVMediaType, position: AVCaptureDevice.Position, types: [AVCaptureDevice.DeviceType]) -> AVCaptureDevice? {
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: types, mediaType: mediaType, position: position)
+        return discoverySession.devices.first
     }
 }
