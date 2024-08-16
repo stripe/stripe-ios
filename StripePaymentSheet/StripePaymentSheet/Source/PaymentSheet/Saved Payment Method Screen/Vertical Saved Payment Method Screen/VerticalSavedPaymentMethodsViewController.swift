@@ -34,6 +34,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let isCBCEligible: Bool
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private var updateViewController: UpdateCardViewController?
 
@@ -150,14 +151,18 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
 
-    init(configuration: PaymentSheet.Configuration,
-         selectedPaymentMethod: STPPaymentMethod?,
-         paymentMethods: [STPPaymentMethod],
-         elementsSession: STPElementsSession) {
+    init(
+        configuration: PaymentSheet.Configuration,
+        selectedPaymentMethod: STPPaymentMethod?,
+        paymentMethods: [STPPaymentMethod],
+        elementsSession: STPElementsSession,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
+        self.analyticsHelper = analyticsHelper
         // Put in remove only mode and don't show the option to update PMs if:
         // 1. We only have 1 payment method
         // 2. The customer can't update the card brand 
@@ -271,6 +276,7 @@ extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
 extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButtonDelegate {
 
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
+        analyticsHelper.logSavedPMScreenOptionSelected(option: .saved(paymentMethod: paymentMethod))
         // Set payment method as default
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),

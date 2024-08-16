@@ -151,7 +151,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
         )
         XCTAssertTrue((sut.internalViewController is STPAddCardViewController))
         let cancelButton = sut.internalViewController?.navigationItem.leftBarButtonItem
-        cancelButton?.target?.perform(cancelButton?.action, with: cancelButton)
+        _ = cancelButton?.target?.perform(cancelButton?.action, with: cancelButton)
 
         XCTAssertTrue(delegate.didCancel)
     }

@@ -24,14 +24,34 @@ class PaymentMethodFormViewController: UIViewController {
     let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
-        // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have a divergent path for link. Where is the setDefaultBillingDetailsIfNecessary call, for example?
-        if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
-            return linkEnabledElement.makePaymentOption(intent: intent, elementsSession: elementsSession)
-        }
 
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
+
         if let params = form.updateParams(params: params) {
+            if let linkInlineSignupElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? LinkInlineSignupElement }).first {
+                switch linkInlineSignupElement.action {
+                case .signupAndPay(let account, let phoneNumber, let legalName):
+                    return .link(
+                        option: .signUp(
+                            account: account,
+                            phoneNumber: phoneNumber,
+                            consentAction: linkInlineSignupElement.viewModel.consentAction,
+                            legalName: legalName,
+                            intentConfirmParams: params
+                        )
+                    )
+                case .continueWithoutLink:
+                    return .new(confirmParams: params)
+                case .none:
+                    // Link is optional when in textFieldOnly mode
+                    if linkInlineSignupElement.viewModel.mode != .checkbox {
+                        return .new(confirmParams: params)
+                    }
+                    return nil
+                }
+            }
+
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }

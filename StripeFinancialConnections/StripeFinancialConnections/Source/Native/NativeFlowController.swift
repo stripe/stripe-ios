@@ -798,6 +798,12 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
         pushPane(.networkingLinkVerification, animated: true)
     }
 
+    func networkingLinkLoginWarmupViewControllerDidSelectCancel(
+        _ viewController: NetworkingLinkLoginWarmupViewController
+    ) {
+        viewController.dismiss(animated: true)
+    }
+
     func networkingLinkLoginWarmupViewController(
         _ viewController: NetworkingLinkLoginWarmupViewController,
         didSelectSkipWithManifest manifest: FinancialConnectionsSessionManifest
@@ -875,16 +881,18 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
 // MARK: - NetworkingLinkVerificationViewControllerDelegate
 
 extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate {
+    func networkingLinkVerificationViewController(_ viewController: NetworkingLinkVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
+        dataManager.consumerPublishableKey = consumerPublishableKey
+    }
 
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData?
+        consumerSession: ConsumerSessionData?,
+        preventBackNavigation: Bool
     ) {
-        if let consumerSession = consumerSession {
-            dataManager.consumerSession = consumerSession
-        }
-        pushPane(nextPane, animated: true)
+        dataManager.consumerSession = consumerSession
+        pushPane(nextPane, animated: true, clearNavigationStack: preventBackNavigation)
     }
 
     func networkingLinkVerificationViewController(
@@ -916,9 +924,10 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        hideBackButtonOnNextPane: Bool
     ) {
-        pushPane(nextPane, animated: true)
+        pushPane(nextPane, animated: true, clearNavigationStack: hideBackButtonOnNextPane)
     }
 
     func linkAccountPickerViewController(
@@ -939,6 +948,11 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 // MARK: - NetworkingSaveToLinkVerificationDelegate
 
 extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
+
+    func networkingSaveToLinkVerificationViewController(_ viewController: NetworkingSaveToLinkVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
+        dataManager.consumerPublishableKey = consumerPublishableKey
+    }
+
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         saveToLinkWithStripeSucceeded: Bool?,
@@ -962,6 +976,10 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
 // MARK: - NetworkingLinkStepUpVerificationViewControllerDelegate
 
 extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDelegate {
+
+    func networkingLinkStepUpVerificationViewController(_ viewController: NetworkingLinkStepUpVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
+        dataManager.consumerPublishableKey = consumerPublishableKey
+    }
 
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
@@ -1010,7 +1028,7 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         signedUpAttachedAndSynchronized synchronizePayload: FinancialConnectionsSynchronize
     ) {
         dataManager.manifest = synchronizePayload.manifest
-        pushPane(synchronizePayload.manifest.nextPane, animated: true)
+        pushPane(synchronizePayload.manifest.nextPane, animated: true, clearNavigationStack: true)
     }
 
     func linkLoginViewController(
@@ -1200,6 +1218,7 @@ private func CreatePaneViewController(
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
+                returnURL: dataManager.returnURL,
                 analyticsClient: dataManager.analyticsClient
             )
             let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)

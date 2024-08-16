@@ -41,8 +41,10 @@ import UIKit
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
-        case .legacy, .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+        case .legacy:
             return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+            return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
             return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:

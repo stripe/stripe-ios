@@ -207,6 +207,7 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
+            "expand": ["payment_method"],
             "id": id,
         ]
 
@@ -214,12 +215,18 @@ extension STPAPIClient {
             parameters["payment_method_options"] = ["card": ["cvc": cvc]]
         }
 
-        post(
-            resource: endpoint,
-            parameters: parameters,
-            ephemeralKeySecret: nil,
-            completion: completion
-        )
+        APIRequest<PaymentDetailsShareResponse>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { paymentDetailsShareResponse, _, error in
+            guard let paymentDetailsShareResponse else {
+                stpAssert(error != nil)
+                completion(.failure(error ?? NSError.stp_genericConnectionError()))
+                return
+            }
+            completion(.success(paymentDetailsShareResponse))
+        }
     }
 
     func logout(

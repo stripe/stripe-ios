@@ -620,6 +620,11 @@ extension PlaygroundController {
     func confirmHandler(_ paymentMethod: STPPaymentMethod,
                         _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        // Sanity check the payment method
+        if paymentMethod.type == .card {
+            assert(paymentMethod.card != nil)
+        }
+
         switch settings.integrationType {
         case .deferred_mp:
             // multiprocessor

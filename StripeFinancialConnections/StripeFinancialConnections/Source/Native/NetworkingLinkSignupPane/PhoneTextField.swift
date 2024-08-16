@@ -84,7 +84,8 @@ final class PhoneTextField: UIView {
             defaultCountryCode = e164PhoneNumber.countryCode
         }
         self.countryCodeSelectorView = PhoneCountryCodeSelectorView(
-            defaultCountryCode: defaultCountryCode
+            defaultCountryCode: defaultCountryCode,
+            theme: theme
         )
         self.theme = theme
         super.init(frame: .zero)

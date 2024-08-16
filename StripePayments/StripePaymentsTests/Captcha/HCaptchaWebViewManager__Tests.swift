@@ -19,7 +19,7 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        presenterView = UIApplication.shared.keyWindow?.rootViewController?.view
+        presenterView = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController?.view
         apiKey = UUID().uuidString
     }
 

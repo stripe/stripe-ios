@@ -833,7 +833,6 @@ extension STPAPIClient {
         ) { paymentMethod, _, error in
             completion(paymentMethod, error)
         }
-
     }
 
     /// Creates a PaymentMethod object with the provided params object.

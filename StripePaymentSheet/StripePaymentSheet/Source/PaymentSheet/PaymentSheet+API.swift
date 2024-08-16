@@ -57,8 +57,8 @@ extension PaymentSheet {
             _preconfirmShim?(hostingController)
         } else if case let .saved(paymentMethod, _) = paymentOption,
                   paymentMethod.type == .card,
-                  intent.cvcRecollectionEnabled,
-                  isFlowController {
+                  isFlowController,
+                  intent.cvcRecollectionEnabled {
             // MARK: - CVC Recollection
             let presentingViewController = authenticationContext.authenticationPresentingViewController()
 
@@ -133,8 +133,7 @@ extension PaymentSheet {
         case let .new(confirmParams):
             // Set allow_redisplay on params
             confirmParams.setAllowRedisplay(
-                paymentMethodSave: elementsSession.customerSessionPaymentSheetFeatures?.paymentMethodSave,
-                allowRedisplayOverride: elementsSession.customerSessionPaymentSheetFeatures?.paymentMethodSaveAllowRedisplayOverride,
+                paymentSheetFeatures: elementsSession.customerSessionPaymentSheetFeatures,
                 isSettingUp: intent.isSettingUp
             )
             switch intent {
@@ -418,8 +417,8 @@ extension PaymentSheet {
                                 linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
                                     Task { @MainActor in
                                         switch result {
-                                        case .success(let shareResponse):
-                                            confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod, type: .card), linkAccount, shouldSave)
+                                        case .success(let paymentDetailsShareResponse):
+                                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
                                         case .failure(let error):
                                             STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                             // If this fails, confirm directly

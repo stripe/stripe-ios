@@ -86,7 +86,6 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
-            isPaymentSheet: true,
             delegate: self
         )
         return view
@@ -186,6 +185,7 @@ class AddPaymentMethodViewController: UIViewController {
 
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
+        analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
 #if !canImport(CompositorServices)
             UISelectionFeedbackGenerator().selectionChanged()
 #endif

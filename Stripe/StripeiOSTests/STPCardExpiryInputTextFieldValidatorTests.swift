@@ -78,9 +78,9 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
         }
 
         let nineties = "01/95"
-        validator.inputValue = nonsensical
+        validator.inputValue = nineties
         if case .invalid(let errorMessage) = validator.validationState {
-            XCTAssertEqual(errorMessage, "Your card's expiration date is invalid.")
+            XCTAssertEqual(errorMessage, "Your card's expiration year is invalid.")
         } else {
             XCTFail("The 90s are over")
         }
