@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Запазване за бъдещи плащания";
 
-"Save this account for future %@ payments" = "Запазете тази сметка за следващи %@ плащания";
+"Save payment details to %@ for future purchases" = "Запазване на платежните данни в %@ за бъдещи покупки";
 
-"Save this card for future %@ payments" = "Запазете тази карта за следващи %@ плащания";
+"Save this account for future %@ payments" = "Запазете тази сметка за следващи %@ плащания";
 
 "Save your bank account in just a few steps." = "Запазете банковата си сметка само с няколко стъпки.";
 

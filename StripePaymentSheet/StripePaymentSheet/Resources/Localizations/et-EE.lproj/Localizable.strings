@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Salvestage tulevasteks makseteks";
 
-"Save this account for future %@ payments" = "Salvesta see konto tulevaste %@ maksete jaoks";
+"Save payment details to %@ for future purchases" = "Salvesta makseandmed %@ tulevaste ostude jaoks";
 
-"Save this card for future %@ payments" = "Salvestage see kaart tulevasteks makseteks teenuses %@";
+"Save this account for future %@ payments" = "Salvesta see konto tulevaste %@ maksete jaoks";
 
 "Save your bank account in just a few steps." = "Salvestage oma pangakonto vaid mõne lihtsa sammuga.";
 
