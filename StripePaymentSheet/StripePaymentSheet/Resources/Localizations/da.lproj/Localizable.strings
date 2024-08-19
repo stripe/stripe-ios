@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Gem til fremtidige betalinger";
 
-"Save this account for future %@ payments" = "Gem denne konto til fremtidige %@-betalinger";
+"Save payment details to %@ for future purchases" = "Gem betalingsoplysninger for %@ til senere køb";
 
-"Save this card for future %@ payments" = "Gem dette kort til fremtidige %@ betalinger";
+"Save this account for future %@ payments" = "Gem denne konto til fremtidige %@-betalinger";
 
 "Save your bank account in just a few steps." = "Gem din bankkonto med blot nogle få trin.";
 

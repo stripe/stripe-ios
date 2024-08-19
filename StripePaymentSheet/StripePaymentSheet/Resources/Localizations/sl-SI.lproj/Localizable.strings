@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Shrani za prihodnja plačila";
 
-"Save this account for future %@ payments" = "Shrani ta računa za prihodnja plačila %@";
+"Save payment details to %@ for future purchases" = "Shranite podatke o plačilu podjetju %@ za prihodnja plačila";
 
-"Save this card for future %@ payments" = "Shrani to kartico za prihodnja plačila trgovcu %@";
+"Save this account for future %@ payments" = "Shrani ta računa za prihodnja plačila %@";
 
 "Save your bank account in just a few steps." = "Shranite svoj bančni v le nekaj korakih.";
 

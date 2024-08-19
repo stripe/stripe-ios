@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Mentés a későbbi fizetésekhez";
 
-"Save this account for future %@ payments" = "Számla mentése a(z) %@ részére történő fizetésekhez";
+"Save payment details to %@ for future purchases" = "Fizetési adatok mentése %@ vállalkozó részére későbbi vásárlásokhoz";
 
-"Save this card for future %@ payments" = "A kártya mentése a(z) %@ részére történő fizetésekhez";
+"Save this account for future %@ payments" = "Számla mentése a(z) %@ részére történő fizetésekhez";
 
 "Save your bank account in just a few steps." = "Mentse el egyszerűen bankszámláját.";
 
