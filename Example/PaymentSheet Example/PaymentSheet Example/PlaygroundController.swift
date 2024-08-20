@@ -283,10 +283,18 @@ class PlaygroundController: ObservableObject {
     var customerSessionClientSecret: String?
     var paymentMethodTypes: [String]?
     var amount: Int?
-    var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
     var currentDataTask: URLSessionDataTask?
+
+    var checkoutEndpoint: String {
+        get {
+            settings.checkoutEndpoint
+        }
+        set {
+            settings.checkoutEndpoint = newValue
+        }
+    }
 
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
