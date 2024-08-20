@@ -95,7 +95,6 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
         }
 
         return apiClient.attachLinkConsumerToLinkAccountSession(
-            requestSurface: "ios_instant_debits",
             linkAccountSession: clientSecret,
             consumerSessionClientSecret: consumerSessionClientSecret
         )

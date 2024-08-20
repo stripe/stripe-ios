@@ -15,6 +15,10 @@ final class FinancialConnectionsAPIClient {
     var consumerPublishableKey: String?
     var consumerSession: ConsumerSessionData?
 
+    var requestSurface: String {
+        isLinkWithStripe ? "ios_instant_debits" : "ios_connections"
+    }
+
     init(apiClient: STPAPIClient) {
         self.backingAPIClient = apiClient
     }
@@ -197,14 +201,12 @@ protocol FinancialConnectionsAPI {
     ) -> Future<FinancialConnectionsSessionManifest>
 
     func linkAccountSignUp(
-        requestSurface: String,
         emailAddress: String,
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse>
 
     func attachLinkConsumerToLinkAccountSession(
-        requestSurface: String,
         linkAccountSession: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse>
@@ -822,7 +824,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         consumerSessionClientSecret: String
     ) -> Future<ConsumerSessionResponse> {
         var parameters: [String: Any] = [
-            "request_surface": "ios_connections",
+            "request_surface": requestSurface,
             "type": otpType,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
@@ -849,7 +851,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
-            "request_surface": "ios_connections",
+            "request_surface": requestSurface,
         ]
         return post(
             resource: "consumers/sessions/confirm_verification",
@@ -859,7 +861,6 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func linkAccountSignUp(
-        requestSurface: String, // "ios_instant_debits"
         emailAddress: String,
         phoneNumber: String,
         country: String
@@ -883,7 +884,6 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func attachLinkConsumerToLinkAccountSession(
-        requestSurface: String,
         linkAccountSession: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
