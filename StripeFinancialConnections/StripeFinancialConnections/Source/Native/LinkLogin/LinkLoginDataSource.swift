@@ -72,7 +72,6 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         country: String
     ) -> Future<LinkSignUpResponse> {
         apiClient.linkAccountSignUp(
-            requestSurface: "ios_instant_debits",
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             country: country
@@ -103,7 +102,6 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
         apiClient.attachLinkConsumerToLinkAccountSession(
-            requestSurface: "ios_instant_debits",
             linkAccountSession: linkAccountSession,
             consumerSessionClientSecret: consumerSessionClientSecret
         )
