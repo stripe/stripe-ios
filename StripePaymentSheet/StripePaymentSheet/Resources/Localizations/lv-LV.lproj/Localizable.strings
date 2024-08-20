@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Saglabāt nākotnes maksājumiem";
 
-"Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
+"Save payment details to %@ for future purchases" = "Saglabāt maksājuma informāciju %@ turpmākiem pirkumiem";
 
-"Save this card for future %@ payments" = "Saglabāt šo karti %@ maksājumiem nākotnē";
+"Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
 
 "Save your bank account in just a few steps." = "Saglabājiet savu bankas kontu, izpildot tikai dažus soļus.";
 

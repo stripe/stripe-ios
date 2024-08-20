@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Gelecekteki ödemeler için kaydedilsin";
 
-"Save this account for future %@ payments" = "Bu hesabı gelecekteki %@ ödemeleri için kaydedin";
+"Save payment details to %@ for future purchases" = "Ödeme bilgilerini gelecekteki satın almalar için %@ işletmesine kaydet";
 
-"Save this card for future %@ payments" = "Bu kartı gelecekteki %@ ödemeleri için kaydedin";
+"Save this account for future %@ payments" = "Bu hesabı gelecekteki %@ ödemeleri için kaydedin";
 
 "Save your bank account in just a few steps." = "Banka hesabınızı birkaç adımda kaydedin.";
 

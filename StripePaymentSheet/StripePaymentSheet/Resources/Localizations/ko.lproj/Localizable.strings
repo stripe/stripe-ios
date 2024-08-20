@@ -148,9 +148,9 @@
 
 "Save for future payments" = "향후 결제에 사용하도록 저장";
 
-"Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
+"Save payment details to %@ for future purchases" = "향후 구매를 위해 결제 세부사항 %@에 저장";
 
-"Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
+"Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
 
 "Save your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌를 저장하십시오.";
 

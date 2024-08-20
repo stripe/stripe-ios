@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Für zukünftige Zahlungen speichern";
 
-"Save this account for future %@ payments" = "Konto für zukünftige %@-Zahlungen speichern";
+"Save payment details to %@ for future purchases" = "Zahlungsinformationen für %@ für spätere Käufe speichern";
 
-"Save this card for future %@ payments" = "Karte für zukünftige Zahlungen von %@ speichern";
+"Save this account for future %@ payments" = "Konto für zukünftige %@-Zahlungen speichern";
 
 "Save your bank account in just a few steps." = "Speichern Sie Ihr Bankkonto in nur wenigen Schritten.";
 

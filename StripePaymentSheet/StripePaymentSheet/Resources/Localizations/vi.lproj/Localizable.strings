@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
 
-"Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
+"Save payment details to %@ for future purchases" = "Lưu thông tin thanh toán vào %@ để mua hàng trong tương lai";
 
-"Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
+"Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
 
 "Save your bank account in just a few steps." = "Lưu tài khoản ngân hàng chỉ trong vài bước.";
 

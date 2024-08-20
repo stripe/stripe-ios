@@ -148,9 +148,9 @@
 
 "Save for future payments" = "今後の支払いのために保存する";
 
-"Save this account for future %@ payments" = "今後の %@ の支払いのためにこの口座を保存する";
+"Save payment details to %@ for future purchases" = "今後の購入のために %@ に決済情報を保存する";
 
-"Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
+"Save this account for future %@ payments" = "今後の %@ の支払いのためにこの口座を保存する";
 
 "Save your bank account in just a few steps." = "銀行口座の保存はわずか数ステップで完了します。";
 

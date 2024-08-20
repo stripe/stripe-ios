@@ -148,9 +148,9 @@
 
 "Save for future payments" = "Simpan untuk pembayaran mendatang";
 
-"Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
+"Save payment details to %@ for future purchases" = "Simpan detail pembayaran pada %@ untuk pembelian mendatang";
 
-"Save this card for future %@ payments" = "Simpan kartu ini untuk pembayaran %@ mendatang";
+"Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
 
 "Save your bank account in just a few steps." = "Simpan rekening bank Anda hanya dalam beberapa langkah.";
 
