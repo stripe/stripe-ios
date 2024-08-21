@@ -55,6 +55,7 @@ final class ManualEntryViewController: UIViewController {
                     "Submit",
                     "The submit button for a screen that allows a user to manually enter their bank account information."
                 ),
+                accessibilityIdentifier: "manual_entry_continue_button",
                 action: didSelectContinue
             ),
             theme: dataSource.manifest.theme
