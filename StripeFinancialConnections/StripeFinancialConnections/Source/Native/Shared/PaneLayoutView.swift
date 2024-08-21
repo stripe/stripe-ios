@@ -24,6 +24,7 @@ final class PaneLayoutView {
     private var footerView: UIView?
     private var footerViewBottomConstraint: NSLayoutConstraint?
     private weak var presentingView: UIView?
+    private let keepFooterAboveKeyboard: Bool
 
     /// Whether or not the sheet is currently presented as a form sheet (which only happens on iPad).
     /// Unfortunately, the best way to know this is to check if the sheet's width is not equal to the window's width.
@@ -40,9 +41,14 @@ final class PaneLayoutView {
     }
 
     /// Creates a PaneLayoutView with the provided content view and footer view.
-    init(contentView: UIView, footerView: UIView?) {
+    /// In order to keep the footer view above the keyboard;
+    /// - Set `keepFooterAboveKeyboard: true`.
+    /// - Hold onto this instance of `PaneLayoutView` on the view controller presenting it.
+    /// This is required to prevent the keyboard observer notifications be removed.
+    init(contentView: UIView, footerView: UIView?, keepFooterAboveKeyboard: Bool = false) {
         self.scrollViewContentView = contentView
         self.footerView = footerView
+        self.keepFooterAboveKeyboard = keepFooterAboveKeyboard
 
         let scrollView = AutomaticShadowScrollView()
         self.scrollView = scrollView
@@ -62,11 +68,7 @@ final class PaneLayoutView {
     }
 
     /// Adds this `PaneLayoutView` to the provided view.
-    /// In order to keep the footer view above the keyboard;
-    /// - Set `keepFooterAboveKeyboard: true`.
-    /// - Hold onto this instance of `PaneLayoutView` on the view controller presenting it.
-    /// This is required to prevent the keyboard observer notifications be removed.
-    func addTo(view: UIView, keepFooterAboveKeyboard: Bool = false) {
+    func addTo(view: UIView) {
         // This function encapsulates an error-prone sequence where we
         // must add `paneLayoutView` (and all it's subviews) to the `view`
         // BEFORE we can add a constraint for `UIScrollView` content
@@ -136,7 +138,7 @@ final class PaneLayoutView {
         let adjustedKeyboardHeight: CGFloat
         if keyboardHeight > 0 {
             // Removes additional padding applied to footer view when showing above the keyboard.
-            adjustedKeyboardHeight = keyboardHeight - Constants.Layout.defaultVerticalPadding
+            adjustedKeyboardHeight = keyboardHeight - (Constants.Layout.defaultVerticalPadding * 2)
         } else {
             adjustedKeyboardHeight = keyboardHeight
         }

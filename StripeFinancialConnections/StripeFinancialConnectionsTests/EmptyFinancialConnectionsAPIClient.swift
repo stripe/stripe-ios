@@ -195,7 +195,6 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func linkAccountSignUp(
-        requestSurface: String,
         emailAddress: String,
         phoneNumber: String,
         country: String
@@ -204,7 +203,6 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func attachLinkConsumerToLinkAccountSession(
-        requestSurface: String,
         linkAccountSession: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {

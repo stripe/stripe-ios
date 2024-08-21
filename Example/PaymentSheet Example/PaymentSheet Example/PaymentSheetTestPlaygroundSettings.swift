@@ -430,7 +430,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
-    var checkoutEndpoint: String?
+    var checkoutEndpoint: String
     var autoreload: Autoreload
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled

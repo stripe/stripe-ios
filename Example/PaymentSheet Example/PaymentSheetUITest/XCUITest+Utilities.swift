@@ -215,6 +215,10 @@ extension XCTestCase {
         routingField.forceTapWhenHittableInTestCase(self)
         app.typeText("110000000")
 
+        // Dismiss keyboard, otherwise we can not see the next field
+        // This is only an artifact in the (test) native version of the flow
+        app.tapCoordinate(at: .init(x: 150, y: 150))
+
         let acctField = context.textFields["manual_entry_account_number_text_field"]
         acctField.forceTapWhenHittableInTestCase(self)
         app.typeText("000123456789")
