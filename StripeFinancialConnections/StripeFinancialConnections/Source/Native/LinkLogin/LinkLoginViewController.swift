@@ -106,10 +106,11 @@ final class LinkLoginViewController: UIViewController {
 
         self.paneLayoutView = PaneLayoutView(
             contentView: contentView,
-            footerView: footerView.footerView
+            footerView: footerView.footerView,
+            keepFooterAboveKeyboard: true
         )
 
-        paneLayoutView?.addTo(view: view, keepFooterAboveKeyboard: true)
+        paneLayoutView?.addTo(view: view)
 
         #if !canImport(CompositorServices)
         // if user drags, dismiss keyboard so the CTA buttons can be shown
