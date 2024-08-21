@@ -9,7 +9,7 @@ import XCTest
 
 // MARK: Vertical mode tests
 class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
-    
+
     func testCanPayWithCard() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.currency = .eur
@@ -18,12 +18,12 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
-        
+
         try! fillCardData(app)
         app.buttons["Pay €50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
-    
+
     func testFlowController_verticalMode() {
         // Sets the right paymentOption values
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -275,7 +275,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.requireCVCRecollection = .on
         loadPlayground(app, settings)
 

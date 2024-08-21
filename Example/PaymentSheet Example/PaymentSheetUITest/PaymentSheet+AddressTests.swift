@@ -253,7 +253,7 @@ NZ
             var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.uiStyle = .flowController
         settings.shippingInfo = .on
             loadPlayground(
