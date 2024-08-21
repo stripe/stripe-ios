@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)OTPSubmitButtonTappedWithTransactionID:(NSString *)transactionID;
 
+- (void)OOBContinueButtonTappedWithTransactionID:(NSString *)transactionID;
+
 @end
 
 NS_ASSUME_NONNULL_END

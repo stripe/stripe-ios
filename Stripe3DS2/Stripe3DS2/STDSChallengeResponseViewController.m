@@ -569,6 +569,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         case STDSACSUITypeOOB:
             [self.delegate challengeResponseViewControllerDidOOBContinue:self
                                                       whitelistSelection:self.whitelistView.selectedResponse];
+            [self.analyticsDelegate OOBContinueButtonTappedWithTransactionID:self.response.threeDSServerTransactionID];
             break;
         case STDSACSUITypeHTML:
             // No action button in this case, see WKNavigationDelegate.
