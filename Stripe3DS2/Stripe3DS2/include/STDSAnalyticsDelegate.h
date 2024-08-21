@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)cancelButtonTappedWithTransactionID:(NSString *)transactionID;
 
+- (void)OTPSubmitButtonTappedWithTransactionID:(NSString *)transactionID;
+
 @end
 
 NS_ASSUME_NONNULL_END

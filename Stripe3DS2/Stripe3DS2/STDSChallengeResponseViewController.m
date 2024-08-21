@@ -555,6 +555,8 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
             [self.delegate challengeResponseViewController:self
                                             didSubmitInput:self.textChallengeView.inputText
                                         whitelistSelection:self.whitelistView.selectedResponse];
+            
+            [self.analyticsDelegate OTPSubmitButtonTappedWithTransactionID:self.response.threeDSServerTransactionID];
             break;
         }
         case STDSACSUITypeSingleSelect:
