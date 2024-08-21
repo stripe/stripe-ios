@@ -130,7 +130,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (NSString *)presentedChallengeUIType {
-    switch (self.challengeResponseViewController.response.acsUIType) {
+    return [self UIType:self.challengeResponseViewController.response.acsUIType];
+}
+
+- (NSString *)UIType:(STDSACSUIType)uiType {
+    switch (uiType) {
 
         case STDSACSUITypeNone:
             return @"none";
@@ -430,30 +434,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)_handleChallengeResponse:(id<STDSChallengeResponse>)challengeResponse didCancel:(BOOL)didCancel {
     
-    NSString *flow = @"";
-    switch (challengeResponse.acsUIType) {
-        case STDSACSUITypeNone:
-            flow = @"STDSACSUITypeNone";
-            break;
-        case STDSACSUITypeText:
-            flow = @"STDSACSUITypeText";
-            break;
-        case STDSACSUITypeSingleSelect:
-            flow = @"STDSACSUITypeSingleSelect";
-            break;
-        case STDSACSUITypeMultiSelect:
-            flow = @"STDSACSUITypeMultiSelect";
-            break;
-        case STDSACSUITypeOOB:
-            flow = @"STDSACSUITypeOOB";
-            break;
-        case STDSACSUITypeHTML:
-            flow = @"STDSACSUITypeHTML";
-            break;
-    }
-        
-    [_analyticsDelegate didReceiveChallengeResponseWithTransactionID:challengeResponse.threeDSServerTransactionID flow:flow];
-    
     if (challengeResponse.challengeCompletionIndicator) {
         // Final CRes
         // We need to pass didCancel to here because we can't distinguish between cancellation and auth failure from the CRes
@@ -476,6 +456,8 @@ NS_ASSUME_NONNULL_BEGIN
             [self.challengeStatusReceiver transactionDidPresentChallengeScreen:self];
         }
     }
+    
+    [_analyticsDelegate didReceiveChallengeResponseWithTransactionID:challengeResponse.threeDSServerTransactionID flow:[self UIType:challengeResponse.acsUIType]];
 }
 
 - (void)_cleanUp {
