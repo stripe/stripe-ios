@@ -28,6 +28,7 @@
 #import "UIButton+CustomInitialization.h"
 #import "UIFont+DefaultFonts.h"
 #import "UIViewController+Stripe3DS2.h"
+#import "include/STDSAnalyticsDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) id<STDSChallengeResponse> response;
 @property (nonatomic) STDSDirectoryServer directoryServer;
+@property (weak, nonatomic) id<STDSAnalyticsDelegate>analyticsDelegate;
 /// Used to track how long we've been showing a loading spinner.  Nil if we are not showing a spinner.
 @property (nonatomic, strong, nullable) NSDate *loadingStartDate;
 @property (nonatomic, strong, nullable) STDSUICustomization *uiCustomization;
@@ -67,7 +69,10 @@ static const CGFloat kExpandableContentViewTopPadding = 28;
 
 static NSString * const kHTMLStringLoadingURL = @"about:blank";
 
-- (instancetype)initWithUICustomization:(STDSUICustomization * _Nullable)uiCustomization imageLoader:(STDSImageLoader *)imageLoader directoryServer:(STDSDirectoryServer)directoryServer {
+- (instancetype)initWithUICustomization:(STDSUICustomization * _Nullable)uiCustomization 
+                            imageLoader:(STDSImageLoader *)imageLoader
+                        directoryServer:(STDSDirectoryServer)directoryServer
+                      analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate {
     self = [super initWithNibName:nil bundle:nil];
     
     if (self) {
@@ -75,6 +80,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         _imageLoader = imageLoader;
         _tapOutsideKeyboardGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_didTapOutsideKeyboard:)];
         _directoryServer = directoryServer;
+        _analyticsDelegate = analyticsDelegate;
     }
     
     return self;
@@ -531,6 +537,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
 - (void)_cancelButtonTapped:(UIButton *)sender {
     [self.textChallengeView endEditing:NO];
     [self.delegate challengeResponseViewControllerDidCancel:self];
+    [self.analyticsDelegate cancelButtonTappedWithTransactionID:self.response.threeDSServerTransactionID];
 }
 
 - (void)_resendButtonTapped:(UIButton *)sender {

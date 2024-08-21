@@ -180,7 +180,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UIViewController *)createProgressViewControllerWithDidCancel:(void (^)(void))didCancel {
-    return [[STDSProgressViewController alloc] initWithDirectoryServer:[self _directoryServerForUI] uiCustomization:_uiCustomization didCancel:didCancel];
+    return [[STDSProgressViewController alloc] initWithDirectoryServer:[self _directoryServerForUI]
+                                                       uiCustomization:_uiCustomization
+                                                     analyticsDelegate:_analyticsDelegate
+                                                             didCancel:didCancel];
 }
 
 - (void)doChallengeWithViewController:(UIViewController *)presentingViewController
@@ -281,7 +284,10 @@ NS_ASSUME_NONNULL_BEGIN
                                               acsTransactionIdentifier:self.challengeRequestParameters.acsTransactionIdentifier];
     // Start the Challenge flow
     STDSImageLoader *imageLoader = [[STDSImageLoader alloc] initWithURLSession:NSURLSession.sharedSession];
-    self.challengeResponseViewController = [[STDSChallengeResponseViewController alloc] initWithUICustomization:_uiCustomization imageLoader:imageLoader directoryServer:[self _directoryServerForUI]];
+    self.challengeResponseViewController = [[STDSChallengeResponseViewController alloc] initWithUICustomization:_uiCustomization
+                                                                                                    imageLoader:imageLoader
+                                                                                                directoryServer:[self _directoryServerForUI]
+                                                                                              analyticsDelegate:_analyticsDelegate];
     self.challengeResponseViewController.delegate = self;
     
     presentationBlock(self.challengeResponseViewController, ^{ [self _makeChallengeRequest:self.challengeRequestParameters didCancel:NO]; });
