@@ -7,6 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		410D0FCA2C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */; };
+		410D0FCC2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */; };
+		410D0FCE2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FCD2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift */; };
+		410D0FD02C6D0319009B0E26 /* PageDidLoadMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FCF2C6D0319009B0E26 /* PageDidLoadMessageHandlerTests.swift */; };
+		410D0FD22C6D047A009B0E26 /* AccountSessionClaimedMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FD12C6D047A009B0E26 /* AccountSessionClaimedMessageHandlerTests.swift */; };
+		410D0FD42C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FD32C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift */; };
+		410D0FD72C6D07C7009B0E26 /* MessageSenderTestBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FD62C6D07C7009B0E26 /* MessageSenderTestBase.swift */; };
+		410D0FD92C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FD82C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift */; };
+		410D0FDB2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FDA2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift */; };
+		410D0FDD2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FDC2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift */; };
+		413987C82C63F34B001D375E /* DebugMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987B82C63F34B001D375E /* DebugMessageHandler.swift */; };
+		413987C92C63F34B001D375E /* FetchClientSecretMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987B92C63F34B001D375E /* FetchClientSecretMessageHandler.swift */; };
+		413987CA2C63F34B001D375E /* ScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987BA2C63F34B001D375E /* ScriptMessageHandler.swift */; };
+		413987CB2C63F34B001D375E /* ScriptMessageHandlerWithReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987BB2C63F34B001D375E /* ScriptMessageHandlerWithReply.swift */; };
+		413987CC2C63F34B001D375E /* VoidPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987BC2C63F34B001D375E /* VoidPayload.swift */; };
+		413987CD2C63F34B001D375E /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987BE2C63F34B001D375E /* MessageSender.swift */; };
+		413987CE2C63F34B001D375E /* UpdateConnectInstanceSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987BF2C63F34B001D375E /* UpdateConnectInstanceSender.swift */; };
+		413987D42C640848001D375E /* CallSetterWithSerializableValueSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987D32C640848001D375E /* CallSetterWithSerializableValueSender.swift */; };
+		413987D62C64088E001D375E /* ReturnedFromAuthenticatedWebViewSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987D52C64088E001D375E /* ReturnedFromAuthenticatedWebViewSender.swift */; };
+		413987DD2C640A29001D375E /* FetchInitParamsMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987DC2C640A29001D375E /* FetchInitParamsMessageHandler.swift */; };
+		413987DF2C640C50001D375E /* OnExitMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987DE2C640C50001D375E /* OnExitMessageHandler.swift */; };
+		413987E12C641688001D375E /* PageDidLoadMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413987E02C641688001D375E /* PageDidLoadMessageHandler.swift */; };
+		41814EE82C6BC8800014EB5E /* WebViewMessageHandlerTestBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EE72C6BC8800014EB5E /* WebViewMessageHandlerTestBase.swift */; };
+		41814EEB2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EEA2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift */; };
+		41814EED2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EEC2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift */; };
+		41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */; };
+		41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */; };
+		41814EF32C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */; };
+		4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */; };
+		4186664C2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */; };
+		4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */; };
 		41A2A5642C5ABD6C0077FC74 /* StripeConnectTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */; };
 		41A2A5682C5AC5120077FC74 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A2A5672C5AC5120077FC74 /* StripeCore.framework */; };
 		41A2A5CD2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A56C2C5ACBDD0077FC74 /* Localizable.strings */; };
@@ -85,6 +116,37 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandlerTests.swift; sourceTree = "<group>"; };
+		410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSessionClaimedMessageHandler.swift; sourceTree = "<group>"; };
+		410D0FCD2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAuthenticatedWebViewMessageHandler.swift; sourceTree = "<group>"; };
+		410D0FCF2C6D0319009B0E26 /* PageDidLoadMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageDidLoadMessageHandlerTests.swift; sourceTree = "<group>"; };
+		410D0FD12C6D047A009B0E26 /* AccountSessionClaimedMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSessionClaimedMessageHandlerTests.swift; sourceTree = "<group>"; };
+		410D0FD32C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAuthenticatedWebViewMessageHandlerTests.swift; sourceTree = "<group>"; };
+		410D0FD62C6D07C7009B0E26 /* MessageSenderTestBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSenderTestBase.swift; sourceTree = "<group>"; };
+		410D0FD82C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateConnectInstanceSenderTests.swift; sourceTree = "<group>"; };
+		410D0FDA2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallSetterWithSerializableValueSenderTests.swift; sourceTree = "<group>"; };
+		410D0FDC2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnedFromAuthenticatedWebViewSenderTests.swift; sourceTree = "<group>"; };
+		413987B82C63F34B001D375E /* DebugMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugMessageHandler.swift; sourceTree = "<group>"; };
+		413987B92C63F34B001D375E /* FetchClientSecretMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchClientSecretMessageHandler.swift; sourceTree = "<group>"; };
+		413987BA2C63F34B001D375E /* ScriptMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandler.swift; sourceTree = "<group>"; };
+		413987BB2C63F34B001D375E /* ScriptMessageHandlerWithReply.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandlerWithReply.swift; sourceTree = "<group>"; };
+		413987BC2C63F34B001D375E /* VoidPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoidPayload.swift; sourceTree = "<group>"; };
+		413987BE2C63F34B001D375E /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
+		413987BF2C63F34B001D375E /* UpdateConnectInstanceSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateConnectInstanceSender.swift; sourceTree = "<group>"; };
+		413987D32C640848001D375E /* CallSetterWithSerializableValueSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallSetterWithSerializableValueSender.swift; sourceTree = "<group>"; };
+		413987D52C64088E001D375E /* ReturnedFromAuthenticatedWebViewSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnedFromAuthenticatedWebViewSender.swift; sourceTree = "<group>"; };
+		413987DC2C640A29001D375E /* FetchInitParamsMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitParamsMessageHandler.swift; sourceTree = "<group>"; };
+		413987DE2C640C50001D375E /* OnExitMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnExitMessageHandler.swift; sourceTree = "<group>"; };
+		413987E02C641688001D375E /* PageDidLoadMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageDidLoadMessageHandler.swift; sourceTree = "<group>"; };
+		41814EE72C6BC8800014EB5E /* WebViewMessageHandlerTestBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewMessageHandlerTestBase.swift; sourceTree = "<group>"; };
+		41814EEA2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMessageHandlerTests.swift; sourceTree = "<group>"; };
+		41814EEC2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchClientSecretMessageHandlerTests.swift; sourceTree = "<group>"; };
+		41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitParamsMessageHandlerTests.swift; sourceTree = "<group>"; };
+		41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnExitMessageHandlerTests.swift; sourceTree = "<group>"; };
+		41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoaderStartMessageHandlerTests.swift; sourceTree = "<group>"; };
+		418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSetterFunctionCalledMessageHandler.swift; sourceTree = "<group>"; };
+		4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoaderStartMessageHandler.swift; sourceTree = "<group>"; };
+		4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandler.swift; sourceTree = "<group>"; };
 		41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectTests.xctestplan; sourceTree = "<group>"; };
 		41A2A5672C5AC5120077FC74 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41A2A56B2C5ACBDD0077FC74 /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -173,9 +235,111 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		410D0FD52C6D07B1009B0E26 /* MessageSenders */ = {
+			isa = PBXGroup;
+			children = (
+				410D0FD62C6D07C7009B0E26 /* MessageSenderTestBase.swift */,
+				410D0FD82C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift */,
+				410D0FDA2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift */,
+				410D0FDC2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift */,
+			);
+			path = MessageSenders;
+			sourceTree = "<group>";
+		};
+		413987BD2C63F34B001D375E /* MessageHandlers */ = {
+			isa = PBXGroup;
+			children = (
+				413987D92C64093C001D375E /* Helpers */,
+				413987B82C63F34B001D375E /* DebugMessageHandler.swift */,
+				413987B92C63F34B001D375E /* FetchClientSecretMessageHandler.swift */,
+				413987DC2C640A29001D375E /* FetchInitParamsMessageHandler.swift */,
+				413987DE2C640C50001D375E /* OnExitMessageHandler.swift */,
+				4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */,
+				4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */,
+				413987E02C641688001D375E /* PageDidLoadMessageHandler.swift */,
+				410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */,
+				410D0FCD2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift */,
+			);
+			path = MessageHandlers;
+			sourceTree = "<group>";
+		};
+		413987C02C63F34B001D375E /* MessageSenders */ = {
+			isa = PBXGroup;
+			children = (
+				413987BE2C63F34B001D375E /* MessageSender.swift */,
+				413987BF2C63F34B001D375E /* UpdateConnectInstanceSender.swift */,
+				413987D32C640848001D375E /* CallSetterWithSerializableValueSender.swift */,
+				413987D52C64088E001D375E /* ReturnedFromAuthenticatedWebViewSender.swift */,
+			);
+			path = MessageSenders;
+			sourceTree = "<group>";
+		};
+		413987C42C63F34B001D375E /* Webview */ = {
+			isa = PBXGroup;
+			children = (
+				413987BD2C63F34B001D375E /* MessageHandlers */,
+				413987C02C63F34B001D375E /* MessageSenders */,
+			);
+			path = Webview;
+			sourceTree = "<group>";
+		};
+		413987C62C63F34B001D375E /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				413987C42C63F34B001D375E /* Webview */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		413987D92C64093C001D375E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				413987BC2C63F34B001D375E /* VoidPayload.swift */,
+				413987BA2C63F34B001D375E /* ScriptMessageHandler.swift */,
+				413987BB2C63F34B001D375E /* ScriptMessageHandlerWithReply.swift */,
+				418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		41814EE52C6BC8610014EB5E /* Webview */ = {
+			isa = PBXGroup;
+			children = (
+				410D0FD52C6D07B1009B0E26 /* MessageSenders */,
+				41814EE92C6BCA970014EB5E /* MessageHandlers */,
+			);
+			path = Webview;
+			sourceTree = "<group>";
+		};
+		41814EE62C6BC8690014EB5E /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				41814EE52C6BC8610014EB5E /* Webview */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		41814EE92C6BCA970014EB5E /* MessageHandlers */ = {
+			isa = PBXGroup;
+			children = (
+				41814EE72C6BC8800014EB5E /* WebViewMessageHandlerTestBase.swift */,
+				41814EEA2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift */,
+				41814EEC2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift */,
+				41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */,
+				41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */,
+				41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */,
+				410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */,
+				410D0FCF2C6D0319009B0E26 /* PageDidLoadMessageHandlerTests.swift */,
+				410D0FD12C6D047A009B0E26 /* AccountSessionClaimedMessageHandlerTests.swift */,
+				410D0FD32C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift */,
+			);
+			path = MessageHandlers;
+			sourceTree = "<group>";
+		};
 		41A2A5602C5A97130077FC74 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				413987C62C63F34B001D375E /* Internal */,
 				41A2A5FF2C5ACD3E0077FC74 /* Helpers */,
 			);
 			path = Source;
@@ -296,6 +460,7 @@
 		41D17A4E2C5A73A7007C6EE6 /* StripeConnectTests */ = {
 			isa = PBXGroup;
 			children = (
+				41814EE62C6BC8690014EB5E /* Internal */,
 				41D17A4F2C5A73A7007C6EE6 /* StripeConnectTests.swift */,
 			);
 			path = StripeConnectTests;
@@ -537,7 +702,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4186664C2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift in Sources */,
+				413987D62C64088E001D375E /* ReturnedFromAuthenticatedWebViewSender.swift in Sources */,
+				413987DF2C640C50001D375E /* OnExitMessageHandler.swift in Sources */,
+				413987C92C63F34B001D375E /* FetchClientSecretMessageHandler.swift in Sources */,
+				413987E12C641688001D375E /* PageDidLoadMessageHandler.swift in Sources */,
+				410D0FCE2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift in Sources */,
+				413987CD2C63F34B001D375E /* MessageSender.swift in Sources */,
 				41A2A6012C5ACD9F0077FC74 /* STPLocalizedString.swift in Sources */,
+				413987CE2C63F34B001D375E /* UpdateConnectInstanceSender.swift in Sources */,
+				4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */,
+				413987CC2C63F34B001D375E /* VoidPayload.swift in Sources */,
+				413987DD2C640A29001D375E /* FetchInitParamsMessageHandler.swift in Sources */,
+				413987D42C640848001D375E /* CallSetterWithSerializableValueSender.swift in Sources */,
+				413987CB2C63F34B001D375E /* ScriptMessageHandlerWithReply.swift in Sources */,
+				413987CA2C63F34B001D375E /* ScriptMessageHandler.swift in Sources */,
+				413987C82C63F34B001D375E /* DebugMessageHandler.swift in Sources */,
+				410D0FCC2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift in Sources */,
+				4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */,
 				41A2A5FE2C5ACCAA0077FC74 /* StripeConnectBundleLocator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -547,6 +729,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				41D17A502C5A73A7007C6EE6 /* StripeConnectTests.swift in Sources */,
+				410D0FDD2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift in Sources */,
+				410D0FD92C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift in Sources */,
+				41814EEB2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift in Sources */,
+				41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */,
+				410D0FD22C6D047A009B0E26 /* AccountSessionClaimedMessageHandlerTests.swift in Sources */,
+				41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */,
+				410D0FD42C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift in Sources */,
+				410D0FCA2C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift in Sources */,
+				410D0FDB2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift in Sources */,
+				410D0FD72C6D07C7009B0E26 /* MessageSenderTestBase.swift in Sources */,
+				410D0FD02C6D0319009B0E26 /* PageDidLoadMessageHandlerTests.swift in Sources */,
+				41814EED2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift in Sources */,
+				41814EE82C6BC8800014EB5E /* WebViewMessageHandlerTestBase.swift in Sources */,
+				41814EF32C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1030,6 +1226,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeConnectTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1045,6 +1242,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeConnectTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
