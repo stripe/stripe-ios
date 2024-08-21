@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)OOBContinueButtonTappedWithTransactionID:(NSString *)transactionID;
 
+- (void)OOBDidEnterBackground:(NSString *)transactionID;
+- (void)OOBWillEnterForeground:(NSString *)transactionID;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -94,6 +94,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 
     NSString *imageName = STDSDirectoryServerImageName(self.directoryServer);
     UIImage *dsImage = imageName ? [UIImage imageNamed:imageName inBundle:[STDSBundleLocator stdsResourcesBundle] compatibleWithTraitCollection:nil] : nil;
@@ -511,8 +512,17 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
 
+- (void)_applicationDidEnterBackground {
+    if (self.response.acsUIType == STDSACSUITypeOOB) {
+        [self.analyticsDelegate OOBDidEnterBackground:self.response.threeDSServerTransactionID];
+    }
+}
+
 - (void)_applicationWillEnterForeground:(NSNotification *)notification {
     if (self.response.acsUIType == STDSACSUITypeOOB) {
+        
+        [self.analyticsDelegate OOBWillEnterForeground:self.response.threeDSServerTransactionID];
+        
         if (self.response.challengeAdditionalInfoText) {
             // [Req 316] When Challenge Additional Information Text is present, the SDK would replace the Challenge Information Text and Challenge Information Text Indicator with the Challenge Additional Information Text when the 3DS Requestor App is moved to the foreground.
             self.challengeInformationView.challengeInformationText = self.response.challengeAdditionalInfoText;
