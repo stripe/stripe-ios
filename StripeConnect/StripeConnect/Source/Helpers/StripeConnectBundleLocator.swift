@@ -7,7 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
- 
+
 final class StripeConnectBundleLocator: BundleLocatorProtocol {
     static let internalClass: AnyClass = StripeConnectBundleLocator.self
     static let bundleName = "StripeConnectBundle"
