@@ -42,7 +42,7 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
     STDSDeviceInformation *_deviceInformation;
     STDSUICustomization *_uiSettings;
     STDSConfigParameters *_configuration;
-    __weak id<STDSAnalyticsDelegate> _delegate;
+    __weak id<STDSAnalyticsDelegate> _analyticsDelegate;
 }
 
 @synthesize warnings = _warnings;
@@ -50,8 +50,8 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
 - (void)initializeWithConfig:(STDSConfigParameters *)config
                       locale:(nullable NSLocale *)locale
                   uiSettings:(nullable STDSUICustomization *)uiSettings
-           analyticsDelegate:(nonnull id<STDSAnalyticsDelegate>)delegate {
-    _delegate = delegate;
+           analyticsDelegate:(nonnull id<STDSAnalyticsDelegate>)analyticsDelegate {
+    _analyticsDelegate = analyticsDelegate;
     [self initializeWithConfig:config locale:locale uiSettings:uiSettings];
 }
 
@@ -132,7 +132,7 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
                                                                       directoryServer:directoryServer
                                                                       protocolVersion:(protocolVersion != nil) ? STDSThreeDSProtocolVersionForString(protocolVersion) : STDSThreeDSProtocolVersion2_1_0
                                                                       uiCustomization:_uiSettings
-                                                                    analyticsDelegate:_delegate];
+                                                                    analyticsDelegate:_analyticsDelegate];
     transaction.bypassTestModeVerification = [[_configuration parameterValue:kInternalStripeTestingConfigParam] isEqualToString:@"Y"];
     transaction.useULTestLOA = [[_configuration parameterValue:kUseULTestLOAParam] isEqualToString:@"Y"];
     return transaction;
@@ -164,7 +164,7 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
                                                   rootCertificateStrings:rootCertificateStrings
                                                          protocolVersion:(protocolVersion != nil) ? STDSThreeDSProtocolVersionForString(protocolVersion) : STDSThreeDSProtocolVersion2_1_0
                                                          uiCustomization:_uiSettings
-                                                       analyticsDelegate:_delegate];
+                                                       analyticsDelegate:_analyticsDelegate];
         transaction.bypassTestModeVerification = [_configuration parameterValue:kInternalStripeTestingConfigParam] != nil;
     }
 
