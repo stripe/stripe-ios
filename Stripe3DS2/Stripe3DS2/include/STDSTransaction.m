@@ -36,6 +36,7 @@
 #import "STDSSecTypeUtilities.h"
 #import "STDSStripe3DS2Error.h"
 #import "STDSDeviceInformationParameter.h"
+#import "STDSAnalyticsDelegate.h"
 
 static const NSTimeInterval kMinimumTimeout = 5 * 60;
 static NSString * const kStripeLOA = @"3DS_LOA_SDK_STIN_020100_00162";
@@ -69,12 +70,15 @@ NS_ASSUME_NONNULL_BEGIN
     STDSACSNetworkingManager *_networkingManager;
     
     STDSUICustomization *_uiCustomization;
+    
+    __weak id<STDSAnalyticsDelegate> _analyticsDelegate;
 }
 
 - (instancetype)initWithDeviceInformation:(STDSDeviceInformation *)deviceInformation
                           directoryServer:(STDSDirectoryServer)directoryServer
                           protocolVersion:(STDSThreeDSProtocolVersion)protocolVersion
-                          uiCustomization:(nonnull STDSUICustomization *)uiCustomization {
+                          uiCustomization:(nonnull STDSUICustomization *)uiCustomization 
+                        analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate {
     self = [super init];
     if (self) {
         _deviceInformation = deviceInformation;
@@ -98,7 +102,8 @@ NS_ASSUME_NONNULL_BEGIN
                directoryServerCertificate:(STDSDirectoryServerCertificate *)directoryServerCertificate
                    rootCertificateStrings:(NSArray<NSString *> *)rootCertificateStrings
                           protocolVersion:(STDSThreeDSProtocolVersion)protocolVersion
-                          uiCustomization:(STDSUICustomization *)uiCustomization {
+                          uiCustomization:(STDSUICustomization *)uiCustomization
+                        analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate {
     self = [super init];
     if (self) {
         _deviceInformation = deviceInformation;
@@ -418,6 +423,31 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)_handleChallengeResponse:(id<STDSChallengeResponse>)challengeResponse didCancel:(BOOL)didCancel {
+    
+    NSString *flow = @"";
+    switch (challengeResponse.acsUIType) {
+        case STDSACSUITypeNone:
+            flow = @"STDSACSUITypeNone";
+            break;
+        case STDSACSUITypeText:
+            flow = @"STDSACSUITypeText";
+            break;
+        case STDSACSUITypeSingleSelect:
+            flow = @"STDSACSUITypeSingleSelect";
+            break;
+        case STDSACSUITypeMultiSelect:
+            flow = @"STDSACSUITypeMultiSelect";
+            break;
+        case STDSACSUITypeOOB:
+            flow = @"STDSACSUITypeOOB";
+            break;
+        case STDSACSUITypeHTML:
+            flow = @"STDSACSUITypeHTML";
+            break;
+    }
+        
+    [_analyticsDelegate didReceiveChallengeResponseWithTransactionID:challengeResponse.threeDSServerTransactionID flow:flow];
+    
     if (challengeResponse.challengeCompletionIndicator) {
         // Final CRes
         // We need to pass didCancel to here because we can't distinguish between cancellation and auth failure from the CRes
