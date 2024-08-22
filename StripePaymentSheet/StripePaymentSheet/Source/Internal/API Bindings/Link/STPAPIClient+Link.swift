@@ -75,7 +75,7 @@ extension STPAPIClient {
             parameters["consent_action"] = consentAction
         }
         parameters = Self.paramsAddingPaymentUserAgent(parameters)
-        
+
         post(
             resource: endpoint,
             parameters: parameters
@@ -186,7 +186,7 @@ extension STPAPIClient {
             ],
             "request_surface": "ios_payment_element",
         ]
-        
+
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,
