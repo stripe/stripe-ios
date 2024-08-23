@@ -369,4 +369,11 @@ extension String.Localized {
     static var bank: String {
         STPLocalizedString("Bank", "A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.")
     }
+
+    static var pay_over_time_with_affirm: String {
+        STPLocalizedString(
+            "Pay over time with Affirm",
+            "Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm"
+        )
+    }
 }

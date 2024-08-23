@@ -198,6 +198,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
             return String(format: .Localized.after_pay_subtitle_text,
                           numInstallments,
                           installmentAmountDisplayString)
+        case .stripe(.affirm):
+            return String.Localized.pay_over_time_with_affirm
         default:
             return nil
         }

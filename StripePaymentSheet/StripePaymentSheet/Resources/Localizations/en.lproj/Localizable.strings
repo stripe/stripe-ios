@@ -189,6 +189,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
+/* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
+"Pay over time with Affirm" = "Pay over time with Affirm";
+
 /* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
 "Pay with Link" = "Pay with Link";
 
