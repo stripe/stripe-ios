@@ -10,6 +10,7 @@ import Foundation
 
 extension STPTestingAPIClient {
     static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
+
     public static var shared: STPTestingAPIClient {
         return .shared()
     }
@@ -141,10 +142,12 @@ extension STPTestingAPIClient {
     }
 
     func fetchCustomerAndCustomerSessionClientSecret(
+        componentName: String,
         customerID: String? = nil,
         merchantCountry: String? = "us"
     ) async throws -> CreateCustomerSessionResponse {
         let params = [
+            "component_name": componentName,
             "customer_id": customerID,
             "account": merchantCountry,
         ]
