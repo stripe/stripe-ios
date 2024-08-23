@@ -378,8 +378,9 @@ extension NativeFlowController {
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
                         {
-                            createPaymentMethodIfNeeded(for: session) { result in
-                                if let result {
+                            if dataManager.manifest.isProductInstantDebits {
+                                // For Instant Debits, create a payment method and complete with it.
+                                createPaymentMethod(for: session) { result in
                                     switch result {
                                     case .success(let linkedBank):
                                         self.delegate?.nativeFlowController(
@@ -405,25 +406,24 @@ extension NativeFlowController {
                                         )
                                         finishAuthSession(.failed(error: createPaymentError))
                                     }
-                                } else {
-                                    // This is the case where no payment method was created.
-                                    // We can still complete with the existing session details.
-                                    self.delegate?.nativeFlowController(
-                                        self,
-                                        didReceiveEvent: FinancialConnectionsEvent(
-                                            name: .success,
-                                            metadata: FinancialConnectionsEvent.Metadata(
-                                                manualEntry: session.paymentAccount?.isManualEntry ?? false
-                                            )
+                                }
+                            } else {
+                                // Otherwise, complete with the existing session details.
+                                self.delegate?.nativeFlowController(
+                                    self,
+                                    didReceiveEvent: FinancialConnectionsEvent(
+                                        name: .success,
+                                        metadata: FinancialConnectionsEvent.Metadata(
+                                            manualEntry: session.paymentAccount?.isManualEntry ?? false
                                         )
                                     )
-                                    self.logCompleteEvent(
-                                        type: eventType,
-                                        status: "completed",
-                                        numberOfLinkedAccounts: session.accounts.data.count
-                                    )
-                                    finishAuthSession(.completed(.financialConnections(session)))
-                                }
+                                )
+                                self.logCompleteEvent(
+                                    type: eventType,
+                                    status: "completed",
+                                    numberOfLinkedAccounts: session.accounts.data.count
+                                )
+                                finishAuthSession(.completed(.financialConnections(session)))
                             }
                         } else if let closeAuthFlowError = closeAuthFlowError {
                             self.logCompleteEvent(
@@ -477,15 +477,10 @@ extension NativeFlowController {
             }
     }
 
-    private func createPaymentMethodIfNeeded(
+    private func createPaymentMethod(
         for session: StripeAPI.FinancialConnectionsSession,
-        completion: @escaping (Result<InstantDebitsLinkedBank, Error>?) -> Void)
-    {
-        guard dataManager.manifest.isProductInstantDebits else {
-            completion(nil)
-            return
-        }
-
+        completion: @escaping (Result<InstantDebitsLinkedBank, Error>) -> Void
+    ) {
         let bankAccountId: String?
         switch session.paymentAccount {
         case .bankAccount(let account):
@@ -496,37 +491,45 @@ extension NativeFlowController {
             bankAccountId = nil
         }
 
-        if let bankAccountId, let consumerSession = dataManager.consumerSession {
-            var bankAccountDetails: BankAccountDetails?
-            dataManager.createPaymentDetails(
-                consumerSessionClientSecret: consumerSession.clientSecret,
-                bankAccountId: bankAccountId
-            ).chained { [weak self] paymentDetails -> Future<FinancialConnectionsPaymentMethod> in
-                guard let self else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
-                }
+        guard let bankAccountId else {
+            let error = "InstantDebitsCompletionError: No bank account ID available when trying to create a payment method."
+            completion(.failure(FinancialConnectionsSheetError.unknown(debugDescription: error)))
+            return
+        }
 
-                bankAccountDetails = paymentDetails.redactedPaymentDetails.bankAccountDetails
-                return self.dataManager.createPaymentMethod(
-                    consumerSessionClientSecret: consumerSession.clientSecret,
-                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id
+        guard let consumerSession = dataManager.consumerSession else {
+            let error = "InstantDebitsCompletionError: No consumer session available when trying to create a payment method."
+            completion(.failure(FinancialConnectionsSheetError.unknown(debugDescription: error)))
+            return
+        }
+
+        var bankAccountDetails: BankAccountDetails?
+        dataManager.createPaymentDetails(
+            consumerSessionClientSecret: consumerSession.clientSecret,
+            bankAccountId: bankAccountId
+        ).chained { [weak self] paymentDetails -> Future<FinancialConnectionsPaymentMethod> in
+            guard let self else {
+                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
+            }
+
+            bankAccountDetails = paymentDetails.redactedPaymentDetails.bankAccountDetails
+            return self.dataManager.createPaymentMethod(
+                consumerSessionClientSecret: consumerSession.clientSecret,
+                paymentDetailsId: paymentDetails.redactedPaymentDetails.id
+            )
+        }
+        .observe { result in
+            switch result {
+            case .success(let paymentMethod):
+                let linkedBank = InstantDebitsLinkedBankImplementation(
+                    paymentMethodId: paymentMethod.id,
+                    bankName: bankAccountDetails?.bankName,
+                    last4: bankAccountDetails?.last4
                 )
+                completion(.success(linkedBank))
+            case .failure(let error):
+                completion(.failure(error))
             }
-            .observe { result in
-                switch result {
-                case .success(let paymentMethod):
-                    let linkedBank = InstantDebitsLinkedBankImplementation(
-                        paymentMethodId: paymentMethod.id,
-                        bankName: bankAccountDetails?.bankName,
-                        last4: bankAccountDetails?.last4
-                    )
-                    completion(.success(linkedBank))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        } else {
-            completion(nil)
         }
     }
 
