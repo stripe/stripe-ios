@@ -459,7 +459,7 @@ extension PlaygroundController {
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
-            "use_link": settings.linkEnabled == .on,
+            "use_link": settings.linkMode == .link_pm,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
