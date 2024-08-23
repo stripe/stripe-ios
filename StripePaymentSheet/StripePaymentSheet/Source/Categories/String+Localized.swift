@@ -326,10 +326,17 @@ extension String.Localized {
         )
     }
 
-    static var after_pay_subtitle_text: String {
+    static var buy_now_or_pay_later_with_afterpay: String {
         STPLocalizedString(
-            "%1$d interest-free payments of %2$@",
-            "Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99"
+            "Buy now or pay later with Afterpay",
+            "Subtitle shown on a button allowing a user to select to pay with Afterpay."
+        )
+    }
+
+    static var buy_now_or_pay_later_with_clearpay: String {
+        STPLocalizedString(
+            "Buy now or pay later with Clearpay",
+            "Subtitle shown on a button allowing a user to select to pay with Clearpay."
         )
     }
 
