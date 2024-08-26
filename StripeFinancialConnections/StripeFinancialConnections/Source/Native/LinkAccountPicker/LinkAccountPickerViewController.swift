@@ -383,7 +383,7 @@ final class LinkAccountPickerViewController: UIViewController {
                         )
                     delegate?.linkAccountPickerViewController(
                         self,
-                        didRequestNextPane: .institutionPicker
+                        didRequestNextPane: .institutionPicker,
                         hideBackButtonOnNextPane: false
                     )
                 } else if nextPane == .bankAuthRepair {
@@ -476,7 +476,8 @@ final class LinkAccountPickerViewController: UIViewController {
                 } else {
                     self.delegate?.linkAccountPickerViewController(
                         self,
-                        didRequestNextPane: .institutionPicker
+                        didRequestNextPane: .institutionPicker,
+                        hideBackButtonOnNextPane: false
                     )
                 }
             }
