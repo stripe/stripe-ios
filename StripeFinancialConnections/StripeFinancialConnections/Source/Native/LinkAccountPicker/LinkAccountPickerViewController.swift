@@ -383,61 +383,58 @@ final class LinkAccountPickerViewController: UIViewController {
                         )
                     delegate?.linkAccountPickerViewController(
                         self,
-                        didRequestNextPane: .institutionPicker
+                        didRequestNextPane: .institutionPicker,
+                        hideBackButtonOnNextPane: false
                     )
-                delegate?.linkAccountPickerViewController(
-                    self,
-                    didRequestNextPane: .institutionPicker,
-                    hideBackButtonOnNextPane: false
-                )
-            } else if nextPane == .bankAuthRepair {
-                dataSource
-                    .analyticsClient
-                    .logUnexpectedError(
-                        FinancialConnectionsSheetError
-                            .unknown(
-                                debugDescription: "Connecting a repair account, but user shouldn't be able to."
-                            ),
-                        errorName: "ConnectRepairAccountError",
-                        pane: .linkAccountPicker
-                    )
-                delegate?.linkAccountPickerViewController(
-                    self,
-                    didRequestNextPane: .institutionPicker,
-                    hideBackButtonOnNextPane: false
-                )
-            } else {
-                // non-sheet next pane -- likely step up
-                delegate?.linkAccountPickerViewController(
-                    self,
-                    didRequestNextPane: nextPane,
-                    hideBackButtonOnNextPane: false
-                )
-            }
-        }
-
-        if dataSource.acquireConsentOnPrimaryCtaClick {
-            footerView?.showLoadingView(true)
-            dataSource
-                .markConsentAcquired()
-                .observe { [weak self] result in
-                    guard let self = self else { return }
-                    footerView?.showLoadingView(false)
-                    switch result {
-                    case .success:
-                        pushToNextPane()
-                    case .failure(let error):
-                        self.dataSource.analyticsClient.logUnexpectedError(
-                            error,
-                            errorName: "ConsentAcquiredError",
+                } else if nextPane == .bankAuthRepair {
+                    dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            FinancialConnectionsSheetError
+                                .unknown(
+                                    debugDescription: "Connecting a repair account, but user shouldn't be able to."
+                                ),
+                            errorName: "ConnectRepairAccountError",
                             pane: .linkAccountPicker
                         )
-                        self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
-                    }
-
+                    delegate?.linkAccountPickerViewController(
+                        self,
+                        didRequestNextPane: .institutionPicker,
+                        hideBackButtonOnNextPane: false
+                    )
+                } else {
+                    // non-sheet next pane -- likely step up
+                    delegate?.linkAccountPickerViewController(
+                        self,
+                        didRequestNextPane: nextPane,
+                        hideBackButtonOnNextPane: false
+                    )
                 }
-        } else {
-            pushToNextPane()
+            }
+
+            if dataSource.acquireConsentOnPrimaryCtaClick {
+                footerView?.showLoadingView(true)
+                dataSource
+                    .markConsentAcquired()
+                    .observe { [weak self] result in
+                        guard let self = self else { return }
+                        footerView?.showLoadingView(false)
+                        switch result {
+                        case .success:
+                            pushToNextPane()
+                        case .failure(let error):
+                            self.dataSource.analyticsClient.logUnexpectedError(
+                                error,
+                                errorName: "ConsentAcquiredError",
+                                pane: .linkAccountPicker
+                            )
+                            self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
+                        }
+
+                    }
+            } else {
+                pushToNextPane()
+            }
         }
     }
 
@@ -681,94 +678,6 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                             partnerAccount: selectedPartnerAccount
                         )
                     }
-
-                    var delayDeselectingAccounts = false
-                    let willDismissSheet = {
-                        if delayDeselectingAccounts {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                deselectPreviouslySelectedAccount()
-                            }
-                        } else {
-                            deselectPreviouslySelectedAccount()
-                        }
-                    }
-
-                    let didSelectContinue: () -> Void = { [weak self] in
-                        guard let self else { return }
-                        if selectedPartnerAccount.nextPaneOnSelection == .partnerAuth {
-                            if let institution = selectedPartnerAccount.institution {
-                                self.delegate?.linkAccountPickerViewController(
-                                    self,
-                                    requestedPartnerAuthWithInstitution: institution
-                                )
-                            } else {
-                                self.delegate?.linkAccountPickerViewController(
-                                    self,
-                                    didRequestNextPane: .institutionPicker,
-                                    hideBackButtonOnNextPane: false
-                                )
-                            }
-                        }
-                        // nextPaneOnSelection == bankAuthRepair
-                        else {
-                            dataSource
-                                .analyticsClient
-                                .logUnexpectedError(
-                                    FinancialConnectionsSheetError
-                                        .unknown(
-                                            debugDescription: "Updating a repair account, but repairs are not supported in Mobile."
-                                        ),
-                                    errorName: "UpdateRepairAccountError",
-                                    pane: .linkAccountPicker
-                                )
-                            delegate?.linkAccountPickerViewController(
-                                self,
-                                didRequestNextPane: .institutionPicker,
-                                hideBackButtonOnNextPane: false
-                            )
-                        }
-                    }
-
-                    let genericInfoViewController = GenericInfoViewController(
-                        genericInfoScreen: drawerOnSelection,
-                        theme: dataSource.manifest.theme,
-                        panePresentationStyle: .sheet,
-                        iconView: {
-                            if let institutionIconUrl = selectedPartnerAccount.institution?.icon?.default {
-                                let institutionIconView = InstitutionIconView()
-                                institutionIconView.setImageUrl(institutionIconUrl)
-                                return institutionIconView
-                            } else {
-                                return nil
-                            }
-                        }(),
-                        // "did select continue"
-                        didSelectPrimaryButton: { genericInfoViewController in
-                            // delay deselecting accounts while we animate to the
-                            // next screen to reduce "animation jank" of
-                            // the account getting deselected
-                            delayDeselectingAccounts = true
-                            genericInfoViewController.dismiss(
-                                animated: true,
-                                completion: {
-                                    didSelectContinue()
-                                }
-                            )
-                        },
-                        // "did select cancel"
-                        didSelectSecondaryButton: { genericInfoViewController in
-                            delayDeselectingAccounts = false
-                            genericInfoViewController.dismiss(
-                                animated: true
-                            )
-                        },
-                        didSelectURL: { [weak self] url in
-                            guard let self = self else { return }
-                            self.didSelectURLInTextFromBackend(url)
-                        },
-                        willDismissSheet: willDismissSheet
-                    )
-                    genericInfoViewController.present(on: self)
                 } else {
                     dataSource
                         .analyticsClient
