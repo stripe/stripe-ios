@@ -24,14 +24,11 @@ class ScriptMessageHandler<Payload: Decodable>: NSObject, WKScriptMessageHandler
             debugPrint("Unexpected message name: \(message.name)")
             return
         }
-        guard 
-            let bodyData = (message.body as? String)?.data(using: .utf8),
-            let body = try? JSONDecoder().decode(Payload.self, from: bodyData) else {
+        do {
+            didReceiveMessage(try message.toDecodable())
+        } catch {
             //TODO: MXMOBILE-2491 Log as analytics
-            debugPrint("Failed to decode body for message with name: \(message.name)")
-            return
+            debugPrint("Failed to decode body for message with name: \(message.name) \(error.localizedDescription)")
         }
-        
-        didReceiveMessage(body)
     }
 }

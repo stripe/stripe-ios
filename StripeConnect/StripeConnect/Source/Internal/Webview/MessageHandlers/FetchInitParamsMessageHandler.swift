@@ -11,6 +11,8 @@ import Foundation
 class FetchInitParamsMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchInitParamsMessageHandler.Reply> {
     struct Reply: Codable, Equatable {
         let locale: String
+        var appearance: VoidPayload = .init()
+        var fonts: [VoidPayload] = []
         // TODO: Add fonts & appearance here.
     }
     init(didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {

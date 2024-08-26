@@ -9,7 +9,7 @@ import Foundation
 @testable import StripeConnect
 import XCTest
 
-class ReturnedFromAuthenticatedWebViewSenderTests: MessageSenderTestBase {
+class ReturnedFromAuthenticatedWebViewSenderTests: ScriptWebTestBase {
     func testSendMessage() throws {
         try validateMessageSent(sender: ReturnedFromAuthenticatedWebViewSender(payload: .init(url: "https://dashboard.stripe.com")))
     }

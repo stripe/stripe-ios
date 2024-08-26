@@ -8,20 +8,17 @@
 @testable import StripeConnect
 import XCTest
 
-class DebugMessageHandlerTests: ScriptMessageHandlerTestBase {
+class DebugMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() {
         let expectation = self.expectation(description: "Message received")
         let debugMessage = "test message"
         
-        addMessageHandler(messageHandler: DebugMessageHandler(didReceiveMessage: { payload in
+        webView.addMessageHandler(messageHandler: DebugMessageHandler(didReceiveMessage: { payload in
             expectation.fulfill()
             XCTAssertEqual(payload, debugMessage)
         }))
         
-        evaluateMessage(name: "debug",
-                        json: """
-                        "\(debugMessage)"
-                        """)
+        webView.evaluateDebugMessage(message: debugMessage)
         
         waitForExpectations(timeout: 1, handler: nil)
     }

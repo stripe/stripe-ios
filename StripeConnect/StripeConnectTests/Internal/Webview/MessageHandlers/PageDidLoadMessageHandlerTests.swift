@@ -8,21 +8,18 @@
 @testable import StripeConnect
 import XCTest
 
-class PageDidLoadMessageHandlerTests: ScriptMessageHandlerTestBase {
+class PageDidLoadMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() {
         let expectation = self.expectation(description: "Message received")
         
         let pageViewId = "123"
         
-        addMessageHandler(messageHandler: PageDidLoadMessageHandler(didReceiveMessage: { payload in
+        webView.addMessageHandler(messageHandler: PageDidLoadMessageHandler(didReceiveMessage: { payload in
             expectation.fulfill()
             XCTAssertEqual(payload, .init(pageViewId: pageViewId))
         }))
         
-        evaluateMessage(name: "pageDidLoad",
-                        json: """
-                        {"pageViewId": "\(pageViewId)"}
-                        """)
+        webView.evaluatePageDidLoad(pageViewId: pageViewId)
         
         waitForExpectations(timeout: 1, handler: nil)
     }

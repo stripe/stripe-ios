@@ -25,21 +25,18 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Codable>: NSOb
             debugPrint("Unexpected message name: \(message.name)")
             return (nil, "Unexpected message")
         }
-        guard
-            let bodyData = (message.body as? String)?.data(using: .utf8),
-            let body = try? JSONDecoder().decode(Payload.self, from: bodyData) else {
-            //TODO: MXMOBILE-2491 Log as analytics
-            debugPrint("Failed to decode body for message with name: \(message.name)")
-            return (nil, "Failed to decode body for message")
-        }
         do {
-            let value = try await didReceiveMessage(body)
-            let data = try JSONEncoder().encode(value)
-            guard let response = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) else {
-                return (nil, "Failed to decode body")
+            let payload: Payload = try message.toDecodable()
+            let value = try await didReceiveMessage(payload)
+            let responseData = try JSONEncoder().encode(value)
+            
+            guard let response = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) else {
+                return (nil, "Failed to encode response")
             }
+            
             return (response, nil)
         } catch {
+            debugPrint("Error processing message: \(error.localizedDescription)")
             return (nil, error.localizedDescription)
         }
     }

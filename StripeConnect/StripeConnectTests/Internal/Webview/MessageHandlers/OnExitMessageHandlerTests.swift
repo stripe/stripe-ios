@@ -9,20 +9,15 @@
 @testable import StripeConnect
 import XCTest
 
-class OnExitMessageHandlerTests: ScriptMessageHandlerTestBase {
+class OnExitMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() {
         let expectation = self.expectation(description: "Message received")
         
-        addMessageHandler(messageHandler: OnExitMessageHandler(didReceiveMessage: {
+        webView.addMessageHandler(messageHandler: OnExitMessageHandler(didReceiveMessage: {
             expectation.fulfill()
         }))
         
-        evaluateMessage(name: "onSetterFunctionCalled",
-                        json: """
-                        {
-                            "setter": "setOnExit"
-                        }
-                        """)
+        webView.evaluateSetOnExit()
         
         waitForExpectations(timeout: 1, handler: nil)
     }
