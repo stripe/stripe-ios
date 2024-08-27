@@ -136,7 +136,7 @@ extension XCUIApplication {
     }
 
     var fc_nativeSaveToLinkButton: XCUIElement {
-        return buttons["Save to Link"]
+        return buttons["Save with Link"]
     }
 
     var fc_nativeSuccessDoneButton: XCUIElement {

@@ -493,8 +493,12 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
             app.fc_nativeFeaturedInstitution(name: "Data cannot be shared through Link").tap()
 
-            // success institution will be selected by default
-
+            // select "High Balance" instead of the default "Success" account because
+            // selecting the "Success" will override the previously-linked manual entry account
+            XCTAssertTrue(app.fc_nativeConnectAccountsButton.waitForExistence(timeout: 60.0))
+            app.fc_scrollDown()
+            app.staticTexts["High Balance"].waitForExistenceAndTap()
+            
             app.fc_nativeConnectAccountsButton.tap()
 
             app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
@@ -525,7 +529,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // tap institution
         //
         // note that this will NOT present a drawer because user needs to consent
-        app.scrollViews.staticTexts["Success"].waitForExistenceAndTap()
+        app.scrollViews.staticTexts["High Balance"].waitForExistenceAndTap()
 
         // this will get consent
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
