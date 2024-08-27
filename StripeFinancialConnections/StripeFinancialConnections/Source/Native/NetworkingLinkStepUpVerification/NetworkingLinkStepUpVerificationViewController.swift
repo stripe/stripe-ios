@@ -13,6 +13,10 @@ import UIKit
 protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
+        didReceiveConsumerPublishableKey consumerPublishableKey: String
+    )
+    func networkingLinkStepUpVerificationViewController(
+        _ viewController: NetworkingLinkStepUpVerificationViewController,
         didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution
     )
     func networkingLinkStepUpVerificationViewController(
@@ -30,10 +34,11 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     weak var delegate: NetworkingLinkStepUpVerificationViewControllerDelegate?
 
     private lazy var fullScreenLoadingView: UIView = {
-        return SpinnerView()
+        return SpinnerView(theme: dataSource.manifest.theme)
     }()
     private lazy var bodyView: NetworkingLinkStepUpVerificationBodyView = {
         let bodyView = NetworkingLinkStepUpVerificationBodyView(
+            theme: dataSource.manifest.theme,
             otpView: otpView,
             didSelectResendCode: { [weak self] in
                 self?.didSelectResendCode()
@@ -130,6 +135,10 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
 // MARK: - NetworkingOTPViewDelegate
 
 extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDelegate {
+
+    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
+        delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
+    }
 
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
         if !didShowContent {

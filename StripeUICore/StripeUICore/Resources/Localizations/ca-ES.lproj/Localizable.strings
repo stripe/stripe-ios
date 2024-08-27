@@ -14,6 +14,8 @@
 
 "BSB number" = "Número BSB";
 
+"Bank account •••• %@" = "Compte bancari •••• %@";
+
 "Billing address is same as shipping" = "L'adreça de facturació és la mateixa que la d'enviament";
 
 "Cancel" = "Cancel·la";
@@ -94,9 +96,7 @@
 
 "Remove" = "Eliminar";
 
-"Remove bank account" = "Elimina el compte bancari";
-
-"Remove bank account ending in %@" = "Elimina el compte bancari que acaba en %@";
+"Remove bank account?" = "Voleu eliminar el compte bancari?";
 
 "Remove card" = "Elimina la targeta";
 

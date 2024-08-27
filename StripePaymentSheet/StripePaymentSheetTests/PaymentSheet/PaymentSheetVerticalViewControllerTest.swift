@@ -16,7 +16,6 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             FormSpecProvider.shared.load { _ in
-                PaymentMethodFormViewController.clearFormCache()
                 expectation.fulfill()
             }
         }
@@ -29,6 +28,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 configuration: ._testValue_MostPermissive(),
                 loadResult: loadResult,
                 isFlowController: false,
+                analyticsHelper: ._testValue(),
                 previousPaymentOption: nil
             )
 
@@ -37,54 +37,48 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         // If there are saved PMs, always show the list, even if there's only one other PM
         let savedPMsLoadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            savedPaymentMethods: [._testCard()],
-            isLinkEnabled: false,
-            isApplePayEnabled: false
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [._testCard()]
         )
         XCTAssertTrue(makeViewController(loadResult: savedPMsLoadResult).children.first is VerticalPaymentMethodListViewController)
 
         // If there are no saved payment methods and we have only one payment method and it collects user input, display the form directly
         let formDirectlyResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            savedPaymentMethods: [],
-            isLinkEnabled: false,
-            isApplePayEnabled: false
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: []
         )
         XCTAssertTrue(makeViewController(loadResult: formDirectlyResult).children.first is PaymentMethodFormViewController)
 
         // If there are no saved payment methods and we have only one payment method and it doesn't collect user input, display the list
         let onlyOnePM = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            savedPaymentMethods: [._testCard()],
-            isLinkEnabled: false,
-            isApplePayEnabled: false
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [._testCard()]
         )
         XCTAssertTrue(makeViewController(loadResult: onlyOnePM).children.first is VerticalPaymentMethodListViewController)
 
         // If there are no saved payment methods and we have multiple PMs, display the list
         let multiplePMs = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            savedPaymentMethods: [._testCard()],
-            isLinkEnabled: false,
-            isApplePayEnabled: false
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [._testCard()]
         )
         XCTAssertTrue(makeViewController(loadResult: multiplePMs).children.first is VerticalPaymentMethodListViewController)
 
         // If there are no saved payment methods and we have one PM and Link, display the list
         let onePMAndLink = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            savedPaymentMethods: [._testCard()],
-            isLinkEnabled: true,
-            isApplePayEnabled: false
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [._testCard()]
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndLink).children.first is VerticalPaymentMethodListViewController)
 
         // If there are no saved payment methods and we have one PM and Apple Pay, display the list
         let onePMAndApplePay = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            savedPaymentMethods: [._testCard()],
-            isLinkEnabled: false,
-            isApplePayEnabled: true
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [._testCard()]
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndApplePay).children.first is VerticalPaymentMethodListViewController)
     }

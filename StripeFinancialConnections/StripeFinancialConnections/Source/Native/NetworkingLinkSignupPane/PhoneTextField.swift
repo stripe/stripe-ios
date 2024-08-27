@@ -22,7 +22,8 @@ final class PhoneTextField: UIView {
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
             placeholder: STPLocalizedString("Phone number", "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type a phone number."),
-            showDoneToolbar: true
+            showDoneToolbar: true,
+            theme: theme
         )
         textField.textField.keyboardType = .phonePad
         textField.textField.textContentType = .telephoneNumber
@@ -43,6 +44,7 @@ final class PhoneTextField: UIView {
         return textField
     }()
     private let countryCodeSelectorView: PhoneCountryCodeSelectorView
+    private let theme: FinancialConnectionsTheme
     // we will only start validating as user
     // types once editing ends
     fileprivate var didEndEditingOnce = false
@@ -74,7 +76,7 @@ final class PhoneTextField: UIView {
 
     weak var delegate: PhoneTextFieldDelegate?
 
-    init(defaultPhoneNumber: String?) {
+    init(defaultPhoneNumber: String?, theme: FinancialConnectionsTheme) {
         var defaultPhoneNumber = defaultPhoneNumber
         var defaultCountryCode: String?
         if let _defaultPhoneNumber = defaultPhoneNumber, let e164PhoneNumber = PhoneNumber.fromE164(_defaultPhoneNumber) {
@@ -82,8 +84,10 @@ final class PhoneTextField: UIView {
             defaultCountryCode = e164PhoneNumber.countryCode
         }
         self.countryCodeSelectorView = PhoneCountryCodeSelectorView(
-            defaultCountryCode: defaultCountryCode
+            defaultCountryCode: defaultCountryCode,
+            theme: theme
         )
+        self.theme = theme
         super.init(frame: .zero)
         countryCodeSelectorView.delegate = self
         addAndPinSubview(textField)
@@ -215,7 +219,7 @@ private struct PhoneTextFieldUIViewRepresentable: UIViewRepresentable {
     let defaultPhoneNumber: String
 
     func makeUIView(context: Context) -> PhoneTextField {
-        PhoneTextField(defaultPhoneNumber: defaultPhoneNumber)
+        PhoneTextField(defaultPhoneNumber: defaultPhoneNumber, theme: .light)
     }
 
     func updateUIView(

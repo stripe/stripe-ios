@@ -26,6 +26,7 @@ class IntentConfirmParams {
 
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
+    /// ⚠️ Usage of this is *not compatible* with server-side confirmation!
     let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
     /// True if the customer opts to save their payment method for future payments.
@@ -65,6 +66,9 @@ class IntentConfirmParams {
             let params = STPPaymentMethodParams(type: .unknown)
             params.rawTypeString = externalPaymentMethod.type
             self.init(params: params, type: type)
+        case .instantDebits:
+            let params = STPPaymentMethodParams(type: .link)
+            self.init(params: params, type: type)
         }
     }
 
@@ -103,13 +107,15 @@ class IntentConfirmParams {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
         }
     }
-    func setAllowRedisplay(paymentMethodSave: Bool?,
+    func setAllowRedisplay(paymentSheetFeatures: PaymentSheetComponentFeature?,
                            isSettingUp: Bool) {
-        guard let paymentMethodSave else {
+        guard let paymentSheetFeatures else {
             // Legacy Ephemeral Key
             paymentMethodParams.allowRedisplay = .unspecified
             return
         }
+        let paymentMethodSave = paymentSheetFeatures.paymentMethodSave
+        let allowRedisplayOverride = paymentSheetFeatures.paymentMethodSaveAllowRedisplayOverride
 
         // Customer Session is enabled
         if paymentMethodSave {
@@ -127,15 +133,12 @@ class IntentConfirmParams {
                 }
             }
         } else {
+            stpAssert(saveForFutureUseCheckboxState == .hidden, "Checkbox should be hidden")
             if isSettingUp {
-                // Checkbox is hidden
-                paymentMethodParams.allowRedisplay = .limited
+                paymentMethodParams.allowRedisplay = allowRedisplayOverride ?? .limited
             } else {
-                if saveForFutureUseCheckboxState == .selected {
-                    paymentMethodParams.allowRedisplay = .always
-                } else if saveForFutureUseCheckboxState == .deselected {
-                    paymentMethodParams.allowRedisplay = .unspecified
-                }
+                // PaymentMethod won't be attached to customer
+                paymentMethodParams.allowRedisplay = .unspecified
             }
         }
     }

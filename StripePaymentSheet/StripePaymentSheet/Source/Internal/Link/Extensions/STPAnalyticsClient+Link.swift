@@ -37,7 +37,13 @@ extension STPAnalyticsClient {
     }
 
     func logLinkSignupFailure(error: Error) {
-        self.logPaymentSheetEvent(event: .linkSignupFailure, error: error)
+        var params: [String: Any] = [:]
+        if let stripeError = error as? StripeError,
+           case .apiError(let stripeAPIError) = stripeError,
+           let message = stripeAPIError.message{
+            params["error_message"] = message
+        }
+        self.logPaymentSheetEvent(event: .linkSignupFailure, error: error, params: params)
     }
 
     func logLinkSignupFailureAccountExists() {

@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 
-class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
+class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList
@@ -192,5 +192,20 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    }
+
+    func linkAccountSignUp(
+        emailAddress: String,
+        phoneNumber: String,
+        country: String
+    ) -> Future<LinkSignUpResponse> {
+        return Promise<StripeFinancialConnections.LinkSignUpResponse>()
+    }
+
+    func attachLinkConsumerToLinkAccountSession(
+        linkAccountSession: String,
+        consumerSessionClientSecret: String
+    ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
+        return Promise<StripeFinancialConnections.AttachLinkConsumerToLinkAccountSessionResponse>()
     }
 }

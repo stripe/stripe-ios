@@ -18,12 +18,12 @@ protocol FinancialConnectionsAnalyticsClientDelegate: AnyObject {
 
 final class FinancialConnectionsAnalyticsClient {
 
-    private let analyticsClient: AnalyticsClientV2
+    private let analyticsClient: AnalyticsClientV2Protocol
     private var additionalParameters: [String: Any] = [:]
     weak var delegate: FinancialConnectionsAnalyticsClientDelegate?
 
     init(
-        analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(
+        analyticsClient: AnalyticsClientV2Protocol = AnalyticsClientV2(
             clientId: "mobile-clients-linked-accounts",
             origin: "stripe-linked-accounts-ios"
         )
@@ -210,6 +210,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .networkingSaveToLinkVerification
         case is LinkAccountPickerViewController:
             return .linkAccountPicker
+        case is LinkLoginViewController:
+            return .linkLogin
         case is ErrorViewController:
             return .unexpectedError
         default:

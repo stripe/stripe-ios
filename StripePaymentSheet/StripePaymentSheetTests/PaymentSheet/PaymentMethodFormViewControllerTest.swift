@@ -16,7 +16,6 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             FormSpecProvider.shared.load { _ in
-                PaymentMethodFormViewController.clearFormCache()
                 expectation.fulfill()
             }
         }
@@ -35,12 +34,12 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...and no default billing address...
         XCTAssertEqual(configuration.defaultBillingDetails, PaymentSheet.Configuration().defaultBillingDetails)
         // ...PaymentMethodFormVC...
-        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), previousCustomerInput: nil, configuration: configuration, isLinkEnabled: false, headerView: nil, delegate: self)
+        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), elementsSession: ._testCardValue(), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
 
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
         sut.endAppearanceTransition()
-        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1")?.text, "")
+        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1").text, "")
 
         // ...and updating the shipping address...
         shippingDetails = AddressViewController.AddressDetails(address: .init(country: "US", line1: "Updated line1"))
@@ -50,7 +49,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         sut.endAppearanceTransition()
 
         // ...should update its address fields with the shipping address
-        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1")?.text, "Updated line1")
+        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1").text, "Updated line1")
     }
 
     func testHandlesViewDidAppear() {
@@ -59,10 +58,13 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             // ..using cash app as an example b/c it contains a SimpleMandateTextView that we can inspect to test behavior below...
             type: .stripe(.cashApp),
             intent: ._testPaymentIntent(paymentMethodTypes: [.cashApp], setupFutureUsage: .offSession),
+            elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
             previousCustomerInput: nil,
+            formCache: .init(),
             configuration: ._testValue_MostPermissive(),
-            isLinkEnabled: false,
+
             headerView: nil,
+            analyticsHelper: ._testValue(),
             delegate: self
         )
         // ...when viewDidAppear is called...
@@ -74,6 +76,37 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         XCTAssertTrue(mandate.mandateTextView.viewDidAppear)
         // ...and notify the delegate
         XCTAssertTrue(didUpdateDelegateMethodCalled)
+    }
+
+    func testFormCache() {
+        let formCache = PaymentMethodFormCache()
+        let firstSUT = PaymentMethodFormViewController(
+            type: .stripe(.card),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
+            elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
+            previousCustomerInput: nil,
+            formCache: formCache,
+            configuration: ._testValue_MostPermissive(),
+
+            headerView: nil,
+            analyticsHelper: ._testValue(),
+            delegate: self
+        )
+        firstSUT.form.getTextFieldElement("ZIP").setText("12345")
+
+        let secondSUT = PaymentMethodFormViewController(
+            type: .stripe(.card),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
+            elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
+            previousCustomerInput: nil,
+            formCache: formCache,
+            configuration: ._testValue_MostPermissive(),
+
+            headerView: nil,
+            analyticsHelper: ._testValue(),
+            delegate: self
+        )
+        XCTAssertEqual(secondSUT.form.getTextFieldElement("ZIP").text, "12345")
     }
 }
 

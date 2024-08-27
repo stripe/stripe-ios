@@ -11,6 +11,7 @@ import UIKit
 
 protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent,
+                                                        elementsSession: STPElementsSession,
                                                         with paymentOption: PaymentOption,
                                                         completion: @escaping(InternalCustomerSheetResult) -> Void)
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
@@ -342,10 +343,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private func defaultCallToAction() -> ConfirmButton.CallToActionType {
         switch mode {
         case .selectingSaved:
-            return .custom(title: STPLocalizedString(
-                "Confirm",
-                "A button used to confirm selecting a saved payment method"
-            ))
+            return .custom(title: String.Localized.confirm)
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
             return .customWithLock(title: STPLocalizedString(
                 "Save",
@@ -466,14 +464,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            guard let (fetchedSetupIntent, fetchedElementsSession) = await fetchSetupIntent(clientSecret: clientSecret) else {
+            guard let (fetchedSetupIntent, elementsSession) = await fetchSetupIntent(clientSecret: clientSecret) else {
                 self.processingInFlight = false
                 self.updateUI()
                 return
             }
-            let setupIntent = Intent.setupIntent(elementsSession: fetchedElementsSession, setupIntent: fetchedSetupIntent)
+            let setupIntent = Intent.setupIntent(fetchedSetupIntent)
 
-            guard let setupIntent = await self.confirm(intent: setupIntent, paymentOption: paymentOption),
+            guard let setupIntent = await self.confirm(intent: setupIntent, elementsSession: elementsSession, paymentOption: paymentOption),
                   let paymentMethod = setupIntent.paymentMethod else {
                 self.processingInFlight = false
                 self.updateUI()
@@ -527,9 +525,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     private func fetchSetupIntent(clientSecret: String) async -> (STPSetupIntent, STPElementsSession)? {
         do {
-            return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret,
-                                                                             clientDefaultPaymentMethod: nil,
-                                                                             configuration: .init())
+            return try await self.customerSheetDataSource.fetchElementsSession(setupIntentClientSecret: clientSecret)
         } catch {
             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
             self.error = error
@@ -546,11 +542,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    func confirm(intent: Intent, paymentOption: PaymentOption) async -> STPSetupIntent? {
+    func confirm(intent: Intent, elementsSession: STPElementsSession, paymentOption: PaymentOption) async -> STPSetupIntent? {
         var setupIntent: STPSetupIntent?
         do {
             setupIntent = try await withCheckedThrowingContinuation { continuation in
-                self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, with: paymentOption, completion: { result in
+                self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, elementsSession: elementsSession, with: paymentOption, completion: { result in
                     switch result {
                     case .canceled:
                         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentCanceled()
@@ -809,10 +805,6 @@ extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewContr
 
     var requiresFullScreen: Bool {
         return false
-    }
-
-    func didFinishAnimatingHeight() {
-        // no-op
     }
 }
 

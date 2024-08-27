@@ -8,8 +8,9 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodPayPalTests: XCTestCase {
+class STPPaymentMethodPayPalTests: STPNetworkStubbingTestCase {
     var payPalJSON: [AnyHashable: Any]?
 
     func _retrievePayPalJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

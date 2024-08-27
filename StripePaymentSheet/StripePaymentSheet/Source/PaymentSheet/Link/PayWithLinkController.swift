@@ -23,10 +23,12 @@ final class PayWithLinkController {
     private var selfRetainer: PayWithLinkController?
 
     let intent: Intent
+    let elementsSession: STPElementsSession
     let configuration: PaymentSheet.Configuration
 
-    init(intent: Intent, configuration: PaymentSheet.Configuration) {
+    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) {
         self.intent = intent
+        self.elementsSession = elementsSession
         self.configuration = configuration
         self.paymentHandler = .init(apiClient: configuration.apiClient)
     }
@@ -40,7 +42,7 @@ final class PayWithLinkController {
         self.selfRetainer = self
         self.completion = completion
 
-        let payWithLinkWebController = PayWithLinkWebController(intent: intent, configuration: configuration)
+        let payWithLinkWebController = PayWithLinkWebController(intent: intent, elementsSession: elementsSession, configuration: configuration)
         payWithLinkWebController.payWithLinkDelegate = self
         payWithLinkWebController.present(over: presentingController)
     }
@@ -52,12 +54,14 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
     func payWithLinkWebControllerDidComplete(
         _ payWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
+        elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: payWithLinkWebController,
             intent: intent,
+            elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             isFlowController: false

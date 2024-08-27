@@ -54,6 +54,7 @@ NSString * const SWHttpTrafficRecorderErrorDomain           = @"RECORDER_ERROR_D
     dispatch_once(&onceToken, ^{
         shared = self.new;
         shared.isRecording = NO;
+        shared.followRedirects = YES;
         shared.fileNo = 0;
         shared.fileCreationQueue = [[NSOperationQueue alloc] init];
         shared.runTimeStamp = 0;
@@ -254,6 +255,9 @@ didReceiveResponse:(NSURLResponse *)response
                                                  }];
     
     NSString *path = [self getFilePath:request response:response];
+    NSLog(@"Recording request: %@", request.URL);
+    NSLog(@"Recording response code: %ld", (long)response.statusCode);
+    NSLog(@"To path: %@", path);
     SWHTTPTrafficRecordingFormat format = [SWHttpTrafficRecorder sharedRecorder].recordingFormat;
     if(format == SWHTTPTrafficRecordingFormatBodyOnly){
         [self createBodyOnlyFileWithRequest:request response:response data:data atFilePath:path];
@@ -276,7 +280,11 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     if (response != nil) {
         [[self client] URLProtocol:self wasRedirectedToRequest:request redirectResponse:response];
     }
-    completionHandler(request);
+    if ([SWHttpTrafficRecorder sharedRecorder].followRedirects) {
+        completionHandler(request);
+    } else {
+        completionHandler(nil);
+    }
 }
 
 
@@ -402,6 +410,11 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
         [tail appendFormat:@"%@: %@\n", key, (NSString*)[response.allHeaderFields objectForKey:key]];
     }
     
+    NSString *postBodyRequest = [self postBodyRequestStringForRequest:request];
+    if (postBodyRequest != nil) {
+        [tail appendFormat:@"X-Stripe-Mock-Request: %@\n", postBodyRequest];
+    }
+    
     [tail appendString:@"\n"];
     
     data = [self doBase64:data request:request response:response];
@@ -421,6 +434,20 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     [self createFileAt:filePath usingData:[tail dataUsingEncoding:NSUTF8StringEncoding] completionHandler:^(BOOL created) {
         [self.class updateRecorderProgressDelegate:(created ? SWHTTPTrafficRecordingProgressRecorded : SWHTTPTrafficRecordingProgressFailedToRecord) userInfo: userInfo];
     }];
+}
+
+-(NSString *)postBodyRequestStringForRequest:(NSURLRequest *)request {
+    NSString *postBody = [request valueForHTTPHeaderField:@"X-Stripe-Mock-Request"];
+    if (postBody != nil && [postBody length] > 0) {
+        NSString *(^postBodyTransformBlock)(NSURLRequest *request, NSString *postBody) = [SWHttpTrafficRecorder sharedRecorder].postBodyTransformBlock;
+        
+        if(postBodyTransformBlock){
+            postBody = postBodyTransformBlock(request, postBody);
+        }
+
+        return postBody;
+    }
+    return nil;
 }
 
 -(NSData *)replaceRegexWithTokensInData: (NSData *) data {

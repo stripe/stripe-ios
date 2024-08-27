@@ -81,46 +81,35 @@ class VerticalPaymentMethodListViewController: UIViewController {
             ]
         }
 
-        // Special case - order "New Card" immediately after saved card:
-        let shouldReorderNewCard: Bool = paymentMethodTypes.contains(.stripe(.card)) && savedPaymentMethod?.type == .card
-        if shouldReorderNewCard {
-            let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.card))
-            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card), savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance, shouldAnimateOnPress: true) { [weak self] in
-                self?.didTap(rowButton: $0, selection: selection)
-            }
-            views.append(rowButton)
-            if initialSelection == selection {
-                rowButton.isSelected = true
-                currentSelection = selection
-            }
-        }
-
-        // Apple Pay and Link:
-        if shouldShowApplePay {
+        // Build Apple Pay and Link rows
+        let applePay: RowButton? = {
+            guard shouldShowApplePay else { return nil }
             let selection = VerticalPaymentMethodListSelection.applePay
             let rowButton = RowButton.makeForApplePay(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .applePay)
             }
-            views.append(rowButton)
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
             }
-        }
-        if shouldShowLink {
+            return rowButton
+        }()
+        let link: RowButton? = {
+            guard shouldShowLink else { return nil }
             let selection = VerticalPaymentMethodListSelection.link
             let rowButton = RowButton.makeForLink(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
-            views.append(rowButton)
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
             }
-        }
+            return rowButton
+        }()
 
-        // All other payment methods (excluding card, if it was already added above):
-        let paymentMethodTypes = shouldReorderNewCard ? paymentMethodTypes.filter({ $0 != .stripe(.card) }) : paymentMethodTypes
+        // Payment methods
+        var indexAfterCards: Int?
+        let paymentMethodTypes = paymentMethodTypes
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(
@@ -134,12 +123,17 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 self?.didTap(rowButton: $0, selection: selection)
             }
             views.append(rowButton)
-
+            if paymentMethodType == .stripe(.card), let index = views.firstIndex(of: rowButton) {
+                indexAfterCards = index + 1
+            }
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
             }
         }
+
+        // Insert Apple Pay/Link after card or, if cards aren't present, first
+        views.insert(contentsOf: [applePay, link].compactMap({ $0 }), at: indexAfterCards ?? 0)
 
         for view in views {
             stackView.addArrangedSubview(view)
@@ -242,6 +236,19 @@ enum VerticalPaymentMethodListSelection: Equatable {
             return lhsPM.stripeId == rhsPM.stripeId
         default:
             return false
+        }
+    }
+
+    var analyticsIdentifier: String {
+        switch self {
+        case .applePay:
+            return "apple_pay"
+        case .link:
+            return "link"
+        case .saved:
+            return "saved"
+        case .new(paymentMethodType: let type):
+            return type.identifier
         }
     }
 }

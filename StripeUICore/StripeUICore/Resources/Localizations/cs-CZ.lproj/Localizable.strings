@@ -14,6 +14,8 @@
 
 "BSB number" = "Číslo BSB";
 
+"Bank account •••• %@" = "Bankovní účet •••• %@";
+
 "Billing address is same as shipping" = "Fakturační adresa je stejná jako dodací";
 
 "Cancel" = "Zrušit";
@@ -94,9 +96,7 @@
 
 "Remove" = "Odebrat";
 
-"Remove bank account" = "Odebrat bankovní účet";
-
-"Remove bank account ending in %@" = "Odebrat bankovní účet končící na %@";
+"Remove bank account?" = "Odebrat bankovní účet?";
 
 "Remove card" = "Odebrat kartu";
 

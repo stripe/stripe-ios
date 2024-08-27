@@ -181,7 +181,13 @@ extension STPElementsSession: STPAPIResponseDecodable {
         )
     }
 }
+
+// MARK: - Extensions
 extension STPElementsSession {
+    var isCardBrandChoiceEligible: Bool {
+        return cardBrandChoice?.eligible ?? false
+    }
+
     func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {
@@ -210,8 +216,8 @@ extension STPElementsSession {
 }
 
 extension STPElementsSession {
-    func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
-        guard let paymentMethodSave = customerSessionPaymentSheetPaymentMethodSave() else {
+    var savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        guard let paymentMethodSave = customerSessionPaymentSheetFeatures?.paymentMethodSave else {
             return .legacy
         }
         return paymentMethodSave
@@ -219,17 +225,25 @@ extension STPElementsSession {
         : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
     }
 
-    /// Returns the value on CustomerSession's components.payment_sheet.features.payment_method_save
-    /// - Returns:
-    /// -   true, if the value of payment_method_save == "enabled",
-    /// -   false, if the value of payment_method_save == "disabled",
-    /// -   nil, if CustomerSession is not available (using legacy ephemeral key, or payment_sheet component is not enabled)
-    func customerSessionPaymentSheetPaymentMethodSave() -> Bool? {
+    var customerSessionPaymentSheetFeatures: PaymentSheetComponentFeature? {
         guard let customerSession = customer?.customerSession,
-              customerSession.paymentSheetComponent.enabled,
-              let features = customerSession.paymentSheetComponent.features else {
+              customerSession.paymentSheetComponent.enabled else {
             return nil
         }
-        return features.paymentMethodSave
+        return customerSession.paymentSheetComponent.features
+    }
+}
+
+extension STPElementsSession {
+    func savePaymentMethodConsentBehaviorForCustomerSheet() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        return customerSessionCustomerSheet() ? .customerSheetWithCustomerSession : .legacy
+    }
+
+    func customerSessionCustomerSheet() -> Bool {
+        guard let customerSession = customer?.customerSession,
+              customerSession.customerSheetComponent.enabled else {
+            return false
+        }
+        return true
     }
 }

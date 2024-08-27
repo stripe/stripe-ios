@@ -12,10 +12,11 @@ import UIKit
 final class AccountPickerFooterView: UIView {
 
     private let singleAccount: Bool
+    private let theme: FinancialConnectionsTheme
     private let didSelectLinkAccounts: () -> Void
 
     private lazy var linkAccountsButton: Button = {
-        let linkAccountsButton = Button.primary()
+        let linkAccountsButton = Button.primary(theme: theme)
         linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -30,10 +31,12 @@ final class AccountPickerFooterView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
+        theme: FinancialConnectionsTheme,
         didSelectLinkAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.singleAccount = singleAccount
+        self.theme = theme
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
 

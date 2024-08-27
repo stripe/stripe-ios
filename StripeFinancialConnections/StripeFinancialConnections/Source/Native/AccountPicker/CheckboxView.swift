@@ -11,11 +11,12 @@ import UIKit
 
 final class CheckboxView: UIView {
 
-    private let checkboxImageView: UIImageView = {
+    private let theme: FinancialConnectionsTheme
+    private lazy var checkboxImageView: UIImageView = {
         let checkboxImageView = UIImageView()
         checkboxImageView.contentMode = .scaleAspectFit
         checkboxImageView.image = Image.check.makeImage()
-            .withTintColor(.iconActionPrimary, renderingMode: .alwaysOriginal)
+            .withTintColor(theme.primaryColor, renderingMode: .alwaysOriginal)
         return checkboxImageView
     }()
 
@@ -25,7 +26,8 @@ final class CheckboxView: UIView {
         }
     }
 
-    init() {
+    init(theme: FinancialConnectionsTheme) {
+        self.theme = theme
         super.init(frame: .zero)
         addAndPinSubview(checkboxImageView)
         isSelected = false  // fire off setter to draw

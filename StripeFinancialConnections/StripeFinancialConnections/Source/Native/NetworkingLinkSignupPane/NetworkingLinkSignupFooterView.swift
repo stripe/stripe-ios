@@ -15,6 +15,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     private let aboveCtaText: String
     private let saveToLinkButtonText: String
     private let notNowButtonText: String
+    private let theme: FinancialConnectionsTheme
     private let didSelectSaveToLink: () -> Void
     private let didSelectNotNow: () -> Void
     private let didSelectURL: (URL) -> Void
@@ -60,8 +61,9 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }()
 
     private lazy var saveToLinkButton: StripeUICore.Button = {
-        let saveToLinkButton = Button.primary()
+        let saveToLinkButton = Button.primary(theme: theme)
         saveToLinkButton.title = saveToLinkButtonText
+        saveToLinkButton.accessibilityIdentifier = "networking_link_signup_footer_view.save_to_link_button"
         saveToLinkButton.addTarget(self, action: #selector(didSelectSaveToLinkButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -85,6 +87,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
         aboveCtaText: String,
         saveToLinkButtonText: String,
         notNowButtonText: String,
+        theme: FinancialConnectionsTheme,
         didSelectSaveToLink: @escaping () -> Void,
         didSelectNotNow: @escaping () -> Void,
         didSelectURL: @escaping (URL) -> Void
@@ -92,6 +95,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
         self.aboveCtaText = aboveCtaText
         self.saveToLinkButtonText = saveToLinkButtonText
         self.notNowButtonText = notNowButtonText
+        self.theme = theme
         self.didSelectSaveToLink = didSelectSaveToLink
         self.didSelectNotNow = didSelectNotNow
         self.didSelectURL = didSelectURL
@@ -132,6 +136,7 @@ private struct NetworkingLinkSignupFooterViewUIViewRepresentable: UIViewRepresen
             aboveCtaText: "By saving your account to Link, you agree to Link’s [Terms](https://link.co/terms) and [Privacy Policy](https://link.co/privacy)",
             saveToLinkButtonText: "Save to Link",
             notNowButtonText: "Not now",
+            theme: .light,
             didSelectSaveToLink: {},
             didSelectNotNow: {},
             didSelectURL: { _ in }

@@ -26,11 +26,10 @@ class PaymentSheetFormFactory {
     let paymentMethod: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheetFormFactoryConfig
     let addressSpecProvider: AddressSpecProvider
-    let offerSaveToLinkWhenSupported: Bool
+    let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
     let previousCustomerInput: IntentConfirmParams?
 
-    let supportsLinkCard: Bool
     let isPaymentIntent: Bool
     let isSettingUp: Bool
     let currency: String?
@@ -38,12 +37,14 @@ class PaymentSheetFormFactory {
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
-    let analyticsClient: STPAnalyticsClient
+    let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
-        case .legacy, .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+        case .legacy:
             return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+            return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
             return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
@@ -62,29 +63,43 @@ class PaymentSheetFormFactory {
 
     convenience init(
         intent: Intent,
+        elementsSession: STPElementsSession,
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
-        offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
+
+        /// Whether or not the card form should show the link inline signup checkbox
+        let showLinkInlineCardSignup: Bool = {
+            guard case .paymentSheet(let configuration) = configuration else {
+                return false
+            }
+
+            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+            guard isLinkEnabled && !elementsSession.disableLinkSignup && elementsSession.supportsLinkCard else {
+                return false
+            }
+
+            let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
+            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
                   addressSpecProvider: addressSpecProvider,
-                  offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
+                  showLinkInlineCardSignup: showLinkInlineCardSignup,
                   linkAccount: linkAccount,
-                  cardBrandChoiceEligible: intent.cardBrandChoiceEligible,
-                  supportsLinkCard: intent.supportsLinkCard,
+                  cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
                   currency: intent.currency,
                   amount: intent.amount,
-                  countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
-                  savePaymentMethodConsentBehavior: intent.elementsSession.savePaymentMethodConsentBehavior(),
-                  analyticsClient: analyticsClient)
+                  countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
+                  savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
+                  analyticsHelper: analyticsHelper)
     }
 
     required init(
@@ -92,22 +107,21 @@ class PaymentSheetFormFactory {
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
-        offerSaveToLinkWhenSupported: Bool = false,
+        showLinkInlineCardSignup: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
         cardBrandChoiceEligible: Bool = false,
-        supportsLinkCard: Bool,
         isPaymentIntent: Bool,
         isSettingUp: Bool,
         currency: String?,
         amount: Int?,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
         self.addressSpecProvider = addressSpecProvider
-        self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
+        self.showLinkInlineCardSignup = showLinkInlineCardSignup
         self.linkAccount = linkAccount
         // Restore the previous customer input if its the same type
         if previousCustomerInput?.paymentMethodType == paymentMethod {
@@ -115,7 +129,6 @@ class PaymentSheetFormFactory {
         } else {
             self.previousCustomerInput = nil
         }
-        self.supportsLinkCard = supportsLinkCard
         self.isPaymentIntent = isPaymentIntent
         self.isSettingUp = isSettingUp
         self.currency = currency
@@ -123,70 +136,72 @@ class PaymentSheetFormFactory {
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
-        self.analyticsClient = analyticsClient
+        self.analyticsHelper = analyticsHelper
     }
 
     func make() -> PaymentMethodElement {
-        guard case .stripe(let paymentMethod) = paymentMethod else {
-            return makeExternalPaymentMethodForm()
-        }
-        var additionalElements = [Element]()
-
-        // We have two ways to create the form for a payment method
-        // 1. Custom, one-off forms
-        if paymentMethod == .card {
-            return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
-        } else if paymentMethod == .USBankAccount {
-            return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
-        } else if paymentMethod == .UPI {
-            return makeUPI()
-        } else if paymentMethod == .cashApp && isSettingUp {
-            // special case, display mandate for Cash App when setting up or pi+sfu
-            additionalElements = [makeCashAppMandate()]
-        } else if paymentMethod == .payPal && isSettingUp {
-            // Paypal requires mandate when setting up
-            additionalElements = [makePaypalMandate()]
-        } else if paymentMethod == .revolutPay && isSettingUp {
-            // special case, display mandate for revolutPay when setting up or pi+sfu
-            additionalElements = [makeRevolutPayMandate()]
-        } else if paymentMethod == .klarna && isSettingUp {
-            // special case, display mandate for Klarna when setting up or pi+sfu
-            additionalElements = [makeKlarnaMandate()]
-        } else if paymentMethod == .amazonPay && isSettingUp {
-            // special case, display mandate for Amazon Pay when setting up or pi+sfu
-            additionalElements = [makeAmazonPayMandate()]
-        } else if paymentMethod == .bancontact {
-            return makeBancontact()
-        } else if paymentMethod == .bacsDebit {
-            return makeBacsDebit()
-        } else if paymentMethod == .blik {
-            return makeBLIK()
-        } else if paymentMethod == .OXXO {
-            return  makeOXXO()
-        } else if paymentMethod == .konbini {
-            return makeKonbini()
-        } else if paymentMethod == .boleto {
-            return makeBoleto()
-        } else if paymentMethod == .swish {
-            return makeSwish()
-        } else if paymentMethod == .instantDebits {
+        switch paymentMethod {
+        case .instantDebits:
             return makeInstantDebits()
-        }
+        case .external:
+            return makeExternalPaymentMethodForm()
+        case .stripe(let paymentMethod):
+            var additionalElements = [Element]()
 
-        guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-            stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-            analyticsClient.log(analytic: errorAnalytic)
-            return FormElement(elements: [], theme: theme)
-        }
-        if paymentMethod == .iDEAL {
-            return makeiDEAL(spec: spec)
-        } else if paymentMethod == .sofort {
-            return makeSofort(spec: spec)
-        }
+            // We have two ways to create the form for a payment method
+            // 1. Custom, one-off forms
+            if paymentMethod == .card {
+                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
+            } else if paymentMethod == .USBankAccount {
+                return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
+            } else if paymentMethod == .UPI {
+                return makeUPI()
+            } else if paymentMethod == .cashApp && isSettingUp {
+                // special case, display mandate for Cash App when setting up or pi+sfu
+                additionalElements = [makeCashAppMandate()]
+            } else if paymentMethod == .payPal && isSettingUp {
+                // Paypal requires mandate when setting up
+                additionalElements = [makePaypalMandate()]
+            } else if paymentMethod == .revolutPay && isSettingUp {
+                // special case, display mandate for revolutPay when setting up or pi+sfu
+                additionalElements = [makeRevolutPayMandate()]
+            } else if paymentMethod == .klarna && isSettingUp {
+                // special case, display mandate for Klarna when setting up or pi+sfu
+                additionalElements = [makeKlarnaMandate()]
+            } else if paymentMethod == .amazonPay && isSettingUp {
+                // special case, display mandate for Amazon Pay when setting up or pi+sfu
+                additionalElements = [makeAmazonPayMandate()]
+            } else if paymentMethod == .bancontact {
+                return makeBancontact()
+            } else if paymentMethod == .bacsDebit {
+                return makeBacsDebit()
+            } else if paymentMethod == .blik {
+                return makeBLIK()
+            } else if paymentMethod == .OXXO {
+                return  makeOXXO()
+            } else if paymentMethod == .konbini {
+                return makeKonbini()
+            } else if paymentMethod == .boleto {
+                return makeBoleto()
+            } else if paymentMethod == .swish {
+                return makeSwish()
+            }
 
-        // 2. Element-based forms defined in JSON
-        return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
+            guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
+                stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
+                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
+                analyticsHelper.analyticsClient.log(analytic: errorAnalytic)
+                return FormElement(elements: [], theme: theme)
+            }
+            if paymentMethod == .iDEAL {
+                return makeiDEAL(spec: spec)
+            } else if paymentMethod == .sofort {
+                return makeSofort(spec: spec)
+            }
+
+            // 2. Element-based forms defined in JSON
+            return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
+        }
     }
 }
 

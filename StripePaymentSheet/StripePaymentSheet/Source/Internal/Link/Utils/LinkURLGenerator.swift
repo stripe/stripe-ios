@@ -46,15 +46,15 @@ struct LinkURLParams: Encodable {
 }
 
 class LinkURLGenerator {
-    static func linkParams(configuration: PaymentSheet.Configuration, intent: Intent) throws -> LinkURLParams {
+    static func linkParams(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) throws -> LinkURLParams {
         guard let publishableKey = configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey else {
             throw LinkURLGeneratorError.noPublishableKey
         }
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? intent.countryCode(overrideCountry: configuration.userOverrideCountry) ?? "US"
+        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? elementsSession.countryCode(overrideCountry: configuration.userOverrideCountry) ?? "US"
 
-        let merchantCountryCode = intent.merchantCountryCode ?? customerCountryCode
+        let merchantCountryCode = elementsSession.merchantCountryCode ?? customerCountryCode
 
         // Get email from the previously fetched account in the Link button, or the billing details
         var customerEmail = LinkAccountContext.shared.account?.email
@@ -79,18 +79,19 @@ class LinkURLGenerator {
             loggerMetadata = ["mobile_session_id": sessionID]
         }
 
-        let paymentObjectType: LinkURLParams.PaymentObjectMode = intent.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
+        let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
         let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
 
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
+                             stripeAccount: configuration.apiClient.stripeAccount,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
                              merchantInfo: merchantInfo,
                              customerInfo: customerInfo,
                              paymentInfo: paymentInfo,
                              experiments: [:],
-                             flags: intent.linkFlags,
+                             flags: elementsSession.linkFlags,
                              loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag(),
                              intentMode: intentMode,
@@ -106,8 +107,8 @@ class LinkURLGenerator {
         return url
     }
 
-    static func url(configuration: PaymentSheet.Configuration, intent: Intent) throws -> URL {
-        let params = try Self.linkParams(configuration: configuration, intent: intent)
+    static func url(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) throws -> URL {
+        let params = try Self.linkParams(configuration: configuration, intent: intent, elementsSession: elementsSession)
         return try url(params: params)
     }
 }

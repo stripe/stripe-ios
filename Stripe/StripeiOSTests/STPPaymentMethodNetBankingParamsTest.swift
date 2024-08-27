@@ -9,8 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodNetBankingParamsTests: XCTestCase {
+class STPPaymentMethodNetBankingParamsTests: STPNetworkStubbingTestCase {
     func testCreateNetBankingPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingINPublishableKey)
         let netbankingParams = STPPaymentMethodNetBankingParams()

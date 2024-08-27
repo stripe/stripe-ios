@@ -13,10 +13,11 @@ final class LinkAccountPickerFooterView: UIView {
 
     private let defaultCta: String
     private let singleAccount: Bool
+    private let theme: FinancialConnectionsTheme
     private let didSelectConnectAccount: () -> Void
 
     private lazy var connectAccountButton: Button = {
-        let connectAccountButton = Button.primary()
+        let connectAccountButton = Button.primary(theme: theme)
         connectAccountButton.title = defaultCta
         connectAccountButton.isEnabled = false // disable by default
         connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
@@ -34,11 +35,13 @@ final class LinkAccountPickerFooterView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
+        theme: FinancialConnectionsTheme,
         didSelectConnectAccount: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.defaultCta = defaultCta
         self.singleAccount = singleAccount
+        self.theme = theme
         self.didSelectConnectAccount = didSelectConnectAccount
         super.init(frame: .zero)
 

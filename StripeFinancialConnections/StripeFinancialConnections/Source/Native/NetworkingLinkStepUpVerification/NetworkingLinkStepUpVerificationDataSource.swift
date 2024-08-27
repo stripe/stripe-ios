@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol NetworkingLinkStepUpVerificationDataSource: AnyObject {
+    var manifest: FinancialConnectionsSessionManifest { get }
     var consumerSession: ConsumerSessionData { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var networkingOTPDataSource: NetworkingOTPDataSource { get }
@@ -21,9 +22,9 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
 
     private(set) var consumerSession: ConsumerSessionData
     private let selectedAccountIds: [String]
-    private let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
+    let manifest: FinancialConnectionsSessionManifest
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let networkingOTPDataSource: NetworkingOTPDataSource
 
@@ -51,7 +52,8 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
             apiClient: apiClient,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient,
-            isTestMode: manifest.isTestMode
+            isTestMode: manifest.isTestMode,
+            theme: manifest.theme
         )
         self.networkingOTPDataSource = networkingOTPDataSource
         networkingOTPDataSource.delegate = self

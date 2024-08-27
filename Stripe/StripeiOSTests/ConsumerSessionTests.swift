@@ -13,14 +13,18 @@ import XCTest
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class ConsumerSessionTests: XCTestCase {
+class ConsumerSessionTests: STPNetworkStubbingTestCase {
 
-    let apiClient: STPAPIClient = {
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        return apiClient
-    }()
+    var apiClient: STPAPIClient!
+
+    override func setUp() {
+        strictParamsEnforcement = false
+        super.setUp()
+        apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    }
 
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
@@ -172,7 +176,7 @@ class ConsumerSessionTests: XCTestCase {
             consumerAccountPublishableKey: sessionWithKey?.publishableKey
         ) { result in
             switch result {
-            case .success(let createdPaymentDetails):
+            case .success:
                 // If this succeeds, log out...
                 consumerSession.logout(with: self.apiClient, consumerAccountPublishableKey: sessionWithKey?.publishableKey) { logoutResult in
                     switch logoutResult {
@@ -180,7 +184,7 @@ class ConsumerSessionTests: XCTestCase {
                         // Try to use the session again, it shouldn't work
                         consumerSession.createPaymentDetails(paymentMethodParams: paymentMethodParams, with: self.apiClient, consumerAccountPublishableKey: sessionWithKey?.publishableKey) { loggedOutAuthenticatedActionResult in
                             switch loggedOutAuthenticatedActionResult {
-                            case .success(let success):
+                            case .success:
                                 XCTFail("Logout failed to invalidate token")
                             case .failure(let error):
 

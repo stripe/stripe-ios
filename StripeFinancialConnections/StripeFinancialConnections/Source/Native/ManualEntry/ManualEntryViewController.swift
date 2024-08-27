@@ -25,18 +25,16 @@ final class ManualEntryViewController: UIViewController {
     weak var delegate: ManualEntryViewControllerDelegate?
 
     private lazy var manualEntryFormView: ManualEntryFormView = {
-        let manualEntryFormView = ManualEntryFormView(isTestMode: dataSource.manifest.isTestMode)
+        let manualEntryFormView = ManualEntryFormView(
+            isTestMode: dataSource.manifest.isTestMode,
+            theme: dataSource.manifest.theme
+        )
         manualEntryFormView.delegate = self
         return manualEntryFormView
     }()
-    private lazy var footerView: ManualEntryFooterView = {
-        let manualEntryFooterView = ManualEntryFooterView(
-            didSelectContinue: { [weak self] in
-                self?.didSelectContinue()
-            }
-        )
-        return manualEntryFooterView
-    }()
+
+    private var footerButton: StripeUICore.Button?
+    private var paneLayoutView: PaneLayoutView?
 
     init(dataSource: ManualEntryDataSource) {
         self.dataSource = dataSource
@@ -51,7 +49,20 @@ final class ManualEntryViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
 
-        let paneLayoutView = PaneLayoutView(
+        let footerView = PaneLayoutView.createFooterView(
+            primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                title: STPLocalizedString(
+                    "Submit",
+                    "The submit button for a screen that allows a user to manually enter their bank account information."
+                ),
+                accessibilityIdentifier: "manual_entry_continue_button",
+                action: didSelectContinue
+            ),
+            theme: dataSource.manifest.theme
+        )
+        self.footerButton = footerView.primaryButton
+
+        self.paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
                 iconView: nil,
                 title: STPLocalizedString(
@@ -88,13 +99,13 @@ final class ManualEntryViewController: UIViewController {
                 }(),
                 contentView: manualEntryFormView
             ),
-            footerView: footerView
+            footerView: footerView.footerView,
+            keepFooterAboveKeyboard: true
         )
-        paneLayoutView.addTo(view: view)
+        paneLayoutView?.addTo(view: view)
         #if !canImport(CompositorServices)
-        paneLayoutView.scrollView.keyboardDismissMode = .onDrag
+        paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif
-        stp_beginObservingKeyboardAndInsettingScrollView(paneLayoutView.scrollView, onChange: nil)
 
         adjustContinueButtonStateIfNeeded()
 
@@ -110,7 +121,7 @@ final class ManualEntryViewController: UIViewController {
         }
         manualEntryFormView.setError(text: nil)  // clear previous error
 
-        footerView.setIsLoading(true)
+        footerButton?.isLoading = true
         dataSource.attachBankAccountToLinkAccountSession(
             routingNumber: routingAndAccountNumber.routingNumber,
             accountNumber: routingAndAccountNumber.accountNumber
@@ -128,7 +139,7 @@ final class ManualEntryViewController: UIViewController {
                         accountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
                     )
             case .failure(let error):
-                self.footerView.setIsLoading(false)
+                self.footerButton?.isLoading = false
 
                 let errorText: String
                 if let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError {
@@ -149,7 +160,7 @@ final class ManualEntryViewController: UIViewController {
     }
 
     private func adjustContinueButtonStateIfNeeded() {
-        footerView.continueButton.isEnabled = (manualEntryFormView.routingAndAccountNumber != nil)
+        footerButton?.isEnabled = (manualEntryFormView.routingAndAccountNumber != nil)
     }
 }
 

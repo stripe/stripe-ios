@@ -34,6 +34,7 @@ final class InstitutionTableView: UIView {
 
     private let allowManualEntry: Bool
     private let institutionSearchDisabled: Bool
+    private let theme: FinancialConnectionsTheme
     let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: InstitutionTableViewDelegate?
@@ -63,6 +64,7 @@ final class InstitutionTableView: UIView {
                 "The subtitle of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number)."
             ),
             image: .add,
+            theme: theme,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 FeedbackGeneratorAdapter.buttonTapped()
@@ -85,6 +87,7 @@ final class InstitutionTableView: UIView {
                 ),
                 subtitle: nil,
                 image: .search,
+                theme: theme,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     FeedbackGeneratorAdapter.buttonTapped()
@@ -100,10 +103,12 @@ final class InstitutionTableView: UIView {
     init(
         frame: CGRect,
         allowManualEntry: Bool,
-        institutionSearchDisabled: Bool
+        institutionSearchDisabled: Bool,
+        theme: FinancialConnectionsTheme
     ) {
         self.allowManualEntry = allowManualEntry
         self.institutionSearchDisabled = institutionSearchDisabled
+        self.theme = theme
         let cellIdentifier = "\(InstitutionTableViewCell.self)"
         tableView = UITableView(frame: frame)
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
@@ -115,7 +120,7 @@ final class InstitutionTableView: UIView {
                     "Unable to dequeue cell \(InstitutionTableViewCell.self) with cell identifier \(cellIdentifier)"
                 )
             }
-            cell.customize(with: institution)
+            cell.customize(with: institution, theme: theme)
             return cell
         }
         dataSource.defaultRowAnimation = .fade

@@ -40,7 +40,7 @@ struct PaymentSheetTestPlayground: View {
             }
         }
         Group {
-            SettingView(setting: $playgroundController.settings.linkEnabled)
+            SettingView(setting: $playgroundController.settings.linkMode)
             SettingView(setting: $playgroundController.settings.userOverrideCountry)
             SettingView(setting: $playgroundController.settings.externalPaymentMethods)
             SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
@@ -92,6 +92,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
+                        SettingPickerView(setting: $playgroundController.settings.amount)
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
@@ -107,7 +108,10 @@ struct PaymentSheetTestPlayground: View {
                                         .bold()
                                     Spacer()
                                 }
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodSave)
+                                SettingPickerView(setting: paymentMethodSaveBinding)
+                                if playgroundController.settings.paymentMethodSave == .disabled {
+                                    SettingPickerView(setting: $playgroundController.settings.allowRedisplayOverride)
+                                }
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
                                 SettingPickerView(setting: paymentMethodRedisplayBinding)
                                 if playgroundController.settings.paymentMethodRedisplay == .enabled {
@@ -154,7 +158,16 @@ struct PaymentSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
-
+    var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
+        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
+            return playgroundController.settings.paymentMethodSave
+        } set: { newValue in
+            if playgroundController.settings.paymentMethodSave != newValue {
+                playgroundController.settings.allowRedisplayOverride = .notSet
+            }
+            playgroundController.settings.paymentMethodSave = newValue
+        }
+    }
     var customCTABinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.customCtaLabel ?? ""

@@ -1,0 +1,25 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/tokens$
+401
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 31 Jul 2024 02:09:41 GMT
+access-control-allow-credentials: true
+Content-Length: 122
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+Www-Authenticate: Bearer realm="Stripe"
+X-Stripe-Mock-Request: card\[exp_month]=6&card\[exp_year]=2050&card\[number]=4242%204242%204242%204242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*
+
+{
+  "error" : {
+    "message" : "Invalid API Key provided: not_a_va********asdf",
+    "type" : "invalid_request_error"
+  }
+}

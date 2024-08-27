@@ -108,8 +108,8 @@ public class PaymentSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
         self.configuration = configuration
-        STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration,
-                                                                   intentConfig: mode.intentConfig)
+        self.analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: configuration)
+        analyticsHelper.logInitialized()
     }
 
     /// Presents a sheet for a customer to complete their payment
@@ -148,6 +148,7 @@ public class PaymentSheet {
         PaymentSheetLoader.load(
             mode: mode,
             configuration: configuration,
+            analyticsHelper: analyticsHelper,
             isFlowController: false
         ) { result in
             switch result {
@@ -159,24 +160,26 @@ public class PaymentSheet {
                         return PaymentSheetViewController(
                             configuration: self.configuration,
                             loadResult: loadResult,
+                            analyticsHelper: self.analyticsHelper,
                             delegate: self
                         )
                     case .vertical:
                         let verticalVC = PaymentSheetVerticalViewController(
                             configuration: self.configuration,
                             loadResult: loadResult,
-                            isFlowController: false
+                            isFlowController: false,
+                            analyticsHelper: self.analyticsHelper
                         )
                         verticalVC.paymentSheetDelegate = self
                         return verticalVC
                     }
                 }()
-                self.bottomSheetViewController.contentStack = [paymentSheetVC]
+                self.bottomSheetViewController.setViewControllers([paymentSheetVC])
             case .failure(let error):
                 completion(.failed(error: error))
             }
         }
-        self.bottomSheetViewController.contentStack = [self.loadingViewController]
+        self.bottomSheetViewController.setViewControllers([self.loadingViewController])
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
@@ -237,6 +240,7 @@ public class PaymentSheet {
         return vc
     }()
 
+    let analyticsHelper: PaymentSheetAnalyticsHelper
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -252,6 +256,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 configuration: self.configuration,
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
+                elementsSession: paymentSheetViewController.elementsSession,
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
                 isFlowController: false
@@ -312,7 +317,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         self.presentPayWithLinkController(
             from: paymentSheetViewController,
-            intent: paymentSheetViewController.intent
+            intent: paymentSheetViewController.intent,
+            elementsSession: paymentSheetViewController.elementsSession
         )
     }
 }
@@ -335,6 +341,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
     func payWithLinkWebControllerDidComplete(
         _ PayWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
+        elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
         let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.85)
@@ -367,10 +374,12 @@ private extension PaymentSheet {
     func presentPayWithLinkController(
         from presentingController: UIViewController,
         intent: Intent,
+        elementsSession: STPElementsSession,
         completion: (() -> Void)? = nil
     ) {
         let payWithLinkVC = PayWithLinkWebController(
             intent: intent,
+            elementsSession: elementsSession,
             configuration: configuration
         )
 
@@ -384,6 +393,7 @@ private extension PaymentSheet {
 
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
+    var elementsSession: STPElementsSession { get }
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()

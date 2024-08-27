@@ -195,11 +195,11 @@ extension PaymentSheet {
 
         /// The layout of payment methods in PaymentSheet. Defaults to `.horizontal`.
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
-        @_spi(STP) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
+        @_spi(ExperimentalPaymentMethodLayoutAPI) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
-    @_spi(STP) public enum PaymentMethodLayout {
+    @_spi(ExperimentalPaymentMethodLayoutAPI) public enum PaymentMethodLayout {
         /// Payment methods are arranged horizontally. Users can swipe left or right to navigate through different payment methods.
         case horizontal
 
@@ -518,12 +518,12 @@ extension STPPaymentMethodBillingDetails {
     }
 }
 extension PaymentSheet.CustomerConfiguration {
-    func ephemeralKeySecretBasedOn(intent: Intent?) -> String? {
+    func ephemeralKeySecretBasedOn(elementsSession: STPElementsSession?) -> String? {
         switch customerAccessProvider {
         case .legacyCustomerEphemeralKey(let legacy):
             return legacy
         case .customerSession:
-            return intent?.elementsSession.customer?.customerSession.apiKey
+            return elementsSession?.customer?.customerSession.apiKey
         }
     }
 }

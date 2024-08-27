@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB-number";
 
+"Bank account •••• %@" = "Pangakonto •••• %@";
+
 "Billing address is same as shipping" = "Arveldusaadress on sama mis tarneaadress";
 
 "Cancel" = "Tühista";
@@ -94,9 +96,7 @@
 
 "Remove" = "Eemalda";
 
-"Remove bank account" = "Eemaldage pangakonto";
-
-"Remove bank account ending in %@" = "Eemaldage pangakonto lõpuga %@";
+"Remove bank account?" = "Kas soovite pangakonto eemaldada?";
 
 "Remove card" = "Eemalda kaart";
 

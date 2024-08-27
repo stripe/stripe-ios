@@ -22,6 +22,8 @@
 
 "Back" = "Назад";
 
+"Bank" = "Банк";
+
 "Bank account" = "Банковский счет";
 
 "Buy now or pay later with Klarna" = "Купите сейчас или оплатите позже через систему Klarna";
@@ -43,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Указывая свои банковские реквизиты и подтверждая платеж, вы принимаете данный запрос на прямое списание средств и <terms>Сервисное соглашение о запросе на прямое списание средств</terms>, а также уполномочиваете компанию Stripe Payments Australia Pty Ltd ACN 160 180 343, идентификационный номер пользователя системы прямого списания средств 507156, (“Stripe”), снимать средства с вашего счета через систему Bulk Electronic Clearing System (BECS) от имени %@ (далее \"Продавец\") на суммы, отдельно указанные вам Продавцом. Вы подтверждаете, что являетесь владельцем указанного выше счета либо лицом с правом подписи по этому счету.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Указывая реквизиты карты, вы разрешаете компании %@ списывать средства с карты в рамках будущих платежей в соответствии с условиями компании.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой электронный адрес, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
@@ -142,9 +148,9 @@
 
 "Save for future payments" = "Сохранить данные для будущих платежей";
 
-"Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
+"Save payment details to %@ for future purchases" = "Сохранить реквизиты платежа в адрес %@ для будущих покупок";
 
-"Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
+"Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
 
 "Save your bank account in just a few steps." = "Сохраните реквизиты своего банковского счета всего за несколько шагов.";
 
@@ -166,11 +172,15 @@
 
 "Simple, secure one-click payments" = "Защищенные безопасные платежи одним нажатием";
 
+"Something went wrong when linking your account.\nPlease try again later." = "При попытке подключить ваш счет произошла ошибка.\nПопробуйте еще раз позже.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Через 1-2 рабочих дня Stripe зачислит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями, которые помогут вам закончить сохранение реквизитов своего банковского счета у %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
 
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Введенный код IBAN ошибочен, код страны \"%@\" не поддерживается.";
 
 "Update" = "Обновить";
 

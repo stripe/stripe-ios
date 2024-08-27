@@ -22,6 +22,8 @@
 
 "Back" = "Indietro";
 
+"Bank" = "Banca";
+
 "Bank account" = "Conto bancario";
 
 "Buy now or pay later with Klarna" = "Paga a rate con Klarna";
@@ -43,6 +45,10 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuando, autorizzi %1$@ ad addebitare questo pagamento e i pagamenti futuri sul tuo conto Cash App conformemente ai termini di %2$@, fino alla revoca di tale autorizzazione. Puoi modificarla in qualsiasi momento nelle impostazioni di Cash app.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Creando un account Link, accetti i <terms>Termini</terms> e l'<privacy>Informativa sulla privacy</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Fornendo i dati del tuo conto bancario e confermando il pagamento, accetti la presente richiesta di addebito diretto e il <terms>contratto di servizio per la richiesta di addebito diretto</terms> e autorizzi Stripe Payments Australia Pty Ltd ACN 160 180 343 con numero ID utente per l'addebito diretto 507156 (\"Stripe\") ad addebitare sul tuo conto tramite il Bulk Electronic Clearing System (BECS) per conto di %@ (\"Esercente\") qualsiasi importo che ti viene comunicato separatamente dall'Esercente. Dichiari di essere un titolare del conto o un firmatario autorizzato per il conto sopra elencato.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Fornendo i dati della tua carta, autorizzi %@ ad addebitare su di essa i futuri pagamenti in base a quanto previsto dai relativi termini e condizioni.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Fornendo il tuo indirizzo email, accetti di creare un account Link e salvare i tuoi dati di pagamento su Link conformemente ai <terms>Termini</terms> e all'<privacy>Informativa sulla privacy</privacy> di Link.";
 
@@ -142,9 +148,9 @@
 
 "Save for future payments" = "Salva per i pagamenti futuri";
 
-"Save this account for future %@ payments" = "Salva il conto per i pagamenti futuri di %@";
+"Save payment details to %@ for future purchases" = "Salva i dati di pagamento su %@ per acquisti futuri";
 
-"Save this card for future %@ payments" = "Salva la carta per i pagamenti futuri di %@";
+"Save this account for future %@ payments" = "Salva il conto per i pagamenti futuri di %@";
 
 "Save your bank account in just a few steps." = "Salva il tuo conto bancario in pochi passaggi.";
 
@@ -166,11 +172,15 @@
 
 "Simple, secure one-click payments" = "Pagamenti semplici e sicuri con un solo clic";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Si è verificato un problema durante il collegamento del conto.\nRiprova più tardi.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe verserà 0,01 USD sul tuo conto entro 1-2 giorni lavorativi. Poi riceverai un'email con le istruzioni per completare il salvataggio del conto bancario con %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe verserà 0,01 USD sul tuo account in 1-2 giorni lavorativi. Poi riceverai un'email con le istruzioni per completare il pagamento a favore di %@.";
 
 "The IBAN you entered is incomplete." = "L'IBAN inserito è incompleto.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L'IBAN inserito non è valido; \"%@\" non è un codice Paese valido.";
 
 "Update" = "Aggiorna";
 

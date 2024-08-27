@@ -140,7 +140,8 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
+            intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
+            elementsSession: .emptyElementsSession,
             paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod, confirmParams: nil),
             paymentHandler: paymentHandler,
             completion: { _, _ in
@@ -164,7 +165,8 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
+            intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
+            elementsSession: .emptyElementsSession,
             paymentOption: .new(confirmParams: MockParams.intentConfirmParams),
             paymentHandler: paymentHandler,
             completion: { _, _ in
@@ -192,7 +194,8 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
+            intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
+            elementsSession: .emptyElementsSession,
             paymentOption: .new(confirmParams: intentConfirmParams),
             paymentHandler: paymentHandler,
             completion: { _, _ in
@@ -217,7 +220,8 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredSetupIntentConfiguration(clientSecret: MockParams.dashboardSetupIntentClientSecret)),
+            intent: .deferredIntent(intentConfig: MockParams.deferredSetupIntentConfiguration(clientSecret: MockParams.dashboardSetupIntentClientSecret)),
+            elementsSession: .emptyElementsSession,
             paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod, confirmParams: nil),
             paymentHandler: paymentHandler,
             completion: { _, _ in
@@ -241,7 +245,8 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredSetupIntentConfiguration(clientSecret: MockParams.dashboardSetupIntentClientSecret)),
+            intent: .deferredIntent(intentConfig: MockParams.deferredSetupIntentConfiguration(clientSecret: MockParams.dashboardSetupIntentClientSecret)),
+            elementsSession: .emptyElementsSession,
             paymentOption: .new(confirmParams: MockParams.intentConfirmParams),
             paymentHandler: paymentHandler,
             completion: { _, _ in
@@ -304,7 +309,7 @@ private extension PaymentSheet_ConfirmParamsTest {
 
     func bodyParams(from request: URLRequest, line: UInt) -> [String: String] {
         guard let httpBody = request.httpBodyOrBodyStream,
-              let query = String(data: httpBody, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+              let query = String(decoding: httpBody, as: UTF8.self).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
               let components = URLComponents(string: "http://someurl.com?\(query)") else {
             XCTFail("Request body empty", line: line)
             return [:]

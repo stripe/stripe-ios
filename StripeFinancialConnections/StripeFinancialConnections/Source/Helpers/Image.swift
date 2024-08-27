@@ -22,6 +22,7 @@ enum Image: String, ImageMaker {
     case close
     case generic_error
     case info
+    case link_logo
     case panel_arrow_right
     case person
     case search

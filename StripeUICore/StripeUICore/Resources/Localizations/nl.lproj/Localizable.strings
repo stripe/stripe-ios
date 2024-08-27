@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB-nummer";
 
+"Bank account •••• %@" = "Bankrekening •••• %@";
+
 "Billing address is same as shipping" = "Factuuradres is hetzelfde als het verzendadres";
 
 "Cancel" = "Annuleren";
@@ -94,9 +96,7 @@
 
 "Remove" = "Verwijderen";
 
-"Remove bank account" = "Bankrekening verwijderen";
-
-"Remove bank account ending in %@" = "Bankrekening verwijderen die eindigt op %@";
+"Remove bank account?" = "Bankrekening verwijderen?";
 
 "Remove card" = "Betaalkaart verwijderen";
 

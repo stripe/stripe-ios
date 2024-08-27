@@ -36,6 +36,7 @@ class AddPaymentMethodViewController: UIViewController {
     lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
+            elementsSession: elementsSession,
             configuration: configuration,
             logAvailability: false
         )
@@ -63,8 +64,10 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private let intent: Intent
+    private let elementsSession: STPElementsSession
     private let configuration: PaymentSheet.Configuration
-    private let isLinkEnabled: Bool
+    private let formCache: PaymentMethodFormCache
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
     var previousCustomerInput: IntentConfirmParams?
 
     private var paymentMethodFormElement: PaymentMethodElement {
@@ -73,7 +76,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, previousCustomerInput: previousCustomerInput, configuration: configuration, isLinkEnabled: isLinkEnabled, headerView: nil, delegate: self)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, delegate: self)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -83,7 +86,6 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
-            isPaymentSheet: true,
             delegate: self
         )
         return view
@@ -101,16 +103,20 @@ class AddPaymentMethodViewController: UIViewController {
 
     required init(
         intent: Intent,
+        elementsSession: STPElementsSession,
         configuration: PaymentSheet.Configuration,
         previousCustomerInput: IntentConfirmParams? = nil,
-        isLinkEnabled: Bool,
+        formCache: PaymentMethodFormCache,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: AddPaymentMethodViewControllerDelegate? = nil
     ) {
         self.configuration = configuration
         self.intent = intent
+        self.elementsSession = elementsSession
         self.previousCustomerInput = previousCustomerInput
         self.delegate = delegate
-        self.isLinkEnabled = isLinkEnabled
+        self.formCache = formCache
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -149,7 +155,17 @@ class AddPaymentMethodViewController: UIViewController {
 
     private func updateFormElement() {
         if selectedPaymentMethodType != paymentMethodFormViewController.paymentMethodType {
-            paymentMethodFormViewController = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, previousCustomerInput: previousCustomerInput, configuration: configuration, isLinkEnabled: isLinkEnabled, headerView: nil, delegate: self)
+            paymentMethodFormViewController = PaymentMethodFormViewController(
+                type: selectedPaymentMethodType,
+                intent: intent,
+                elementsSession: elementsSession,
+                previousCustomerInput: previousCustomerInput,
+                formCache: formCache,
+                configuration: configuration,
+                headerView: nil,
+                analyticsHelper: analyticsHelper,
+                delegate: self
+            )
         }
         updateUI()
     }
@@ -169,6 +185,7 @@ class AddPaymentMethodViewController: UIViewController {
 
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
+        analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
 #if !canImport(CompositorServices)
             UISelectionFeedbackGenerator().selectionChanged()
 #endif

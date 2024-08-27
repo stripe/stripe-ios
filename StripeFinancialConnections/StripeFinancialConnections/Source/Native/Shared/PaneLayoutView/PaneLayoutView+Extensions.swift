@@ -145,6 +145,7 @@ extension PaneLayoutView {
         primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
         secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration? = nil,
         topText: String? = nil,
+        theme: FinancialConnectionsTheme,
         didSelectURL: ((URL) -> Void)? = nil
     ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?, secondaryButton: StripeUICore.Button?) {
         guard
@@ -177,7 +178,7 @@ extension PaneLayoutView {
 
         var primaryButtonReference: StripeUICore.Button?
         if let primaryButtonConfiguration = primaryButtonConfiguration {
-            let primaryButton = Button.primary()
+            let primaryButton = Button.primary(theme: theme)
             primaryButtonReference = primaryButton
             primaryButton.title = primaryButtonConfiguration.title
             primaryButton.accessibilityIdentifier = primaryButtonConfiguration.accessibilityIdentifier
@@ -218,9 +219,9 @@ extension PaneLayoutView {
         )
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 16,
+            top: Constants.Layout.defaultVerticalPadding,
             leading: Constants.Layout.defaultHorizontalMargin,
-            bottom: 16,
+            bottom: Constants.Layout.defaultVerticalPadding,
             trailing: Constants.Layout.defaultHorizontalMargin
         )
         return (paddingStackView, primaryButtonReference, secondaryButtonReference)

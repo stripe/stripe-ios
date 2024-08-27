@@ -23,7 +23,6 @@ extension PaymentSheet {
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
-        .instantDebits,
         .AUBECSDebit,
         .UPI,
         .cashApp,
@@ -33,11 +32,29 @@ extension PaymentSheet {
         .bacsDebit,
         .alipay,
         .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
+        .sunbit,
+        .billie,
+        .satispay,
         .boleto,
         .swish,
         .twint,
         .multibanco,
     ]
+
+    /// Canonical source of truth for whether Apple Pay is enabled
+    static func isApplePayEnabled(elementsSession: STPElementsSession, configuration: Configuration) -> Bool {
+        return StripeAPI.deviceSupportsApplePay()
+            && configuration.applePay != nil
+            && elementsSession.isApplePayEnabled
+    }
+
+    /// Canonical source of truth for whether Link is enabled
+    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: Configuration) -> Bool {
+        guard elementsSession.supportsLink else {
+            return false
+        }
+        return !configuration.requiresBillingDetailCollection()
+    }
 }
 
 // MARK: - PaymentMethodRequirementProvider
@@ -65,7 +82,7 @@ extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
 extension Intent: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
-        case let .paymentIntent(_, paymentIntent):
+        case let .paymentIntent(paymentIntent):
             var reqs = [PaymentMethodTypeRequirement]()
             // Shipping address
             if let shippingInfo = paymentIntent.shipping {
@@ -86,7 +103,7 @@ extension Intent: PaymentMethodRequirementProvider {
             }
 
             return reqs
-        case let .setupIntent(_, setupIntent):
+        case let .setupIntent(setupIntent):
             var reqs = [PaymentMethodTypeRequirement]()
 
             // valid us bank verification method

@@ -1,0 +1,109 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/sources$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fsources; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=mono-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=mono-bapi-srv"}],"include_subdomains":true}
+request-id: req_pUiOIPAfbTqjKs
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 4331
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:11:32 GMT
+original-request: req_pUiOIPAfbTqjKs
+stripe-version: 2020-08-27
+idempotency-key: 86e56173-f579-4924-829b-ded298fdf2f4
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: amount=600&currency=GBP&flow=redirect&guid=.*&klarna\[custom_payment_methods]=&klarna\[first_name]=Arthur&klarna\[last_name]=Dent&klarna\[owner_dob_day]=11&klarna\[owner_dob_month]=03&klarna\[owner_dob_year]=1952&klarna\[product]=payment&klarna\[purchase_country]=GB&muid=.*&owner\[address]\[city]=London&owner\[address]\[country]=GB&owner\[address]\[line1]=29%20Arlington%20Avenue&owner\[address]\[postal_code]=N1%207BE&owner\[email]=test%40example\.com&owner\[phone]=02012267709&payment_user_agent=.*&redirect\[return_url]=https%3A\/\/shop\.example\.com\/return\?redirect_merchant_name%3Dxctest&sid=.*&source_order\[items]\[0]\[amount]=500&source_order\[items]\[0]\[currency]=GBP&source_order\[items]\[0]\[description]=Test%20Item&source_order\[items]\[0]\[quantity]=2&source_order\[items]\[0]\[type]=sku&source_order\[items]\[1]\[amount]=100&source_order\[items]\[1]\[currency]=GBP&source_order\[items]\[1]\[description]=Tax&source_order\[items]\[1]\[quantity]=1&source_order\[items]\[1]\[type]=tax&type=klarna
+
+{
+  "id" : "src_1PiS0lGoesj9fw9QWWUhWHRE",
+  "livemode" : false,
+  "amount" : 600,
+  "owner" : {
+    "address" : {
+      "state" : null,
+      "country" : "GB",
+      "line2" : null,
+      "city" : "London",
+      "line1" : "29 Arlington Avenue",
+      "postal_code" : "N1 7BE"
+    },
+    "phone" : "02012267709",
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : "test@example.com",
+    "name" : null
+  },
+  "source_order" : {
+    "amount" : 600,
+    "currency" : "gbp",
+    "email" : "test@example.com",
+    "items" : [
+      {
+        "amount" : 500,
+        "currency" : "gbp",
+        "quantity" : 2,
+        "description" : "Test Item",
+        "type" : "sku",
+        "parent" : null
+      },
+      {
+        "amount" : 100,
+        "currency" : "gbp",
+        "quantity" : 1,
+        "description" : "Tax",
+        "type" : "tax",
+        "parent" : null
+      }
+    ]
+  },
+  "klarna" : {
+    "payment_method_categories" : "pay_over_time,pay_later",
+    "owner_dob_year" : "1952",
+    "client_token" : "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyMzA1ZWJjLWI4MTEtMzYzNy1hYTRjLTY2ZWNhMTg3NGYzZCJ9.eyJzZXNzaW9uX2lkIjoiNzNiODlkY2UtNGNiNy02YWFhLTljOGUtZTVjOGQ3NzZjODk3IiwiYmFzZV91cmwiOiJodHRwczovL2pzLnBsYXlncm91bmQua2xhcm5hLmNvbS9ldS9rcCIsImRlc2lnbiI6ImtsYXJuYSIsImxhbmd1YWdlIjoiZW4iLCJwdXJjaGFzZV9jb3VudHJ5IjoiR0IiLCJlbnZpcm9ubWVudCI6InBsYXlncm91bmQiLCJtZXJjaGFudF9uYW1lIjoiU3RyaXBlIFRlc3QgKEVVKSIsInNlc3Npb25fdHlwZSI6IlBBWU1FTlRTIiwiY2xpZW50X2V2ZW50X2Jhc2VfdXJsIjoiaHR0cHM6Ly9ldS5wbGF5Z3JvdW5kLmtsYXJuYWV2dC5jb20iLCJzY2hlbWUiOnRydWUsImV4cGVyaW1lbnRzIjpbeyJuYW1lIjoia3BjLXBzZWwtNDQyOSIsInZhcmlhdGUiOiJhIn0seyJuYW1lIjoia3AtY2xpZW50LW9uZS1wdXJjaGFzZS1mbG93IiwidmFyaWF0ZSI6InZhcmlhdGUtMSJ9LHsibmFtZSI6ImtwYy0xay1zZXJ2aWNlIiwidmFyaWF0ZSI6InZhcmlhdGUtMSJ9LHsibmFtZSI6ImtwLWNsaWVudC11dG9waWEtc3RhdGljLXdpZGdldCIsInZhcmlhdGUiOiJpbmRleCIsInBhcmFtZXRlcnMiOnsiZHluYW1pYyI6InRydWUifX0seyJuYW1lIjoia3AtY2xpZW50LXV0b3BpYS1mbG93IiwidmFyaWF0ZSI6InZhcmlhdGUtMSJ9LHsibmFtZSI6ImluLWFwcC1zZGstbmV3LWludGVybmFsLWJyb3dzZXIiLCJwYXJhbWV0ZXJzIjp7InZhcmlhdGVfaWQiOiJuZXctaW50ZXJuYWwtYnJvd3Nlci1lbmFibGUifX0seyJuYW1lIjoia3AtY2xpZW50LXV0b3BpYS1zZGstZmxvdyIsInZhcmlhdGUiOiJ2YXJpYXRlLTEifSx7Im5hbWUiOiJpbi1hcHAtc2RrLWNhcmQtc2Nhbm5pbmciLCJwYXJhbWV0ZXJzIjp7InZhcmlhdGVfaWQiOiJjYXJkLXNjYW5uaW5nLWVuYWJsZSJ9fV0sInJlZ2lvbiI6ImV1Iiwib3JkZXJfYW1vdW50Ijo2MDAsIm9mZmVyaW5nX29wdHMiOjAsIm9vIjoiN3MiLCJ2ZXJzaW9uIjoidjEuMTAuMC0xNTkwLWczZWJjMzkwNyJ9.c5DfBp__BCXZoOSAYjOc3x1hvNvDmAM6VxLtU9oCiMiXLuYCEehK8zmWO_GeoYSRJgv4PfXSgQ0HaaPhZRu1jKQXp3BMYRgkxU8YX4Eb92VZ2NfPnA2qf0qPT3R8tRvXwAqnOVLlnlSX3IhukidliLyyxh-Fyleid-d439caly416ccXdxnR6A9aWwJeY11MDMHnZhL_rs7XxVJ97acYQCtt1oaVgx4-tc8RlDUahb0JRLjlXtGT2YVCiJghQdM7czpEWIPCTA7bc8XOPot_9Ez47dxcnZv22GQ4uNsqDJtVSx5EdgCEt2UM3DyokZ6FoD_jjARbDt-D-k4BEe7S6Q",
+    "owner_dob_day" : "11",
+    "pay_later_asset_urls_standard" : "https:\/\/x.klarnacdn.net\/payment-method\/assets\/badges\/generic\/klarna.svg",
+    "pay_later_name" : "Pay in 30 days",
+    "pay_over_time_asset_urls_standard" : "https:\/\/x.klarnacdn.net\/payment-method\/assets\/badges\/generic\/klarna.svg",
+    "owner_dob_month" : "03",
+    "pay_later_asset_urls_descriptive" : "https:\/\/x.klarnacdn.net\/payment-method\/assets\/badges\/generic\/klarna.svg",
+    "pay_later_redirect_url" : "https:\/\/pay.playground.klarna.com\/eu\/hpp\/payments\/3FyUP4z",
+    "purchase_country" : "GB",
+    "first_name" : "Arthur",
+    "payment_intents_redirect_url" : "https:\/\/pay.playground.klarna.com\/eu\/hpp\/payments\/3gvP59e",
+    "pay_over_time_asset_urls_descriptive" : "https:\/\/x.klarnacdn.net\/payment-method\/assets\/badges\/generic\/klarna.svg",
+    "last_name" : "Dent",
+    "pay_over_time_name" : "3 interest-free instalments",
+    "pay_over_time_redirect_url" : "https:\/\/pay.playground.klarna.com\/eu\/hpp\/payments\/3NjHHHA"
+  },
+  "statement_descriptor" : null,
+  "type" : "klarna",
+  "redirect" : {
+    "status" : "pending",
+    "failure_reason" : null,
+    "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1PiS0lGoesj9fw9QWWUhWHRE?client_secret=src_client_secret_oK3whWBTtAqPRlO6sW0WUbzR",
+    "return_url" : "https:\/\/shop.example.com\/return?redirect_merchant_name=xctest"
+  },
+  "usage" : "single_use",
+  "object" : "source",
+  "created" : 1722391891,
+  "client_secret" : "src_client_secret_oK3whWBTtAqPRlO6sW0WUbzR",
+  "flow" : "redirect",
+  "currency" : "gbp",
+  "status" : "pending"
+}

@@ -39,7 +39,12 @@ final class FormHeaderView: UIView {
         let views = [imageView, label].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.spacing = 12
-        stackView.alignment = .center
+        if imageView == nil {
+            // Avoid stackview ambiguous height
+            stackView.alignment = .fill
+        } else {
+            stackView.alignment = .center
+        }
         return stackView
     }()
 

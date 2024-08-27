@@ -33,6 +33,11 @@ extension XCUIElement {
 
     @discardableResult
     func waitForExistenceAndTap(timeout: TimeInterval = 4.0) -> Bool {
+        if exists {
+            forceTapElement()
+            return true
+        }
+
         guard waitForExistence(timeout: timeout) else {
             return false
         }
@@ -147,7 +152,7 @@ func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElemen
 
         // Then, we do a scroll right on the scrollview
         let startCoordinate = collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
-        startCoordinate.press(forDuration: 0.01, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
+        startCoordinate.press(forDuration: 0.1, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
     }
     return nil
 }
@@ -209,6 +214,10 @@ extension XCTestCase {
         let routingField = context.textFields["manual_entry_routing_number_text_field"]
         routingField.forceTapWhenHittableInTestCase(self)
         app.typeText("110000000")
+
+        // Dismiss keyboard, otherwise we can not see the next field
+        // This is only an artifact in the (test) native version of the flow
+        app.tapCoordinate(at: .init(x: 150, y: 150))
 
         let acctField = context.textFields["manual_entry_account_number_text_field"]
         acctField.forceTapWhenHittableInTestCase(self)

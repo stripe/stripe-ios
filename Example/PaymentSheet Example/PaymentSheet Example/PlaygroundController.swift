@@ -14,9 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
-@_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(ExperimentalPaymentMethodLayoutAPI) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -285,10 +283,18 @@ class PlaygroundController: ObservableObject {
     var customerSessionClientSecret: String?
     var paymentMethodTypes: [String]?
     var amount: Int?
-    var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
     var currentDataTask: URLSessionDataTask?
+
+    var checkoutEndpoint: String {
+        get {
+            settings.checkoutEndpoint
+        }
+        set {
+            settings.checkoutEndpoint = newValue
+        }
+    }
 
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
@@ -428,7 +434,16 @@ extension PlaygroundController {
         self.currentDataTask?.resume()
     }
 
+    struct PlaygroundError: LocalizedError {
+       let errorDescription: String?
+    }
+
     func loadBackend() {
+        func fail(error: Error) {
+            self.lastPaymentResult = .failed(error: error)
+            self.isLoading = false
+            self.currentlyRenderedSettings = self.settings
+        }
         paymentSheetFlowController = nil
         addressViewController = nil
         paymentSheet = nil
@@ -440,10 +455,11 @@ extension PlaygroundController {
             "customer": customerIdOrType,
             "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
+            "amount": settings.amount.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
-            "use_link": settings.linkEnabled == .on,
+            "use_link": settings.linkMode == .link_pm,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
@@ -452,6 +468,10 @@ extension PlaygroundController {
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
+            guard settingsToLoad.apmsEnabled == .off else {
+                fail(error: PlaygroundError(errorDescription: "supported payment methods is set but will have no effect while automatic payment methods are enabled"))
+                return
+            }
             body["supported_payment_methods"] = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
@@ -460,6 +480,10 @@ extension PlaygroundController {
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
             body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
         }
+        if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
+            body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
+        }
+
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, reload again
             if settingsToLoad != self.settings {
@@ -486,10 +510,7 @@ extension PlaygroundController {
                        let jsonError = json["error"] {
                         errorMessage = jsonError
                     }
-                    let error = NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
-                    self.lastPaymentResult = .failed(error: error)
-                    self.isLoading = false
-                    self.currentlyRenderedSettings = self.settings
+                    fail(error: PlaygroundError(errorDescription: errorMessage))
                 }
                 return
             }
@@ -609,6 +630,11 @@ extension PlaygroundController {
     func confirmHandler(_ paymentMethod: STPPaymentMethod,
                         _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        // Sanity check the payment method
+        if paymentMethod.type == .card {
+            assert(paymentMethod.card != nil)
+        }
+
         switch settings.integrationType {
         case .deferred_mp:
             // multiprocessor
@@ -616,7 +642,7 @@ extension PlaygroundController {
             return
         case .deferred_csc:
             if settings.integrationType == .deferred_csc {
-                DispatchQueue.global(qos: .background).async {
+                DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
                     intentCreationCallback(.success(self.clientSecret!))
                 }
             }
@@ -643,8 +669,8 @@ extension PlaygroundController {
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
                 if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400,
-                   let errorMessage = String(data: data, encoding: .utf8){
+                   (response as? HTTPURLResponse)?.statusCode == 400 {
+                    let errorMessage = String(decoding: data, as: UTF8.self)
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {

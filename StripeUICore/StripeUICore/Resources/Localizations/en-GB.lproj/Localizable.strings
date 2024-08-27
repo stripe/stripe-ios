@@ -14,6 +14,8 @@
 
 "BSB number" = "BSB number";
 
+"Bank account •••• %@" = "Bank account •••• %@";
+
 "Billing address is same as shipping" = "Billing address is same as shipping";
 
 "Cancel" = "Cancel";
@@ -94,9 +96,7 @@
 
 "Remove" = "Remove";
 
-"Remove bank account" = "Remove bank account";
-
-"Remove bank account ending in %@" = "Remove bank account ending in %@";
+"Remove bank account?" = "Remove bank account?";
 
 "Remove card" = "Remove card";
 

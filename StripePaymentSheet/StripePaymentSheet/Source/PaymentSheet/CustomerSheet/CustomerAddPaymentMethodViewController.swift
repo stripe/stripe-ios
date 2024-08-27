@@ -35,7 +35,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
-            params.setAllowRedisplayForCustomerSheet(savePaymentMethodConsentBehavior)
             return .new(confirmParams: params)
         }
         return nil
@@ -147,6 +146,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodScreenPresented()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        sendEventToSubviews(.viewDidAppear, from: view)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -233,17 +237,17 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethod: type,
             previousCustomerInput: nil,
             addressSpecProvider: .shared,
-            offerSaveToLinkWhenSupported: false,
+            showLinkInlineCardSignup: false,
             linkAccount: nil,
             cardBrandChoiceEligible: cbcEligible,
-            supportsLinkCard: false,
             isPaymentIntent: false,
             isSettingUp: true,
             currency: nil,
             amount: nil,
             countryCode: nil,
-            savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior)
-            .make()
+            savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
+            analyticsHelper: .init(isCustom: false, configuration: .init()) // Just use a dummy analytics helper; we don't look at these analytics.
+        ).make()
         formElement.delegate = self
         return formElement
     }

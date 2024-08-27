@@ -9,10 +9,18 @@
 @testable@_spi(STP) import StripeUICore
 
 extension Element {
+    func getTextFieldElement(_ label: String) -> TextFieldElement {
+        return getTextFieldElement(label)!
+    }
+
     func getTextFieldElement(_ label: String) -> TextFieldElement? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? TextFieldElement }
             .first { $0.configuration.label == label }
+    }
+
+    func getDropdownFieldElement(_ label: String) -> DropdownFieldElement {
+        return getDropdownFieldElement(label)!
     }
 
     func getDropdownFieldElement(_ label: String) -> DropdownFieldElement? {
@@ -22,15 +30,17 @@ extension Element {
     }
 
     func getMandateElement() -> SimpleMandateElement? {
-        return getAllUnwrappedSubElements()
-            .compactMap { $0 as? SimpleMandateElement }
-            .first
+        return getElement()
     }
 
     func getAUBECSMandateElement() -> StaticElement? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? StaticElement }
             .first { $0.view is AUBECSLegalTermsView }
+    }
+
+    func getPhoneNumberElement() -> PhoneNumberElement {
+        return getPhoneNumberElement()!
     }
 
     func getPhoneNumberElement() -> PhoneNumberElement? {
@@ -43,27 +53,13 @@ extension Element {
             .first { $0.label.hasPrefix(prefix) }
     }
 
+    func getCardSection() -> CardSectionElement {
+        return getElement()!
+    }
+
     func getElement<T>() -> T? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? T }
             .first
-    }
-}
-
-extension SectionElement: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return ["<SectionElement: \(Unmanaged.passUnretained(self).toOpaque())>", title].compactMap { $0 }.joined(separator: " - ")
-    }
-}
-
-extension TextFieldElement: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return "<TextFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>  -  \"\(configuration.label)\"  -  \(validationState)"
-    }
-}
-
-extension DropdownFieldElement {
-    public override var debugDescription: String {
-        return "<DropdownFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>  -  \"\(label ?? "nil")\"  -  \(validationState)"
     }
 }

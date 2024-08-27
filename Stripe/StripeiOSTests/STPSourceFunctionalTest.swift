@@ -10,9 +10,10 @@
 @_spi(STP) @testable import StripeCore
 @testable import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
-class STPSourceFunctionalTest: XCTestCase {
+class STPSourceFunctionalTest: STPNetworkStubbingTestCase {
     func testCreateSource_bancontact() {
         let params = STPSourceParams.bancontactParams(
             withAmount: 1099,
@@ -35,10 +36,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
             XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
             XCTAssertNotNil(source?.redirect?.url)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
 
             expectation.fulfill()
         }
@@ -80,10 +78,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(address?.state, card.address.state)
             XCTAssertEqual(address?.country, card.address.country)
             XCTAssertEqual(address?.postalCode, card.address.postalCode)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
 
             expectation.fulfill()
         }
@@ -117,7 +112,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.details?["statement_descriptor"] as? String, "ORDER AT123")
             // #pragma clang diagnostic push
             // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
             // #pragma clang diagnostic pop
 
             expectation.fulfill()
@@ -149,7 +144,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertNil(source?.details?["statement_descriptor"])
             // #pragma clang diagnostic push
             // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
             // #pragma clang diagnostic pop
 
             expectation.fulfill()
@@ -181,7 +176,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertNil(source?.details?["statement_descriptor"])
             // #pragma clang diagnostic push
             // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
             // #pragma clang diagnostic pop
 
             expectation.fulfill()
@@ -215,10 +210,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.owner?.address?.country, "DE")
             XCTAssertEqual(source?.sepaDebitDetails?.country, "DE")
             XCTAssertEqual(source?.sepaDebitDetails?.last4, "3000")
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
 
             expectation.fulfill()
         }
@@ -251,10 +243,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertNil(source?.owner?.address?.country)
             XCTAssertEqual(source?.sepaDebitDetails?.country, "DE") // German IBAN so sepa tells us country here even though we didnt pass it up as owner info
             XCTAssertEqual(source?.sepaDebitDetails?.last4, "3000")
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
 
             expectation.fulfill()
         }
@@ -282,10 +271,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
             XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
             XCTAssertNotNil(source?.redirect?.url)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
             XCTAssertEqual(source?.details?["country"] as? String, "DE")
 
             expectation.fulfill()
@@ -370,10 +356,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
             XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
             XCTAssertNotNil(source?.redirect?.url)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
             expectation.fulfill()
         }
 
@@ -405,10 +388,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
             XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
             XCTAssertNotNil(source?.redirect?.url)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
             expectation.fulfill()
         }
 
@@ -472,10 +452,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
             XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
             XCTAssertNotNil(source?.redirect?.url)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
             XCTAssertEqual(source?.allResponseFields["statement_descriptor"] as! String, "ORDER AT123")
 
             expectation.fulfill()
@@ -505,10 +482,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
             XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
             XCTAssertNotNil(source?.redirect?.url)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
             XCTAssertNil(source?.allResponseFields["statement_descriptor"])
 
             expectation.fulfill()
@@ -535,10 +509,7 @@ class STPSourceFunctionalTest: XCTestCase {
             XCTAssertEqual(source?.redirect?.status, STPSourceRedirectStatus.pending)
             XCTAssertEqual(source?.redirect?.returnURL, URL(string: "https://shop.example.com/crtABC?redirect_merchant_name=xctest"))
             XCTAssertNotNil(source?.redirect?.url)
-            // #pragma clang diagnostic push
-            // #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertNil(source?.metadata, "Metadata is not returned.")
-            // #pragma clang diagnostic pop
+            XCTAssertNil(source?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
 
             expectation.fulfill()
         }

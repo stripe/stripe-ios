@@ -37,6 +37,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private lazy var continueStateView: UIView = {
         let continueStateViews = ContinueStateViews(
             institutionImageUrl: nil,
+            theme: manifest.theme,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
                 if let url = self.lastOpenedNativeURL {
@@ -83,7 +84,8 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         return item
     }()
 
-    private let loadingView = LoadingView(frame: .zero)
+    // Use nil theme so the spinner view doesn't flash to the theme's color before launching the webview.
+    private let loadingView = LoadingView(frame: .zero, theme: nil)
 
     // MARK: - Init
 
