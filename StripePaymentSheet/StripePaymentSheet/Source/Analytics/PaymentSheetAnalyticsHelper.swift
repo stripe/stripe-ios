@@ -327,6 +327,7 @@ extension PaymentSheet.Configuration {
         payload["apple_pay_config"] = applePay != nil
         payload["style"] = style.rawValue
         payload["customer"] = customer != nil
+        payload["customer_access_provider"] = customer?.customerAccessProvider.analyticValue
         payload["return_url"] = returnURL != nil
         payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
         payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description

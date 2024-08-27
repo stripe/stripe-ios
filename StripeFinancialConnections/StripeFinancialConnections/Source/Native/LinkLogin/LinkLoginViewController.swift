@@ -212,7 +212,7 @@ final class LinkLoginViewController: UIViewController {
             url: url,
             pane: .linkLogin,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { _ in /* Stripe scheme URLs are not expected. */ }
+            handleURL: { _, _ in /* Stripe scheme URLs are not expected. */ }
         )
     }
 
