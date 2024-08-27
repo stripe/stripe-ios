@@ -239,7 +239,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             url: url,
             pane: .networkingLinkSignupPane,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { urlHost in
+            handleURL: { urlHost, _ in
                 if urlHost == "legal-details-notice", let legalDetailsNotice {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNotice,

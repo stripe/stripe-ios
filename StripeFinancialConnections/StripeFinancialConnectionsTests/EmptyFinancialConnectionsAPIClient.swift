@@ -96,7 +96,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
-        routingNumber: String
+        routingNumber: String,
+        consumerSessionClientSecret: String?
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
@@ -120,7 +121,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func saveAccountsToNetworkAndLink(
         shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
@@ -138,6 +139,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func disableNetworking(
         disabledReason: String?,
+        clientSuggestedNextPaneOnDisableNetworking: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
@@ -159,9 +161,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
-        consumerSessionClientSecret: String
-    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsInstitutionList> {
-        return Promise<StripeFinancialConnections.FinancialConnectionsInstitutionList>()
+        consumerSessionClientSecret: String,
+        consentAcquired: Bool?
+    ) -> StripeCore.Future<StripeFinancialConnections.ShareNetworkedAccountsResponse> {
+        return Promise<StripeFinancialConnections.ShareNetworkedAccountsResponse>()
     }
 
     func consumerSessionLookup(
