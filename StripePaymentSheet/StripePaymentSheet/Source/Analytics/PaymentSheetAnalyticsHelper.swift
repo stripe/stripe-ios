@@ -88,11 +88,16 @@ final class PaymentSheetAnalyticsHelper {
                 return "none"
             }
         }()
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "selected_lpm": defaultPaymentMethodAnalyticsValue,
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
         ]
+        let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        if linkEnabled {
+            let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
+            params["link_mode"] = linkMode
+        }
         let duration: TimeInterval = {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
@@ -259,16 +264,6 @@ final class PaymentSheetAnalyticsHelper {
         var additionalParams = [:] as [String: Any]
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
-        if event == .paymentSheetLoadSucceeded {
-            if linkEnabled == true {
-                let linkPassthrough: Bool? = {
-                    guard let elementsSession else { return nil }
-                    return elementsSession.linkPassthroughModeEnabled
-                }()
-                let linkMode: String = linkPassthrough == true ? "passthrough" : "payment_method_mode"
-                additionalParams["link_mode"] = linkMode
-            }
-        }
         additionalParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
         additionalParams["link_session_type"] = elementsSession?.linkPopupWebviewOption.rawValue
         additionalParams["mpe_config"] = configuration.analyticPayload
