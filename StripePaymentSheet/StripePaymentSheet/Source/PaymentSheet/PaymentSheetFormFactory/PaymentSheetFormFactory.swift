@@ -177,6 +177,8 @@ class PaymentSheetFormFactory {
                 return makeBoleto()
             } else if paymentMethod == .swish {
                 return makeSwish()
+            } else if paymentMethod == .linkCardBrand {
+                return makeInstantDebits()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {

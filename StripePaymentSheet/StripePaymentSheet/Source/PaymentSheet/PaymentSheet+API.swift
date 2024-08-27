@@ -410,8 +410,16 @@ extension PaymentSheet {
                         switch result {
                         case .success(let paymentDetails):
                             if elementsSession.linkPassthroughModeEnabled {
+                                let paymentMethodType = Self.getExpectedPaymentMethodType(
+                                    paymentMethodType: paymentDetails.paymentDetailsType,
+                                    linkMode: elementsSession.linkMode
+                                )
                                 // If passthrough mode, share payment details
-                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
+                                linkAccount.sharePaymentDetails(
+                                    id: paymentDetails.stripeID,
+                                    cvc: paymentMethodParams.card?.cvc,
+                                    paymentMethodType: paymentMethodType
+                                ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
                                         confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
@@ -632,6 +640,18 @@ extension PaymentSheet {
         }
         params.returnURL = configuration.returnURL
         return params
+    }
+
+    static func getExpectedPaymentMethodType(
+        paymentMethodType: ConsumerPaymentDetails.PaymentDetailsType?,
+        linkMode: LinkSettings.LinkMode?
+    ) -> ConsumerSession.PaymentMethodType? {
+        switch paymentMethodType {
+        case .card: .card
+        case .bankAccount: linkMode == .linkCardBrand ? .card : .bankAccount
+        case .invalid: nil
+        case .none: nil
+        }
     }
 }
 

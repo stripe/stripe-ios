@@ -200,6 +200,7 @@ extension STPAPIClient {
         id: String,
         consumerAccountPublishableKey: String?,
         cvc: String?,
+        paymentMethodType: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
@@ -213,6 +214,10 @@ extension STPAPIClient {
 
         if let cvc = cvc {
             parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+        }
+
+        if let paymentMethodType {
+            parameters["expected_payment_method_type"] = paymentMethodType
         }
 
         APIRequest<PaymentDetailsShareResponse>.post(

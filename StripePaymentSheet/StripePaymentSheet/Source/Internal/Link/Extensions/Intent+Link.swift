@@ -26,6 +26,10 @@ extension STPElementsSession {
         linkSettings?.fundingSources
     }
 
+    var linkMode: LinkSettings.LinkMode? {
+        linkSettings?.linkMode
+    }
+
     var disableLinkSignup: Bool {
         linkSettings?.disableSignup ?? false
     }

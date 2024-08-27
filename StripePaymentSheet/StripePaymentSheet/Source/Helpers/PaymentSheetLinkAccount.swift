@@ -166,7 +166,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
+    func sharePaymentDetails(
+        id: String,
+        cvc: String?,
+        paymentMethodType: ConsumerSession.PaymentMethodType?,
+        completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
+    ) {
         guard let session = currentSession else {
             assertionFailure()
             return completion(
@@ -182,6 +187,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 id: id,
                 cvc: cvc,
                 consumerAccountPublishableKey: publishableKey,
+                paymentMethodType: paymentMethodType,
                 completion: completionWrapper
             )
         }

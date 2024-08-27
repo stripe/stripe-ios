@@ -175,6 +175,21 @@ extension PaymentSheet {
                 }
             }
 
+            if
+                elementsSession.linkFundingSources?.contains(.bankAccount) == true,
+                !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount),
+                elementsSession.linkSettings?.linkMode == .linkCardBrand
+            {
+                let availabilityStatus = configurationSatisfiesRequirements(
+                    requirements: [.financialConnectionsSDK],
+                    configuration: configuration,
+                    intent: intent
+                )
+                if availabilityStatus == .supported {
+                    recommendedPaymentMethodTypes.append(.stripe(.linkCardBrand))
+                }
+            }
+
             if let merchantPaymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
                 // Order the payment methods according to the merchant's `paymentMethodOrder` configuration:
                 var reorderedPaymentMethodTypes = [PaymentMethodType]()
@@ -196,8 +211,10 @@ extension PaymentSheet {
                 }
                 // 3. Append the remaining PMs in recommendedPaymentMethodTypes
                 reorderedPaymentMethodTypes.append(contentsOf: recommendedPaymentMethodTypes)
+                print("**** reorderedPaymentMethodTypes", reorderedPaymentMethodTypes)
                 return reorderedPaymentMethodTypes
             } else {
+                print("**** recommendedPaymentMethodTypes", recommendedPaymentMethodTypes)
                 return recommendedPaymentMethodTypes
             }
         }
@@ -237,9 +254,9 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
-                        .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
-                        .sunbit, .billie, .satispay:
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .linkCardBrand, .affirm, .paynow,
+                        .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint,
+                        .multibanco, .sunbit, .billie, .satispay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -254,7 +271,7 @@ extension PaymentSheet {
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
                             .mobilePay, .swish, .twint, .sunbit, .billie, .satispay:
                         return [.returnURL]
-                    case .USBankAccount:
+                    case .USBankAccount, .linkCardBrand:
                         return [
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,

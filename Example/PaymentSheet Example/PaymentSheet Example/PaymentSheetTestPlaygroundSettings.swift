@@ -242,6 +242,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case link_pm = "Link PM"
         case passthrough
+        case link_card_brand = "Link Card"
+
+        var value: String {
+            switch self {
+            case .link_pm: "LINK_PAYMENT_METHOD"
+            case .passthrough: "PASSTHROUGH"
+            case .link_card_brand: "LINK_CARD_BRAND"
+            }
+        }
     }
 
     enum UserOverrideCountry: String, PickerEnum {
