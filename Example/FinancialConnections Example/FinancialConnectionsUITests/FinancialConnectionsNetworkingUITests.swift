@@ -402,13 +402,14 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         )
     }
 
-    func testNativeNetworkingManualEntryTestMode() throws {
-        let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
-        executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: emailAddresss)
-        executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: emailAddresss)
-        executeNativeNetworkingManualEntryTestModeConsentWithUpdateRequiredTest(emailAddress: emailAddresss)
-        executeNativeNetworkingManualEntryTestModeNotNowFlowTest(emailAddress: emailAddresss)
-    }
+    // TODO: uncomment once we release an SDK version w/ backend changes
+//    func testNativeNetworkingManualEntryTestMode() throws {
+//        let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
+//        executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: emailAddresss)
+//        executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: emailAddresss)
+//        executeNativeNetworkingManualEntryTestModeConsentWithUpdateRequiredTest(emailAddress: emailAddresss)
+//        executeNativeNetworkingManualEntryTestModeNotNowFlowTest(emailAddress: emailAddresss)
+//    }
 
     private func executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: String) {
         let app = XCUIApplication.fc_launch(
