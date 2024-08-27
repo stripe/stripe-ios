@@ -255,9 +255,20 @@ final class PaymentSheetAnalyticsHelper {
             guard let elementsSession else { return nil }
             return PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         }()
+        
         var additionalParams = [:] as [String: Any]
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
+        if event == .paymentSheetLoadSucceeded {
+            if linkEnabled == true {
+                let linkPassthrough: Bool? = {
+                    guard let elementsSession else { return nil }
+                    return elementsSession.linkPassthroughModeEnabled
+                }()
+                let linkMode: String = linkPassthrough == true ? "passthrough" : "payment_method_mode"
+                additionalParams["link_mode"] = linkMode
+            }
+        }
         additionalParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
         additionalParams["link_session_type"] = elementsSession?.linkPopupWebviewOption.rawValue
         additionalParams["mpe_config"] = configuration.analyticPayload
