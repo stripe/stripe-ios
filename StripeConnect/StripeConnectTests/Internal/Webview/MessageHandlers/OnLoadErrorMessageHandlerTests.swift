@@ -18,6 +18,6 @@ class OnLoadErrorMessageHandlerTests: ScriptWebTestBase {
         
         webView.evaluateOnLoadError(type: "failed_to_load", message: "Error message")
         
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

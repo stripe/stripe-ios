@@ -13,49 +13,115 @@ import WebKit
 import SafariServices
 
 class ConnectComponentWebViewTests: XCTestCase {
-    func testSetup() {
-        let componentManager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test"), fetchClientSecret: {
-            XCTFail("Client secret should not be retrieved in this test")
-            return ""
-        })
-        let webView = ConnectComponentWebView(componentManager: componentManager, componentType: .payouts)
-        
-        XCTAssertEqual(webView.url, URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html#component=payouts&publicKey=test"))
-    }
-    
     @MainActor
     func testFetchClientSecret() async throws {
-        let expectation = XCTestExpectation(description: "Client secret is fetched")
         let componentManager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test"), fetchClientSecret: {
-            expectation.fulfill()
-            return ""
+            return "test"
         })
-        let webView = ConnectComponentWebView(componentManager: componentManager, componentType: .payouts)
+        let webView = ConnectComponentWebView(componentManager: componentManager, componentType: .payouts, loadContent: false)
         
         try await webView.evaluateMessageWithReply(name: "fetchClientSecret",
                                                    json: "{}",
-                                                   postReply: false)
+                                                   expectedResponse: "test")
+    }
+    
+    @MainActor
+    func testFetchInitParams() async throws {
+        let message = FetchInitParamsMessageHandler.Reply(locale: "fr-FR", appearance: .default)
+        let componentManager = componentManagerAssertingOnFetch()
+        let webView = ConnectComponentWebView(componentManager: componentManager,
+                                              componentType: .payouts,
+                                              webLocale: Locale(identifier: "fr_FR"),
+                                              loadContent: false)
         
-        await fulfillment(of: [expectation], timeout: 1.0)
+        
+       try await webView.evaluateMessageWithReply(name: "fetchInitParams",
+                                                                json: "{}",
+                                                                expectedResponse: message)
+    }
+    
+    @MainActor
+    func testUpdateAppearance() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webView = ConnectComponentWebView(componentManager: componentManager,
+                                              componentType: .payouts,
+                                              webLocale: Locale(identifier: "fr_FR"),
+                                              loadContent: false)
+        var appearance = EmbeddedComponentManager.Appearance()
+        appearance.spacingUnit = 5
+        let expectation = try webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(locale: "fr-FR", appearance: .init(appearance: appearance, traitCollection: UITraitCollection()))))
+        componentManager.update(appearance: appearance)
+       
+        // Ensures the appearance on component manager was set.
+        XCTAssertEqual(appearance.asDictionary(traitCollection: .init()), componentManager.appearance.asDictionary(traitCollection: .init()))
+        
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+    
+    @MainActor
+    func testFetchInitParamsTraitCollection() async throws {
+        var appearance = EmbeddedComponentManager.Appearance()
+        appearance.colors.actionPrimaryText = UIColor { $0.userInterfaceStyle == .light ? .black : .white }
+
+        let componentManager = componentManagerAssertingOnFetch(appearance: appearance)
+        
+        let webView = ConnectComponentWebView(componentManager: componentManager,
+                                              componentType: .payouts,
+                                              webLocale: Locale(identifier: "fr_FR"),
+                                              loadContent: false)
+
+        webView.triggerTraitCollectionChange(style: .dark)
+        
+        try await webView.evaluateMessageWithReply(name: "fetchInitParams",
+                                                   json: "{}",
+                                                   expectedResponse: """
+            {"appearance":{"variables":{"actionPrimaryColorText":"rgb(255, 255, 255)","fontFamily":"-apple-system"}},"fonts":[],"locale":"fr-FR"}
+            """)
+    }
+    
+    @MainActor
+    func testUpdateTraitCollection() async throws {
+        var appearance = EmbeddedComponentManager.Appearance()
+        appearance.colors.actionPrimaryText = UIColor { $0.userInterfaceStyle == .light ? .red : .green }
+
+        let componentManager = componentManagerAssertingOnFetch(appearance: appearance)
+        
+        let webView = ConnectComponentWebView(componentManager: componentManager,
+                                              componentType: .payouts,
+                                              webLocale: Locale(identifier: "fr_FR"),
+                                              loadContent: false)
+
+        let expectation = try webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(locale: "fr-FR", appearance: .init(appearance: appearance, traitCollection: UITraitCollection(userInterfaceStyle: .dark)))))
+
+        webView.triggerTraitCollectionChange(style: .dark)
+        
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
     
     @MainActor
     func testLocale() async throws {
-        let componentManager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test"), fetchClientSecret: {
-            XCTFail("Client secret should not be retrieved in this test")
-            return ""
-        })
+        let componentManager = componentManagerAssertingOnFetch()
         let notificationCenter = NotificationCenter()
         let webView = ConnectComponentWebView(
             componentManager: componentManager,
             componentType: .payouts,
             notificationCenter: notificationCenter,
-            webLocale: Locale(identifier: "fr_FR"))
+            webLocale: Locale(identifier: "fr_FR"),
+            loadContent: false)
         
-        let expectation = try webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(locale: "fr-FR")))
+        let expectation = try webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(locale: "fr-FR", appearance: .default)))
         
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
         
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+    
+    func componentManagerAssertingOnFetch(appearance: Appearance = .default) -> EmbeddedComponentManager {
+        EmbeddedComponentManager(apiClient: .init(publishableKey: "test"),
+                                 appearance: appearance,
+                                 fetchClientSecret: {
+            XCTFail("Client secret should not be retrieved in this test")
+            return ""
+        })
     }
 }

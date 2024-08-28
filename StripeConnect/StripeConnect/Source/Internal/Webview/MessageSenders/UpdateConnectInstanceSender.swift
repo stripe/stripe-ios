@@ -9,9 +9,9 @@ import Foundation
 
 /// Updates appearance and locale options.
 struct UpdateConnectInstanceSender: MessageSender {
-    struct Payload: Codable, Equatable {
+    struct Payload: Encodable {
         let locale: String
-        // TODO: Add appearance here.
+        private(set) var appearance: AppearanceWrapper
     }
     let name: String = "updateConnectInstance"
     let payload: Payload
