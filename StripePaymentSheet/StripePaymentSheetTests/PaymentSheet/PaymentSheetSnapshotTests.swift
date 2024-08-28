@@ -431,9 +431,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
                                                             confirmHandler: confirmHandler(_:_:_:),
-                                                            isCVCRecollectionEnabledCallback: {
-            return true
-        })
+                                                            requireCVCRecollection: true)
 
         preparePaymentSheet(
             customer: "snapshot",

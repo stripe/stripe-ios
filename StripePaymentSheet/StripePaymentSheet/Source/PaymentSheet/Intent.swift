@@ -62,7 +62,7 @@ enum Intent {
     var cvcRecollectionEnabled: Bool {
         switch self {
         case .deferredIntent(let intentConfig):
-            return intentConfig.isCVCRecollectionEnabledCallback()
+            return intentConfig.requireCVCRecollection
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
         case .setupIntent:
