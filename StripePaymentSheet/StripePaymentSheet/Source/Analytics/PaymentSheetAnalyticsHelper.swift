@@ -88,11 +88,16 @@ final class PaymentSheetAnalyticsHelper {
                 return "none"
             }
         }()
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "selected_lpm": defaultPaymentMethodAnalyticsValue,
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
         ]
+        let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        if linkEnabled {
+            let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
+            params["link_mode"] = linkMode
+        }
         let duration: TimeInterval = {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
@@ -255,6 +260,7 @@ final class PaymentSheetAnalyticsHelper {
             guard let elementsSession else { return nil }
             return PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         }()
+        
         var additionalParams = [:] as [String: Any]
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
