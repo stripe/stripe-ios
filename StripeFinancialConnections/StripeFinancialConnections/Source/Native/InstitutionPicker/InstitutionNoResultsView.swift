@@ -50,7 +50,7 @@ final class InstitutionNoResultsView: UIView {
             textColor: .textDefault,
             linkColor: .textActionPrimaryFocused,
             showLinkUnderline: false,
-            alignCenter: true
+            alignment: .center
         )
         subtitleLabel.accessibilityIdentifier = "institution_search_no_results_subtitle"
         if let didSelectManuallyEnterDetails = didSelectManuallyEnterDetails {

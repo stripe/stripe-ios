@@ -20,7 +20,6 @@ final class MerchantDataAccessView: HitTestView {
         isNetworking: Bool,
         font: FinancialConnectionsFont,
         boldFont: FinancialConnectionsFont,
-        alignCenter: Bool,
         didSelectLearnMore: @escaping (URL) -> Void
     ) {
         super.init(frame: .zero)
@@ -80,7 +79,7 @@ final class MerchantDataAccessView: HitTestView {
             boldFont: boldFont,
             linkFont: font,
             textColor: .textDefault,
-            alignCenter: alignCenter
+            alignment: .center
         )
         label.setText(
             finalString,
@@ -174,7 +173,6 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
             isNetworking: false,
             font: .body(.small),
             boldFont: .body(.smallEmphasized),
-            alignCenter: Bool.random(),
             didSelectLearnMore: { _ in }
         )
     }

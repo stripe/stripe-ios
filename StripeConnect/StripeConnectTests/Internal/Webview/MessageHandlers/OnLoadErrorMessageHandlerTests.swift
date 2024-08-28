@@ -7,27 +7,16 @@
 @testable import StripeConnect
 import XCTest
 
-class OnLoadErrorMessageHandlerTests: ScriptMessageHandlerTestBase {
+class OnLoadErrorMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() {
         let expectation = self.expectation(description: "Message received")
-        addMessageHandler(messageHandler: OnLoadErrorMessageHandler(didReceiveMessage: { payload in
+        webView.addMessageHandler(messageHandler: OnLoadErrorMessageHandler(didReceiveMessage: { payload in
             expectation.fulfill()
             
             XCTAssertEqual(payload, OnLoadErrorMessageHandler.Values(error: .init(type: "failed_to_load", message: "Error message")))
         }))
         
-        evaluateMessage(name: "onSetterFunctionCalled",
-                        json: """
-                        {
-                            "setter": "setOnLoadError",
-                            "value": {
-                                "error": {
-                                    "type": "failed_to_load",
-                                    "message": "Error message"
-                                }
-                            }
-                        }
-                        """)
+        webView.evaluateOnLoadError(type: "failed_to_load", message: "Error message")
         
         waitForExpectations(timeout: 1, handler: nil)
     }

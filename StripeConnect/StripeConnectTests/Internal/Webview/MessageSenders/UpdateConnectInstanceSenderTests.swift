@@ -9,7 +9,7 @@ import Foundation
 @testable import StripeConnect
 import XCTest
 
-class UpdateConnectInstanceSenderTests: MessageSenderTestBase {
+class UpdateConnectInstanceSenderTests: ScriptWebTestBase {
     func testSendMessage() throws {
         try validateMessageSent(sender: UpdateConnectInstanceSender(payload: .init(locale: "en")))
     }

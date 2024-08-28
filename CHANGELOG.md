@@ -1,3 +1,8 @@
+## X.Y.Z 2024-XX-YY
+### PaymentSheet
+* [Fixed] PaymentSheet now uses a border width of 1.5 instead of 0 when `PaymentSheet.Appearance.borderWidth' is 0.
+
+
 ## 23.29.2 2024-08-19
 ### PaymentSheet
 * [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
