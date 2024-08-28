@@ -26,4 +26,10 @@ public class EmbeddedComponentManager {
         self.apiClient = apiClient
         self.fetchClientSecret = fetchClientSecret
     }
+    
+    /// Creates a payouts component
+    /// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/payouts
+    public func createPayoutsViewController() -> PayoutsViewController {
+        .init(componentManager: self)
+    }
 }
