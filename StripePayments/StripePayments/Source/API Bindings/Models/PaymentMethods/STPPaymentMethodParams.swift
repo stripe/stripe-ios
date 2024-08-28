@@ -82,8 +82,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var boleto: STPPaymentMethodBoletoParams?
     /// If this is a Link PaymentMethod, this contains additional details
     @objc public var link: STPPaymentMethodLinkParams?
-    /// If this is a Link Card Brand PaymentMethod, this contains additional details
-    @objc public var linkCardBrand: STPPaymentMethodLinkCardBrandParams?
     /// If this is an Klarna PaymentMethod, this contains additional details.
     @objc public var klarna: STPPaymentMethodKlarnaParams?
     /// If this is an Affirm PaymentMethod, this contains additional details.
@@ -809,7 +807,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             .blik,
             .weChatPay,
             .link,
-            .linkCardBrand,
             .USBankAccount,
             .cashApp,
             .revolutPay,
@@ -1312,8 +1309,6 @@ extension STPPaymentMethodParams {
             boleto = STPPaymentMethodBoletoParams()
         case .link:
             link = STPPaymentMethodLinkParams()
-        case .linkCardBrand:
-            linkCardBrand = STPPaymentMethodLinkCardBrandParams()
         case .klarna:
             klarna = STPPaymentMethodKlarnaParams()
         case .affirm:
@@ -1368,7 +1363,7 @@ extension STPPaymentMethodParams {
             } else {
                 return "FPX"
             }
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .giropay, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .sofort, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .linkCardBrand, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .unknown:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .giropay, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .sofort, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .unknown:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         @unknown default:

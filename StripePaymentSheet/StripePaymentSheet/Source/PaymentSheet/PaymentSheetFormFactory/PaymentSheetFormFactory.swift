@@ -133,7 +133,7 @@ class PaymentSheetFormFactory {
 
     func make() -> PaymentMethodElement {
         switch paymentMethod {
-        case .instantDebits:
+        case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
         case .external:
             return makeExternalPaymentMethodForm()
@@ -177,8 +177,6 @@ class PaymentSheetFormFactory {
                 return makeBoleto()
             } else if paymentMethod == .swish {
                 return makeSwish()
-            } else if paymentMethod == .linkCardBrand {
-                return makeInstantDebits()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {

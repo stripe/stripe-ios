@@ -186,8 +186,6 @@ extension STPPaymentMethodType {
                 return .pm_type_aubecsdebit
             case .USBankAccount:
                 return .pm_type_us_bank
-            case .linkCardBrand:
-                return .pm_type_us_bank
             case .UPI:
                 return .pm_type_upi
             case .cashApp:

@@ -16,7 +16,10 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
+
+        // Synthetic payment methods:
         case instantDebits
+        case linkCardBrand
 
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
@@ -27,7 +30,7 @@ extension PaymentSheet {
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.label
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
             }
         }
@@ -42,6 +45,8 @@ extension PaymentSheet {
                 return externalPaymentMethod.type
             case .instantDebits:
                 return "instant_debits"
+            case .linkCardBrand:
+                return "link_card_bank"
             }
         }
 
@@ -103,7 +108,7 @@ extension PaymentSheet {
                     }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
             }
         }
@@ -114,7 +119,7 @@ extension PaymentSheet {
                 return stpPaymentMethodType.iconRequiresTinting
             case .external:
                 return false
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return true
             }
         }
@@ -186,7 +191,7 @@ extension PaymentSheet {
                     intent: intent
                 )
                 if availabilityStatus == .supported {
-                    recommendedPaymentMethodTypes.append(.stripe(.linkCardBrand))
+                    recommendedPaymentMethodTypes.append(.linkCardBrand)
                 }
             }
 
@@ -254,7 +259,7 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .linkCardBrand, .affirm, .paynow,
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow,
                         .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint,
                         .multibanco, .sunbit, .billie, .satispay:
                         return [.unsupportedForSetup]
@@ -271,7 +276,7 @@ extension PaymentSheet {
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
                             .mobilePay, .swish, .twint, .sunbit, .billie, .satispay:
                         return [.returnURL]
-                    case .USBankAccount, .linkCardBrand:
+                    case .USBankAccount:
                         return [
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,

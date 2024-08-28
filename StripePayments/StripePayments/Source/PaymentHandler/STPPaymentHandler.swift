@@ -723,7 +723,6 @@ public class STPPaymentHandler: NSObject {
             .weChatPay,
             .boleto,
             .link,
-            .linkCardBrand,
             .klarna,
             .affirm,
             .cashApp,

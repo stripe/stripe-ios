@@ -58,8 +58,6 @@ import Foundation
     case boleto
     /// A Link payment method
     case link
-    /// A Link-branded card payment method.
-    case linkCardBrand
     /// A Klarna payment method.
     case klarna
     /// An Affirm payment method
@@ -147,8 +145,6 @@ import Foundation
             return STPLocalizedString("Boleto", "Payment Method type brand name")
         case .link:
             return STPLocalizedString("Link", "Link Payment Method type brand name")
-        case .linkCardBrand:
-            return STPLocalizedString("Bank", "Link Card Bank Payment Method type brand name")
         case .klarna:
             return STPLocalizedString("Klarna", "Payment Method type brand name")
         case .affirm:
@@ -247,8 +243,6 @@ import Foundation
             return "boleto"
         case .link:
             return "link"
-        case .linkCardBrand:
-            return "link_card_brand"
         case .klarna:
             return "klarna"
         case .affirm:
