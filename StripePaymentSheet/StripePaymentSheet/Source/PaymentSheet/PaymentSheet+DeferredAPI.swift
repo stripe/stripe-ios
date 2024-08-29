@@ -67,6 +67,7 @@ extension PaymentSheet {
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
                         try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, isFlowController: isFlowController)
+                        try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: paymentIntent, paymentMethod: paymentMethod)
                         let paymentIntentParams = makePaymentIntentParams(
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
@@ -96,6 +97,7 @@ extension PaymentSheet {
                     if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                         // 4a. Client-side confirmation
                         try PaymentSheetDeferredValidator.validate(setupIntent: setupIntent, intentConfiguration: intentConfig)
+                        try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: setupIntent, paymentMethod: paymentMethod)
                         let setupIntentParams = makeSetupIntentParams(
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
