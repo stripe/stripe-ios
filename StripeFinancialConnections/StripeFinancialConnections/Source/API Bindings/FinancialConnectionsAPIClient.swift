@@ -266,8 +266,9 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
-        let parameters = [
+        let parameters: [String: Any] = [
             "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
         ]
         return self.post(
             resource: APIEndpointConsentAcquired,
@@ -437,8 +438,9 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
-        let body = [
+        let body: [String: Any] = [
             "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
         ]
         return self.post(
             resource: APIEndpointLinkMoreAccounts,
