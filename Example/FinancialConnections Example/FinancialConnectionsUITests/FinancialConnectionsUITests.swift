@@ -437,6 +437,63 @@ final class FinancialConnectionsUITests: XCTestCase {
                 .exists
         )
     }
+
+    func testNativeCustomManualEntryHandoff() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":false,"merchant":"platform_c","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        let searchBarTextField = app.fc_searchBarTextField
+        searchBarTextField.waitForExistenceAndTap()
+        searchBarTextField.typeText("show_no_results")
+
+        app.otherElements["institution_search_no_results_subtitle"].links.firstMatch.waitForExistenceAndTap()
+
+        // ...manual entry screen will be skipped...
+
+        let failedAlert = app.alerts["Failed"]
+        XCTAssertTrue(failedAlert.waitForExistence(timeout: 60))
+        XCTAssert(
+            failedAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS 'FinancialConnectionsCustomManualEntryRequiredError'")).firstMatch
+                .exists
+        )
+    }
+
+    func testNativeSkipSuccessPane() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"platform_c","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        app.buttons["Not now"].waitForExistenceAndTap() // skip networking sign up
+
+        // ...the success pane will be skipped...
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
 }
 
 extension XCTestCase {
