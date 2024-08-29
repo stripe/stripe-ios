@@ -17,10 +17,9 @@ class PaymentSheetImageLibrary {
     /// An icon representing Afterpay.
     @objc
     public class func afterpayLogo(locale: Locale = Locale.current) -> UIImage {
-        switch (locale.stp_languageCode, locale.stp_regionCode) {
-        case ("en", "GB"):
+        if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: locale) {
             return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
-        default:
+        } else {
             return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
         }
     }

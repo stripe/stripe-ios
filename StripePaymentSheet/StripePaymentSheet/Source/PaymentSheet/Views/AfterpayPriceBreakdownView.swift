@@ -40,22 +40,14 @@ class AfterpayPriceBreakdownView: UIView {
         return URL(string: "https://static.afterpay.com/modal/\(localeCode).html")
     }()
 
-    static func numberOfInstallments(currency: String) -> Int {
-        return currency.uppercased() == "EUR" ? 3 : 4
-    }
-
     let locale: Locale
 
-    init(amount: Int, currency: String, locale: Locale = Locale.autoupdatingCurrent, theme: ElementsUITheme = .default) {
+    init(locale: Locale = Locale.autoupdatingCurrent, theme: ElementsUITheme = .default) {
         self.locale = locale
         self.theme = theme
         super.init(frame: .zero)
-        let numInstallments = Self.numberOfInstallments(currency: currency)
-        let installmentAmount = amount / numInstallments
-        let installmentAmountDisplayString = String.localizedAmountDisplayString(for: installmentAmount, currency: currency)
 
-        afterPayClearPayLabel.attributedText = generateAfterPayClearPayString(numInstallments: numInstallments,
-                                                                              installmentAmountString: installmentAmountDisplayString)
+        afterPayClearPayLabel.attributedText = makeAfterPayClearPayString()
         afterPayClearPayLabel.numberOfLines = 0
         afterPayClearPayLabel.translatesAutoresizingMaskIntoConstraints = false
         afterPayClearPayLabel.isUserInteractionEnabled = true
@@ -77,51 +69,27 @@ class AfterpayPriceBreakdownView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
-    private func generateAfterPayClearPayString(numInstallments: Int, installmentAmountString: String) -> NSMutableAttributedString {
-        let amountStringAttributes = [
-            NSAttributedString.Key.font: theme.fonts.subheadlineBold,
-            .foregroundColor: theme.colors.bodyText,
-        ]
+    private func makeAfterPayClearPayString() -> NSMutableAttributedString {
         let stringAttributes = [
             NSAttributedString.Key.font: theme.fonts.subheadline,
             .foregroundColor: theme.colors.bodyText,
         ]
-        let template = STPLocalizedString("Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>",
-                                          "Pay in templated string for afterpay/clearpay")
+        let template = STPLocalizedString(
+            "Buy now or pay later with <img/>",
+            "Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay"
+        )
 
         let resultingString = NSMutableAttributedString()
         resultingString.append(NSAttributedString(string: ""))
-        guard let numInstallmentsRange = template.range(of: "<num_installments/>"),
-              let installmentPrice = template.range(of: "<installment_price/>"),
-              let img = template.range(of: "<img/>") else {
+        guard let img = template.range(of: "<img/>") else {
             return resultingString
         }
 
-        var numInstallmentsAppended = false
-        var installmentPriceAppended = false
         var imgAppended = false
 
         for (indexOffset, currCharacter) in template.enumerated() {
             let currIndex = template.index(template.startIndex, offsetBy: indexOffset)
-            if numInstallmentsRange.contains(currIndex) {
-                if numInstallmentsAppended {
-                    continue
-                }
-                numInstallmentsAppended = true
-                resultingString.append(NSAttributedString(string: "\(numInstallments)",
-                                                          attributes: stringAttributes))
-            } else if installmentPrice.contains(currIndex) {
-                if installmentPriceAppended {
-                    continue
-                }
-                installmentPriceAppended = true
-                resultingString.append(NSAttributedString(string: installmentAmountString,
-                                                          attributes: amountStringAttributes))
-            } else if img.contains(currIndex) {
+            if img.contains(currIndex) {
                 if imgAppended {
                     continue
                 }
@@ -170,6 +138,16 @@ class AfterpayPriceBreakdownView: UIView {
         afterpayMarkImageView.tintColor = theme.colors.parentBackground.contrastingColor
     }
 #endif
+
+    static func shouldUseClearpayBrand(for locale: Locale) -> Bool {
+        // See https://github.com/search?q=repo%3Aafterpay%2Fsdk-ios%20clearpay&type=code for latest rules
+        switch (locale.stp_languageCode, locale.stp_regionCode) {
+        case ("en", "GB"):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 private extension UIResponder {
