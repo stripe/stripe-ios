@@ -44,6 +44,22 @@ struct PaymentSheetDeferredValidator {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your SetupIntent usage (\(setupIntent.usage)) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (\(String(describing: setupFutureUsage))).")
         }
     }
+    
+    static func validatePaymentMethodId(paymentIntent: STPPaymentIntent, paymentMethod: STPPaymentMethod) throws {
+        if paymentIntent.paymentMethod != nil {
+            guard paymentIntent.paymentMethodId == paymentMethod.stripeId else {
+                throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent paymentMethodId (\(paymentIntent.paymentMethodId!)) does not match the STPPaymentMethod stripeId (\(paymentMethod.stripeId)).")
+            }
+        }
+    }
+    
+    static func validatePaymentMethodId(setupIntent: STPSetupIntent, paymentMethod: STPPaymentMethod) throws {
+        if setupIntent.paymentMethod != nil {
+            guard setupIntent.paymentMethodID == paymentMethod.stripeId else {
+                throw PaymentSheetError.deferredIntentValidationFailed(message: "Your SetupIntent paymentMethodID (\(setupIntent.paymentMethodID!)) does not match the STPPaymentMethod stripeId (\(paymentMethod.stripeId)).")
+            }
+        }
+    }
 }
 
 // MARK: - Validation helpers

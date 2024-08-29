@@ -11,7 +11,7 @@ import XCTest
 
 final class PaymentSheetDeferredValidatorTests: XCTestCase {
     let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in }
-
+    
     func testMismatchedIntentAndIntentConfiguration() throws {
         let pi = STPFixtures.makePaymentIntent()
         let intentConfig_si = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD"), confirmHandler: confirmHandler)
@@ -26,7 +26,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
             XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. You returned a SetupIntent client secret but used a PaymentSheet.IntentConfiguration in payment mode.")
         }
     }
-
+    
     func testPaymentIntentMismatchedCurrency() throws {
         let pi = STPFixtures.makePaymentIntent(amount: 100, currency: "GBP")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
@@ -36,7 +36,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
             XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentIntent currency (GBP) does not match the PaymentSheet.IntentConfiguration currency (USD).")
         }
     }
-
+    
     func testPaymentIntentMismatchedSetupFutureUsage() throws {
         let pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", setupFutureUsage: .offSession)
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
@@ -46,7 +46,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
             XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentIntent setupFutureUsage (offSession) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (nil).")
         }
     }
-
+    
     func testPaymentIntentMismatchedCaptureMethod() throws {
         let pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", captureMethod: "manual")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic), confirmHandler: confirmHandler)
@@ -56,17 +56,53 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
             XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentIntent captureMethod (manual) does not match the PaymentSheet.IntentConfiguration amount (automatic).")
         }
     }
-
+    
     func testPaymentIntentNotFlowControllerManualConfirmationMethod() throws {
-         let pi = STPFixtures.makePaymentIntent(amount: 1000, currency: "USD", confirmationMethod: "manual")
-         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: confirmHandler)
+        let pi = STPFixtures.makePaymentIntent(amount: 1000, currency: "USD", confirmationMethod: "manual")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: confirmHandler)
         XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
                                                                         intentConfiguration: intentConfig,
                                                                         isFlowController: false)) { error in
-             XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentIntent confirmationMethod (manual) can only be used with PaymentSheet.FlowController.")
-         }
-     }
-
+            XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentIntent confirmationMethod (manual) can only be used with PaymentSheet.FlowController.")
+        }
+    }
+    
+    func testPaymentIntentMismatchedPaymentMethodId() throws {
+        let testCard = STPPaymentMethod._testCard()
+        let testCardPi = STPFixtures.makePaymentIntent(paymentMethod: testCard)
+        
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: testCardPi,
+                                                                                 paymentMethod: testCard))
+        
+        let testUSBankAccount = STPPaymentMethod._testUSBankAccount()
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: testCardPi,
+                                                                                     paymentMethod: testUSBankAccount)) { error in
+            XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentIntent paymentMethodId (\(testCardPi.paymentMethodId!)) does not match the STPPaymentMethod stripeId (\(testUSBankAccount.stripeId)).")
+        }
+        
+        let nilPaymentMethodPi = STPFixtures.makePaymentIntent()
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: nilPaymentMethodPi,
+                                                                                 paymentMethod: testCard))
+    }
+    
+    func testSetupIntentMismatchedPaymentMethodId() throws {
+        let testCard = STPPaymentMethod._testCard()
+        let testCardSi = STPFixtures.makeSetupIntent(paymentMethod: testCard)
+        
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: testCardSi,
+                                                                                 paymentMethod: testCard))
+        
+        let testUSBankAccount = STPPaymentMethod._testUSBankAccount()
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: testCardSi,
+                                                                                     paymentMethod: testUSBankAccount)) { error in
+            XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your SetupIntent paymentMethodID (\(testCardSi.paymentMethodID!)) does not match the STPPaymentMethod stripeId (\(testUSBankAccount.stripeId)).")
+        }
+        
+        let nilPaymentMethodSi = STPFixtures.makeSetupIntent()
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: nilPaymentMethodSi,
+                                                                                 paymentMethod: testCard))
+    }
+    
     func testSetupIntentMismatchedUsage() throws {
         let si = STPFixtures.makeSetupIntent(usage: "on_session")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD", setupFutureUsage: .offSession), confirmHandler: confirmHandler)
