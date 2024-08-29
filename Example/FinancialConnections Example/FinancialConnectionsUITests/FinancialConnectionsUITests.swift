@@ -407,6 +407,36 @@ final class FinancialConnectionsUITests: XCTestCase {
         let playgroundCancelAlert = app.alerts["Cancelled"]
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
+
+    func testNativeOnEventClosureEvents() throws {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        app.fc_nativeBackButton().waitForExistenceAndTap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'events=open,manual_entry_initiated,consent_acquired,institution_selected,institution_authorized,accounts_selected,success'")).firstMatch
+                .exists
+        )
+    }
 }
 
 extension XCTestCase {
