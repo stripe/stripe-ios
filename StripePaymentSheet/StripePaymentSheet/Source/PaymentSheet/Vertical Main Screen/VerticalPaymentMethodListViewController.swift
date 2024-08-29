@@ -114,7 +114,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
-                subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount),
+                subtitle: Self.subtitleText(for: paymentMethodType),
                 savedPaymentMethodType: savedPaymentMethod?.type,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
@@ -186,18 +186,18 @@ class VerticalPaymentMethodListViewController: UIViewController {
         return label
     }
 
-    func subtitleText(for paymentMethodType: PaymentSheet.PaymentMethodType, currency: String?, amount: Int?) -> String? {
+    static func subtitleText(for paymentMethodType: PaymentSheet.PaymentMethodType) -> String? {
         switch paymentMethodType {
         case .stripe(.klarna):
             return String.Localized.buy_now_or_pay_later_with_klarna
         case .stripe(.afterpayClearpay):
-            guard let currency, let amount else { return nil }
-            let numInstallments = AfterpayPriceBreakdownView.numberOfInstallments(currency: currency)
-            let installmentAmount = amount / numInstallments
-            let installmentAmountDisplayString = String.localizedAmountDisplayString(for: installmentAmount, currency: currency)
-            return String(format: .Localized.after_pay_subtitle_text,
-                          numInstallments,
-                          installmentAmountDisplayString)
+            if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: Locale.current) {
+                return String.Localized.buy_now_or_pay_later_with_clearpay
+            } else {
+                return String.Localized.buy_now_or_pay_later_with_afterpay
+            }
+        case .stripe(.affirm):
+            return String.Localized.pay_over_time_with_affirm
         default:
             return nil
         }

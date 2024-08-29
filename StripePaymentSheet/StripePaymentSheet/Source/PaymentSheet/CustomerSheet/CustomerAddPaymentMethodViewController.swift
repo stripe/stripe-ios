@@ -242,8 +242,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             cardBrandChoiceEligible: cbcEligible,
             isPaymentIntent: false,
             isSettingUp: true,
-            currency: nil,
-            amount: nil,
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
             analyticsHelper: .init(isCustom: false, configuration: .init()) // Just use a dummy analytics helper; we don't look at these analytics.

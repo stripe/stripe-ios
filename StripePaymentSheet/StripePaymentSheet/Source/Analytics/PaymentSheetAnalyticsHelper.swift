@@ -270,6 +270,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
+        additionalParams["require_cvc_recollection"] = intent?.cvcRecollectionEnabled
         additionalParams["selected_lpm"] = selectedLPM
         additionalParams["link_context"] = linkContext
 

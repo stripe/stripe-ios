@@ -326,10 +326,17 @@ extension String.Localized {
         )
     }
 
-    static var after_pay_subtitle_text: String {
+    static var buy_now_or_pay_later_with_afterpay: String {
         STPLocalizedString(
-            "%1$d interest-free payments of %2$@",
-            "Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99"
+            "Buy now or pay later with Afterpay",
+            "Subtitle shown on a button allowing a user to select to pay with Afterpay."
+        )
+    }
+
+    static var buy_now_or_pay_later_with_clearpay: String {
+        STPLocalizedString(
+            "Buy now or pay later with Clearpay",
+            "Subtitle shown on a button allowing a user to select to pay with Clearpay."
         )
     }
 
@@ -368,5 +375,12 @@ extension String.Localized {
 
     static var bank: String {
         STPLocalizedString("Bank", "A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.")
+    }
+
+    static var pay_over_time_with_affirm: String {
+        STPLocalizedString(
+            "Pay over time with Affirm",
+            "Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm"
+        )
     }
 }
