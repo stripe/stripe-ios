@@ -82,7 +82,7 @@ extension PaymentSheet {
                         }
                     } else {
                         // 4b. Server-side confirmation
-                        try PaymentSheetDeferredValidator.validatePaymentMethod(paymentIntent: paymentIntent, paymentMethod: paymentMethod)
+                        try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: paymentIntent, paymentMethod: paymentMethod)
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
@@ -110,7 +110,7 @@ extension PaymentSheet {
                         }
                     } else {
                         // 4b. Server-side confirmation
-                        try PaymentSheetDeferredValidator.validatePaymentMethod(setupIntent: setupIntent, paymentMethod: paymentMethod)
+                        try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: setupIntent, paymentMethod: paymentMethod)
                         paymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,
