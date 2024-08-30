@@ -882,6 +882,10 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
     func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(
         _ viewController: AttachLinkedPaymentAccountViewController
     ) {
+        // #ir-magnesium-presser; keeping accounts selected can lead to them being passed along
+        // to the Link signup/save call later in the flow. We don't need them anymore since we know
+        // they've failed us in some way at this point.
+        dataManager.linkedAccounts = nil
         pushPane(.manualEntry, animated: true)
     }
 
