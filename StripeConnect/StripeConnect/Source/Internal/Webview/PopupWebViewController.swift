@@ -10,6 +10,7 @@ import UIKit
 import WebKit
 
 /// Presented when a new target is opened from `StripeConnectWebView`
+@available(iOS 15.0, *)
 class PopupWebViewController: UIViewController {
     let webView: ConnectWebView
 

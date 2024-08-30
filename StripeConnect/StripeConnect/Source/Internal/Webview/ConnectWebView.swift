@@ -16,6 +16,7 @@ import WebKit
  - Opening email links
  - Downloads  TODO MXMOBILE-2485
  */
+@available(iOS 15, *)
 class ConnectWebView: WKWebView {
 
     
@@ -71,6 +72,7 @@ class ConnectWebView: WKWebView {
 
 // MARK: - Private
 
+@available(iOS 15, *)
 private extension ConnectWebView {
     // Opens the given navigation in a PopupWebViewController
     func openInPopup(configuration: WKWebViewConfiguration,
@@ -104,6 +106,7 @@ private extension ConnectWebView {
 
 // MARK: - WKUIDelegate
 
+@available(iOS 15, *)
 extension ConnectWebView: WKUIDelegate {
     func webView(_ webView: WKWebView,
                  createWebViewWith configuration: WKWebViewConfiguration,
@@ -150,6 +153,7 @@ extension ConnectWebView: WKUIDelegate {
 
 // MARK: - WKNavigationDelegate
 
+@available(iOS 15, *)
 extension ConnectWebView: WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,

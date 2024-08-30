@@ -9,6 +9,7 @@
 import UIKit
 import WebKit
 
+@available(iOS 15, *)
 class ConnectComponentWebView: ConnectWebView {
     /// The embedded component manager that will be used for requests.
     var componentManager: EmbeddedComponentManager
@@ -76,6 +77,7 @@ class ConnectComponentWebView: ConnectWebView {
 
 // MARK: - Internal
 
+@available(iOS 15, *)
 extension ConnectComponentWebView {
     /// Convenience method to add `ScriptMessageHandler`
     func addMessageHandler<Payload>(_ messageHandler: ScriptMessageHandler<Payload>,
@@ -99,6 +101,7 @@ extension ConnectComponentWebView {
 
 // MARK: - Private
 
+@available(iOS 15, *)
 private extension ConnectComponentWebView {
     /// Registers JS -> Swift message handlers
     func addMessageHandlers() {

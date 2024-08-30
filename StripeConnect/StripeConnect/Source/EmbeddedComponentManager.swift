@@ -10,6 +10,7 @@ import StripeCore
 import UIKit
 
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public class EmbeddedComponentManager {
     let apiClient: STPAPIClient
     

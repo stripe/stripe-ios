@@ -1,0 +1,4 @@
+
+temp file to get Bundle.module to work
+
+TODO: replace this with localized strings files
