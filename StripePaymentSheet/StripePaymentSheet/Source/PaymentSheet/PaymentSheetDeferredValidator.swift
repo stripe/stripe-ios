@@ -36,7 +36,7 @@ struct PaymentSheetDeferredValidator {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent confirmationMethod (\(paymentIntent.confirmationMethod)) can only be used with PaymentSheet.FlowController.")
         }
     }
-
+    
     static func validate(setupIntent: STPSetupIntent,
                          intentConfiguration: PaymentSheet.IntentConfiguration,
                          paymentMethod: STPPaymentMethod) throws {
@@ -50,18 +50,32 @@ struct PaymentSheetDeferredValidator {
     }
     
     static func validatePaymentMethodId(paymentIntent: STPPaymentIntent, paymentMethod: STPPaymentMethod) throws {
-        if paymentIntent.paymentMethod != nil {
-            guard paymentIntent.paymentMethodId == paymentMethod.stripeId else {
-                throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent paymentMethodId (\(paymentIntent.paymentMethodId!)) does not match the STPPaymentMethod stripeId (\(paymentMethod.stripeId)).")
-            }
+        guard let intentPaymentMethod = paymentIntent.paymentMethod else {
+            return
+        }
+        guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
+            throw PaymentSheetError.deferredIntentValidationFailed(message: """
+                \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
+
+                To resolve this issue, you can:
+                1. Create a new Intent each time before you call the `confirmHandler`, or
+                2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
+            """)
         }
     }
     
     static func validatePaymentMethodId(setupIntent: STPSetupIntent, paymentMethod: STPPaymentMethod) throws {
-        if setupIntent.paymentMethod != nil {
-            guard setupIntent.paymentMethodID == paymentMethod.stripeId else {
-                throw PaymentSheetError.deferredIntentValidationFailed(message: "Your SetupIntent paymentMethodID (\(setupIntent.paymentMethodID!)) does not match the STPPaymentMethod stripeId (\(paymentMethod.stripeId)).")
-            }
+        guard let intentPaymentMethod = setupIntent.paymentMethod else {
+            return
+        }
+        guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
+            throw PaymentSheetError.deferredIntentValidationFailed(message: """
+                \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
+
+                To resolve this issue, you can:
+                1. Create a new Intent each time before you call the `confirmHandler`, or
+                2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
+            """)
         }
     }
 }

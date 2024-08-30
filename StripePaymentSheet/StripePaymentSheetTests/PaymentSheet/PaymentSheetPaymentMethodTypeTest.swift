@@ -518,7 +518,7 @@ extension STPFixtures {
         captureMethod: String = "automatic",
         confirmationMethod: String = "automatic",
         shippingProvided: Bool = false,
-        paymentMethod: STPPaymentMethod? = nil
+        paymentMethodJson: [String:Any]? = nil
     ) -> STPPaymentIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)!
         if let setupFutureUsage = setupFutureUsage {
@@ -537,9 +537,7 @@ extension STPFixtures {
             // The payment intent json already has shipping on it, so just remove it if needed
             json["shipping"] = nil
         }
-        if let paymentMethod = paymentMethod {
-            var paymentMethodJson = STPPaymentMethod.paymentMethodJson
-            paymentMethodJson["id"] = paymentMethod.stripeId
+        if let paymentMethodJson = paymentMethodJson {
             json["payment_method"] = paymentMethodJson
             
         }
@@ -552,16 +550,14 @@ extension STPFixtures {
     static func makeSetupIntent(
         paymentMethodTypes: [STPPaymentMethodType] = [.card],
         usage: String = "off_session",
-        paymentMethod: STPPaymentMethod? = nil
+        paymentMethodJson: [String:Any]? = nil
     ) -> STPSetupIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONSetupIntent)!
         json["usage"] = usage
         json["payment_method_types"] = paymentMethodTypes.map {
             STPPaymentMethod.string(from: $0)
         }
-        if let paymentMethod = paymentMethod {
-            var paymentMethodJson = STPPaymentMethod.paymentMethodJson
-            paymentMethodJson["id"] = paymentMethod.stripeId
+        if let paymentMethodJson = paymentMethodJson {
             json["payment_method"] = paymentMethodJson
             
         }

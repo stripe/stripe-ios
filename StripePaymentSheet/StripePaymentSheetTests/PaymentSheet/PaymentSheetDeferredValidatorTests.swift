@@ -72,37 +72,81 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         }
     }
     
-    func testPaymentIntentMismatchedPaymentMethodId() throws {
+    func testPaymentIntentMatchedPaymentMethodId() throws {
         let testCard = STPPaymentMethod._testCard()
-        let testCardPi = STPFixtures.makePaymentIntent(paymentMethod: testCard)
+        var paymentMethodJson = STPPaymentMethod.paymentMethodJson
+        paymentMethodJson["id"] = testCard.stripeId
+        let testCardPi = STPFixtures.makePaymentIntent(paymentMethodJson: paymentMethodJson)
         
         XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: testCardPi,
                                                                                    paymentMethod: testCard))
-        
+    }
+    
+    func testPaymentIntentMismatchedPaymentMethodId() throws {
+        let testCard = STPPaymentMethod._testCard()
+        var paymentMethodJson = STPPaymentMethod.paymentMethodJson
+        paymentMethodJson["id"] = testCard.stripeId
+        let testCardPi = STPFixtures.makePaymentIntent(paymentMethodJson: paymentMethodJson)
         let testUSBankAccount = STPPaymentMethod._testUSBankAccount()
+        guard let intentPaymentMethod = testCardPi.paymentMethod else {
+            return
+        }
         XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: testCardPi,
                                                                                        paymentMethod: testUSBankAccount)) { error in
-            XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentIntent paymentMethodId (\(testCardPi.paymentMethodId!)) does not match the STPPaymentMethod stripeId (\(testUSBankAccount.stripeId)).")
+            XCTAssertEqual("\(error)", """
+            An error occurred in PaymentSheet.     \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(testUSBankAccount.stripeId).
+            
+                To resolve this issue, you can:
+                1. Create a new Intent each time before you call the `confirmHandler`, or
+                2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
+            """)
         }
         
+        
+    }
+    
+    func testPaymentIntentNilPaymentMethod() throws {
+        let testCard = STPPaymentMethod._testCard()
         let nilPaymentMethodPi = STPFixtures.makePaymentIntent()
         XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: nilPaymentMethodPi,
                                                                                    paymentMethod: testCard))
     }
     
-    func testSetupIntentMismatchedPaymentMethodId() throws {
+    func testSetupIntentMatchedPaymentMethodId() throws {
         let testCard = STPPaymentMethod._testCard()
-        let testCardSi = STPFixtures.makeSetupIntent(paymentMethod: testCard)
+        var paymentMethodJson = STPPaymentMethod.paymentMethodJson
+        paymentMethodJson["id"] = testCard.stripeId
+        let testCardSi = STPFixtures.makeSetupIntent(paymentMethodJson: paymentMethodJson)
         
         XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: testCardSi,
                                                                                    paymentMethod: testCard))
-        
+    }
+    
+    func testSetupIntentMismatchedPaymentMethodId() throws {
+        let testCard = STPPaymentMethod._testCard()
+        var paymentMethodJson = STPPaymentMethod.paymentMethodJson
+        paymentMethodJson["id"] = testCard.stripeId
+        let testCardSi = STPFixtures.makeSetupIntent(paymentMethodJson: paymentMethodJson)
         let testUSBankAccount = STPPaymentMethod._testUSBankAccount()
+        guard let intentPaymentMethod = testCardSi.paymentMethod else {
+            return
+        }
         XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: testCardSi,
                                                                                        paymentMethod: testUSBankAccount)) { error in
-            XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your SetupIntent paymentMethodID (\(testCardSi.paymentMethodID!)) does not match the STPPaymentMethod stripeId (\(testUSBankAccount.stripeId)).")
+            XCTAssertEqual("\(error)", """
+            An error occurred in PaymentSheet.     \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(testUSBankAccount.stripeId).
+            
+                To resolve this issue, you can:
+                1. Create a new Intent each time before you call the `confirmHandler`, or
+                2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
+            """)
         }
         
+        
+    }
+    
+    func testSetupIntentNilPaymentMethod() throws {
+        let testCard = STPPaymentMethod._testCard()
         let nilPaymentMethodSi = STPFixtures.makeSetupIntent()
         XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: nilPaymentMethodSi,
                                                                                    paymentMethod: testCard))
