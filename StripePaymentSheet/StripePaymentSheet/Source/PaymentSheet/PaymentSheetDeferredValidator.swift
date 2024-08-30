@@ -26,7 +26,6 @@ struct PaymentSheetDeferredValidator {
         guard paymentIntent.captureMethod == captureMethod else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent captureMethod (\(paymentIntent.captureMethod)) does not match the PaymentSheet.IntentConfiguration amount (\(captureMethod)).")
         }
-        
         try validatePaymentMethodId(paymentIntent: paymentIntent, paymentMethod: paymentMethod)
         /*
          Manual confirmation is only available using FlowController because merchants own the final step of confirmation.
