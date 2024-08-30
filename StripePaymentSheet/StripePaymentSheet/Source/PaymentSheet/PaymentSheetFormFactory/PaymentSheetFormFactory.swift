@@ -32,8 +32,6 @@ class PaymentSheetFormFactory {
 
     let isPaymentIntent: Bool
     let isSettingUp: Bool
-    let currency: String?
-    let amount: Int?
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
@@ -95,8 +93,6 @@ class PaymentSheetFormFactory {
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
-                  currency: intent.currency,
-                  amount: intent.amount,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   analyticsHelper: analyticsHelper)
@@ -112,8 +108,6 @@ class PaymentSheetFormFactory {
         cardBrandChoiceEligible: Bool = false,
         isPaymentIntent: Bool,
         isSettingUp: Bool,
-        currency: String?,
-        amount: Int?,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         analyticsHelper: PaymentSheetAnalyticsHelper
@@ -131,8 +125,6 @@ class PaymentSheetFormFactory {
         }
         self.isPaymentIntent = isPaymentIntent
         self.isSettingUp = isSettingUp
-        self.currency = currency
-        self.amount = amount
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
@@ -611,18 +603,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> StaticElement? {
-        guard let amount = amount, let currency = currency else {
-            assertionFailure("After requires a non-nil amount and currency")
-            return nil
-        }
-
-        return StaticElement(
-            view: AfterpayPriceBreakdownView(
-                amount: amount,
-                currency: currency,
-                theme: theme
-            )
-        )
+        return StaticElement(view: AfterpayPriceBreakdownView(theme: theme))
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
