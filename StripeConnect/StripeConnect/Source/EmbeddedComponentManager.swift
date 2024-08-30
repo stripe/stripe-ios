@@ -58,6 +58,11 @@ public class EmbeddedComponentManager {
         .init(componentManager: self)
     }
 
+    @_spi(DashboardOnly)
+    public func createPaymentDetails() -> PaymentDetailsViewController {
+        .init(componentManager: self)
+    }
+
     /// Used to keep reference of all web views associated with this component manager.
     /// - Parameters:
     ///   - webView: The web view associated with this component manager
