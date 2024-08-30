@@ -171,6 +171,10 @@ extension XCUIApplication {
         return bankAccount
     }
 
+    func fc_nativeBackButton() -> XCUIElement {
+        return navigationBars["fc_navigation_bar"].buttons["Back"]
+    }
+
     func fc_scrollDown() {
         swipeUp(velocity: .verySlow)
     }

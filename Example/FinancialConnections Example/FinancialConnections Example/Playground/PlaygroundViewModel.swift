@@ -227,6 +227,7 @@ final class PlaygroundViewModel: ObservableObject {
         ) { [weak self] setupPlaygroundResponse in
             guard let self else { return }
             if let setupPlaygroundResponse = setupPlaygroundResponse {
+                var onEventEvents: [String] = []
                 PresentFinancialConnectionsSheet(
                     useCase: self.playgroundConfiguration.useCase,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
@@ -235,6 +236,7 @@ final class PlaygroundViewModel: ObservableObject {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
                             BannerHelper.shared.showBanner(with: message, for: 3.0)
                         }
+                        onEventEvents.append(event.name.rawValue)
                     },
                     completionHandler: { [weak self] result in
                         switch result {
@@ -246,11 +248,13 @@ final class PlaygroundViewModel: ObservableObject {
                             let accountNames = session.accounts.data.map({ $0.displayName ?? "N/A" })
                             let accountIds = session.accounts.data.map({ $0.id })
 
+                            // WARNING: the "events" output is used for end-to-end tests so be careful modifying it
                             let sessionInfo =
 """
 session_id=\(sessionId)
 account_names=\(accountNames)
 account_ids=\(accountIds)
+events=\(onEventEvents.joined(separator: ","))
 """
 
                             let message = "\(accountInfos)\n\n\(sessionInfo)"
