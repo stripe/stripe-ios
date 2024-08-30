@@ -51,7 +51,7 @@ public class EmbeddedComponentManager {
             item.updateAppearance(appearance: appearance)
         }
     }
-    
+
     /// Creates a payouts component
     /// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/payouts
     public func createPayoutsViewController() -> PayoutsViewController {

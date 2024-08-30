@@ -5,8 +5,8 @@
 //  Created by Mel Ludowise on 5/3/24.
 //
 
-@_spi(STP) import StripeCore
 import SafariServices
+@_spi(STP) import StripeCore
 import WebKit
 
 /**
@@ -19,15 +19,14 @@ import WebKit
 @available(iOS 15, *)
 class ConnectWebView: WKWebView {
 
-    
     private var optionalPresentPopup: ((UIViewController) -> Void)?
 
     /// Closure to present a popup web view controller.
     /// This is required for any components that can open a popup, otherwise an assertionFailure will occur.
     var presentPopup: (UIViewController) -> Void {
         get {
-            assert(optionalPresentPopup != nil,  "Cannot present popup")
-            //TODO: MXMOBILE-2491 Log as analytics when pop up is not set.
+            assert(optionalPresentPopup != nil,     "Cannot present popup")
+            // TODO: MXMOBILE-2491 Log as analytics when pop up is not set.
             return optionalPresentPopup ?? { _ in }
         }
         set {
@@ -40,10 +39,10 @@ class ConnectWebView: WKWebView {
 
     /// The instance that will handle opening external urls
     let urlOpener: ApplicationURLOpener
-    
+
     /// The current version for the SDK
     let sdkVersion: String?
-    
+
     init(frame: CGRect,
          configuration: WKWebViewConfiguration,
          // Only override for tests
@@ -53,14 +52,14 @@ class ConnectWebView: WKWebView {
         self.sdkVersion = sdkVersion
         configuration.applicationNameForUserAgent = "- stripe-ios/\(sdkVersion ?? "")"
         super.init(frame: frame, configuration: configuration)
-        
+
         // Allow the web view to be inspected for debug builds on 16.4+
         #if DEBUG
         if #available(iOS 16.4, *) {
             isInspectable = true
         }
         #endif
-        
+
         uiDelegate = self
         navigationDelegate = self
     }
@@ -77,7 +76,7 @@ private extension ConnectWebView {
     // Opens the given navigation in a PopupWebViewController
     func openInPopup(configuration: WKWebViewConfiguration,
                      navigationAction: WKNavigationAction) -> WKWebView? {
-        let popupVC = PopupWebViewController(configuration: configuration, 
+        let popupVC = PopupWebViewController(configuration: configuration,
                                              navigationAction: navigationAction,
                                              urlOpener: urlOpener,
                                              sdkVersion: sdkVersion)

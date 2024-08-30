@@ -22,10 +22,10 @@ class ConnectComponentWebView: ConnectWebView {
 
     /// Represents the current locale that should get sent to the webview
     private let webLocale: Locale
-    
+
     /// The current notification center instance
     private let notificationCenter: NotificationCenter
-    
+
     init(componentManager: EmbeddedComponentManager,
          componentType: ComponentType,
          // Should only be overridden for tests
@@ -56,7 +56,8 @@ class ConnectComponentWebView: ConnectWebView {
         addMessageHandlers()
         addNotificationObservers()
         if loadContent {
-            load(.init(url: StripeConnectConstants.connectJSURL(component: componentType.rawValue, publishableKey: publishableKey)))
+            let url = ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url
+            load(.init(url: url))
         }
     }
 
@@ -90,7 +91,7 @@ extension ConnectComponentWebView {
                               contentWorld: WKContentWorld = .page) {
         contentController.addScriptMessageHandler(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
     }
-    
+
     /// Convenience method to send messages to the webview.
     func sendMessage(_ sender: any MessageSender) {
         if let message = sender.javascriptMessage {
@@ -121,6 +122,7 @@ private extension ConnectComponentWebView {
         })
         addMessageHandler(PageDidLoadMessageHandler{_ in })
         addMessageHandler(AccountSessionClaimedMessageHandler{ message in
+            // TODO: use this for analytics
         })
 
     }

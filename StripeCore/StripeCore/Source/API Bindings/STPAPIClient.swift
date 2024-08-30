@@ -142,7 +142,7 @@ import UIKit
     // MARK: Helpers
 
     static var didShowTestmodeKeyWarning = false
-    class func validateKey(_ publishableKey: String?) {
+    @_spi(STP) public class func validateKey(_ publishableKey: String?) {
         guard NSClassFromString("XCTest") == nil else {
             return  // no asserts in unit tests
         }

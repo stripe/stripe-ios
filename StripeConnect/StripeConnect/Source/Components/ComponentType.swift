@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ComponentType: String {
+enum ComponentType: String, Encodable {
     /// Displays the balance summary, the payout schedule, and a list of payouts for the connected account
     case payouts
     case onboarding

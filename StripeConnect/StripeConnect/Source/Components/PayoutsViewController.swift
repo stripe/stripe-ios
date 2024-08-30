@@ -14,7 +14,7 @@ import UIKit
 @available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
     let webView: ConnectComponentWebView
-    
+
     public weak var delegate: PayoutsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager) {
@@ -63,4 +63,3 @@ public extension PayoutsViewControllerDelegate {
     func payoutsLoadDidFail(_ payouts: PayoutsViewController,
                             withError error: Error) { }
 }
-

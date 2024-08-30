@@ -5,8 +5,8 @@
 //  Created by Mel Ludowise on 8/30/24.
 //
 
-@_spi(STP) @_spi(DashboardOnly) import StripeCore
 import Foundation
+@_spi(STP) @_spi(DashboardOnly) import StripeCore
 
 struct ConnectJSURLParams: Encodable {
     let component: ComponentType
@@ -25,6 +25,7 @@ extension ConnectJSURLParams {
         STPAPIClient.validateKey(apiClient.publishableKey)
 
         if apiClient.publishableKeyIsUserKey {
+            // Dashboard app overrides
             self.apiKeyOverride = apiClient.publishableKey
             self.merchantIdOverride = apiClient.stripeAccount
             self.platformIdOverride = apiClient.stripeAccount
@@ -34,24 +35,12 @@ extension ConnectJSURLParams {
         }
     }
 
-//    private var asDict: [String: String] {
-//        var params: [String: String] = [:]
-//        params["component"] = component
-//        params["publicKey"] = publishableKey
-//        params["livemodeOverride"] = livemodeOverride
-//        params["merchantIdOverride"] = merchantIdOverride
-//        params["platformIdOverride"] = platformIdOverride
-//        params["apiKeyOverride"] = apiKeyOverride
-//        return params
-//    }
-
-
     var url: URL {
         guard let data = try? JSONEncoder().encode(self),
               let dict = try? JSONSerialization.jsonObject(with: data) as? [String: String] else {
             // TODO: Log error
             return StripeConnectConstants.connectJSBaseURL
         }
-        return URL(string:"#\(URLEncoder.queryString(from: dict))", relativeTo: StripeConnectConstants.connectJSBaseURL)!
+        return URL(string: "#\(URLEncoder.queryString(from: dict))", relativeTo: StripeConnectConstants.connectJSBaseURL)!
     }
 }
