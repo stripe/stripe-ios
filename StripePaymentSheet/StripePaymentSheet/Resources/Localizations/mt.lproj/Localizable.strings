@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li pagamenti bla imgħax  ta' %2$@";
-
 "+ Add" = "+ Żid";
 
 "Add US bank account" = "Żid kont tal-bank ibbażat ġewwa l-Istati Uniti tal-Amerka";
@@ -25,6 +23,12 @@
 "Bank" = "Bank";
 
 "Bank account" = "Kont tal-bank";
+
+"Buy now or pay later with <img/>" = "Ixtri issa jew ħallas iktar tard grazzi għal <img/>";
+
+"Buy now or pay later with Afterpay" = "Ixtri issa jew ħallas iktar tard b'Afterpay";
+
+"Buy now or pay later with Clearpay" = "Ixtri issa jew ħallas iktar tard bi Clearpay";
 
 "Buy now or pay later with Klarna" = "Ixtri issa jew ħallas iktar tard bi Klarna";
 
@@ -118,9 +122,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Ħallas lil %@ u lil eluf ta' negozji oħra iktar malajr.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Ħallas f'dan-numru ta' pagamenti: <num_installments/> ta' <installment_price/> mingħajr imgħax grazzi għal <img/>";
-
 "Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
+
+"Pay over time with Affirm" = "Ħallas bin-nifs b'Affirm";
 
 "Pay with Link" = "Ħallas b'Link";
 

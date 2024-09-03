@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li pagaments sense interessos de %2$@";
-
 "+ Add" = "+ Afegir";
 
 "Add US bank account" = "Afegeix un compte bancari dels EUA";
@@ -25,6 +23,12 @@
 "Bank" = "Banc";
 
 "Bank account" = "Compte bancari";
+
+"Buy now or pay later with <img/>" = "Compra ara o paga més endavant amb <img/>";
+
+"Buy now or pay later with Afterpay" = "Compra ara o paga més endavant amb Afterpay";
+
+"Buy now or pay later with Clearpay" = "Compra ara o paga més endavant amb Clearpay";
 
 "Buy now or pay later with Klarna" = "Compra ara o paga més endavant amb Klarna";
 
@@ -118,9 +122,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Pagueu més ràpidament a %@ i a milers de negocis.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Feu <num_installments/> pagaments sense interessos de <installment_price/> amb <img/>";
-
 "Pay over time with %@" = "Pagueu a terminis amb %@";
+
+"Pay over time with Affirm" = "Paga a terminis amb Affirm";
 
 "Pay with Link" = "Pagar amb Link";
 

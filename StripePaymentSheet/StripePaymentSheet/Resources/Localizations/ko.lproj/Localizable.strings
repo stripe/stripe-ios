@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li%2$@회 무이자 결제";
-
 "+ Add" = "+ 추가";
 
 "Add US bank account" = "미국 은행 계좌 추가";
@@ -25,6 +23,12 @@
 "Bank" = "은행";
 
 "Bank account" = "은행 계좌";
+
+"Buy now or pay later with <img/>" = "<img/>(으)로 지금 구매하거나 나중에 결제하십시오.";
+
+"Buy now or pay later with Afterpay" = "지금 구매하거나 Afterpay로 나중에 결제";
+
+"Buy now or pay later with Clearpay" = "지금 구매하거나 Clearpay로 나중에 결제";
 
 "Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
 
@@ -118,9 +122,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
-
 "Pay over time with %@" = "%@으로 할부 결제";
+
+"Pay over time with Affirm" = "Affirm으로 할부 결제";
 
 "Pay with Link" = "Link로 결제";
 
