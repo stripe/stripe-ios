@@ -133,8 +133,10 @@ class PaymentSheetFormFactory {
 
     func make() -> PaymentMethodElement {
         switch paymentMethod {
-        case .instantDebits, .linkCardBrand:
-            return makeInstantDebits()
+        case .instantDebits:
+            return makeInstantDebits(requireLinkedBank: true)
+        case .linkCardBrand:
+            return makeInstantDebits(requireLinkedBank: false)
         case .external:
             return makeExternalPaymentMethodForm()
         case .stripe(let paymentMethod):
@@ -642,7 +644,7 @@ extension PaymentSheetFormFactory {
         return StaticElement(view: label)
     }
 
-    func makeInstantDebits() -> PaymentMethodElement {
+    func makeInstantDebits(requireLinkedBank: Bool) -> PaymentMethodElement {
         return InstantDebitsPaymentMethodElement(
             configuration: configuration,
             titleElement: {
@@ -656,6 +658,7 @@ extension PaymentSheetFormFactory {
                 }
             }(),
             emailElement: makeEmail(),
+            requireLinkedBank: requireLinkedBank,
             theme: theme
         )
     }

@@ -26,6 +26,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let emailElement: TextFieldElement
     private let linkedBankInfoView: BankAccountInfoView
     private var linkedBank: InstantDebitsLinkedBank?
+    private let requireLinkedBank: Bool
     private let theme: ElementsUITheme
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
@@ -75,6 +76,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         configuration: PaymentSheetFormFactoryConfig,
         titleElement: StaticElement?,
         emailElement: PaymentMethodElementWrapper<TextFieldElement>,
+        requireLinkedBank: Bool,
         theme: ElementsUITheme = .default
     ) {
         self.configuration = configuration
@@ -87,6 +89,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.emailElement = emailElement.element
         self.linkedBank = nil
         self.linkedBankInfoSectionElement.view.isHidden = true
+        self.requireLinkedBank = requireLinkedBank
         self.theme = theme
 
         let allElements: [Element?] = [
@@ -181,14 +184,16 @@ extension InstantDebitsPaymentMethodElement: PaymentMethodElement {
 
     // after a bank is linked, this gets hit to update
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        if
-            let updatedParams = formElement.updateParams(params: params),
-            let linkedBank
-        {
+        guard let updatedParams = formElement.updateParams(params: params) else {
+            return nil
+        }
+
+        if requireLinkedBank, let linkedBank {
             updatedParams.instantDebitsLinkedBank = linkedBank
             return updatedParams
+        } else {
+            return updatedParams
         }
-        return nil
     }
 }
 

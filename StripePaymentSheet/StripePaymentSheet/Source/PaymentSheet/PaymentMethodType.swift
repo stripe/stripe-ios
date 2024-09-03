@@ -178,9 +178,7 @@ extension PaymentSheet {
                 if availabilityStatus == .supported {
                     recommendedPaymentMethodTypes.append(.instantDebits)
                 }
-            }
-
-            if
+            } else if
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true,
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount),
                 elementsSession.linkSettings?.linkMode == .linkCardBrand

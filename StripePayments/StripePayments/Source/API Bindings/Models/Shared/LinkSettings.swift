@@ -58,19 +58,19 @@ import Foundation
         fromAPIResponse response: [AnyHashable: Any]?
     ) -> Self? {
         guard
-            let response = response,
-            let fundingSourcesStrings = response["link_funding_sources"] as? [String]
+            let response = response
+//            let fundingSourcesStrings = response["link_funding_sources"] as? [String]
         else {
             return nil
         }
 
         // Server may send down funding sources we haven't implemented yet, so we'll just ignore any unknown sources
-        let validFundingSources = Set(fundingSourcesStrings.compactMap(FundingSource.init))
+//        let validFundingSources = Set(fundingSourcesStrings.compactMap(FundingSource.init))
 
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
         let disableSignup = response["link_mobile_disable_signup"] as? Bool ?? false
-        let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
+//        let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
 
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
@@ -80,11 +80,13 @@ import Foundation
         }
 
         return LinkSettings(
-            fundingSources: validFundingSources,
+            fundingSources: [.card, .bankAccount],
+//            fundingSources: validFundingSources,
             popupWebviewOption: webviewOption,
             passthroughModeEnabled: passthroughModeEnabled,
             disableSignup: disableSignup,
-            linkMode: linkMode,
+            linkMode: .linkCardBrand,
+//            linkMode: linkMode,
             linkFlags: linkFlags,
             allResponseFields: response
         ) as? Self
