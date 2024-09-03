@@ -34,6 +34,14 @@ protocol NativeFlowDataManager: AnyObject {
     var customSuccessPaneCaption: String? { get set }
     var customSuccessPaneSubCaption: String? { get set }
 
+    func createPaymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentDetails>
+    func createPaymentMethod(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String
+    ) -> Future<FinancialConnectionsPaymentMethod>
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
 }
@@ -120,6 +128,26 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         // If the server returns active institution use that, otherwise resort to initial institution.
         self.institution = manifest.activeInstitution ?? manifest.initialInstitution
         didUpdateManifest()
+    }
+
+    func createPaymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentDetails> {
+        apiClient.paymentDetails(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            bankAccountId: bankAccountId
+        )
+    }
+
+    func createPaymentMethod(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String
+    ) -> Future<FinancialConnectionsPaymentMethod> {
+        apiClient.paymentMethods(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            paymentDetailsId: paymentDetailsId
+        )
     }
 
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession> {
