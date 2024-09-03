@@ -68,7 +68,7 @@ extension LinkInlineSignupView {
                 self.checkboxButton.alpha = 1.0
             }
             else {
-                self.checkboxButton.alpha = 0.5
+                self.checkboxButton.alpha = 0.6
             }
             
         }
