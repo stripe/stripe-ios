@@ -61,6 +61,17 @@ extension LinkInlineSignupView {
             self.merchantName = merchantName
             self.appearance = appearance
         }
+        
+        func setUserInteraction(isUserInteractionEnabled: Bool) {
+            self.checkboxButton.isEnabled = isUserInteractionEnabled
+            if isUserInteractionEnabled {
+                self.checkboxButton.alpha = 1.0
+            }
+            else {
+                self.checkboxButton.alpha = 0.6
+            }
+            
+        }
 
         @objc func didToggleCheckbox() {
             delegate?.didUpdate(element: self)
