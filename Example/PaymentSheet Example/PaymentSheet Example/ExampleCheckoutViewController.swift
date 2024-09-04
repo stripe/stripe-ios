@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import UIKit
 
 class ExampleCheckoutViewController: UIViewController {
@@ -63,23 +63,15 @@ class ExampleCheckoutViewController: UIViewController {
                 }
             })
         task.resume()
+        
+        
+
     }
 
     @objc
     func didTapCheckoutButton() {
-        // MARK: Start the checkout process
-        paymentSheet?.present(from: self) { paymentResult in
-            // MARK: Handle the payment result
-            switch paymentResult {
-            case .completed:
-                self.displayAlert("Your order is confirmed!")
-            case .canceled:
-                print("Canceled!")
-            case .failed(let error):
-                print(error)
-                self.displayAlert("Payment failed: \n\(error.localizedDescription)")
-            }
-        }
+        let vc = EmbeddedViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
     func displayAlert(_ message: String) {
@@ -91,5 +83,23 @@ class ExampleCheckoutViewController: UIViewController {
         }
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
+    }
+}
+
+
+class EmbeddedViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = .white
+        
+        let paymentMethodsView = EmbeddedPaymentMethodsView(savedPaymentMethod: nil, appearance: .default, shouldShowApplePay: true, shouldShowLink: true)
+        paymentMethodsView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(paymentMethodsView)
+        
+        NSLayoutConstraint.activate([
+            paymentMethodsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            paymentMethodsView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            paymentMethodsView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0)
+        ])
     }
 }

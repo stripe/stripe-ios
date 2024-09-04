@@ -35,10 +35,14 @@ public extension PaymentSheet {
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
         public var borderWidth: CGFloat = 1.0
+        
+        @_spi(STP) public var borderWidthSelected: CGFloat?
 
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
+        
+        @_spi(STP) public var paymentOptionView: PaymentOptionView = PaymentOptionView()
 
         // MARK: Fonts
 
@@ -93,6 +97,8 @@ public extension PaymentSheet {
 
             /// The border color used for inputs, tabs, and other components
             public var componentBorder: UIColor = .systemGray3
+            
+            @_spi(STP) public var componentBorderSelected: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
             public var componentDivider: UIColor = .systemGray3
@@ -212,3 +218,48 @@ public extension PaymentSheet {
         }
     }
 }
+
+// TODO(porter) TBD
+@_spi(STP) public extension PaymentSheet.Appearance {
+    struct PaymentOptionView: Equatable {
+        
+        public var paymentMethodRow: PaymentMethodRow = PaymentMethodRow()
+        
+        public var style: Style = .flatCheck
+        
+        public struct PaymentMethodRow: Equatable {
+            public var additionalInsets: UIEdgeInsets?
+            public var spacing: CGFloat = 12.0
+            
+            public var flat: Flat = Flat()
+            
+            public struct Flat: Equatable {
+                public var separatorThickness: CGFloat = 1.0
+                public var separatorColor: UIColor?
+                public var separatorInset: UIEdgeInsets?
+                public var topSeparatorEnabled: Bool = true
+                public var bottomSeparatorEnabled: Bool = true
+                public var radio: Radio = Radio()
+                public var checkmark: Checkmark = Checkmark()
+                
+                public struct Radio: Equatable {
+                    public var colorSelected: UIColor?
+                    public var colorUnselected: UIColor?
+                }
+                
+                public struct Checkmark: Equatable {
+                    public var color: UIColor?
+                }
+            }
+        }
+        
+        // TODO(porter) Flesh this out
+        public enum Style {
+            case flatRadio
+            case flatCheck
+            case floating
+        }
+        
+    }
+}
+
