@@ -205,22 +205,13 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
 extension HostController: NativeFlowControllerDelegate {
     func nativeFlowController(
         _ nativeFlowController: NativeFlowController,
-        didFinish result: FinancialConnectionsSheet.Result
+        didFinish result: HostControllerResult
     ) {
         guard let viewController = navigationController.topViewController else {
             assertionFailure("Navigation stack is empty")
             return
         }
-        let hostControllerResult: HostControllerResult
-        switch result {
-        case .completed(let session):
-            hostControllerResult = .completed(.financialConnections(session))
-        case .canceled:
-            hostControllerResult = .canceled
-        case .failed(let error):
-            hostControllerResult = .failed(error: error)
-        }
-        delegate?.hostController(self, viewController: viewController, didFinish: hostControllerResult)
+        delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
 
     func nativeFlowController(

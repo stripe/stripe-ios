@@ -1,5 +1,5 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pj9JiIFbdis1OxT1hf8gUZn\/confirm$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pv61LFY0qyl6XeW0HQ7pNyM\/confirm$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,26 +13,26 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_jmlGt2C1GR5Im0
+request-id: req_IOEe2ZhQJ0DKtX
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 1045
+Content-Length: 1148
 Vary: Origin
-Date: Fri, 02 Aug 2024 00:25:59 GMT
-original-request: req_jmlGt2C1GR5Im0
+Date: Tue, 03 Sep 2024 23:20:23 GMT
+original-request: req_IOEe2ZhQJ0DKtX
 stripe-version: 2020-08-27
-idempotency-key: b05f8310-05a9-4e0a-a6bc-856269e65a11
+idempotency-key: 776e1432-5ef4-46d8-9b35-3d8ad6389ce0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
-X-Stripe-Mock-Request: client_secret=pi_3Pj9JiIFbdis1OxT1hf8gUZn_secret_PCLWMwlDNyxfmaxoLMAQ08vFY&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[metadata]\[test_key]=test_value&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=satispay&return_url=example-app-scheme%3A\/\/unused
+X-Stripe-Mock-Request: client_secret=pi_3Pv61LFY0qyl6XeW0HQ7pNyM_secret_FpcM4fxislq4dnA4WOIiwOqdb&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[metadata]\[test_key]=test_value&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=bancontact&return_url=example-app-scheme%3A\/\/authorized
 
 {
   "payment_method_configuration_details" : null,
   "canceled_at" : null,
   "source" : null,
-  "amount" : 6000,
+  "amount" : 100,
   "capture_method" : "automatic",
   "livemode" : false,
   "shipping" : null,
@@ -40,18 +40,23 @@ X-Stripe-Mock-Request: client_secret=pi_3Pj9JiIFbdis1OxT1hf8gUZn_secret_PCLWMwlD
   "object" : "payment_intent",
   "currency" : "eur",
   "last_payment_error" : null,
+  "amount_subtotal" : 100,
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "next_action" : {
     "type" : "redirect_to_url",
     "redirect_to_url" : {
-      "return_url" : "example-app-scheme:\/\/unused",
-      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1PSnETIFbdis1OxT\/pa_nonce_QaJxJwUQ3yvtLZpiCeyoKqvnkED856M"
+      "return_url" : "example-app-scheme:\/\/authorized",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_QmfMK7i0PC7oB56ewOu0vney5Oy3KN9"
     }
   },
-  "payment_method" : "pm_1Pj9JiIFbdis1OxTDFXTt2wF",
-  "client_secret" : "pi_3Pj9JiIFbdis1OxT1hf8gUZn_secret_PCLWMwlDNyxfmaxoLMAQ08vFY",
-  "id" : "pi_3Pj9JiIFbdis1OxT1hf8gUZn",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tax" : 0
+  },
+  "payment_method" : "pm_1Pv61LFY0qyl6XeWpgroSG3y",
+  "client_secret" : "pi_3Pv61LFY0qyl6XeW0HQ7pNyM_secret_FpcM4fxislq4dnA4WOIiwOqdb",
+  "id" : "pi_3Pv61LFY0qyl6XeW0HQ7pNyM",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -61,9 +66,9 @@ X-Stripe-Mock-Request: client_secret=pi_3Pj9JiIFbdis1OxT1hf8gUZn_secret_PCLWMwlD
   "processing" : null,
   "receipt_email" : null,
   "payment_method_types" : [
-    "satispay"
+    "bancontact"
   ],
   "setup_future_usage" : null,
-  "created" : 1722558358,
+  "created" : 1725405623,
   "description" : null
 }

@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li rentefri betalinger på %2$@";
-
 "+ Add" = "+ Legg til";
 
 "Add US bank account" = "Legg til bankkonto i USA";
@@ -25,6 +23,12 @@
 "Bank" = "Bank";
 
 "Bank account" = "Bankkonto";
+
+"Buy now or pay later with <img/>" = "Kjøp nå eller betal senere med <img/>";
+
+"Buy now or pay later with Afterpay" = "Kjøp nå eller betal senere med Afterpay";
+
+"Buy now or pay later with Clearpay" = "Kjøp nå eller betal senere med Clearpay";
 
 "Buy now or pay later with Klarna" = "Kjøp nå eller betal senere med Klarna";
 
@@ -118,9 +122,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Betal raskere hos %@ og hos tusenvis av bedrifter.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal med <num_installments/> rentefri avdrag på <installment_price/> med <img/>";
-
 "Pay over time with %@" = "Betal over tid med%@";
+
+"Pay over time with Affirm" = "Betal over tid med Affirm";
 
 "Pay with Link" = "Betal med Link";
 

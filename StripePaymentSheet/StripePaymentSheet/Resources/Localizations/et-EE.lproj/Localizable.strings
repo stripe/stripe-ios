@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li intressivaba makset summas %2$@";
-
 "+ Add" = "+ lisa";
 
 "Add US bank account" = "Lisa Ameerika Ühendriikide pangakonto";
@@ -25,6 +23,12 @@
 "Bank" = "Pank";
 
 "Bank account" = "Pangakonto";
+
+"Buy now or pay later with <img/>" = "Osta praegu või maksa <img/> abil hiljem";
+
+"Buy now or pay later with Afterpay" = "Osta praegu või maksa Afterpay abil hiljem";
+
+"Buy now or pay later with Clearpay" = "Osta praegu või maksa Clearpay abil hiljem";
 
 "Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
 
@@ -118,9 +122,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Makske kiiremini kaupleja %@ lehel ja tuhandetel teistel saitidel.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Makske <num_installments/> <installment_price/> suuruse intressivaba osamaksega <img/> abil";
-
 "Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
+
+"Pay over time with Affirm" = "Maksa Affirmi järelmaksuga";
 
 "Pay with Link" = "Maksa Linkiga";
 
