@@ -20,8 +20,7 @@ import UIKit
         return stackView
     }()
 
-    public init(
-                savedPaymentMethod: STPPaymentMethod?,
+    public init(savedPaymentMethod: STPPaymentMethod?,
                 appearance: PaymentSheet.Appearance,
                 shouldShowApplePay: Bool,
                 shouldShowLink: Bool) {
@@ -44,6 +43,7 @@ import UIKit
                                                                didTap: handleRowSelection(selectedRowButton:)))
         }
 
+        // TODO(porter) Pass these in via init later
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.bancontact), .stripe(.klarna), .stripe(.card)]
         for type in paymentMethodTypes {
             stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: type,
@@ -68,6 +68,8 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
 
+    
+    // MARK: Tap handling
     func handleRowSelection(selectedRowButton: RowButton) {
         for case let rowButton as RowButton in stackView.arrangedSubviews {
             rowButton.isSelected = rowButton === selectedRowButton
