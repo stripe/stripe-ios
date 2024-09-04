@@ -125,7 +125,7 @@ final class PlaygroundConfiguration {
             case customKeys = "custom_keys"
             case partnerD = "partner_d"
             case partnerF = "partner_f"
-            case partnerC = "partner_c"
+            case platformC = "platform_c"
             case bugBash = "bug_bash"
         }
     }
@@ -155,6 +155,11 @@ final class PlaygroundConfiguration {
             customId: .partnerF,
             displayName: "Partner F",
             isTestModeSupported: false
+        ),
+        Merchant(
+            customId: .platformC,
+            displayName: "Platform C",
+            isTestModeSupported: true
         ),
         Merchant(
             customId: .bugBash,
