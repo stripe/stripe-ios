@@ -225,10 +225,10 @@ public extension PaymentSheet {
         
         public var paymentMethodRow: PaymentMethodRow = PaymentMethodRow()
         
-        public var style: Style = .flatCheck
+        public var style: Style = .flatRadio
         
         public struct PaymentMethodRow: Equatable {
-            public var additionalInsets: UIEdgeInsets?
+            public var additionalInsets: CGFloat = 4.0
             public var spacing: CGFloat = 12.0
             
             public var flat: Flat = Flat()

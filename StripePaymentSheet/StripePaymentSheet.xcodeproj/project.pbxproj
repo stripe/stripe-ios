@@ -112,7 +112,6 @@
 		6151DDC02B14FDCF00ED4F7E /* UpdateCardViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151DDBF2B14FDCF00ED4F7E /* UpdateCardViewControllerSnapshotTests.swift */; };
 		6180A5C12C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6180A5C02C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift */; };
 		6180A5C72C824377009D1536 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6180A5C62C824377009D1536 /* RadioButton.swift */; };
-		6180A5C92C8248A1009D1536 /* EmbeddedRowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6180A5C82C8248A1009D1536 /* EmbeddedRowButton.swift */; };
 		6180A5CB2C8249D2009D1536 /* UIStackView+Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6180A5CA2C8249D2009D1536 /* UIStackView+Separator.swift */; };
 		6198AA6E2BED1C5A00F39D3E /* SavedPaymentMethodRowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6198AA6D2BED1C5A00F39D3E /* SavedPaymentMethodRowButton.swift */; };
 		619AF0852BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619AF0842BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift */; };
@@ -121,7 +120,6 @@
 		61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */; };
 		61CBE6662BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */; };
 		61D8688E2C06553E001FAD84 /* RightAccessoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */; };
-		61FB6BC52C8810E000F8E074 /* CheckmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FB6BC42C8810E000F8E074 /* CheckmarkView.swift */; };
 		623C2D9F87929D6DA9C09E23 /* STPCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39B31D0B890A4F8E4819B15 /* STPCameraView.swift */; };
 		630A3B22BC5C176928538511 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B7188D37BDE69B56D8223046 /* Main.storyboard */; };
 		648FDD85FD6ECDA1BBC71D45 /* CustomerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FA9C54257694EC0F205A5C /* CustomerSheet.swift */; };
@@ -462,7 +460,6 @@
 		617C44F9338DE2E93E318291 /* PayWithLinkWebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWithLinkWebController.swift; sourceTree = "<group>"; };
 		6180A5C02C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentMethodsView.swift; sourceTree = "<group>"; };
 		6180A5C62C824377009D1536 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
-		6180A5C82C8248A1009D1536 /* EmbeddedRowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedRowButton.swift; sourceTree = "<group>"; };
 		6180A5CA2C8249D2009D1536 /* UIStackView+Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Separator.swift"; sourceTree = "<group>"; };
 		6193FC5E14E1EC459E31B5F4 /* SheetNavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetNavigationButton.swift; sourceTree = "<group>"; };
 		6198AA6D2BED1C5A00F39D3E /* SavedPaymentMethodRowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPaymentMethodRowButton.swift; sourceTree = "<group>"; };
@@ -471,7 +468,6 @@
 		61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightAccessoryButton.swift; sourceTree = "<group>"; };
-		61FB6BC42C8810E000F8E074 /* CheckmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckmarkView.swift; sourceTree = "<group>"; };
 		62CE362B80042827F47ABC3F /* AffirmCopyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmCopyLabel.swift; sourceTree = "<group>"; };
 		64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowControllerStateTests.swift; sourceTree = "<group>"; };
 		64D658AC15478BF1E0A76B9D /* TestModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeView.swift; sourceTree = "<group>"; };
@@ -907,8 +903,6 @@
 			isa = PBXGroup;
 			children = (
 				6180A5C02C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift */,
-				6180A5C82C8248A1009D1536 /* EmbeddedRowButton.swift */,
-				61FB6BC42C8810E000F8E074 /* CheckmarkView.swift */,
 				6180A5C62C824377009D1536 /* RadioButton.swift */,
 				6180A5CA2C8249D2009D1536 /* UIStackView+Separator.swift */,
 			);
@@ -1806,7 +1800,6 @@
 				5943CD64F4F85071B16A76AC /* LinkPopupURLParser.swift in Sources */,
 				B626EE932BF2872200B05B05 /* PaymentMethodTypeImageView.swift in Sources */,
 				FA32A3732505CC037CDE64D7 /* LinkURLGenerator.swift in Sources */,
-				6180A5C92C8248A1009D1536 /* EmbeddedRowButton.swift in Sources */,
 				61D8688E2C06553E001FAD84 /* RightAccessoryButton.swift in Sources */,
 				2EDF4115FDC40A5B0672CCFD /* Locale+Link.swift in Sources */,
 				1ECC1086460E57AE75F18FBF /* OperationDebouncer.swift in Sources */,
@@ -1903,7 +1896,6 @@
 				2E4C37C73AD202C8A3DD2E4E /* LoadingViewController.swift in Sources */,
 				A8ECBDF889E258F03B86BC2E /* PaymentSheetFlowControllerViewController.swift in Sources */,
 				247A8FEE5184E5976720599E /* PaymentSheetViewController.swift in Sources */,
-				61FB6BC52C8810E000F8E074 /* CheckmarkView.swift in Sources */,
 				6B31B9BA2B90FCE60064E210 /* CustomerSession.swift in Sources */,
 				4DDECA1F7EC6B624C00D549E /* PollingViewController.swift in Sources */,
 				59BE39C4C3992DBB6A698390 /* PollingViewModel.swift in Sources */,

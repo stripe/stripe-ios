@@ -30,6 +30,20 @@ class RowButton: UIView {
     private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
         return ShadowedRoundedRectangle(appearance: appearance)
     }()
+    private lazy var radioButton: RadioButton? = {
+        guard appearance.paymentOptionView.style == .flatRadio else { return nil }
+        return RadioButton(appearance: appearance) {
+            self.didTap(self)
+        }
+    }()
+    private lazy var checkmarkImageView: UIImageView? = {
+        guard appearance.paymentOptionView.style == .flatCheck else { return nil}
+        let checkmarkImageView = UIImageView(image: Image.icon_checkmark.makeImage(template: true)) // TODO(porter) Get check asset from figma
+        checkmarkImageView.tintColor = appearance.paymentOptionView.paymentMethodRow.flat.checkmark.color ?? appearance.colors.primary
+        checkmarkImageView.contentMode = .scaleAspectFit
+        checkmarkImageView.isHidden = true
+        return checkmarkImageView
+    }()
     let imageView: UIImageView
     let label: UILabel
     let sublabel: UILabel?
@@ -48,6 +62,8 @@ class RowButton: UIView {
     var isSelected: Bool = false {
         didSet {
             shadowRoundedRect.isSelected = isSelected
+            radioButton?.isOn = isSelected
+            checkmarkImageView?.isHidden = !isSelected
             updateAccessibilityTraits()
         }
     }
@@ -57,6 +73,7 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
+    
     var heightConstraint: NSLayoutConstraint?
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, didTap: @escaping DidTapClosure) {
@@ -97,9 +114,18 @@ class RowButton: UIView {
                 rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
                 rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             ])
+        } else if let checkmarkImageView {
+            checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(checkmarkImageView)
+            NSLayoutConstraint.activate([
+                checkmarkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+                checkmarkImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                checkmarkImageView.widthAnchor.constraint(equalToConstant: 16),
+                checkmarkImageView.heightAnchor.constraint(equalToConstant: 16)
+            ])
         }
 
-        for view in [imageView, labelsStackView] {
+        for view in [radioButton, imageView, labelsStackView].compactMap({ $0 }) {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.isUserInteractionEnabled = false
             view.isAccessibilityElement = false
@@ -120,7 +146,12 @@ class RowButton: UIView {
         }
 
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            radioButton?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+            radioButton?.centerYAnchor.constraint(equalTo: centerYAnchor),
+            radioButton?.heightAnchor.constraint(equalToConstant: 18),
+            radioButton?.widthAnchor.constraint(equalToConstant: 18),
+            
+            imageView.leadingAnchor.constraint(equalTo: radioButton?.trailingAnchor ?? leadingAnchor, constant: 12),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 14),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -14),
@@ -130,12 +161,12 @@ class RowButton: UIView {
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             labelsStackView.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 4),
-            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -4),
+            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: appearance.paymentOptionView.paymentMethodRow.additionalInsets),
+            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -appearance.paymentOptionView.paymentMethodRow.additionalInsets),
 
             imageViewBottomConstraint,
             imageViewTopConstraint,
-        ])
+        ].compactMap({ $0 }))
 
         // Add tap gesture
         shadowRoundedRect.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))

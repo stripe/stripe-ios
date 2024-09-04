@@ -99,7 +99,7 @@ class EmbeddedViewController: UIViewController {
         NSLayoutConstraint.activate([
             paymentMethodsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             paymentMethodsView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            paymentMethodsView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0)
+            paymentMethodsView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.85)
         ])
     }
 }

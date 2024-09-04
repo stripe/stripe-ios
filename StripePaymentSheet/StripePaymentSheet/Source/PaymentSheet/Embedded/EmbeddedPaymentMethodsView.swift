@@ -10,10 +10,12 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 @_spi(STP) public class EmbeddedPaymentMethodsView: UIView {
+    private let appearance: PaymentSheet.Appearance
+    
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        
+        stackView.spacing = appearance.paymentOptionView.style == .floating ? appearance.paymentOptionView.paymentMethodRow.spacing : 0
         return stackView
     }()
     
@@ -21,36 +23,33 @@ import UIKit
                 appearance: PaymentSheet.Appearance,
                 shouldShowApplePay: Bool,
                 shouldShowLink: Bool) {
+        self.appearance = appearance
         super.init(frame: .zero)
         
         if let savedPaymentMethod {
-            stackView.addArrangedSubview(EmbeddedRowButton(appearance: appearance,
-                                                           rowButton: .makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
-                                                                                                 appearance: appearance,
-                                                                                                 didTap: handleRowSelection(embeddedRowButton:))))
+            stackView.addArrangedSubview(RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
+                                                                             appearance: appearance,
+                                                                             didTap: handleRowSelection(selectedRowButton:)))
         }
         
         if shouldShowApplePay {
-            stackView.addArrangedSubview(EmbeddedRowButton(appearance: appearance,
-                                                           rowButton: .makeForApplePay(appearance: appearance,
-                                                                                       didTap: handleRowSelection(embeddedRowButton:))))
+            stackView.addArrangedSubview(RowButton.makeForApplePay(appearance: appearance,
+                                                                   didTap: handleRowSelection(selectedRowButton:)))
         }
         
         if shouldShowLink {
-            stackView.addArrangedSubview(EmbeddedRowButton(appearance: appearance,
-                                                           rowButton: .makeForLink(appearance: appearance,
-                                                                                   didTap: handleRowSelection(embeddedRowButton:))))
+            stackView.addArrangedSubview(RowButton.makeForLink(appearance: appearance,
+                                                               didTap: handleRowSelection(selectedRowButton:)))
         }
         
         // TODO(porter) Pass in some actual payment method types
         let types: [PaymentSheet.PaymentMethodType] = [.stripe(.bancontact), .stripe(.klarna), .stripe(.card)]
         for type in types {
-            stackView.addArrangedSubview(EmbeddedRowButton(appearance: appearance,
-                                                           rowButton: .makeForPaymentMethodType(paymentMethodType: type,
-                                                                                                savedPaymentMethodType: savedPaymentMethod?.type,
-                                                                                                appearance: appearance,
-                                                                                                shouldAnimateOnPress: true,
-                                                                                                didTap: handleRowSelection(embeddedRowButton:))))
+            stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: type,
+                                                                            savedPaymentMethodType: savedPaymentMethod?.type,
+                                                                            appearance: appearance,
+                                                                            shouldAnimateOnPress: true,
+                                                                            didTap: handleRowSelection(selectedRowButton:)))
         }
         
         if appearance.paymentOptionView.style != .floating {
@@ -71,6 +70,7 @@ import UIKit
                                     addTopSeparator: appearance.paymentOptionView.paymentMethodRow.flat.topSeparatorEnabled,
                                     addBottomSeparator: appearance.paymentOptionView.paymentMethodRow.flat.bottomSeparatorEnabled)
         }
+        
         addAndPinSubview(stackView)
     }
     
@@ -78,9 +78,9 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    func handleRowSelection(embeddedRowButton: RowButton) {
-        for case let rowButton as EmbeddedRowButton in stackView.arrangedSubviews {
-            rowButton.isSelected = rowButton.rowButton === embeddedRowButton
+    func handleRowSelection(selectedRowButton: RowButton) {
+        for case let rowButton as RowButton in stackView.arrangedSubviews {
+            rowButton.isSelected = rowButton === selectedRowButton
         }
     }
 }
