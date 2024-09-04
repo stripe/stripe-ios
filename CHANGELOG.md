@@ -1,4 +1,4 @@
-## X.Y.Z 2024-XX-YY
+## 23.28.3 2024-09-03
 ### PaymentSheet
 * [Fixed] PaymentSheet now uses a border width of 1.5 instead of 0 when `PaymentSheet.Appearance.borderWidth' is 0.
 * [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)

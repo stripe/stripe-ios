@@ -1,5 +1,5 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3PiRzmFY0qyl6XeW1VtQrypE\/confirm$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pv61OFY0qyl6XeW1T1VgtLz\/confirm$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,20 +13,20 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_uH9oUqhIRv572r
+request-id: req_hnwnFgNacVPajV
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 1148
+Content-Length: 1141
 Vary: Origin
-Date: Wed, 31 Jul 2024 02:10:30 GMT
-original-request: req_uH9oUqhIRv572r
+Date: Tue, 03 Sep 2024 23:20:27 GMT
+original-request: req_hnwnFgNacVPajV
 stripe-version: 2020-08-27
-idempotency-key: cc6fa70a-fe99-4f8a-bf7b-b14d7be0b089
+idempotency-key: 6edd2754-cbdd-47d9-82d1-f781ab7aeed6
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
-X-Stripe-Mock-Request: client_secret=pi_3PiRzmFY0qyl6XeW1VtQrypE_secret_LI3lVvH3KPv4whDPdR3xNvbZo&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[metadata]\[test_key]=test_value&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=bancontact&return_url=example-app-scheme%3A\/\/authorized
+X-Stripe-Mock-Request: client_secret=pi_3Pv61OFY0qyl6XeW1T1VgtLz_secret_T7DLZeI4aNNl4FvL9ArBbgEKj&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Jenny%20Rosen&payment_method_data\[metadata]\[test_key]=test_value&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=eps&return_url=example-app-scheme%3A\/\/authorized
 
 {
   "payment_method_configuration_details" : null,
@@ -47,16 +47,16 @@ X-Stripe-Mock-Request: client_secret=pi_3PiRzmFY0qyl6XeW1VtQrypE_secret_LI3lVvH3
     "type" : "redirect_to_url",
     "redirect_to_url" : {
       "return_url" : "example-app-scheme:\/\/authorized",
-      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_QZbCWugkgujD3SAh3nNjNBIx6L3ItaK"
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_QmfMLm7hGej44Q46D4TusRomPscmvFV"
     }
   },
   "total_details" : {
     "amount_discount" : 0,
     "amount_tax" : 0
   },
-  "payment_method" : "pm_1PiRzmFY0qyl6XeWVMHmocyP",
-  "client_secret" : "pi_3PiRzmFY0qyl6XeW1VtQrypE_secret_LI3lVvH3KPv4whDPdR3xNvbZo",
-  "id" : "pi_3PiRzmFY0qyl6XeW1VtQrypE",
+  "payment_method" : "pm_1Pv61OFY0qyl6XeW85ekzkP9",
+  "client_secret" : "pi_3Pv61OFY0qyl6XeW1T1VgtLz_secret_T7DLZeI4aNNl4FvL9ArBbgEKj",
+  "id" : "pi_3Pv61OFY0qyl6XeW1T1VgtLz",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -66,9 +66,9 @@ X-Stripe-Mock-Request: client_secret=pi_3PiRzmFY0qyl6XeW1VtQrypE_secret_LI3lVvH3
   "processing" : null,
   "receipt_email" : null,
   "payment_method_types" : [
-    "bancontact"
+    "eps"
   ],
   "setup_future_usage" : null,
-  "created" : 1722391830,
+  "created" : 1725405626,
   "description" : null
 }
