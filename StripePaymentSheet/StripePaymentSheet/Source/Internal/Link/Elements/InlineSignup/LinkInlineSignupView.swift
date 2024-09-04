@@ -271,3 +271,18 @@ extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
     }
 
 }
+
+extension LinkInlineSignupView: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            switch event {
+            case .shouldDisableUserInteraction:
+                self.checkboxElement.setUserInteraction(isUserInteractionEnabled: false)
+            case .shouldEnableUserInteraction:
+                self.checkboxElement.setUserInteraction(isUserInteractionEnabled: true)
+            default:
+                break
+            }
+        }
+    }
+}

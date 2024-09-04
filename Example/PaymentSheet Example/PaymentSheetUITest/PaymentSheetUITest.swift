@@ -2434,56 +2434,44 @@ extension PaymentSheetUITestCase {
         app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10)
 
         // "Sign Up" pane
-        app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
-            .firstMatch
-            .waitForExistenceAndTap(timeout: 10)
-        app.typeText(email + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Phone number"].tap()
-        // the `XCUIKeyboardKey.return.rawValue` will automatically
-        // press the "Continue with Link" button to proceed to next
-        // screen
-        app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
+        let emailTextField = app.textFields["email_text_field"]
+        XCTAssertTrue(emailTextField.waitForExistence(timeout: 10.0), "Failed to find email text field")
+        emailTextField.typeText("\(UUID().uuidString)@uitest.com")
 
-        // "Institution Picker" pane
-        let searchTextField = app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Search'"))
-            .firstMatch
-        searchTextField.waitForExistenceAndTap(timeout: 10)
-        app.typeText("Test Institution" + XCUIKeyboardKey.return.rawValue)
-        searchTextField
-            .coordinate(
-                withNormalizedOffset: CGVector(
-                    dx: 0.5,
-                    // bottom of search text field
-                    dy: 1.0
-                )
-            )
-        // at this point, we searched "Test Institution"
-        // and the only search result is "Test Institution,"
-        // so here we guess that 80 pixels below search bar
-        // there will be a "Test Institution"
-        //
-        // we do this "guess" because every other method of
-        // selecting the institution did not work on iOS 17
-            .withOffset(CGVector(dx: 0, dy: 80))
-            .tap()
+        let phoneTextField = app.textFields["phone_text_field"]
+        XCTAssertTrue(phoneTextField.waitForExistence(timeout: 10.0), "Failed to find phone text field")
 
-        // "Account Picker" pane
-        _ = app.staticTexts["Select account"].waitForExistence(timeout: 10)
-        // `swipeUp` is necessary to see the `High Balance` account
-        app.swipeUp()
-        sleep(1) // wait for swipe up to finish
-        app.webViews
-            .buttons
-            .containing(NSPredicate(format: "label CONTAINS 'High Balance'"))
-            .firstMatch
-            .tap()
-        app.buttons["Connect account"].tap()
+        let countryCodeSelector = app.otherElements["phone_country_code_selector"]
+        XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
+        countryCodeSelector.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
+        app.toolbars.buttons["Done"].tap()
+
+        phoneTextField.tap()
+        phoneTextField.typeText("4015006000")
+
+        let linkLoginCtaButton = app.buttons["link_login.primary_button"]
+        XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
+        linkLoginCtaButton.tap()
+
+        // "Institution picker" pane
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
+        featuredLegacyTestInstitution.tap()
+
+        let prepaneContinueButton = app.buttons["prepane_continue_button"]
+        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "Failed to open Partner Auth Prepane - \(#function) waiting failed")
+        prepaneContinueButton.tap()
+
+        let accountPickerLinkAccountsButton = app.buttons["connect_accounts_button"]
+        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
+        XCTAssert(accountPickerLinkAccountsButton.isEnabled, "no account selected")
+        accountPickerLinkAccountsButton.tap()
 
         // "Success" pane
-        XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
-        app.buttons["Done"].forceTapWhenHittableInTestCase(self)
+        let successDoneButton = app.buttons["success_done_button"]
+        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
+        successDoneButton.tap()
 
         // Back to Payment Sheet
         app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
