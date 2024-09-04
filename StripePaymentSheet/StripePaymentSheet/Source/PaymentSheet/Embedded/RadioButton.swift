@@ -93,11 +93,12 @@ class RadioButton: UIView {
         offLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
         onLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
-
+#if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         applyStyling()
     }
+#endif
 
     // MARK: - Private methods
 

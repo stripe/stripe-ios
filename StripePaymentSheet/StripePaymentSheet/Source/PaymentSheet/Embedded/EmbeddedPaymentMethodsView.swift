@@ -68,7 +68,6 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
 
-    
     // MARK: Tap handling
     func handleRowSelection(selectedRowButton: RowButton) {
         for case let rowButton as RowButton in stackView.arrangedSubviews {

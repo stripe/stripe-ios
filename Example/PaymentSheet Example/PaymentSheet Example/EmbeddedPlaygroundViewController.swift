@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripePaymentSheet
+import UIKit
 
 class EmbeddedPlaygroundViewController: UIViewController {
     override func viewDidLoad() {
@@ -16,7 +16,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
         var appearance = PaymentSheet.Appearance.default
         appearance.paymentOptionView.style = .flatRadio
-        
+
         let paymentMethodsView = EmbeddedPaymentMethodsView(savedPaymentMethod: nil, appearance: appearance, shouldShowApplePay: true, shouldShowLink: true)
         paymentMethodsView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(paymentMethodsView)
