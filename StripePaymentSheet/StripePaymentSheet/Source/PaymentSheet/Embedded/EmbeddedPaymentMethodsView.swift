@@ -20,24 +20,34 @@ import UIKit
         return stackView
     }()
 
-    public init(savedPaymentMethod: STPPaymentMethod?,
-                appearance: PaymentSheet.Appearance,
-                shouldShowApplePay: Bool,
-                shouldShowLink: Bool) {
+    // TODO(porter) Remove later, just for use in EmbeddedPlaygroundViewController since PaymentMethodType and AccessoryType aren't public
+    public convenience init(savedPaymentMethod: STPPaymentMethod?,
+                            appearance: PaymentSheet.Appearance,
+                            shouldShowApplePay: Bool,
+                            shouldShowLink: Bool) {
+        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.bancontact), .stripe(.klarna), .stripe(.card)]
+        let savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? = .viewMore
+
+        self.init(paymentMethodTypes: paymentMethodTypes, savedPaymentMethod: savedPaymentMethod, appearance: appearance, shouldShowApplePay: shouldShowApplePay, shouldShowLink: shouldShowLink, savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
+    }
+
+    init(paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+         savedPaymentMethod: STPPaymentMethod?,
+         appearance: PaymentSheet.Appearance,
+         shouldShowApplePay: Bool,
+         shouldShowLink: Bool,
+         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
         self.appearance = appearance
         super.init(frame: .zero)
-
         let rowButtonAppearance = appearance.paymentOptionView.style.appearanceForStyle(appearance: appearance)
 
         if let savedPaymentMethod {
             let accessoryButton: RowButton.RightAccessoryButton? = {
-                // TODO(porter) Pass in accessory type
-                return RowButton.RightAccessoryButton(accessoryType: .viewMore, appearance: appearance, didTap: didTapAccessoryButton)
-//                if let savedPaymentMethodAccessoryType {
-//                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
-//                } else {
-//                    return nil
-//                }
+                if let savedPaymentMethodAccessoryType {
+                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
+                } else {
+                    return nil
+                }
             }()
             stackView.addArrangedSubview(RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
                                                                              appearance: rowButtonAppearance,
@@ -45,7 +55,15 @@ import UIKit
                                                                              didTap: handleRowSelection(selectedRowButton:)))
         }
 
-        // TODO(porter) ordering of LPMs, cards, Link, Apple Pay
+        // Add card before Apple Pay and Link if present and before any other LPMs
+        if paymentMethodTypes.contains(.stripe(.card)) {
+            stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card),
+                                                                            savedPaymentMethodType: savedPaymentMethod?.type,
+                                                                            appearance: rowButtonAppearance,
+                                                                            shouldAnimateOnPress: true,
+                                                                            didTap: handleRowSelection(selectedRowButton:)))
+        }
+
         if shouldShowApplePay {
             stackView.addArrangedSubview(RowButton.makeForApplePay(appearance: rowButtonAppearance,
                                                                    didTap: handleRowSelection(selectedRowButton:)))
@@ -56,10 +74,8 @@ import UIKit
                                                                didTap: handleRowSelection(selectedRowButton:)))
         }
 
-        // TODO(porter) Pass these in via init later
-        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.bancontact), .stripe(.klarna), .stripe(.card)]
-        for type in paymentMethodTypes {
-            stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: type,
+        for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) {
+            stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType,
                                                                             savedPaymentMethodType: savedPaymentMethod?.type,
                                                                             appearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,
@@ -87,7 +103,7 @@ import UIKit
             rowButton.isSelected = rowButton === selectedRowButton
         }
     }
-    
+
     func didTapAccessoryButton() {
         // TODO(porter)
     }

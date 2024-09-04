@@ -36,7 +36,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
                 "id": "preloaded_amex",
             ] as [String: Any]
         let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: amex)
-        
+
         let paymentMethodsView = EmbeddedPaymentMethodsView(savedPaymentMethod: paymentMethod, appearance: appearance, shouldShowApplePay: true, shouldShowLink: true)
         paymentMethodsView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(paymentMethodsView)
