@@ -27,19 +27,21 @@ import UIKit
         self.appearance = appearance
         super.init(frame: .zero)
 
+        let rowButtonAppearance = appearance.paymentOptionView.style.appearanceForStyle(appearance: appearance)
+
         if let savedPaymentMethod {
             stackView.addArrangedSubview(RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
-                                                                             appearance: appearance,
+                                                                             appearance: rowButtonAppearance,
                                                                              didTap: handleRowSelection(selectedRowButton:)))
         }
 
         if shouldShowApplePay {
-            stackView.addArrangedSubview(RowButton.makeForApplePay(appearance: appearance,
+            stackView.addArrangedSubview(RowButton.makeForApplePay(appearance: rowButtonAppearance,
                                                                    didTap: handleRowSelection(selectedRowButton:)))
         }
 
         if shouldShowLink {
-            stackView.addArrangedSubview(RowButton.makeForLink(appearance: appearance,
+            stackView.addArrangedSubview(RowButton.makeForLink(appearance: rowButtonAppearance,
                                                                didTap: handleRowSelection(selectedRowButton:)))
         }
 
@@ -48,7 +50,7 @@ import UIKit
         for type in paymentMethodTypes {
             stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: type,
                                                                             savedPaymentMethodType: savedPaymentMethod?.type,
-                                                                            appearance: appearance,
+                                                                            appearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,
                                                                             didTap: handleRowSelection(selectedRowButton:)))
         }
@@ -86,6 +88,19 @@ extension PaymentSheet.Appearance.PaymentOptionView.Style {
             return .zero
         case .floating:
             return .zero
+        }
+    }
+
+    func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
+        switch self {
+        case .flatRadio, .flatCheck:
+            var appearance = appearance
+            appearance.borderWidth = 0.0
+            appearance.cornerRadius = 0.0
+            appearance.shadow = .disabled
+            return appearance
+        case .floating:
+            return appearance
         }
     }
 }

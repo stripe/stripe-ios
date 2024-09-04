@@ -12,7 +12,13 @@ import UIKit
 class EmbeddedPlaygroundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = UIColor(dynamicProvider: { traitCollection in
+            if traitCollection.userInterfaceStyle == .dark {
+                return .secondarySystemBackground
+            }
+
+            return .systemBackground
+        })
 
         var appearance = PaymentSheet.Appearance.default
         appearance.paymentOptionView.style = .flatRadio

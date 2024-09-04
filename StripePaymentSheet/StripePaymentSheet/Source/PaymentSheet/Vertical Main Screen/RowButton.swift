@@ -11,25 +11,9 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension PaymentSheet.Appearance.PaymentOptionView.Style {
-    func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
-        switch self {
-        case .flatRadio, .flatCheck:
-            var appearance = appearance
-            appearance.borderWidth = 0.0
-            appearance.shadow = .disabled
-            return appearance
-        case .floating:
-            return appearance
-        }
-    }
-}
-
 /// A selectable button used in vertical mode to display payment methods.
 class RowButton: UIView {
-    private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
-        return ShadowedRoundedRectangle(appearance: appearance)
-    }()
+    private let shadowRoundedRect: ShadowedRoundedRectangle
     private lazy var radioButton: RadioButton? = {
         guard appearance.paymentOptionView.style == .flatRadio else { return nil }
         return RadioButton(appearance: appearance) { [weak self] in
@@ -49,15 +33,7 @@ class RowButton: UIView {
     let label: UILabel
     let sublabel: UILabel?
     let shouldAnimateOnPress: Bool
-    private var _appearance: PaymentSheet.Appearance
-    var appearance: PaymentSheet.Appearance {
-           get {
-               return _appearance.paymentOptionView.style.appearanceForStyle(appearance: _appearance)
-           }
-           set {
-               _appearance = newValue
-           }
-       }
+    let appearance: PaymentSheet.Appearance
     typealias DidTapClosure = (RowButton) -> Void
     let didTap: DidTapClosure
     var isSelected: Bool = false {
@@ -77,9 +53,10 @@ class RowButton: UIView {
     var heightConstraint: NSLayoutConstraint?
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, didTap: @escaping DidTapClosure) {
-        self._appearance = appearance
+        self.appearance = appearance
         self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
+        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.imageView = imageView
         self.label = Self.makeVerticalRowButtonLabel(text: text, appearance: appearance)
         if let subtext {
