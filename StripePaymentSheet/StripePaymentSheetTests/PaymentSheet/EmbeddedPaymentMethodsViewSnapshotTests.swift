@@ -5,14 +5,13 @@
 //  Created by Nick Porter on 9/4/24.
 //
 
-import Foundation
-import iOSSnapshotTestCase
 import StripeCoreTestUtils
-import UIKit
+@_spi(STP) @testable import StripePayments
+@_spi(STP) @testable import StripePaymentSheet
+@testable import StripePaymentsTestUtils
+@_spi(STP) @testable import StripeUICore
+import XCTest
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 
 class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     
