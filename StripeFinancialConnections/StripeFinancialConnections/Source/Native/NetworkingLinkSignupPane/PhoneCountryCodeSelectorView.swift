@@ -76,6 +76,7 @@ final class PhoneCountryCodeSelectorView: UIView {
         backgroundColor = .backgroundOffset
         layer.cornerRadius = 8
         clipsToBounds = true
+        accessibilityIdentifier = "phone_country_code_selector"
 
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
