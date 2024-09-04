@@ -32,6 +32,38 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
     
+    // MARK: Flat check snapshot tests
+    
+    func testEmbeddedPaymentMethodsView_flatCheck() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.paymentOptionView.style = .flatCheck
+        
+        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: appearance,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none)
+
+        verify(embeddedView)
+    }
+    
+    // MARK: Floating snapshot tests
+    
+    func testEmbeddedPaymentMethodsView_floating() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.paymentOptionView.style = .floating
+        
+        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: appearance,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none)
+
+        verify(embeddedView)
+    }
+    
     // TODO(porter) Add more tests
 
     func verify(
