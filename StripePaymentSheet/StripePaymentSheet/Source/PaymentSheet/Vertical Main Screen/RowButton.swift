@@ -26,19 +26,20 @@ extension PaymentSheet.Appearance.PaymentOptionView.Style {
 }
 
 /// A selectable button used in vertical mode to display payment methods.
-class RowButton: UIView {    
+class RowButton: UIView {
     private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
         return ShadowedRoundedRectangle(appearance: appearance)
     }()
     private lazy var radioButton: RadioButton? = {
         guard appearance.paymentOptionView.style == .flatRadio else { return nil }
-        return RadioButton(appearance: appearance) {
+        return RadioButton(appearance: appearance) { [weak self] in
+            guard let self = self else { return }
             self.didTap(self)
         }
     }()
     private lazy var checkmarkImageView: UIImageView? = {
-        guard appearance.paymentOptionView.style == .flatCheck else { return nil}
-        let checkmarkImageView = UIImageView(image: Image.icon_checkmark.makeImage(template: true)) // TODO(porter) Get check asset from figma
+        guard appearance.paymentOptionView.style == .flatCheck else { return nil }
+        let checkmarkImageView = UIImageView(image: Image.embedded_check.makeImage(template: true))
         checkmarkImageView.tintColor = appearance.paymentOptionView.paymentMethodRow.flat.checkmark.color ?? appearance.colors.primary
         checkmarkImageView.contentMode = .scaleAspectFit
         checkmarkImageView.isHidden = true
@@ -73,7 +74,6 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
-    
     var heightConstraint: NSLayoutConstraint?
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, didTap: @escaping DidTapClosure) {
@@ -121,7 +121,7 @@ class RowButton: UIView {
                 checkmarkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
                 checkmarkImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 checkmarkImageView.widthAnchor.constraint(equalToConstant: 16),
-                checkmarkImageView.heightAnchor.constraint(equalToConstant: 16)
+                checkmarkImageView.heightAnchor.constraint(equalToConstant: 16),
             ])
         }
 
@@ -150,7 +150,7 @@ class RowButton: UIView {
             radioButton?.centerYAnchor.constraint(equalTo: centerYAnchor),
             radioButton?.heightAnchor.constraint(equalToConstant: 18),
             radioButton?.widthAnchor.constraint(equalToConstant: 18),
-            
+
             imageView.leadingAnchor.constraint(equalTo: radioButton?.trailingAnchor ?? leadingAnchor, constant: 12),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 14),

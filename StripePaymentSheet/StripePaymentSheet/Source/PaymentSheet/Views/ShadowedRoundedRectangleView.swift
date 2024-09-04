@@ -53,7 +53,6 @@ class ShadowedRoundedRectangle: UIView {
             if selectedBorderWidth > 0 {
                 layer.borderWidth = selectedBorderWidth * 1.5
             } else if appearance.paymentOptionView.style == .floating {
-                // TODO(porter) Only set this if we're using embedded
                 // Without a border, the customer can't tell this is selected and it looks bad
                 layer.borderWidth = 1.5
             }

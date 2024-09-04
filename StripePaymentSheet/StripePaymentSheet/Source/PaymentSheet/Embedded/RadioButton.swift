@@ -10,7 +10,7 @@ import UIKit
 
 class RadioButton: UIView {
     private let appearance: PaymentSheet.Appearance
-    
+
     private struct Constants {
         static let diameter: CGFloat = 18
         static let innerDiameter: CGFloat = 12
@@ -22,17 +22,17 @@ class RadioButton: UIView {
             update()
         }
     }
-    
+
     private var selectedColor: CGColor {
         appearance.paymentOptionView.paymentMethodRow.flat.radio.colorSelected?.cgColor ?? appearance.colors.primary.cgColor
     }
-    
+
     private var unselectedColor: CGColor {
         appearance.paymentOptionView.paymentMethodRow.flat.radio.colorUnselected?.cgColor ?? appearance.colors.componentBorder.cgColor
     }
-    
+
     private let didTap: () -> Void
-    
+
     /// Layer for the "off" state.
     private lazy var offLayer: CALayer = {
         let layer = CALayer()
@@ -59,7 +59,7 @@ class RadioButton: UIView {
 
         return layer
     }()
-    
+
     /// Inner circle layer for the "on" state.
     private lazy var onLayerInnerCircle: CALayer = {
         let innerCircle = CALayer()
@@ -115,10 +115,10 @@ class RadioButton: UIView {
         offLayer.borderColor = unselectedColor
         onLayer.borderColor = selectedColor
         onLayerInnerCircle.backgroundColor = selectedColor
-        
+
         CATransaction.commit()
     }
-    
+
     @objc private func handleTap() {
         didTap()
     }

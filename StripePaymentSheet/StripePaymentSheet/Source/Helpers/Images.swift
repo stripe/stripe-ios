@@ -82,4 +82,7 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // Mandates
     case bacsdd_logo = "bacsdd_logo"
+
+    // Embedded
+    case embedded_check = "icon-check"
 }
