@@ -30,11 +30,22 @@ import UIKit
         let rowButtonAppearance = appearance.paymentOptionView.style.appearanceForStyle(appearance: appearance)
 
         if let savedPaymentMethod {
+            let accessoryButton: RowButton.RightAccessoryButton? = {
+                // TODO(porter) Pass in accessory type
+                return RowButton.RightAccessoryButton(accessoryType: .viewMore, appearance: appearance, didTap: didTapAccessoryButton)
+//                if let savedPaymentMethodAccessoryType {
+//                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
+//                } else {
+//                    return nil
+//                }
+            }()
             stackView.addArrangedSubview(RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
                                                                              appearance: rowButtonAppearance,
+                                                                             rightAccessoryView: accessoryButton,
                                                                              didTap: handleRowSelection(selectedRowButton:)))
         }
 
+        // TODO(porter) ordering of LPMs, cards, Link, Apple Pay
         if shouldShowApplePay {
             stackView.addArrangedSubview(RowButton.makeForApplePay(appearance: rowButtonAppearance,
                                                                    didTap: handleRowSelection(selectedRowButton:)))
@@ -75,6 +86,10 @@ import UIKit
         for case let rowButton as RowButton in stackView.arrangedSubviews {
             rowButton.isSelected = rowButton === selectedRowButton
         }
+    }
+    
+    func didTapAccessoryButton() {
+        // TODO(porter)
     }
 }
 

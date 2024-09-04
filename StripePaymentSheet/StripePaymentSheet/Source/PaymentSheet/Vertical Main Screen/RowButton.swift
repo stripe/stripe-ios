@@ -84,6 +84,7 @@ class RowButton: UIView {
         addAndPinSubview(shadowRoundedRect)
 
         if let rightAccessoryView {
+            // TODO(porter) Move this below labels in the flat check style
             rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(rightAccessoryView)
             NSLayoutConstraint.activate([
