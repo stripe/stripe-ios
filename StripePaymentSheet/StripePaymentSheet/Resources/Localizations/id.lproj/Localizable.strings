@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li pembayaran bebas bunga sebesar %2$@";
-
 "+ Add" = "+ Tambahkan";
 
 "Add US bank account" = "Tambahkan rekening bank AS";
@@ -25,6 +23,12 @@
 "Bank" = "Bank";
 
 "Bank account" = "Rekening bank";
+
+"Buy now or pay later with <img/>" = "Beli sekarang atau bayar nanti dengan <img/>";
+
+"Buy now or pay later with Afterpay" = "Beli sekarang atau bayar nanti dengan Afterpay";
+
+"Buy now or pay later with Clearpay" = "Beli sekarang atau bayar nanti dengan Clearpay";
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
 
@@ -118,9 +122,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Bayar lebih cepat di %@ dan ribuan bisnis.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> angsuran bebas bunga sebesar <installment_price/> dengan <img/>";
-
 "Pay over time with %@" = "Bayar dengan jangka waktu dengan %@";
+
+"Pay over time with Affirm" = "Bayar seiring waktu dengan Affirm";
 
 "Pay with Link" = "Bayar dengan Link";
 

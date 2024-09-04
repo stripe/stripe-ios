@@ -1,5 +1,5 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3PiRzfFY0qyl6XeW07ggWuUF\/confirm$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pv616FY0qyl6XeW0ERcy4kq\/confirm$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,26 +13,26 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_sjCZMwC5KhNfMJ
+request-id: req_dGAXEMktnTV3UT
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 1343
+Content-Length: 1219
 Vary: Origin
-Date: Wed, 31 Jul 2024 02:10:24 GMT
-original-request: req_sjCZMwC5KhNfMJ
+Date: Tue, 03 Sep 2024 23:20:09 GMT
+original-request: req_dGAXEMktnTV3UT
 stripe-version: 2020-08-27
-idempotency-key: 115fc5aa-789f-438c-b5e4-4d2d5e887c13
+idempotency-key: a4dff928-8d6b-41ff-8dfd-e1ee71b0edc9
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
 x-content-type-options: nosniff
-X-Stripe-Mock-Request: client_secret=pi_3PiRzfFY0qyl6XeW07ggWuUF_secret_VRVccUE0U9E88Ujh6w0oEUuYM&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[card]\[exp_month]=7&payment_method_data\[card]\[exp_year]=2029&payment_method_data\[card]\[number]=4000000000003220&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=card&return_url=example-app-scheme%3A\/\/authorized
+X-Stripe-Mock-Request: client_secret=pi_3Pv616FY0qyl6XeW0ERcy4kq_secret_0qYH0oQeuqSqFUreCsXHY76eE&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=alipay&payment_method_options\[alipay]\[app_bundle_id]=com\.apple\.dt\.xctest\.tool&payment_method_options\[alipay]\[app_version_key]=.*&return_url=foo%3A\/\/bar
 
 {
   "payment_method_configuration_details" : null,
   "canceled_at" : null,
   "source" : null,
-  "amount" : 100,
+  "amount" : 2000,
   "capture_method" : "automatic",
   "livemode" : false,
   "shipping" : null,
@@ -40,23 +40,25 @@ X-Stripe-Mock-Request: client_secret=pi_3PiRzfFY0qyl6XeW07ggWuUF_secret_VRVccUE0
   "object" : "payment_intent",
   "currency" : "usd",
   "last_payment_error" : null,
-  "amount_subtotal" : 100,
+  "amount_subtotal" : 2000,
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "next_action" : {
-    "type" : "redirect_to_url",
-    "redirect_to_url" : {
-      "return_url" : "example-app-scheme:\/\/authorized",
-      "url" : "https:\/\/hooks.stripe.com\/3d_secure_2\/hosted?merchant=acct_1G6m1pFY0qyl6XeW&payment_intent=pi_3PiRzfFY0qyl6XeW07ggWuUF&payment_intent_client_secret=pi_3PiRzfFY0qyl6XeW07ggWuUF_secret_VRVccUE0U9E88Ujh6w0oEUuYM&publishable_key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&source=payatt_3PiRzfFY0qyl6XeW0luCNpDl"
+    "type" : "alipay_handle_redirect",
+    "alipay_handle_redirect" : {
+      "native_url" : null,
+      "native_data" : null,
+      "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1Pv617FY0qyl6XeWIaxjeZkC?client_secret=src_client_secret_ht9zWZYbmTghOeVpvj1G5gc4",
+      "return_url" : "foo:\/\/bar"
     }
   },
   "total_details" : {
     "amount_discount" : 0,
     "amount_tax" : 0
   },
-  "payment_method" : "pm_1PiRzfFY0qyl6XeW3rpBuZrf",
-  "client_secret" : "pi_3PiRzfFY0qyl6XeW07ggWuUF_secret_VRVccUE0U9E88Ujh6w0oEUuYM",
-  "id" : "pi_3PiRzfFY0qyl6XeW07ggWuUF",
+  "payment_method" : "pm_1Pv617FY0qyl6XeWNWVOf3MN",
+  "client_secret" : "pi_3Pv616FY0qyl6XeW0ERcy4kq_secret_0qYH0oQeuqSqFUreCsXHY76eE",
+  "id" : "pi_3Pv616FY0qyl6XeW0ERcy4kq",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -66,9 +68,9 @@ X-Stripe-Mock-Request: client_secret=pi_3PiRzfFY0qyl6XeW07ggWuUF_secret_VRVccUE0
   "processing" : null,
   "receipt_email" : null,
   "payment_method_types" : [
-    "card"
+    "alipay"
   ],
   "setup_future_usage" : null,
-  "created" : 1722391823,
+  "created" : 1725405608,
   "description" : null
 }
