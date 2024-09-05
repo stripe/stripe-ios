@@ -30,7 +30,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             configuration: configuration,
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             analyticsHelper: ._testValue()
         )
         XCTAssertTrue(viewController.canRemovePaymentMethods)
@@ -65,7 +65,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             configuration: configuration,
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             analyticsHelper: ._testValue()
         )
         XCTAssertTrue(viewController.canRemovePaymentMethods)
@@ -90,7 +90,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             configuration: configuration,
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             analyticsHelper: ._testValue()
         )
         XCTAssertFalse(viewController.canRemovePaymentMethods)
@@ -111,7 +111,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+                                                                       elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
         XCTAssertFalse(viewController.canEdit)
         // Should be in remove only mode
@@ -123,7 +123,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+                                                                       elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
         XCTAssertFalse(viewController.canEdit) // Can't edit, merchant is not eligible for CBC
         XCTAssertTrue(viewController.isRemoveOnlyMode) // Only operation we can make with a single payment method in this case is remove
@@ -135,7 +135,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+                                                                       elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
         XCTAssertFalse(viewController.canEdit)
     }
@@ -146,7 +146,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
-                                                                       elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+                                                                       elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
         XCTAssertFalse(viewController.canEdit)
     }
@@ -160,7 +160,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          cardBrandChoiceData: [
-                                            "eligible": true]), 
+                                            "eligible": true]),
             analyticsHelper: ._testValue()
         )
         XCTAssertTrue(viewController.canEdit)
@@ -175,7 +175,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             configuration: configuration,
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             analyticsHelper: ._testValue()
         )
         // The card is NOT co-branded and, we can't edit, enter remove only mode
@@ -190,7 +190,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
-                                         cardBrandChoiceData: ["eligible": true]), 
+                                         cardBrandChoiceData: ["eligible": true]),
             analyticsHelper: ._testValue()
         )
         // The card is NOT co-branded and, we can't edit, enter remove only mode
@@ -205,7 +205,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
-                                         cardBrandChoiceData: ["eligible": true]), 
+                                         cardBrandChoiceData: ["eligible": true]),
             analyticsHelper: ._testValue()
         )
 
@@ -220,7 +220,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             configuration: configuration,
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]), 
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             analyticsHelper: ._testValue()
         )
 
