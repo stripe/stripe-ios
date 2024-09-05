@@ -10,7 +10,6 @@ import Foundation
 
 extension STPTestingAPIClient {
     static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
-
     public static var shared: STPTestingAPIClient {
         return .shared()
     }
