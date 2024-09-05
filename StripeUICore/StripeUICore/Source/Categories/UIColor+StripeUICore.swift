@@ -169,7 +169,7 @@ private extension UIColor {
             var alpha: CGFloat = 0
 
             self.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-
+            
             return UIColor(
                 hue: hue,
                 saturation: saturation,

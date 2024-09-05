@@ -178,6 +178,18 @@ public extension PaymentSheet {
             /// The text color of the primary button
             /// - Note: If `nil`, defaults to either white or black depending on the color of the button
             public var textColor: UIColor?
+            
+            /// The background color of the primary button when in a disabled state.
+             /// - Note: If `nil`, defaults to `backgroundColor`. If `backgroundColor` is `nil`, defaults to colors.primary.
+            public var disabledBackgroundColor: UIColor?
+
+            /// The text color of the primary button when in a disabled state. This color will be used at 60% opacity to provide a disabled appearance.
+            /// - Note: If `nil`, defaults to `textColor` with an alpha value of 0.6
+             public var disabledTextColor: UIColor?
+
+            /// The border color of the primary button when in a disabled state.
+            /// - Note: If `nil`, defaults to `borderColor`
+            public var disabledBorderColor: UIColor?
 
             /// The background color of the primary button when in a success state.
             /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
@@ -187,6 +199,11 @@ public extension PaymentSheet {
             /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
             /// - Note: If `nil`, defaults to `textColor`
             public var successTextColor: UIColor?
+            
+            /// The border color of the primary button when in a success state.
+            /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
+            /// - Note: If `nil`, defaults to `borderColor`
+            public var successBorderColor: UIColor?
 
             /// The corner radius of the primary button
             /// - Note: If `nil`, `appearance.cornerRadius` will be used as the primary button corner radius
