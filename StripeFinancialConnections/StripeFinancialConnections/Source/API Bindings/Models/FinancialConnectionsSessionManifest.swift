@@ -126,6 +126,11 @@ struct FinancialConnectionsSessionManifest: Decodable {
         !livemode
     }
 
+    var isPantherPayment: Bool {
+        let isLinkPaymentMethod = paymentMethodType == .link
+        return isProductInstantDebits && isLinkPaymentMethod
+    }
+
     init(
         accountholderCustomerEmailAddress: String? = nil,
         accountholderIsLinkConsumer: Bool? = nil,
