@@ -17,6 +17,7 @@ public class EmbeddedComponentManager {
     private(set) var childWebViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
     
     let fetchClientSecret: () async -> String?
+    let fonts: [EmbeddedComponentManager.CustomFontSource]
     private(set) var appearance: EmbeddedComponentManager.Appearance
     /**
      Initializes a StripeConnect instance.
@@ -24,6 +25,8 @@ public class EmbeddedComponentManager {
      - Parameters:
        - apiClient: The APIClient instance used to make requests to Stripe.
        - appearance: Customizes the look of Connect embedded components.
+       - fonts: An array of custom fonts embedded in your app binary for use by any embedded
+       components created from this EmbeddedComponentManager and referenced in `appearance`.
        - fetchClientSecret: ​​The closure that retrieves the [client secret](https://docs.stripe.com/api/account_sessions/object#account_session_object-client_secret)
      returned by `/v1/account_sessions`. This tells the `EmbeddedComponentManager` which account to
      delegate access to. This function is also used to retrieve a client secret function to
@@ -31,9 +34,11 @@ public class EmbeddedComponentManager {
      */
     public init(apiClient: STPAPIClient = STPAPIClient.shared,
                 appearance: EmbeddedComponentManager.Appearance = .default,
+                fonts: [EmbeddedComponentManager.CustomFontSource] = [],
                 fetchClientSecret: @escaping () async -> String?) {
         self.apiClient = apiClient
         self.fetchClientSecret = fetchClientSecret
+        self.fonts = fonts
         self.appearance = appearance
     }
     

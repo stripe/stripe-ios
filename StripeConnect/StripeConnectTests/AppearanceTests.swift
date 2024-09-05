@@ -174,11 +174,9 @@ class AppearanceTests: XCTestCase {
 
         XCTAssertEqual(appearance.asDictionary(traitCollection: lightModeTraits)["actionPrimaryColorText"], "rgb(255, 0, 0)")
         XCTAssertEqual(appearance.asDictionary(traitCollection: darkModeTraits)["actionPrimaryColorText"], "rgb(0, 255, 0)")
-
         
         XCTAssertEqual(appearance.asDictionary(traitCollection: lightModeTraits)["colorBackground"], "rgb(255, 255, 255)")
         XCTAssertEqual(appearance.asDictionary(traitCollection: darkModeTraits)["colorBackground"], "rgb(0, 0, 0)")
-
         
         XCTAssertEqual(appearance.asDictionary(traitCollection: lightModeTraits)["colorText"], "rgb(0, 0, 0)")
         XCTAssertEqual(appearance.asDictionary(traitCollection: darkModeTraits)["colorText"], "rgb(255, 255, 255)")
