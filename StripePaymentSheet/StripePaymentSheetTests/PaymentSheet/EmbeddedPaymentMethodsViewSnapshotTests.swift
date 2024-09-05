@@ -199,11 +199,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         appearance.paymentOptionView?.style = .flatRadio
 
         let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethod: nil,
+                                                      savedPaymentMethod: ._testCard(),
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .viewMore)
 
         // Simulate tapping a button
         if let rowButton = embeddedView.stackView.arrangedSubviews.first(where: { $0 is RowButton }) as? RowButton {
@@ -398,11 +398,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         appearance.paymentOptionView?.style = .flatCheck
 
         let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethod: nil,
+                                                      savedPaymentMethod: ._testCard(),
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .viewMore)
 
         // Simulate tapping a button
         if let rowButton = embeddedView.stackView.arrangedSubviews.first(where: { $0 is RowButton }) as? RowButton {
@@ -534,11 +534,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         appearance.paymentOptionView?.style = .floating
 
         let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethod: nil,
+                                                      savedPaymentMethod: ._testCard(),
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .viewMore)
 
         verify(embeddedView)
     }
