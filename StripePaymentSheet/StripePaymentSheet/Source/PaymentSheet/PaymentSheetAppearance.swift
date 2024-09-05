@@ -36,6 +36,7 @@ public extension PaymentSheet {
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
         public var borderWidth: CGFloat = 1.0
 
+        // TOOD(porter) Make public for GA
         @_spi(STP) public var borderWidthSelected: CGFloat?
 
         /// The shadow used for inputs and tabs in PaymentSheet
@@ -43,7 +44,7 @@ public extension PaymentSheet {
         public var shadow: Shadow = Shadow()
 
         // TOOD(porter) Should this be optional so we know we are in embedded mode when it is populated?
-        @_spi(STP) public var paymentOptionView: PaymentOptionView = PaymentOptionView()
+        @_spi(STP) public var paymentOptionView: PaymentOptionView?
 
         // MARK: Fonts
 
@@ -99,6 +100,7 @@ public extension PaymentSheet {
             /// The border color used for inputs, tabs, and other components
             public var componentBorder: UIColor = .systemGray3
 
+            // TOOD(porter) Make public for GA
             @_spi(STP) public var componentBorderSelected: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
@@ -224,10 +226,11 @@ public extension PaymentSheet {
 @_spi(STP) public extension PaymentSheet.Appearance {
     struct PaymentOptionView: Equatable {
 
+        public init() {}
+
         public var paymentMethodRow: PaymentMethodRow = PaymentMethodRow()
 
-        // TOOD(porter) What should this default to? Making it default to floating to not impact vert. mode
-        public var style: Style = .floating
+        public var style: Style = .flatRadio
 
         public struct PaymentMethodRow: Equatable {
             public var additionalInsets: CGFloat = 4.0
