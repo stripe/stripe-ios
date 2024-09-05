@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePaymentSheet
+@_spi(EmbeddedPaymentMethodsViewBeta) import StripePaymentSheet
 import UIKit
 
 class EmbeddedPlaygroundViewController: UIViewController {

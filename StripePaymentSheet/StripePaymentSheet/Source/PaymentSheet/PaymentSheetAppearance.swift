@@ -37,14 +37,14 @@ public extension PaymentSheet {
         public var borderWidth: CGFloat = 1.0
 
         // TOOD(porter) Make public for GA
-        @_spi(STP) public var borderWidthSelected: CGFloat?
+        @_spi(EmbeddedPaymentMethodsViewBeta) public var borderWidthSelected: CGFloat?
 
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
 
         // TOOD(porter) Should this be optional so we know we are in embedded mode when it is populated?
-        @_spi(STP) public var paymentOptionView: PaymentOptionView?
+        @_spi(EmbeddedPaymentMethodsViewBeta) public var paymentOptionView: PaymentOptionView?
 
         // MARK: Fonts
 
@@ -101,7 +101,7 @@ public extension PaymentSheet {
             public var componentBorder: UIColor = .systemGray3
 
             // TOOD(porter) Make public for GA
-            @_spi(STP) public var componentBorderSelected: UIColor?
+            @_spi(EmbeddedPaymentMethodsViewBeta) public var componentBorderSelected: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
             public var componentDivider: UIColor = .systemGray3
@@ -223,7 +223,7 @@ public extension PaymentSheet {
 }
 
 // TODO(porter) TBD
-@_spi(STP) public extension PaymentSheet.Appearance {
+@_spi(EmbeddedPaymentMethodsViewBeta) public extension PaymentSheet.Appearance {
     struct PaymentOptionView: Equatable {
 
         public init() {}

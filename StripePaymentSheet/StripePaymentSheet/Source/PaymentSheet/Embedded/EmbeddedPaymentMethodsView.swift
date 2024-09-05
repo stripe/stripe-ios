@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 // TODO(porter) Probably shouldn't be public, just easy for testing.
-@_spi(STP) public class EmbeddedPaymentMethodsView: UIView {
+@_spi(EmbeddedPaymentMethodsViewBeta) public class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
 
     private var paymentOptionView: PaymentSheet.Appearance.PaymentOptionView {
@@ -133,6 +133,7 @@ extension PaymentSheet.Appearance.PaymentOptionView.Style {
     func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
         switch self {
         case .flatRadio, .flatCheck:
+            // TODO(porter) See if there is a better way to do this, less sneaky
             var appearance = appearance
             appearance.borderWidth = 0.0
             appearance.cornerRadius = 0.0
