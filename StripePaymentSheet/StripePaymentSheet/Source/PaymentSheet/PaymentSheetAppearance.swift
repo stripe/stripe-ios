@@ -43,8 +43,8 @@ public extension PaymentSheet {
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
 
-        // TOOD(porter) Should this be optional so we know we are in embedded mode when it is populated?
-        @_spi(EmbeddedPaymentMethodsViewBeta) public var paymentOptionView: PaymentOptionView?
+        // TOOD(porter) Make public for GA
+        @_spi(EmbeddedPaymentMethodsViewBeta) public var paymentOptionView: PaymentOptionView = PaymentOptionView()
 
         // MARK: Fonts
 

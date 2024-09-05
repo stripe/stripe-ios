@@ -14,19 +14,10 @@ import UIKit
 @_spi(EmbeddedPaymentMethodsViewBeta) public class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
 
-    private var paymentOptionView: PaymentSheet.Appearance.PaymentOptionView {
-        guard let paymentOptionView = appearance.paymentOptionView else {
-            stpAssert(false, "appearance.paymentOptionView cannot be nil when using EmbeddedPaymentMethodsView.")
-            return .init()
-        }
-
-        return paymentOptionView
-    }
-
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = paymentOptionView.style == .floating ? paymentOptionView.paymentMethodRow.spacing : 0
+        stackView.spacing = appearance.paymentOptionView.style == .floating ? appearance.paymentOptionView.paymentMethodRow.spacing : 0
         return stackView
     }()
 
@@ -49,7 +40,7 @@ import UIKit
          savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
         self.appearance = appearance
         super.init(frame: .zero)
-        let rowButtonAppearance = paymentOptionView.style.appearanceForStyle(appearance: appearance)
+        let rowButtonAppearance = appearance.paymentOptionView.style.appearanceForStyle(appearance: appearance)
 
         if let savedPaymentMethod {
             let accessoryButton: RowButton.RightAccessoryButton? = {
@@ -92,12 +83,12 @@ import UIKit
                                                                             didTap: handleRowSelection(selectedRowButton:)))
         }
 
-        if paymentOptionView.style != .floating {
-            stackView.addSeparators(color: paymentOptionView.paymentMethodRow.flat.separatorColor ?? appearance.colors.componentBorder,
-                                    thickness: paymentOptionView.paymentMethodRow.flat.separatorThickness,
-                                    inset: paymentOptionView.paymentMethodRow.flat.separatorInset ?? paymentOptionView.style.defaultInsets,
-                                    addTopSeparator: paymentOptionView.paymentMethodRow.flat.topSeparatorEnabled,
-                                    addBottomSeparator: paymentOptionView.paymentMethodRow.flat.bottomSeparatorEnabled)
+        if appearance.paymentOptionView.style != .floating {
+            stackView.addSeparators(color: appearance.paymentOptionView.paymentMethodRow.flat.separatorColor ?? appearance.colors.componentBorder,
+                                    thickness: appearance.paymentOptionView.paymentMethodRow.flat.separatorThickness,
+                                    inset: appearance.paymentOptionView.paymentMethodRow.flat.separatorInset ?? appearance.paymentOptionView.style.defaultInsets,
+                                    addTopSeparator: appearance.paymentOptionView.paymentMethodRow.flat.topSeparatorEnabled,
+                                    addBottomSeparator: appearance.paymentOptionView.paymentMethodRow.flat.bottomSeparatorEnabled)
         }
 
         addAndPinSubview(stackView)

@@ -21,8 +21,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         })
 
         var appearance = PaymentSheet.Appearance.default
-        appearance.paymentOptionView = .init()
-        appearance.paymentOptionView?.style = .flatRadio
+        appearance.paymentOptionView.style = .flatRadio
 
         let amex =
             [

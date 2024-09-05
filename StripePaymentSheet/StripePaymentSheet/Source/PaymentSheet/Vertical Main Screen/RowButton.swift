@@ -15,7 +15,7 @@ import UIKit
 class RowButton: UIView {
     private let shadowRoundedRect: ShadowedRoundedRectangle
     private lazy var radioButton: RadioButton? = {
-        guard let paymentOptionView = appearance.paymentOptionView, paymentOptionView.style == .flatRadio else { return nil }
+        guard appearance.paymentOptionView.style == .flatRadio else { return nil }
         return RadioButton(appearance: appearance) { [weak self] in
             guard let self = self else { return }
             self.didTap(self)
@@ -42,15 +42,6 @@ class RowButton: UIView {
         }
     }
     var heightConstraint: NSLayoutConstraint?
-
-    private var verticalInsets: CGFloat {
-        guard let paymentOptionView = appearance.paymentOptionView else {
-            return 4
-        }
-
-        // TODO(porter) Add more vertical insets for flat check style when using a saved payment method
-        return paymentOptionView.paymentMethodRow.additionalInsets
-    }
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, didTap: @escaping DidTapClosure) {
         self.appearance = appearance
@@ -130,8 +121,8 @@ class RowButton: UIView {
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             labelsStackView.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: verticalInsets),
-            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -verticalInsets),
+            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: appearance.paymentOptionView.paymentMethodRow.additionalInsets),
+            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -appearance.paymentOptionView.paymentMethodRow.additionalInsets),
 
             imageViewBottomConstraint,
             imageViewTopConstraint,
