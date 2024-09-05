@@ -187,10 +187,6 @@ public extension PaymentSheet {
             /// - Note: If `nil`, defaults to `textColor` with an alpha value of 0.6
              public var disabledTextColor: UIColor?
 
-            /// The border color of the primary button when in a disabled state.
-            /// - Note: If `nil`, defaults to `borderColor`
-            public var disabledBorderColor: UIColor?
-
             /// The background color of the primary button when in a success state.
             /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
             public var successBackgroundColor: UIColor = .systemGreen
@@ -199,11 +195,6 @@ public extension PaymentSheet {
             /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
             /// - Note: If `nil`, defaults to `textColor`
             public var successTextColor: UIColor?
-            
-            /// The border color of the primary button when in a success state.
-            /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
-            /// - Note: If `nil`, defaults to `borderColor`
-            public var successBorderColor: UIColor?
 
             /// The corner radius of the primary button
             /// - Note: If `nil`, `appearance.cornerRadius` will be used as the primary button corner radius
