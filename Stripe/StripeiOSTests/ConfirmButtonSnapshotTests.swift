@@ -68,6 +68,38 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         verify(confirmButton)
     }
+    
+    // Tests that `primaryButton` disabled color is correct for the default theme
+    func testConfirmButtonDefaultDisabledColor() {
+        let confirmButton = ConfirmButton(
+            state: .disabled,
+            style: .stripe,
+            callToAction: .setup,
+            appearance: .default,
+            didTap: {}
+        )
+
+        verify(confirmButton)
+    }
+
+    // Tests that `primaryButton` disabled color is updated properly
+    func testConfirmButtonDisabledColor() {
+        var appearance = PaymentSheet.Appearance.default
+        var button = PaymentSheet.Appearance.PrimaryButton()
+        button.disabledBackgroundColor = .red
+        button.disabledTextColor = .green.withAlphaComponent(0.2)
+        appearance.primaryButton = button
+
+        let confirmButton = ConfirmButton(
+            state: .disabled,
+            style: .stripe,
+            callToAction: .setup,
+            appearance: appearance,
+            didTap: {}
+        )
+
+        verify(confirmButton)
+    }
 
     // Tests that `primaryButton` success color is correct for the default theme
     func testConfirmButtonDefaultSuccessColor() {

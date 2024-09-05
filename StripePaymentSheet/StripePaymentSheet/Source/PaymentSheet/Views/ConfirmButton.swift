@@ -533,6 +533,10 @@ class ConfirmButton: UIView {
                 return disabledTextColor
             }
             
+            if status == .disabled {
+                return overriddenForegroundColor?.withAlphaComponent(0.6) ?? background.contrastingColor.withAlphaComponent(0.6)
+            }
+            
             // Use successTextColor if in succeeded state and provided, otherwise fallback to foreground color
             if status == .succeeded, let successTextColor = appearance.primaryButton.successTextColor {
                 return successTextColor
