@@ -13,7 +13,7 @@ import UIKit
 @_spi(STP) public class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
 
-    private lazy var stackView: UIStackView = {
+    lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = appearance.paymentOptionView.style == .floating ? appearance.paymentOptionView.paymentMethodRow.spacing : 0
