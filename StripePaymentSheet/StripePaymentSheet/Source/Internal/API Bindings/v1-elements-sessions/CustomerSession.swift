@@ -43,7 +43,7 @@ struct CustomerSession: Equatable, Hashable {
             }
 
             var allowRedisplayOverrideValue: STPPaymentMethodAllowRedisplay?
-            if let allowRedisplayOverride = mobilePaymentElementDict["payment_method_save_allow_redisplay_override"] as? String {
+            if let allowRedisplayOverride = mobilePaymentElementFeaturesDict["payment_method_save_allow_redisplay_override"] as? String {
                 allowRedisplayOverrideValue = STPPaymentMethod.allowRedisplay(from: allowRedisplayOverride)
             }
 

@@ -44,7 +44,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             elementsSession: ._testValue(
                 paymentMethodTypes: ["card"],
                 customerSessionData: [
-                    "payment_sheet": [
+                    "mobile_payment_element": [
                         "enabled": true,
                         "features": ["payment_method_save": "enabled",
                                      "payment_method_remove": "disabled",

@@ -124,7 +124,7 @@ class STPElementsSessionTest: XCTestCase {
     func testSPMConsentAndRemoval_pmsE_pmrE() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [
-                                                                "payment_sheet": [
+                                                                "mobile_payment_element": [
                                                                     "enabled": true,
                                                                     "features": ["payment_method_save": "enabled",
                                                                                  "payment_method_remove": "enabled",
@@ -144,7 +144,7 @@ class STPElementsSessionTest: XCTestCase {
     func testSPMConsentAndRemoval_pmsD_pmrE() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [
-                                                                "payment_sheet": [
+                                                                "mobile_payment_element": [
                                                                     "enabled": true,
                                                                     "features": ["payment_method_save": "disabled",
                                                                                  "payment_method_remove": "enabled",
@@ -164,7 +164,7 @@ class STPElementsSessionTest: XCTestCase {
     func testSPMConsentAndRemoval_pmsE_pmrD() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [
-                                                                "payment_sheet": [
+                                                                "mobile_payment_element": [
                                                                     "enabled": true,
                                                                     "features": ["payment_method_save": "enabled",
                                                                                  "payment_method_remove": "disabled",
@@ -184,7 +184,7 @@ class STPElementsSessionTest: XCTestCase {
     func testSPMConsentAndRemoval_pmsD_pmrD() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [
-                                                                "payment_sheet": [
+                                                                "mobile_payment_element": [
                                                                     "enabled": true,
                                                                     "features": ["payment_method_save": "disabled",
                                                                                  "payment_method_remove": "disabled",
@@ -231,7 +231,7 @@ class STPElementsSessionTest: XCTestCase {
     func testAllowsRemovalOfPaymentMethodsForCustomerSheet_enabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [
-                                                                "payment_sheet": [
+                                                                "mobile_payment_element": [
                                                                     "enabled": false
                                                                 ],
                                                                 "customer_sheet": [
@@ -248,7 +248,7 @@ class STPElementsSessionTest: XCTestCase {
     func testAllowsRemovalOfPaymentMethodsForCustomerSheet_disabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [
-                                                                "payment_sheet": [
+                                                                "mobile_payment_element": [
                                                                     "enabled": false
                                                                 ],
                                                                 "customer_sheet": [
