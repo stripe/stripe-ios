@@ -21,14 +21,6 @@ class RowButton: UIView {
             self.didTap(self)
         }
     }()
-    private lazy var checkmarkImageView: UIImageView? = {
-        guard let paymentOptionView = appearance.paymentOptionView, paymentOptionView.style == .flatCheck else { return nil }
-        let checkmarkImageView = UIImageView(image: Image.embedded_check.makeImage(template: true))
-        checkmarkImageView.tintColor = paymentOptionView.paymentMethodRow.flat.checkmark.color ?? appearance.colors.primary
-        checkmarkImageView.contentMode = .scaleAspectFit
-        checkmarkImageView.isHidden = true
-        return checkmarkImageView
-    }()
     let imageView: UIImageView
     let label: UILabel
     let sublabel: UILabel?
@@ -40,7 +32,6 @@ class RowButton: UIView {
         didSet {
             shadowRoundedRect.isSelected = isSelected
             radioButton?.isOn = isSelected
-            checkmarkImageView?.isHidden = !isSelected
             updateAccessibilityTraits()
         }
     }
@@ -100,15 +91,6 @@ class RowButton: UIView {
                 rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
                 rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
                 rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            ])
-        } else if let checkmarkImageView {
-            checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(checkmarkImageView)
-            NSLayoutConstraint.activate([
-                checkmarkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-                checkmarkImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                checkmarkImageView.widthAnchor.constraint(equalToConstant: 16),
-                checkmarkImageView.heightAnchor.constraint(equalToConstant: 16),
             ])
         }
 

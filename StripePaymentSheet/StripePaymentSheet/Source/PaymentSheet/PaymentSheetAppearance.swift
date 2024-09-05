@@ -261,7 +261,6 @@ public extension PaymentSheet {
         // TODO(porter) Flesh this out
         public enum Style {
             case flatRadio
-            case flatCheck
             case floating
         }
 

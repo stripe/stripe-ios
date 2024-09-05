@@ -125,14 +125,14 @@ extension PaymentSheet.Appearance.PaymentOptionView.Style {
         switch self {
         case .flatRadio:
             return UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        case .flatCheck, .floating:
+        case .floating:
             return .zero
         }
     }
 
     func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
         switch self {
-        case .flatRadio, .flatCheck:
+        case .flatRadio:
             // TODO(porter) See if there is a better way to do this, less sneaky
             var appearance = appearance
             appearance.borderWidth = 0.0
