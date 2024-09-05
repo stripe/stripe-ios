@@ -133,7 +133,7 @@ extension PaymentSheet {
         case let .new(confirmParams):
             // Set allow_redisplay on params
             confirmParams.setAllowRedisplay(
-                paymentSheetFeatures: elementsSession.customerSessionPaymentSheetFeatures,
+                mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                 isSettingUp: intent.isSettingUp
             )
             switch intent {

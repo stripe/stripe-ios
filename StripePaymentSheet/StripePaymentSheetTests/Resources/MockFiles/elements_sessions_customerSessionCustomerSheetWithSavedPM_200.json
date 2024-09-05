@@ -17,6 +17,9 @@
         "payment_sheet": {
           "enabled": false
         },
+        "mobile_payment_element": {
+          "enabled": false
+        },
         "customer_sheet": {
           "enabled": true,
           "features": {

@@ -13,7 +13,7 @@ struct CustomerSession: Equatable, Hashable {
     let apiKey: String
     let apiKeyExpiry: Int
     let customer: String
-    let paymentSheetComponent: PaymentSheetComponent
+    let mobilePaymentElementComponent: MobilePaymentElementComponent
     let customerSheetComponent: CustomerSheetComponent
 
     /// Helper method to decode the `v1/elements/sessions` response's `external_payment_methods_data` hash.
@@ -26,33 +26,33 @@ struct CustomerSession: Equatable, Hashable {
               let apiKeyExpiry = response["api_key_expiry"] as? Int,
               let customer = response["customer"] as? String,
               let componentsDict = response["components"] as? [AnyHashable: Any],
-              let paymentSheetDict = componentsDict["payment_sheet"] as? [AnyHashable: Any],
-              let paymentSheetEnabled = paymentSheetDict["enabled"] as? Bool,
+              let mobilePaymentElementDict = componentsDict["mobile_payment_element"] as? [AnyHashable: Any],
+              let mobilePaymentElementEnabled = mobilePaymentElementDict["enabled"] as? Bool,
               let customerSheetDict = componentsDict["customer_sheet"] as? [AnyHashable: Any],
               let customerSheetEnabled = customerSheetDict["enabled"] as? Bool
         else {
             return nil
         }
 
-        var paymentSheetComponent: PaymentSheetComponent
-        if paymentSheetEnabled {
-            guard let paymentSheetFeaturesDict = paymentSheetDict["features"] as? [AnyHashable: Any],
-                  let paymentMethodSave = paymentSheetFeaturesDict["payment_method_save"] as? String,
-                  let paymentMethodRemove = paymentSheetFeaturesDict["payment_method_remove"] as? String else {
+        var mobilePaymentElementComponent: MobilePaymentElementComponent
+        if mobilePaymentElementEnabled {
+            guard let mobilePaymentElementFeaturesDict = mobilePaymentElementDict["features"] as? [AnyHashable: Any],
+                  let paymentMethodSave = mobilePaymentElementFeaturesDict["payment_method_save"] as? String,
+                  let paymentMethodRemove = mobilePaymentElementFeaturesDict["payment_method_remove"] as? String else {
                 return nil
             }
 
             var allowRedisplayOverrideValue: STPPaymentMethodAllowRedisplay?
-            if let allowRedisplayOverride = paymentSheetFeaturesDict["payment_method_save_allow_redisplay_override"] as? String {
+            if let allowRedisplayOverride = mobilePaymentElementFeaturesDict["payment_method_save_allow_redisplay_override"] as? String {
                 allowRedisplayOverrideValue = STPPaymentMethod.allowRedisplay(from: allowRedisplayOverride)
             }
 
-            paymentSheetComponent = PaymentSheetComponent(enabled: true,
-                                                          features: PaymentSheetComponentFeature(paymentMethodSave: paymentMethodSave == "enabled",
-                                                                                                 paymentMethodRemove: paymentMethodRemove == "enabled",
-                                                                                                 paymentMethodSaveAllowRedisplayOverride: allowRedisplayOverrideValue))
+            mobilePaymentElementComponent = MobilePaymentElementComponent(enabled: true,
+                                                                          features: MobilePaymentElementComponentFeature(paymentMethodSave: paymentMethodSave == "enabled",
+                                                                                                                         paymentMethodRemove: paymentMethodRemove == "enabled",
+                                                                                                                         paymentMethodSaveAllowRedisplayOverride: allowRedisplayOverrideValue))
         } else {
-            paymentSheetComponent = PaymentSheetComponent(enabled: false, features: nil)
+            mobilePaymentElementComponent = MobilePaymentElementComponent(enabled: false, features: nil)
         }
 
         var customerSheetComponent: CustomerSheetComponent
@@ -72,19 +72,19 @@ struct CustomerSession: Equatable, Hashable {
                                apiKey: apiKey,
                                apiKeyExpiry: apiKeyExpiry,
                                customer: customer,
-                               paymentSheetComponent: paymentSheetComponent,
+                               mobilePaymentElementComponent: mobilePaymentElementComponent,
                                customerSheetComponent: customerSheetComponent)
     }
 }
 
-struct PaymentSheetComponent: Equatable, Hashable {
+struct MobilePaymentElementComponent: Equatable, Hashable {
     let enabled: Bool
-    let features: PaymentSheetComponentFeature?
+    let features: MobilePaymentElementComponentFeature?
 }
 
 /// Features on CustomerSessions when the paymentSheet component is enabled:
-/// https://docs.corp.stripe.com/api/customer_sessions/object#customer_session_object-components-payment_sheet-features
-struct PaymentSheetComponentFeature: Equatable, Hashable {
+/// https://docs.corp.stripe.com/api/customer_sessions/object#customer_session_object-components-mobile_payment_element-features
+struct MobilePaymentElementComponentFeature: Equatable, Hashable {
     let paymentMethodSave: Bool
     let paymentMethodRemove: Bool
     let paymentMethodSaveAllowRedisplayOverride: STPPaymentMethodAllowRedisplay?

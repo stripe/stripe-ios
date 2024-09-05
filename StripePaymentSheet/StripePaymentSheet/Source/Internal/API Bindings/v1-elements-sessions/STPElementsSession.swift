@@ -191,8 +191,8 @@ extension STPElementsSession {
     func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {
-            if customerSession.paymentSheetComponent.enabled,
-               let features = customerSession.paymentSheetComponent.features {
+            if customerSession.mobilePaymentElementComponent.enabled,
+               let features = customerSession.mobilePaymentElementComponent.features {
                 allowsRemovalOfPaymentMethods = features.paymentMethodRemove
             }
         } else {
@@ -217,7 +217,7 @@ extension STPElementsSession {
 
 extension STPElementsSession {
     var savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
-        guard let paymentMethodSave = customerSessionPaymentSheetFeatures?.paymentMethodSave else {
+        guard let paymentMethodSave = customerSessionMobilePaymentElementFeatures?.paymentMethodSave else {
             return .legacy
         }
         return paymentMethodSave
@@ -225,12 +225,12 @@ extension STPElementsSession {
         : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
     }
 
-    var customerSessionPaymentSheetFeatures: PaymentSheetComponentFeature? {
+    var customerSessionMobilePaymentElementFeatures: MobilePaymentElementComponentFeature? {
         guard let customerSession = customer?.customerSession,
-              customerSession.paymentSheetComponent.enabled else {
+              customerSession.mobilePaymentElementComponent.enabled else {
             return nil
         }
-        return customerSession.paymentSheetComponent.features
+        return customerSession.mobilePaymentElementComponent.features
     }
 }
 
