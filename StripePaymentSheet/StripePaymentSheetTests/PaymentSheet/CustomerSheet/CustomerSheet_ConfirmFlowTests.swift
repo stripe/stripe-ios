@@ -212,7 +212,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [
-                                                               "payment_sheet": [
+                                                               "mobile_payment_element": [
                                                                    "enabled": false,
                                                                ],
                                                                "customer_sheet": [
