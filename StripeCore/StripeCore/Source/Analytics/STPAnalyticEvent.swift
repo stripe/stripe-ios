@@ -266,4 +266,7 @@ import Foundation
     case refreshSetupIntentSuccess = "stripeios.refresh_setup_intent_success"
     case refreshPaymentIntentFailed = "stripeios.refresh_payment_intent_failed"
     case refreshSetupIntentFailed = "stripeios.refresh_setup_intent_failed"
+
+    // MARK: - Telemetry Client
+    case fraudDetectionApiFailure = "fraud_detection_data_repository.api_failure"
 }
