@@ -255,7 +255,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     func testEmbeddedPaymentMethodsView_floating_spacing() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.paymentOptionView.style = .floating
-        appearance.paymentOptionView.paymentMethodRow.spacing = 30
+        appearance.paymentOptionView.paymentMethodRow.floating.spacing = 30
 
         let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
