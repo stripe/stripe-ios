@@ -121,7 +121,7 @@ extension PaymentSheet.Appearance.PaymentOptionView.Style {
         }
     }
 
-    func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
+    fileprivate func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
         switch self {
         case .flatRadio:
             // TODO(porter) See if there is a better way to do this, less sneaky
