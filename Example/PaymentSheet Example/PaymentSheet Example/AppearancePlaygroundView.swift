@@ -126,6 +126,16 @@ struct AppearancePlaygroundView: View {
             get: { Color(self.appearance.primaryButton.backgroundColor ?? self.appearance.colors.primary) },
             set: { self.appearance.primaryButton.backgroundColor = UIColor($0) }
         )
+        
+        let primaryButtonDisabledColorBinding = Binding(
+            get: { Color(self.appearance.primaryButton.disabledBackgroundColor ?? self.appearance.primaryButton.backgroundColor ?? self.appearance.colors.primary) },
+            set: { self.appearance.primaryButton.disabledBackgroundColor = UIColor($0) }
+        )
+        
+        let primaryButtonDisabledTextColorBinding = Binding(
+            get: { Color(self.appearance.primaryButton.disabledTextColor ?? self.appearance.primaryButton.textColor?.withAlphaComponent(0.6) ?? .white.withAlphaComponent(0.6)) },
+            set: { self.appearance.primaryButton.disabledTextColor = UIColor($0) }
+        )
 
         let primaryButtonSuccessColorBinding = Binding(
             get: { Color(self.appearance.primaryButton.successBackgroundColor) },
@@ -262,6 +272,8 @@ struct AppearancePlaygroundView: View {
                 Section(header: Text("Primary Button")) {
                     DisclosureGroup {
                         ColorPicker("backgroundColor", selection: primaryButtonBackgroundColorBinding)
+                        ColorPicker("disabledBackgroundColor", selection: primaryButtonDisabledColorBinding)
+                        ColorPicker("disabledTextColor", selection: primaryButtonDisabledTextColorBinding)
                         ColorPicker("successBackgroundColor", selection: primaryButtonSuccessColorBinding)
                         ColorPicker("successTextColor", selection: primaryButtonSuccessTextColorBinding)
                         ColorPicker("textColor", selection: primaryButtonTextColorBinding)
