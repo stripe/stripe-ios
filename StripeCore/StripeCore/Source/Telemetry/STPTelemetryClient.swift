@@ -43,16 +43,11 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         forceSend: Bool = false,
         completion: ((Result<[String: Any], Error>) -> Void)? = nil
     ) {
-
         let wrappedCompletion: ((Result<[String: Any], Error>) -> Void) = { result in
-            switch result {
-            case .success:
-                break
-            case .failure(let error):
+            if case .failure(let error) = result {
                 let errorAnalytic = ErrorAnalytic(event: .fraudDetectionApiFailure, error: error)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             }
-
             completion?(result)
         }
 
