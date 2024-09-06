@@ -81,7 +81,7 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
     func testAppearance() {
         var appearance: PaymentSheet.Appearance = ._testMSPaintTheme
         appearance.paymentOptionView.style = .floating
-        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: ._testMSPaintTheme, currency: "USD", amount: 1099, delegate: self)
+        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: appearance, currency: "USD", amount: 1099, delegate: self)
         let window = UIWindow()
         window.isHidden = false
         window.addAndPinSubview(sut.view, insets: .zero)
