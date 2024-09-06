@@ -61,7 +61,7 @@ class MainViewController: UITableViewController {
     }
 
     lazy var embeddedComponentManager: EmbeddedComponentManager = {
-        .init(fetchClientSecret: { [weak self, merchant] in
+        return .init(appearance: AppSettings.shared.appearanceInfo.appearance, fetchClientSecret: { [weak self, merchant] in
             do {
                 return try await API.accountSession(merchantId: merchant.id).get().clientSecret
             } catch {
@@ -75,6 +75,26 @@ class MainViewController: UITableViewController {
         super.viewDidLoad()
         title = merchant.displayName ?? merchant.merchantId
         navigationItem.titleView = navbarTitleButton
+        addChangeAppearanceButtonNavigationItem(to: self)
+    }
+    
+    func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
+         // Add a button to change the appearance
+         let button = UIBarButtonItem(
+             image: UIImage(systemName: "paintpalette"),
+             style: .plain,
+             target: self,
+             action: #selector(selectAppearance)
+         )
+         button.accessibilityLabel = "Change appearance"
+         var buttonItems = viewController.navigationItem.rightBarButtonItems ?? []
+         buttonItems = [button] + buttonItems
+         viewController.navigationItem.rightBarButtonItems = buttonItems
+     }
+    
+    @objc
+    func selectAppearance() {
+        self.navigationController?.present(AppearanceSettings(componentManager: embeddedComponentManager).containerViewController, animated: true)
     }
 
     /// Called when table row is selected
@@ -87,6 +107,7 @@ class MainViewController: UITableViewController {
         }
         
         viewControllerToPush.navigationItem.backButtonDisplayMode = .minimal
+        addChangeAppearanceButtonNavigationItem(to: viewControllerToPush)
         navigationController?.pushViewController(viewControllerToPush, animated: true)
     }
 

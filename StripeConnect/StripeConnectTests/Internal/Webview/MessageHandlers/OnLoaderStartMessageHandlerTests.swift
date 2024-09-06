@@ -19,6 +19,6 @@ class OnLoaderStartMessageHandlerTests: ScriptWebTestBase {
         
         webView.evaluateOnLoaderStart(elementTagName: "onboarding")
         
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }
