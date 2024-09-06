@@ -11,13 +11,13 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// A selectable button used in vertical mode to display payment methods.
+/// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 class RowButton: UIView {
     private let shadowRoundedRect: ShadowedRoundedRectangle
     private lazy var radioButton: RadioButton? = {
         guard appearance.paymentOptionView.style == .flatRadio else { return nil }
         return RadioButton(appearance: appearance) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.didTap(self)
         }
     }()
