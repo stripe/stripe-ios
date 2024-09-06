@@ -113,15 +113,30 @@ final class PlaygroundConfiguration {
         let displayName: String
         /// whether on the 'backend' we provide test mode keys
         let isTestModeSupported: Bool
+        /// for connect
+        let stripeAccount: String?
 
         var id: String {
             return customId.rawValue
+        }
+
+        init(
+            customId: CustomId,
+            displayName: String,
+            isTestModeSupported: Bool,
+            stripeAccount: String? = nil
+        ) {
+            self.customId = customId
+            self.displayName = displayName
+            self.isTestModeSupported = isTestModeSupported
+            self.stripeAccount = stripeAccount
         }
 
         // The id's should use underscore as "-" is not supported in Glitch
         enum CustomId: String {
             case `default` = "default"
             case networking = "networking"
+            case connect = "connect"
             case customKeys = "custom_keys"
             case partnerD = "partner_d"
             case partnerF = "partner_f"
@@ -140,6 +155,12 @@ final class PlaygroundConfiguration {
             customId: .networking,
             displayName: "Networking",
             isTestModeSupported: true
+        ),
+        Merchant(
+            customId: .connect,
+            displayName: "Connect",
+            isTestModeSupported: true,
+            stripeAccount: "acct_1PnnD9CY58qxxwvr"
         ),
         Merchant(
             customId: .customKeys,
@@ -169,6 +190,7 @@ final class PlaygroundConfiguration {
 
     ]
     private static let merchantCustomIdKey = "merchant"
+    private static let stripeAccountKey = "stripe_account"
     var merchant: Merchant {
         get {
             if
@@ -190,6 +212,7 @@ final class PlaygroundConfiguration {
                 testMode = false
             }
             configurationStore[Self.merchantCustomIdKey] = newValue.customId.rawValue
+            configurationStore[Self.stripeAccountKey] = newValue.stripeAccount
         }
     }
 
