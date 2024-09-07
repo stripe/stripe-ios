@@ -77,6 +77,7 @@ import UIKit
 
         for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) {
             stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType,
+                                                                            subtitle: VerticalPaymentMethodListViewController.subtitleText(for: paymentMethodType),
                                                                             savedPaymentMethodType: savedPaymentMethod?.type,
                                                                             appearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,

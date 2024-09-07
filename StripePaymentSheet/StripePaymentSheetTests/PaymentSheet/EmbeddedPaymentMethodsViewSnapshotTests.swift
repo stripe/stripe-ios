@@ -64,13 +64,35 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         var appearance: PaymentSheet.Appearance = .default
         appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.klarna)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none)
         verify(embeddedView)
+        // Assert height
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultInset = PaymentSheet.Appearance.default.paymentOptionView.paymentMethodRow.additionalInsets
+        for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
+            let newHeight = rowButton.frame.size.height
+            XCTAssertEqual((appearance.paymentOptionView.paymentMethodRow.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
+        }
+    }
+    
+    func testEmbeddedPaymentMethodsView_flatRadio_rowHeightSingleLine() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
+
+        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: appearance,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: false,
+                                                      savedPaymentMethodAccessoryType: .none)
+
+        verify(embeddedView)
+
         // Assert height
         let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
         let defaultInset = PaymentSheet.Appearance.default.paymentOptionView.paymentMethodRow.additionalInsets
@@ -306,11 +328,34 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         appearance.paymentOptionView.style = .floating
         appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none)
+
+        verify(embeddedView)
+
+        // Assert height
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultInset = PaymentSheet.Appearance.default.paymentOptionView.paymentMethodRow.additionalInsets
+        for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
+            let newHeight = rowButton.frame.size.height
+            XCTAssertEqual((appearance.paymentOptionView.paymentMethodRow.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
+        }
+    }
+    
+    func testEmbeddedPaymentMethodsView_floating_rowHeightSingleLine() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.paymentOptionView.style = .floating
+        appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
+
+        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: appearance,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: false,
                                                       savedPaymentMethodAccessoryType: .none)
 
         verify(embeddedView)
