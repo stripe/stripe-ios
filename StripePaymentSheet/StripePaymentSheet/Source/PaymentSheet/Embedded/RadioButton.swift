@@ -33,8 +33,7 @@ class RadioButton: UIView {
 
     private let didTap: () -> Void
 
-    /// Layer for the "off" state.
-    private lazy var offLayer: CALayer = {
+    private lazy var outerCircle: CALayer = {
         let layer = CALayer()
         layer.bounds = CGRect(x: 0, y: 0, width: Constants.diameter, height: Constants.diameter)
         layer.cornerRadius = Constants.diameter / 2
@@ -44,24 +43,7 @@ class RadioButton: UIView {
         return layer
     }()
 
-    /// Layer for the "on" state.
-    private lazy var onLayer: CALayer = {
-        let layer = CALayer()
-        layer.bounds = CGRect(x: 0, y: 0, width: Constants.diameter, height: Constants.diameter)
-        layer.cornerRadius = Constants.diameter / 2
-        layer.borderWidth = Constants.borderWidth
-        layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        layer.borderColor = selectedColor
-
-        // Add and center inner circle
-        layer.addSublayer(onLayerInnerCircle)
-        onLayerInnerCircle.position = CGPoint(x: layer.bounds.midX, y: layer.bounds.midY)
-
-        return layer
-    }()
-
-    /// Inner circle layer for the "on" state.
-    private lazy var onLayerInnerCircle: CALayer = {
+    private lazy var innerCircle: CALayer = {
         let innerCircle = CALayer()
         innerCircle.backgroundColor = selectedColor
         innerCircle.cornerRadius = Constants.innerDiameter / 2
@@ -78,10 +60,9 @@ class RadioButton: UIView {
         self.appearance = appearance
         self.didTap = didTap
         super.init(frame: .zero)
-        layer.addSublayer(offLayer)
-        layer.addSublayer(onLayer)
+        layer.addSublayer(outerCircle)
+        layer.addSublayer(innerCircle)
         update()
-        applyStyling()
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
     }
 
@@ -90,13 +71,13 @@ class RadioButton: UIView {
     }
 
     override func layoutSubviews() {
-        offLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        onLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        outerCircle.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        innerCircle.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        applyStyling()
+        update()
     }
 #endif
 
@@ -105,18 +86,8 @@ class RadioButton: UIView {
     private func update() {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        offLayer.isHidden = isOn
-        onLayer.isHidden = !isOn
-        CATransaction.commit()
-    }
-
-    private func applyStyling() {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        offLayer.borderColor = unselectedColor
-        onLayer.borderColor = selectedColor
-        onLayerInnerCircle.backgroundColor = selectedColor
-
+        outerCircle.borderColor = isOn ? selectedColor : unselectedColor
+        innerCircle.isHidden = !isOn
         CATransaction.commit()
     }
 
