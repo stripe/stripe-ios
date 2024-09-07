@@ -80,7 +80,7 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.cornerRadius = $0 }
         )
 
-        let componentBorderWidthBinding = Binding(
+        let borderWidthBinding = Binding(
             get: { self.appearance.borderWidth },
             set: { self.appearance.borderWidth = $0 }
         )
@@ -235,8 +235,8 @@ struct AppearancePlaygroundView: View {
                 }
 
                 Section(header: Text("Miscellaneous")) {
-                    Stepper("cornerRadius: \(Int(appearance.cornerRadius))", value: cornerRadiusBinding, in: 0...30)
-                    Stepper("componentBorderWidth: \(Int(appearance.borderWidth))", value: componentBorderWidthBinding, in: 0...30)
+                    Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
+                    Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
