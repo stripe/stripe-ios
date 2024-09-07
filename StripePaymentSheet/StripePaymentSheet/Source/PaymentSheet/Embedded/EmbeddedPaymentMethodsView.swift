@@ -85,6 +85,7 @@ import UIKit
 
         if appearance.paymentOptionView.style != .floating {
             stackView.addSeparators(color: appearance.paymentOptionView.paymentMethodRow.flat.separatorColor ?? appearance.colors.componentBorder,
+                                    backgroundColor: appearance.colors.componentBackground,
                                     thickness: appearance.paymentOptionView.paymentMethodRow.flat.separatorThickness,
                                     inset: appearance.paymentOptionView.paymentMethodRow.flat.separatorInset ?? appearance.paymentOptionView.style.defaultInsets,
                                     addTopSeparator: appearance.paymentOptionView.paymentMethodRow.flat.topSeparatorEnabled,
