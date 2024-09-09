@@ -31,6 +31,7 @@ final class AccountPickerFooterView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
+        shouldShowDataAccessView: Bool,
         theme: FinancialConnectionsTheme,
         didSelectLinkAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
@@ -40,20 +41,20 @@ final class AccountPickerFooterView: UIView {
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
 
-        let verticalStackView = HitTestStackView(
-            arrangedSubviews: [
-                MerchantDataAccessView(
-                    isStripeDirect: isStripeDirect,
-                    businessName: businessName,
-                    permissions: permissions,
-                    isNetworking: false,
-                    font: .label(.small),
-                    boldFont: .label(.smallEmphasized),
-                    didSelectLearnMore: didSelectMerchantDataAccessLearnMore
-                ),
-                linkAccountsButton,
-            ]
-        )
+        let verticalStackView = HitTestStackView()
+        if shouldShowDataAccessView {
+            verticalStackView.addArrangedSubview(MerchantDataAccessView(
+                isStripeDirect: isStripeDirect,
+                businessName: businessName,
+                permissions: permissions,
+                isNetworking: false,
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                didSelectLearnMore: didSelectMerchantDataAccessLearnMore
+            ))
+        }
+        verticalStackView.addArrangedSubview(linkAccountsButton)
+
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         verticalStackView.isLayoutMarginsRelativeArrangement = true
