@@ -230,6 +230,7 @@ final class PlaygroundViewModel: ObservableObject {
                 var onEventEvents: [String] = []
                 PresentFinancialConnectionsSheet(
                     useCase: self.playgroundConfiguration.useCase,
+                    stripeAccount: self.playgroundConfiguration.merchant.stripeAccount,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
                     onEvent: { event in
                         if self.liveEvents.wrappedValue == true {
@@ -377,6 +378,7 @@ private func SetupPlayground(
 
 private func PresentFinancialConnectionsSheet(
     useCase: PlaygroundConfiguration.UseCase,
+    stripeAccount: String?,
     setupPlaygroundResponseJSON: [String: String],
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
@@ -422,6 +424,7 @@ private func PresentFinancialConnectionsSheet(
         // disable app-to-app for UI tests
         returnURL: isUITest ? nil : "financial-connections-example://redirect"
     )
+    financialConnectionsSheet.apiClient.stripeAccount = stripeAccount
     financialConnectionsSheet.onEvent = onEvent
     let topMostViewController = UIViewController.topMostViewController()!
     if useCase == .token {

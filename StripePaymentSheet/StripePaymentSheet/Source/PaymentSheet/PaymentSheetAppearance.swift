@@ -178,6 +178,14 @@ public extension PaymentSheet {
             /// The text color of the primary button
             /// - Note: If `nil`, defaults to either white or black depending on the color of the button
             public var textColor: UIColor?
+            
+            /// The background color of the primary button when in a disabled state.
+             /// - Note: If `nil`, defaults to `backgroundColor`. If `backgroundColor` is `nil`, defaults to `appearance.colors.primary`.
+            public var disabledBackgroundColor: UIColor?
+
+            /// The text color of the primary button when in a disabled state.
+            /// - Note: If `nil`, defaults to `textColor` with an alpha value of 0.6
+             public var disabledTextColor: UIColor?
 
             /// The background color of the primary button when in a success state.
             /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.

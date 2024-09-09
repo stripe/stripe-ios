@@ -233,6 +233,11 @@ class ConfirmButton: UIView {
                 titleLabel.font = font
             }
         }
+        
+        /// Background color for the `.disabled` state.
+        var disabledBackgroundColor: UIColor {
+            return appearance.primaryButton.disabledBackgroundColor ?? appearance.primaryButton.backgroundColor ?? appearance.colors.primary
+        }
 
         /// Background color for the `.succeeded` state.
         var succeededBackgroundColor: UIColor {
@@ -311,6 +316,7 @@ class ConfirmButton: UIView {
         }
 
         var overriddenForegroundColor: UIColor?
+        
 
         init(appearance: PaymentSheet.Appearance = .default) {
             self.appearance = appearance
@@ -463,7 +469,9 @@ class ConfirmButton: UIView {
             UIView.animate(withDuration: animationDuration) {
                 self.titleLabel.alpha = {
                     switch status {
-                    case .disabled, .spinnerWithInteractionDisabled:
+                    case .disabled:
+                        return self.appearance.primaryButton.disabledTextColor == nil ? 0.6 : 1.0
+                    case .spinnerWithInteractionDisabled:
                         return 0.6
                     case .succeeded:
                         return 0
@@ -510,8 +518,10 @@ class ConfirmButton: UIView {
 
         private func backgroundColor(for status: Status) -> UIColor {
             switch status {
-            case .enabled, .disabled, .processing, .spinnerWithInteractionDisabled:
+            case .enabled, .processing, .spinnerWithInteractionDisabled:
                 return tintColor
+            case .disabled:
+                return disabledBackgroundColor
             case .succeeded:
                 return succeededBackgroundColor
             }
@@ -520,12 +530,17 @@ class ConfirmButton: UIView {
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
+            // Use disabledTextColor if in disabled state and provided, otherwise fallback to foreground color
+            if status == .disabled, let disabledTextColor = appearance.primaryButton.disabledTextColor {
+                return disabledTextColor
+            }
+            
             // Use successTextColor if in succeeded state and provided, otherwise fallback to foreground color
             if status == .succeeded, let successTextColor = appearance.primaryButton.successTextColor {
                 return successTextColor
             }
 
-            // if foreground is set prefer that over a dynamic constrasting color in all othe states
+            // if foreground is set prefer that over a dynamic contrasting color in all other states
             return overriddenForegroundColor ?? background.contrastingColor
         }
 

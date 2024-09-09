@@ -139,6 +139,10 @@ extension XCUIApplication {
         return buttons["Save with Link"]
     }
 
+    var fc_nativeNetworkingNotNowButton: XCUIElement {
+        return buttons["Not now"]
+    }
+
     var fc_nativeSuccessDoneButton: XCUIElement {
         let successDoneButton = buttons["success_done_button"]
         XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
