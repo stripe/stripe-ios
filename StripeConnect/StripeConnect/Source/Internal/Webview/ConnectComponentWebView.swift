@@ -11,7 +11,7 @@ import WebKit
 
 class ConnectComponentWebView: ConnectWebView {
     /// The embedded component manager that will be used for requests.
-    private var componentManager: EmbeddedComponentManager
+    var componentManager: EmbeddedComponentManager
     
     /// The component type that should be loaded.
     private var componentType: ComponentType
@@ -29,7 +29,8 @@ class ConnectComponentWebView: ConnectWebView {
          componentType: ComponentType,
          // Should only be overridden for tests
          notificationCenter: NotificationCenter = NotificationCenter.default,
-         webLocale: Locale = Locale.autoupdatingCurrent) {
+         webLocale: Locale = Locale.autoupdatingCurrent,
+         loadContent: Bool = true) {
         self.componentManager = componentManager
         self.componentType = componentType
         self.notificationCenter = notificationCenter
@@ -46,17 +47,30 @@ class ConnectComponentWebView: ConnectWebView {
         config.allowsInlineMediaPlayback = true
 
         super.init(frame: .zero, configuration: config)
+        componentManager.registerChild(self)
         guard let publishableKey = componentManager.apiClient.publishableKey else {
             assertionFailure("A publishable key is required. For more info, see https://stripe.com/docs/keys")
             return
         }
         addMessageHandlers()
         addNotificationObservers()
-        load(.init(url: StripeConnectConstants.connectJSURL(component: componentType.rawValue, publishableKey: publishableKey)))
+        if loadContent {
+            load(.init(url: StripeConnectConstants.connectJSURL(component: componentType.rawValue, publishableKey: publishableKey)))
+        }
     }
 
+    func updateAppearance(appearance: Appearance) {
+        sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: appearance, traitCollection: traitCollection))))
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        DispatchQueue.main.async {
+            self.updateAppearance(appearance: self.componentManager.appearance)
+        }
     }
 }
 
@@ -88,16 +102,20 @@ extension ConnectComponentWebView {
 private extension ConnectComponentWebView {
     /// Registers JS -> Swift message handlers
     func addMessageHandlers() {
-        addMessageHandler(FetchInitParamsMessageHandler.init(didReceiveMessage: { _ in
-            return .init(locale: "en-US")
+        addMessageHandler(FetchInitParamsMessageHandler.init(didReceiveMessage: {[weak self] _ in
+            guard let self else {
+                stpAssertionFailure("Message received after web view was deallocated")
+                // If self no longer exists give default values
+                return .init(locale: "", appearance: .init(appearance: .default, traitCollection: .init()))
+            }
+            return .init(locale: webLocale.webIdentifier, appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))
         }))
         addMessageHandler(DebugMessageHandler())
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
-            return await self?.componentManager.fetchClientSecret()
+            await self?.componentManager.fetchClientSecret()
         })
         addMessageHandler(PageDidLoadMessageHandler{_ in })
-        addMessageHandler(AccountSessionClaimedMessageHandler{message in
-            print("Account session claimed \(message)")
+        addMessageHandler(AccountSessionClaimedMessageHandler{ message in
         })
 
     }
@@ -110,7 +128,7 @@ private extension ConnectComponentWebView {
             queue: .main
         ) { [weak self] _ in
             guard let self else { return }
-            sendMessage(UpdateConnectInstanceSender(payload: .init(locale: self.webLocale.webIdentifier)))
+            sendMessage(UpdateConnectInstanceSender(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))))
         }
     }
 }

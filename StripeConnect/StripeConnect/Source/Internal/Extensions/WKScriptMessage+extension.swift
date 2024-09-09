@@ -12,7 +12,15 @@ extension WKScriptMessage {
         if let payload = body as? DecodableType {
             return payload
         }
-        let jsonData = try JSONSerialization.data(withJSONObject: body, options: [])
+        let jsonData = try toData()
         return try JSONDecoder().decode(DecodableType.self, from: jsonData)
+    }
+    
+    func toData() throws -> Data {
+        if let bodyString = body as? String,
+            let data = bodyString.data(using: .utf8) {
+            return data
+        }
+        return try JSONSerialization.connectData(withJSONObject: body)
     }
 }

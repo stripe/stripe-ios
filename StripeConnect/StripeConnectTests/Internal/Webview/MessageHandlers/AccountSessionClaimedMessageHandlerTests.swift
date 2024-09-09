@@ -19,6 +19,6 @@ class AccountSessionClaimedMessageHandlerTests: ScriptWebTestBase {
         }))
         
         webView.evaluateAccountSessionClaimed(merchantId: merchantId)
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

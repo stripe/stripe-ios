@@ -24,6 +24,9 @@
 		416E9EDE2C78C0BA00A0B917 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9EDD2C78C0BA00A0B917 /* AppInfo.swift */; };
 		416E9EE02C78C10800A0B917 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9EDF2C78C10800A0B917 /* MainViewController.swift */; };
 		416E9EE32C7B988100A0B917 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9EE22C7B988100A0B917 /* AppSettings.swift */; };
+		41810D712C89F4CD00F10EB7 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D702C89F4CD00F10EB7 /* AppearanceSettings.swift */; };
+		41810D762C8A005D00F10EB7 /* AppearanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D752C8A005D00F10EB7 /* AppearanceInfo.swift */; };
+		41810D782C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */; };
 		41E9A1BD2C7CC85100EDE131 /* SwiftUIContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E9A1BC2C7CC85100EDE131 /* SwiftUIContainerViewController.swift */; };
 		41E9A1BF2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E9A1BE2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift */; };
 		41E9A1C12C7CE30000EDE131 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E9A1C02C7CE30000EDE131 /* AppSettingsView.swift */; };
@@ -73,6 +76,9 @@
 		416E9EDD2C78C0BA00A0B917 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		416E9EDF2C78C10800A0B917 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		416E9EE22C7B988100A0B917 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		41810D702C89F4CD00F10EB7 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
+		41810D752C8A005D00F10EB7 /* AppearanceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceInfo.swift; sourceTree = "<group>"; };
+		41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppSettings+AppearanceInfo.swift"; sourceTree = "<group>"; };
 		41E9A1BC2C7CC85100EDE131 /* SwiftUIContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIContainerViewController.swift; sourceTree = "<group>"; };
 		41E9A1BE2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+NavigationEmbed.swift"; sourceTree = "<group>"; };
 		41E9A1C02C7CE30000EDE131 /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
@@ -129,6 +135,7 @@
 		416E9E952C76BD4400A0B917 /* StripeConnectExample */ = {
 			isa = PBXGroup;
 			children = (
+				41810D742C8A004F00F10EB7 /* Appearance */,
 				413D18402C7FA2FF0051AA42 /* Views */,
 				41E9A1BB2C7CC83500EDE131 /* Helpers */,
 				416E9EE12C7B987400A0B917 /* Storage */,
@@ -186,6 +193,16 @@
 				416E9EE22C7B988100A0B917 /* AppSettings.swift */,
 			);
 			path = Storage;
+			sourceTree = "<group>";
+		};
+		41810D742C8A004F00F10EB7 /* Appearance */ = {
+			isa = PBXGroup;
+			children = (
+				41810D702C89F4CD00F10EB7 /* AppearanceSettings.swift */,
+				41810D752C8A005D00F10EB7 /* AppearanceInfo.swift */,
+				41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */,
+			);
+			path = Appearance;
 			sourceTree = "<group>";
 		};
 		41E9A1BB2C7CC83500EDE131 /* Helpers */ = {
@@ -301,6 +318,7 @@
 			files = (
 				416E9E9B2C76BD4400A0B917 /* AppStartViewController.swift in Sources */,
 				413D18442C7FAE280051AA42 /* OptionListRow.swift in Sources */,
+				41810D782C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift in Sources */,
 				416E9E972C76BD4400A0B917 /* AppDelegate.swift in Sources */,
 				41E9A1C12C7CE30000EDE131 /* AppSettingsView.swift in Sources */,
 				416E9ED62C78BD9900A0B917 /* API.swift in Sources */,
@@ -311,6 +329,8 @@
 				413D18422C7FA30A0051AA42 /* TextInput.swift in Sources */,
 				41E9A1BD2C7CC85100EDE131 /* SwiftUIContainerViewController.swift in Sources */,
 				416E9EDE2C78C0BA00A0B917 /* AppInfo.swift in Sources */,
+				41810D762C8A005D00F10EB7 /* AppearanceInfo.swift in Sources */,
+				41810D712C89F4CD00F10EB7 /* AppearanceSettings.swift in Sources */,
 				41E9A1BF2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift in Sources */,
 				416E9EE02C78C10800A0B917 /* MainViewController.swift in Sources */,
 			);

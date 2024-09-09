@@ -9,7 +9,7 @@ import Foundation
 
 /// Sends a message to the webview by calling a function on `window`
 protocol MessageSender {
-    associatedtype Payload: Codable & Equatable
+    associatedtype Payload: Encodable
     /// Name of the method (e.g. `updateConnectInstance`)
     var name: String { get }
     /// Function param
@@ -18,10 +18,7 @@ protocol MessageSender {
 
 extension MessageSender {
     var javascriptMessage: String? {
-        let encoder = JSONEncoder()
-        // Ensure keys are sorted for test stability.
-        encoder.outputFormatting = .sortedKeys
-        guard let jsonData = try? encoder.encode(payload),
+        guard let jsonData = try? JSONEncoder.connectEncoder.encode(payload),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             //TODO: MXMOBILE-2491 Log failure to analytics
             return nil
