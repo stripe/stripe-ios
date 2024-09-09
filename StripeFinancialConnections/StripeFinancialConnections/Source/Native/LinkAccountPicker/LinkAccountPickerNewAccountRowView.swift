@@ -54,7 +54,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
 
 private func CreateIconView(imageUrl: String, theme: FinancialConnectionsTheme) -> UIView {
     RoundedIconView(
-        image: .imageUrl(imageUrl),
+        image: .imageUrl(imageUrl, fallback: Image.add),
         style: .rounded,
         theme: theme
     )
