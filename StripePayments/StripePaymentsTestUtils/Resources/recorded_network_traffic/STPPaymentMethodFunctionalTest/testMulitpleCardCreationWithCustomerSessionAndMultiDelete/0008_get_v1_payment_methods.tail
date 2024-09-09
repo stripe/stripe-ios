@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_QZbCyiHuibLKjs&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_QnINed3dyqy6p6&type=card$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_ndoBjmmvBlvPkT
+request-id: req_9pjgImHWFsqkRN
 Content-Length: 2451
 Vary: Origin
-Date: Wed, 31 Jul 2024 02:10:59 GMT
+Date: Thu, 05 Sep 2024 15:40:19 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -30,7 +30,7 @@ x-content-type-options: nosniff
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1PiS0DFY0qyl6XeWZ9i3YHcf",
+      "id" : "pm_1PvhnBFY0qyl6XeWuTiGb7An",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -71,14 +71,14 @@ x-content-type-options: nosniff
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1722391857,
+      "created" : 1725550817,
       "allow_redisplay" : "unspecified",
       "type" : "card",
-      "customer" : "cus_QZbCyiHuibLKjs"
+      "customer" : "cus_QnINed3dyqy6p6"
     },
     {
       "object" : "payment_method",
-      "id" : "pm_1PiS0CFY0qyl6XeWcO0sdTlc",
+      "id" : "pm_1PvhnAFY0qyl6XeWJhOV2gTR",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -119,10 +119,10 @@ x-content-type-options: nosniff
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1722391856,
+      "created" : 1725550816,
       "allow_redisplay" : "unspecified",
       "type" : "card",
-      "customer" : "cus_QZbCyiHuibLKjs"
+      "customer" : "cus_QnINed3dyqy6p6"
     }
   ],
   "url" : "\/v1\/payment_methods"

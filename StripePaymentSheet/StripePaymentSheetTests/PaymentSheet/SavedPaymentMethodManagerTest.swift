@@ -49,7 +49,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "cuss_test")
 
         let elementsSession: STPElementsSession = ._testValue(paymentMethodTypes: ["card"], customerSessionData: [
-            "payment_sheet": [
+            "mobile_payment_element": [
                 "enabled": true,
                 "features": ["payment_method_save": "enabled",
                              "payment_method_remove": "enabled",
@@ -95,7 +95,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
         let elementsSession: STPElementsSession = ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                             "payment_sheet": [
+                                             "mobile_payment_element": [
                                                  "enabled": true,
                                                  "features": ["payment_method_save": "enabled",
                                                               "payment_method_remove": "enabled",

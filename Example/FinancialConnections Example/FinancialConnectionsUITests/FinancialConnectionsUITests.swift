@@ -484,7 +484,10 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 
-        app.buttons["Not now"].waitForExistenceAndTap() // skip networking sign up
+        let notNowButton = app.buttons["Not now"]
+        XCTAssert(notNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
+        app.fc_dismissKeyboard()
+        notNowButton.waitForExistenceAndTap() // skip networking sign up
 
         // ...the success pane will be skipped...
 
