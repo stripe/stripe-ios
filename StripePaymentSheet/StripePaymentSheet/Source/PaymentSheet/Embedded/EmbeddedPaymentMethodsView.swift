@@ -134,6 +134,7 @@ extension PaymentSheet.Appearance.PaymentOptionView.Style {
             // TODO(porter) See if there is a better way to do this, less sneaky
             var appearance = appearance
             appearance.borderWidth = 0.0
+            appearance.colors.componentBorderSelected = .clear
             appearance.cornerRadius = 0.0
             appearance.shadow = .disabled
             return appearance
