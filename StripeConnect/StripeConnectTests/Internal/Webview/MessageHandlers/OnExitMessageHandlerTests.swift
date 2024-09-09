@@ -19,6 +19,6 @@ class OnExitMessageHandlerTests: ScriptWebTestBase {
         
         webView.evaluateSetOnExit()
         
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

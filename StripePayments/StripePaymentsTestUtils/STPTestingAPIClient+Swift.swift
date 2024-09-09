@@ -145,6 +145,7 @@ extension STPTestingAPIClient {
         merchantCountry: String? = "us"
     ) async throws -> CreateCustomerSessionResponse {
         let params = [
+            "component_name": "mobile_payment_element",
             "customer_id": customerID,
             "account": merchantCountry,
         ]

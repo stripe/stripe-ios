@@ -56,13 +56,7 @@ end
 def create_pr
   # Create a new pull request from the branch
   pr_body = %{
-  - [ ] Verify CHANGELOG is updated with any new features or breaking changes (be thorough when reviewing commit history)
   - [ ] Verify MIGRATING is updated (if necessary).
-  - [ ] Verify the following files are updated to use the new version string:
-    - [ ] Version.xcconfig
-    - [ ] All *.podspec files
-    - [ ] StripeAPIConfiguration+Version.swift
-  - [ ] Verify any new localized strings.
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
   }
 
