@@ -2,9 +2,9 @@
 ### PaymentSheet
 * [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
 
-
-## 23.28.3 2024-09-03
+## 23.30.0 2024-09-09
 ### PaymentSheet
+* [Added] CustomerSessions is now in private beta.
 * [Fixed] PaymentSheet now uses a border width of 1.5 instead of 0 when `PaymentSheet.Appearance.borderWidth' is 0.
 * [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
 
@@ -12,7 +12,6 @@
 ### PaymentSheet
 * [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
 * [Fixed] Fixed an issue in SwiftUI where setting `isPresented=false` wouldn't dismiss the sheet.
-
 
 ## 23.29.1 2024-08-12
 ### PaymentSheet
@@ -38,6 +37,9 @@
 * [Added] Support for Sunbit (Private Beta) bindings.
 * [Added] Support for Billie (Private Beta) bindings.
 * [Added] Support for Satispay (Private Beta) bindings.
+
+## 23.28.3 2024-09-03
+This release was made in error, and contains changes from 23.29.0, 23.29.1, and 23.29.2.
 
 ## 23.28.1 2024-07-16
 ### Payments

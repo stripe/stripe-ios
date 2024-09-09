@@ -21,6 +21,6 @@ class PageDidLoadMessageHandlerTests: ScriptWebTestBase {
         
         webView.evaluatePageDidLoad(pageViewId: pageViewId)
         
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

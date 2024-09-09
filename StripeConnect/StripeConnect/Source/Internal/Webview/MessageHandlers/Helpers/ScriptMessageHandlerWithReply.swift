@@ -8,7 +8,7 @@
 import WebKit
 
 /// Convenience class that conforms to WKScriptMessageHandlerWithReply and can be instantiated with a closure
-class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Codable>: NSObject, WKScriptMessageHandlerWithReply {
+class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NSObject, WKScriptMessageHandlerWithReply {
     let name: String
     let didReceiveMessage: (Payload) async throws -> Response
     
@@ -28,7 +28,7 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Codable>: NSOb
         do {
             let payload: Payload = try message.toDecodable()
             let value = try await didReceiveMessage(payload)
-            let responseData = try JSONEncoder().encode(value)
+            let responseData = try JSONEncoder.connectEncoder.encode(value)
             
             guard let response = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) else {
                 return (nil, "Failed to encode response")

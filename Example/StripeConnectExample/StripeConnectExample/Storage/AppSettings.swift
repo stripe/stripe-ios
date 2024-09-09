@@ -11,7 +11,8 @@ class AppSettings {
     enum  Constants {
         static let defaultServerBaseURL = "https://stripe-connect-mobile-example-v1.glitch.me/"
         static let serverBaseURLKey = "ServerBaseURL"
-        
+        static let appearanceIdKey = "AppearanceId"
+
         static let selectedMerchantKey = "SelectedMerchant"
     }
     
@@ -24,6 +25,16 @@ class AppSettings {
         }
         set {
             UserDefaults.standard.setValue(newValue, forKey: Constants.serverBaseURLKey)
+        }
+    }
+    
+    var appearanceId: String? {
+        get {
+            UserDefaults.standard.string(forKey: Constants.appearanceIdKey) ??
+            nil
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: Constants.appearanceIdKey)
         }
     }
     
