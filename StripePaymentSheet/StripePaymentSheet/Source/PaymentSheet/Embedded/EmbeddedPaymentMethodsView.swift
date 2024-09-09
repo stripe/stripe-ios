@@ -53,6 +53,7 @@ import UIKit
             stackView.addArrangedSubview(RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
                                                                              appearance: rowButtonAppearance,
                                                                              rightAccessoryView: accessoryButton,
+                                                                             isEmbedded: true,
                                                                              didTap: handleRowSelection(selectedRowButton:)))
         }
 
@@ -62,16 +63,19 @@ import UIKit
                                                                             savedPaymentMethodType: savedPaymentMethod?.type,
                                                                             appearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,
+                                                                            isEmbedded: true,
                                                                             didTap: handleRowSelection(selectedRowButton:)))
         }
 
         if shouldShowApplePay {
             stackView.addArrangedSubview(RowButton.makeForApplePay(appearance: rowButtonAppearance,
+                                                                   isEmbedded: true,
                                                                    didTap: handleRowSelection(selectedRowButton:)))
         }
 
         if shouldShowLink {
             stackView.addArrangedSubview(RowButton.makeForLink(appearance: rowButtonAppearance,
+                                                               isEmbedded: true,
                                                                didTap: handleRowSelection(selectedRowButton:)))
         }
 
@@ -81,6 +85,7 @@ import UIKit
                                                                             savedPaymentMethodType: savedPaymentMethod?.type,
                                                                             appearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,
+                                                                            isEmbedded: true,
                                                                             didTap: handleRowSelection(selectedRowButton:)))
         }
 

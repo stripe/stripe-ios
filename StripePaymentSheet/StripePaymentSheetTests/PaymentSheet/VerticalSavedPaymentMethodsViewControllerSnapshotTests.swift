@@ -6,7 +6,7 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP)@_spi(EmbeddedPaymentMethodsViewBeta) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -31,7 +31,6 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isRemoveOnlyMode: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
-        configuration.appearance.paymentOptionView.style = .floating
         let paymentMethods = isRemoveOnlyMode ? [STPPaymentMethod._testCardAmex()] : generatePaymentMethods()
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,

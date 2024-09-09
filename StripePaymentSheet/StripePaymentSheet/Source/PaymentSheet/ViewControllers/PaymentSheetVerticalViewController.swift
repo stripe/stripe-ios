@@ -363,9 +363,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         )
-        // TODO(porter) Find a better way
-        var updatedAppearance = configuration.appearance
-        updatedAppearance.paymentOptionView.style = .floating
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
             savedPaymentMethod: savedPaymentMethods.first,
@@ -374,7 +371,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             shouldShowLink: shouldShowLinkInList,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             overrideHeaderView: makeWalletHeaderView(),
-            appearance: updatedAppearance,
+            appearance: configuration.appearance,
             currency: loadResult.intent.currency,
             amount: loadResult.intent.amount,
             delegate: self
