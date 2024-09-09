@@ -183,8 +183,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none)
 
-        // Simulate tapping a button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.first(where: { $0 is RowButton }) as? RowButton {
+        // Simulate tapping the last button
+        if let rowButton = embeddedView.stackView.arrangedSubviews.reversed().first(where: { $0 is RowButton }) as? RowButton {
             embeddedView.handleRowSelection(selectedRowButton: rowButton)
         }
 
@@ -213,8 +213,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .viewMore)
 
-        // Simulate tapping a button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.first(where: { $0 is RowButton }) as? RowButton {
+        // Simulate tapping the last button
+        if let rowButton = embeddedView.stackView.arrangedSubviews.reversed().first(where: { $0 is RowButton }) as? RowButton {
             embeddedView.handleRowSelection(selectedRowButton: rowButton)
         }
 
@@ -397,8 +397,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none)
 
-        // Simulate tapping a button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.first(where: { $0 is RowButton }) as? RowButton {
+        // Simulate tapping the last button
+        if let rowButton = embeddedView.stackView.arrangedSubviews.reversed().first(where: { $0 is RowButton }) as? RowButton {
             embeddedView.handleRowSelection(selectedRowButton: rowButton)
         }
 
@@ -418,8 +418,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none)
 
-        // Simulate tapping a button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.first(where: { $0 is RowButton }) as? RowButton {
+        // Simulate tapping the last button
+        if let rowButton = embeddedView.stackView.arrangedSubviews.reversed().first(where: { $0 is RowButton }) as? RowButton {
             embeddedView.handleRowSelection(selectedRowButton: rowButton)
         }
 
