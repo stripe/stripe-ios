@@ -46,7 +46,7 @@ class ConnectWebViewTests: XCTestCase {
                         
             XCTAssertTrue(userAgent.hasSuffix("- stripe-ios/1.2.3"), "User agent should include the SDK identifier but value was: \(String(describing: result))")
         }
-        wait(for: [expectation], timeout: 2.0)
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
     
     func testOpenSafariVCIfNotInAllowedHosts() {

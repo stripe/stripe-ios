@@ -26,6 +26,9 @@
          location = "group:PaymentSheet Example/PaymentSheet Example.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:StripeConnectExample/StripeConnect Example.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:UI Examples/UI Examples.xcodeproj">
       </FileRef>
    </Group>
