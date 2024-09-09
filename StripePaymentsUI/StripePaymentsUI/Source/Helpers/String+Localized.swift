@@ -79,9 +79,6 @@ extension String.Localized {
             "Section title for entering your CVC/CVV. e.g. 'Confirm your CVC' or 'Confirm your CVV'"
         )
     }
-    @_spi(STP) public static var cvv: String {
-        STPLocalizedString("CVV", "Label for entering CVV in text field")
-    }
 
     @_spi(STP) public static var cvc: String {
         STPLocalizedString("CVC", "Label for entering CVC in text field")
