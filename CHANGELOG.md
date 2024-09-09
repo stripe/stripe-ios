@@ -1,3 +1,7 @@
+## 23.30.0 2024-09-09
+### PaymentSheet
+* [Added] CustomerSessions is now in private beta.
+
 ## 23.28.3 2024-09-03
 ### PaymentSheet
 * [Fixed] PaymentSheet now uses a border width of 1.5 instead of 0 when `PaymentSheet.Appearance.borderWidth' is 0.
