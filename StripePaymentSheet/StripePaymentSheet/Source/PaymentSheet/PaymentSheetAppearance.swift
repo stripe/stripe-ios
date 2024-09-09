@@ -180,10 +180,10 @@ public extension PaymentSheet {
             public var textColor: UIColor?
             
             /// The background color of the primary button when in a disabled state.
-             /// - Note: If `nil`, defaults to `backgroundColor`. If `backgroundColor` is `nil`, defaults to colors.primary.
+             /// - Note: If `nil`, defaults to `backgroundColor`. If `backgroundColor` is `nil`, defaults to `appearance.colors.primary`.
             public var disabledBackgroundColor: UIColor?
 
-            /// The text color of the primary button when in a disabled state. This color will be used at 60% opacity to provide a disabled appearance.
+            /// The text color of the primary button when in a disabled state.
             /// - Note: If `nil`, defaults to `textColor` with an alpha value of 0.6
              public var disabledTextColor: UIColor?
 

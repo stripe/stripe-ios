@@ -86,7 +86,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
     func testConfirmButtonDisabledColorWhenSetPrimaryColorAndNoSetBackgroundColorOrDisabledColor() {
         var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
-        button.disabledTextColor = .green.withAlphaComponent(0.2)
+        button.disabledTextColor = .green.withAlphaComponent(0.6)
         appearance.primaryButton = button
         appearance.colors.primary = .yellow
         
@@ -107,7 +107,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.backgroundColor = .yellow
-        button.disabledTextColor = .green.withAlphaComponent(0.2)
+        button.disabledTextColor = .green.withAlphaComponent(0.6)
         appearance.primaryButton = button
         
 
@@ -128,7 +128,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.backgroundColor = .red
         button.disabledBackgroundColor = .black
-        button.disabledTextColor = .green.withAlphaComponent(0.2)
+        button.disabledTextColor = .green.withAlphaComponent(0.6)
         appearance.primaryButton = button
         appearance.colors.primary = .yellow
         
@@ -149,7 +149,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.disabledBackgroundColor = .red
-        button.disabledTextColor = .green.withAlphaComponent(0.2)
+        button.disabledTextColor = .green.withAlphaComponent(0.6)
         appearance.primaryButton = button
 
         let confirmButton = ConfirmButton(

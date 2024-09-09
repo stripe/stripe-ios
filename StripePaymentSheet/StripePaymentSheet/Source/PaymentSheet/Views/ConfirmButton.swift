@@ -469,6 +469,8 @@ class ConfirmButton: UIView {
             UIView.animate(withDuration: animationDuration) {
                 self.titleLabel.alpha = {
                     switch status {
+                    case .disabled:
+                        return self.appearance.primaryButton.disabledTextColor == nil ? 0.6 : 1.0
                     case .spinnerWithInteractionDisabled:
                         return 0.6
                     case .succeeded:
@@ -533,16 +535,12 @@ class ConfirmButton: UIView {
                 return disabledTextColor
             }
             
-            if status == .disabled {
-                return overriddenForegroundColor?.withAlphaComponent(0.6) ?? background.contrastingColor.withAlphaComponent(0.6)
-            }
-            
             // Use successTextColor if in succeeded state and provided, otherwise fallback to foreground color
             if status == .succeeded, let successTextColor = appearance.primaryButton.successTextColor {
                 return successTextColor
             }
 
-            // if foreground is set prefer that over a dynamic constrasting color in all other states
+            // if foreground is set prefer that over a dynamic contrasting color in all other states
             return overriddenForegroundColor ?? background.contrastingColor
         }
 
