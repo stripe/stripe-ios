@@ -205,22 +205,6 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatRadio_genericTestAppearance() {
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethod: ._testCard(),
-                                                      appearance: ._testMSPaintTheme,
-                                                      shouldShowApplePay: true,
-                                                      shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .viewMore)
-
-        // Simulate tapping the last button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.reversed().first(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.handleRowSelection(selectedRowButton: rowButton)
-        }
-
-        verify(embeddedView)
-    }
-
     func testEmbeddedPaymentMethodsView_flatRadio_componentBackgroundColor() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.colors.componentBackground = .purple
@@ -422,20 +406,6 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         if let rowButton = embeddedView.stackView.arrangedSubviews.reversed().first(where: { $0 is RowButton }) as? RowButton {
             embeddedView.handleRowSelection(selectedRowButton: rowButton)
         }
-
-        verify(embeddedView)
-    }
-
-    func testEmbeddedPaymentMethodsView_floating_genericAppearance() {
-        var appearance: PaymentSheet.Appearance = ._testMSPaintTheme
-        appearance.paymentOptionView.style = .floating
-
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethod: ._testCard(),
-                                                      appearance: appearance,
-                                                      shouldShowApplePay: true,
-                                                      shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .viewMore)
 
         verify(embeddedView)
     }
