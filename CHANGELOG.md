@@ -1,3 +1,7 @@
+## X.Y.Z X-Y-Z
+### PaymentSheet
+* [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
+
 ## 23.30.0 2024-09-09
 ### PaymentSheet
 * [Added] CustomerSessions is now in private beta.
