@@ -307,7 +307,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointSearchInstitutions,
             parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
