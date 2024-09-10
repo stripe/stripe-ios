@@ -20,6 +20,7 @@ extension STPPaymentHandlerActionStatus {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension STPPaymentHandler {
     struct Analytic: StripeCore.Analytic {
         let event: StripeCore.STPAnalyticEvent
