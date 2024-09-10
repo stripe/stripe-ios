@@ -85,10 +85,10 @@
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
 
-/* Error message for card entry form when CVC/CVV is incomplete. */
+/* Error message for card entry form when CVC is incomplete. */
 "Your card's security code is incomplete." = "Your card's security code is incomplete.";
 
-/* Error message for card entry form when CVC/CVV is invalid */
+/* Error message for card entry form when CVC is invalid */
 "Your card's security code is invalid." = "Your card's security code is invalid.";
 
 /* Error message for when postal code in form is invalid */
