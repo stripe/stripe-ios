@@ -15,8 +15,8 @@ final class RoundedIconView: UIView {
         /// A local image. Images live in `/Resources/Images`, and defined in `/Source/Helpers/Image.swift`.
         case image(Image)
 
-        /// A remote image from a given URL, and an optional local image to fallback to
-        case imageUrl(String?, fallback: Image? = nil)
+        /// A remote image from a given URL, and an optional local image to use as a placeholder.
+        case imageUrl(String?, placeholder: Image? = nil)
     }
 
     enum Style {
@@ -49,10 +49,10 @@ final class RoundedIconView: UIView {
         switch image {
         case .image(let image):
             iconImageView.image = image.makeImage(template: true)
-        case .imageUrl(let imageUrl, let fallbackImage):
+        case .imageUrl(let imageUrl, let placeholder):
             iconImageView.setImage(
                 with: imageUrl,
-                placeholder: fallbackImage?.makeImage(template: true),
+                placeholder: placeholder?.makeImage(template: true),
                 useAlwaysTemplateRenderingMode: true
             )
         }
