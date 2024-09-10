@@ -70,7 +70,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
-    
+
     func testCVVRecollectionScreen() {
         let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
 
@@ -82,7 +82,6 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
-
 
     func testSavedScreen_customCTA() {
         let paymentMethods = [
