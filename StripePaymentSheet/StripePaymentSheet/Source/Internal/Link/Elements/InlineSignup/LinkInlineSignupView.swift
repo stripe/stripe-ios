@@ -259,6 +259,7 @@ extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
         #if !canImport(CompositorServices)
         safariVC.dismissButtonStyle = .close
+        safariVC.preferredControlTintColor = window?.tintColor ?? viewModel.configuration.appearance.colors.primary
         #endif
         safariVC.modalPresentationStyle = .overFullScreen
 
