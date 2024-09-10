@@ -16,6 +16,8 @@
 
 "CVC" = "Код CVV/CVC";
 
+"CVV" = "Код CVV/CVC";
+
 "Card information" = "Данные платежной карты";
 
 "Card number" = "Номер карты";

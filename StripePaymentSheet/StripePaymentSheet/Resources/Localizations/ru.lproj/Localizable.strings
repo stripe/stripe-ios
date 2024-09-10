@@ -76,7 +76,9 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Подтвердите платеж в вашем банковском приложении в течение %@ для оформления покупки.";
 
-"Confirm your CVC" = "Подтвердить код CVC карты";
+"Confirm your CVC" = "Подтвердить код CVV карты";
+
+"Confirm your CVV" = "Подтвердить код CVV карты";
 
 "Contact information" = "Контактные данные";
 
