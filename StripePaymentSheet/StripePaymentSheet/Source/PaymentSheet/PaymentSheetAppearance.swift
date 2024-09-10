@@ -36,9 +36,17 @@ public extension PaymentSheet {
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
         public var borderWidth: CGFloat = 1.0
 
+        /// The border width used for selected buttons and tabs in PaymentSheet
+        /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
+        /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
+        @_spi(EmbeddedPaymentMethodsViewBeta) public var borderWidthSelected: CGFloat?
+
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
+
+        /// Describes the appearance of the embeddable payment element
+        @_spi(EmbeddedPaymentMethodsViewBeta) public var paymentOptionView: PaymentOptionView = PaymentOptionView()
 
         // MARK: Fonts
 
@@ -93,6 +101,10 @@ public extension PaymentSheet {
 
             /// The border color used for inputs, tabs, and other components
             public var componentBorder: UIColor = .systemGray3
+
+            /// The border color used for selected buttons and tabs in PaymentSheet
+            /// - Note: If `nil`, defaults to  `appearance.colors.primary`
+            @_spi(EmbeddedPaymentMethodsViewBeta) public var componentBorderSelected: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
             public var componentDivider: UIColor = .systemGray3
@@ -217,6 +229,81 @@ public extension PaymentSheet {
             /// The shadow of the primary button
             /// - Note: If `nil`, `appearance.shadow` will be used as the primary button shadow
             public var shadow: Shadow?
+        }
+    }
+}
+
+@_spi(EmbeddedPaymentMethodsViewBeta) public extension PaymentSheet.Appearance {
+    /// Describes the appearance of the embedded payment element
+    struct PaymentOptionView: Equatable {
+
+        /// The display style options for the embedded payment element
+        public enum Style {
+            /// A flat style with radio buttons
+            case flatRadio
+            /// A floating style
+            case floating
+        }
+
+        /// Creates a `PaymentSheet.Appearance.PaymentOptionView` with default values
+        public init() {}
+
+        /// Describes the appearance of the payment method row
+        public var paymentMethodRow: PaymentMethodRow = PaymentMethodRow()
+
+        /// The display style of the embedded payment element
+        public var style: Style = .flatRadio
+
+        /// Describes the appearance of the payment method row
+        public struct PaymentMethodRow: Equatable {
+            /// Additional vertical insets applied to a payment method row
+            /// - Note: Increasing this value increases the height of the row
+            public var additionalInsets: CGFloat = 4.0
+
+            /// Appearance settings for the flat style
+            public var flat: Flat = Flat()
+
+            /// Appearance settings for the floating style
+            public var floating: Floating = Floating()
+
+            /// Describes the appearance of the flat style of the embedded payment element
+            public struct Flat: Equatable {
+                /// The thickness of the separator line between payment method rows
+                public var separatorThickness: CGFloat = 1.0
+
+                /// The color of the separator line between payment method rows
+                /// - Note: If `nil`, defaults to `appearance.colors.componentBorder`
+                public var separatorColor: UIColor?
+
+                /// The insets of the separator line between payment method rows
+                public var separatorInset: UIEdgeInsets?
+
+                /// Determines if the top separator is visible at the top of the embedded payment element
+                public var topSeparatorEnabled: Bool = true
+
+                /// Determines if the bottom separator is visible at the bottom of the embedded payment element
+                public var bottomSeparatorEnabled: Bool = true
+
+                /// Appearance settings for the radio button
+                public var radio: Radio = Radio()
+
+                /// Describes the appearance of the radio button
+                public struct Radio: Equatable {
+                    /// The color of the radio button when selected
+                    /// - Note: If `nil`, defaults to `appearance.color.primaryColor`
+                    public var colorSelected: UIColor?
+
+                    /// The color of the radio button when unselected
+                    /// - Note: If `nil`, defaults to `appearance.colors.componentBorder`
+                    public var colorUnselected: UIColor?
+                }
+            }
+
+            /// Describes the appearance of the floating style payment method row
+            public struct Floating: Equatable {
+                /// The spacing between payment method rows
+                public var spacing: CGFloat = 12.0
+            }
         }
     }
 }
