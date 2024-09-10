@@ -152,6 +152,10 @@ extension PaymentSheet {
                     if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
                         params.paymentMethodId = paymentMethodId
                         params.paymentMethodParams = nil
+
+                        if paymentIntent.isSetupFutureUsageSet {
+                            params.mandateData = STPMandateDataParams.makeWithInferredValues()
+                        }
                     }
                 }
                 paymentHandler.confirmPayment(
@@ -179,14 +183,7 @@ extension PaymentSheet {
                     if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
                         setupIntentParams.paymentMethodID = paymentMethodId
                         setupIntentParams.paymentMethodParams = nil
-
-                        let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
-                        let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
-                        // Tell Stripe to infer mandate info from client
-                        onlineParams.inferFromClient = true
-                        mandateCustomerAcceptanceParams.onlineParams = onlineParams
-                        mandateCustomerAcceptanceParams.type = .online
-                        setupIntentParams.mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
+                        setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                     }
                 }
                 paymentHandler.confirmSetupIntent(
@@ -482,12 +479,7 @@ extension PaymentSheet {
         var isSetupFutureUsageSet: Bool {
             switch self {
             case .paymentIntent(let paymentIntent):
-                return paymentIntent.setupFutureUsage != .none || (paymentIntent.paymentMethodOptions?.allResponseFields.values.contains(where: {
-                    if let value = $0 as? [String: Any] {
-                        return value["setup_future_usage"] != nil
-                    }
-                    return false
-                }) ?? false)
+                return paymentIntent.isSetupFutureUsageSet
             case .setupIntent:
                 return true
             }
