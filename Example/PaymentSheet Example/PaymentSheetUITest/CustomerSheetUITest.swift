@@ -319,6 +319,7 @@ class CustomerSheetUITest: XCTestCase {
         continueManualEntry.tap()
 
         // Fill out Link
+        XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: timeout))
         app.typeText("test-\(UUID().uuidString)@example.com")
         XCTAssertTrue(app.textFields["Phone number"].waitForExistence(timeout: timeout))
         app.typeText("3105551234")
