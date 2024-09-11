@@ -77,6 +77,7 @@ final class AccountPickerViewController: UIViewController {
             businessName: businessName,
             permissions: dataSource.manifest.permissions,
             singleAccount: dataSource.manifest.singleAccount,
+            isInstantDebits: dataSource.manifest.isProductInstantDebits,
             theme: dataSource.manifest.theme,
             didSelectLinkAccounts: { [weak self] in
                 guard let self = self else {

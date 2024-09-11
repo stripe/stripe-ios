@@ -12,6 +12,7 @@ import UIKit
 final class AccountPickerFooterView: UIView {
 
     private let singleAccount: Bool
+    private let isInstantDebits: Bool
     private let theme: FinancialConnectionsTheme
     private let didSelectLinkAccounts: () -> Void
 
@@ -31,11 +32,13 @@ final class AccountPickerFooterView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
+        isInstantDebits: Bool,
         theme: FinancialConnectionsTheme,
         didSelectLinkAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.singleAccount = singleAccount
+        self.isInstantDebits = isInstantDebits
         self.theme = theme
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
@@ -47,6 +50,7 @@ final class AccountPickerFooterView: UIView {
                     businessName: businessName,
                     permissions: permissions,
                     isNetworking: false,
+                    isInstantDebits: isInstantDebits,
                     font: .label(.small),
                     boldFont: .label(.smallEmphasized),
                     didSelectLearnMore: didSelectMerchantDataAccessLearnMore
@@ -54,6 +58,7 @@ final class AccountPickerFooterView: UIView {
                 linkAccountsButton,
             ]
         )
+
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         verticalStackView.isLayoutMarginsRelativeArrangement = true
