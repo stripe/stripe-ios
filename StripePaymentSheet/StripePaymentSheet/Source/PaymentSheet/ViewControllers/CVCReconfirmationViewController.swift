@@ -23,9 +23,8 @@ class CVCReconfirmationViewController: UIViewController {
         return navBar
     }()
     private lazy var headerLabel: UILabel = {
-        let headerLabelText = String.Localized.confirm_your_cvc
         let header = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-        header.text = headerLabelText
+        header.text = String.Localized.confirm_your_cvc
         return header
     }()
     private lazy var confirmButton: ConfirmButton = {
