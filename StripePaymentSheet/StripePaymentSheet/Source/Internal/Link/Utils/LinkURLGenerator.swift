@@ -28,6 +28,7 @@ struct LinkURLParams: Encodable {
         case payment
         case setup
     }
+    
     var path = "mobile_pay"
     var integrationType = "mobile"
     var paymentObject: PaymentObjectMode
@@ -43,6 +44,7 @@ struct LinkURLParams: Encodable {
     var locale: String
     var intentMode: IntentMode
     var setupFutureUsage: Bool
+    var cardBrandChoice: STPCardBrandChoice?
 }
 
 class LinkURLGenerator {
@@ -95,7 +97,9 @@ class LinkURLGenerator {
                              loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag(),
                              intentMode: intentMode,
-                             setupFutureUsage: intent.isSettingUp)
+                             setupFutureUsage: intent.isSettingUp,
+                             cardBrandChoice: elementsSession.cardBrandChoice
+        )
     }
 
     static func url(params: LinkURLParams) throws -> URL {
