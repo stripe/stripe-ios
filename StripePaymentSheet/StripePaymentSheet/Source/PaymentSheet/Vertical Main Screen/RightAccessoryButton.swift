@@ -39,11 +39,11 @@ extension RowButton {
         private var label: UILabel {
             let label = UILabel()
             label.text = accessoryType.text
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.font = embeddedAppearance.paymentSheetAppearance.scaledFont(for: embeddedAppearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             if #available(iOS 15.0, *) {
                 label.minimumContentSizeCategory = .large
             }
-            label.textColor = appearance.colors.primary // TODO(porter) use secondary action color
+            label.textColor = embeddedAppearance.colors.primary // TODO(porter) use secondary action color
             label.adjustsFontSizeToFitWidth = true
             label.adjustsFontForContentSizeCategory = true
             label.isAccessibilityElement = false
@@ -53,7 +53,7 @@ extension RowButton {
         private var imageView: UIImageView? {
             guard let image = accessoryType.accessoryImage else { return nil }
             let imageView = UIImageView(image: image)
-            imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
+            imageView.tintColor = embeddedAppearance.colors.primary // TODO(porter) use secondary action color
             imageView.contentMode = .scaleAspectFit
             imageView.isAccessibilityElement = false
             return imageView
@@ -67,12 +67,12 @@ extension RowButton {
         }
 
         let accessoryType: AccessoryType
-        let appearance: PaymentSheet.Appearance
+        let embeddedAppearance: EmbeddedAppearance
         let didTap: () -> Void
 
-        init(accessoryType: AccessoryType, appearance: PaymentSheet.Appearance, didTap: @escaping () -> Void) {
+        init(accessoryType: AccessoryType, embeddedAppearance: EmbeddedAppearance, didTap: @escaping () -> Void) {
             self.accessoryType = accessoryType
-            self.appearance = appearance
+            self.embeddedAppearance = embeddedAppearance
             self.didTap = didTap
             super.init(frame: .zero)
             addAndPinSubview(stackView)

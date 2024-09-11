@@ -120,7 +120,7 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, embeddedAppearance: appearance.toFloatingEmbeddedAppearance, rightAccessoryView: stackView) { [weak self] _ in
             guard let self else { return }
             state = .selected
             delegate?.didSelectButton(self, with: paymentMethod)

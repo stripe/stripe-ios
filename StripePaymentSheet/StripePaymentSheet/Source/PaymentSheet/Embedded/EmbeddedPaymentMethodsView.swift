@@ -12,48 +12,47 @@ import UIKit
 
 // TODO(porter) Probably shouldn't be public, just easy for testing.
 @_spi(EmbeddedPaymentMethodsViewBeta) public class EmbeddedPaymentMethodsView: UIView {
-    private let appearance: PaymentSheet.Appearance
+    private let embeddedAppearance: EmbeddedAppearance
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = appearance.paymentOptionView.style == .floating ? appearance.paymentOptionView.paymentMethodRow.floating.spacing : 0
+        stackView.spacing = embeddedAppearance.style == .floating ? embeddedAppearance.floating.spacing : 0
         return stackView
     }()
 
     // TODO(porter) Remove later, just for use in EmbeddedPlaygroundViewController since PaymentMethodType and AccessoryType aren't public
     public convenience init(savedPaymentMethod: STPPaymentMethod?,
-                            appearance: PaymentSheet.Appearance,
+                            embeddedAppearance: EmbeddedAppearance,
                             shouldShowApplePay: Bool,
                             shouldShowLink: Bool) {
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.bancontact), .stripe(.klarna), .stripe(.card)]
         let savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? = .viewMore
 
-        self.init(paymentMethodTypes: paymentMethodTypes, savedPaymentMethod: savedPaymentMethod, appearance: appearance, shouldShowApplePay: shouldShowApplePay, shouldShowLink: shouldShowLink, savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
+        self.init(paymentMethodTypes: paymentMethodTypes, savedPaymentMethod: savedPaymentMethod, embeddedAppearance: embeddedAppearance, shouldShowApplePay: shouldShowApplePay, shouldShowLink: shouldShowLink, savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
     }
 
     init(paymentMethodTypes: [PaymentSheet.PaymentMethodType],
          savedPaymentMethod: STPPaymentMethod?,
-         appearance: PaymentSheet.Appearance,
+         embeddedAppearance: EmbeddedAppearance,
          shouldShowApplePay: Bool,
          shouldShowLink: Bool,
          savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
-        self.appearance = appearance
+        self.embeddedAppearance = embeddedAppearance
         super.init(frame: .zero)
-        let rowButtonAppearance = appearance.paymentOptionView.style.appearanceForStyle(appearance: appearance)
+        let rowButtonAppearance = embeddedAppearance.style.appearanceForStyle(appearance: embeddedAppearance)
 
         if let savedPaymentMethod {
             let accessoryButton: RowButton.RightAccessoryButton? = {
                 if let savedPaymentMethodAccessoryType {
-                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
+                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, embeddedAppearance: rowButtonAppearance, didTap: didTapAccessoryButton)
                 } else {
                     return nil
                 }
             }()
             stackView.addArrangedSubview(RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
-                                                                             appearance: rowButtonAppearance,
+                                                                             embeddedAppearance: rowButtonAppearance,
                                                                              rightAccessoryView: accessoryButton,
-                                                                             isEmbedded: true,
                                                                              didTap: handleRowSelection(selectedRowButton:)))
         }
 
@@ -61,21 +60,18 @@ import UIKit
         if paymentMethodTypes.contains(.stripe(.card)) {
             stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card),
                                                                             savedPaymentMethodType: savedPaymentMethod?.type,
-                                                                            appearance: rowButtonAppearance,
+                                                                            embeddedAppearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,
-                                                                            isEmbedded: true,
                                                                             didTap: handleRowSelection(selectedRowButton:)))
         }
 
         if shouldShowApplePay {
-            stackView.addArrangedSubview(RowButton.makeForApplePay(appearance: rowButtonAppearance,
-                                                                   isEmbedded: true,
+            stackView.addArrangedSubview(RowButton.makeForApplePay(embeddedAppearance: rowButtonAppearance,
                                                                    didTap: handleRowSelection(selectedRowButton:)))
         }
 
         if shouldShowLink {
-            stackView.addArrangedSubview(RowButton.makeForLink(appearance: rowButtonAppearance,
-                                                               isEmbedded: true,
+            stackView.addArrangedSubview(RowButton.makeForLink(embeddedAppearance: rowButtonAppearance,
                                                                didTap: handleRowSelection(selectedRowButton:)))
         }
 
@@ -83,19 +79,18 @@ import UIKit
             stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType,
                                                                             subtitle: VerticalPaymentMethodListViewController.subtitleText(for: paymentMethodType),
                                                                             savedPaymentMethodType: savedPaymentMethod?.type,
-                                                                            appearance: rowButtonAppearance,
+                                                                            embeddedAppearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,
-                                                                            isEmbedded: true,
                                                                             didTap: handleRowSelection(selectedRowButton:)))
         }
 
-        if appearance.paymentOptionView.style != .floating {
-            stackView.addSeparators(color: appearance.paymentOptionView.paymentMethodRow.flat.separatorColor ?? appearance.colors.componentBorder,
-                                    backgroundColor: appearance.colors.componentBackground,
-                                    thickness: appearance.paymentOptionView.paymentMethodRow.flat.separatorThickness,
-                                    inset: appearance.paymentOptionView.paymentMethodRow.flat.separatorInset ?? appearance.paymentOptionView.style.defaultInsets,
-                                    addTopSeparator: appearance.paymentOptionView.paymentMethodRow.flat.topSeparatorEnabled,
-                                    addBottomSeparator: appearance.paymentOptionView.paymentMethodRow.flat.bottomSeparatorEnabled)
+        if rowButtonAppearance.style != .floating {
+            stackView.addSeparators(color: embeddedAppearance.flat.separatorColor ?? embeddedAppearance.colors.componentBorder,
+                                    backgroundColor: embeddedAppearance.colors.componentBackground,
+                                    thickness: embeddedAppearance.flat.separatorThickness,
+                                    inset: embeddedAppearance.flat.separatorInset ?? rowButtonAppearance.style.defaultInsets,
+                                    addTopSeparator: embeddedAppearance.flat.topSeparatorEnabled,
+                                    addBottomSeparator: embeddedAppearance.flat.bottomSeparatorEnabled)
         }
 
         addAndPinSubview(stackView)
@@ -117,7 +112,7 @@ import UIKit
     }
 }
 
-extension PaymentSheet.Appearance.PaymentOptionView.Style {
+extension EmbeddedAppearance.Style {
 
     var defaultInsets: UIEdgeInsets {
         switch self {
@@ -128,7 +123,7 @@ extension PaymentSheet.Appearance.PaymentOptionView.Style {
         }
     }
 
-    fileprivate func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
+    fileprivate func appearanceForStyle(appearance: EmbeddedAppearance) -> EmbeddedAppearance {
         switch self {
         case .flatRadio:
             // TODO(porter) See if there is a better way to do this, less sneaky

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class RadioButton: UIView {
-    private let appearance: PaymentSheet.Appearance
+    private let embeddedAppearance: EmbeddedAppearance
 
     private struct Constants {
         static let diameter: CGFloat = 18
@@ -24,11 +24,11 @@ class RadioButton: UIView {
     }
 
     private var selectedColor: CGColor {
-        appearance.paymentOptionView.paymentMethodRow.flat.radio.colorSelected?.cgColor ?? appearance.colors.primary.cgColor
+        embeddedAppearance.flat.radio.colorSelected?.cgColor ?? embeddedAppearance.colors.primary.cgColor
     }
 
     private var unselectedColor: CGColor {
-        appearance.paymentOptionView.paymentMethodRow.flat.radio.colorUnselected?.cgColor ?? appearance.colors.componentBorder.cgColor
+        embeddedAppearance.flat.radio.colorUnselected?.cgColor ?? embeddedAppearance.colors.componentBorder.cgColor
     }
 
     private let didTap: () -> Void
@@ -56,8 +56,8 @@ class RadioButton: UIView {
         return CGSize(width: Constants.diameter, height: Constants.diameter)
     }
 
-    init(appearance: PaymentSheet.Appearance = .default, didTap: @escaping () -> Void) {
-        self.appearance = appearance
+    init(embeddedAppearance: EmbeddedAppearance = .default, didTap: @escaping () -> Void) {
+        self.embeddedAppearance = embeddedAppearance
         self.didTap = didTap
         super.init(frame: .zero)
         layer.addSublayer(outerCircle)

@@ -20,8 +20,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
             return .systemBackground
         })
 
-        var appearance = PaymentSheet.Appearance.default
-        appearance.paymentOptionView.style = .flatRadio
+        var appearance = EmbeddedAppearance.default
+        appearance.style = .flatRadio
 
         let amex =
             [
@@ -37,7 +37,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             ] as [String: Any]
         let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: amex)
 
-        let paymentMethodsView = EmbeddedPaymentMethodsView(savedPaymentMethod: paymentMethod, appearance: appearance, shouldShowApplePay: true, shouldShowLink: true)
+        let paymentMethodsView = EmbeddedPaymentMethodsView(savedPaymentMethod: paymentMethod, embeddedAppearance: appearance, shouldShowApplePay: true, shouldShowLink: true)
         paymentMethodsView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(paymentMethodsView)
 

@@ -20,6 +20,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
     var rowButtons: [RowButton] {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
+    var embeddedAppearance: EmbeddedAppearance {
+        appearance.toFloatingEmbeddedAppearance
+    }
     private(set) var currentSelection: VerticalPaymentMethodListSelection?
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
@@ -60,13 +63,13 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let selection = VerticalPaymentMethodListSelection.saved(paymentMethod: savedPaymentMethod)
             let accessoryButton: RowButton.RightAccessoryButton? = {
                 if let savedPaymentMethodAccessoryType {
-                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
+                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, embeddedAppearance: embeddedAppearance, didTap: didTapAccessoryButton)
                 } else {
                     return nil
                 }
             }()
 
-            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance, rightAccessoryView: accessoryButton) { [weak self] in
+            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, embeddedAppearance: embeddedAppearance, rightAccessoryView: accessoryButton) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
             if initialSelection == selection {
@@ -85,7 +88,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let applePay: RowButton? = {
             guard shouldShowApplePay else { return nil }
             let selection = VerticalPaymentMethodListSelection.applePay
-            let rowButton = RowButton.makeForApplePay(appearance: appearance) { [weak self] in
+            let rowButton = RowButton.makeForApplePay(embeddedAppearance: embeddedAppearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .applePay)
             }
             if initialSelection == selection {
@@ -97,7 +100,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let link: RowButton? = {
             guard shouldShowLink else { return nil }
             let selection = VerticalPaymentMethodListSelection.link
-            let rowButton = RowButton.makeForLink(appearance: appearance) { [weak self] in
+            let rowButton = RowButton.makeForLink(embeddedAppearance: embeddedAppearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
             if initialSelection == selection {
@@ -116,7 +119,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 paymentMethodType: paymentMethodType,
                 subtitle: Self.subtitleText(for: paymentMethodType),
                 savedPaymentMethodType: savedPaymentMethod?.type,
-                appearance: appearance,
+                embeddedAppearance: embeddedAppearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
                 shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)
             ) { [weak self] in
