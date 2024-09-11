@@ -65,9 +65,7 @@ class CVCRecollectionView: UIView {
         super.init(frame: .zero)
 
         self.titleLabel.isHidden = mode == .detailedWithInput
-        let brand = String.Localized.cvc
-
-        self.titleLabel.text = String(format: String.Localized.cvc_section_title, brand)
+        self.titleLabel.text = String(format: String.Localized.cvc_section_title, String.Localized.cvc)
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, stackView, errorLabel])
         if mode == .inputOnly {
