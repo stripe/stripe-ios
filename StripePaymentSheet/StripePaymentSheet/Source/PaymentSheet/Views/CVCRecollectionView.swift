@@ -65,9 +65,7 @@ class CVCRecollectionView: UIView {
         super.init(frame: .zero)
 
         self.titleLabel.isHidden = mode == .detailedWithInput
-        let brand = (self.paymentMethod.card?.brand ?? .unknown) == .amex
-        ? String.Localized.cvv
-        : String.Localized.cvc
+        let brand = String.Localized.cvc
 
         self.titleLabel.text = String(format: String.Localized.cvc_section_title, brand)
 

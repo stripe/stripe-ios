@@ -307,7 +307,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointSearchInstitutions,
             parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -334,7 +334,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsCancel,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -349,7 +349,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsRetrieve,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -455,7 +455,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointLinkMoreAccounts,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 

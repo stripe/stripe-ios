@@ -18,6 +18,7 @@ final class MerchantDataAccessView: HitTestView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         isNetworking: Bool,
+        isInstantDebits: Bool,
         font: FinancialConnectionsFont,
         boldFont: FinancialConnectionsFont,
         didSelectLearnMore: @escaping (URL) -> Void
@@ -26,7 +27,20 @@ final class MerchantDataAccessView: HitTestView {
 
         // the asterisks are to bold the text via "markdown"
         let leadingString: String
-        if isStripeDirect {
+        if isInstantDebits {
+            if let businessName {
+                let localized = STPLocalizedString(
+                    "Your login and financial details are never shared with %@.",
+                    "This message is a lead-up to a disclosure that the merchant (ex. Coca-Cola) will never receive details on the user's bank accounts. For example, the full text may read 'Your login and financial details are never shared with Coca-Cola.'"
+                )
+                leadingString = String(format: localized, businessName)
+            } else {
+                leadingString = STPLocalizedString(
+                    "Your login and financial details are never shared with this business.",
+                    "This message is a lead-up to a disclosure that the merchant will never receive details on the user's bank accounts. In this case, the business name is not specified. For example, the full text may read 'Your login and financial details are never shared with this business.'"
+                )
+            }
+        } else if isStripeDirect {
             let localizedLeadingString = STPLocalizedString(
                 "Stripe can access",
                 "This text is a lead-up to a disclosure that lists all of the bank data that Stripe will have access to. For example, the full text may read 'Data accessible to Stripe: Account details, transactions.'"
@@ -57,7 +71,9 @@ final class MerchantDataAccessView: HitTestView {
         let permissionString = FormPermissionListString(permissions)
 
         let learnMoreUrlString: String
-        if isStripeDirect {
+        if isInstantDebits {
+            learnMoreUrlString = "https://support.link.com/questions/connecting-your-bank-account"
+        } else if isStripeDirect {
             learnMoreUrlString = "https://stripe.com/docs/linked-accounts/faqs"
         } else {
             learnMoreUrlString =
@@ -66,7 +82,9 @@ final class MerchantDataAccessView: HitTestView {
         let learnMoreString = "[\(String.Localized.learn_more)](\(learnMoreUrlString))"
 
         let finalString: String
-        if isNetworking {
+        if isInstantDebits {
+            finalString = "\(leadingString) \(learnMoreString)"
+        } else if isNetworking {
             finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         } else if isStripeDirect {
             finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
@@ -163,6 +181,7 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
 
     let isStripeDirect: Bool
     let businessName: String?
+    var isInstantDebits: Bool = false
     let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
 
     func makeUIView(context: Context) -> MerchantDataAccessView {
@@ -171,6 +190,7 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
             businessName: businessName,
             permissions: permissions,
             isNetworking: false,
+            isInstantDebits: isInstantDebits,
             font: .body(.small),
             boldFont: .body(.smallEmphasized),
             didSelectLearnMore: { _ in }
@@ -242,6 +262,20 @@ struct MerchantDataAccessView_Previews: PreviewProvider {
                     MerchantDataAccessViewUIViewRepresentable(
                         isStripeDirect: true,
                         businessName: nil,
+                        permissions: []
+                    )
+
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: true,
+                        businessName: nil,
+                        isInstantDebits: true,
+                        permissions: []
+                    )
+
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: "Rocket Rides",
+                        isInstantDebits: true,
                         permissions: []
                     )
                 }
