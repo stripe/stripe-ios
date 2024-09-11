@@ -1,6 +1,8 @@
 ## X.Y.Z X-Y-Z
 ### PaymentSheet
 * [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
+### CardScan
+* [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
 
 ## 23.30.0 2024-09-09
 ### PaymentSheet
@@ -20,7 +22,7 @@
 * [Added] `PaymentSheet.IntentConfiguration` now validates that its `amount` is non-zero.
 
 ### PaymentsUI
-* [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed. 
+* [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed.
 
 ## 23.29.0 2024-08-05
 ### PaymentSheet
