@@ -12,6 +12,7 @@ import UIKit
 final class AccountPickerFooterView: UIView {
 
     private let singleAccount: Bool
+    private let isInstantDebits: Bool
     private let theme: FinancialConnectionsTheme
     private let didSelectLinkAccounts: () -> Void
 
@@ -31,29 +32,32 @@ final class AccountPickerFooterView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
-        shouldShowDataAccessView: Bool,
+        isInstantDebits: Bool,
         theme: FinancialConnectionsTheme,
         didSelectLinkAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.singleAccount = singleAccount
+        self.isInstantDebits = isInstantDebits
         self.theme = theme
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
 
-        let verticalStackView = HitTestStackView()
-        if shouldShowDataAccessView {
-            verticalStackView.addArrangedSubview(MerchantDataAccessView(
-                isStripeDirect: isStripeDirect,
-                businessName: businessName,
-                permissions: permissions,
-                isNetworking: false,
-                font: .label(.small),
-                boldFont: .label(.smallEmphasized),
-                didSelectLearnMore: didSelectMerchantDataAccessLearnMore
-            ))
-        }
-        verticalStackView.addArrangedSubview(linkAccountsButton)
+        let verticalStackView = HitTestStackView(
+            arrangedSubviews: [
+                MerchantDataAccessView(
+                    isStripeDirect: isStripeDirect,
+                    businessName: businessName,
+                    permissions: permissions,
+                    isNetworking: false,
+                    isInstantDebits: isInstantDebits,
+                    font: .label(.small),
+                    boldFont: .label(.smallEmphasized),
+                    didSelectLearnMore: didSelectMerchantDataAccessLearnMore
+                ),
+                linkAccountsButton,
+            ]
+        )
 
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
