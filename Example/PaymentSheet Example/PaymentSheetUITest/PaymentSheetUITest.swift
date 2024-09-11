@@ -73,16 +73,16 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         numberField.tap()
         numberField.typeText("378282246310005")
 
-        // Test that Amex card changes "CVC" -> "CVV" and allows 4 digits
-        let cvvField = app.textFields["CVV"]
-        XCTAssertTrue(cvvField.waitForExistence(timeout: 10.0))
+        // Test that Amex card allows 4 digits
+        let cvcField = app.textFields["CVC"]
+        XCTAssertTrue(cvcField.waitForExistence(timeout: 10.0))
 
         let expField = app.textFields["expiration date"]
         XCTAssertTrue((expField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(expField.typeText("1228"))
 
-        XCTAssertTrue((cvvField.value as? String)?.isEmpty ?? true)
-        XCTAssertNoThrow(cvvField.typeText("1234"))
+        XCTAssertTrue((cvcField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(cvcField.typeText("1234"))
 
         app.toolbars.buttons["Done"].tap()  // Country picker toolbar's "Done" button
 

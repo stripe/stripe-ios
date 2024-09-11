@@ -365,10 +365,6 @@ extension String.Localized {
         STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
     }
 
-    static var confirm_your_cvv: String {
-        STPLocalizedString("Confirm your CVV", "Title for prompting for a card's CVV on confirming the payment")
-    }
-
     static var confirm: String {
         STPLocalizedString("Confirm", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
     }

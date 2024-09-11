@@ -23,7 +23,7 @@ class CVCReconfirmationViewController: UIViewController {
         return navBar
     }()
     private lazy var headerLabel: UILabel = {
-        let headerLabelText = cardBrand == .amex ? String.Localized.confirm_your_cvv : String.Localized.confirm_your_cvc
+        let headerLabelText = String.Localized.confirm_your_cvc
         let header = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
         header.text = headerLabelText
         return header
