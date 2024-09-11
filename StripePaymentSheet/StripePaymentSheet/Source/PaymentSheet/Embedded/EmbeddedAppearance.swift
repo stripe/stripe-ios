@@ -49,7 +49,7 @@ import UIKit
     /// The border width used for selected buttons and tabs in the embedded payment element
     /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
     /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-    @_spi(EmbeddedPaymentMethodsViewBeta) public var borderWidthSelected: CGFloat?
+    public var borderWidthSelected: CGFloat?
 
     /// The shadow used for inputs and tabs in the embedded payment element
     /// - Note: Set this to `.disabled` to disable shadows

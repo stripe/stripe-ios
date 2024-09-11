@@ -8,6 +8,7 @@
 import Foundation
 
 extension EmbeddedAppearance {
+    /// Creates an `PaymentSheet.Appearance` object from the current `EmbeddedAppearance`
     var paymentSheetAppearance: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
         appearance.font = font
@@ -23,6 +24,8 @@ extension EmbeddedAppearance {
 }
 
 extension PaymentSheet.Appearance {
+    
+    /// Creates an `EmbeddedAppearance` object from the current `PaymentSheet.Appearance` with a `style` of `floating`
     var toFloatingEmbeddedAppearance: EmbeddedAppearance {
         var appearance = EmbeddedAppearance()
         appearance.font = font
