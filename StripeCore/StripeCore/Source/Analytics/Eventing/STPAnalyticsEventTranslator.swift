@@ -21,17 +21,11 @@ struct STPAnalyticsEventTranslator {
     func translate(_ analytic: Analytic, payload: [String: Any]) -> STPAnalyticsTranslatedEvent? {
         switch analytic.event {
 
-        // Sheet presentation (Custom)
-        case .mcShowCustomNewPM:
-            return .init(eventName: "didPresentCustom", metadata: payload)
-        case .mcShowCustomSavedPM:
-            return .init(eventName: "didPresentWithSavedPMCustom", metadata: payload)
-
-        // Sheet presentation (Complete)
-        case .mcShowCompleteNewPM:
-            return .init(eventName: "didPresentComplete", metadata: payload)
-        case .mcShowCompleteSavedPM:
-            return .init(eventName: "didPresentWithSavedPMComplete", metadata: payload)
+        // Sheet presentation
+        case .mcShowCustomNewPM, .mcShowCompleteNewPM:
+            return .init(eventName: "didPresent", metadata: payload)
+        case .mcShowCustomSavedPM, .mcShowCompleteSavedPM:
+            return .init(eventName: "didPresentWithSavedPM", metadata: payload)
 
         // Tapping on a payment method type
         case .paymentSheetCarouselPaymentMethodTapped:
@@ -51,25 +45,15 @@ struct STPAnalyticsEventTranslator {
         case .mcSavedPaymentMethodRemoved:
             return .init(eventName: "didRemovePaymentMethod", metadata: payload)
 
-        // Saved Payment Methods (Custom)
-        case .mcOptionSelectCustomNewPM:
-            return .init(eventName: "didSelectSavedPaymentMethodNewCustom", metadata: payload)
-        case .mcOptionSelectCustomSavedPM:
-            return .init(eventName: "didSelectSavedPaymentMethodSavedCustom", metadata: payload)
-        case .mcOptionSelectCustomApplePay:
-            return .init(eventName: "didSelectSavedPaymentMethodApplePayCustom", metadata: payload)
-        case .mcOptionSelectCustomLink:
-            return .init(eventName: "didSelectSavedPaymentMethodLinkCustom", metadata: payload)
-
-        // Saved Payment Methods (Complete)
-        case .mcOptionSelectCompleteNewPM:
-            return .init(eventName: "didSelectSavedPaymentMethodNewComplete", metadata: payload)
-        case .mcOptionSelectCompleteSavedPM:
-            return .init(eventName: "didSelectSavedPaymentMethodSavedComplete", metadata: payload)
-        case .mcOptionSelectCompleteApplePay:
-            return .init(eventName: "didSelectSavedPaymentMethodApplePayComplete", metadata: payload)
-        case .mcOptionSelectCompleteLink:
-            return .init(eventName: "didSelectSavedPaymentMethodLinkComplete", metadata: payload)
+        // Saved Payment Methods
+        case .mcOptionSelectCustomNewPM, .mcOptionSelectCompleteNewPM:
+            return .init(eventName: "didSelectSavedPaymentMethodNew", metadata: payload)
+        case .mcOptionSelectCustomSavedPM, .mcOptionSelectCompleteSavedPM:
+            return .init(eventName: "didSelectSavedPaymentMethodSaved", metadata: payload)
+        case .mcOptionSelectCustomApplePay, .mcOptionSelectCompleteApplePay:
+            return .init(eventName: "didSelectSavedPaymentMethodApplePay", metadata: payload)
+        case .mcOptionSelectCustomLink, .mcOptionSelectCompleteLink:
+            return .init(eventName: "didSelectSavedPaymentMethodLink", metadata: payload)
 
         default:
             return nil
