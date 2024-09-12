@@ -513,10 +513,18 @@ extension NativeFlowController {
             }
 
             bankAccountDetails = paymentDetails.redactedPaymentDetails.bankAccountDetails
-            return self.dataManager.createPaymentMethod(
-                consumerSessionClientSecret: consumerSession.clientSecret,
-                paymentDetailsId: paymentDetails.redactedPaymentDetails.id
-            )
+            if self.dataManager.manifest.isPantherPayment {
+                return self.dataManager.apiClient.sharePaymentDetails(
+                    consumerSessionClientSecret: consumerSession.clientSecret,
+                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
+                    expectedPaymentMethodType: "card"
+                )
+            } else {
+                return self.dataManager.createPaymentMethod(
+                    consumerSessionClientSecret: consumerSession.clientSecret,
+                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id
+                )
+            }
         }
         .observe { result in
             switch result {
@@ -801,7 +809,7 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
         // to the Link signup/save call later in the flow. We don't need them anymore since we know
         // they've failed us in some way at this point.
         dataManager.linkedAccounts = nil
-        
+
         dataManager.paymentAccountResource = paymentAccountResource
         dataManager.accountNumberLast4 = accountNumberLast4
 

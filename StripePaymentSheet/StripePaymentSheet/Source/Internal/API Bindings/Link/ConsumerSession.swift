@@ -129,6 +129,7 @@ extension ConsumerSession {
         id: String,
         cvc: String?,
         consumerAccountPublishableKey: String?,
+        paymentMethodType: PaymentMethodType?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         apiClient.sharePaymentDetails(
@@ -136,6 +137,7 @@ extension ConsumerSession {
             id: id,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             cvc: cvc,
+            paymentMethodType: paymentMethodType?.rawValue,
             completion: completion)
     }
 

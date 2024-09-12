@@ -458,6 +458,7 @@ extension PlaygroundController {
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
             "use_link": settings.linkMode == .link_pm,
+            "link_mode": settings.linkMode.value,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
             "customer_session_component_name": "mobile_payment_element",

@@ -181,14 +181,13 @@ extension InstantDebitsPaymentMethodElement: PaymentMethodElement {
 
     // after a bank is linked, this gets hit to update
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        if
-            let updatedParams = formElement.updateParams(params: params),
-            let linkedBank
-        {
-            updatedParams.instantDebitsLinkedBank = linkedBank
-            return updatedParams
+        guard let updatedParams = formElement.updateParams(params: params) else {
+            return nil
         }
-        return nil
+
+        guard let linkedBank else { return nil }
+        updatedParams.instantDebitsLinkedBank = linkedBank
+        return updatedParams
     }
 }
 

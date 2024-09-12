@@ -219,6 +219,14 @@ protocol FinancialConnectionsAPI {
         bankAccountId: String
     ) -> Future<FinancialConnectionsPaymentDetails>
 
+    // TODO: Figure out return type for this request.
+    // We'll need to sort out the down-scoped client secret first.
+    func sharePaymentDetails(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String,
+        expectedPaymentMethodType: String
+    ) -> Future<FinancialConnectionsPaymentMethod>
+
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String
@@ -944,6 +952,27 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         )
     }
 
+    func sharePaymentDetails(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String,
+        expectedPaymentMethodType: String
+    ) -> Future<FinancialConnectionsPaymentMethod> {
+        let parameters: [String: Any] = [
+            "request_surface": requestSurface,
+            "id": paymentDetailsId,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ],
+            "expected_payment_method_type": expectedPaymentMethodType,
+            "expand": ["payment_method"],
+        ]
+        return post(
+            resource: APIEndpointSharePaymentDetails,
+            parameters: parameters,
+            useConsumerPublishableKeyIfNeeded: false
+        )
+    }
+
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String
@@ -995,4 +1024,5 @@ private let APIEndpointPollAccountNumbers = "link_account_sessions/poll_account_
 private let APIEndpointLinkAccountsSignUp = "consumers/accounts/sign_up"
 private let APIEndpointAttachLinkConsumerToLinkAccountSession = "consumers/attach_link_consumer_to_link_account_session"
 private let APIEndpointPaymentDetails = "consumers/payment_details"
+private let APIEndpointSharePaymentDetails = "consumers/payment_details/share"
 private let APIEndpointPaymentMethods = "payment_methods"

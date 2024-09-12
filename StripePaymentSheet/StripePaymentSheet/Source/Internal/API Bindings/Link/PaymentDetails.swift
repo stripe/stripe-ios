@@ -19,18 +19,28 @@ typealias ConsumerSessionWithPaymentDetails = (session: ConsumerSession, payment
  For internal SDK use only
  */
 final class ConsumerPaymentDetails: Decodable {
-    let stripeID: String
+    enum PaymentDetailsType: String, Decodable {
+        case card = "CARD"
+        case bankAccount = "BANK_ACCOUNT"
+        case invalid = "PAYMENT_DETAILS_TYPE_INVALID"
+    }
 
-    init(stripeID: String) {
+    let stripeID: String
+    let paymentDetailsType: PaymentDetailsType
+
+    init(stripeID: String, paymentDetailsType: PaymentDetailsType) {
         self.stripeID = stripeID
+        self.paymentDetailsType = paymentDetailsType
     }
 
     private enum CodingKeys: String, CodingKey {
         case stripeID = "id"
+        case paymentDetailsType = "type"
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.stripeID = try container.decode(String.self, forKey: .stripeID)
+        self.paymentDetailsType = try container.decode(PaymentDetailsType.self, forKey: .paymentDetailsType)
     }
 }

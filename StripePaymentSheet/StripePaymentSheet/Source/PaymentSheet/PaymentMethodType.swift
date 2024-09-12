@@ -16,7 +16,10 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
+
+        // Synthetic payment methods:
         case instantDebits
+        case linkCardBrand
 
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
@@ -27,7 +30,7 @@ extension PaymentSheet {
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.label
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
             }
         }
@@ -42,6 +45,8 @@ extension PaymentSheet {
                 return externalPaymentMethod.type
             case .instantDebits:
                 return "instant_debits"
+            case .linkCardBrand:
+                return "link_card_bank"
             }
         }
 
@@ -103,7 +108,7 @@ extension PaymentSheet {
                     }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
             }
         }
@@ -114,7 +119,7 @@ extension PaymentSheet {
                 return stpPaymentMethodType.iconRequiresTinting
             case .external:
                 return false
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return true
             }
         }
@@ -173,6 +178,19 @@ extension PaymentSheet {
                 if availabilityStatus == .supported {
                     recommendedPaymentMethodTypes.append(.instantDebits)
                 }
+            } else if
+                elementsSession.linkFundingSources?.contains(.bankAccount) == true,
+                !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount),
+                elementsSession.linkSettings?.linkMode == .linkCardBrand
+            {
+                let availabilityStatus = configurationSatisfiesRequirements(
+                    requirements: [.financialConnectionsSDK],
+                    configuration: configuration,
+                    intent: intent
+                )
+                if availabilityStatus == .supported {
+                    recommendedPaymentMethodTypes.append(.linkCardBrand)
+                }
             }
 
             if let merchantPaymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
@@ -196,8 +214,10 @@ extension PaymentSheet {
                 }
                 // 3. Append the remaining PMs in recommendedPaymentMethodTypes
                 reorderedPaymentMethodTypes.append(contentsOf: recommendedPaymentMethodTypes)
+                print("**** reorderedPaymentMethodTypes", reorderedPaymentMethodTypes)
                 return reorderedPaymentMethodTypes
             } else {
+                print("**** recommendedPaymentMethodTypes", recommendedPaymentMethodTypes)
                 return recommendedPaymentMethodTypes
             }
         }
@@ -237,9 +257,9 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
-                        .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
-                        .sunbit, .billie, .satispay:
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow,
+                        .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint,
+                        .multibanco, .sunbit, .billie, .satispay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
