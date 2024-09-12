@@ -795,6 +795,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         // Update UI
         regenerateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
     }
 
     func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
@@ -816,6 +817,9 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         error = nil  // clear error
         updateUI()
+        if viewController.paymentOption != nil {
+            analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
+        }
     }
 
     func updateErrorLabel(for error: Swift.Error?) {

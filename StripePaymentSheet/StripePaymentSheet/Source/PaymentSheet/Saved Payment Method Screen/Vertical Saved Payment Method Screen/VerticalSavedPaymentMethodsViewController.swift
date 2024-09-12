@@ -226,6 +226,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         if paymentMethodRows.isEmpty {
             completeSelection()
         }
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
     }
 
     private func completeSelection(afterDelay: TimeInterval = 0.0) {
