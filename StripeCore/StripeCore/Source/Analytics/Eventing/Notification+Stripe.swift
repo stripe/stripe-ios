@@ -14,7 +14,6 @@ public extension Notification.Name {
     static let mobilePaymentElement = Notification.Name("MobilePaymentElement")
 }
 
-
 @_spi(MobilePaymentElementEventingBeta)
 public struct MobilePaymentElementEvent {
     public let eventName: String

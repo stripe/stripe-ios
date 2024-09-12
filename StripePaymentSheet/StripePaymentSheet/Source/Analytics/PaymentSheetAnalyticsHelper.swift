@@ -186,7 +186,7 @@ final class PaymentSheetAnalyticsHelper {
     /// Used to ensure we only send one `mc_form_completed` event per `mc_form_shown` to avoid spamming.
     var didSendPaymentSheetFormCompletedEvent: Bool = false
     /// Used because it is possible for logFormCompleted to be called before logFormShown when switching payment methods
-    var lastLogFormShown: String? = nil
+    var lastLogFormShown: String?
     func logFormCompleted(paymentMethodTypeIdentifier: String) {
         if !didSendPaymentSheetFormCompletedEvent && paymentMethodTypeIdentifier == lastLogFormShown {
             didSendPaymentSheetFormCompletedEvent = true
@@ -279,7 +279,7 @@ final class PaymentSheetAnalyticsHelper {
             guard let elementsSession else { return nil }
             return PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         }()
-        
+
         var additionalParams = [:] as [String: Any]
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
