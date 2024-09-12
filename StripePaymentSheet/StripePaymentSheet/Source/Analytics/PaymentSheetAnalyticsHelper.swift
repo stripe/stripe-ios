@@ -125,45 +125,39 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
-        let event: STPAnalyticEvent = {
+        let (event, selectedLPM): (STPAnalyticEvent, String?) = {
             if isCustom {
                 switch option {
                 case .add:
-                    return .mcOptionSelectCustomNewPM
-                case .saved:
-                    return .mcOptionSelectCustomSavedPM
+                    return (.mcOptionSelectCustomNewPM, nil)
+                case .saved(let paymentMethod):
+                    return (.mcOptionSelectCustomSavedPM, paymentMethod.type.identifier)
                 case .applePay:
-                    return .mcOptionSelectCustomApplePay
+                    return (.mcOptionSelectCustomApplePay, nil)
                 case .link:
-                    return .mcOptionSelectCustomLink
+                    return (.mcOptionSelectCustomLink, nil)
                 }
             } else {
                 switch option {
                 case .add:
-                    return .mcOptionSelectCompleteNewPM
-                case .saved:
-                    return .mcOptionSelectCompleteSavedPM
+                    return (.mcOptionSelectCompleteNewPM, nil)
+                case .saved(let paymentMethod):
+                    return (.mcOptionSelectCompleteSavedPM, paymentMethod.type.identifier)
                 case .applePay:
-                    return .mcOptionSelectCompleteApplePay
+                    return (.mcOptionSelectCompleteApplePay, nil)
                 case .link:
-                    return .mcOptionSelectCompleteLink
+                    return (.mcOptionSelectCompleteLink, nil)
                 }
             }
         }()
-        log(event: event)
+        log(event: event, selectedLPM: selectedLPM)
     }
 
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
-        var params: [String: Any] = [
-            "payment_method_type": paymentMethod.type.identifier,
-        ]
-        if let cardBrand = paymentMethod.card {
-            params["card_brand"] = cardBrand.brand
-        }
-        log(event: .mcSavedPaymentMethodRemoved, params: params)
+        log(event: .mcSavedPaymentMethodRemoved, selectedLPM: paymentMethod.type.identifier)
     }
 
     /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.
