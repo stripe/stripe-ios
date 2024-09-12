@@ -214,6 +214,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
         // Detach the payment method from the customer
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // Remove the payment method row button
         paymentMethodRows.removeAll { $0.paymentMethod.stripeId == paymentMethod.stripeId }
@@ -226,7 +227,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         if paymentMethodRows.isEmpty {
             completeSelection()
         }
-        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
     }
 
     private func completeSelection(afterDelay: TimeInterval = 0.0) {

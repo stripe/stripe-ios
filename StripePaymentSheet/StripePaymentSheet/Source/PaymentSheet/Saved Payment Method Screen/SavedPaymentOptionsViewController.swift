@@ -635,7 +635,6 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
         removePaymentMethod(paymentMethod)
         _ = viewController.bottomSheetController?.popContentViewController()
-        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
     }
 
     func didUpdate(viewController: UpdateCardViewController,
