@@ -36,7 +36,7 @@ import UIKit
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
     let url = URL(string: "https://q.stripe.com")!
-
+    private let analyticsEventTranslator = STPAnalyticsEventTranslator()
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
 
@@ -117,6 +117,11 @@ import UIKit
         guard !STPAnalyticsClient.isUnitOrUITest else {
             _testLogHistory.append(payload)
             return
+        }
+
+        if let translatedEvent = analyticsEventTranslator.translate(analytic, payload: payload) {
+            NotificationCenter.default.post(name: translatedEvent.notificationName,
+                                            object: translatedEvent.event)
         }
 
         var request = URLRequest(url: url)

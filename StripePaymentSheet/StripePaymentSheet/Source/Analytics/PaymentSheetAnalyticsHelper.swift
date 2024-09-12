@@ -156,11 +156,22 @@ final class PaymentSheetAnalyticsHelper {
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
+    func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
+        var params: [String: Any] = [
+            "payment_method_type": paymentMethod.type.identifier,
+        ]
+        if let cardBrand = paymentMethod.card {
+            params["card_brand"] = cardBrand.brand
+        }
+        log(event: .mcSavedPaymentMethodRemoved, params: params)
+    }
 
     /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.
     var didSendPaymentSheetFormInteractedEventAfterFormShown: Bool = false
     func logFormShown(paymentMethodTypeIdentifier: String) {
         didSendPaymentSheetFormInteractedEventAfterFormShown = false
+        didSendPaymentSheetFormCompletedEvent = false
+        lastLogFormShown = paymentMethodTypeIdentifier
         startTimeMeasurement(.formShown)
         log(
             event: .paymentSheetFormShown,
@@ -173,6 +184,20 @@ final class PaymentSheetAnalyticsHelper {
             didSendPaymentSheetFormInteractedEventAfterFormShown = true
             log(
                 event: .paymentSheetFormInteracted,
+                selectedLPM: paymentMethodTypeIdentifier
+            )
+        }
+    }
+
+    /// Used to ensure we only send one `mc_form_completed` event per `mc_form_shown` to avoid spamming.
+    var didSendPaymentSheetFormCompletedEvent: Bool = false
+    /// Used because it is possible for logFormCompleted to be called before logFormShown when switching payment methods
+    var lastLogFormShown: String? = nil
+    func logFormCompleted(paymentMethodTypeIdentifier: String) {
+        if !didSendPaymentSheetFormCompletedEvent && paymentMethodTypeIdentifier == lastLogFormShown {
+            didSendPaymentSheetFormCompletedEvent = true
+            log(
+                event: .paymentSheetFormCompleted,
                 selectedLPM: paymentMethodTypeIdentifier
             )
         }
