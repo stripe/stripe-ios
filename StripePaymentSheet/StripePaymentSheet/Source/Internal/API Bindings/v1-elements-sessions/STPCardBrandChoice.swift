@@ -11,13 +11,13 @@ import Foundation
 /// You cannot directly instantiate an `STPCardBrandChoice`.
 /// - seealso: https://stripe.com/docs/card-brand-choice
 class STPCardBrandChoice: NSObject {
-    
+
     /// Determines if this intent is eligible for card brand choice
     let eligible: Bool
-    
+
     /// :nodoc:
     let allResponseFields: [AnyHashable: Any]
-    
+
     /// :nodoc:
     @objc override var description: String {
         let props: [String] = [
@@ -26,10 +26,10 @@ class STPCardBrandChoice: NSObject {
             // Properties
             "eligible = \(String(describing: eligible))",
         ]
-        
+
         return "<\(props.joined(separator: "; "))>"
     }
-    
+
     private init(
         eligible: Bool,
         allResponseFields: [AnyHashable: Any]
@@ -42,17 +42,17 @@ class STPCardBrandChoice: NSObject {
 
 // MARK: - STPAPIResponseDecodable
 extension STPCardBrandChoice: STPAPIResponseDecodable {
-    
+
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response else {
             return nil
         }
-        
+
         return STPCardBrandChoice(
             eligible: dict["eligible"] as? Bool ?? false,
             allResponseFields: dict
         ) as? Self
     }
-    
+
 }

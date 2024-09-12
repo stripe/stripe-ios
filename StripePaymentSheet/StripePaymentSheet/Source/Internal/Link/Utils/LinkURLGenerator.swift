@@ -110,8 +110,7 @@ class LinkURLGenerator {
                              locale: Locale.current.toLanguageTag(),
                              intentMode: intentMode,
                              setupFutureUsage: intent.isSettingUp,
-                             cardBrandChoice: cardBrandChoiceInfo
-        )
+                             cardBrandChoice: cardBrandChoiceInfo)
     }
 
     static func url(params: LinkURLParams) throws -> URL {
