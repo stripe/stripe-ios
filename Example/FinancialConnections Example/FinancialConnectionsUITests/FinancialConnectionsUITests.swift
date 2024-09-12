@@ -613,6 +613,39 @@ final class FinancialConnectionsUITests: XCTestCase {
                 .exists
         )
     }
+
+    // this tests going through "ResetFlowViewController"
+    func testNativeResetFlowWithErrorToSuccess() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        app.fc_scrollDown()
+
+        app.fc_nativeFeaturedInstitution(name: "Down bank (unscheduled)").waitForExistenceAndTap()
+
+        // selecting another bank will activate "reset flow"
+        app.buttons["select_another_bank_button"].waitForExistenceAndTap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
 }
 
 extension XCTestCase {
