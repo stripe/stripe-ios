@@ -77,6 +77,9 @@ final public class FinancialConnectionsSheet {
     // Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
+    // Any additional parameters useful for the financial connections SDK to know.
+    @_spi(STP) public var additionalParameters: [String: Any] = [:]
+
     // MARK: - Init
 
     /**

@@ -69,6 +69,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
     private let returnURL: String?
+    private let isPantherPayment: Bool
 
     // MARK: - UI
 
@@ -94,13 +95,15 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         apiClient: FinancialConnectionsAPIClient,
         manifest: FinancialConnectionsSessionManifest,
         sessionFetcher: FinancialConnectionsSessionFetcher,
-        returnURL: String?
+        returnURL: String?,
+        isPantherPayment: Bool
     ) {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
         self.manifest = manifest
         self.sessionFetcher = sessionFetcher
         self.returnURL = returnURL
+        self.isPantherPayment = isPantherPayment
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -153,6 +156,9 @@ extension FinancialConnectionsWebFlowViewController {
         var additionalQueryParameters = additionalQueryParameters
         if manifest.isProductInstantDebits {
             additionalQueryParameters = (additionalQueryParameters ?? "") + "&return_payment_method=true"
+            if isPantherPayment {
+                additionalQueryParameters = (additionalQueryParameters ?? "") + "&link_mode=link_card_brand"
+            }
         }
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)

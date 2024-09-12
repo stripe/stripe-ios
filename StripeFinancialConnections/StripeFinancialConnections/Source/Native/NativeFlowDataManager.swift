@@ -34,6 +34,7 @@ protocol NativeFlowDataManager: AnyObject {
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneCaption: String? { get set }
     var customSuccessPaneSubCaption: String? { get set }
+    var isPantherPayment: Bool { get }
 
     func createPaymentDetails(
         consumerSessionClientSecret: String,
@@ -83,6 +84,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let isPantherPayment: Bool
 
     var institution: FinancialConnectionsInstitution?
     var authSession: FinancialConnectionsAuthSession?
@@ -117,7 +119,8 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        isPantherPayment: Bool
     ) {
         self.manifest = manifest
         self.visualUpdate = visualUpdate
@@ -131,6 +134,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.authSession = manifest.activeAuthSession
         // If the server returns active institution use that, otherwise resort to initial institution.
         self.institution = manifest.activeInstitution ?? manifest.initialInstitution
+        self.isPantherPayment = isPantherPayment
         didUpdateManifest()
     }
 

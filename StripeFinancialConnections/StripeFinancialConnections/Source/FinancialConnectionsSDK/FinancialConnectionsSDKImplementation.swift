@@ -20,6 +20,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        additionalParameters: [String: Any],
         onEvent: ((StripeCore.FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
@@ -30,6 +31,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         )
         financialConnectionsSheet.apiClient = apiClient
         financialConnectionsSheet.onEvent = onEvent
+        financialConnectionsSheet.additionalParameters = additionalParameters
         // Captures self explicitly until the callback is invoked
         financialConnectionsSheet.present(
             from: presentingViewController,
