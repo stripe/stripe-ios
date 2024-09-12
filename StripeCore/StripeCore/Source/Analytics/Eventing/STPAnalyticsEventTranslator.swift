@@ -49,7 +49,3 @@ struct STPAnalyticsEventTranslator {
         }
     }
 }
-
-
-
-
