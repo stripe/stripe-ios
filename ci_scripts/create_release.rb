@@ -57,7 +57,7 @@ def create_pr
   # Create a new pull request from the branch
   pr_body = %{
   - [ ] Verify CHANGELOG
-    - [ ] Entries are intended to be read by humans. Does each entry make sense?
+    - [ ] Ensure notes for this release are not empty
     - [ ] Release date correct?
     - [ ] Version number looks correct?
   - [ ] Verify MIGRATING is updated (if necessary).
