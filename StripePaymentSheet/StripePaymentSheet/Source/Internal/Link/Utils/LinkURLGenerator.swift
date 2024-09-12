@@ -28,6 +28,11 @@ struct LinkURLParams: Encodable {
         case payment
         case setup
     }
+    struct CardBrandChoiceInfo: Encodable {
+        var isMerchantEligibleForCBC: Bool
+        var stripePreferredNetworks: [String]
+        var supportedCobrandedNetworks: [String: Bool]
+    }
     
     var path = "mobile_pay"
     var integrationType = "mobile"
@@ -44,7 +49,7 @@ struct LinkURLParams: Encodable {
     var locale: String
     var intentMode: IntentMode
     var setupFutureUsage: Bool
-    var cardBrandChoice: STPCardBrandChoice?
+    var cardBrandChoice: CardBrandChoiceInfo?
 }
 
 class LinkURLGenerator {
@@ -84,7 +89,14 @@ class LinkURLGenerator {
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
         let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
-
+        var cardBrandChoiceInfo: LinkURLParams.CardBrandChoiceInfo?
+        
+        if let cardBrandChoice = elementsSession.cardBrandChoice {
+            cardBrandChoiceInfo = LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: cardBrandChoice.eligible, stripePreferredNetworks: (cardBrandChoice.allResponseFields["preferred_networks"] as? [String]) ?? [], supportedCobrandedNetworks: cardBrandChoice.allResponseFields["supported_cobranded_networks"] as? [String : Bool] ?? [:])
+        }
+        
+        let flags = (elementsSession.linkFlags).merging(elementsSession.flags) { (current, _) in current }
+        
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
                              stripeAccount: configuration.apiClient.stripeAccount,
@@ -93,12 +105,12 @@ class LinkURLGenerator {
                              customerInfo: customerInfo,
                              paymentInfo: paymentInfo,
                              experiments: [:],
-                             flags: elementsSession.linkFlags,
+                             flags: flags,
                              loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag(),
                              intentMode: intentMode,
                              setupFutureUsage: intent.isSettingUp,
-                             cardBrandChoice: elementsSession.cardBrandChoice
+                             cardBrandChoice: cardBrandChoiceInfo
         )
     }
 
