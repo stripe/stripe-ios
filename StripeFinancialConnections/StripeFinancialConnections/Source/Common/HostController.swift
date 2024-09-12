@@ -168,6 +168,7 @@ private extension HostController {
             visualUpdate: synchronizePayload.visual,
             returnURL: returnURL,
             consentPaneModel: synchronizePayload.text?.consentPane,
+            accountPickerPane: synchronizePayload.text?.accountPickerPane,
             apiClient: apiClient,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient
