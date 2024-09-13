@@ -236,7 +236,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         }
         // Make sure the appropriate events have "selected_lpm" = "card"
         for analytic in analyticsLog {
-            if ["mc_form_shown", "mc_form_interacted", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
+            if ["mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
                XCTAssertEqual(analytic[string: "selected_lpm"], "card")
             }
         }
@@ -280,6 +280,9 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         confirmRemoval.tap()
 
         XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
+
+        // Give time for analyticsLog to receive mc_custom_paymentoption_removed
+        sleep(1)
 
         XCTAssertEqual(
             analyticsLog.suffix(1).map({ $0[string: "event"] }),
