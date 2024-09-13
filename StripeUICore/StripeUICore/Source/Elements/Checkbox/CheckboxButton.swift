@@ -313,7 +313,12 @@ class CheckBox: UIView {
             fillColor.setFill()
         }
         borderPath.fill()
-        theme.colors.secondaryText.setStroke()
+        if theme.colors.border.rgba.alpha != 0 {
+            theme.colors.border.setStroke()
+        } else {
+            // If the border is clear, fall back to secondaryText
+            theme.colors.secondaryText.setStroke()
+        }
         borderPath.stroke()
 
         if isSelected {

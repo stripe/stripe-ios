@@ -1,6 +1,7 @@
 ## X.Y.Z X-Y-Z
 ### PaymentSheet
 * [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
+* [Fixed] Fixed an issue where checkboxes were not visible when `appearance.colors.componentBorder` was transparent.
 
 ## 23.30.0 2024-09-09
 ### PaymentSheet

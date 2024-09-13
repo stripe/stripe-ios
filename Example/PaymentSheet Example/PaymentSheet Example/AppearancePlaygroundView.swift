@@ -126,12 +126,12 @@ struct AppearancePlaygroundView: View {
             get: { Color(self.appearance.primaryButton.backgroundColor ?? self.appearance.colors.primary) },
             set: { self.appearance.primaryButton.backgroundColor = UIColor($0) }
         )
-        
+
         let primaryButtonDisabledColorBinding = Binding(
             get: { Color(self.appearance.primaryButton.disabledBackgroundColor ?? self.appearance.primaryButton.backgroundColor ?? self.appearance.colors.primary) },
             set: { self.appearance.primaryButton.disabledBackgroundColor = UIColor($0) }
         )
-        
+
         let primaryButtonDisabledTextColorBinding = Binding(
             get: { Color(self.appearance.primaryButton.disabledTextColor ?? self.appearance.primaryButton.textColor?.withAlphaComponent(0.6) ?? .white.withAlphaComponent(0.6)) },
             set: { self.appearance.primaryButton.disabledTextColor = UIColor($0) }
