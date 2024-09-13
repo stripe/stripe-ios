@@ -89,14 +89,16 @@ class LinkURLGenerator {
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
         let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
-        var cardBrandChoiceInfo: LinkURLParams.CardBrandChoiceInfo?
         
-        if let cardBrandChoice = elementsSession.cardBrandChoice {
-            cardBrandChoiceInfo = LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: cardBrandChoice.eligible, stripePreferredNetworks: (cardBrandChoice.allResponseFields["preferred_networks"] as? [String]) ?? [], supportedCobrandedNetworks: cardBrandChoice.allResponseFields["supported_cobranded_networks"] as? [String : Bool] ?? [:])
-        }
-        
-        let flags = (elementsSession.linkFlags).merging(elementsSession.flags) { (current, _) in current }
-        
+        let cardBrandChoiceInfo: LinkURLParams.CardBrandChoiceInfo? = {
+                    guard let cardBrandChoice = elementsSession.cardBrandChoice else { return nil }
+                    return LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: cardBrandChoice.eligible,
+                                                             stripePreferredNetworks: cardBrandChoice.preferredNetworks,
+                                                             supportedCobrandedNetworks: cardBrandChoice.supportedCobrandedNetworks)
+                }()
+
+        let flags = elementsSession.linkFlags.merging(elementsSession.flags) { (current, _) in current }
+
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
                              stripeAccount: configuration.apiClient.stripeAccount,

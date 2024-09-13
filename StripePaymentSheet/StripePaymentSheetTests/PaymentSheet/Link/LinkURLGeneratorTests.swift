@@ -72,7 +72,7 @@ class LinkURLGeneratorTests: XCTestCase {
         XCTAssertEqual(params, expectedParams)
     }
 
-    func testURLParamsWithCBC() async {
+    func testURLParamsWithCBC() {
         var config = PaymentSheet.Configuration()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _, _ in
             // Nothing
