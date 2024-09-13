@@ -12,7 +12,6 @@ import UIKit
 final class AccountPickerFooterView: UIView {
 
     private let singleAccount: Bool
-    private let isInstantDebits: Bool
     private let theme: FinancialConnectionsTheme
     private let didSelectLinkAccounts: () -> Void
 
@@ -28,36 +27,25 @@ final class AccountPickerFooterView: UIView {
     }()
 
     init(
-        isStripeDirect: Bool,
-        businessName: String?,
-        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        dataAccessNotice: String?,
         singleAccount: Bool,
-        isInstantDebits: Bool,
         theme: FinancialConnectionsTheme,
         didSelectLinkAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.singleAccount = singleAccount
-        self.isInstantDebits = isInstantDebits
         self.theme = theme
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
 
-        let verticalStackView = HitTestStackView(
-            arrangedSubviews: [
-                MerchantDataAccessView(
-                    isStripeDirect: isStripeDirect,
-                    businessName: businessName,
-                    permissions: permissions,
-                    isNetworking: false,
-                    isInstantDebits: isInstantDebits,
-                    font: .label(.small),
-                    boldFont: .label(.smallEmphasized),
-                    didSelectLearnMore: didSelectMerchantDataAccessLearnMore
-                ),
-                linkAccountsButton,
-            ]
-        )
+        let verticalStackView = HitTestStackView()
+        if let dataAccessNotice {
+            verticalStackView.addArrangedSubview(CreateDataAccessLabel(
+                dataAccessNotice: dataAccessNotice,
+                didSelectLearnMore: didSelectMerchantDataAccessLearnMore
+            ))
+        }
+        verticalStackView.addArrangedSubview(linkAccountsButton)
 
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
@@ -110,4 +98,26 @@ final class AccountPickerFooterView: UIView {
     func startLoading() {
         linkAccountsButton.isLoading = true
     }
+}
+
+private func CreateDataAccessLabel(
+    dataAccessNotice: String,
+    didSelectLearnMore: @escaping (URL) -> Void
+) -> HitTestView {
+    let label = AttributedTextView(
+        font: .label(.small),
+        boldFont: .label(.smallEmphasized),
+        linkFont: .label(.small),
+        textColor: .textDefault,
+        alignment: .center
+    )
+    label.setText(
+        dataAccessNotice,
+        action: { url in
+            didSelectLearnMore(url)
+        }
+    )
+    let hitTestView = HitTestView()
+    hitTestView.addAndPinSubview(label)
+    return hitTestView
 }
