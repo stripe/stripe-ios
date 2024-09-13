@@ -18,7 +18,7 @@ class STPCardBrandChoice: NSObject {
     /// List of preferred networks
     let preferredNetworks: [String]
 
-    /// Dictionary of whether or not a cobrand is supported
+    /// Dictionary indicating if a merchant can process each cobranded network
     let supportedCobrandedNetworks: [String: Bool]
 
     /// :nodoc:

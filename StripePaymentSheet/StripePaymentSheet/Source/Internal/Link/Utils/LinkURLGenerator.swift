@@ -91,11 +91,11 @@ class LinkURLGenerator {
         let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
         
         let cardBrandChoiceInfo: LinkURLParams.CardBrandChoiceInfo? = {
-                    guard let cardBrandChoice = elementsSession.cardBrandChoice else { return nil }
-                    return LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: cardBrandChoice.eligible,
-                                                             stripePreferredNetworks: cardBrandChoice.preferredNetworks,
-                                                             supportedCobrandedNetworks: cardBrandChoice.supportedCobrandedNetworks)
-                }()
+            guard let cardBrandChoice = elementsSession.cardBrandChoice else { return nil }
+            return LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: cardBrandChoice.eligible,
+                                                     stripePreferredNetworks: cardBrandChoice.preferredNetworks,
+                                                     supportedCobrandedNetworks: cardBrandChoice.supportedCobrandedNetworks)
+        }()
 
         let flags = elementsSession.linkFlags.merging(elementsSession.flags) { (current, _) in current }
 
