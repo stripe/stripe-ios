@@ -53,6 +53,7 @@
 		6A05FB4B2BCF245C0001D128 /* FinancialConnectionsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A05FB4A2BCF245C0001D128 /* FinancialConnectionsEvent.swift */; };
 		6A52ABC06783A90B9E339948 /* StripeFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CE623A81057C4063A1E0C4 /* StripeFile.swift */; };
 		6B4156FCFAEDD1C73DC6EDAD /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 23D22B2C40BA7C182BCE50B2 /* iOSSnapshotTestCase */; };
+		6B9282392C94A99400277765 /* STPAnalyticsEventTranslatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9282382C94A99400277765 /* STPAnalyticsEventTranslatorTest.swift */; };
 		6B987BDA2C910F5500DDFDB3 /* STPAnalyticsEventTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B987BD92C910F5500DDFDB3 /* STPAnalyticsEventTranslator.swift */; };
 		6B987BDD2C9111BC00DDFDB3 /* Notification+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B987BDC2C9111BC00DDFDB3 /* Notification+Stripe.swift */; };
 		6B9C7B832BC73B1C007D5A28 /* AnalyticsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9C7B822BC73B1C007D5A28 /* AnalyticsHelper.swift */; };
@@ -247,6 +248,7 @@
 		6A05FB462BCF24370001D128 /* FinancialConnectionsLinkedBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLinkedBank.swift; sourceTree = "<group>"; };
 		6A05FB482BCF244A0001D128 /* InstantDebitsLinkedBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsLinkedBank.swift; sourceTree = "<group>"; };
 		6A05FB4A2BCF245C0001D128 /* FinancialConnectionsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsEvent.swift; sourceTree = "<group>"; };
+		6B9282382C94A99400277765 /* STPAnalyticsEventTranslatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticsEventTranslatorTest.swift; sourceTree = "<group>"; };
 		6B987BD92C910F5500DDFDB3 /* STPAnalyticsEventTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticsEventTranslator.swift; sourceTree = "<group>"; };
 		6B987BDC2C9111BC00DDFDB3 /* Notification+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Stripe.swift"; sourceTree = "<group>"; };
 		6B9C7B822BC73B1C007D5A28 /* AnalyticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelper.swift; sourceTree = "<group>"; };
@@ -462,6 +464,7 @@
 				B3CA4B1855BF8D2F08F275A9 /* Error_SerializeForLoggingTest.swift */,
 				B67F2CA32BAB91860011E34A /* AnalyticLoggableErrorTest.swift */,
 				2B16FDA9232BD4FBD4B13EC2 /* STPAnalyticsClientTest.swift */,
+				6B9282382C94A99400277765 /* STPAnalyticsEventTranslatorTest.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -943,6 +946,7 @@
 				8AD68C8D00A0BCF94E5230DC /* UIImage+StripeCoreTests.swift in Sources */,
 				6D68B868938BAB15A843B33C /* TestJSONEncoder.swift in Sources */,
 				EFF90360C85642F7F2898186 /* URLEncoderTest.swift in Sources */,
+				6B9282392C94A99400277765 /* STPAnalyticsEventTranslatorTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
