@@ -157,7 +157,8 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
-        log(event: .mcSavedPaymentMethodRemoved, selectedLPM: paymentMethod.type.identifier)
+        let event: STPAnalyticEvent = isCustom ? .mcOptionRemoveCustomSavedPM : .mcOptionRemoveCompleteSavedPM
+        log(event: event, selectedLPM: paymentMethod.type.identifier)
     }
 
     /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.

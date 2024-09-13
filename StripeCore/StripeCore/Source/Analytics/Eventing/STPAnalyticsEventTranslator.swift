@@ -42,7 +42,7 @@ struct STPAnalyticsEventTranslator {
         // Saved Payment Methods
         case .mcOptionSelectCustomSavedPM, .mcOptionSelectCompleteSavedPM:
             return .init(eventName: "selectedSavedPaymentMethod", metadata: payload)
-        case .mcSavedPaymentMethodRemoved:
+        case .mcOptionRemoveCustomSavedPM, .mcOptionRemoveCompleteSavedPM:
             return .init(eventName: "removedSavedPaymentMethod", metadata: payload)
         default:
             return nil

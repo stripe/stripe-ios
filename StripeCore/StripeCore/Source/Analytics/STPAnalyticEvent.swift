@@ -113,7 +113,8 @@ import Foundation
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
 
     // MARK: - PaymentSheet Saved Payment Method Removed
-    case mcSavedPaymentMethodRemoved = "mc_savedpaymentmethod_removed"
+    case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
+    case mcOptionRemoveCompleteSavedPM = "mc_complete_paymentoption_removed"
 
     // MARK: - Link Signup
     case linkSignupCheckboxChecked = "link.signup.checkbox_checked"

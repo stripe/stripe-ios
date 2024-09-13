@@ -219,8 +219,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Check analytics
         XCTAssertEqual(
-            analyticsLog.suffix(3).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped"]
+            analyticsLog.suffix(4).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
         app.buttons["Confirm"].tap()
@@ -280,6 +280,11 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         confirmRemoval.tap()
 
         XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
+
+        XCTAssertEqual(
+            analyticsLog.suffix(1).map({ $0[string: "event"] }),
+            ["mc_custom_paymentoption_removed"]
+        )
     }
 
     func testPaymentSheetSwiftUI() throws {
@@ -512,8 +517,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
         XCTAssertEqual(
-            analyticsLog.suffix(8).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            analyticsLog.suffix(9).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         // Make sure they all have the same session id
