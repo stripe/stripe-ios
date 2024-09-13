@@ -313,7 +313,7 @@ class CheckBox: UIView {
             fillColor.setFill()
         }
         borderPath.fill()
-        theme.colors.border.setStroke()
+        theme.colors.secondaryText.setStroke()
         borderPath.stroke()
 
         if isSelected {
