@@ -32,17 +32,15 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
     }
     func testAnalyticNotTranslated() {
         let translator = STPAnalyticsEventTranslator()
-        let analytic = GenericAnalytic(event: .paymentSheetLoadStarted, params: [:])
 
-        let result = translator.translate(analytic, payload: [:])
+        let result = translator.translate(.paymentSheetLoadStarted, payload: [:])
 
         XCTAssertNil(result)
     }
     func _testTranslationMapping(event: STPAnalyticEvent, translatedEventName: String) {
         let translator = STPAnalyticsEventTranslator()
-        let analytic = GenericAnalytic(event: event, params: [:])
 
-        guard let result = translator.translate(analytic, payload: [:]) else {
+        guard let result = translator.translate(event, payload: [:]) else {
             XCTFail("There is no mapping for event: \"\(event)\". See: STPAnalyticsEventTranslator")
             return
         }
@@ -50,4 +48,23 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
         XCTAssertEqual(result.notificationName, Notification.Name.mobilePaymentElement)
         XCTAssertEqual(result.event.eventName, translatedEventName)
     }
+
+    func testPayloadIsFiltered() {
+        let translator = STPAnalyticsEventTranslator()
+        let payload: [String: Any] = ["selected_lpm": "card",
+                                      "otherData": "testValue"]
+
+        let result = translator.translate(.paymentSheetFormShown, payload: payload)
+
+        XCTAssertEqual(result?.event.metadata as? [String: String], ["paymentMethodType": "card"])
+    }
+
+    func testTranslatesToEmptyPayload() {
+        let translator = STPAnalyticsEventTranslator()
+        let payload: [String: Any] = ["otherData": "testValue"]
+
+        let result = translator.translate(.paymentSheetFormShown, payload: payload)
+        XCTAssertEqual(result?.event.metadata as? [String:String], [:])
+    }
+
 }
