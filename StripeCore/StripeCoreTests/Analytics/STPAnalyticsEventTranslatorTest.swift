@@ -52,7 +52,8 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
     func testPayloadIsFiltered() {
         let translator = STPAnalyticsEventTranslator()
         let payload: [String: Any] = ["selected_lpm": "card",
-                                      "otherData": "testValue"]
+                                      "otherData": "testValue",
+        ]
 
         let result = translator.translate(.paymentSheetFormShown, payload: payload)
 
@@ -64,7 +65,6 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
         let payload: [String: Any] = ["otherData": "testValue"]
 
         let result = translator.translate(.paymentSheetFormShown, payload: payload)
-        XCTAssertEqual(result?.event.metadata as? [String:String], [:])
+        XCTAssertEqual(result?.event.metadata as? [String: String], [:])
     }
-
 }
