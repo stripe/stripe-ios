@@ -22,6 +22,7 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
         _testTranslationMapping(event: .paymentSheetFormShown, translatedEventName: "displayedPaymentMethodForm")
         _testTranslationMapping(event: .paymentSheetFormInteracted, translatedEventName: "startedInteractionWithPaymentMethodForm")
         _testTranslationMapping(event: .paymentSheetFormCompleted, translatedEventName: "completedPaymentMethodForm")
+        _testTranslationMapping(event: .paymentSheetConfirmButtonTapped, translatedEventName: "tappedConfirmButton")
     }
     func testSavedPaymentMethods() {
         _testTranslationMapping(event: .mcOptionSelectCustomSavedPM, translatedEventName: "selectedSavedPaymentMethod")

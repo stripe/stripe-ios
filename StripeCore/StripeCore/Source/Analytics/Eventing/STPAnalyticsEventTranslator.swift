@@ -19,33 +19,50 @@ struct STPAnalyticsTranslatedEvent {
 
 struct STPAnalyticsEventTranslator {
     func translate(_ analytic: Analytic, payload: [String: Any]) -> STPAnalyticsTranslatedEvent? {
-        switch analytic.event {
+        guard let translatedEventName = translateEvent(analytic) else {
+            return nil
+        }
+        return .init(eventName: translatedEventName, metadata: translatePayload(payload))
+    }
 
+    func translateEvent(_ analytic: Analytic) -> String? {
+        switch analytic.event {
         // Sheet presentation
         case .mcShowCustomNewPM, .mcShowCompleteNewPM, .mcShowCustomSavedPM, .mcShowCompleteSavedPM:
-            return .init(eventName: "presentedSheet", metadata: payload)
+            return "presentedSheet"
 
         // Tapping on a payment method type
         case .paymentSheetCarouselPaymentMethodTapped:
-            return .init(eventName: "selectedPaymentMethodType", metadata: payload)
+            return "selectedPaymentMethodType"
 
         // Payment Method form showed
         case .paymentSheetFormShown:
-            return .init(eventName: "displayedPaymentMethodForm", metadata: payload)
+            return "displayedPaymentMethodForm"
 
         // Form Interaction
         case .paymentSheetFormInteracted:
-            return .init(eventName: "startedInteractionWithPaymentMethodForm", metadata: payload)
+            return "startedInteractionWithPaymentMethodForm"
         case .paymentSheetFormCompleted:
-            return .init(eventName: "completedPaymentMethodForm", metadata: payload)
+            return "completedPaymentMethodForm"
+        case .paymentSheetConfirmButtonTapped:
+            return "tappedConfirmButton"
 
         // Saved Payment Methods
         case .mcOptionSelectCustomSavedPM, .mcOptionSelectCompleteSavedPM:
-            return .init(eventName: "selectedSavedPaymentMethod", metadata: payload)
+            return "selectedSavedPaymentMethod"
         case .mcOptionRemoveCustomSavedPM, .mcOptionRemoveCompleteSavedPM:
-            return .init(eventName: "removedSavedPaymentMethod", metadata: payload)
+            return "removedSavedPaymentMethod"
+
         default:
             return nil
         }
+    }
+
+    func translatePayload(_ payload: [String: Any]) -> [String: Any] {
+        var payload: [String: Any] = [:]
+        if let paymentMethodType = payload["selected_lpm"] {
+            payload["paymentMethodType"] = paymentMethodType
+        }
+        return payload
     }
 }
