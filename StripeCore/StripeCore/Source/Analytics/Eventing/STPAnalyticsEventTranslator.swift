@@ -18,15 +18,15 @@ struct STPAnalyticsTranslatedEvent {
 }
 
 struct STPAnalyticsEventTranslator {
-    func translate(_ analytic: Analytic, payload: [String: Any]) -> STPAnalyticsTranslatedEvent? {
-        guard let translatedEventName = translateEvent(analytic) else {
+    func translate(_ analyticEvent: STPAnalyticEvent, payload: [String: Any]) -> STPAnalyticsTranslatedEvent? {
+        guard let translatedEventName = translateEvent(analyticEvent) else {
             return nil
         }
-        return .init(eventName: translatedEventName, metadata: translatePayload(payload))
+        return .init(eventName: translatedEventName, metadata: filterPayload(payload))
     }
 
-    func translateEvent(_ analytic: Analytic) -> String? {
-        switch analytic.event {
+    func translateEvent(_ analyticEvent: STPAnalyticEvent) -> String? {
+        switch analyticEvent {
         // Sheet presentation
         case .mcShowCustomNewPM, .mcShowCompleteNewPM, .mcShowCustomSavedPM, .mcShowCompleteSavedPM:
             return "presentedSheet"
@@ -58,11 +58,11 @@ struct STPAnalyticsEventTranslator {
         }
     }
 
-    func translatePayload(_ payload: [String: Any]) -> [String: Any] {
-        var payload: [String: Any] = [:]
-        if let paymentMethodType = payload["selected_lpm"] {
-            payload["paymentMethodType"] = paymentMethodType
+    func filterPayload(_ originalPayload: [String: Any]) -> [String: Any] {
+        var filteredPayload: [String: Any] = [:]
+        if let paymentMethodType = originalPayload["selected_lpm"] {
+            filteredPayload["paymentMethodType"] = paymentMethodType
         }
-        return payload
+        return filteredPayload
     }
 }

@@ -119,7 +119,7 @@ import UIKit
             return
         }
 
-        if let translatedEvent = analyticsEventTranslator.translate(analytic, payload: payload) {
+        if let translatedEvent = analyticsEventTranslator.translate(analytic.event, payload: payload) {
             NotificationCenter.default.post(name: translatedEvent.notificationName,
                                             object: translatedEvent.event)
         }
