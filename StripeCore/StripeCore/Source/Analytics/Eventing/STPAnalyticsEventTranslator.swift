@@ -10,8 +10,8 @@ struct STPAnalyticsTranslatedEvent {
     let event: MobilePaymentElementEvent
 
     init(notificationName: Notification.Name = .mobilePaymentElement,
-         eventName: String,
-         metadata: [String: Any]) {
+         eventName: MobilePaymentElementEvent.Name,
+         metadata: [MobilePaymentElementEvent.MetadataKey: Any]) {
         self.notificationName = notificationName
         self.event = .init(eventName: eventName, metadata: metadata)
     }
@@ -25,43 +25,43 @@ struct STPAnalyticsEventTranslator {
         return .init(eventName: translatedEventName, metadata: filterPayload(payload))
     }
 
-    func translateEvent(_ analyticEvent: STPAnalyticEvent) -> String? {
+    func translateEvent(_ analyticEvent: STPAnalyticEvent) -> MobilePaymentElementEvent.Name? {
         switch analyticEvent {
         // Sheet presentation
         case .mcShowCustomNewPM, .mcShowCompleteNewPM, .mcShowCustomSavedPM, .mcShowCompleteSavedPM:
-            return "presentedSheet"
+            return .presentedSheet
 
         // Tapping on a payment method type
         case .paymentSheetCarouselPaymentMethodTapped:
-            return "selectedPaymentMethodType"
+            return .selectedPaymentMethodType
 
         // Payment Method form showed
         case .paymentSheetFormShown:
-            return "displayedPaymentMethodForm"
+            return .displayedPaymentMethodForm
 
         // Form Interaction
         case .paymentSheetFormInteracted:
-            return "startedInteractionWithPaymentMethodForm"
+            return .startedInteractionWithPaymentMethodForm
         case .paymentSheetFormCompleted:
-            return "completedPaymentMethodForm"
+            return .completedPaymentMethodForm
         case .paymentSheetConfirmButtonTapped:
-            return "tappedConfirmButton"
+            return .tappedConfirmButton
 
         // Saved Payment Methods
         case .mcOptionSelectCustomSavedPM, .mcOptionSelectCompleteSavedPM:
-            return "selectedSavedPaymentMethod"
+            return .selectedSavedPaymentMethod
         case .mcOptionRemoveCustomSavedPM, .mcOptionRemoveCompleteSavedPM:
-            return "removedSavedPaymentMethod"
+            return .removedSavedPaymentMethod
 
         default:
             return nil
         }
     }
 
-    func filterPayload(_ originalPayload: [String: Any]) -> [String: Any] {
-        var filteredPayload: [String: Any] = [:]
+    func filterPayload(_ originalPayload: [String: Any]) -> [MobilePaymentElementEvent.MetadataKey: Any] {
+        var filteredPayload: [MobilePaymentElementEvent.MetadataKey: Any] = [:]
         if let paymentMethodType = originalPayload["selected_lpm"] {
-            filteredPayload["paymentMethodType"] = paymentMethodType
+            filteredPayload[.paymentMethodType] = paymentMethodType
         }
         return filteredPayload
     }

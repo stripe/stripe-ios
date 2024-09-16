@@ -20,8 +20,25 @@ public extension Notification.Name {
 public struct MobilePaymentElementEvent {
 
     /// The name of the event
-    public let eventName: String
+    public let eventName: Name
 
     /// Associated metadata with the event
-    public let metadata: [String: Any?]
+    public let metadata: [MetadataKey: Any?]
+
+    public enum Name {
+        case presentedSheet
+        case selectedPaymentMethodType
+        case displayedPaymentMethodForm
+
+        case startedInteractionWithPaymentMethodForm
+        case completedPaymentMethodForm
+        case tappedConfirmButton
+
+        case selectedSavedPaymentMethod
+        case removedSavedPaymentMethod
+    }
+
+    public enum MetadataKey {
+        case paymentMethodType
+    }
 }
