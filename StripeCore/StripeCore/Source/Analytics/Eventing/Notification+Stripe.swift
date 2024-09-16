@@ -5,13 +5,12 @@
 
 import Foundation
 
-/**
- * WARNING: These events are intended to be used for analytics purposes ONLY. This API is volatile and is expected to change.
- * There are no guarantees about the accuracy, correctness, or stability of when these events are fired nor the data associated with them.
- */
 @_spi(MobilePaymentElementEventingBeta)
 public extension Notification.Name {
-    /// The name of the notification used to send notifications for Mobile Payment Element
+    /// WARNING: These events are intended to be used for analytics purposes ONLY. This API is volatile and is expected to change.
+    /// There are no guarantees about the accuracy, correctness, or stability of when these events are fired nor the data associated with them.
+    ///
+    /// A notification posted by Mobile Payment Element for analytics purposes.
     static let mobilePaymentElement = Notification.Name("MobilePaymentElement")
 }
 
@@ -20,12 +19,12 @@ public extension Notification.Name {
 public struct MobilePaymentElementEvent {
 
     /// The name of the event
-    public let eventName: Name
+    public let eventName: EventName
 
     /// Associated metadata with the event
     public let metadata: [MetadataKey: Any?]
 
-    public enum Name {
+    public enum EventName {
         case presentedSheet
         case selectedPaymentMethodType
         case displayedPaymentMethodForm
