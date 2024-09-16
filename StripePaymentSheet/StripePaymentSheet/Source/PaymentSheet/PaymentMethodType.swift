@@ -17,7 +17,8 @@ extension PaymentSheet {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
 
-        // Synthetic payment methods:
+        // Synthetic payment methods. These are payment methods which don't have an `STPPaymentMethodType` defined for the same name.
+        // That is, the payment method manifest for a synthetic PMT will show a PMT that doesn't match the form name.
         case instantDebits
         case linkCardBrand
 
