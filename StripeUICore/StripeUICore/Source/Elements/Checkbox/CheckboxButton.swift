@@ -265,7 +265,7 @@ class CheckBox: UIView {
             return theme.colors.primary
         }
 
-        return theme.colors.background
+        return theme.colors.parentBackground
     }
 
     var theme: ElementsUITheme {
