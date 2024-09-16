@@ -10,25 +10,25 @@ import XCTest
 
 class STPAnalyticsTranslatedEventTest: XCTestCase {
     func testSheetPresentation() {
-        _testTranslationMapping(event: .mcShowCustomNewPM, translatedEventName: "presentedSheet")
-        _testTranslationMapping(event: .mcShowCompleteNewPM, translatedEventName: "presentedSheet")
-        _testTranslationMapping(event: .mcShowCustomSavedPM, translatedEventName: "presentedSheet")
-        _testTranslationMapping(event: .mcShowCompleteSavedPM, translatedEventName: "presentedSheet")
+        _testTranslationMapping(event: .mcShowCustomNewPM, translatedEventName: .presentedSheet)
+        _testTranslationMapping(event: .mcShowCompleteNewPM, translatedEventName: .presentedSheet)
+        _testTranslationMapping(event: .mcShowCustomSavedPM, translatedEventName: .presentedSheet)
+        _testTranslationMapping(event: .mcShowCompleteSavedPM, translatedEventName: .presentedSheet)
     }
     func testTapPaymentMethodType() {
-        _testTranslationMapping(event: .paymentSheetCarouselPaymentMethodTapped, translatedEventName: "selectedPaymentMethodType")
+        _testTranslationMapping(event: .paymentSheetCarouselPaymentMethodTapped, translatedEventName: .selectedPaymentMethodType)
     }
     func testFormInteractions() {
-        _testTranslationMapping(event: .paymentSheetFormShown, translatedEventName: "displayedPaymentMethodForm")
-        _testTranslationMapping(event: .paymentSheetFormInteracted, translatedEventName: "startedInteractionWithPaymentMethodForm")
-        _testTranslationMapping(event: .paymentSheetFormCompleted, translatedEventName: "completedPaymentMethodForm")
-        _testTranslationMapping(event: .paymentSheetConfirmButtonTapped, translatedEventName: "tappedConfirmButton")
+        _testTranslationMapping(event: .paymentSheetFormShown, translatedEventName: .displayedPaymentMethodForm)
+        _testTranslationMapping(event: .paymentSheetFormInteracted, translatedEventName: .startedInteractionWithPaymentMethodForm)
+        _testTranslationMapping(event: .paymentSheetFormCompleted, translatedEventName: .completedPaymentMethodForm)
+        _testTranslationMapping(event: .paymentSheetConfirmButtonTapped, translatedEventName: .tappedConfirmButton)
     }
     func testSavedPaymentMethods() {
-        _testTranslationMapping(event: .mcOptionSelectCustomSavedPM, translatedEventName: "selectedSavedPaymentMethod")
-        _testTranslationMapping(event: .mcOptionSelectCompleteSavedPM, translatedEventName: "selectedSavedPaymentMethod")
-        _testTranslationMapping(event: .mcOptionRemoveCustomSavedPM, translatedEventName: "removedSavedPaymentMethod")
-        _testTranslationMapping(event: .mcOptionRemoveCompleteSavedPM, translatedEventName: "removedSavedPaymentMethod")
+        _testTranslationMapping(event: .mcOptionSelectCustomSavedPM, translatedEventName: .selectedSavedPaymentMethod)
+        _testTranslationMapping(event: .mcOptionSelectCompleteSavedPM, translatedEventName: .selectedSavedPaymentMethod)
+        _testTranslationMapping(event: .mcOptionRemoveCustomSavedPM, translatedEventName: .removedSavedPaymentMethod)
+        _testTranslationMapping(event: .mcOptionRemoveCompleteSavedPM, translatedEventName: .removedSavedPaymentMethod)
     }
     func testAnalyticNotTranslated() {
         let translator = STPAnalyticsEventTranslator()
@@ -37,7 +37,7 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
 
         XCTAssertNil(result)
     }
-    func _testTranslationMapping(event: STPAnalyticEvent, translatedEventName: String) {
+    func _testTranslationMapping(event: STPAnalyticEvent, translatedEventName: MobilePaymentElementEvent.Name) {
         let translator = STPAnalyticsEventTranslator()
 
         guard let result = translator.translate(event, payload: [:]) else {
@@ -57,7 +57,7 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
 
         let result = translator.translate(.paymentSheetFormShown, payload: payload)
 
-        XCTAssertEqual(result?.event.metadata as? [String: String], ["paymentMethodType": "card"])
+        XCTAssertEqual(result?.event.metadata as? [MobilePaymentElementEvent.MetadataKey: String], [.paymentMethodType: "card"])
     }
 
     func testTranslatesToEmptyPayload() {
