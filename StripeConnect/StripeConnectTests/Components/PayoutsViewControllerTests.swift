@@ -19,7 +19,7 @@ class PayoutsViewControllerTests: XCTestCase {
             self.payoutDidFail = payoutDidFail
         }
 
-        var payoutDidFail: ((_ payouts: PayoutsViewController,   _ error: any Error) -> Void)?
+        var payoutDidFail: ((_ payouts: PayoutsViewController,    _ error: any Error) -> Void)?
 
         func payoutsLoadDidFail(_ payouts: PayoutsViewController, withError error: any Error) {
             payoutDidFail?(payouts, error)
