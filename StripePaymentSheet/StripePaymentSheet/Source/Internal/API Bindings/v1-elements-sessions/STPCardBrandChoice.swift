@@ -15,6 +15,12 @@ class STPCardBrandChoice: NSObject {
     /// Determines if this intent is eligible for card brand choice
     let eligible: Bool
 
+    /// List of preferred networks
+    let preferredNetworks: [String]
+
+    /// Dictionary indicating if a merchant can process each cobranded network
+    let supportedCobrandedNetworks: [String: Bool]
+
     /// :nodoc:
     let allResponseFields: [AnyHashable: Any]
 
@@ -32,9 +38,13 @@ class STPCardBrandChoice: NSObject {
 
     private init(
         eligible: Bool,
+        preferredNetworks: [String],
+        supportedCobrandedNetworks: [String: Bool],
         allResponseFields: [AnyHashable: Any]
     ) {
         self.eligible = eligible
+        self.preferredNetworks = preferredNetworks
+        self.supportedCobrandedNetworks = supportedCobrandedNetworks
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -51,8 +61,9 @@ extension STPCardBrandChoice: STPAPIResponseDecodable {
 
         return STPCardBrandChoice(
             eligible: dict["eligible"] as? Bool ?? false,
+            preferredNetworks: dict["preferred_networks"] as? [String] ?? [],
+            supportedCobrandedNetworks: dict["supported_cobranded_networks"] as? [String: Bool] ?? [:],
             allResponseFields: dict
         ) as? Self
     }
-
 }
