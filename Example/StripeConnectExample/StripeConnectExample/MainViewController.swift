@@ -13,17 +13,17 @@ class MainViewController: UITableViewController {
 
     let appInfo: AppInfo
     let merchant: MerchantInfo
-    
+
     init(appInfo: AppInfo, merchant: MerchantInfo) {
         self.appInfo = appInfo
         self.merchant = merchant
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
         case payouts = "Payouts"
@@ -107,7 +107,7 @@ class MainViewController: UITableViewController {
         case .payouts:
             viewControllerToPush = embeddedComponentManager.createPayoutsViewController()
         }
-        
+
         viewControllerToPush.navigationItem.backButtonDisplayMode = .minimal
         addChangeAppearanceButtonNavigationItem(to: viewControllerToPush)
         navigationController?.pushViewController(viewControllerToPush, animated: true)
@@ -138,12 +138,12 @@ class MainViewController: UITableViewController {
 
         performAction(Row.allCases[indexPath.row], cell: cell)
     }
-    
+
     @objc
     func presentServerSettings() {
         self.present(AppSettingsView(appInfo: appInfo).containerViewController, animated: true)
     }
-    
+
     func presentAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))

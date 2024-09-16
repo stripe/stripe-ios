@@ -11,13 +11,13 @@ import WebKit
 class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NSObject, WKScriptMessageHandlerWithReply {
     let name: String
     let didReceiveMessage: (Payload) async throws -> Response
-    
+
     init(name: String,
          didReceiveMessage: @escaping (Payload) async throws -> Response) {
         self.name = name
         self.didReceiveMessage = didReceiveMessage
     }
-    
+
     @MainActor
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) async -> (Any?, String?) {
@@ -33,7 +33,7 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NS
             guard let response = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) else {
                 return (nil, "Failed to encode response")
             }
-            
+
             return (response, nil)
         } catch {
             debugPrint("Error processing message: \(error.localizedDescription)")

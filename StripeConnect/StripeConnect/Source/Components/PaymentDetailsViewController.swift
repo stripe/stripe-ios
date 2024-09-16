@@ -41,7 +41,8 @@ public class PaymentDetailsViewController: UIViewController {
     }
 
     public func setPayment(id: String) {
-        webView.sendMessage(SetPaymentSender(payload: id))
+//        webView.sendMessage(SetPaymentSender(payload: id))
+//        webView.evaluateJavaScript("")
     }
 }
 

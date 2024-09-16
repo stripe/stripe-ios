@@ -17,7 +17,7 @@ class OpenAuthenticatedWebViewMessageHandlerTests: ScriptWebTestBase {
             expectation.fulfill()
             XCTAssertEqual(payload, .init(url: URL(string: "https://dashboard.stripe.com")!, id: id))
         }))
-        
+
         webView.evaluateOpenAuthenticatedWebView(url: url, id: id)
         
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
