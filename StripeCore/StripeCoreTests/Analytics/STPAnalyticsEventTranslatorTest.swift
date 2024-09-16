@@ -37,7 +37,7 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
 
         XCTAssertNil(result)
     }
-    func _testTranslationMapping(event: STPAnalyticEvent, translatedEventName: MobilePaymentElementEvent.Name) {
+    func _testTranslationMapping(event: STPAnalyticEvent, translatedEventName: MobilePaymentElementEvent.EventName) {
         let translator = STPAnalyticsEventTranslator()
 
         guard let result = translator.translate(event, payload: [:]) else {

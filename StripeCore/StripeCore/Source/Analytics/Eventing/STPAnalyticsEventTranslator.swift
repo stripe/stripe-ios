@@ -10,7 +10,7 @@ struct STPAnalyticsTranslatedEvent {
     let event: MobilePaymentElementEvent
 
     init(notificationName: Notification.Name = .mobilePaymentElement,
-         eventName: MobilePaymentElementEvent.Name,
+         eventName: MobilePaymentElementEvent.EventName,
          metadata: [MobilePaymentElementEvent.MetadataKey: Any]) {
         self.notificationName = notificationName
         self.event = .init(eventName: eventName, metadata: metadata)
@@ -25,7 +25,7 @@ struct STPAnalyticsEventTranslator {
         return .init(eventName: translatedEventName, metadata: filterPayload(payload))
     }
 
-    func translateEvent(_ analyticEvent: STPAnalyticEvent) -> MobilePaymentElementEvent.Name? {
+    func translateEvent(_ analyticEvent: STPAnalyticEvent) -> MobilePaymentElementEvent.EventName? {
         switch analyticEvent {
         // Sheet presentation
         case .mcShowCustomNewPM, .mcShowCompleteNewPM, .mcShowCustomSavedPM, .mcShowCompleteSavedPM:
