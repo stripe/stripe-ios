@@ -391,14 +391,7 @@ import UIKit
 extension AddressSectionElement: Element {
     @discardableResult
     public func beginEditing() -> Bool {
-        let firstInvalidNonDropDownElement = elements.first(where: {
-            switch $0.validationState {
-            case .valid:
-                return false
-            case .invalid:
-                return !($0 is DropdownFieldElement)
-            }
-        })
+        let firstInvalidNonDropDownElement = firstInvalidNonDropdownElement(elements: elements)
 
         // If first non-dropdown element is auto complete, don't do anything
         if firstInvalidNonDropDownElement === autoCompleteLine {
@@ -406,6 +399,24 @@ extension AddressSectionElement: Element {
         }
 
         return firstInvalidNonDropDownElement?.beginEditing() ?? false
+    }
+
+    private func firstInvalidNonDropdownElement(elements: [Element]) -> Element? {
+        for element in elements {
+            if let sectionElement = element as? SectionElement,
+               let firstInvalid = firstInvalidNonDropdownElement(elements: sectionElement.elements) {
+                return firstInvalid
+            }
+            switch element.validationState {
+            case .valid:
+                continue
+            case .invalid:
+                if !(element is DropdownFieldElement) {
+                    return element
+                }
+            }
+        }
+        return nil
     }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		41054E432C989AAD00383C09 /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41054E422C989AAD00383C09 /* Font+Extension.swift */; };
 		410D0FCA2C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */; };
 		410D0FCC2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */; };
 		410D0FCE2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FCD2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift */; };
@@ -49,6 +50,7 @@
 		416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */; };
 		41810D692C88C4B100F10EB7 /* AppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D682C88C4B100F10EB7 /* AppearanceTests.swift */; };
 		41810D6B2C88E71D00F10EB7 /* Appearance+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D6A2C88E71D00F10EB7 /* Appearance+Encoding.swift */; };
+		41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */; };
 		41814EE82C6BC8800014EB5E /* ScriptWebTestBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EE72C6BC8800014EB5E /* ScriptWebTestBase.swift */; };
 		41814EEB2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EEA2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift */; };
 		41814EED2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EEC2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift */; };
@@ -114,6 +116,9 @@
 		41BCCFED2C8B34F600797E01 /* StringCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFEC2C8B34F600797E01 /* StringCodingKey.swift */; };
 		41BCCFF02C8B3C8900797E01 /* AppearanceWrapper+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */; };
 		41BCCFF32C8B449800797E01 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFF22C8B449800797E01 /* TestHelpers.swift */; };
+		41BCCFF52C8B5A0A00797E01 /* CustomFontSourceWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFF42C8B5A0A00797E01 /* CustomFontSourceWrapper.swift */; };
+		41BCCFFB2C8B95BB00797E01 /* CustomFontSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFFA2C8B95BB00797E01 /* CustomFontSourceTests.swift */; };
+		41BCCFFE2C8BA45F00797E01 /* FakeFont.txt in Resources */ = {isa = PBXBuildFile; fileRef = 41BCCFFD2C8BA45F00797E01 /* FakeFont.txt */; };
 		41D17A4B2C5A73A7007C6EE6 /* StripeConnect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41D17A402C5A73A6007C6EE6 /* StripeConnect.framework */; };
 		41D17A512C5A73A7007C6EE6 /* StripeConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = 41D17A432C5A73A6007C6EE6 /* StripeConnect.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41D17A652C5A7429007C6EE6 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A5A2C5A7429007C6EE6 /* Project-Debug.xcconfig */; };
@@ -139,6 +144,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		41054E422C989AAD00383C09 /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandlerTests.swift; sourceTree = "<group>"; };
 		410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSessionClaimedMessageHandler.swift; sourceTree = "<group>"; };
 		410D0FCD2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAuthenticatedWebViewMessageHandler.swift; sourceTree = "<group>"; };
@@ -181,6 +187,7 @@
 		416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKScriptMessage+extension.swift"; sourceTree = "<group>"; };
 		41810D682C88C4B100F10EB7 /* AppearanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceTests.swift; sourceTree = "<group>"; };
 		41810D6A2C88E71D00F10EB7 /* Appearance+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Appearance+Encoding.swift"; sourceTree = "<group>"; };
+		41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontSource.swift; sourceTree = "<group>"; };
 		41814EE72C6BC8800014EB5E /* ScriptWebTestBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptWebTestBase.swift; sourceTree = "<group>"; };
 		41814EEA2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMessageHandlerTests.swift; sourceTree = "<group>"; };
 		41814EEC2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchClientSecretMessageHandlerTests.swift; sourceTree = "<group>"; };
@@ -246,6 +253,9 @@
 		41BCCFEC2C8B34F600797E01 /* StringCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringCodingKey.swift; sourceTree = "<group>"; };
 		41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppearanceWrapper+Default.swift"; sourceTree = "<group>"; };
 		41BCCFF22C8B449800797E01 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		41BCCFF42C8B5A0A00797E01 /* CustomFontSourceWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontSourceWrapper.swift; sourceTree = "<group>"; };
+		41BCCFFA2C8B95BB00797E01 /* CustomFontSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontSourceTests.swift; sourceTree = "<group>"; };
+		41BCCFFD2C8BA45F00797E01 /* FakeFont.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = FakeFont.txt; sourceTree = "<group>"; };
 		41D17A402C5A73A6007C6EE6 /* StripeConnect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeConnect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41D17A432C5A73A6007C6EE6 /* StripeConnect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeConnect.h; sourceTree = "<group>"; };
 		41D17A4A2C5A73A7007C6EE6 /* StripeConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -329,6 +339,7 @@
 				410D0FE02C6D31A3009B0E26 /* PopupWebViewController.swift */,
 				416E9E732C751A1A00A0B917 /* ConnectComponentWebView.swift */,
 				41BCCFEA2C8B348500797E01 /* AppearanceWrapper.swift */,
+				41BCCFF42C8B5A0A00797E01 /* CustomFontSourceWrapper.swift */,
 			);
 			path = Webview;
 			sourceTree = "<group>";
@@ -378,6 +389,7 @@
 				416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */,
 				41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */,
 				41542A6A2C88B79E004E728E /* JSONSerialization+extension.swift */,
+				41054E422C989AAD00383C09 /* Font+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -426,6 +438,7 @@
 				41A2A5FF2C5ACD3E0077FC74 /* Helpers */,
 				416E9E752C751B0500A0B917 /* EmbeddedComponentManager.swift */,
 				413D18452C7FB75B0051AA42 /* EmbeddedComponentManager+Appearance.swift */,
+				41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -524,6 +537,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		41BCCFFC2C8BA44700797E01 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				41BCCFFD2C8BA45F00797E01 /* FakeFont.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		41D17A362C5A73A6007C6EE6 = {
 			isa = PBXGroup;
 			children = (
@@ -558,11 +579,13 @@
 		41D17A4E2C5A73A7007C6EE6 /* StripeConnectTests */ = {
 			isa = PBXGroup;
 			children = (
+				41BCCFFC2C8BA44700797E01 /* Resources */,
 				41BCCFEE2C8B3C7900797E01 /* Helpers */,
 				416E9E882C76B36F00A0B917 /* Components */,
 				41814EE62C6BC8690014EB5E /* Internal */,
 				416E9E812C76994C00A0B917 /* WebView+Tests.swift */,
 				41810D682C88C4B100F10EB7 /* AppearanceTests.swift */,
+				41BCCFFA2C8B95BB00797E01 /* CustomFontSourceTests.swift */,
 			);
 			path = StripeConnectTests;
 			sourceTree = "<group>";
@@ -793,6 +816,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41BCCFFE2C8BA45F00797E01 /* FakeFont.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -809,12 +833,14 @@
 				413987C92C63F34B001D375E /* FetchClientSecretMessageHandler.swift in Sources */,
 				41BCCFEB2C8B348500797E01 /* AppearanceWrapper.swift in Sources */,
 				413987E12C641688001D375E /* PageDidLoadMessageHandler.swift in Sources */,
+				41054E432C989AAD00383C09 /* Font+Extension.swift in Sources */,
 				41542A692C88B6F2004E728E /* JSONEncoder+extension.swift in Sources */,
 				416E9E842C76AE0A00A0B917 /* ComponentType.swift in Sources */,
 				410D0FCE2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift in Sources */,
 				413D18482C7FBAA70051AA42 /* CSSHelpers.swift in Sources */,
 				413987CD2C63F34B001D375E /* MessageSender.swift in Sources */,
 				41A2A6012C5ACD9F0077FC74 /* STPLocalizedString.swift in Sources */,
+				41BCCFF52C8B5A0A00797E01 /* CustomFontSourceWrapper.swift in Sources */,
 				413987CE2C63F34B001D375E /* UpdateConnectInstanceSender.swift in Sources */,
 				416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */,
 				410D0FE32C6D31C6009B0E26 /* StripeConnectConstants.swift in Sources */,
@@ -827,6 +853,7 @@
 				41810D6B2C88E71D00F10EB7 /* Appearance+Encoding.swift in Sources */,
 				410D0FE12C6D31A3009B0E26 /* PopupWebViewController.swift in Sources */,
 				413987CB2C63F34B001D375E /* ScriptMessageHandlerWithReply.swift in Sources */,
+				41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */,
 				413987CA2C63F34B001D375E /* ScriptMessageHandler.swift in Sources */,
 				416E9E862C76B35E00A0B917 /* PayoutsViewController.swift in Sources */,
 				41542A6B2C88B79E004E728E /* JSONSerialization+extension.swift in Sources */,
@@ -866,6 +893,7 @@
 				41814EE82C6BC8800014EB5E /* ScriptWebTestBase.swift in Sources */,
 				41BCCFF02C8B3C8900797E01 /* AppearanceWrapper+Default.swift in Sources */,
 				416E9E822C76994C00A0B917 /* WebView+Tests.swift in Sources */,
+				41BCCFFB2C8B95BB00797E01 /* CustomFontSourceTests.swift in Sources */,
 				41814EF32C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1354,6 +1382,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeConnectTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 			};
 			name = Debug;

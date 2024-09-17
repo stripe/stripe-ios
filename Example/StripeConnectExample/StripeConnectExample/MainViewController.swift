@@ -61,7 +61,9 @@ class MainViewController: UITableViewController {
     }
 
     lazy var embeddedComponentManager: EmbeddedComponentManager = {
-        return .init(appearance: AppSettings.shared.appearanceInfo.appearance, fetchClientSecret: { [weak self, merchant] in
+        return .init(appearance: AppSettings.shared.appearanceInfo.appearance,
+                     fonts: customFonts(),
+                     fetchClientSecret: { [weak self, merchant] in
             do {
                 return try await API.accountSession(merchantId: merchant.id).get().clientSecret
             } catch {
@@ -146,5 +148,41 @@ class MainViewController: UITableViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
+    }
+    
+    func customFonts() -> [EmbeddedComponentManager.CustomFontSource] {
+        // Note: The font name does not always match the file name,
+        // but it makes initialization of font source easier when it does.
+        let fonts: [String] = [
+            "Handjet-Regular",
+            "Handjet-Bold"
+        ]
+                
+        let fontSources: [EmbeddedComponentManager.CustomFontSource] = fonts.map { fontName in
+            guard let fontFileURL = Bundle.main.url(forResource: fontName, withExtension: "ttf"), 
+                    let font = UIFont(name: fontName, size: UIFont.systemFontSize) else {
+                print("Failed to load font with name \(fontName)")
+                return nil
+            }
+            do {
+                return try .init(font: font, fileUrl: fontFileURL)
+            } catch {
+                print("Failed to create font source \(error)")
+                return nil
+            }
+        }
+        .compactMap({ $0})
+        
+        if fontSources.count != fonts.count {
+            print("Failed to load some fonts. Below are the available fonts to choose from: ")
+            for family in UIFont.familyNames.sorted() {
+                print("Family: \(family)")
+                for name in UIFont.fontNames(forFamilyName: family) {
+                    print("- \(name)")
+                }
+            }
+        }
+        
+        return fontSources
     }
 }

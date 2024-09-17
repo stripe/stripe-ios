@@ -149,7 +149,7 @@ extension WKWebView {
                         expectedMessage = expectedResponse
                     } else {
                         guard let json = try? JSONEncoder.connectEncoder.encode(expectedResponse)else {
-                            XCTFail("Failed to expected response \(expectedResponse)", file: file, line: line)
+                            XCTFail("Failed to encode expected response \(expectedResponse)", file: file, line: line)
                             return
                         }
                         expectedMessage = String(data: json, encoding: .utf8)
@@ -159,7 +159,6 @@ extension WKWebView {
                         XCTFail("Failed to get message \(message)", file: file, line: line)
                         return
                     }
-                    
                     XCTAssertEqual(actualMessage, expectedMessage, file: file, line: line)
                     continuation.resume(returning: ())
                 }

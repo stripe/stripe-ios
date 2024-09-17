@@ -71,3 +71,30 @@ extension UIColor {
         cssValue(includeAlpha: false)
     }
 }
+
+private extension Data {
+    func ranges() -> [ClosedRange<Int>] {
+        var ranges: [ClosedRange<Int>] = []
+        var start: Int?
+
+        for (index, byte) in self.enumerated() {
+            for bit in 0..<8 {
+                let isSet = (byte & (1 << bit)) != 0
+                let charCode = index * 8 + bit
+
+                if isSet && start == nil {
+                    start = charCode
+                } else if !isSet && start != nil {
+                    ranges.append(start!...(charCode - 1))
+                    start = nil
+                }
+            }
+        }
+
+        if let start = start {
+            ranges.append(start...((self.count * 8) - 1))
+        }
+
+        return ranges
+    }
+}

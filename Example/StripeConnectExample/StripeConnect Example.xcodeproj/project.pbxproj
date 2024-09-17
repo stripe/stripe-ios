@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		41054E462C989FA200383C09 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 41054E452C989FA200383C09 /* OFL.txt */; };
+		4128D1A22C98C3C600760A48 /* Handjet-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4128D19E2C98BF9600760A48 /* Handjet-Bold.ttf */; };
+		4128D1A42C98C3CB00760A48 /* Handjet-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4128D1A12C98BFB200760A48 /* Handjet-Regular.ttf */; };
 		413D18422C7FA30A0051AA42 /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413D18412C7FA30A0051AA42 /* TextInput.swift */; };
 		413D18442C7FAE280051AA42 /* OptionListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413D18432C7FAE280051AA42 /* OptionListRow.swift */; };
 		413D184A2C7FCE5E0051AA42 /* StripeConnectExample.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */; };
@@ -57,6 +60,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		41054E452C989FA200383C09 /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
+		4128D19E2C98BF9600760A48 /* Handjet-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Handjet-Bold.ttf"; sourceTree = "<group>"; };
+		4128D1A12C98BFB200760A48 /* Handjet-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Handjet-Regular.ttf"; sourceTree = "<group>"; };
 		413D18412C7FA30A0051AA42 /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInput.swift; sourceTree = "<group>"; };
 		413D18432C7FAE280051AA42 /* OptionListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionListRow.swift; sourceTree = "<group>"; };
 		413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectExample.xctestplan; sourceTree = "<group>"; };
@@ -103,6 +109,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		41054E442C989F7F00383C09 /* Handjet */ = {
+			isa = PBXGroup;
+			children = (
+				4128D19E2C98BF9600760A48 /* Handjet-Bold.ttf */,
+				4128D1A12C98BFB200760A48 /* Handjet-Regular.ttf */,
+				41054E452C989FA200383C09 /* OFL.txt */,
+			);
+			path = Handjet;
+			sourceTree = "<group>";
+		};
 		413D18402C7FA2FF0051AA42 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +131,7 @@
 		416E9E8A2C76BD4400A0B917 = {
 			isa = PBXGroup;
 			children = (
+				41810D7B2C8A0B9000F10EB7 /* Resources */,
 				413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */,
 				416E9E952C76BD4400A0B917 /* StripeConnectExample */,
 				416E9EB62C76BD4600A0B917 /* StripeConnectExampleUITests */,
@@ -203,6 +220,22 @@
 				41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */,
 			);
 			path = Appearance;
+			sourceTree = "<group>";
+		};
+		41810D7B2C8A0B9000F10EB7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				41810D7C2C8A0B9700F10EB7 /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		41810D7C2C8A0B9700F10EB7 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				41054E442C989F7F00383C09 /* Handjet */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		41E9A1BB2C7CC83500EDE131 /* Helpers */ = {
@@ -296,9 +329,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41054E462C989FA200383C09 /* OFL.txt in Resources */,
+				4128D1A22C98C3C600760A48 /* Handjet-Bold.ttf in Resources */,
 				413D184A2C7FCE5E0051AA42 /* StripeConnectExample.xctestplan in Resources */,
 				416E9EA02C76BD4600A0B917 /* Assets.xcassets in Resources */,
 				416E9EA32C76BD4600A0B917 /* Base in Resources */,
+				4128D1A42C98C3CB00760A48 /* Handjet-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,6 +407,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -434,6 +471,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
