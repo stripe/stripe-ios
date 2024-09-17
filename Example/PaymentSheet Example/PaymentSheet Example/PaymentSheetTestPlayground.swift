@@ -245,6 +245,7 @@ struct PaymentSheetTestPlayground: View {
                     playgroundController.settings.integrationType = .deferred_csc
                 }
             }
+            
             playgroundController.settings.uiStyle = newUIStyle
         }
     }
@@ -253,12 +254,12 @@ struct PaymentSheetTestPlayground: View {
         Binding<PaymentSheetTestPlaygroundSettings.Layout> {
             return playgroundController.settings.layout
         } set: { newLayout in
-            // Force vertical layout for embedded
+            // If switching to horizontal mode and embedded is selected, reset to PaymentSheet
             if newLayout == .horizontal && playgroundController.settings.uiStyle == .embedded {
-                playgroundController.settings.layout = .vertical
-            } else {
-                playgroundController.settings.layout = newLayout
+                playgroundController.settings.uiStyle = .paymentSheet
             }
+            
+            playgroundController.settings.layout = newLayout
         }
     }
     
@@ -266,6 +267,7 @@ struct PaymentSheetTestPlayground: View {
         Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
             return playgroundController.settings.integrationType
         } set: { newIntegrationType in
+            // If switching to CSC and embedded is selected, reset to PaymentSheet
             if newIntegrationType == .normal && playgroundController.settings.uiStyle == .embedded {
                 playgroundController.settings.uiStyle = .paymentSheet
             }
