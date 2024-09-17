@@ -93,7 +93,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hIk-Ur-mhf">
-                                        <rect key="frame" x="0.0" y="108" width="222" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="108" width="222" height="16.5"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="CustomerSheet (SwiftUI)"/>
                                         <connections>
@@ -101,19 +101,11 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="Ysb-4K-dUG">
-                                        <rect key="frame" x="0.0" y="120" width="222" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="136.5" width="222" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="LinkPaymentController"/>
                                         <connections>
                                             <segue destination="jqF-43-4W3" kind="show" id="I4Q-i5-Ogf"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PqJ-Uq-tvb">
-                                        <rect key="frame" x="0.0" y="132" width="222" height="34.5"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Embedded playground"/>
-                                        <connections>
-                                            <segue destination="UO7-ym-FxO" kind="show" id="8Y8-nE-pda"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -451,22 +443,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XDa-HS-A7Z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1400" y="877"/>
-        </scene>
-        <!--Embedded Playground View Controller-->
-        <scene sceneID="8b9-XO-txM">
-            <objects>
-                <viewController id="UO7-ym-FxO" customClass="EmbeddedPlaygroundViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="T1q-Uc-aU5">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="HQL-0B-cUt"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="MhB-nP-jRJ"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="8fv-x9-cLD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2245" y="859"/>
         </scene>
         <!--Checkout (Custom)-->
         <scene sceneID="QR4-jL-qym">

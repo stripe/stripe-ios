@@ -9,7 +9,38 @@ import Foundation
 @_spi(EmbeddedPaymentMethodsViewBeta) import StripePaymentSheet
 import UIKit
 
+protocol EmbeddedPlaygroundViewControllerDelegate: AnyObject {
+    func didComplete(with result: PaymentSheetResult)
+}
+
 class EmbeddedPlaygroundViewController: UIViewController {
+    
+    private let settings: PaymentSheetTestPlaygroundSettings
+    private let appearance: PaymentSheet.Appearance
+    
+    weak var delegate: EmbeddedPlaygroundViewControllerDelegate?
+    
+    private lazy var checkoutButton: UIButton = {
+        let checkoutButton = UIButton(type: .system)
+        checkoutButton.backgroundColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
+        checkoutButton.layer.cornerRadius = 5.0
+        checkoutButton.clipsToBounds = true
+        checkoutButton.setTitle("Checkout", for: .normal)
+        checkoutButton.setTitleColor(.white, for: .normal)
+        checkoutButton.translatesAutoresizingMaskIntoConstraints = false
+        return checkoutButton
+    }()
+    
+    init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
+        self.settings = settings
+        self.appearance = appearance
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(dynamicProvider: { traitCollection in
@@ -20,9 +51,29 @@ class EmbeddedPlaygroundViewController: UIViewController {
             return .systemBackground
         })
 
-        var appearance = PaymentSheet.Appearance.default
-        appearance.paymentOptionView.style = .flatRadio
+        // TODO: pass in an embedded configuration built from `PaymentSheetTestPlaygroundSettings`
+        let paymentMethodsView = EmbeddedPaymentMethodsView(savedPaymentMethod: settings.customerMode == .returning ? .mockPaymentMethod : nil,
+                                                            appearance: appearance,
+                                                            shouldShowApplePay: settings.applePayEnabled == .on,
+                                                            shouldShowLink: settings.linkMode == .link_pm)
+        paymentMethodsView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(paymentMethodsView)
+        self.view.addSubview(checkoutButton)
 
+        NSLayoutConstraint.activate([
+            paymentMethodsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            paymentMethodsView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            paymentMethodsView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            checkoutButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
+            checkoutButton.heightAnchor.constraint(equalToConstant: 50),
+            checkoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+        ])
+    }
+}
+
+extension STPPaymentMethod {
+    static var mockPaymentMethod: STPPaymentMethod? {
         let amex =
             [
                 "card": [
@@ -35,16 +86,6 @@ class EmbeddedPlaygroundViewController: UIViewController {
                 "type": "card",
                 "id": "preloaded_amex",
             ] as [String: Any]
-        let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: amex)
-
-        let paymentMethodsView = EmbeddedPaymentMethodsView(savedPaymentMethod: paymentMethod, appearance: appearance, shouldShowApplePay: true, shouldShowLink: true)
-        paymentMethodsView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(paymentMethodsView)
-
-        NSLayoutConstraint.activate([
-            paymentMethodsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            paymentMethodsView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            paymentMethodsView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1),
-        ])
+        return STPPaymentMethod.decodedObject(fromAPIResponse: amex)
     }
 }
