@@ -13,10 +13,11 @@ extension AppSettings {
     var appearanceOptions: [AppearanceInfo] {
         [
             .default,
+            .customFont,
             .hotDog,
             .link,
             .oceanBreeze,
-            .shrek
+            .ogre
         ]
     }
     
@@ -38,7 +39,7 @@ extension AppearanceInfo {
         .init(displayName: "Default", appearance: .default)
     }
     
-    static var shrek: AppearanceInfo {
+    static var ogre: AppearanceInfo {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.colors.primary = UIColor(red: 90/255, green: 233/255, blue: 43/255, alpha: 1)
         appearance.colors.background = UIColor(red: 131/255, green: 116/255, blue: 17/255, alpha: 1)
@@ -50,7 +51,7 @@ extension AppearanceInfo {
         appearance.badgeNeutral.colorText = UIColor(red: 40/255, green: 215/255, blue: 42/255, alpha: 1)
         appearance.badgeNeutral.colorBackground = UIColor(red: 99/255, green: 136/255, blue: 99/255, alpha: 1)
         appearance.buttonSecondary.colorText = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
-        return .init(displayName: "Shrek", appearance: appearance)
+        return .init(displayName: "Ogre", appearance: appearance)
     }
     
     static var hotDog: AppearanceInfo {
@@ -108,5 +109,11 @@ extension AppearanceInfo {
         appearance.spacingUnit = 9
         
         return .init(displayName: "Link", appearance: appearance)
+    }
+    
+    static var customFont: AppearanceInfo {
+        var appearance = EmbeddedComponentManager.Appearance()
+        appearance.typography.font = UIFont(name: "Handjet-Regular", size: UIFont.systemFontSize)
+        return .init(displayName: "Custom Font", appearance: appearance)
     }
 }

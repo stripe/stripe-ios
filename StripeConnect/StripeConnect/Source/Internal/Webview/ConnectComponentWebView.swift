@@ -108,7 +108,9 @@ private extension ConnectComponentWebView {
                 // If self no longer exists give default values
                 return .init(locale: "", appearance: .init(appearance: .default, traitCollection: .init()))
             }
-            return .init(locale: webLocale.webIdentifier, appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))
+            return .init(locale: webLocale.webIdentifier,
+                         appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection), 
+                         fonts: componentManager.fonts.map({ .init(customFontSource: $0)}))
         }))
         addMessageHandler(DebugMessageHandler())
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
