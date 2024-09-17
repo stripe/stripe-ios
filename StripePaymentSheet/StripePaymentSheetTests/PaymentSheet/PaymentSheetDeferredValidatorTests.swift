@@ -7,6 +7,7 @@
 
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(STP) import StripeCore
 import XCTest
 
 final class PaymentSheetDeferredValidatorTests: XCTestCase {
@@ -101,8 +102,9 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
             """)
         }
-        
-        
+        let analyticEvent = STPAnalyticsClient.sharedClient._testLogHistory.last
+        XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetIntentPaymentMethodIdMismatch.rawValue)
+        XCTAssertNotNil(analyticEvent?["error_code"] as? String)
     }
     
     func testPaymentIntentNilPaymentMethod() throws {
@@ -141,8 +143,9 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
             """)
         }
-        
-        
+        let analyticEvent = STPAnalyticsClient.sharedClient._testLogHistory.last
+        XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetIntentPaymentMethodIdMismatch.rawValue)
+        XCTAssertNotNil(analyticEvent?["error_code"] as? String)
     }
     
     func testSetupIntentNilPaymentMethod() throws {

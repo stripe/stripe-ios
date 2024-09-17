@@ -7,6 +7,7 @@
 
 import Foundation
 import StripePayments
+@_spi(STP) import StripeCore
 
 struct PaymentSheetDeferredValidator {
     /// Note: We don't validate amount (for any payment method) because there are use cases where the amount can change slightly between PM collection and confirmation.
@@ -53,6 +54,8 @@ struct PaymentSheetDeferredValidator {
             return
         }
         guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: "Payment method ids don't match"))
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             throw PaymentSheetError.deferredIntentValidationFailed(message: """
                 \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
 
@@ -68,6 +71,8 @@ struct PaymentSheetDeferredValidator {
             return
         }
         guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: "Payment method ids don't match"))
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             throw PaymentSheetError.deferredIntentValidationFailed(message: """
                 \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
 
