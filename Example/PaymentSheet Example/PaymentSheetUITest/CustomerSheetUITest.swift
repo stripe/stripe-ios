@@ -325,7 +325,7 @@ class CustomerSheetUITest: XCTestCase {
         app.typeText("3105551234")
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save with Link"].waitForExistenceAndTap(timeout: timeout)
-        
+
         let doneManualEntry = app.buttons["success_done_button"]
         XCTAssertTrue(doneManualEntry.waitForExistence(timeout: timeout))
         doneManualEntry.tap()
@@ -359,7 +359,6 @@ class CustomerSheetUITest: XCTestCase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: timeout)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled
@@ -465,7 +464,6 @@ class CustomerSheetUITest: XCTestCase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: timeout)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled and we should auto select Visa
