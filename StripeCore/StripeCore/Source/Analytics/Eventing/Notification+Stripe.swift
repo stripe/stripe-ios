@@ -21,23 +21,60 @@ public struct MobilePaymentElementEvent {
     /// The name of the event
     public let eventName: EventName
 
-    /// Associated metadata with the event
-    public let metadata: [MetadataKey: Any?]
-
-    public enum EventName {
+    public enum EventName: Equatable {
         case presentedSheet
-        case selectedPaymentMethodType
-        case displayedPaymentMethodForm
+        case selectedPaymentMethodType(SelectedPaymentMethodType)
+        case displayedPaymentMethodForm(DisplayedPaymentMethodForm)
 
-        case startedInteractionWithPaymentMethodForm
-        case completedPaymentMethodForm
-        case tappedConfirmButton
+        case startedInteractionWithPaymentMethodForm(StartedInteractionWithPaymentMethodForm)
+        case completedPaymentMethodForm(CompletedPaymentMethodForm)
+        case tappedConfirmButton(TappedConfirmButton)
 
-        case selectedSavedPaymentMethod
-        case removedSavedPaymentMethod
+        case selectedSavedPaymentMethod(SelectedSavedPaymentMethod)
+        case removedSavedPaymentMethod(RemovedSavedPaymentMethod)
     }
 
-    public enum MetadataKey {
-        case paymentMethodType
+    public struct SelectedPaymentMethodType: Equatable {
+        public let paymentMethodType: String
+        internal init(paymentMethodType: String) {
+            self.paymentMethodType = paymentMethodType
+        }
+    }
+    public struct DisplayedPaymentMethodForm: Equatable {
+        public let paymentMethodType: String
+        internal init(paymentMethodType: String) {
+            self.paymentMethodType = paymentMethodType
+        }
+    }
+    public struct StartedInteractionWithPaymentMethodForm: Equatable {
+        public let paymentMethodType: String
+        internal init(paymentMethodType: String) {
+            self.paymentMethodType = paymentMethodType
+        }
+    }
+    public struct CompletedPaymentMethodForm: Equatable {
+        public let paymentMethodType: String
+        internal init(paymentMethodType: String) {
+            self.paymentMethodType = paymentMethodType
+        }
+    }
+    public struct TappedConfirmButton: Equatable {
+        public let paymentMethodType: String
+        internal init(paymentMethodType: String) {
+            self.paymentMethodType = paymentMethodType
+        }
+    }
+    public struct SelectedSavedPaymentMethod: Equatable {
+        public let paymentMethodType: String
+        internal init(paymentMethodType: String) {
+            self.paymentMethodType = paymentMethodType
+        }
+
+    }
+    public struct RemovedSavedPaymentMethod: Equatable {
+        public let paymentMethodType: String
+        internal init(paymentMethodType: String) {
+            self.paymentMethodType = paymentMethodType
+        }
     }
 }

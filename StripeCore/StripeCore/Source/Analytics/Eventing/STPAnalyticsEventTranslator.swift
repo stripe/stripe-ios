@@ -10,59 +10,80 @@ struct STPAnalyticsTranslatedEvent {
     let event: MobilePaymentElementEvent
 
     init(notificationName: Notification.Name = .mobilePaymentElement,
-         eventName: MobilePaymentElementEvent.EventName,
-         metadata: [MobilePaymentElementEvent.MetadataKey: Any]) {
+         eventName: MobilePaymentElementEvent.EventName) {
         self.notificationName = notificationName
-        self.event = .init(eventName: eventName, metadata: metadata)
+        self.event = .init(eventName: eventName)
     }
 }
 
 struct STPAnalyticsEventTranslator {
     func translate(_ analyticEvent: STPAnalyticEvent, payload: [String: Any]) -> STPAnalyticsTranslatedEvent? {
-        guard let translatedEventName = translateEvent(analyticEvent) else {
+        guard let translatedEventName = translateEvent(analyticEvent, payload: payload) else {
             return nil
         }
-        return .init(eventName: translatedEventName, metadata: filterPayload(payload))
+        return .init(eventName: translatedEventName)
     }
 
-    func translateEvent(_ analyticEvent: STPAnalyticEvent) -> MobilePaymentElementEvent.EventName? {
+    func translateEvent(_ analyticEvent: STPAnalyticEvent, payload: [String: Any]) -> MobilePaymentElementEvent.EventName? {
+        let paymentMethodType = paymentMethodType(payload)
         switch analyticEvent {
+
         // Sheet presentation
         case .mcShowCustomNewPM, .mcShowCompleteNewPM, .mcShowCustomSavedPM, .mcShowCompleteSavedPM:
             return .presentedSheet
 
         // Tapping on a payment method type
         case .paymentSheetCarouselPaymentMethodTapped:
-            return .selectedPaymentMethodType
+            guard let paymentMethodType else {
+                return nil
+            }
+            return .selectedPaymentMethodType(.init(paymentMethodType: paymentMethodType))
 
         // Payment Method form showed
         case .paymentSheetFormShown:
-            return .displayedPaymentMethodForm
+            guard let paymentMethodType else {
+                return nil
+            }
+            return .displayedPaymentMethodForm(.init(paymentMethodType: paymentMethodType))
 
         // Form Interaction
         case .paymentSheetFormInteracted:
-            return .startedInteractionWithPaymentMethodForm
+            guard let paymentMethodType else {
+                return nil
+            }
+            return .startedInteractionWithPaymentMethodForm(.init(paymentMethodType: paymentMethodType))
         case .paymentSheetFormCompleted:
-            return .completedPaymentMethodForm
+            guard let paymentMethodType else {
+                return nil
+            }
+            return .completedPaymentMethodForm(.init(paymentMethodType: paymentMethodType))
         case .paymentSheetConfirmButtonTapped:
-            return .tappedConfirmButton
+            guard let paymentMethodType else {
+                return nil
+            }
+            return .tappedConfirmButton(.init(paymentMethodType: paymentMethodType))
 
         // Saved Payment Methods
         case .mcOptionSelectCustomSavedPM, .mcOptionSelectCompleteSavedPM:
-            return .selectedSavedPaymentMethod
+            guard let paymentMethodType else {
+                return nil
+            }
+            return .selectedSavedPaymentMethod(.init(paymentMethodType: paymentMethodType))
         case .mcOptionRemoveCustomSavedPM, .mcOptionRemoveCompleteSavedPM:
-            return .removedSavedPaymentMethod
+            guard let paymentMethodType else {
+                return nil
+            }
+            return .removedSavedPaymentMethod(.init(paymentMethodType: paymentMethodType))
 
         default:
             return nil
         }
     }
 
-    func filterPayload(_ originalPayload: [String: Any]) -> [MobilePaymentElementEvent.MetadataKey: Any] {
-        var filteredPayload: [MobilePaymentElementEvent.MetadataKey: Any] = [:]
-        if let paymentMethodType = originalPayload["selected_lpm"] {
-            filteredPayload[.paymentMethodType] = paymentMethodType
+    func paymentMethodType(_ originalPayload: [String: Any]) -> String? {
+        if let paymentMethodType = originalPayload["selected_lpm"] as? String {
+            return paymentMethodType
         }
-        return filteredPayload
+        return nil
     }
 }
