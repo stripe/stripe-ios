@@ -84,8 +84,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue((cvcField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(cvcField.typeText("1234"))
 
-        app.toolbars.buttons["Done"].tap()  // Country picker toolbar's "Done" button
-
         let postalField = app.textFields["ZIP"]
         XCTAssertTrue((postalField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(postalField.typeText("12345"))
@@ -2581,7 +2579,6 @@ extension PaymentSheetUITestCase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled
