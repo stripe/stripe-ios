@@ -68,6 +68,11 @@ extension CustomerSheet {
                        "preferredNetworks must not contain any duplicate card brands")
             }
         }
+        
+        /// By default, CustomerSheet will accept all supported cards by Stripe.
+        /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
+        /// Note: This is only a client-side solution.
+        public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.

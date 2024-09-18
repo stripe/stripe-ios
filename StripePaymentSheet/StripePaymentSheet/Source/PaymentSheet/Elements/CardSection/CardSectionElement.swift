@@ -60,6 +60,7 @@ final class CardSectionElement: ContainerElement {
     let theme: ElementsUITheme
     let preferredNetworks: [STPCardBrand]?
     let hostedSurface: HostedSurface
+    let cardBrandFilter: CardBrandFilter
 
     init(
         collectName: Bool = false,
@@ -68,11 +69,13 @@ final class CardSectionElement: ContainerElement {
         cardBrandChoiceEligible: Bool = false,
         hostedSurface: HostedSurface,
         theme: ElementsUITheme = .default,
+        cardBrandFilter: CardBrandFilter,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.hostedSurface = hostedSurface
         self.theme = theme
         self.analyticsHelper = analyticsHelper
+        self.cardBrandFilter = cardBrandFilter
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
@@ -94,7 +97,7 @@ final class CardSectionElement: ContainerElement {
             }
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDown: cardBrandDropDown?.element), theme: theme) { field, params in
+                                                                                       cardBrandDropDown: cardBrandDropDown?.element, cardFilter: cardBrandFilter), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -214,7 +217,7 @@ final class CardSectionElement: ContainerElement {
             guard let self = self else { return }
             switch result {
             case .success(let brands):
-                fetchedCardBrands = brands
+                fetchedCardBrands = brands.filter { self.cardBrandFilter.isAccepted(cardBrand: $0) }
             case .failure:
                 // If we fail to fetch card brands fall back to normal card brand detection
                 fetchedCardBrands = Set<STPCardBrand>()

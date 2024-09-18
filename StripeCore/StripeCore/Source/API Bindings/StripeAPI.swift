@@ -51,7 +51,7 @@ import PassKit
     /// @note JCB is only supported on iOS 10.1+
     @objc public class var jcbPaymentNetworkSupported: Bool {
         get {
-            return self.additionalEnabledApplePayNetworks.contains(.JCB)
+            return self.supportedPKPaymentNetworks().contains(.JCB)
         }
         set(JCBPaymentNetworkSupported) {
             if JCBPaymentNetworkSupported

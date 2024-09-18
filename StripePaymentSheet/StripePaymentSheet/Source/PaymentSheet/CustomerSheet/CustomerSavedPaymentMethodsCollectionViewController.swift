@@ -82,6 +82,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
         let isTestMode: Bool
+        let cardBrandFilter: CardBrandFilter
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -436,7 +437,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                               appearance: appearance,
                                               hostedSurface: .customerSheet,
                                               canRemoveCard: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                              isTestMode: configuration.isTestMode)
+                                              isTestMode: configuration.isTestMode,
+                                              cardBrandFilter: configuration.cardBrandFilter)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }

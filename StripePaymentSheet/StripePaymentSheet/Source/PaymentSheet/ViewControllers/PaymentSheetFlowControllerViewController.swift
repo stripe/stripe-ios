@@ -206,7 +206,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-                allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+                allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                cardBrandFilter: .init(cardBrandAcceptance: configuration.cardBrandAcceptance)
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,

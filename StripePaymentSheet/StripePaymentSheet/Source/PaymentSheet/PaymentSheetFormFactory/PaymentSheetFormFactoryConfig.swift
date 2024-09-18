@@ -93,4 +93,13 @@ enum PaymentSheetFormFactoryConfig {
             return config.isUsingBillingAddressCollection()
         }
     }
+    
+    var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance {
+        switch self {
+        case .paymentSheet(let configuration):
+            return configuration.cardBrandAcceptance
+        case .customerSheet(let configuration):
+            return configuration.cardBrandAcceptance
+        }
+    }
 }

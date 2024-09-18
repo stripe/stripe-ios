@@ -22,10 +22,12 @@ extension TextFieldElement {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
         let cardBrandDropDown: DropdownFieldElement?
-
-        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil) {
+        let cardFilter: CardBrandFilter
+        
+        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter) {
             self.defaultValue = defaultValue
             self.cardBrandDropDown = cardBrandDropDown
+            self.cardFilter = cardFilter
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
@@ -73,6 +75,7 @@ extension TextFieldElement {
             case incomplete
             case invalidBrand
             case invalidLuhn
+            case disallowedBrand(brand: STPCardBrand)
 
             func shouldDisplay(isUserEditing: Bool) -> Bool {
                 switch self {
@@ -80,7 +83,7 @@ extension TextFieldElement {
                     return false
                 case .incomplete, .invalidLuhn:
                     return !isUserEditing
-                case .invalidBrand:
+                case .invalidBrand, .disallowedBrand:
                     return true
                 }
             }
@@ -93,6 +96,9 @@ extension TextFieldElement {
                     return String.Localized.your_card_number_is_incomplete
                 case .invalidBrand, .invalidLuhn:
                     return String.Localized.your_card_number_is_invalid
+                case .disallowedBrand(let brand):
+                    let cardBrandDisplayName =  STPCardBrandUtilities.stringFrom(brand) ?? "brand"
+                    return "\(cardBrandDisplayName) is not accepted"
                 }
             }
         }
@@ -108,6 +114,12 @@ extension TextFieldElement {
             let binRange = binController.mostSpecificBINRange(forNumber: text)
             if binRange.brand == .unknown {
                 return .invalid(Error.invalidBrand)
+            }
+            
+            
+            let cardBrand = STPCardValidator.brand(forNumber: text)
+            if !cardFilter.isAccepted(cardBrand: cardBrand) {
+                return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 
             // Is the PAN the correct length?
@@ -290,14 +302,16 @@ extension TextFieldElement {
         let lastFour: String
         let isEditable = false
         let cardBrandDropDown: DropdownFieldElement
-
+        let cardFilter: CardBrandFilter
+        
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, cardBrandDropDown: DropdownFieldElement) {
+        init(lastFour: String, cardBrandDropDown: DropdownFieldElement, cardFilter: CardBrandFilter) {
             self.lastFour = lastFour
             self.cardBrandDropDown = cardBrandDropDown
+            self.cardFilter = cardFilter
         }
 
         func makeDisplayText(for text: String) -> NSAttributedString {
@@ -306,8 +320,48 @@ extension TextFieldElement {
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
-            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown)
-                                            .accessoryView(for: lastFourFormatted, theme: theme)
+            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown,
+                                                     cardFilter: cardFilter).accessoryView(for: lastFourFormatted, theme: theme)
         }
+    }
+}
+
+extension STPCardBrand {
+    var asBrandCategory: PaymentSheet.CardBrandAcceptance.BrandCategory? {
+        switch self {
+        case .visa:
+            return .visa
+        case .amex:
+            return .amex
+        case .mastercard:
+            return .mastercard
+        case .discover, .JCB, .dinersClub, .unionPay:
+            return .discoverGlobalNetwork
+        case .cartesBancaires, .unknown:
+            return nil
+        @unknown default:
+            return nil
+        }
+    }
+}
+
+struct CardBrandFilter {
+    let cardBrandAcceptance: PaymentSheet.CardBrandAcceptance
+    
+    func isAccepted(cardBrand: STPCardBrand) -> Bool {
+        switch cardBrandAcceptance {
+        case .all:
+            return true
+        case .allowed(let allowedCardBrands):
+            if let brandCategory = cardBrand.asBrandCategory, !allowedCardBrands.contains(brandCategory) {
+                return false
+            }
+        case .disallowed(let disallowedBrands):
+            if let brandCategory = cardBrand.asBrandCategory, disallowedBrands.contains(brandCategory) {
+                return false
+            }
+        }
+        
+        return true
     }
 }

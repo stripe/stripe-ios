@@ -271,7 +271,10 @@ final class PaymentSheetLoader {
             }
         }
 
-        return savedPaymentMethods
+        return savedPaymentMethods.filter {
+            guard let cardBrand = $0.card?.brand else { return true }
+            return CardBrandFilter(cardBrandAcceptance: configuration.cardBrandAcceptance).isAccepted(cardBrand: cardBrand)
+        }
     }
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {

@@ -309,7 +309,8 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                             appearance: configuration.appearance,
                                                             hostedSurface: .paymentSheet,
                                                             canRemoveCard: canRemovePaymentMethods,
-                                                            isTestMode: configuration.apiClient.isTestmode)
+                                                            isTestMode: configuration.apiClient.isTestmode,
+                                                            cardBrandFilter: .init(cardBrandAcceptance: configuration.cardBrandAcceptance))
 
         updateViewController.delegate = self
         self.updateViewController = updateViewController

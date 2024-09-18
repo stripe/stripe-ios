@@ -27,6 +27,7 @@ final class UpdateCardViewController: UIViewController {
     private let isTestMode: Bool
     private let hostedSurface: HostedSurface
     private let canRemoveCard: Bool
+    private let cardBrandFilter: CardBrandFilter
 
     private var latestError: Error? {
         didSet {
@@ -91,7 +92,7 @@ final class UpdateCardViewController: UIViewController {
 
     // MARK: Elements
     private lazy var panElement: TextFieldElement = {
-        return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown).makeElement(theme: appearance.asElementsTheme)
+        return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown, cardFilter: cardBrandFilter).makeElement(theme: appearance.asElementsTheme)
     }()
 
     private lazy var cardBrandDropDown: DropdownFieldElement = {
@@ -136,14 +137,15 @@ final class UpdateCardViewController: UIViewController {
          appearance: PaymentSheet.Appearance,
          hostedSurface: HostedSurface,
          canRemoveCard: Bool,
-         isTestMode: Bool) {
+         isTestMode: Bool,
+         cardBrandFilter: CardBrandFilter) {
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
         self.hostedSurface = hostedSurface
         self.isTestMode = isTestMode
         self.canRemoveCard = canRemoveCard
-
+        self.cardBrandFilter = cardBrandFilter
         super.init(nibName: nil, bundle: nil)
     }
 
