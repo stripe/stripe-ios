@@ -220,6 +220,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
             analyticsLog.suffix(4).map({ $0[string: "event"] }),
             ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
         )
+        XCTAssertEqual(
+            analyticsLog.suffix(4).map({ $0[string: "selected_lpm"] }),
+            ["card", nil, "card", "card"]
+        )
 
         app.buttons["Confirm"].tap()
         var successText = app.staticTexts["Success!"]
@@ -285,6 +289,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             analyticsLog.suffix(1).map({ $0[string: "event"] }),
             ["mc_custom_paymentoption_removed"]
+        )
+        XCTAssertEqual(
+            analyticsLog.suffix(1).map({ $0[string: "selected_lpm"] }),
+            ["card"]
         )
     }
 

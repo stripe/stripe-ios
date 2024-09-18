@@ -134,21 +134,49 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             let sut = PaymentSheetAnalyticsHelper(isCustom: isCustom, configuration: .init(), analyticsClient: analyticsClient)
             return sut
         }
-        let testcases: [(isCustom: Bool, option: SavedPaymentOptionsViewController.Selection, expectedEvent: String)] = [
-            (isCustom: false, option: .applePay, expectedEvent: "mc_complete_paymentoption_applepay_select"),
-            (isCustom: false, option: .link, expectedEvent: "mc_complete_paymentoption_link_select"),
-            (isCustom: false, option: .add, expectedEvent: "mc_complete_paymentoption_newpm_select"),
-            (isCustom: false, option: .saved(paymentMethod: ._testCard()), expectedEvent: "mc_complete_paymentoption_savedpm_select"),
-            (isCustom: true, option: .applePay, expectedEvent: "mc_custom_paymentoption_applepay_select"),
-            (isCustom: true, option: .link, expectedEvent: "mc_custom_paymentoption_link_select"),
-            (isCustom: true, option: .add, expectedEvent: "mc_custom_paymentoption_newpm_select"),
-            (isCustom: true, option: .saved(paymentMethod: ._testCard()), expectedEvent: "mc_custom_paymentoption_savedpm_select"),
+        let testcases: [(isCustom: Bool, option: SavedPaymentOptionsViewController.Selection, expectedEvent: String, expectedSelectedLPM: String?)] = [
+            (isCustom: false, option: .applePay, expectedEvent: "mc_complete_paymentoption_applepay_select", nil),
+            (isCustom: false, option: .link, expectedEvent: "mc_complete_paymentoption_link_select", nil),
+            (isCustom: false, option: .add, expectedEvent: "mc_complete_paymentoption_newpm_select", nil),
+            (isCustom: false, option: .saved(paymentMethod: ._testCard()), expectedEvent: "mc_complete_paymentoption_savedpm_select", "card"),
+            (isCustom: true, option: .applePay, expectedEvent: "mc_custom_paymentoption_applepay_select", nil),
+            (isCustom: true, option: .link, expectedEvent: "mc_custom_paymentoption_link_select", nil),
+            (isCustom: true, option: .add, expectedEvent: "mc_custom_paymentoption_newpm_select", nil),
+            (isCustom: true, option: .saved(paymentMethod: ._testCard()), expectedEvent: "mc_custom_paymentoption_savedpm_select", "card"),
         ]
         for testcase in testcases {
             let sut = _createHelper(isCustom: testcase.isCustom)
             sut.logSavedPMScreenOptionSelected(option: testcase.option)
             XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, testcase.expectedEvent)
+            if let expectedLpm = testcase.expectedSelectedLPM {
+                XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, expectedLpm)
+            }
         }
+    }
+    func testLogPaymentMethodRemoved_complete() {
+        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        sut.logSavedPaymentMethodRemoved(paymentMethod: ._testCard())
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_complete_paymentoption_removed")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
+    }
+    func testLogPaymentMethodRemoved_custom() {
+        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: .init(), analyticsClient: analyticsClient)
+        sut.logSavedPaymentMethodRemoved(paymentMethod: ._testCard())
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_paymentoption_removed")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
+    }
+    func testLogNewPaymentMethodSelected() {
+        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: .init(), analyticsClient: analyticsClient)
+        sut.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: "card")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_carousel_payment_method_tapped")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
+    }
+    func testLogFormCompleted() {
+        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: .init(), analyticsClient: analyticsClient)
+        sut.logFormShown(paymentMethodTypeIdentifier: "card")
+        sut.logFormCompleted(paymentMethodTypeIdentifier: "card")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_form_completed")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
     }
 
     func testLogFormShownAndInteracted() {

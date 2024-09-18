@@ -6,7 +6,7 @@
 import Foundation
 import XCTest
 
-@testable @_spi(STP) @_spi(MobilePaymentElementEventingBeta) import StripeCore
+@testable @_spi(STP) @_spi(MobilePaymentElementAnalyticEventBeta) import StripeCore
 
 class STPAnalyticsTranslatedEventTest: XCTestCase {
     let payloadWithLPM: [String: Any] = ["selected_lpm": "card"]
@@ -49,7 +49,7 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
 
         XCTAssertNil(result)
     }
-    func _testTranslationMapping(event: STPAnalyticEvent, payload: [String: Any], translatedEventName: MobilePaymentElementEvent.EventName) {
+    func _testTranslationMapping(event: STPAnalyticEvent, payload: [String: Any], translatedEventName: MobilePaymentElementAnalyticEvent.Name) {
         let translator = STPAnalyticsEventTranslator()
 
         guard let result = translator.translate(event, payload: payload) else {
@@ -58,6 +58,6 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
         }
 
         XCTAssertEqual(result.notificationName, Notification.Name.mobilePaymentElement)
-        XCTAssertEqual(result.event.eventName, translatedEventName)
+        XCTAssertEqual(result.event.name, translatedEventName)
     }
 }

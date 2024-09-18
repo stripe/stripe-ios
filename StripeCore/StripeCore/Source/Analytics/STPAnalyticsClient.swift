@@ -106,6 +106,10 @@ import UIKit
     ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
     ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
     public func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
+        log(analytic: analytic, apiClient: apiClient, notificationCenter: .default)
+    }
+
+    func log(analytic: Analytic, apiClient: STPAPIClient = .shared, notificationCenter: NotificationCenter = .default) {
         let payload = payload(from: analytic, apiClient: apiClient)
 
         #if DEBUG
@@ -113,15 +117,15 @@ import UIKit
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
+        if let translatedEvent = analyticsEventTranslator.translate(analytic.event, payload: payload) {
+            notificationCenter.post(name: translatedEvent.notificationName,
+                                    object: translatedEvent.event)
+        }
+
         // If in testing, don't log analytic, instead append payload to log history
         guard !STPAnalyticsClient.isUnitOrUITest else {
             _testLogHistory.append(payload)
             return
-        }
-
-        if let translatedEvent = analyticsEventTranslator.translate(analytic.event, payload: payload) {
-            NotificationCenter.default.post(name: translatedEvent.notificationName,
-                                            object: translatedEvent.event)
         }
 
         var request = URLRequest(url: url)

@@ -7,12 +7,12 @@ import Foundation
 
 struct STPAnalyticsTranslatedEvent {
     let notificationName: Notification.Name
-    let event: MobilePaymentElementEvent
+    let event: MobilePaymentElementAnalyticEvent
 
     init(notificationName: Notification.Name = .mobilePaymentElement,
-         eventName: MobilePaymentElementEvent.EventName) {
+         name: MobilePaymentElementAnalyticEvent.Name) {
         self.notificationName = notificationName
-        self.event = .init(eventName: eventName)
+        self.event = .init(name: name)
     }
 }
 
@@ -21,10 +21,10 @@ struct STPAnalyticsEventTranslator {
         guard let translatedEventName = translateEvent(analyticEvent, payload: payload) else {
             return nil
         }
-        return .init(eventName: translatedEventName)
+        return .init(name: translatedEventName)
     }
 
-    func translateEvent(_ analyticEvent: STPAnalyticEvent, payload: [String: Any]) -> MobilePaymentElementEvent.EventName? {
+    func translateEvent(_ analyticEvent: STPAnalyticEvent, payload: [String: Any]) -> MobilePaymentElementAnalyticEvent.Name? {
         let paymentMethodType = paymentMethodType(payload)
         switch analyticEvent {
 
