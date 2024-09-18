@@ -19,6 +19,8 @@ extension LinkInlineSignupView {
 
         private let merchantName: String
         private let appearance: PaymentSheet.Appearance
+        /// Controls the stroke color of the checkbox
+        private let borderColor: UIColor
 
         var view: UIView {
             return checkboxButton
@@ -37,6 +39,8 @@ extension LinkInlineSignupView {
             // Make the checkbox in Link use background color as it's background instead of componenetBackground
             var appearanceCopy = appearance
             appearanceCopy.colors.componentBackground = appearance.colors.background
+            // Force the border to match the passed in borderColor
+            appearanceCopy.colors.componentBorder = borderColor
 
             let text = STPLocalizedString(
                 "Save your info for secure 1-click checkout with Link",
@@ -57,20 +61,20 @@ extension LinkInlineSignupView {
             return checkbox
         }()
 
-        init(merchantName: String, appearance: PaymentSheet.Appearance) {
+        init(merchantName: String, appearance: PaymentSheet.Appearance, borderColor: UIColor) {
             self.merchantName = merchantName
             self.appearance = appearance
+            self.borderColor = borderColor
         }
-        
+
         func setUserInteraction(isUserInteractionEnabled: Bool) {
             self.checkboxButton.isEnabled = isUserInteractionEnabled
             if isUserInteractionEnabled {
                 self.checkboxButton.alpha = 1.0
-            }
-            else {
+            } else {
                 self.checkboxButton.alpha = 0.6
             }
-            
+
         }
 
         @objc func didToggleCheckbox() {

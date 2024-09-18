@@ -706,11 +706,10 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         app.typeText("Jane Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("foo@bar.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("108800")
-        app.typeText("00012345" + XCUIKeyboardKey.return.rawValue)
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("00012345")
         app.typeText("123 Main St" + XCUIKeyboardKey.return.rawValue + XCUIKeyboardKey.return.rawValue)
         app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.toolbars.buttons["Done"].tap() // State picker toolbar's "Done" button
         app.typeText("94010" + XCUIKeyboardKey.return.rawValue)
         let payButton = app.buttons["Pay £50.99"]
         XCTAssertFalse(payButton.isEnabled)
@@ -914,7 +913,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled and we should auto select Visa
@@ -944,7 +942,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled

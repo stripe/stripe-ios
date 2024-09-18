@@ -12,7 +12,7 @@ class FetchInitParamsMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, 
     struct Reply: Encodable {
         let locale: String
         var appearance: AppearanceWrapper
-        var fonts: [VoidPayload] = []
+        var fonts: [CustomFontSourceWrapper] = []
     }
     init(didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {
         super.init(name: "fetchInitParams", didReceiveMessage: didReceiveMessage)

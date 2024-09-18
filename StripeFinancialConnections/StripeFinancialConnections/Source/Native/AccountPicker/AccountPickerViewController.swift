@@ -73,9 +73,7 @@ final class AccountPickerViewController: UIViewController {
 
     private lazy var footerView: AccountPickerFooterView = {
         return AccountPickerFooterView(
-            isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
-            businessName: businessName,
-            permissions: dataSource.manifest.permissions,
+            dataAccessNotice: dataSource.accountPickerPane?.dataAccessNotice,
             singleAccount: dataSource.manifest.singleAccount,
             theme: dataSource.manifest.theme,
             didSelectLinkAccounts: { [weak self] in

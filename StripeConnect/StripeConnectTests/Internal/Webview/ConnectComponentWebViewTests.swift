@@ -13,6 +13,9 @@ import WebKit
 import SafariServices
 
 class ConnectComponentWebViewTests: XCTestCase {
+
+    typealias FontSource = EmbeddedComponentManager.CustomFontSource
+
     @MainActor
     func testFetchClientSecret() async throws {
         let componentManager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test"), fetchClientSecret: {
@@ -116,12 +119,32 @@ class ConnectComponentWebViewTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
     
-    func componentManagerAssertingOnFetch(appearance: Appearance = .default) -> EmbeddedComponentManager {
+    func componentManagerAssertingOnFetch(appearance: Appearance = .default, fonts: [EmbeddedComponentManager.CustomFontSource] = []) -> EmbeddedComponentManager {
         EmbeddedComponentManager(apiClient: .init(publishableKey: "test"),
                                  appearance: appearance,
+                                 fonts: fonts,
                                  fetchClientSecret: {
             XCTFail("Client secret should not be retrieved in this test")
             return ""
         })
+    }
+    
+    @MainActor
+    func testFetchInitParamsWithFontSource() async throws {
+        let testBundle = Bundle(for: type(of: self))
+        let fileURL = try XCTUnwrap(testBundle.url(forResource: "FakeFont", withExtension: "txt"))
+        let fontSource = try FontSource(font: .systemFont(ofSize: 12), fileUrl: fileURL)
+        let componentManager = componentManagerAssertingOnFetch(fonts: [fontSource])
+        let webView = ConnectComponentWebView(componentManager: componentManager,
+                                              componentType: .payouts,
+                                              webLocale: Locale(identifier: "fr_FR"),
+                                              loadContent: false)
+        
+        
+       try await webView.evaluateMessageWithReply(name: "fetchInitParams",
+                                                  json: "{}",
+                                                  expectedResponse:"""
+                                                            {"appearance":{"variables":{"fontFamily":"-apple-system"}},"fonts":[{"family":".AppleSystemUIFont","src":"url(data:font\\/txt;charset=utf-8;base64,dGVzdAo=)","weight":"400"}],"locale":"fr-FR"}
+                                                            """)
     }
 }

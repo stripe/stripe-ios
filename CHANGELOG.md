@@ -2,6 +2,7 @@
 ### PaymentSheet
 * [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
 * [Added] CVC Recollection is now in GA. For more information see our docs for [here](https://docs.stripe.com/payments/accept-a-payment?platform=ios#ios-cvc-recollection) for intent first integrations or [here](https://docs.stripe.com/payments/accept-a-payment-deferred?platform=ios&type=payment#ios-cvc-recollection) for deferred intent integrations.
+* [Fixed] Fixed an issue where checkboxes were not visible when `appearance.colors.componentBorder` was transparent.
 
 ## 23.30.0 2024-09-09
 ### PaymentSheet

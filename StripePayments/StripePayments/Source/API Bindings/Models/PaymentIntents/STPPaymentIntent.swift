@@ -132,6 +132,18 @@ public class STPPaymentIntent: NSObject {
     /// Payment-method-specific configuration for this PaymentIntent.
     @_spi(STP) public let paymentMethodOptions: STPPaymentMethodOptions?
 
+    /// Whether the payment intent has setup for future usage set.
+    @_spi(STP) public var isSetupFutureUsageSet: Bool {
+        let setupFutureUsageInResponse = (paymentMethodOptions?.allResponseFields.values.contains(where: {
+            if let value = $0 as? [String: Any] {
+                return value["setup_future_usage"] != nil
+            }
+            return false
+        }) ?? false)
+
+        return setupFutureUsage != .none || setupFutureUsageInResponse
+    }
+
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [

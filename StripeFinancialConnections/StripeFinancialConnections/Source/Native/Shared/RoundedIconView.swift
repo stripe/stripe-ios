@@ -12,8 +12,11 @@ import UIKit
 final class RoundedIconView: UIView {
 
     enum ImageType {
+        /// A local image. Images live in `/Resources/Images`, and defined in `/Source/Helpers/Image.swift`.
         case image(Image)
-        case imageUrl(String?)
+
+        /// A remote image from a given URL, and an optional local image to use as a placeholder.
+        case imageUrl(String?, placeholder: Image? = nil)
     }
 
     enum Style {
@@ -46,10 +49,10 @@ final class RoundedIconView: UIView {
         switch image {
         case .image(let image):
             iconImageView.image = image.makeImage(template: true)
-        case .imageUrl(let imageUrl):
+        case .imageUrl(let imageUrl, let placeholder):
             iconImageView.setImage(
                 with: imageUrl,
-                placeholder: nil,
+                placeholder: placeholder?.makeImage(template: true),
                 useAlwaysTemplateRenderingMode: true
             )
         }
