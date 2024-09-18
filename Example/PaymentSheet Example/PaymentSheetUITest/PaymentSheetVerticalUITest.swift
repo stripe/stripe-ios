@@ -111,7 +111,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         let eventsWithSelectedLPM = ["mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped"]
         XCTAssertEqual(
-            analyticsLog.filter{ eventsWithSelectedLPM.contains($0[string: "event"]!)}.map { $0[string: "selected_lpm"]},
+            analyticsLog.filter({ eventsWithSelectedLPM.contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
             ["sepa_debit", "sepa_debit", "sepa_debit", "sepa_debit", "sepa_debit"]
         )
 
@@ -130,8 +130,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
         )
         XCTAssertEqual(
-            analyticsLog.filter{ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
-                .contains($0[string: "event"]!)}.map { $0[string: "selected_lpm"]},
+            analyticsLog.filter({ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
+                .contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
             ["card", "card"]
         )
 
