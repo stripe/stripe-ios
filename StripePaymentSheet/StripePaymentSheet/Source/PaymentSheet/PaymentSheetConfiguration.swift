@@ -535,10 +535,10 @@ extension PaymentSheet.CustomerConfiguration {
 
 extension PaymentSheet {
     /// Options to block certain card brands on the client
-    public enum CardBrandAcceptance {
+    public enum CardBrandAcceptance: Equatable {
         
         /// Card brand categories that can be allowed or disallowed
-        public enum BrandCategory {
+        public enum BrandCategory: Equatable  {
             /// Visa branded cards
             case visa
             /// Mastercard branded cards
