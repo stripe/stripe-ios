@@ -118,6 +118,7 @@
 		619AF08A2BF56FC000D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */; };
 		61C0D3B8C63EB4558AB74A7E /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1C7CFA5C9C1A8A73CFA1C0 /* StripePayments.framework */; };
 		61C59B0D2C9B935100062CF0 /* CardBrandFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C59B0C2C9B935100062CF0 /* CardBrandFilter.swift */; };
+		61C59B0F2C9BA20C00062CF0 /* CardBrandFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C59B0E2C9BA20C00062CF0 /* CardBrandFilterTests.swift */; };
 		61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */; };
 		61CBE6662BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */; };
 		61D8688E2C06553E001FAD84 /* RightAccessoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */; };
@@ -468,6 +469,7 @@
 		619AF0842BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodRowButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewControllerTests.swift; sourceTree = "<group>"; };
 		61C59B0C2C9B935100062CF0 /* CardBrandFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrandFilter.swift; sourceTree = "<group>"; };
+		61C59B0E2C9BA20C00062CF0 /* CardBrandFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrandFilterTests.swift; sourceTree = "<group>"; };
 		61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightAccessoryButton.swift; sourceTree = "<group>"; };
@@ -1403,6 +1405,7 @@
 				6103F2BD2BE53737002D67F8 /* SavedPaymentMethodManagerTest.swift */,
 				73FB30705EC36BD0868904A2 /* Elements+TestHelpers.swift */,
 				64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */,
+				61C59B0E2C9BA20C00062CF0 /* CardBrandFilterTests.swift */,
 				990304EF35A0EE37DCE20D5B /* IntentStatusPollerTest.swift */,
 				6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */,
 				FCA28FF8CD5BA829A44CDCE7 /* Link */,
@@ -1741,6 +1744,7 @@
 				AE8EF3966E7BABDFC3B426ED /* PaymentSheet+DashboardConfirmParamsTest.swift in Sources */,
 				B65B42972C013DED00EC565D /* PaymentMethodFormViewControllerTest.swift in Sources */,
 				6B50BCEE2C29EE1F009702FB /* SavedPaymentOptionsViewControllerTests.swift in Sources */,
+				61C59B0F2C9BA20C00062CF0 /* CardBrandFilterTests.swift in Sources */,
 				C28450436BDA52BE9BE3BDC3 /* PaymentSheetConfigurationTests.swift in Sources */,
 				F1A350D67665949CF91A0C02 /* CustomerSheetConfigurationTests.swift in Sources */,
 			);
