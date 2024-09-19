@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import StripePaymentSheet
+@testable @_spi(CardBrandFilteringAlpha) import StripePaymentSheet
 @_spi(STP) import StripeCore
 
 class CardBrandFilterTests: XCTestCase {

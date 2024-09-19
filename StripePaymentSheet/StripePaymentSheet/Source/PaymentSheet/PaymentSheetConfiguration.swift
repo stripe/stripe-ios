@@ -166,7 +166,7 @@ extension PaymentSheet {
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
         /// Note: This is only a client-side solution.
-        public var cardBrandAcceptance: CardBrandAcceptance = .all
+        @_spi(CardBrandFilteringAlpha) public var cardBrandAcceptance: CardBrandAcceptance = .all
 
         /// Initializes a Configuration with default values
         public init() {}
@@ -533,7 +533,7 @@ extension PaymentSheet.CustomerConfiguration {
     }
 }
 
-extension PaymentSheet {
+@_spi(CardBrandFilteringAlpha) extension PaymentSheet {
     /// Options to block certain card brands on the client
     public enum CardBrandAcceptance: Equatable {
         
