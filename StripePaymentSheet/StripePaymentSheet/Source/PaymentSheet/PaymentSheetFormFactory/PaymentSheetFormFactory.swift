@@ -133,7 +133,7 @@ class PaymentSheetFormFactory {
 
     func make() -> PaymentMethodElement {
         switch paymentMethod {
-        case .instantDebits:
+        case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
         case .external:
             return makeExternalPaymentMethodForm()
