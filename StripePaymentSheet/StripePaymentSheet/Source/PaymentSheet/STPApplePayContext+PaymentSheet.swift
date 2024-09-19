@@ -192,7 +192,18 @@ extension STPApplePayContext {
             }
 #endif
         }
-
+        
+        // Update list of supportedNetworks based on the merchant's configuration of cardBrandAcceptance
+        switch configuration.cardBrandAcceptance {
+        case .all:
+            break
+        case .allowed(brands: let allowedBrands):
+            paymentRequest.supportedNetworks = allowedBrands.flatMap{ $0.asPkNetworks }
+        case .disallowed(brands: let disallowedBrands):
+            let disallowedNetworks = disallowedBrands.flatMap { $0.asPkNetworks }
+            paymentRequest.supportedNetworks = paymentRequest.supportedNetworks.filter { !disallowedNetworks.contains($0) }
+        }
+        
         return paymentRequest
     }
 }
@@ -234,4 +245,19 @@ private func makeRequiredBillingDetails(from configuration: PaymentSheet.Configu
         requiredPKContactFields.insert(.name)
     }
     return requiredPKContactFields
+}
+
+extension PaymentSheet.CardBrandAcceptance.BrandCategory {
+    var asPkNetworks: [PKPaymentNetwork] {
+        switch self {
+        case .visa:
+            return [.visa]
+        case .mastercard:
+            return [.masterCard, .maestro]
+        case .amex:
+            return [.amex]
+        case .discoverGlobalNetwork:
+            return [.discover]
+        }
+    }
 }
