@@ -323,7 +323,23 @@ extension PaymentSheet {
                 self.isPresented = true
             }
 
-            showPaymentOptions()
+            if let linkAccount = LinkAccountContext.shared.account,
+               linkAccount.sessionState == .requiresVerification,
+               !linkAccount.hasStartedSMSVerification {
+                let verificationController = LinkVerificationController(linkAccount: linkAccount)
+                verificationController.present(from: presentingViewController) { result in
+                    switch result {
+                    case .completed:
+//                        TODO(link): Refactor this
+//                        self?.viewController.selectLink()
+                        completion?()
+                    case .canceled, .failed:
+                        showPaymentOptions()
+                    }
+                }
+            } else {
+                showPaymentOptions()
+            }
         }
 
         /// Completes the payment or setup.

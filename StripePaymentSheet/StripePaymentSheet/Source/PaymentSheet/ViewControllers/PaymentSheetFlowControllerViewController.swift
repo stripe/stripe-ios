@@ -82,6 +82,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case addingNew
     }
     private var mode: Mode
+    private var isSavingInProgress: Bool = false
+    private var isVerificationInProgress: Bool = false
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
     private var isHackyLinkButtonSelected: Bool = false
@@ -564,7 +566,24 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
-        updateUI()
+
+        if case .link(let linkOption) = selectedPaymentOption,
+           let linkAccount = linkOption.account,
+           linkAccount.sessionState == .requiresVerification {
+            isVerificationInProgress = true
+            updateUI()
+
+            let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+            verificationController.present(from: self, completion: { [weak self] _ in
+                // Verification result is ignored here on purpose. If verification is canceled or fails,
+                // we will simply don't block the payment. This will be revised after we redesign the inline
+                // signup UI to include verification status.
+                self?.isVerificationInProgress = false
+                self?.updateUI()
+            })
+        } else {
+            updateUI()
+        }
     }
 
     func updateErrorLabel(for error: Error?) {

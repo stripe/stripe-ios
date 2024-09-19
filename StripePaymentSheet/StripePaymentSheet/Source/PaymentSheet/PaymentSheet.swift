@@ -298,7 +298,16 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 }
             }
         } else {
-            confirm(completion)
+            verifyLinkSessionIfNeeded(with: paymentOption, intent: paymentSheetViewController.intent) { shouldConfirm in
+                if shouldConfirm {
+                    confirm { result, deferredIntentConfirmationType  in
+                        completion(result, deferredIntentConfirmationType)
+                    }
+                } else {
+//                    TODO(link): set deferredIntentConfirmationType here instead of .client
+                    completion(.canceled, .client)
+                }
+            }
         }
     }
 
@@ -355,16 +364,6 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
     }
-
-    private func findPaymentSheetViewController() -> PaymentSheetViewControllerProtocol? {
-        for vc in bottomSheetViewController.contentStack {
-            if let paymentSheetVC = vc as? PaymentSheetViewControllerProtocol {
-                return paymentSheetVC
-            }
-        }
-
-        return nil
-    }
 }
 
 // MARK: - Link
@@ -412,3 +411,127 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
 }
+
+
+    // MARK: - Link
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension PaymentSheet: PayWithLinkViewControllerDelegate {
+
+    func payWithLinkViewControllerDidConfirm(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        intent: Intent,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        PaymentSheet.confirm(
+            configuration: self.configuration,
+            authenticationContext: self.bottomSheetViewController,
+            intent: intent,
+//            TODO(link): Pass Elements Session
+            elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: []),
+            paymentOption: paymentOption,
+            paymentHandler: self.paymentHandler,
+            isFlowController: false)
+        { result, confirmationType in
+            if case let .failed(error) = result {
+                self.mostRecentError = error
+            }
+            // TODO(link): Analytics
+//            STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
+//                isCustom: false,
+//                paymentMethod: paymentOption.analyticsValue,
+//                result: result,
+//                linkEnabled: intent.supportsLink,
+//                activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
+//                currency: intent.currency,
+//                intentConfig: intent.intentConfig
+//            )
+
+            completion(result, confirmationType)
+        }
+    }
+
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
+        payWithLinkViewController.dismiss(animated: true)
+    }
+
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult
+    ) {
+        completion?(result)
+    }
+
+    private func findPaymentSheetViewController() -> PaymentSheetViewController? {
+        for vc in bottomSheetViewController.contentStack {
+            if let paymentSheetVC = vc as? PaymentSheetViewController {
+                return paymentSheetVC
+            }
+        }
+
+        return nil
+    }
+}
+
+
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
+    private extension PaymentSheet {
+
+        func presentPayWithLinkController(
+            from presentingController: UIViewController,
+            intent: Intent,
+            elementsSession: STPElementsSession,
+            shouldOfferApplePay: Bool = false,
+            shouldFinishOnClose: Bool = false,
+            completion: (() -> Void)? = nil
+        ) {
+            let payWithLinkVC = PayWithLinkViewController(
+                intent: intent,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                shouldOfferApplePay: shouldOfferApplePay,
+                shouldFinishOnClose: shouldFinishOnClose
+            )
+
+            payWithLinkVC.payWithLinkDelegate = self
+
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                payWithLinkVC.modalPresentationStyle = .formSheet
+            } else {
+                payWithLinkVC.modalPresentationStyle = .overFullScreen
+            }
+
+            presentingController.present(payWithLinkVC, animated: true, completion: completion)
+        }
+
+        func verifyLinkSessionIfNeeded(
+            with paymentOption: PaymentOption,
+            intent: Intent,
+            completion: ((Bool) -> Void)? = nil
+        ) {
+            guard
+                case .link(let linkOption) = paymentOption,
+                let linkAccount = linkOption.account,
+                linkAccount.sessionState == .requiresVerification
+            else {
+                // No verification required
+                completion?(true)
+                return
+            }
+
+            let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+            verificationController.present(from: bottomSheetViewController) { [weak self] result in
+                self?.bottomSheetViewController.dismiss(animated: true, completion: nil)
+                switch result {
+                case .completed:
+                    completion?(true)
+                case .canceled, .failed:
+                    completion?(false)
+                }
+            }
+        }
+
+    }
