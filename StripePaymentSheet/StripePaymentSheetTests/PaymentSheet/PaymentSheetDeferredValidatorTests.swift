@@ -103,7 +103,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
             """)
         }
         let analyticEvent = STPAnalyticsClient.sharedClient._testLogHistory.last
-        XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetIntentPaymentMethodIdMismatch.rawValue)
+        XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetDeferredIntentPaymentMethodIdMismatch.rawValue)
         XCTAssertNotNil(analyticEvent?["error_code"] as? String)
     }
     
@@ -144,7 +144,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
             """)
         }
         let analyticEvent = STPAnalyticsClient.sharedClient._testLogHistory.last
-        XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetIntentPaymentMethodIdMismatch.rawValue)
+        XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetDeferredIntentPaymentMethodIdMismatch.rawValue)
         XCTAssertNotNil(analyticEvent?["error_code"] as? String)
     }
     

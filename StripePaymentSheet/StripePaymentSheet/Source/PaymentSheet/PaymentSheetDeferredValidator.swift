@@ -54,15 +54,16 @@ struct PaymentSheetDeferredValidator {
             return
         }
         guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
-            let errorAnalytic = ErrorAnalytic(event: .paymentSheetIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: "Payment method ids don't match"))
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            throw PaymentSheetError.deferredIntentValidationFailed(message: """
+            let errorMessage = """
                 \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
 
                 To resolve this issue, you can:
                 1. Create a new Intent each time before you call the `confirmHandler`, or
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
-            """)
+            """
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage))
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
         }
     }
     
@@ -71,15 +72,16 @@ struct PaymentSheetDeferredValidator {
             return
         }
         guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
-            let errorAnalytic = ErrorAnalytic(event: .paymentSheetIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: "Payment method ids don't match"))
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            throw PaymentSheetError.deferredIntentValidationFailed(message: """
+            let errorMessage = """
                 \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
 
                 To resolve this issue, you can:
                 1. Create a new Intent each time before you call the `confirmHandler`, or
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
-            """)
+            """
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage))
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
         }
     }
 }

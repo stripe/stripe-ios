@@ -194,7 +194,7 @@ import Foundation
     case paymentSheetFormShown = "mc_form_shown"
     case paymentSheetFormInteracted = "mc_form_interacted"
     case paymentSheetCardNumberCompleted = "mc_card_number_completed"
-    case paymentSheetIntentPaymentMethodIdMismatch = "mc_intent_payment_method_id_mismatch"
+    case paymentSheetDeferredIntentPaymentMethodIdMismatch = "mc_deferred_intent_payment_method_id_mismatch"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
