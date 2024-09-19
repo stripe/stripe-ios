@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'release_common'
+require_relative 'validate_version_number'
 
 # Get argument of new version number
 @version = @specified_version
@@ -101,6 +102,7 @@ def propose_release
 end
 
 steps = [
+  method(:validate_version_number),
   method(:create_branch),
   method(:update_version),
   method(:update_placeholders),
