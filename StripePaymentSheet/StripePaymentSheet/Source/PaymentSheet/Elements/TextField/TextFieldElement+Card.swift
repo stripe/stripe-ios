@@ -49,7 +49,7 @@ extension TextFieldElement {
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
-                        RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases)
+                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter{ cardFilter.isAccepted(cardBrand:$0) })
                     return rotatingCardBrandsView
                 }
             } else {
@@ -97,7 +97,7 @@ extension TextFieldElement {
                 case .invalidBrand, .invalidLuhn:
                     return String.Localized.your_card_number_is_invalid
                 case .disallowedBrand(let brand):
-                    let cardBrandDisplayName =  STPCardBrandUtilities.stringFrom(brand) ?? "brand"
+                    let cardBrandDisplayName =  STPCardBrandUtilities.stringFrom(brand) ?? "This card brand"
                     return "\(cardBrandDisplayName) is not accepted"
                 }
             }
