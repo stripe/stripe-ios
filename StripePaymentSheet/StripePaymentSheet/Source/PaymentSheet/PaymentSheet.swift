@@ -324,11 +324,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     }
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
-        self.presentPayWithLinkController(
-            from: paymentSheetViewController,
-            intent: paymentSheetViewController.intent,
-            elementsSession: paymentSheetViewController.elementsSession
-        )
+        self.presentPayWithLinkController(from: paymentSheetViewController, intent: paymentSheetViewController.intent, elementsSession: paymentSheetViewController.elementsSession, shouldOfferApplePay: true, shouldFinishOnClose: true)
     }
 }
 
