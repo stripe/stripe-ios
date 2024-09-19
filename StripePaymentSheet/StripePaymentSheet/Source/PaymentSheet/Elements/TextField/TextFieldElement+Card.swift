@@ -24,7 +24,7 @@ extension TextFieldElement {
         let cardBrandDropDown: DropdownFieldElement?
         let cardFilter: CardBrandFilter
         
-        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter) {
+        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default) {
             self.defaultValue = defaultValue
             self.cardBrandDropDown = cardBrandDropDown
             self.cardFilter = cardFilter

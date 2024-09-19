@@ -9,7 +9,14 @@ import Foundation
 @_spi(STP) import StripeCore
 
 struct CardBrandFilter {
+    
+    static let `default`: CardBrandFilter = .init(cardBrandAcceptance: .all)
+    
     private let cardBrandAcceptance: PaymentSheet.CardBrandAcceptance
+    
+    init(cardBrandAcceptance: PaymentSheet.CardBrandAcceptance) {
+        self.cardBrandAcceptance = cardBrandAcceptance
+    }
     
     /// Determines if a merchant can accept a card brand based on `cardBrandAcceptance`
     /// - Parameter cardBrand: The `STPCardBrand` to determine if acceptance

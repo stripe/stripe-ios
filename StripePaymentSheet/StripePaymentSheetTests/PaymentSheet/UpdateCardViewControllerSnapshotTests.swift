@@ -30,7 +30,8 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
                                            appearance: appearance,
                                            hostedSurface: .paymentSheet,
                                            canRemoveCard: true,
-                                           isTestMode: false)
+                                           isTestMode: false,
+                                           cardBrandFilter: .default)
         sut.view.autosizeHeight(width: 375)
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: sut.view.frame.size.height))
         testWindow.isHidden = false
