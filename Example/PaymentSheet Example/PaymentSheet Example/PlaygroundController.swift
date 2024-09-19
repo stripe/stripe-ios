@@ -171,6 +171,16 @@ class PlaygroundController: ObservableObject {
         case .vertical:
             configuration.paymentMethodLayout = .vertical
         }
+        
+        switch settings.cardBrandAcceptance {
+        case .all:
+            configuration.cardBrandAcceptance = .all
+        case .blockAmEx:
+            configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
+        case .allowVisa:
+            configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
+        
         return configuration
     }
 
