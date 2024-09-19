@@ -38,7 +38,8 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
                                                     configuration: config,
                                                     paymentSheetConfiguration: PaymentSheet.Configuration(),
                                                     intent: intent,
-                                                    appearance: appearance)
+                                                    appearance: appearance,
+                                                    analyticsHelper: ._testValue())
         let testWindow = UIWindow()
         testWindow.isHidden = false
         if darkMode {
