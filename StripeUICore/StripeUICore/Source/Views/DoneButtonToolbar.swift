@@ -38,7 +38,7 @@ import UIKit
             target: self,
             action: #selector(didTapDone)
         )
-        doneButton.tintColor = theme.colors.primary
+        doneButton.tintColor = theme.colors.secondary ?? theme.colors.primary
         let cancelButton = UIBarButtonItem(
             barButtonSystemItem: .cancel,
             target: self,

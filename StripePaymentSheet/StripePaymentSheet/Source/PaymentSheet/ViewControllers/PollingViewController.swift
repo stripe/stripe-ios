@@ -59,7 +59,7 @@ class PollingViewController: UIViewController {
                 format: viewModel.CTA,
                    timeRemaining
                ))
-               attrText.addAttributes([.foregroundColor: appearance.colors.primary],
+        attrText.addAttributes([.foregroundColor: appearance.colors.secondary ?? appearance.colors.primary],
                                       range: NSString(string: attrText.string).range(of: timeRemaining))
                return attrText
     }
@@ -133,7 +133,7 @@ class PollingViewController: UIViewController {
         button.setTitle(.Localized.cancel_pay_another_way, for: .normal)
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 22)
         button.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
-        button.tintColor = appearance.colors.primary
+        button.tintColor = appearance.colors.secondary ?? appearance.colors.primary
         return button
     }()
 

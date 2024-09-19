@@ -94,6 +94,10 @@ public extension PaymentSheet {
             #else
             public var background: UIColor = .systemBackground
             #endif
+            
+            /// The secondary color used throughout PaymentSheet
+            /// - Note: If `nil`, defaults to  `appearance.colors.primary`
+            public var secondary: UIColor?
 
             /// The color used for the background of inputs, tabs, and other components
             public var componentBackground: UIColor = UIColor.dynamic(light: .systemBackground,
@@ -192,7 +196,7 @@ public extension PaymentSheet {
             public var textColor: UIColor?
             
             /// The background color of the primary button when in a disabled state.
-             /// - Note: If `nil`, defaults to `backgroundColor`. If `backgroundColor` is `nil`, defaults to `appearance.colors.primary`.
+            /// - Note: If `nil`, defaults to `backgroundColor`. If `backgroundColor` is `nil`, defaults to `appearance.colors.primary`.
             public var disabledBackgroundColor: UIColor?
 
             /// The text color of the primary button when in a disabled state.

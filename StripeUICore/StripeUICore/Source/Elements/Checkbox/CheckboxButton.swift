@@ -262,7 +262,7 @@ class CheckBox: UIView {
 
     private var fillColor: UIColor {
         if isSelected {
-            return theme.colors.primary
+            return theme.colors.secondary ?? theme.colors.primary
         }
 
         return theme.colors.parentBackground

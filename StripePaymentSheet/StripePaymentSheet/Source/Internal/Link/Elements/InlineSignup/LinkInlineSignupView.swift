@@ -39,7 +39,7 @@ final class LinkInlineSignupView: UIView {
                                        isOptional: viewModel.isEmailOptional,
                                        showLogo: viewModel.mode != .textFieldsOnlyPhoneFirst,
                                        theme: theme)
-        element.indicatorTintColor = theme.colors.primary
+        element.indicatorTintColor = theme.colors.secondary ?? theme.colors.primary
         return element
     }()
 
@@ -85,7 +85,7 @@ final class LinkInlineSignupView: UIView {
                                            delegate: self)
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
-        legalView.tintColor = theme.colors.primary
+        legalView.tintColor = theme.colors.secondary ?? theme.colors.primary
 
         return StaticElement(
             view: legalView

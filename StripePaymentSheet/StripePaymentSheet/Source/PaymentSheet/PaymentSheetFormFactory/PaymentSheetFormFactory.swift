@@ -876,6 +876,7 @@ extension PaymentSheet.Appearance {
 
         var colors = ElementsUITheme.Color()
         colors.primary = self.colors.primary
+        colors.secondary = self.colors.secondary
         colors.parentBackground = self.colors.background
         colors.background = self.colors.componentBackground
         colors.bodyText = self.colors.text

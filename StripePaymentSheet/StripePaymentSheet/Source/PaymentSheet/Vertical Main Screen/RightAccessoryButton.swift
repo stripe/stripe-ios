@@ -43,7 +43,7 @@ extension RowButton {
             if #available(iOS 15.0, *) {
                 label.minimumContentSizeCategory = .large
             }
-            label.textColor = appearance.colors.primary // TODO(porter) use secondary action color
+            label.textColor = appearance.colors.secondary ?? appearance.colors.primary // TODO(porter) use secondary action color
             label.adjustsFontSizeToFitWidth = true
             label.adjustsFontForContentSizeCategory = true
             label.isAccessibilityElement = false
@@ -53,7 +53,7 @@ extension RowButton {
         private var imageView: UIImageView? {
             guard let image = accessoryType.accessoryImage else { return nil }
             let imageView = UIImageView(image: image)
-            imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
+            imageView.tintColor = appearance.colors.secondary ?? appearance.colors.primary // TODO(porter) use secondary action color
             imageView.contentMode = .scaleAspectFit
             imageView.isAccessibilityElement = false
             return imageView

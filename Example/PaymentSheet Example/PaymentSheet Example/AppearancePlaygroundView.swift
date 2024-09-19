@@ -24,6 +24,11 @@ struct AppearancePlaygroundView: View {
             get: { Color(self.appearance.colors.primary) },
             set: { self.appearance.colors.primary = UIColor($0) }
         )
+        
+        let secondaryColorBinding = Binding(
+            get: { Color(self.appearance.colors.secondary ?? self.appearance.colors.primary) },
+            set: { self.appearance.colors.secondary = UIColor($0) }
+        )
 
         let backgroundColorBinding = Binding(
             get: { Color(self.appearance.colors.background) },
@@ -219,6 +224,7 @@ struct AppearancePlaygroundView: View {
                 Section(header: Text("Colors")) {
                     Group {
                         ColorPicker("primary", selection: primaryColorBinding)
+                        ColorPicker("secondary", selection: secondaryColorBinding)
                         ColorPicker("background", selection: backgroundColorBinding)
                         ColorPicker("componentBackground", selection: componentBackgroundColorBinding)
                         ColorPicker("componentBorder", selection: componentBorderColorBinding)

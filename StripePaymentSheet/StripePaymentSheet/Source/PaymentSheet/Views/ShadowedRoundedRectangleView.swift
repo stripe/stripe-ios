@@ -56,7 +56,7 @@ class ShadowedRoundedRectangle: UIView {
                 // Without a border, the customer can't tell this is selected and it looks bad
                 layer.borderWidth = 1.5
             }
-            layer.borderColor = appearance.colors.componentBorderSelected?.cgColor ?? appearance.colors.primary.cgColor
+            layer.borderColor = appearance.colors.componentBorderSelected?.cgColor ?? appearance.colors.secondary?.cgColor ?? appearance.colors.primary.cgColor
         } else {
             layer.borderWidth = appearance.borderWidth
             layer.borderColor = appearance.colors.componentBorder.cgColor

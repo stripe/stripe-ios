@@ -119,8 +119,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         navBar.delegate = self
         navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
         // TODO(porter) Read color from new secondary action color from appearance
-        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
-        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.secondary ?? configuration.appearance.colors.primary, for: .normal)
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.secondary?.disabledColor ?? configuration.appearance.colors.primary.disabledColor, for: .disabled)
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
         return navBar
     }()

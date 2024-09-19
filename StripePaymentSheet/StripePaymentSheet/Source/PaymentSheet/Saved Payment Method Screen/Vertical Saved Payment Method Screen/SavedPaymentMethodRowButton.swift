@@ -90,7 +90,7 @@ final class SavedPaymentMethodRowButton: UIView {
     // TODO(porter) Refactor CircleIconView out of SavedPaymentMethodCollectionView once it is deleted
     private lazy var circleView: SavedPaymentMethodCollectionView.CircleIconView = {
         let circleView = SavedPaymentMethodCollectionView.CircleIconView(icon: .icon_checkmark,
-                                                                         fillColor: appearance.colors.primary)
+                                                                         fillColor: appearance.colors.secondary ?? appearance.colors.primary)
         circleView.isHidden = true
         return circleView
     }()

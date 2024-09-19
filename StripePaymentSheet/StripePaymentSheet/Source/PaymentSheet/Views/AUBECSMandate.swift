@@ -31,7 +31,7 @@ final class AUBECSLegalTermsView: UIView {
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
         textView.textColor = theme.colors.secondaryText
-        textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
+        textView.linkTextAttributes = [.foregroundColor: theme.colors.secondary ?? theme.colors.primary]
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.clipsToBounds = false

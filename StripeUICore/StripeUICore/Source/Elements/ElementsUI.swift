@@ -51,7 +51,7 @@ import UIKit
         textView.font = theme.fonts.footnote
         textView.backgroundColor = .clear
         textView.textColor = theme.colors.secondaryText
-        textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
+        textView.linkTextAttributes = [.foregroundColor: theme.colors.secondary ?? theme.colors.primary]
         return textView
     }
 
@@ -100,6 +100,7 @@ import UIKit
         public init() {}
 
         public var primary = UIColor.systemBlue
+        public var secondary: UIColor?
         public var parentBackground = UIColor.systemBackground
         public var background = ElementsUI.backgroundColor
         public var disabledBackground = ElementsUI.disabledBackgroundColor
