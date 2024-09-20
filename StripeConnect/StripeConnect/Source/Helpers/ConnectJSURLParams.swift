@@ -32,7 +32,7 @@ extension ConnectJSURLParams {
             self.livemodeOverride = apiClient.userKeyLiveMode
 
             // TODO: Temporary hack – we shouldn't need to specify a publishable key if using apiKeyOverride
-            self.publicKey = apiClient.publishableKey
+//            self.publicKey = apiClient.publishableKey
         } else {
             self.publicKey = apiClient.publishableKey
         }
@@ -42,11 +42,8 @@ extension ConnectJSURLParams {
         guard let data = try? JSONEncoder().encode(self),
               let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             // TODO: Log error
-            fatalError("Unable to encode URL params")
             return StripeConnectConstants.connectJSBaseURL
         }
-        // Convert to string values so boolean is "true" or "false"
-        let strDict = dict.mapValues(String.init(describing:))
 
         return URL(string: "#\(URLEncoder.queryString(from: dict))", relativeTo: StripeConnectConstants.connectJSBaseURL)!
     }

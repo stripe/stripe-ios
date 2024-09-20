@@ -19,7 +19,7 @@ class PayoutsViewControllerTests: XCTestCase {
             self.payoutDidFail = payoutDidFail
         }
 
-        var payoutDidFail: ((_ payouts: PayoutsViewController,     _ error: any Error) -> Void)?
+        var payoutDidFail: ((_ payouts: PayoutsViewController, _ error: any Error) -> Void)?
 
         func payoutsLoadDidFail(_ payouts: PayoutsViewController, withError error: any Error) {
             payoutDidFail?(payouts, error)
@@ -32,16 +32,14 @@ class PayoutsViewControllerTests: XCTestCase {
             return nil
         })
         let vc = componentManager.createPayoutsViewController()
-        let payoutsDelegate = PayoutViewControllerDelegatePassThrough()
-        vc.delegate = payoutsDelegate
 
         let expectation = XCTestExpectation(description: "Delegate called")
-
-        payoutsDelegate.payoutDidFail = { _, error in
+        let payoutsDelegate = PayoutViewControllerDelegatePassThrough { _, error in
             expectation.fulfill()
             XCTAssertEqual((error as? EmbeddedComponentError)?.type, .rateLimitError)
             XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
         }
+        vc.delegate = payoutsDelegate
 
         vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         

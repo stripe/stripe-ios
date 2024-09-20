@@ -20,6 +20,7 @@ public class EmbeddedComponentManager {
     let fetchClientSecret: () async -> String?
     let fonts: [EmbeddedComponentManager.CustomFontSource]
     private(set) var appearance: EmbeddedComponentManager.Appearance
+
     /**
      Initializes a StripeConnect instance.
 
@@ -59,7 +60,7 @@ public class EmbeddedComponentManager {
     }
 
     @_spi(DashboardOnly)
-    public func createPaymentDetails() -> PaymentDetailsViewController {
+    public func createPaymentDetailsViewController() -> PaymentDetailsViewController {
         .init(componentManager: self)
     }
 

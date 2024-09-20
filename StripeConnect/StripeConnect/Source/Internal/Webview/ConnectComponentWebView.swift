@@ -49,10 +49,6 @@ class ConnectComponentWebView: ConnectWebView {
 
         super.init(frame: .zero, configuration: config)
         componentManager.registerChild(self)
-        guard let publishableKey = componentManager.apiClient.publishableKey else {
-            assertionFailure("A publishable key is required. For more info, see https://stripe.com/docs/keys")
-            return
-        }
         addMessageHandlers()
         addNotificationObservers()
         if loadContent {
