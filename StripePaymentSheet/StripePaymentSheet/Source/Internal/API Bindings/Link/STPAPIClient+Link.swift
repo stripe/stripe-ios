@@ -74,6 +74,7 @@ extension STPAPIClient {
         if let consentAction = consentAction {
             parameters["consent_action"] = consentAction
         }
+        parameters = Self.paramsAddingPaymentUserAgent(parameters)
 
         post(
             resource: endpoint,
