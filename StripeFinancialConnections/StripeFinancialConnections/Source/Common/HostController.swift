@@ -44,6 +44,7 @@ class HostController {
     private let returnURL: String?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
     private let analyticsClientV1: STPAnalyticsClientProtocol
+    private let additionalParameters: [String: Any]
 
     private var nativeFlowController: NativeFlowController?
     lazy var hostViewController = HostViewController(
@@ -57,6 +58,13 @@ class HostController {
 
     weak var delegate: HostControllerDelegate?
 
+    private var isPantherPayment: Bool {
+        guard let linkMode = additionalParameters["link_mode"] as? String else {
+            return false
+        }
+        return linkMode == "link_card_brand"
+    }
+
     // MARK: - Init
 
     init(
@@ -65,13 +73,15 @@ class HostController {
         clientSecret: String,
         returnURL: String?,
         publishableKey: String?,
-        stripeAccount: String?
+        stripeAccount: String?,
+        additionalParameters: [String: Any]
     ) {
         self.apiClient = apiClient
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
+        self.additionalParameters = additionalParameters
         analyticsClient.setAdditionalParameters(
             linkAccountSessionClientSecret: clientSecret,
             publishableKey: publishableKey,
@@ -154,7 +164,8 @@ private extension HostController {
             apiClient: apiClient,
             manifest: manifest,
             sessionFetcher: sessionFetcher,
-            returnURL: returnURL
+            returnURL: returnURL,
+            isPantherPayment: isPantherPayment
         )
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)
@@ -171,7 +182,8 @@ private extension HostController {
             accountPickerPane: synchronizePayload.text?.accountPickerPane,
             apiClient: apiClient,
             clientSecret: clientSecret,
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            isPantherPayment: isPantherPayment
         )
         nativeFlowController = NativeFlowController(
             dataManager: dataManager,
