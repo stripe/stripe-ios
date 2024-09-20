@@ -26,6 +26,7 @@ class MainViewController: UITableViewController {
     
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
+        case onboarding = "Onboarding"
         case payouts = "Payouts"
 
         var label: String { rawValue }
@@ -104,6 +105,8 @@ class MainViewController: UITableViewController {
         let viewControllerToPush: UIViewController
 
         switch row {
+        case .onboarding:
+            viewControllerToPush = embeddedComponentManager.createAccountOnboardingViewController(fullTermsOfServiceUrl: nil, recipientTermsOfServiceUrl: nil, privacyPolicyUrl: nil, skipTermsOfServiceCollection: nil, collectionOptions: .init())
         case .payouts:
             viewControllerToPush = embeddedComponentManager.createPayoutsViewController()
         }

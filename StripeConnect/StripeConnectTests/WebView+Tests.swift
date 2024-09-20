@@ -20,8 +20,8 @@ extension WKWebView {
                         """)
     }
     
-    func evaluateSetOnExit() {
-        evaluateMessage(name: "onSetterFunctionCalled",
+    func evaluateSetOnExit() async throws {
+        try await evaluateMessage(name: "onSetterFunctionCalled",
                         json: """
                         {
                             "setter": "setOnExit"
@@ -62,8 +62,8 @@ extension WKWebView {
                         """)
     }
     
-    func evaluateOnLoadError(type: String, message: String) {
-        evaluateMessage(name: "onSetterFunctionCalled",
+    func evaluateOnLoadError(type: String, message: String) async throws {
+        try await evaluateMessage(name: "onSetterFunctionCalled",
                         json:
                         """
                         {
@@ -124,6 +124,16 @@ extension WKWebView {
         }
     }
     
+    @discardableResult
+    func evaluateMessage(name: String,
+                         json: String) async throws -> Any? {
+        return try await withCheckedThrowingContinuation { continuation in
+            evaluateMessage(name: name, json: json, completionHandler: { response, error in
+                continuation.resume(returning: response)
+            })
+        }
+    }
+    
     func evaluateMessage(name: String,
                          json: String,
                          completionHandler: ((Any?, (any Error)?) -> Void)? = nil) {
@@ -132,6 +142,21 @@ extension WKWebView {
         """
         
         evaluateJavaScript(script, completionHandler: completionHandler)
+    }
+    
+    func ensureMessagesNotSet(messages: [String],
+                              file: StaticString = #filePath,
+                              line: UInt = #line) async throws {
+        for message in messages {
+            do {
+                try await self.evaluateMessageWithReply(name: message,
+                                                        json: "{}",
+                                                        expectedResponse: "",
+                                                        file: file,
+                                                        line: line)
+                XCTFail("\(message) should not be set when it's nil", file: file, line: line)
+            } catch {}
+        }
     }
     
     func evaluateMessageWithReply<Response: Encodable>(name: String,
