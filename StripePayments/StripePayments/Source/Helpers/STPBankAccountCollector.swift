@@ -254,6 +254,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
+                additionalParameters: additionalParameters,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -507,6 +508,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
+                additionalParameters: additionalParameters,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -596,6 +598,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
+                additionalParameters: additionalParameters,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
