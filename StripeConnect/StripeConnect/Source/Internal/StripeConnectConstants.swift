@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 enum StripeConnectConstants {
 
@@ -22,4 +21,5 @@ enum StripeConnectConstants {
     ]
 
     static let connectJSBaseURL = URL(string: "http://localhost:3001/v1.0/ios_webview.html")!
+//    static let connectJSBaseURL = URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!
 }

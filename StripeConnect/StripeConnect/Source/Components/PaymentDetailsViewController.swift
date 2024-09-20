@@ -20,7 +20,7 @@ public class PaymentDetailsViewController: UIViewController {
     init(componentManager: EmbeddedComponentManager) {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
-            componentType: .payouts
+            componentType: .paymentDetails
         )
         super.init(nibName: nil, bundle: nil)
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
@@ -41,8 +41,7 @@ public class PaymentDetailsViewController: UIViewController {
     }
 
     public func setPayment(id: String) {
-//        webView.sendMessage(SetPaymentSender(payload: id))
-//        webView.evaluateJavaScript("")
+        webView.sendMessage(SetPaymentSender.setPayment(id: id))
     }
 }
 
