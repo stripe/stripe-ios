@@ -20,7 +20,7 @@ class PageDidLoadMessageHandlerTests: ScriptWebTestBase {
         }))
 
         webView.evaluatePageDidLoad(pageViewId: pageViewId)
-        
+
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

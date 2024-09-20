@@ -42,7 +42,7 @@ class PayoutsViewControllerTests: XCTestCase {
         vc.delegate = payoutsDelegate
 
         vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
-        
+
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }

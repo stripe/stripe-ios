@@ -41,7 +41,10 @@ public class PaymentDetailsViewController: UIViewController {
     }
 
     public func setPayment(id: String) {
-        webView.sendMessage(SetPaymentSender.setPayment(id: id))
+        webView.sendMessage(CallSetterWithSerializableValueSender(payload: .init(
+            setter: "setPayment",
+            value: id
+        )))
     }
 }
 

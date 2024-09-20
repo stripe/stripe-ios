@@ -19,7 +19,7 @@ class OpenAuthenticatedWebViewMessageHandlerTests: ScriptWebTestBase {
         }))
 
         webView.evaluateOpenAuthenticatedWebView(url: url, id: id)
-        
+
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

@@ -26,7 +26,7 @@ class ScriptWebTestBase: XCTestCase {
     func validateMessageSent<Sender: MessageSender>(sender: Sender) throws {
         let expectation = try webView.expectationForMessageReceived(sender: sender)
         try webView.sendMessage(sender: sender)
-        
+
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }

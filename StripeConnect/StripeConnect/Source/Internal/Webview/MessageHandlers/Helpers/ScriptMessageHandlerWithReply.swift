@@ -29,7 +29,7 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NS
             let payload: Payload = try message.toDecodable()
             let value = try await didReceiveMessage(payload)
             let responseData = try JSONEncoder.connectEncoder.encode(value)
-            
+
             guard let response = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) else {
                 return (nil, "Failed to encode response")
             }

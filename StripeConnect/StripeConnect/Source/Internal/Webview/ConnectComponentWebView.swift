@@ -13,7 +13,7 @@ import WebKit
 class ConnectComponentWebView: ConnectWebView {
     /// The embedded component manager that will be used for requests.
     var componentManager: EmbeddedComponentManager
-    
+
     /// The component type that should be loaded.
     private var componentType: ComponentType
 
@@ -60,11 +60,11 @@ class ConnectComponentWebView: ConnectWebView {
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: appearance, traitCollection: traitCollection))))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         DispatchQueue.main.async {
             self.updateAppearance(appearance: self.componentManager.appearance)
@@ -109,15 +109,15 @@ private extension ConnectComponentWebView {
                 return .init(locale: "", appearance: .init(appearance: .default, traitCollection: .init()))
             }
             return .init(locale: webLocale.webIdentifier,
-                         appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection), 
-                         fonts: componentManager.fonts.map({ .init(customFontSource: $0)}))
+                         appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection),
+                         fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
         addMessageHandler(DebugMessageHandler())
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler{_ in })
-        addMessageHandler(AccountSessionClaimedMessageHandler{ message in
+        addMessageHandler(PageDidLoadMessageHandler { _ in })
+        addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
             // TODO: use this for analytics
         })
 

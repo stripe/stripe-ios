@@ -21,7 +21,6 @@ class PaymentDetailsViewControllerTests: XCTestCase {
             self.paymentDetailsDidFail = paymentDetailsDidFail
         }
 
-
         func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController, withError error: any Error) {
             paymentDetailsDidFail?(paymentDetails, error)
         }
@@ -45,6 +44,21 @@ class PaymentDetailsViewControllerTests: XCTestCase {
 
         vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
 
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    func testSetPayment() throws {
+        STPAPIClient.shared.publishableKey = "pk_test"
+        let componentManager = EmbeddedComponentManager(fetchClientSecret: {
+            return nil
+        })
+        let vc = componentManager.createPaymentDetailsViewController()
+        let expectation = try vc.webView.expectationForMessageReceived(sender: CallSetterWithSerializableValueSender(payload: .init(
+            setter: "setPayment",
+            value: "pi_123"
+        )))
+
+        vc.setPayment(id: "pi_123")
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }

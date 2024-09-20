@@ -19,7 +19,7 @@ class DebugMessageHandlerTests: ScriptWebTestBase {
         }))
 
         webView.evaluateDebugMessage(message: debugMessage)
-        
+
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

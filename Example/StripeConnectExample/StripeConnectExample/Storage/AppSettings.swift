@@ -27,11 +27,10 @@ class AppSettings {
             UserDefaults.standard.setValue(newValue, forKey: Constants.serverBaseURLKey)
         }
     }
-    
+
     var appearanceId: String? {
         get {
-            UserDefaults.standard.string(forKey: Constants.appearanceIdKey) ??
-            nil
+            UserDefaults.standard.string(forKey: Constants.appearanceIdKey)
         }
         set {
             UserDefaults.standard.setValue(newValue, forKey: Constants.appearanceIdKey)
