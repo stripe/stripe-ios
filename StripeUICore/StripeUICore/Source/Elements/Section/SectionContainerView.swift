@@ -198,14 +198,19 @@ extension SectionContainerView: EventHandler {
 extension SectionContainerView {
     class MultiElementRowView: UIView {
         let views: [UIView]
-
-        init(views: [UIView], theme: ElementsUITheme = .default) {
-            self.views = views
-            super.init(frame: .zero)
+        let theme: ElementsUITheme
+        lazy var stackView: StackViewWithSeparator = {
             let stackView = buildStackView(views: views, theme: theme)
             stackView.axis = .horizontal
             stackView.drawBorder = false
             stackView.distribution = .fillEqually
+            return stackView
+        }()
+
+        init(views: [UIView], theme: ElementsUITheme = .default) {
+            self.views = views
+            self.theme = theme
+            super.init(frame: .zero)
             addAndPinSubview(stackView)
         }
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }

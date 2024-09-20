@@ -17,7 +17,10 @@ import UIKit
 /// If card scanning is available, it uses a custom view that adds card scanning. Otherwise, it uses the default SectionElement view.
 /// It coordinates between the PAN and CVC fields.
 final class CardSectionElement: ContainerElement {
-
+    var stackView: UIStackView {
+        return cardSection.stackView
+    }
+    
     var elements: [Element] {
         return [cardSection]
     }

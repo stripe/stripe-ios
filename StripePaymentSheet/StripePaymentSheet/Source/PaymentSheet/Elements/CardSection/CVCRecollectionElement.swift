@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class CVCRecollectionElement: ContainerElement {
+final class CVCRecollectionElement: Element {
     var elements: [Element] {
         return [textFieldElement]
     }

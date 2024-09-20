@@ -11,19 +11,34 @@
 
 @_spi(STP) import StripeCore
 import SwiftUI
+
+#if DEBUG
 extension UIView {
     func ambiguousView() -> UIView? {
-        if hasAmbiguousLayout {
-           return self
-        }
         for subview in self.subviews {
             if let ambiguousSubview = subview.ambiguousView() {
                 return ambiguousSubview
             }
         }
+        if hasAmbiguousLayout {
+            print("Horizontal axis constraints: \(self.constraintsAffectingLayout(for: .horizontal)))")
+            print("Vertical axis constraints: \(self.constraintsAffectingLayout(for: .vertical)))")
+            print("For more info, try setting a breakpoint here and calling: \nexpr -l objc -O -- [\(Unmanaged.passUnretained(self).toOpaque()) _autolayoutTrace]")
+            print("Will start exercising layout ambiguity every second, expect the UI to move around!")
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] t in
+                if let self {
+                    self.exerciseAmbiguityInLayout()
+                } else {
+                    print("Layout ambiguity has been resolved.")
+                    t.invalidate()
+                }
+            }
+           return self
+        }
         return nil
     }
 }
+#endif
 
 extension View {
     /// Presents a sheet for a customer to complete their payment.

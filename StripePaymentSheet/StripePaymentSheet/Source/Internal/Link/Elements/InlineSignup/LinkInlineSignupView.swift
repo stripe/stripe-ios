@@ -92,7 +92,7 @@ final class LinkInlineSignupView: UIView {
         )
     }()
 
-    private lazy var combinedEmailNameSection: Element = {
+    private lazy var combinedEmailNameSection: SectionElement = {
         return SectionElement(elements: [emailSection, phoneNumberSection, nameElement], theme: theme)
     }()
 
@@ -108,7 +108,11 @@ final class LinkInlineSignupView: UIView {
         }
 
         let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
-        let formElement = FormElement(elements: elements, style: style, theme: theme)
+//        TODO: Why are these all nested? Is it possible to fix this part and then use isHidden only with >1 element instead of adding/removing the subviews? Or should we add/remove the subviews as needed?
+        return FormElement(elements: elements, style: style, theme: theme)
+    }()
+    
+    private lazy var containerFormElement: FormElement = {
         let containerFormElement = FormElement(elements: [formElement, legalTermsElement], theme: theme, customSpacing: [(formElement, ElementsUI.formSpacing - 4.0)])
         return containerFormElement
     }()
@@ -141,14 +145,14 @@ final class LinkInlineSignupView: UIView {
         clipsToBounds = true
         directionalLayoutMargins = .insets(amount: viewModel.layoutInsets)
 
-        formElement.view.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(formElement.view)
+        containerFormElement.view.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(containerFormElement.view)
 
         NSLayoutConstraint.activate([
-            formElement.view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            formElement.view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            formElement.view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            formElement.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            containerFormElement.view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            containerFormElement.view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            containerFormElement.view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            containerFormElement.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
 
         updateAppearance()
@@ -165,7 +169,7 @@ final class LinkInlineSignupView: UIView {
     func setupBindings() {
         viewModel.delegate = self
         checkboxElement.delegate = self
-        formElement.delegate = self
+        containerFormElement.delegate = self
     }
 
     func updateUI(animated: Bool = false) {
@@ -176,11 +180,15 @@ final class LinkInlineSignupView: UIView {
         }
         if viewModel.mode == .checkbox {
             formElement.toggleChild(combinedEmailNameSection, show: viewModel.shouldShowEmailField, animated: animated)
+            combinedEmailNameSection.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
+            combinedEmailNameSection.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
+            combinedEmailNameSection.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
+        } else {
+            formElement.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
+            formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
+            formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
         }
-        formElement.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
-        formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
-        formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
-        formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        containerFormElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
         switch viewModel.mode {
         case .checkbox:

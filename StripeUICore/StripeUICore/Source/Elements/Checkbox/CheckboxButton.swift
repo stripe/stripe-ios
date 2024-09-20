@@ -60,12 +60,15 @@ import UIKit
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [textView, descriptionLabel])
+        let stackView = UIStackView(arrangedSubviews: [textView])
         stackView.spacing = 4
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        if descriptionLabel.text != nil {
+            stackView.addArrangedSubview(descriptionLabel)
+        }
         return stackView
     }()
 
@@ -123,8 +126,6 @@ import UIKit
 
         if let description {
             descriptionLabel.text = description
-        } else {
-            descriptionLabel.isHidden = true
         }
 
         setupUI()
@@ -212,7 +213,12 @@ import UIKit
         textView.textColor = hasDescription ? theme.colors.bodyText : theme.colors.secondaryText
 
         descriptionLabel.font = font
-        descriptionLabel.isHidden = !hasDescription
+        if hasDescription {
+            stackView.addArrangedSubview(descriptionLabel)
+        } else {
+            stackView.removeArrangedSubview(descriptionLabel)
+            descriptionLabel.removeFromSuperview()
+        }
         descriptionLabel.textColor = theme.colors.secondaryText
 
         // Align checkbox to center of first line of text. The center of the checkbox is already

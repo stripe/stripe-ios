@@ -40,13 +40,17 @@ final class LinkMoreInfoView: UIView {
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
+        let widthConstraint = logoView.widthAnchor.constraint(equalToConstant: Constants.logoWidth)
+        widthConstraint.priority = .defaultHigh
+        let heightConstraint = logoView.heightAnchor.constraint(equalToConstant: Constants.logoHeight)
+        heightConstraint.priority = .defaultHigh
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
 
-            logoView.widthAnchor.constraint(equalToConstant: Constants.logoWidth),
-            logoView.heightAnchor.constraint(equalToConstant: Constants.logoHeight),
+            widthConstraint,
+            heightConstraint,
         ])
     }
 

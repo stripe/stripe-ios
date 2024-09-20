@@ -319,13 +319,13 @@ private extension PayWithLinkButton {
             last4Label.text = last4
 
             cardStackView.isHidden = false
-            payWithLinkView.isHidden = true
+            payWithLinkView.isHidden = false
             emailStackView.isHidden = true
             payWithStackView.isHidden = true
         case .hasEmail(let email):
             emailLabel.text = email
 
-            payWithLinkView.isHidden = true
+            payWithLinkView.isHidden = false
             cardStackView.isHidden = true
             emailStackView.isHidden = false
             payWithStackView.isHidden = true
