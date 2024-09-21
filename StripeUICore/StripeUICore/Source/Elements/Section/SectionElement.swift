@@ -15,6 +15,9 @@ import UIKit
  */
 @_spi(STP) public final class SectionElement: ContainerElement {
     weak public var delegate: ElementDelegate?
+    public var stackView: UIStackView {
+        sectionView.containerView.stackView
+    }
     lazy var sectionView: SectionView = {
         isViewInitialized = true
         return SectionView(viewModel: viewModel)
@@ -112,11 +115,13 @@ extension SectionElement {
     /// - Note: `HiddenElement`'s are skipped by the `ContainerElement`'s auto advance logic
     @_spi(STP) public final class HiddenElement: ContainerElement {
         final class HiddenView: UIView {}
-
         weak public var delegate: ElementDelegate?
         public lazy var view: UIView = {
             return HiddenView(frame: .zero) // Hide the element's view
         }()
+        // Empty UIStackView
+        public var stackView: UIStackView = UIStackView()
+
         public let elements: [Element]
 
         public init?(_ element: Element?) {

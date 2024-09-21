@@ -16,7 +16,7 @@ import UIKit
  */
 @objc(STP_Internal_FormView)
 @_spi(STP) public class FormView: UIView {
-    private let stackView: UIStackView
+    @_spi(STP) public let stackView: UIStackView
     public init(viewModel: FormElement.ViewModel) {
         if viewModel.bordered {
             let stack = StackViewWithSeparator(arrangedSubviews: viewModel.elements)

@@ -329,10 +329,25 @@ class PlaygroundController: ObservableObject {
             if newValue.autoreload == .on {
                 self.load()
             }
+            if newValue.shakeAmbiguousViews == .on {
+                self.ambiguousViewTimer?.invalidate()
+                self.ambiguousViewTimer = .scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { t in
+                    self.checkForAmbiguousViews()
+                })
+            } else {
+                self.ambiguousViewTimer?.invalidate()
+            }
         }.store(in: &subscribers)
-
+        
         // Listen for analytics
         STPAnalyticsClient.sharedClient.delegate = self
+    }
+    
+    var ambiguousViewTimer: Timer?
+    func checkForAmbiguousViews() {
+        if let v = self.rootViewController.view.window!.ambiguousView() {
+            print(v)
+        }
     }
 
     func buildPaymentSheet() {
