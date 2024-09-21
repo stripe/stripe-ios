@@ -27,7 +27,7 @@ public class PayoutsViewController: UIViewController {
             OnLoadErrorMessageHandler { [weak self] value in
                 guard let self else { return }
                 self.delegate?.payoutsLoadDidFail(self, withError: value.error.connectEmbedError)
-            }
+            },
         ]))
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)

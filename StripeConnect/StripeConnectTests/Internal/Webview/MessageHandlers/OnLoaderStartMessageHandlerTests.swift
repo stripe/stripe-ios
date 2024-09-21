@@ -16,11 +16,11 @@ class OnLoaderStartMessageHandlerTests: ScriptWebTestBase {
                 XCTAssertEqual(payload, OnLoaderStartMessageHandler.Values(elementTagName: "onboarding"))
 
                 expectation.fulfill()
-            }
+            },
         ]))
 
         webView.evaluateOnLoaderStart(elementTagName: "onboarding")
-        
+
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

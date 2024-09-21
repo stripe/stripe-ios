@@ -5,7 +5,6 @@
 //  Created by Chris Mays on 8/13/24.
 //
 
-
 @testable import StripeConnect
 import XCTest
 
@@ -16,11 +15,11 @@ class OnExitMessageHandlerTests: ScriptWebTestBase {
         webView.addMessageHandler(messageHandler: OnSetterFunctionCalledMessageHandler([
             OnExitMessageHandler {
                 expectation.fulfill()
-            }
+            },
         ]))
 
         webView.evaluateSetOnExit()
-        
+
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

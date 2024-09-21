@@ -15,11 +15,11 @@ class OnLoadErrorMessageHandlerTests: ScriptWebTestBase {
                 XCTAssertEqual(payload, OnLoadErrorMessageHandler.Values(error: .init(type: "failed_to_load", message: "Error message")))
 
                 expectation.fulfill()
-            }
+            },
         ]))
 
         webView.evaluateOnLoadError(type: "failed_to_load", message: "Error message")
-        
+
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }
 }

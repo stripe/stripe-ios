@@ -31,7 +31,7 @@ public class PaymentDetailsViewController: UIViewController {
             OnCloseMessageHandler { [weak self] in
                 guard let self else { return }
                 self.delegate?.paymentDetailsDidClose(self)
-            }
+            },
         ]))
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
