@@ -10,7 +10,7 @@ import WebKit
 
 class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctionCalledMessageHandler.Payload> {
     struct Payload: Decodable {
-        /// Name of the component-specific setter function (e.g. `onExit`)
+        /// Name of the setter function (e.g. `onExit`)
         let setter: String
 
         /// Container with value that will be lazily decoded when we know the type
@@ -18,7 +18,7 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
 
         enum CodingKeys: CodingKey {
             case setter
-            case values
+            case value
         }
 
         init(from decoder: any Decoder) throws {
@@ -27,8 +27,9 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
             self.container = container
         }
 
-        func values<Values: Decodable>(_ valuesType: Values.Type = Values.self) throws -> Values {
-            try container.decode(Values.self, forKey: .values)
+        /// Lazily decode value
+        func value<Value: Decodable>() throws -> Value {
+            try container.decode(Value.self, forKey: .value)
         }
     }
 
@@ -38,16 +39,18 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
         /// Callback when message is received
         fileprivate let didReceiveMessage: (Payload) throws -> Void
 
-        init<Values: Codable>(
+        /// Creates a handler that passes a typed value to `didReceiveMessage`
+        init<Value: Codable>(
             setter: String,
-            didReceiveMessage: @escaping (Values) -> Void
+            didReceiveMessage: @escaping (Value) -> Void
         ) {
             self.setter = setter
             self.didReceiveMessage = { payload in
-                didReceiveMessage(try payload.values())
+                didReceiveMessage(try payload.value())
             }
         }
 
+        /// Creates a handler where `didReceiveMessage` takes no arguments
         init(
             setter: String,
             didReceiveMessage: @escaping () -> Void
