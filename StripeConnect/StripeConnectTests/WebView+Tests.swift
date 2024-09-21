@@ -34,7 +34,7 @@ extension WKWebView {
                                 json: """
                         {
                             "setter": "setOnLoaderStart",
-                            "value": {
+                            "values": {
                                 "elementTagName": "\(elementTagName)"
                             }
                         }
@@ -68,7 +68,7 @@ extension WKWebView {
                         """
                         {
                             "setter": "setOnLoadError",
-                            "value": {
+                            "values": {
                                 "error": {
                                     "type": "\(type)",
                                     "message": "\(message)"

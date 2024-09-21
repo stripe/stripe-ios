@@ -13,40 +13,6 @@ import XCTest
 
 class PaymentDetailsViewControllerTests: XCTestCase {
 
-    private class PaymentDetailsViewControllerDelegatePassThrough: PaymentDetailsViewControllerDelegate {
-
-        var paymentDetailsDidFail: ((_ paymentDetails: PaymentDetailsViewController, _ error: any Error) -> Void)?
-
-        init(paymentDetailsDidFail: ((PaymentDetailsViewController, any Error) -> Void)? = nil) {
-            self.paymentDetailsDidFail = paymentDetailsDidFail
-        }
-
-        func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController, withError error: any Error) {
-            paymentDetailsDidFail?(paymentDetails, error)
-        }
-    }
-
-    func testPaymentDetailsViewControllerDelegate() {
-        STPAPIClient.shared.publishableKey = "pk_test"
-        let componentManager = EmbeddedComponentManager(fetchClientSecret: {
-            return nil
-        })
-        let vc = componentManager.createPaymentDetailsViewController()
-
-        let expectation = XCTestExpectation(description: "Delegate called")
-
-        let paymentDetailsDelegate = PaymentDetailsViewControllerDelegatePassThrough { _, error in
-            XCTAssertEqual((error as? EmbeddedComponentError)?.type, .rateLimitError)
-            XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
-            expectation.fulfill()
-        }
-        vc.delegate = paymentDetailsDelegate
-
-        vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
-
-        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
-    }
-
     func testSetPayment() throws {
         STPAPIClient.shared.publishableKey = "pk_test"
         let componentManager = EmbeddedComponentManager(fetchClientSecret: {
@@ -60,5 +26,63 @@ class PaymentDetailsViewControllerTests: XCTestCase {
 
         vc.setPayment(id: "pi_123")
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    func testLoadDidFail() {
+        STPAPIClient.shared.publishableKey = "pk_test"
+        let componentManager = EmbeddedComponentManager(fetchClientSecret: {
+            return nil
+        })
+        let vc = componentManager.createPaymentDetailsViewController()
+
+        let expectation = XCTestExpectation(description: "loadDidFail called")
+
+        let paymentDetailsDelegate = PaymentDetailsViewControllerDelegatePassThrough(loadDidFail: { _, error in
+            XCTAssertEqual((error as? EmbeddedComponentError)?.type, .rateLimitError)
+            XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
+            expectation.fulfill()
+        })
+        vc.delegate = paymentDetailsDelegate
+
+        vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    func testDidClose() {
+        STPAPIClient.shared.publishableKey = "pk_test"
+        let componentManager = EmbeddedComponentManager(fetchClientSecret: {
+            return nil
+        })
+        let vc = componentManager.createPaymentDetailsViewController()
+
+        let expectation = XCTestExpectation(description: "didClose called")
+
+        let paymentDetailsDelegate = PaymentDetailsViewControllerDelegatePassThrough(didClose: { _ in
+            expectation.fulfill()
+        })
+        vc.delegate = paymentDetailsDelegate
+        vc.webView.evaluateMessage(name: "onSetterFunctionCalled", json: "{ \"setter\": \"setOnClose\" }")
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+}
+
+private class PaymentDetailsViewControllerDelegatePassThrough: PaymentDetailsViewControllerDelegate {
+
+    var loadDidFail: ((_ paymentDetails: PaymentDetailsViewController, _ error: any Error) -> Void)?
+    var didClose: ((PaymentDetailsViewController) -> Void)?
+
+    init(loadDidFail: ((PaymentDetailsViewController, any Error) -> Void)? = nil,
+         didClose: ((PaymentDetailsViewController) -> Void)? = nil) {
+        self.loadDidFail = loadDidFail
+        self.didClose = didClose
+    }
+
+    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController, withError error: any Error) {
+        loadDidFail?(paymentDetails, error)
+    }
+
+    func paymentDetailsDidClose(_ paymentDetails: PaymentDetailsViewController) {
+        didClose?(paymentDetails)
     }
 }

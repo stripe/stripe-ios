@@ -8,7 +8,7 @@
 import WebKit
 
 extension WKScriptMessage {
-    func toDecodable<DecodableType: Decodable>() throws -> DecodableType {
+    func toDecodable<DecodableType: Decodable>(t: DecodableType.Type = DecodableType.self) throws -> DecodableType {
         if let payload = body as? DecodableType {
             return payload
         }

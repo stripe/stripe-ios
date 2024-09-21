@@ -12,11 +12,13 @@ import XCTest
 class OnExitMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() {
         let expectation = self.expectation(description: "Message received")
-        
-        webView.addMessageHandler(messageHandler: OnExitMessageHandler(didReceiveMessage: {
-            expectation.fulfill()
-        }))
-        
+
+        webView.addMessageHandler(messageHandler: OnSetterFunctionCalledMessageHandler([
+            OnExitMessageHandler {
+                expectation.fulfill()
+            }
+        ]))
+
         webView.evaluateSetOnExit()
         
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)

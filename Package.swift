@@ -21,10 +21,6 @@ let package = Package(
             targets: ["StripePaymentsUI"]
         ),
         .library(
-            name: "StripeConnect",
-            targets: ["StripeConnect"]
-        ),
-        .library(
             name: "StripePaymentSheet",
             targets: ["StripePaymentSheet"]
         ),
@@ -73,15 +69,6 @@ let package = Package(
             dependencies: ["StripeCore"],
             path: "StripeCameraCore/StripeCameraCore",
             exclude: ["Info.plist"]
-        ),
-        .target(
-            name: "StripeConnect",
-            dependencies: ["StripeCore"],
-            path: "StripeConnect/StripeConnect",
-            exclude: ["Info.plist"],
-            resources: [
-                .process("Resources")
-            ]
         ),
         .target(
             name: "StripeCore",

@@ -23,10 +23,16 @@ public class PaymentDetailsViewController: UIViewController {
             componentType: .paymentDetails
         )
         super.init(nibName: nil, bundle: nil)
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
-            guard let self else { return }
-            self.delegate?.paymentDetailsLoadDidFail(self, withError: value.error.connectEmbedError)
-        })
+        webView.addMessageHandler(OnSetterFunctionCalledMessageHandler([
+            OnLoadErrorMessageHandler { [weak self] value in
+                guard let self else { return }
+                self.delegate?.paymentDetailsLoadDidFail(self, withError: value.error.connectEmbedError)
+            },
+            OnCloseMessageHandler { [weak self] in
+                guard let self else { return }
+                self.delegate?.paymentDetailsDidClose(self)
+            }
+        ]))
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
         }
@@ -40,6 +46,14 @@ public class PaymentDetailsViewController: UIViewController {
         view = webView
     }
 
+    /**
+     Sets the ID of the payment, charge, or PaymentIntent that displays in the view controller. To obtain this ID, query the [charges API](https://docs.stripe.com/api/charges) or use a payment ID that you’ve created or stored in your integration.
+
+     - Note: The view controller will display a loading indicator until `setPayment` is called and the payment is loaded.
+
+     - Parameters:
+       - id: An ID of the payment, charge, or PaymentIntent on the connected account.
+     */
     public func setPayment(id: String) {
         webView.sendMessage(CallSetterWithSerializableValueSender(payload: .init(
             setter: "setPayment",
@@ -59,14 +73,19 @@ public protocol PaymentDetailsViewControllerDelegate: AnyObject {
        - payouts: The payment details component that errored when loading
        - error: The error that occurred when loading the component
      */
-    func paymentDetailsLoadDidFail(_ payouts: PaymentDetailsViewController,
+    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController,
                                    withError error: Error)
+
+    func paymentDetailsDidClose(_ paymentDetails: PaymentDetailsViewController)
 
 }
 
 @available(iOS 15, *)
 public extension PaymentDetailsViewControllerDelegate {
     // Default implementation to make optional
-    func paymentDetailsLoadDidFail(_ payouts: PaymentDetailsViewController,
+
+    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController,
                                    withError error: Error) { }
+
+    func paymentDetailsDidClose(_ paymentDetails: PaymentDetailsViewController) { }
 }

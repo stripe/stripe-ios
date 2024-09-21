@@ -10,12 +10,14 @@ import XCTest
 class OnLoadErrorMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() {
         let expectation = self.expectation(description: "Message received")
-        webView.addMessageHandler(messageHandler: OnLoadErrorMessageHandler(didReceiveMessage: { payload in
-            expectation.fulfill()
-            
-            XCTAssertEqual(payload, OnLoadErrorMessageHandler.Values(error: .init(type: "failed_to_load", message: "Error message")))
-        }))
-        
+        webView.addMessageHandler(messageHandler: OnSetterFunctionCalledMessageHandler([
+            OnLoadErrorMessageHandler { payload in
+                XCTAssertEqual(payload, OnLoadErrorMessageHandler.Values(error: .init(type: "failed_to_load", message: "Error message")))
+
+                expectation.fulfill()
+            }
+        ]))
+
         webView.evaluateOnLoadError(type: "failed_to_load", message: "Error message")
         
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)

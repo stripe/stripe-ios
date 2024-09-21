@@ -25,7 +25,7 @@ class ConnectWebView: WKWebView {
     /// This is required for any components that can open a popup, otherwise an assertionFailure will occur.
     var presentPopup: (UIViewController) -> Void {
         get {
-            assert(optionalPresentPopup != nil,            "Cannot present popup")
+            assert(optionalPresentPopup != nil, "Cannot present popup")
             // TODO: MXMOBILE-2491 Log as analytics when pop up is not set.
             return optionalPresentPopup ?? { _ in }
         }

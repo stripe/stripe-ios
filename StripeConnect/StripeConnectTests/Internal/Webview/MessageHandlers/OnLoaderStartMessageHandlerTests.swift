@@ -11,12 +11,14 @@ import XCTest
 class OnLoaderStartMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() {
         let expectation = self.expectation(description: "Message received")
-        webView.addMessageHandler(messageHandler: OnLoaderStartMessageHandler(didReceiveMessage: { payload in
-            expectation.fulfill()
-            
-            XCTAssertEqual(payload, OnLoaderStartMessageHandler.Values(elementTagName: "onboarding"))
-        }))
-        
+        webView.addMessageHandler(messageHandler: OnSetterFunctionCalledMessageHandler([
+            OnLoaderStartMessageHandler { payload in
+                XCTAssertEqual(payload, OnLoaderStartMessageHandler.Values(elementTagName: "onboarding"))
+
+                expectation.fulfill()
+            }
+        ]))
+
         webView.evaluateOnLoaderStart(elementTagName: "onboarding")
         
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)

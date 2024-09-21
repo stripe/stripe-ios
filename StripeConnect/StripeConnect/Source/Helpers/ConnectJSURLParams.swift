@@ -30,9 +30,6 @@ extension ConnectJSURLParams {
             self.merchantIdOverride = apiClient.stripeAccount
             self.platformIdOverride = apiClient.stripeAccount
             self.livemodeOverride = apiClient.userKeyLiveMode
-
-            // TODO: Temporary hack – we shouldn't need to specify a publishable key if using apiKeyOverride
-//            self.publicKey = apiClient.publishableKey
         } else {
             self.publicKey = apiClient.publishableKey
         }

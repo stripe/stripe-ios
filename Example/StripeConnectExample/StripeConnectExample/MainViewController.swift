@@ -13,17 +13,17 @@ class MainViewController: UITableViewController {
 
     let appInfo: AppInfo
     let merchant: MerchantInfo
-
+    
     init(appInfo: AppInfo, merchant: MerchantInfo) {
         self.appInfo = appInfo
         self.merchant = merchant
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
         case payouts = "Payouts"
@@ -79,7 +79,7 @@ class MainViewController: UITableViewController {
         navigationItem.titleView = navbarTitleButton
         addChangeAppearanceButtonNavigationItem(to: self)
     }
-
+    
     func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
          // Add a button to change the appearance
          let button = UIBarButtonItem(
@@ -93,7 +93,7 @@ class MainViewController: UITableViewController {
          buttonItems = [button] + buttonItems
          viewController.navigationItem.rightBarButtonItems = buttonItems
      }
-
+    
     @objc
     func selectAppearance() {
         self.navigationController?.present(AppearanceSettings(componentManager: embeddedComponentManager).containerViewController, animated: true)
@@ -107,7 +107,7 @@ class MainViewController: UITableViewController {
         case .payouts:
             viewControllerToPush = embeddedComponentManager.createPayoutsViewController()
         }
-
+        
         viewControllerToPush.navigationItem.backButtonDisplayMode = .minimal
         addChangeAppearanceButtonNavigationItem(to: viewControllerToPush)
         navigationController?.pushViewController(viewControllerToPush, animated: true)
@@ -138,28 +138,28 @@ class MainViewController: UITableViewController {
 
         performAction(Row.allCases[indexPath.row], cell: cell)
     }
-
+    
     @objc
     func presentServerSettings() {
         self.present(AppSettingsView(appInfo: appInfo).containerViewController, animated: true)
     }
-
+    
     func presentAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
     }
-
+    
     func customFonts() -> [EmbeddedComponentManager.CustomFontSource] {
         // Note: The font name does not always match the file name,
         // but it makes initialization of font source easier when it does.
         let fonts: [String] = [
             "Handjet-Regular",
-            "Handjet-Bold",
+            "Handjet-Bold"
         ]
-
+                
         let fontSources: [EmbeddedComponentManager.CustomFontSource] = fonts.map { fontName in
-            guard let fontFileURL = Bundle.main.url(forResource: fontName, withExtension: "ttf"),
+            guard let fontFileURL = Bundle.main.url(forResource: fontName, withExtension: "ttf"), 
                     let font = UIFont(name: fontName, size: UIFont.systemFontSize) else {
                 print("Failed to load font with name \(fontName)")
                 return nil
@@ -171,8 +171,8 @@ class MainViewController: UITableViewController {
                 return nil
             }
         }
-        .compactMap({ $0 })
-
+        .compactMap({ $0})
+        
         if fontSources.count != fonts.count {
             print("Failed to load some fonts. Below are the available fonts to choose from: ")
             for family in UIFont.familyNames.sorted() {
@@ -182,7 +182,7 @@ class MainViewController: UITableViewController {
                 }
             }
         }
-
+        
         return fontSources
     }
 }
