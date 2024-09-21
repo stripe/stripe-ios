@@ -213,11 +213,11 @@ final class CardSectionElement: ContainerElement {
 
         var fetchedCardBrands = Set<STPCardBrand>()
         let hadBrands = !cardBrands.isEmpty
-        STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
+        STPCardValidator.possibleBrands(forNumber: panElement.text, with: cardBrandFilter) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let brands):
-                fetchedCardBrands = brands.filter { self.cardBrandFilter.isAccepted(cardBrand: $0) }
+                fetchedCardBrands = brands
             case .failure:
                 // If we fail to fetch card brands fall back to normal card brand detection
                 fetchedCardBrands = Set<STPCardBrand>()
