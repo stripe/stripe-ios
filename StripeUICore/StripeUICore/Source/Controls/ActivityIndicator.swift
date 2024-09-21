@@ -38,7 +38,7 @@ import UIKit
             if hidesWhenStopped {
                 updateVisibility()
             } else {
-                alpha = 1.0
+                isHidden = false
             }
         }
     }
@@ -231,7 +231,7 @@ private extension ActivityIndicator {
 
     func updateVisibility() {
         if hidesWhenStopped {
-            alpha = isAnimating ? 1.0 : 0.0
+            isHidden = !isAnimating
         }
     }
 

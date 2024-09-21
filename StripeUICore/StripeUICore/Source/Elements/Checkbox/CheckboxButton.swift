@@ -60,15 +60,12 @@ import UIKit
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [textView])
+        let stackView = UIStackView(arrangedSubviews: [textView, descriptionLabel])
         stackView.spacing = 4
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        if descriptionLabel.text != nil {
-            stackView.addArrangedSubview(descriptionLabel)
-        }
         return stackView
     }()
 
@@ -124,9 +121,7 @@ import UIKit
         accessibilityHint = description
         accessibilityTraits = UISwitch().accessibilityTraits
 
-        if let description {
-            descriptionLabel.text = description
-        }
+        descriptionLabel.text = description
 
         setupUI()
 
@@ -153,7 +148,7 @@ import UIKit
         super.layoutSubviews()
 
         // Preferred max width sometimes is off when changing font size
-//        descriptionLabel.preferredMaxLayoutWidth = stackView.bounds.width
+        descriptionLabel.preferredMaxLayoutWidth = stackView.bounds.width
         textView.invalidateIntrinsicContentSize()
     }
 
@@ -213,12 +208,7 @@ import UIKit
         textView.textColor = hasDescription ? theme.colors.bodyText : theme.colors.secondaryText
 
         descriptionLabel.font = font
-        if hasDescription {
-            stackView.addArrangedSubview(descriptionLabel)
-        } else {
-            stackView.removeArrangedSubview(descriptionLabel)
-            descriptionLabel.removeFromSuperview()
-        }
+        descriptionLabel.isHidden = !hasDescription
         descriptionLabel.textColor = theme.colors.secondaryText
 
         // Align checkbox to center of first line of text. The center of the checkbox is already

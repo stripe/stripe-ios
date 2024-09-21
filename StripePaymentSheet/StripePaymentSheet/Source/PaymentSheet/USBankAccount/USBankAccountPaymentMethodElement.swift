@@ -12,10 +12,6 @@
 import UIKit
 
 final class USBankAccountPaymentMethodElement: ContainerElement {
-    var stackView: UIStackView {
-        formElement.stackView
-    }
-    
     var elements: [Element] {
         return [formElement]
     }

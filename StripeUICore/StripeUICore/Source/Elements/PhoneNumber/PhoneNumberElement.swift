@@ -16,7 +16,7 @@ import UIKit
     // MARK: - ContainerElement protocol
     public lazy var elements: [Element] = { [countryDropdownElement, textFieldElement] }()
     public var delegate: ElementDelegate?
-    public lazy var stackView: UIStackView = {
+    public lazy var view: UIView = {
         countryDropdownElement.view.directionalLayoutMargins.trailing = 0
         let hStackView = UIStackView(arrangedSubviews: elements.map { $0.view })
         if let infoView = infoView {
@@ -33,7 +33,6 @@ import UIKit
         }
         return hStackView
     }()
-    public var view: UIView { stackView }
 
     // MARK: - sub-Elements
     let countryDropdownElement: DropdownFieldElement

@@ -16,10 +16,6 @@ import UIKit
  In addition to the physical address, it can collect other related fields like name.
  */
 @_spi(STP) public class AddressSectionElement: ContainerElement {
-    public var stackView: UIStackView {
-        addressSection.stackView
-    }
-    
     public typealias DidUpdateAddress = (AddressDetails) -> Void
 
     /// Describes an address to use as a default for AddressSectionElement

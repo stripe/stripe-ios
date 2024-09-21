@@ -17,8 +17,6 @@ import UIKit
  */
 @_spi(STP) public protocol ContainerElement: Element, ElementDelegate {
     var elements: [Element] { get }
-    // The UIStackView used to arrange the underlying elements
-    var stackView: UIStackView { get }
 }
 
 extension ContainerElement {
@@ -82,21 +80,5 @@ extension ContainerElement {
         elements.reduce("") { partialResult, element in
             partialResult + "\n└─ \(String(describing: element).replacingOccurrences(of: "└─", with: "   └─"))"
         }
-    }
-    
-    @_spi(STP) public func indexForInsertingElement(_ element: Element) -> Int? {
-        guard let elementToInsertIndex = elements.firstIndex(where: { $0 === element }) else {
-            return nil
-        }
-        // Get locations for all elements within the current UIStackView
-        let viewIndices = elements.map( { stackView.arrangedSubviews.firstIndex(of: $0.view ) } )
-        var indexForViewInsertion = 0
-        for (elementIndex, viewIndex) in zip(elements.indices, viewIndices) {
-            // If the element's view is in the UIStackView and the element is before the elementToInsert, then use that location
-            if let viewIndex, elementIndex < elementToInsertIndex {
-                indexForViewInsertion = viewIndex + 1
-            }
-        }
-        return indexForViewInsertion
     }
 }

@@ -12,10 +12,6 @@
 import UIKit
 
 final class InstantDebitsPaymentMethodElement: ContainerElement {
-    var stackView: UIStackView {
-        return formElement.stackView
-    }
-    
     var elements: [Element] {
         return [formElement]
     }

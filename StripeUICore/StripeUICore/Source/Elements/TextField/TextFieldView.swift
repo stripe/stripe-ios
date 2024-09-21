@@ -74,13 +74,13 @@ class TextFieldView: UIView {
                 // Occasionally the OS will attempt to call `becomeFirstResponder` on it, causing it to take focus
                 accessoryView.setCanBecomeFirstResponder(false)
                 accessoryContainerView.addAndPinSubview(accessoryView)
-                accessoryView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+                accessoryView.setContentHuggingPriority(.required, for: .horizontal)
                 // Don't have trailing padding when showing a picker view in the accessory view
                 hStack.updateTrailingAnchor(constant: 0)
                 accessoryView.setCanBecomeFirstResponder(true)
             } else if let accessoryView = accessoryView {
                 accessoryContainerView.addAndPinSubview(accessoryView)
-                accessoryView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+                accessoryView.setContentHuggingPriority(.required, for: .horizontal)
                 hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
             }
         }
@@ -141,17 +141,15 @@ class TextFieldView: UIView {
 
     fileprivate func installConstraints() {
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
-        clearButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-//        clearButton.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-//                                                      for: .horizontal)
-        errorIconView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-//        errorIconView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-//                                                      for: .horizontal)
-        accessoryContainerView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        textFieldView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        textFieldView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-//        accessoryContainerView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-//                                                      for: .horizontal)
+        clearButton.setContentHuggingPriority(.required, for: .horizontal)
+        clearButton.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
+                                                      for: .horizontal)
+        errorIconView.setContentHuggingPriority(.required, for: .horizontal)
+        errorIconView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
+                                                      for: .horizontal)
+        accessoryContainerView.setContentHuggingPriority(.required, for: .horizontal)
+        accessoryContainerView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
+                                                      for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
         addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)

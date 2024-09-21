@@ -15,7 +15,9 @@ import UIKit
 @objc(STP_Internal_LinkMoreInfoView)
 final class LinkMoreInfoView: UIView {
     struct Constants {
-        static var logoWidth: CGFloat = 42
+        static var logoWidth: CGFloat {
+            42
+        }
         static let logoHeight: CGFloat = 14
     }
     private lazy var logoView: UIImageView = {
@@ -33,20 +35,18 @@ final class LinkMoreInfoView: UIView {
     init(theme: ElementsUITheme = .default) {
         self.theme = theme
         super.init(frame: .zero)
-        addSubview(logoView)
-        let widthConstraint = logoView.widthAnchor.constraint(equalToConstant: Constants.logoWidth)
-        widthConstraint.priority = .required
-        let heightConstraint = logoView.heightAnchor.constraint(equalToConstant: Constants.logoHeight)
-        heightConstraint.priority = .required
-        let leadingConstraint = logoView.leadingAnchor.constraint(equalTo: leadingAnchor)
-        leadingConstraint.priority = .defaultHigh
+        let stackView = UIStackView(arrangedSubviews: [logoView])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stackView)
         NSLayoutConstraint.activate([
-            logoView.topAnchor.constraint(equalTo: topAnchor),
-            logoView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            logoView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            leadingConstraint,
-            widthConstraint,
-            heightConstraint,
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+
+            logoView.widthAnchor.constraint(equalToConstant: Constants.logoWidth),
+            logoView.heightAnchor.constraint(equalToConstant: Constants.logoHeight),
         ])
     }
 

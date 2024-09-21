@@ -96,12 +96,9 @@ class FloatingPlaceholderTextFieldView: UIView {
 
         // Allow space for the minimized placeholder to sit above the textfield
         let minimizedPlaceholderHeight = placeholderLabel.font.lineHeight * Constants.Placeholder.scale
-        let bottomConstraint = textField.bottomAnchor.constraint(equalTo: bottomAnchor)
-        // The text field's intrinsict size should override the bottom constraint
-        bottomConstraint.priority = .defaultLow
         NSLayoutConstraint.activate([
             textField.topAnchor.constraint(equalTo: topAnchor, constant: minimizedPlaceholderHeight + Constants.Placeholder.bottomPadding),
-            bottomConstraint,
+            textField.bottomAnchor.constraint(equalTo: bottomAnchor),
             textField.leadingAnchor.constraint(equalTo: leadingAnchor),
             textField.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])

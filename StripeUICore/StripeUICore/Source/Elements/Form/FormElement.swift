@@ -16,12 +16,9 @@ import UIKit
  */
 @_spi(STP) public class FormElement: ContainerElement {
     weak public var delegate: ElementDelegate?
-    @_spi(STP) public lazy var formView: FormView = {
+    lazy var formView: FormView = {
         return FormView(viewModel: viewModel)
     }()
-    public var stackView: UIStackView {
-        formView.stackView
-    }
 
     public let elements: [Element]
     public let customSpacing: [(Element, CGFloat)]

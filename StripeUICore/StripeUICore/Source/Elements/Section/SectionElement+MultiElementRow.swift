@@ -13,15 +13,9 @@ public extension SectionElement {
     /// A simple container element that displays its child elements in a horizontal stackview
     @_spi(STP) final class MultiElementRow: ContainerElement {
         weak public var delegate: ElementDelegate?
-        lazy var multiElementRowView: SectionContainerView.MultiElementRowView = {
+        public lazy var view: UIView = {
             return SectionContainerView.MultiElementRowView(views: elements.map { $0.view }, theme: theme)
         }()
-        public var view: UIView {
-            multiElementRowView
-        }
-        public var stackView: UIStackView {
-            multiElementRowView.stackView
-        }
         public let elements: [Element]
         public let theme: ElementsUITheme
 
