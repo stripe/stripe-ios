@@ -19,39 +19,40 @@ class LinkEmailElement: Element {
     private let activityIndicator: ActivityIndicator = {
         // TODO: Consider adding the activity indicator to TextFieldView
         let activityIndicator = ActivityIndicator(size: .medium)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
         return activityIndicator
     }()
 
     private var infoView: LinkMoreInfoView?
 
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
+    lazy var view: UIView = {
+        let view = UIView()
+        view.addSubview(emailAddressElement.view)
+        view.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: emailAddressElement.view.leadingAnchor, constant: ElementsUI.contentViewInsets.leading),
+            view.centerYAnchor.constraint(equalTo: activityIndicator.centerYAnchor),
+            view.centerYAnchor.constraint(equalTo: emailAddressElement.view.centerYAnchor),
+            activityIndicator.trailingAnchor.constraint(equalTo: emailAddressElement.view.trailingAnchor),
+            view.topAnchor.constraint(equalTo: emailAddressElement.view.topAnchor),
+            view.bottomAnchor.constraint(equalTo: emailAddressElement.view.bottomAnchor),
+        ])
         if let infoView = infoView {
-            stackView.addArrangedSubview(infoView)
-        }
-        stackView.spacing = 0
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = .insets(
-            top: 0,
-            leading: 0,
-            bottom: 0,
-            trailing: ElementsUI.contentViewInsets.trailing
-        )
-        if let infoView = infoView {
-            stackView.setCustomSpacing(ElementsUI.contentViewInsets.trailing, after: activityIndicator)
+            infoView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(infoView)
             NSLayoutConstraint.activate([
-                infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth),
+                emailAddressElement.view.trailingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: ElementsUI.contentViewInsets.trailing),
+                view.trailingAnchor.constraint(equalTo: infoView.trailingAnchor),
+                view.centerYAnchor.constraint(equalTo: infoView.centerYAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                emailAddressElement.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ElementsUI.contentViewInsets.trailing),
             ])
         }
-        return stackView
+        return view
     }()
-
-    var view: UIView {
-        return stackView
-    }
 
     public var emailAddressString: String? {
         return emailAddressElement.text
@@ -74,16 +75,16 @@ class LinkEmailElement: Element {
     public func startAnimating() {
         UIView.performWithoutAnimation {
             activityIndicator.startAnimating()
-            stackView.setNeedsLayout()
-            stackView.layoutSubviews()
+            view.setNeedsLayout()
+            view.layoutSubviews()
         }
     }
 
     public func stopAnimating() {
         UIView.performWithoutAnimation {
             activityIndicator.stopAnimating()
-            stackView.setNeedsLayout()
-            stackView.layoutSubviews()
+            view.setNeedsLayout()
+            view.layoutSubviews()
         }
     }
 

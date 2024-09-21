@@ -72,6 +72,8 @@ extension ContainerElement {
         } else {
             if child.view.superview == nil, let index = self.indexForInsertingElement(child) {
                 self.stackView.insertArrangedSubview(child.view, at: index)
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
             }
         }
     }
@@ -111,6 +113,8 @@ extension ContainerElement {
         } else {
             self.stackView.removeArrangedSubview(child.view)
             child.view.removeFromSuperview()
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
         }
     }
 
