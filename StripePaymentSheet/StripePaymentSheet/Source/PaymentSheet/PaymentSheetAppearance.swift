@@ -238,7 +238,7 @@ public extension PaymentSheet {
     struct PaymentOptionView: Equatable {
 
         /// The display style options for the embedded payment element
-        public enum Style {
+        public enum Style: CaseIterable {
             /// A flat style with radio buttons
             case flatRadio
             /// A floating style

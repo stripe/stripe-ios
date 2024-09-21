@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(EmbeddedPaymentMethodsViewBeta) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -38,6 +38,11 @@ struct AppearancePlaygroundView: View {
         let componentBorderColorBinding = Binding(
             get: { Color(self.appearance.colors.componentBorder) },
             set: { self.appearance.colors.componentBorder = UIColor($0) }
+        )
+        
+        let componentBorderSelectedColorBinding = Binding(
+            get: { Color(self.appearance.colors.componentBorderSelected ?? self.appearance.colors.primary) },
+            set: { self.appearance.colors.componentBorderSelected = UIColor($0) }
         )
 
         let componentDividerColorBinding = Binding(
@@ -211,6 +216,47 @@ struct AppearancePlaygroundView: View {
                 self.appearance.primaryButton.shadow?.radius = $0
             }
         )
+        
+        let paymentOptionViewFlatSeparatorColorBinding = Binding(
+            get: { Color(self.appearance.paymentOptionView.paymentMethodRow.flat.separatorColor ?? appearance.colors.componentBorder) },
+            set: {
+                if self.appearance.paymentOptionView.paymentMethodRow.flat.separatorColor == nil {
+                    self.appearance.paymentOptionView.paymentMethodRow.flat.separatorColor = appearance.colors.componentBorder
+                } else {
+                    self.appearance.paymentOptionView.paymentMethodRow.flat.separatorColor = UIColor($0)
+                }
+            }
+        )
+        
+        let paymentOptionViewFlatRadioColorSelected = Binding(
+            get: { Color(self.appearance.paymentOptionView.paymentMethodRow.flat.radio.colorSelected ?? appearance.colors.primary) },
+            set: {
+                self.appearance.paymentOptionView.paymentMethodRow.flat.radio.colorSelected = UIColor($0)
+            }
+        )
+        
+        let paymentOptionViewFlatRadioColorUnselected = Binding(
+            get: { Color(self.appearance.paymentOptionView.paymentMethodRow.flat.radio.colorUnselected ?? appearance.colors.componentBorder) },
+            set: {
+                self.appearance.paymentOptionView.paymentMethodRow.flat.radio.colorUnselected = UIColor($0)
+            }
+        )
+        
+        let paymentOptionViewFlatLeftSeparatorInset = Binding(
+            get: { self.appearance.paymentOptionView.paymentMethodRow.flat.separatorInset?.left ?? 0},
+            set: {
+                let prevInsets = self.appearance.paymentOptionView.paymentMethodRow.flat.separatorInset ?? .zero
+                self.appearance.paymentOptionView.paymentMethodRow.flat.separatorInset = UIEdgeInsets(top: 0, left: $0, bottom: 0, right: prevInsets.right)
+            }
+        )
+        
+        let paymentOptionViewFlatRightSeparatorInset = Binding(
+            get: { self.appearance.paymentOptionView.paymentMethodRow.flat.separatorInset?.right ?? 0},
+            set: {
+                let prevInsets = self.appearance.paymentOptionView.paymentMethodRow.flat.separatorInset ?? .zero
+                self.appearance.paymentOptionView.paymentMethodRow.flat.separatorInset = UIEdgeInsets(top: 0, left:prevInsets.left , bottom: 0, right: $0)
+            }
+        )
 
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
 
@@ -222,6 +268,7 @@ struct AppearancePlaygroundView: View {
                         ColorPicker("background", selection: backgroundColorBinding)
                         ColorPicker("componentBackground", selection: componentBackgroundColorBinding)
                         ColorPicker("componentBorder", selection: componentBorderColorBinding)
+                        ColorPicker("componentBorderSelected", selection: componentBorderSelectedColorBinding)
                         ColorPicker("componentDivider", selection: componentDividerColorBinding)
                         ColorPicker("text", selection: textColorBinding)
                         ColorPicker("textSecondary", selection: textSecondaryColorBinding)
@@ -237,6 +284,7 @@ struct AppearancePlaygroundView: View {
                 Section(header: Text("Miscellaneous")) {
                     Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
                     Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
+                    Stepper(String(format: "borderWidthSelected: %.1f", appearance.borderWidthSelected ?? appearance.borderWidth * 1.5), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
@@ -307,6 +355,55 @@ struct AppearancePlaygroundView: View {
                         }
                     } label: {
                         Text("Primary Button")
+                    }
+                }
+                
+                Section(header: Text("PaymentOptionView")) {
+                    DisclosureGroup {
+                        Picker("Style", selection: $appearance.paymentOptionView.style) {
+                            ForEach(PaymentSheet.Appearance.PaymentOptionView.Style.allCases, id: \.self) {
+                                Text(String(describing:$0))
+                            }
+                        }
+                        
+                        DisclosureGroup {
+                            Stepper("additionalInsets: \(Int(appearance.paymentOptionView.paymentMethodRow.additionalInsets))",
+                                    value: $appearance.paymentOptionView.paymentMethodRow.additionalInsets, in: 0...40)
+                            
+                            DisclosureGroup {
+                                Stepper("separatorThickness: \(Int(appearance.paymentOptionView.paymentMethodRow.flat.separatorThickness))",
+                                        value: $appearance.paymentOptionView.paymentMethodRow.flat.separatorThickness, in: 0...10)
+                                ColorPicker("separatorColor", selection: paymentOptionViewFlatSeparatorColorBinding)
+                                Stepper("leftSeparatorInset: \(Int(appearance.paymentOptionView.paymentMethodRow.flat.separatorInset?.left ?? 0))",
+                                        value: paymentOptionViewFlatLeftSeparatorInset, in: 0...20)
+                                Stepper("rightSeparatorInset: \(Int(appearance.paymentOptionView.paymentMethodRow.flat.separatorInset?.right ?? 0))",
+                                        value: paymentOptionViewFlatRightSeparatorInset, in: 0...20)
+                                Toggle("topSeparatorEnabled", isOn: $appearance.paymentOptionView.paymentMethodRow.flat.topSeparatorEnabled)
+                                Toggle("bottomSeparatorEnabled", isOn: $appearance.paymentOptionView.paymentMethodRow.flat.bottomSeparatorEnabled)
+                               
+                                DisclosureGroup {
+                                    
+                                } label: {
+                                    Text("Radio")
+                                }
+                                
+                            } label: {
+                                Text("Flat with radio")
+                            }
+                            
+                            DisclosureGroup {
+                                Stepper("Spacing: \(Int(appearance.paymentOptionView.paymentMethodRow.floating.spacing))",
+                                        value: $appearance.paymentOptionView.paymentMethodRow.floating.spacing, in: 0...40)
+                               
+                            } label: {
+                                Text("Floating")
+                            }
+                        } label: {
+                            Text("Row")
+                        }
+                        
+                    } label: {
+                        Text("PaymentOptionView")
                     }
                 }
 
