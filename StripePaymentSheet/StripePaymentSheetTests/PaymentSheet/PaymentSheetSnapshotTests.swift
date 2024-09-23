@@ -15,6 +15,7 @@ import XCTest
 @_spi(STP)@testable import StripeCore
 @_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
+@_spi(EmbeddedPaymentMethodsViewBeta) @testable import StripePaymentSheet
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
@@ -163,6 +164,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
         var appearance = PaymentSheet.Appearance()
         appearance.colors.primary = .red
+        appearance.colors.secondary = .black
         appearance.colors.background = .lightGray
         appearance.colors.componentBackground = .black
         appearance.colors.componentBorder = .yellow
@@ -173,6 +175,18 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         appearance.colors.componentPlaceholderText = .white
         appearance.colors.icon = .orange
         appearance.colors.danger = .cyan
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetSecondaryAndSelected() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.colors.secondary = .black
+        appearance.colors.componentBorderSelected = .red
 
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
