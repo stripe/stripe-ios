@@ -207,6 +207,7 @@ extension PaymentMethodFormViewController {
 
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement? { form as? USBankAccountPaymentMethodElement }
     private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? { form as? InstantDebitsPaymentMethodElement }
+    private var linkMode: LinkSettings.LinkMode? { elementsSession.linkSettings?.linkMode }
 
     private var shouldOverridePrimaryButton: Bool {
         if paymentMethodType == .stripe(.USBankAccount) {
@@ -303,9 +304,14 @@ extension PaymentMethodFormViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
-        let additionalParameters: [String: Any] = [
-            "hosted_surface": "payment_element",
+
+        var additionalParameters: [String: Any] = [
+            "hosted_surface": "payment_element"
         ]
+        if let linkMode {
+            additionalParameters["link_mode"] = linkMode.rawValue
+        }
+
         switch intent {
         case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
@@ -391,11 +397,15 @@ extension PaymentMethodFormViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
-        let additionalParameters: [String: Any] = [
+        var additionalParameters: [String: Any] = [
             "product": "instant_debits",
             "attach_required": true,
             "hosted_surface": "payment_element",
         ]
+        if let linkMode {
+            additionalParameters["link_mode"] = linkMode.rawValue
+        }
+
         switch intent {
         case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(

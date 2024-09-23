@@ -15,24 +15,35 @@ final class ElementsContextTests: XCTestCase {
         let elementsContext = ElementsContext(from: additionalParameter)
 
         XCTAssertNotNil(elementsContext)
-        XCTAssertNil(elementsContext.hostedSurface)
+        XCTAssertNil(elementsContext.linkMode)
     }
 
-    func testHostedSurface() {
-        var additionalParameter = ["hosted_surface": "gibberish"]
+    func testLinkMode() {
+        let linkModeKey = "link_mode"
+
+        var additionalParameter = [linkModeKey: "gibberish"]
         let gibberishElementsContext = ElementsContext(from: additionalParameter)
 
         XCTAssertNotNil(gibberishElementsContext)
-        XCTAssertNil(gibberishElementsContext.hostedSurface)
+        XCTAssertNil(gibberishElementsContext.linkMode)
+        XCTAssertNil(gibberishElementsContext.linkMode?.isPantherPayment)
 
-        additionalParameter["hosted_surface"] = "payment_element"
-        let paymentElementElementsContext = ElementsContext(from: additionalParameter)
+        additionalParameter[linkModeKey] = "LINK_PAYMENT_METHOD"
+        let lpmElementsContext = ElementsContext(from: additionalParameter)
 
-        XCTAssertEqual(paymentElementElementsContext.hostedSurface, .paymentsSheet)
+        XCTAssertEqual(lpmElementsContext.linkMode, .linkPaymentMethod)
+        XCTAssert(lpmElementsContext.linkMode?.isPantherPayment == false)
 
-        additionalParameter["hosted_surface"] = "customer_sheet"
-        let customerSheetElementsContext = ElementsContext(from: additionalParameter)
+        additionalParameter[linkModeKey] = "PASSTHROUGH"
+        let passthroughElementsContext = ElementsContext(from: additionalParameter)
 
-        XCTAssertEqual(customerSheetElementsContext.hostedSurface, .customerSheet)
+        XCTAssertEqual(passthroughElementsContext.linkMode, .passthrough)
+        XCTAssert(passthroughElementsContext.linkMode?.isPantherPayment == false)
+
+        additionalParameter[linkModeKey] = "LINK_CARD_BRAND"
+        let linkCardBrandElementsContext = ElementsContext(from: additionalParameter)
+
+        XCTAssertEqual(linkCardBrandElementsContext.linkMode, .linkCardBrand)
+        XCTAssert(linkCardBrandElementsContext.linkMode?.isPantherPayment == true)
     }
 }
