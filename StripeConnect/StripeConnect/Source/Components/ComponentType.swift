@@ -10,5 +10,6 @@ import Foundation
 enum ComponentType: String {
     /// Displays the balance summary, the payout schedule, and a list of payouts for the connected account
     case payouts
-    case onboarding
+    /// The onboarding flow for the account.
+    case onboarding = "account-onboarding"
 }

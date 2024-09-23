@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 import WebKit
 
@@ -24,6 +25,16 @@ class ConnectComponentWebView: ConnectWebView {
     
     /// The current notification center instance
     private let notificationCenter: NotificationCenter
+    
+    private let setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init()
+    
+    let activityIndicator: ActivityIndicator = {
+        let activityIndicator = ActivityIndicator()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.tintColor = .gray
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }()
     
     init(componentManager: EmbeddedComponentManager,
          componentType: ComponentType,
@@ -47,6 +58,11 @@ class ConnectComponentWebView: ConnectWebView {
         config.allowsInlineMediaPlayback = true
 
         super.init(frame: .zero, configuration: config)
+        self.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        ])
         componentManager.registerChild(self)
         guard let publishableKey = componentManager.apiClient.publishableKey else {
             assertionFailure("A publishable key is required. For more info, see https://stripe.com/docs/keys")
@@ -55,6 +71,7 @@ class ConnectComponentWebView: ConnectWebView {
         addMessageHandlers()
         addNotificationObservers()
         if loadContent {
+            activityIndicator.startAnimating()
             load(.init(url: StripeConnectConstants.connectJSURL(component: componentType.rawValue, publishableKey: publishableKey)))
         }
     }
@@ -82,6 +99,10 @@ extension ConnectComponentWebView {
                            contentWorld: WKContentWorld = .page) {
         contentController.add(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
     }
+    
+    func addMessageHandler(_ handler: OnSetterFunctionCalledMessageHandler.Handler) {
+        setterMessageHandler.addHandler(handler: handler)
+    }
 
     /// Convenience method to add `ScriptMessageHandlerWithReply`
     func addMessageHandler<Payload, Response>(_ messageHandler: ScriptMessageHandlerWithReply<Payload, Response>,
@@ -102,6 +123,10 @@ extension ConnectComponentWebView {
 private extension ConnectComponentWebView {
     /// Registers JS -> Swift message handlers
     func addMessageHandlers() {
+        addMessageHandler(setterMessageHandler)
+        addMessageHandler(OnLoaderStartMessageHandler { [activityIndicator] _ in
+            activityIndicator.stopAnimating()
+        })
         addMessageHandler(FetchInitParamsMessageHandler.init(didReceiveMessage: {[weak self] _ in
             guard let self else {
                 stpAssertionFailure("Message received after web view was deallocated")

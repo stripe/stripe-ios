@@ -16,10 +16,12 @@ public class PayoutsViewController: UIViewController {
     
     public weak var delegate: PayoutsViewControllerDelegate?
 
-    init(componentManager: EmbeddedComponentManager) {
+    init(componentManager: EmbeddedComponentManager,
+         loadContent: Bool = true) {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
-            componentType: .payouts
+            componentType: .payouts,
+            loadContent: loadContent
         )
         super.init(nibName: nil, bundle: nil)
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
