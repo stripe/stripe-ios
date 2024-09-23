@@ -1,7 +1,11 @@
 ## X.Y.Z X-Y-Z
 ### PaymentSheet
 * [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
+* [Added] CVC Recollection is now in GA. For more information see our docs for [here](https://docs.stripe.com/payments/accept-a-payment?platform=ios#ios-cvc-recollection) for intent first integrations or [here](https://docs.stripe.com/payments/accept-a-payment-deferred?platform=ios&type=payment#ios-cvc-recollection) for deferred intent integrations.
 * [Fixed] Fixed an issue where checkboxes were not visible when `appearance.colors.componentBorder` was transparent.
+
+### CardScan
+* [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
 
 ## 23.30.0 2024-09-09
 ### PaymentSheet
@@ -21,7 +25,7 @@
 * [Added] `PaymentSheet.IntentConfiguration` now validates that its `amount` is non-zero.
 
 ### PaymentsUI
-* [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed. 
+* [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed.
 
 ## 23.29.0 2024-08-05
 ### PaymentSheet

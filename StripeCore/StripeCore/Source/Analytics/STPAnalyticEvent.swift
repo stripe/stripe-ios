@@ -112,6 +112,10 @@ import Foundation
     case mcOptionSelectCompleteApplePay = "mc_complete_paymentoption_applepay_select"
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
 
+    // MARK: - PaymentSheet Saved Payment Method Removed
+    case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
+    case mcOptionRemoveCompleteSavedPM = "mc_complete_paymentoption_removed"
+
     // MARK: - Link Signup
     case linkSignupCheckboxChecked = "link.signup.checkbox_checked"
     case linkSignupFlowPresented = "link.signup.flow_presented"
@@ -193,6 +197,7 @@ import Foundation
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
     case paymentSheetFormShown = "mc_form_shown"
     case paymentSheetFormInteracted = "mc_form_interacted"
+    case paymentSheetFormCompleted = "mc_form_completed"
     case paymentSheetCardNumberCompleted = "mc_card_number_completed"
     case paymentSheetDeferredIntentPaymentMethodIdMismatch = "mc_deferred_intent_payment_method_id_mismatch"
 

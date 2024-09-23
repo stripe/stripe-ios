@@ -16,7 +16,11 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
+
+        // Synthetic payment methods. These are payment methods which don't have an `STPPaymentMethodType` defined for the same name.
+        // That is, the payment method manifest for a synthetic PMT will show a PMT that doesn't match the form name.
         case instantDebits
+        case linkCardBrand
 
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
@@ -27,7 +31,7 @@ extension PaymentSheet {
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.label
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
             }
         }
@@ -42,6 +46,8 @@ extension PaymentSheet {
                 return externalPaymentMethod.type
             case .instantDebits:
                 return "instant_debits"
+            case .linkCardBrand:
+                return "link_card_brand"
             }
         }
 
@@ -103,7 +109,7 @@ extension PaymentSheet {
                     }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
             }
         }
@@ -114,7 +120,7 @@ extension PaymentSheet {
                 return stpPaymentMethodType.iconRequiresTinting
             case .external:
                 return false
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return true
             }
         }
