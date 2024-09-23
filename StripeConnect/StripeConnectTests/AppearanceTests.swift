@@ -158,7 +158,8 @@ class AppearanceTests: XCTestCase {
     func testDefaultAppearance() {
         let appearance: Appearance = .default
         XCTAssertEqual(appearance.asDictionary(traitCollection: .init()), [
-            "fontFamily": "-apple-system"
+            "fontFamily": "-apple-system",
+            "fontSizeBase": "16px",
         ])
     }
     
@@ -180,5 +181,20 @@ class AppearanceTests: XCTestCase {
         
         XCTAssertEqual(appearance.asDictionary(traitCollection: lightModeTraits)["colorText"], "rgb(0, 0, 0)")
         XCTAssertEqual(appearance.asDictionary(traitCollection: darkModeTraits)["colorText"], "rgb(255, 255, 255)")
+    }
+
+    func testFontSizesChangeBasedOnTraitCollection() {
+        var appearance = Appearance.default
+
+        appearance.typography.fontSizeBase = 16
+        appearance.typography.headingLg.fontSize = 32
+
+        let xsFontDict = appearance.asDictionary(traitCollection: UITraitCollection(preferredContentSizeCategory: .extraSmall))
+        let axxxlDict = appearance.asDictionary(traitCollection: UITraitCollection(preferredContentSizeCategory: .accessibilityExtraExtraExtraLarge))
+
+        XCTAssertEqual(xsFontDict["fontSizeBase"], "13px")
+        XCTAssertEqual(xsFontDict["headingLgFontSize"], "27px")
+        XCTAssertEqual(axxxlDict["fontSizeBase"], "45px")
+        XCTAssertEqual(axxxlDict["headingLgFontSize"], "90px")
     }
 }

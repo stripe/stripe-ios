@@ -18,7 +18,7 @@ class UpdateConnectInstanceSenderTests: ScriptWebTestBase {
         XCTAssertEqual(
             UpdateConnectInstanceSender(payload: .init(locale: "en", appearance: .default)).javascriptMessage,
             """
-            window.updateConnectInstance({"appearance":{"variables":{"fontFamily":"-apple-system"}},"locale":"en"});
+            window.updateConnectInstance({"appearance":{"variables":{"fontFamily":"-apple-system","fontSizeBase":"16px"}},"locale":"en"});
             """
         )
     }

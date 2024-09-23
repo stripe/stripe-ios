@@ -78,7 +78,7 @@ class ConnectComponentWebViewTests: XCTestCase {
         try await webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                    json: "{}",
                                                    expectedResponse: """
-            {"appearance":{"variables":{"actionPrimaryColorText":"rgb(255, 255, 255)","fontFamily":"-apple-system"}},"fonts":[],"locale":"fr-FR"}
+            {"appearance":{"variables":{"actionPrimaryColorText":"rgb(255, 255, 255)","fontFamily":"-apple-system","fontSizeBase":"16px"}},"fonts":[],"locale":"fr-FR"}
             """)
     }
     
@@ -144,7 +144,7 @@ class ConnectComponentWebViewTests: XCTestCase {
        try await webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                   json: "{}",
                                                   expectedResponse:"""
-                                                            {"appearance":{"variables":{"fontFamily":"-apple-system"}},"fonts":[{"family":".AppleSystemUIFont","src":"url(data:font\\/txt;charset=utf-8;base64,dGVzdAo=)","weight":"400"}],"locale":"fr-FR"}
+                                                            {"appearance":{"variables":{"fontFamily":"-apple-system","fontSizeBase":"16px"}},"fonts":[{"family":".AppleSystemUIFont","src":"url(data:font\\/txt;charset=utf-8;base64,dGVzdAo=)","weight":"400"}],"locale":"fr-FR"}
                                                             """)
     }
 }

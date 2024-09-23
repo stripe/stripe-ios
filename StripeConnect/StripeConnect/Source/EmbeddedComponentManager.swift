@@ -9,13 +9,17 @@ import JavaScriptCore
 import StripeCore
 import UIKit
 
+/// Manages Connect embedded components
+/// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components
+/// - Note: Connect embedded components are only available in private beta.
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public class EmbeddedComponentManager {
     let apiClient: STPAPIClient
-    
+
     // Weakly held web views who get notified when appearance updates.
     private(set) var childWebViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
-    
+
     let fetchClientSecret: () async -> String?
     let fonts: [EmbeddedComponentManager.CustomFontSource]
     private(set) var appearance: EmbeddedComponentManager.Appearance
@@ -23,7 +27,7 @@ public class EmbeddedComponentManager {
     // This should only be used for tests and determines if webview
     // content should load.
     var shouldLoadContent: Bool = true
-    
+
     /**
      Initializes a StripeConnect instance.
 
@@ -46,7 +50,7 @@ public class EmbeddedComponentManager {
         self.fonts = fonts
         self.appearance = appearance
     }
-    
+
     /// Updates the appearance of components created from this EmbeddedComponentManager
     /// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components#customize-the-look-of-connect-embedded-components
     public func update(appearance: Appearance) {
@@ -88,6 +92,11 @@ public class EmbeddedComponentManager {
                         componentManager: self,
                         loadContent: shouldLoadContent)
        }
+
+    @_spi(DashboardOnly)
+    public func createPaymentDetailsViewController() -> PaymentDetailsViewController {
+        .init(componentManager: self)
+    }
 
     /// Used to keep reference of all web views associated with this component manager.
     /// - Parameters:

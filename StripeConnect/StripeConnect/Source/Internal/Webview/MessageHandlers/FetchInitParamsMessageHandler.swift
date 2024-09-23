@@ -8,6 +8,7 @@
 import Foundation
 
 // This message is emitted when the SDK is requesting initialization info.
+@available(iOS 15, *)
 class FetchInitParamsMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchInitParamsMessageHandler.Reply> {
     struct Reply: Encodable {
         let locale: String

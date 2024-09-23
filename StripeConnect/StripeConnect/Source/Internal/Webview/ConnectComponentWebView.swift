@@ -10,10 +10,11 @@
 import UIKit
 import WebKit
 
+@available(iOS 15, *)
 class ConnectComponentWebView: ConnectWebView {
     /// The embedded component manager that will be used for requests.
     var componentManager: EmbeddedComponentManager
-    
+
     /// The component type that should be loaded.
     private var componentType: ComponentType
 
@@ -22,7 +23,7 @@ class ConnectComponentWebView: ConnectWebView {
 
     /// Represents the current locale that should get sent to the webview
     private let webLocale: Locale
-    
+
     /// The current notification center instance
     private let notificationCenter: NotificationCenter
     
@@ -35,7 +36,7 @@ class ConnectComponentWebView: ConnectWebView {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
-    
+
     init(componentManager: EmbeddedComponentManager,
          componentType: ComponentType,
          // Should only be overridden for tests
@@ -64,26 +65,23 @@ class ConnectComponentWebView: ConnectWebView {
             activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
         componentManager.registerChild(self)
-        guard let publishableKey = componentManager.apiClient.publishableKey else {
-            assertionFailure("A publishable key is required. For more info, see https://stripe.com/docs/keys")
-            return
-        }
         addMessageHandlers()
         addNotificationObservers()
         if loadContent {
             activityIndicator.startAnimating()
-            load(.init(url: StripeConnectConstants.connectJSURL(component: componentType.rawValue, publishableKey: publishableKey)))
+            let url = ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url
+            load(.init(url: url))
         }
     }
 
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: appearance, traitCollection: traitCollection))))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         DispatchQueue.main.async {
             self.updateAppearance(appearance: self.componentManager.appearance)
@@ -93,10 +91,11 @@ class ConnectComponentWebView: ConnectWebView {
 
 // MARK: - Internal
 
+@available(iOS 15, *)
 extension ConnectComponentWebView {
     /// Convenience method to add `ScriptMessageHandler`
     func addMessageHandler<Payload>(_ messageHandler: ScriptMessageHandler<Payload>,
-                           contentWorld: WKContentWorld = .page) {
+                                    contentWorld: WKContentWorld = .page) {
         contentController.add(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
     }
     
@@ -106,10 +105,10 @@ extension ConnectComponentWebView {
 
     /// Convenience method to add `ScriptMessageHandlerWithReply`
     func addMessageHandler<Payload, Response>(_ messageHandler: ScriptMessageHandlerWithReply<Payload, Response>,
-                              contentWorld: WKContentWorld = .page) {
+                                              contentWorld: WKContentWorld = .page) {
         contentController.addScriptMessageHandler(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
     }
-    
+
     /// Convenience method to send messages to the webview.
     func sendMessage(_ sender: any MessageSender) {
         if let message = sender.javascriptMessage {
@@ -120,6 +119,7 @@ extension ConnectComponentWebView {
 
 // MARK: - Private
 
+@available(iOS 15, *)
 private extension ConnectComponentWebView {
     /// Registers JS -> Swift message handlers
     func addMessageHandlers() {
@@ -134,17 +134,17 @@ private extension ConnectComponentWebView {
                 return .init(locale: "", appearance: .init(appearance: .default, traitCollection: .init()))
             }
             return .init(locale: webLocale.webIdentifier,
-                         appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection), 
-                         fonts: componentManager.fonts.map({ .init(customFontSource: $0)}))
+                         appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection),
+                         fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
         addMessageHandler(DebugMessageHandler())
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler{_ in })
-        addMessageHandler(AccountSessionClaimedMessageHandler{ message in
+        addMessageHandler(PageDidLoadMessageHandler { _ in })
+        addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
+            // TODO: MXMOBILE-2491 Use this for analytics
         })
-
     }
 
     /// Adds NotificationCenter observers
