@@ -150,15 +150,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (STDSAuthenticationRequestParameters *)createAuthenticationRequestParameters {
     NSError *error = nil;
     NSString *encryptedDeviceData = nil;
-
+    
+    NSMutableDictionary *dictionary = [_deviceInformation.dictionaryValue mutableCopy];
+    dictionary[@"DD"][@"C018"] = _identifier;
+    
+    NSString *SDKReferenceNumber = self.useULTestLOA ? kULTestLOA : kStripeLOA;
+    dictionary[@"DD"][@"C016"] = SDKReferenceNumber;
+    
     if (_directoryServer == STDSDirectoryServerCustom) {
-        encryptedDeviceData = [STDSJSONWebEncryption encryptJSON:_deviceInformation.dictionaryValue
+        encryptedDeviceData = [STDSJSONWebEncryption encryptJSON:dictionary
                                                  withCertificate:_customDirectoryServerCertificate
                                                directoryServerID:_customDirectoryServerID
                                                      serverKeyID:_serverKeyID
                                                            error:&error];
     } else {
-        encryptedDeviceData = [STDSJSONWebEncryption encryptJSON:_deviceInformation.dictionaryValue
+        encryptedDeviceData = [STDSJSONWebEncryption encryptJSON:dictionary
                                               forDirectoryServer:_directoryServer
                                                            error:&error];
     }
@@ -170,7 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                                               deviceData:encryptedDeviceData
                                                                    sdkEphemeralPublicKey:_ephemeralKeyPair.publicKeyJWK
                                                                         sdkAppIdentifier:[STDSDeviceInformationParameter sdkAppIdentifier]
-                                                                      sdkReferenceNumber:self.useULTestLOA ? kULTestLOA : kStripeLOA
+                                                                      sdkReferenceNumber:SDKReferenceNumber
                                                                           messageVersion:[self _messageVersion]];
 }
 
