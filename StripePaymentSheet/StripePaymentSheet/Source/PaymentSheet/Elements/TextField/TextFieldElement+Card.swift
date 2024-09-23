@@ -29,6 +29,17 @@ extension TextFieldElement {
             self.cardBrandDropDown = cardBrandDropDown
             self.cardFilter = cardFilter
         }
+        
+        private func cardBrand(for text: String) -> STPCardBrand {
+            guard let cardBrandDropDown = cardBrandDropDown,
+                  let firstBrandString = cardBrandDropDown.nonPlacerholderItems.first?.rawData else {
+                return STPCardValidator.brand(forNumber: text)
+            }
+            
+            let cardBrandFromDropDown = STPCard.brand(from: firstBrandString)
+            let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
+            return cardBrandFromDropDown == .unknown ? cardBrandFromBin : cardBrandFromDropDown
+        }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             // If CBC is enabled and the PAN is not empty...
@@ -42,7 +53,7 @@ extension TextFieldElement {
                 }
             }
 
-            let cardBrand = STPCardValidator.brand(forNumber: text)
+            let cardBrand = cardBrand(for: text)
             if cardBrand == .unknown {
                 if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
@@ -117,8 +128,9 @@ extension TextFieldElement {
             }
             
             
-            let cardBrand = STPCardValidator.brand(forNumber: text)
-            if !cardFilter.isAccepted(cardBrand: cardBrand) {
+            let cardBrand = cardBrand(for: text)
+            let shouldShowDisallowedError = cardBrandDropDown == nil || text.count > 8
+            if !cardFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 
