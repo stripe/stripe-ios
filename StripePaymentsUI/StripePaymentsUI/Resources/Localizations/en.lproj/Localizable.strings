@@ -31,14 +31,11 @@
 /* Label for card number entry text field */
 "Card number" = "Card number";
 
-/* Section title for entering your CVC/CVV. e.g. 'Confirm your CVC' or 'Confirm your CVV' */
+/* Section title for entering your CVC. e.g. 'Confirm your CVC' */
 "Confirm your %@" = "Confirm your %@";
 
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
-
-/* Label for entering CVV in text field */
-"CVV" = "CVV";
 
 /* Placeholder string for email entry field. */
 "example@example.com" = "example@example.com";
@@ -88,10 +85,10 @@
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
 
-/* Error message for card entry form when CVC/CVV is incomplete. */
+/* Error message for card entry form when CVC is incomplete. */
 "Your card's security code is incomplete." = "Your card's security code is incomplete.";
 
-/* Error message for card entry form when CVC/CVV is invalid */
+/* Error message for card entry form when CVC is invalid */
 "Your card's security code is invalid." = "Your card's security code is invalid.";
 
 /* Error message for when postal code in form is invalid */

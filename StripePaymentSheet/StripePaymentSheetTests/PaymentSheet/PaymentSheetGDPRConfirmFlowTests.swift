@@ -494,7 +494,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
 
         return STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                              customerSessionData: [
-                                                "payment_sheet": [
+                                                "mobile_payment_element": [
                                                     "enabled": true,
                                                     "features": features,
                                                 ],

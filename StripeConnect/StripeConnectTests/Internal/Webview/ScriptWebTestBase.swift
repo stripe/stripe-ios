@@ -27,6 +27,6 @@ class ScriptWebTestBase: XCTestCase {
         let expectation = try webView.expectationForMessageReceived(sender: sender)
         try webView.sendMessage(sender: sender)
         
-        wait(for: [expectation], timeout: 1.0)
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }

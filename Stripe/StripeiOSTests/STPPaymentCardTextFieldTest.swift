@@ -208,7 +208,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         }
         XCTAssertEqual(sut.numberField.text, number)
         XCTAssertEqual(sut.cvcField.text!.count, Int(0))
-        XCTAssertEqual(sut.cvcField.placeholder, "CVV")
+        XCTAssertEqual(sut.cvcField.placeholder, "CVC")
         XCTAssertNil(sut.currentFirstResponderField())
         XCTAssertFalse(sut.isValid)
     }
@@ -682,7 +682,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         }
         XCTAssertEqual(sut.numberField.text, number)
         XCTAssertEqual(sut.cvcField.text!.count, Int(0))
-        XCTAssertEqual(sut.cvcField.placeholder, "CVV")
+        XCTAssertEqual(sut.cvcField.placeholder, "CVC")
         XCTAssertNil(sut.currentFirstResponderField())
         XCTAssertFalse(sut.isValid)
     }

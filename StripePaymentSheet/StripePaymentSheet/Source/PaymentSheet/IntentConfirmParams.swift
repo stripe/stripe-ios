@@ -69,6 +69,9 @@ class IntentConfirmParams {
         case .instantDebits:
             let params = STPPaymentMethodParams(type: .link)
             self.init(params: params, type: type)
+        case .linkCardBrand:
+            let params = STPPaymentMethodParams(type: .card)
+            self.init(params: params, type: type)
         }
     }
 
@@ -107,15 +110,15 @@ class IntentConfirmParams {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
         }
     }
-    func setAllowRedisplay(paymentSheetFeatures: PaymentSheetComponentFeature?,
+    func setAllowRedisplay(mobilePaymentElementFeatures: MobilePaymentElementComponentFeature?,
                            isSettingUp: Bool) {
-        guard let paymentSheetFeatures else {
+        guard let mobilePaymentElementFeatures else {
             // Legacy Ephemeral Key
             paymentMethodParams.allowRedisplay = .unspecified
             return
         }
-        let paymentMethodSave = paymentSheetFeatures.paymentMethodSave
-        let allowRedisplayOverride = paymentSheetFeatures.paymentMethodSaveAllowRedisplayOverride
+        let paymentMethodSave = mobilePaymentElementFeatures.paymentMethodSave
+        let allowRedisplayOverride = mobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
 
         // Customer Session is enabled
         if paymentMethodSave {

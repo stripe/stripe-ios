@@ -167,13 +167,7 @@ extension TextFieldElement {
 
         let defaultValue: String?
         let cardBrandProvider: () -> (STPCardBrand)
-        var label: String {
-            if cardBrandProvider() == .amex {
-                return String.Localized.cvv
-            } else {
-                return String.Localized.cvc
-            }
-        }
+        var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
 
         func keyboardProperties(for text: String) -> KeyboardProperties {

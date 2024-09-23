@@ -22,7 +22,7 @@
     },
     "region" : "US",
     "targetForVariableExpansion" : {
-      "containerPath" : "container:..\/StripeConnect\/StripeConnect.xcodeproj",
+      "containerPath" : "container:StripeConnect.xcodeproj",
       "identifier" : "41D17A3F2C5A73A6007C6EE6",
       "name" : "StripeConnect"
     }

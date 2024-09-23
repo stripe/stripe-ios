@@ -140,7 +140,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
 
         // Element/Sessions endpoint should de-dupe payment methods with CustomerSesssion
         let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
-                                                                                               merchantCountry: nil)
+                                                                                                      merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         let elementSession = try await client.retrieveDeferredElementsSession(

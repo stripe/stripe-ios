@@ -26,11 +26,18 @@ class PayoutsViewControllerTests: XCTestCase {
         }
     }
     
-    func testPayoutsViewControllerDelegate() {
+    let componentManager = EmbeddedComponentManager(fetchClientSecret: {
+        return nil
+    })
+    
+    override func setUp() {
+        super.setUp()
         STPAPIClient.shared.publishableKey = "pk_test"
-        let componentManager = EmbeddedComponentManager(fetchClientSecret: {
-            return nil
-        })
+        componentManager.shouldLoadContent = false
+    }
+    
+    @MainActor
+    func testPayoutsViewControllerDelegate() async throws {
         let vc = componentManager.createPayoutsViewController()
         let payoutsDelegate = PayoutViewControllerDelegatePassThrough()
         vc.delegate = payoutsDelegate
@@ -43,8 +50,8 @@ class PayoutsViewControllerTests: XCTestCase {
             XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
         }
         
-        vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         
-        wait(for: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }

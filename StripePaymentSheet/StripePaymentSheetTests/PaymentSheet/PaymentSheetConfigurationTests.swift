@@ -111,7 +111,7 @@ extension STPElementsSession {
                                                                             "api_key_expiry": 123456678,
                                                                             "customer": "cus_456",
                                                                             "components": [
-                                                                                "payment_sheet": [
+                                                                                "mobile_payment_element": [
                                                                                     "enabled": true,
                                                                                     "features": [
                                                                                         "payment_method_save": "enabled",
