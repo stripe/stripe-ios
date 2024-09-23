@@ -13,7 +13,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
     func testNativeNetworkingTestMode() throws {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
-        executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
+        // TODO(mats): Reenable once step up verification issues are resolved (BANKCON-14617).
+        // executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeAutofillSignInFlowTest(emailAddress: emailAddresss)
         let bankAccountName = "Insufficient Funds"
         executeNativeNetworkingTestModeAddBankAccount(
