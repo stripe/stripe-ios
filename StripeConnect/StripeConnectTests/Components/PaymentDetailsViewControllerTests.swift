@@ -12,25 +12,26 @@ import WebKit
 import XCTest
 
 class PaymentDetailsViewControllerTests: XCTestCase {
-    func testLoadDidFail() {
+    @MainActor
+    func testDelegate() async throws {
         STPAPIClient.shared.publishableKey = "pk_test"
         let componentManager = EmbeddedComponentManager(fetchClientSecret: {
             return nil
         })
         let vc = componentManager.createPaymentDetailsViewController()
 
-        let expectation = XCTestExpectation(description: "loadDidFail called")
+        let expectationDidFail = XCTestExpectation(description: "loadDidFail called")
 
         let paymentDetailsDelegate = PaymentDetailsViewControllerDelegatePassThrough { _, error in
             XCTAssertEqual((error as? EmbeddedComponentError)?.type, .rateLimitError)
             XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
-            expectation.fulfill()
+            expectationDidFail.fulfill()
         }
         vc.delegate = paymentDetailsDelegate
 
-        vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
 
-        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+        await fulfillment(of: [expectationDidFail], timeout: TestHelpers.defaultTimeout)
     }
 
     func testSetPayment() throws {
