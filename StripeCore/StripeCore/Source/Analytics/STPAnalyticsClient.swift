@@ -36,7 +36,7 @@ import UIKit
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
     let url = URL(string: "https://q.stripe.com")!
-
+    private let analyticsEventTranslator = STPAnalyticsEventTranslator()
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
 
@@ -106,12 +106,21 @@ import UIKit
     ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
     ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
     public func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
+        log(analytic: analytic, apiClient: apiClient, notificationCenter: .default)
+    }
+
+    func log(analytic: Analytic, apiClient: STPAPIClient = .shared, notificationCenter: NotificationCenter = .default) {
         let payload = payload(from: analytic, apiClient: apiClient)
 
         #if DEBUG
         NSLog("LOG ANALYTICS: \(analytic.event.rawValue) - \(analytic.params.sorted { $0.0 > $1.0 })")
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
+
+        if let translatedEvent = analyticsEventTranslator.translate(analytic.event, payload: payload) {
+            notificationCenter.post(name: translatedEvent.notificationName,
+                                    object: translatedEvent.event)
+        }
 
         // If in testing, don't log analytic, instead append payload to log history
         guard !STPAnalyticsClient.isUnitOrUITest else {
