@@ -106,7 +106,13 @@ class MainViewController: UITableViewController {
 
         switch row {
         case .onboarding:
-            viewControllerToPush = embeddedComponentManager.createAccountOnboardingViewController(fullTermsOfServiceUrl: nil, recipientTermsOfServiceUrl: nil, privacyPolicyUrl: nil, skipTermsOfServiceCollection: nil, collectionOptions: .init())
+            let savedOnboardingSettings = AppSettings.shared.onboardingSettings
+            viewControllerToPush = embeddedComponentManager.createAccountOnboardingViewController(
+                fullTermsOfServiceUrl: savedOnboardingSettings.fullTermsOfServiceUrl,
+                recipientTermsOfServiceUrl: savedOnboardingSettings.recipientTermsOfServiceUrl,
+                privacyPolicyUrl: savedOnboardingSettings.privacyPolicyUrl,
+                skipTermsOfServiceCollection: savedOnboardingSettings.skipTermsOfService.boolValue,
+                collectionOptions: savedOnboardingSettings.accountCollectionOptions)
         case .payouts:
             viewControllerToPush = embeddedComponentManager.createPayoutsViewController()
         }
