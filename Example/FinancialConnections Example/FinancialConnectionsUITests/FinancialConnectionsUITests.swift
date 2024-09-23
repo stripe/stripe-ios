@@ -615,7 +615,9 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     // this tests going through "ResetFlowViewController"
-    func testNativeResetFlowWithErrorToSuccess() {
+    func testNativeResetFlowWithErrorToSuccess() throws {
+        throw XCTSkip("Skipping this test case until we edit this institution's name")
+
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
