@@ -81,8 +81,8 @@ extension PKPayment {
 
         var transactionIdentifier = self.token.transactionIdentifier
         if transactionIdentifier != "" {
-            if self.stp_isSimulated() {
-                transactionIdentifier = PKPayment.stp_testTransactionIdentifier()
+            if self.stp_ap_isSimulated() {
+                transactionIdentifier = PKPayment.stp_ap_testTransactionIdentifier()
             }
             payload["pk_token_transaction_id"] = transactionIdentifier
         }

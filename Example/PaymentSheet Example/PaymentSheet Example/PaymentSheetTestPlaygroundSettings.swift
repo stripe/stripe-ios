@@ -294,7 +294,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
     enum ShakeAmbiguousViews: String, PickerEnum {
         static var enumName: String { "Shake Ambiguous Views" }
-        
+
         case on
         case off
     }
@@ -479,7 +479,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
-            shakeAmbiguousViews: .on,
+            shakeAmbiguousViews: .off,
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
