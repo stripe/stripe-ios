@@ -640,7 +640,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard4
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 4 -maximum-parallel-testing-workers 4
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -658,7 +658,7 @@ workflows:
         - scheme: StripeConnect Example
         - test_plan: StripeConnectExample
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 4 -maximum-parallel-testing-workers 4
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
