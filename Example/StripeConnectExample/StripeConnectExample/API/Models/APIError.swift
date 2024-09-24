@@ -13,7 +13,7 @@ enum APIError: Error, CustomDebugStringConvertible {
     case networkError(error: Error)
     case responseError(response: APIErrorResponse)
     case unknown(error: Error)
-    
+
     var debugDescription: String {
         switch self {
         case let .failedToParse(error):
