@@ -59,14 +59,23 @@ class ConnectComponentWebView: ConnectWebView {
         config.allowsInlineMediaPlayback = true
 
         super.init(frame: .zero, configuration: config)
+        
+        // Setup views
         self.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor),
         ])
+
+        // Colors
+        updateColors(appearance: componentManager.appearance)
+
+        // Register observers
         componentManager.registerChild(self)
         addMessageHandlers()
         addNotificationObservers()
+
+        // Load the web page
         if loadContent {
             activityIndicator.startAnimating()
             let url = ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url
@@ -76,6 +85,7 @@ class ConnectComponentWebView: ConnectWebView {
 
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: appearance, traitCollection: traitCollection))))
+        updateColors(appearance: appearance)
     }
 
     required init?(coder: NSCoder) {
@@ -158,5 +168,10 @@ private extension ConnectComponentWebView {
             guard let self else { return }
             sendMessage(UpdateConnectInstanceSender(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))))
         }
+    }
+
+    func updateColors(appearance: Appearance) {
+        backgroundColor = appearance.colors.background
+        isOpaque = backgroundColor == nil
     }
 }
