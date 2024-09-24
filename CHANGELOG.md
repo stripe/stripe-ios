@@ -1,3 +1,7 @@
+## X.Y.Z X-Y-Z
+### PaymentSheet
+* [Fixed] Fixes an issue where ISK was not correctly formatted as a zero-decimal currency when using PaymentSheet or Apple Pay. (Thanks [@Thithip](https://github.com/Thithip)!)
+
 ## 23.31.0 2024-09-23
 ### PaymentSheet
 * [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
