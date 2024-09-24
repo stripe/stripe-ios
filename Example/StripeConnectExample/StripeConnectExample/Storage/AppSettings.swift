@@ -83,6 +83,5 @@ class AppSettings {
 
     func setSelectedMerchant(merchant: MerchantInfo?) {
         defaults.setValue(merchant?.id, forKey: Constants.selectedMerchantKey)
-        defaults.synchronize()
     }
 }
