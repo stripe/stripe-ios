@@ -14,6 +14,7 @@ import UIKit
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        elementsContext: ElementsContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void

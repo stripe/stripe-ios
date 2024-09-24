@@ -188,6 +188,7 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
+        elementsContext: ElementsContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -206,6 +207,7 @@ public class STPBankAccountCollector: NSObject {
             clientSecret: clientSecret,
             returnURL: returnURL,
             additionalParameters: additionalParameters,
+            elementsContext: elementsContext,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -217,6 +219,7 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
+        elementsContext: ElementsContext? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -254,6 +257,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
+                elementsContext: elementsContext,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -442,6 +446,7 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
+        elementsContext: ElementsContext? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -460,6 +465,7 @@ public class STPBankAccountCollector: NSObject {
             clientSecret: clientSecret,
             returnURL: returnURL,
             additionalParameters: additionalParameters,
+            elementsContext: elementsContext,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -471,6 +477,7 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
+        elementsContext: ElementsContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -507,6 +514,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
+                elementsContext: elementsContext,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -557,6 +565,7 @@ public class STPBankAccountCollector: NSObject {
         currency: String?,
         onBehalfOf: String?,
         additionalParameters: [String: Any] = [:],
+        elementsContext: ElementsContext?,
         from viewController: UIViewController,
         financialConnectionsCompletion: @escaping (
             FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?
@@ -596,6 +605,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
+                elementsContext: elementsContext,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
