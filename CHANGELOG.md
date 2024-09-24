@@ -1,4 +1,4 @@
-## X.Y.Z X-Y-Z
+## 23.31.0 2024-09-23
 ### PaymentSheet
 * [Removed] Basic Integration sample code.
 * [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.

@@ -8,8 +8,9 @@
 import UIKit
 
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 extension EmbeddedComponentManager {
-    
+
     /// Use a `CustomFontSource` pass custom fonts embedded in your app's binary when initializing a
     /// `EmbeddedComponentManager`.
     /// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components#customize-the-look-of-connect-embedded-components
@@ -19,7 +20,7 @@ extension EmbeddedComponentManager {
         let style: String?
         let weight: String?
         let src: FontSource
-        
+
         /**
          Initializes a CustomFontSource from a base font and its original file URL
          - Parameters:
@@ -37,15 +38,15 @@ extension EmbeddedComponentManager {
             }
 
             let fontData = try Data(contentsOf: fileUrl)
-            self.src = .init(fileType: fileUrl.pathExtension, encoding:fontData.base64EncodedString())
+            self.src = .init(fileType: fileUrl.pathExtension, encoding: fontData.base64EncodedString())
             family = font.familyName
             style = font.isItalic ? "italic" : nil
             self.weight = font.weight.cssValue
         }
-        
+
         enum FontLoadError: Error, CustomDebugStringConvertible {
             case notFileURL
-            
+
             var debugDescription: String {
                 switch self {
                 case .notFileURL:
@@ -54,11 +55,11 @@ extension EmbeddedComponentManager {
             }
         }
     }
-    
+
     struct FontSource: Encodable, Equatable {
         let fileType: String
         let encoding: String
-        
+
         // TODO: CAUI-2844 Move to encoding FontSource directly instead of using a string.
         var stringValue: String {
             "url(data:font/\(fileType);charset=utf-8;base64,\(encoding))"

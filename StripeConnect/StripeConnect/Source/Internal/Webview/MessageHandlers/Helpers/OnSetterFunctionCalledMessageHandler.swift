@@ -12,33 +12,33 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
     struct Payload: Decodable {
         /// Name of the setter function (e.g. `onExit`)
         let setter: String
-        
+
         /// Container with value that will be lazily decoded when we know the type
         private let container: KeyedDecodingContainer<CodingKeys>
-        
+
         enum CodingKeys: CodingKey {
             case setter
             case value
         }
-        
+
         init(from decoder: any Decoder) throws {
             let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
             self.setter = try container.decode(String.self, forKey: .setter)
             self.container = container
         }
-        
+
         /// Lazily decode value
         func value<Value: Decodable>() throws -> Value {
             try container.decode(Value.self, forKey: .value)
         }
     }
-    
+
     class Handler {
         /// Name of the component-specific setter function (e.g. `onExit`)
         let setter: String
         /// Callback when message is received
         fileprivate let didReceiveMessage: (Payload) throws -> Void
-        
+
         /// Creates a handler that passes a typed value to `didReceiveMessage`
         init<Value: Codable>(
             setter: String,
@@ -49,7 +49,7 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
                 didReceiveMessage(try payload.value())
             }
         }
-        
+
         /// Creates a handler where `didReceiveMessage` takes no arguments
         init(
             setter: String,
@@ -61,22 +61,22 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
             }
         }
     }
-    
+
     private var handlerMap: [String: Handler] = [:]
-    
+
     init() {
         weak var weakSelf: OnSetterFunctionCalledMessageHandler?
         super.init(name: "onSetterFunctionCalled", didReceiveMessage: { payload in
             weakSelf?.didReceivePayload(payload: payload)
         })
-        
+
         weakSelf = self
     }
-    
+
     func addHandler(handler: Handler) {
         handlerMap[handler.setter] = handler
     }
-    
+
     func didReceivePayload(payload: Payload) {
         do {
             try handlerMap[payload.setter]?.didReceiveMessage(payload)

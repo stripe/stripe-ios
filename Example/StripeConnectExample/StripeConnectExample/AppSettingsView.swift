@@ -8,32 +8,32 @@
 import SwiftUI
 
 struct AppSettingsView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @Environment(\.viewControllerPresenter) var viewControllerPresenter
-    
+
     // App info is sometimes nil, if for example it fails to load.
     var appInfo: AppInfo?
-    
+
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
-    
+
     var isCustomEndpointValid: Bool {
         guard let url = URL(string: serverURLString) else { return false }
         return UIApplication.shared.canOpenURL(url)
     }
-    
+
     var saveEnabled: Bool {
         isCustomEndpointValid &&
         (AppSettings.shared.selectedMerchant(appInfo: appInfo)?.id != selectedMerchant?.id ||
          AppSettings.shared.selectedServerBaseURL != serverURLString)
     }
-    
+
     init(appInfo: AppInfo?) {
         self.appInfo = appInfo
         _selectedMerchant = .init(initialValue: AppSettings.shared.selectedMerchant(appInfo: appInfo))
     }
-    
+
     var body: some View {
         NavigationView {
             List {

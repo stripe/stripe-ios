@@ -11,7 +11,7 @@ struct OptionListRow: View {
     let title: String
     private(set) var subtitle: String?
     var selected: Bool = false
-    var onSelected: ()-> Void
+    var onSelected: () -> Void
     var body: some View {
         Button {
             onSelected()
