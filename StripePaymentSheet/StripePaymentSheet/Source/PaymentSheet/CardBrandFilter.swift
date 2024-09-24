@@ -26,7 +26,11 @@ struct CardBrandFilter {
         case .all:
             return true
         case .allowed(let allowedCardBrands):
-            if let brandCategory = cardBrand.asBrandCategory, !allowedCardBrands.contains(brandCategory) {
+            guard let brandCategory = cardBrand.asBrandCategory else {
+                return false
+            }
+            
+            if !allowedCardBrands.contains(brandCategory) {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDisallowedCardBrand,
                                                                      params: ["brand": STPCardBrandUtilities.apiValue(from: cardBrand)])
                 return false
