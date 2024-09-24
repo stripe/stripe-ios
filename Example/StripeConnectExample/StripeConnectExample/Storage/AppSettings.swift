@@ -73,12 +73,17 @@ class AppSettings {
     }
 
     func selectedMerchant(appInfo: AppInfo?) -> MerchantInfo? {
+        // Default to the first available merchant if this is the first time opening the app
         guard let merchantId = defaults.string(forKey: Constants.selectedMerchantKey) else {
             return appInfo?.availableMerchants.first
         }
-        return appInfo?.availableMerchants.first(where: {
+
+        // If the merchant is in the list of available merchants, then use its display name
+        let displayName = appInfo?.availableMerchants.first(where: {
             $0.merchantId == merchantId
-        }) ?? .init(displayName: nil, merchantId: merchantId)
+        })?.displayName
+
+        return .init(displayName: displayName, merchantId: merchantId)
     }
 
     func setSelectedMerchant(merchant: MerchantInfo?) {
