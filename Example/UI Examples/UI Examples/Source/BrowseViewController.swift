@@ -18,12 +18,10 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 {
 
     enum Demo: Int {
-        static var count: Int = 13
+        static var count: Int = 11
 
         case STPPaymentCardTextField
         case STPPaymentCardTextFieldWithCBC
-        case STPAddCardViewController
-        case STPAddCardViewControllerWithAddress
         case STPPaymentOptionsViewController
         case STPPaymentOptionsFPXViewController
         case STPShippingInfoViewController
@@ -38,8 +36,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             switch self {
             case .STPPaymentCardTextField: return "Card Field"
             case .STPPaymentCardTextFieldWithCBC: return "Card Field (CBC)"
-            case .STPAddCardViewController: return "(Basic Integration) Card Form"
-            case .STPAddCardViewControllerWithAddress: return "(Basic Integration) Card Form with Billing Address"
             case .STPPaymentOptionsViewController: return "Payment Option Picker"
             case .STPPaymentOptionsFPXViewController: return "Payment Option Picker (With FPX)"
             case .STPShippingInfoViewController: return "Shipping Info Form"
@@ -56,8 +52,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             switch self {
             case .STPPaymentCardTextField: return "STPPaymentCardTextField"
             case .STPPaymentCardTextFieldWithCBC: return "STPPaymentCardTextField"
-            case .STPAddCardViewController: return "STPAddCardViewController"
-            case .STPAddCardViewControllerWithAddress: return "STPAddCardViewController"
             case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
             case .STPPaymentOptionsFPXViewController: return "STPPaymentOptionsViewController"
             case .STPShippingInfoViewController: return "STPShippingInfoViewController"
