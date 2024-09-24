@@ -27,7 +27,6 @@ public class PaymentDetailsViewController: UIViewController {
             guard let self else { return }
             self.delegate?.paymentDetailsLoadDidFail(self, withError: value.error.connectEmbedError)
         })
-        // TODO: Add support for `setOnClose`
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
         }
