@@ -292,6 +292,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum ShakeAmbiguousViews: String, PickerEnum {
+        static var enumName: String { "Shake Ambiguous Views" }
+
+        case on
+        case off
+    }
     enum ExternalPaymentMethods: String, PickerEnum {
         static let enumName: String = "External PMs"
         // Based on https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/55d7fd10/src/externalPaymentMethods/constants.ts#L13
@@ -432,6 +438,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String
     var autoreload: Autoreload
+    var shakeAmbiguousViews: ShakeAmbiguousViews
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
@@ -472,6 +479,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
+            shakeAmbiguousViews: .off,
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
