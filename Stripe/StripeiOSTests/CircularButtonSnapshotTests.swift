@@ -37,6 +37,7 @@ class CircularButtonSnapshotTests: STPSnapshotTestCase {
     ) {
         // Ensures that the button shadow gets captured
         let wrapper = UIView()
+        wrapper.translatesAutoresizingMaskIntoConstraints = false
         wrapper.addAndPinSubview(
             button,
             insets: .insets(top: 10, leading: 10, bottom: 10, trailing: 10)
@@ -46,8 +47,13 @@ class CircularButtonSnapshotTests: STPSnapshotTestCase {
         let window = UIWindow()
         window.addSubview(wrapper)
 
-        let size = wrapper.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        wrapper.bounds = CGRect(origin: .zero, size: size)
+        // Give the wrapper some constraints so that it has something to anchor to
+        NSLayoutConstraint.activate([
+            wrapper.heightAnchor.constraint(equalToConstant: 40),
+            wrapper.widthAnchor.constraint(equalToConstant: 40),
+            wrapper.topAnchor.constraint(equalTo: window.topAnchor),
+            wrapper.leftAnchor.constraint(equalTo: window.leftAnchor),
+        ])
 
         // Test light mode
         wrapper.overrideUserInterfaceStyle = .light
