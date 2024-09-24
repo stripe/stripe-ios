@@ -7,6 +7,7 @@
 
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(STP) import StripeCore
 import XCTest
 
 final class PaymentSheetDeferredValidatorTests: XCTestCase {
@@ -78,7 +79,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         paymentMethodJson["id"] = testCard.stripeId
         let testCardPi = STPFixtures.makePaymentIntent(paymentMethodJson: paymentMethodJson)
         
-        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: testCardPi,
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: testCardPi.paymentMethod,
                                                                                    paymentMethod: testCard))
     }
     
@@ -91,7 +92,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         guard let intentPaymentMethod = testCardPi.paymentMethod else {
             return
         }
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: testCardPi,
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: testCardPi.paymentMethod,
                                                                                        paymentMethod: testUSBankAccount)) { error in
             XCTAssertEqual("\(error)", """
             An error occurred in PaymentSheet.     \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(testUSBankAccount.stripeId).
@@ -101,14 +102,15 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
             """)
         }
-        
-        
+        let analyticEvent = STPAnalyticsClient.sharedClient._testLogHistory.last
+        XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetDeferredIntentPaymentMethodIdMismatch.rawValue)
+        XCTAssertNotNil(analyticEvent?["error_code"] as? String)
     }
     
     func testPaymentIntentNilPaymentMethod() throws {
         let testCard = STPPaymentMethod._testCard()
         let nilPaymentMethodPi = STPFixtures.makePaymentIntent()
-        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(paymentIntent: nilPaymentMethodPi,
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: nilPaymentMethodPi.paymentMethod,
                                                                                    paymentMethod: testCard))
     }
     
@@ -118,7 +120,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         paymentMethodJson["id"] = testCard.stripeId
         let testCardSi = STPFixtures.makeSetupIntent(paymentMethodJson: paymentMethodJson)
         
-        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: testCardSi,
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: testCardSi.paymentMethod,
                                                                                    paymentMethod: testCard))
     }
     
@@ -131,7 +133,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         guard let intentPaymentMethod = testCardSi.paymentMethod else {
             return
         }
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: testCardSi,
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: testCardSi.paymentMethod,
                                                                                        paymentMethod: testUSBankAccount)) { error in
             XCTAssertEqual("\(error)", """
             An error occurred in PaymentSheet.     \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(testUSBankAccount.stripeId).
@@ -141,14 +143,15 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
             """)
         }
-        
-        
+        let analyticEvent = STPAnalyticsClient.sharedClient._testLogHistory.last
+        XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetDeferredIntentPaymentMethodIdMismatch.rawValue)
+        XCTAssertNotNil(analyticEvent?["error_code"] as? String)
     }
     
     func testSetupIntentNilPaymentMethod() throws {
         let testCard = STPPaymentMethod._testCard()
         let nilPaymentMethodSi = STPFixtures.makeSetupIntent()
-        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(setupIntent: nilPaymentMethodSi,
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: nilPaymentMethodSi.paymentMethod,
                                                                                    paymentMethod: testCard))
     }
     

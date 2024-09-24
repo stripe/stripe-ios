@@ -8,35 +8,81 @@
 import Foundation
 import WebKit
 
-class OnSetterFunctionCalledMessageHandler<Values: Codable & Equatable>: ScriptMessageHandler<OnSetterFunctionCalledMessageHandler.Payload<Values>> {
-    struct Payload<Value: Codable & Equatable>: Codable {
+class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctionCalledMessageHandler.Payload> {
+    struct Payload: Decodable {
+        /// Name of the setter function (e.g. `onExit`)
+        let setter: String
+
+        /// Container with value that will be lazily decoded when we know the type
+        private let container: KeyedDecodingContainer<CodingKeys>
+
+        enum CodingKeys: CodingKey {
+            case setter
+            case value
+        }
+
+        init(from decoder: any Decoder) throws {
+            let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
+            self.setter = try container.decode(String.self, forKey: .setter)
+            self.container = container
+        }
+
+        /// Lazily decode value
+        func value<Value: Decodable>() throws -> Value {
+            try container.decode(Value.self, forKey: .value)
+        }
+    }
+
+    class Handler {
         /// Name of the component-specific setter function (e.g. `onExit`)
         let setter: String
-        /// Setter specific payload
-        let value: Value?
-    }
-    
-    let setter: String
+        /// Callback when message is received
+        fileprivate let didReceiveMessage: (Payload) throws -> Void
 
-    init(setter: String, didReceiveMessage: @escaping (Values?) -> Void) {
-        self.setter = setter
-        super.init(name: "onSetterFunctionCalled", didReceiveMessage: { payload in
-            if payload.setter == setter {
-                didReceiveMessage(payload.value)
+        /// Creates a handler that passes a typed value to `didReceiveMessage`
+        init<Value: Codable>(
+            setter: String,
+            didReceiveMessage: @escaping (Value) -> Void
+        ) {
+            self.setter = setter
+            self.didReceiveMessage = { payload in
+                didReceiveMessage(try payload.value())
             }
-        })
+        }
+
+        /// Creates a handler where `didReceiveMessage` takes no arguments
+        init(
+            setter: String,
+            didReceiveMessage: @escaping () -> Void
+        ) {
+            self.setter = setter
+            self.didReceiveMessage = { _ in
+                didReceiveMessage()
+            }
+        }
     }
-    
-    override func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+
+    private var handlerMap: [String: Handler] = [:]
+
+    init() {
+        weak var weakSelf: OnSetterFunctionCalledMessageHandler?
+        super.init(name: "onSetterFunctionCalled", didReceiveMessage: { payload in
+            weakSelf?.didReceivePayload(payload: payload)
+        })
+
+        weakSelf = self
+    }
+
+    func addHandler(handler: Handler) {
+        handlerMap[handler.setter] = handler
+    }
+
+    func didReceivePayload(payload: Payload) {
         do {
-            let payload: Payload<VoidPayload> = try message.toDecodable()
-            if payload.setter == setter {
-                super.userContentController(userContentController, didReceive: message)
-            }
+            try handlerMap[payload.setter]?.didReceiveMessage(payload)
         } catch {
-            //TODO: MXMOBILE-2491 Log as analytics
-            debugPrint("Received unexpected setter function message for setter: \(setter) \(error.localizedDescription)")
+            // TODO: MXMOBILE-2491 Log as analytics
+            debugPrint("Received unexpected setter function message for setter: \(payload.setter) \(error.localizedDescription)")
         }
     }
 }

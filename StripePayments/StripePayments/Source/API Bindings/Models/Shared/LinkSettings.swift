@@ -21,10 +21,17 @@ import Foundation
         case ephemeral
     }
 
+    @_spi(STP) @frozen public enum LinkMode: String {
+        case linkPaymentMethod = "LINK_PAYMENT_METHOD"
+        case passthrough = "PASSTHROUGH"
+        case linkCardBrand = "LINK_CARD_BRAND"
+    }
+
     @_spi(STP) public let fundingSources: Set<FundingSource>
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
     @_spi(STP) public let passthroughModeEnabled: Bool?
     @_spi(STP) public let disableSignup: Bool?
+    @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let linkFlags: [String: Bool]?
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
@@ -34,6 +41,7 @@ import Foundation
         popupWebviewOption: PopupWebviewOption?,
         passthroughModeEnabled: Bool?,
         disableSignup: Bool?,
+        linkMode: LinkMode?,
         linkFlags: [String: Bool]?,
         allResponseFields: [AnyHashable: Any]
     ) {
@@ -41,6 +49,7 @@ import Foundation
         self.popupWebviewOption = popupWebviewOption
         self.passthroughModeEnabled = passthroughModeEnabled
         self.disableSignup = disableSignup
+        self.linkMode = linkMode
         self.linkFlags = linkFlags
         self.allResponseFields = allResponseFields
     }
@@ -61,6 +70,7 @@ import Foundation
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
         let disableSignup = response["link_mobile_disable_signup"] as? Bool ?? false
+        let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
 
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
@@ -74,6 +84,7 @@ import Foundation
             popupWebviewOption: webviewOption,
             passthroughModeEnabled: passthroughModeEnabled,
             disableSignup: disableSignup,
+            linkMode: linkMode,
             linkFlags: linkFlags,
             allResponseFields: response
         ) as? Self

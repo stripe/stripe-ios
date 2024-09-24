@@ -9,22 +9,22 @@ import Foundation
 import UIKit
 
 enum TestHelpers {
-    
+
     // Setting the default timeout to 5 seconds to minimize flakiness because web view operations
     // can be slow especially when running tests in parallel.
     static let defaultTimeout = 5.0
-    
+
     static func withTimeout<T>(seconds: TimeInterval = defaultTimeout, operation: @escaping () async throws -> T) async throws -> T {
         try await withThrowingTaskGroup(of: T.self) { group in
             group.addTask {
                 try await operation()
             }
-            
+
             group.addTask {
                 try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
                 throw TestHelperError.timeout(seconds: seconds)
             }
-            
+
             let result = try await group.next()!
             group.cancelAll()
             return result
