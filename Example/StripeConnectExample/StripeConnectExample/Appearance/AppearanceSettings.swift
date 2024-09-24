@@ -11,21 +11,20 @@ import SwiftUI
 struct AppearanceSettings: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.viewControllerPresenter) var viewControllerPresenter
-    
+
     let componentManager: EmbeddedComponentManager
-    
+
     var saveEnabled: Bool {
         AppSettings.shared.appearanceInfo.id != selectedAppearance.id
     }
-    
+
     @State var selectedAppearance: AppearanceInfo
-    
-    
+
     init(componentManager: EmbeddedComponentManager) {
         self.componentManager = componentManager
         _selectedAppearance = .init(initialValue: AppSettings.shared.appearanceInfo)
     }
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -66,5 +65,5 @@ struct AppearanceSettings: View {
         }
         .environment(\.horizontalSizeClass, .compact)
     }
-    
+
 }

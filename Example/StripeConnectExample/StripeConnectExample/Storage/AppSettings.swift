@@ -15,9 +15,9 @@ class AppSettings {
 
         static let selectedMerchantKey = "SelectedMerchant"
     }
-    
+
     static let shared = AppSettings()
-    
+
     var selectedServerBaseURL: String {
         get {
             UserDefaults.standard.string(forKey: Constants.serverBaseURLKey) ??
@@ -27,24 +27,23 @@ class AppSettings {
             UserDefaults.standard.setValue(newValue, forKey: Constants.serverBaseURLKey)
         }
     }
-    
+
     var appearanceId: String? {
         get {
-            UserDefaults.standard.string(forKey: Constants.appearanceIdKey) ??
-            nil
+            UserDefaults.standard.string(forKey: Constants.appearanceIdKey)
         }
         set {
             UserDefaults.standard.setValue(newValue, forKey: Constants.appearanceIdKey)
         }
     }
-    
+
     func selectedMerchant(appInfo: AppInfo?) -> MerchantInfo? {
         let merchantId = UserDefaults.standard.string(forKey: Constants.selectedMerchantKey)
         return appInfo?.availableMerchants.first(where: {
             $0.merchantId == merchantId
         }) ?? appInfo?.availableMerchants.first
     }
-    
+
     func setSelectedMerchant(merchant: MerchantInfo?) {
         UserDefaults.standard.setValue(merchant?.id, forKey: Constants.selectedMerchantKey)
     }

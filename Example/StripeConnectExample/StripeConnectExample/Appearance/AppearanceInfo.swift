@@ -12,6 +12,6 @@ struct AppearanceInfo: Identifiable {
     var id: String {
         return displayName
     }
-    let displayName: String    
+    let displayName: String
     var appearance: EmbeddedComponentManager.Appearance
 }
