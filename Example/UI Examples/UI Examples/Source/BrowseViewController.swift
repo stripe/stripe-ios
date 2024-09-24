@@ -121,23 +121,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
-        case .STPAddCardViewController:
-            let config = STPPaymentConfiguration()
-            config.cardScanningEnabled = true
-            let viewController = STPAddCardViewController(configuration: config, theme: theme)
-            viewController.delegate = self
-            let navigationController = UINavigationController(rootViewController: viewController)
-            navigationController.navigationBar.stp_theme = theme
-            present(navigationController, animated: true, completion: nil)
-        case .STPAddCardViewControllerWithAddress:
-            let config = STPPaymentConfiguration()
-            config.cardScanningEnabled = true
-            config.requiredBillingAddressFields = .full
-            let viewController = STPAddCardViewController(configuration: config, theme: theme)
-            viewController.delegate = self
-            let navigationController = UINavigationController(rootViewController: viewController)
-            navigationController.navigationBar.stp_theme = theme
-            present(navigationController, animated: true, completion: nil)
         case .STPPaymentOptionsFPXViewController:
             let config = STPPaymentConfiguration()
             config.fpxEnabled = true
