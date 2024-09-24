@@ -40,6 +40,8 @@
 		492039932CA47A8600CE2072 /* ElementsSessionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492039922CA47A8600CE2072 /* ElementsSessionContext.swift */; };
 		493B33062CA3015600E3622F /* LinkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B33052CA3015600E3622F /* LinkMode.swift */; };
 		49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ECDA402CA340E100F647F0 /* AsyncTests.swift */; };
+		493B33062CA3015600E3622F /* LinkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B33052CA3015600E3622F /* LinkMode.swift */; };
+		4955688F2CA1FB8D00518AFD /* ElementsContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4955688E2CA1FB8D00518AFD /* ElementsContext.swift */; };
 		4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7727AEEFD2FC880BADDA1872 /* Dictionary+Stripe.swift */; };
 		53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCE36551600C3E53BEAF8F0 /* StripeCodableTest.swift */; };
 		552DA7969984C443617DBC3E /* STPMultipartFormDataPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C72BA9C44FF60A0E7BEF76 /* STPMultipartFormDataPart.swift */; };
@@ -234,6 +236,7 @@
 		49424775D3233411D9C2473B /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
 		49538DBF8457D96707A2DA56 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49ECDA402CA340E100F647F0 /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
+		4955688E2CA1FB8D00518AFD /* ElementsContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsContext.swift; sourceTree = "<group>"; };
 		4A8030BF88608CA86E295F18 /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		4C51E3FA5EE3587BB7BBC634 /* STPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPError.swift; sourceTree = "<group>"; };
 		4EC3BCEEECB3E1485B18F0C4 /* FinancialConnectionsSDKInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSDKInterface.swift; sourceTree = "<group>"; };
@@ -1015,6 +1018,7 @@
 				096274D0729AA8849FAD103C /* PaymentsSDKVariant.swift in Sources */,
 				DA5A05459309B9B77ACDD736 /* STPDeviceUtils.swift in Sources */,
 				4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */,
+				4955688F2CA1FB8D00518AFD /* ElementsContext.swift in Sources */,
 				83790210FFC2DD764C042C8E /* STPDispatchFunctions.swift in Sources */,
 				72DA29CA8A750E8B00DBF3D4 /* STPError.swift in Sources */,
 				F628BBE9FDA9D3A217ACA753 /* STPNumericStringValidator.swift in Sources */,
