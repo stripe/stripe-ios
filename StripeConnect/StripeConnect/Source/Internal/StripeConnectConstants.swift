@@ -17,7 +17,7 @@ enum StripeConnectConstants {
      */
     static let allowedHosts: Set<String> = [
         "connect-js.stripe.com",
-        "connect.stripe.com"
+        "connect.stripe.com",
     ]
 
     static let connectJSBaseURL = URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!

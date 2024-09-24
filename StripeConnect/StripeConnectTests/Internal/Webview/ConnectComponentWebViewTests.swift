@@ -6,11 +6,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(PrivateBetaConnect) @testable import StripeConnect
-import XCTest
-import WebKit
 import SafariServices
+@_spi(PrivateBetaConnect) @testable import StripeConnect
+@_spi(STP) import StripeCore
+import WebKit
+import XCTest
 
 class ConnectComponentWebViewTests: XCTestCase {
 
@@ -22,12 +22,12 @@ class ConnectComponentWebViewTests: XCTestCase {
             return "test"
         })
         let webView = ConnectComponentWebView(componentManager: componentManager, componentType: .payouts, loadContent: false)
-        
+
         try await webView.evaluateMessageWithReply(name: "fetchClientSecret",
                                                    json: "{}",
                                                    expectedResponse: "test")
     }
-    
+
     @MainActor
     func testFetchInitParams() async throws {
         let message = FetchInitParamsMessageHandler.Reply(locale: "fr-FR", appearance: .default)
@@ -36,13 +36,12 @@ class ConnectComponentWebViewTests: XCTestCase {
                                               componentType: .payouts,
                                               webLocale: Locale(identifier: "fr_FR"),
                                               loadContent: false)
-        
-        
+
        try await webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                                 json: "{}",
                                                                 expectedResponse: message)
     }
-    
+
     @MainActor
     func testUpdateAppearance() async throws {
         let componentManager = componentManagerAssertingOnFetch()
@@ -54,41 +53,41 @@ class ConnectComponentWebViewTests: XCTestCase {
         appearance.spacingUnit = 5
         let expectation = try webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(locale: "fr-FR", appearance: .init(appearance: appearance, traitCollection: UITraitCollection()))))
         componentManager.update(appearance: appearance)
-       
+
         // Ensures the appearance on component manager was set.
         XCTAssertEqual(appearance.asDictionary(traitCollection: .init()), componentManager.appearance.asDictionary(traitCollection: .init()))
-        
+
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
-    
+
     @MainActor
     func testFetchInitParamsTraitCollection() async throws {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.colors.actionPrimaryText = UIColor { $0.userInterfaceStyle == .light ? .black : .white }
 
         let componentManager = componentManagerAssertingOnFetch(appearance: appearance)
-        
+
         let webView = ConnectComponentWebView(componentManager: componentManager,
                                               componentType: .payouts,
                                               webLocale: Locale(identifier: "fr_FR"),
                                               loadContent: false)
 
         webView.triggerTraitCollectionChange(style: .dark)
-        
+
         try await webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                    json: "{}",
                                                    expectedResponse: """
             {"appearance":{"variables":{"actionPrimaryColorText":"rgb(255, 255, 255)","fontFamily":"-apple-system","fontSizeBase":"16px"}},"fonts":[],"locale":"fr-FR"}
             """)
     }
-    
+
     @MainActor
     func testUpdateTraitCollection() async throws {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.colors.actionPrimaryText = UIColor { $0.userInterfaceStyle == .light ? .red : .green }
 
         let componentManager = componentManagerAssertingOnFetch(appearance: appearance)
-        
+
         let webView = ConnectComponentWebView(componentManager: componentManager,
                                               componentType: .payouts,
                                               webLocale: Locale(identifier: "fr_FR"),
@@ -97,10 +96,10 @@ class ConnectComponentWebViewTests: XCTestCase {
         let expectation = try webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(locale: "fr-FR", appearance: .init(appearance: appearance, traitCollection: UITraitCollection(userInterfaceStyle: .dark)))))
 
         webView.triggerTraitCollectionChange(style: .dark)
-        
+
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
-    
+
     @MainActor
     func testLocale() async throws {
         let componentManager = componentManagerAssertingOnFetch()
@@ -111,14 +110,14 @@ class ConnectComponentWebViewTests: XCTestCase {
             notificationCenter: notificationCenter,
             webLocale: Locale(identifier: "fr_FR"),
             loadContent: false)
-        
+
         let expectation = try webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(locale: "fr-FR", appearance: .default)))
-        
+
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
-        
+
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
-    
+
     func componentManagerAssertingOnFetch(appearance: Appearance = .default, fonts: [EmbeddedComponentManager.CustomFontSource] = []) -> EmbeddedComponentManager {
         EmbeddedComponentManager(apiClient: .init(publishableKey: "test"),
                                  appearance: appearance,
@@ -128,7 +127,7 @@ class ConnectComponentWebViewTests: XCTestCase {
             return ""
         })
     }
-    
+
     @MainActor
     func testFetchInitParamsWithFontSource() async throws {
         let testBundle = Bundle(for: type(of: self))
@@ -139,11 +138,10 @@ class ConnectComponentWebViewTests: XCTestCase {
                                               componentType: .payouts,
                                               webLocale: Locale(identifier: "fr_FR"),
                                               loadContent: false)
-        
-        
+
        try await webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                   json: "{}",
-                                                  expectedResponse:"""
+                                                  expectedResponse: """
                                                             {"appearance":{"variables":{"fontFamily":"-apple-system","fontSizeBase":"16px"}},"fonts":[{"family":".AppleSystemUIFont","src":"url(data:font\\/txt;charset=utf-8;base64,dGVzdAo=)","weight":"400"}],"locale":"fr-FR"}
                                                             """)
     }

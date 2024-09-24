@@ -26,9 +26,9 @@ class ConnectComponentWebView: ConnectWebView {
 
     /// The current notification center instance
     private let notificationCenter: NotificationCenter
-    
+
     private let setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init()
-    
+
     let activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator()
         activityIndicator.hidesWhenStopped = true
@@ -62,7 +62,7 @@ class ConnectComponentWebView: ConnectWebView {
         self.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor),
         ])
         componentManager.registerChild(self)
         addMessageHandlers()
@@ -98,7 +98,7 @@ extension ConnectComponentWebView {
                                     contentWorld: WKContentWorld = .page) {
         contentController.add(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
     }
-    
+
     func addMessageHandler(_ handler: OnSetterFunctionCalledMessageHandler.Handler) {
         setterMessageHandler.addHandler(handler: handler)
     }
@@ -154,6 +154,7 @@ private extension ConnectComponentWebView {
             object: nil,
             queue: .main
         ) { [weak self] _ in
+            // swiftlint:disable:previous unused_capture_list
             guard let self else { return }
             sendMessage(UpdateConnectInstanceSender(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))))
         }

@@ -23,7 +23,7 @@ public class EmbeddedComponentManager {
     let fetchClientSecret: () async -> String?
     let fonts: [EmbeddedComponentManager.CustomFontSource]
     private(set) var appearance: EmbeddedComponentManager.Appearance
-    
+
     // This should only be used for tests and determines if webview
     // content should load.
     var shouldLoadContent: Bool = true
@@ -59,7 +59,7 @@ public class EmbeddedComponentManager {
             item.updateAppearance(appearance: appearance)
         }
     }
-    
+
     /// Creates a payouts component
     /// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/payouts
     public func createPayoutsViewController() -> PayoutsViewController {
