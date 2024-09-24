@@ -59,7 +59,7 @@ class ConnectComponentWebView: ConnectWebView {
         config.allowsInlineMediaPlayback = true
 
         super.init(frame: .zero, configuration: config)
-        
+
         // Setup views
         self.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
