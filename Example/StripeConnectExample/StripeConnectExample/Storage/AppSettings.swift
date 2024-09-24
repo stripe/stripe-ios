@@ -73,19 +73,16 @@ class AppSettings {
     }
 
     func selectedMerchant(appInfo: AppInfo?) -> MerchantInfo? {
-        let merchantId = defaults.string(forKey: Constants.selectedMerchantKey)
+        guard let merchantId = defaults.string(forKey: Constants.selectedMerchantKey) else {
+            return appInfo?.availableMerchants.first
+        }
         return appInfo?.availableMerchants.first(where: {
             $0.merchantId == merchantId
-        }) ?? appInfo?.availableMerchants.first
+        }) ?? .init(displayName: nil, merchantId: merchantId)
     }
 
     func setSelectedMerchant(merchant: MerchantInfo?) {
         defaults.setValue(merchant?.id, forKey: Constants.selectedMerchantKey)
-    }
-}
-
-private extension UserDefaults {
-    func string(forKey defaultName: String, defaultValue: String = "") -> String {
-        self.string(forKey: defaultName) ?? defaultValue
+        defaults.synchronize()
     }
 }

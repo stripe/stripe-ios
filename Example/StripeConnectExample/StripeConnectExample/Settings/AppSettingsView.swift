@@ -23,8 +23,32 @@ struct AppSettingsView: View {
         URL(string: serverURLString)?.isValid == true
     }
 
+    var isUsingCustomMerchant: Bool {
+        guard let selectedMerchant,
+              let appInfo else {
+            return true
+        }
+        return !appInfo.availableMerchants.contains(selectedMerchant)
+    }
+
+    var isMerchantIdValid: Bool {
+        if !isUsingCustomMerchant {
+            return true
+        } else if let selectedMerchant {
+            return selectedMerchant.id.starts(with: "acct_")
+            && selectedMerchant.id.count > 5
+        } else {
+            return false
+        }
+    }
+
+    func isMerchantIdValid(_ id: String) -> Bool {
+        id.starts(with: "acct_") && id.count > 5
+    }
+
     var saveEnabled: Bool {
         isCustomEndpointValid &&
+        isMerchantIdValid &&
         (AppSettings.shared.selectedMerchant(appInfo: appInfo)?.id != selectedMerchant?.id ||
          AppSettings.shared.selectedServerBaseURL != serverURLString)
     }
@@ -45,6 +69,27 @@ struct AppSettingsView: View {
                                       onSelected: {
                             selectedMerchant = merchant
                         })
+                    }
+                    HStack {
+                        TextInput(label: "Other",
+                                  placeholder: "acct_xxxx",
+                                  text: .init(
+                                    get: {
+                                        guard let selectedMerchant,
+                                              isUsingCustomMerchant else {
+                                            return ""
+                                        }
+                                        return selectedMerchant.id
+                                    },
+                                    set: {
+                                        selectedMerchant = .init(displayName: nil, merchantId: $0)
+                                    }
+                                  ),
+                                  isValid: isMerchantIdValid)
+                        Spacer()
+                        Image(systemName: "checkmark")
+                            .foregroundColor(.accentColor)
+                            .opacity(isUsingCustomMerchant ? 1.0 : 0.0)
                     }
                 } header: {
                     Text("Select a demo account")
@@ -67,6 +112,7 @@ struct AppSettingsView: View {
                     } label: {
                         Text("Reset to default")
                             .disabled(AppSettings.Constants.defaultServerBaseURL == serverURLString)
+                            .keyboardType(.URL)
                     }
                 } header: {
                     Text("API Server Settings")
@@ -74,6 +120,8 @@ struct AppSettingsView: View {
             }
             .listStyle(.insetGrouped)
             .animation(.easeOut(duration: 0.2), value: selectedMerchant)
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
             .navigationTitle("Configure server")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -12,7 +12,7 @@ import UIKit
 class MainViewController: UITableViewController {
 
     let appInfo: AppInfo
-    let merchant: MerchantInfo
+    var merchant: MerchantInfo
 
     init(appInfo: AppInfo, merchant: MerchantInfo) {
         self.appInfo = appInfo
@@ -76,9 +76,16 @@ class MainViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = merchant.displayName ?? merchant.merchantId
         navigationItem.titleView = navbarTitleButton
         addChangeAppearanceButtonNavigationItem(to: self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let merchant = AppSettings.shared.selectedMerchant(appInfo: appInfo) {
+            self.merchant = merchant
+        }
+        title = merchant.displayName ?? merchant.merchantId
     }
 
     func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
