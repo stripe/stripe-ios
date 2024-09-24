@@ -4,7 +4,7 @@
 //
 
 import UIKit
-#if DEBUG
+
 extension UIView {
     func ambiguousView() -> UIView? {
         for subview in self.subviews {
@@ -30,4 +30,3 @@ extension UIView {
         return nil
     }
 }
-#endif
