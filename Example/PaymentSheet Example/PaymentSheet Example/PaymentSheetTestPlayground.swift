@@ -24,7 +24,7 @@ struct PaymentSheetTestPlayground: View {
         //  (each view can hold 10 direct subviews)
         Group {
             SettingView(setting: uiStyleBinding)
-            SettingView(setting: layoutBinding)
+            SettingView(setting: $playgroundController.settings.layout).disabled(playgroundController.settings.uiStyle == .embedded)
             SettingView(setting: $playgroundController.settings.shippingInfo)
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
@@ -89,7 +89,7 @@ struct PaymentSheetTestPlayground: View {
                                 })
                         }
                         SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: integrationTypeBinding)
+                        SettingPickerView(setting: integrationTypeBinding).disabled(playgroundController.settings.uiStyle == .embedded)
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
                         SettingPickerView(setting: $playgroundController.settings.amount)
@@ -247,19 +247,6 @@ struct PaymentSheetTestPlayground: View {
             }
             
             playgroundController.settings.uiStyle = newUIStyle
-        }
-    }
-    
-    var layoutBinding: Binding<PaymentSheetTestPlaygroundSettings.Layout> {
-        Binding<PaymentSheetTestPlaygroundSettings.Layout> {
-            return playgroundController.settings.layout
-        } set: { newLayout in
-            // If switching to horizontal mode and embedded is selected, reset to PaymentSheet
-            if newLayout == .horizontal && playgroundController.settings.uiStyle == .embedded {
-                playgroundController.settings.uiStyle = .paymentSheet
-            }
-            
-            playgroundController.settings.layout = newLayout
         }
     }
     
