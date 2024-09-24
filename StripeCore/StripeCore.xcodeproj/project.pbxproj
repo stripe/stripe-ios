@@ -37,6 +37,7 @@
 		45DAE581F74EF7E11C64212B /* InstallMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E64986F72C7BD8B1105A95 /* InstallMethod.swift */; };
 		48A6CCB4008A5060C2655C5F /* XCTestCase+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE48D0086BED21F9E837D0B /* XCTestCase+Stripe.swift */; };
 		4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */; };
+		49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ECDA402CA340E100F647F0 /* AsyncTests.swift */; };
 		4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7727AEEFD2FC880BADDA1872 /* Dictionary+Stripe.swift */; };
 		53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCE36551600C3E53BEAF8F0 /* StripeCodableTest.swift */; };
 		552DA7969984C443617DBC3E /* STPMultipartFormDataPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C72BA9C44FF60A0E7BEF76 /* STPMultipartFormDataPart.swift */; };
@@ -228,6 +229,7 @@
 		4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Extensions.swift"; sourceTree = "<group>"; };
 		49424775D3233411D9C2473B /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
 		49538DBF8457D96707A2DA56 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		49ECDA402CA340E100F647F0 /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
 		4A8030BF88608CA86E295F18 /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		4C51E3FA5EE3587BB7BBC634 /* STPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPError.swift; sourceTree = "<group>"; };
 		4EC3BCEEECB3E1485B18F0C4 /* FinancialConnectionsSDKInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSDKInterface.swift; sourceTree = "<group>"; };
@@ -413,6 +415,7 @@
 			isa = PBXGroup;
 			children = (
 				7F2E1D80D0342CF09CB05415 /* URLEncoderTest.swift */,
+				49ECDA402CA340E100F647F0 /* AsyncTests.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -941,6 +944,7 @@
 				84487D8E9B08106C89753536 /* Error_SerializeForLoggingTest.swift in Sources */,
 				0A78AD04075C43A4059C344E /* STPAnalyticsClientTest.swift in Sources */,
 				934CCB00769674F13192A126 /* Dictionary+StripeTests.swift in Sources */,
+				49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */,
 				A50CB2ACAC1DCF9539D76F25 /* NSArray+StripeCoreTest.swift in Sources */,
 				F5DB5D52E2668136FF6D70D6 /* NSMutableURLRequest+StripeTest.swift in Sources */,
 				8AD68C8D00A0BCF94E5230DC /* UIImage+StripeCoreTests.swift in Sources */,

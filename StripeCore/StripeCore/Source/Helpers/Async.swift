@@ -112,6 +112,14 @@ import Foundation
 
         return promise
     }
+
+    public func transformed<T>(
+        with closure: @escaping (Value) throws -> T
+    ) -> Future<T> {
+         chained { value in
+             try Promise(value: closure(value))
+        }
+    }
 }
 
 @_spi(STP) public class Promise<Value>: Future<Value> {
