@@ -11,16 +11,16 @@ import UIKit
 /// Helper SwiftUI Container VC that enables SwiftUI to present view controllers
 class SwiftUIContainerViewController<Content: View>: UIViewController {
     let content: Content
-    
+
     init(content: Content) {
         self.content = content
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         let hostingController = UIHostingController(rootView: content.environment(\.viewControllerPresenter, .init(presentViewController: { [weak self] vc in
@@ -37,7 +37,7 @@ class SwiftUIContainerViewController<Content: View>: UIViewController {
                 self?.view.window?.rootViewController = vc
             }
         })))
-        
+
         self.view.addSubview(hostingController.view)
         self.addChild(hostingController)
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false

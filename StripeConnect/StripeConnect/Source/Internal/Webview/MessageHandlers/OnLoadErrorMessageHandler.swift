@@ -19,13 +19,13 @@ extension OnLoadErrorMessageHandler.Values.ErrorValue {
 class OnLoadErrorMessageHandler: OnSetterFunctionCalledMessageHandler.Handler {
     struct Values: Codable, Equatable {
         let error: ErrorValue
-        
+
         struct ErrorValue: Codable, Equatable {
             let type: String
             let message: String
         }
     }
-    
+
     init(didReceiveMessage: @escaping (Values) -> Void) {
         super.init(setter: "setOnLoadError", didReceiveMessage: didReceiveMessage)
     }

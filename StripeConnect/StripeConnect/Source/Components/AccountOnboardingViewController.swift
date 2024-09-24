@@ -14,16 +14,16 @@ public class AccountOnboardingViewController: UIViewController {
 
     /// Delegate that recieves callbacks for this component
     public weak var delegate: AccountOnboardingViewControllerDelegate?
-    
+
     let webView: ConnectComponentWebView
-    
+
     init(fullTermsOfServiceUrl: URL? = nil,
          recipientTermsOfServiceUrl: URL? = nil,
          privacyPolicyUrl: URL? = nil,
          skipTermsOfServiceCollection: Bool? = nil,
          collectionOptions: AccountCollectionOptions = .init(),
-        componentManager: EmbeddedComponentManager,
-         //Test Only
+         componentManager: EmbeddedComponentManager,
+         // Test Only
          loadContent: Bool = true
     ) {
         webView = ConnectComponentWebView(
@@ -32,7 +32,7 @@ public class AccountOnboardingViewController: UIViewController {
             loadContent: loadContent
         )
         super.init(nibName: nil, bundle: nil)
-        
+
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
             self.delegate?.accountOnboarding(self, didFailLoadWithError: value.error.connectEmbedError)

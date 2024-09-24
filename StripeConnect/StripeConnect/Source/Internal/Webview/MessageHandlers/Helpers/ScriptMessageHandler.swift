@@ -11,13 +11,13 @@ import WebKit
 class ScriptMessageHandler<Payload: Decodable>: NSObject, WKScriptMessageHandler {
     let name: String
     let didReceiveMessage: (Payload) -> Void
-    
+
     init(name: String,
          didReceiveMessage: @escaping (Payload) -> Void) {
         self.name = name
         self.didReceiveMessage = didReceiveMessage
     }
-    
+
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
         guard message.name == name else {
@@ -27,7 +27,7 @@ class ScriptMessageHandler<Payload: Decodable>: NSObject, WKScriptMessageHandler
         do {
             didReceiveMessage(try message.toDecodable())
         } catch {
-            //TODO: MXMOBILE-2491 Log as analytics
+            // TODO: MXMOBILE-2491 Log as analytics
             debugPrint("Failed to decode body for message with name: \(message.name) \(error.localizedDescription)")
         }
     }

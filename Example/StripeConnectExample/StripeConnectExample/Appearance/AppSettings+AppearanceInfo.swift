@@ -17,10 +17,10 @@ extension AppSettings {
             .hotDog,
             .link,
             .oceanBreeze,
-            .ogre
+            .ogre,
         ]
     }
-    
+
     var appearanceInfo: AppearanceInfo {
         get {
             appearanceOptions.first(where: {
@@ -33,12 +33,11 @@ extension AppSettings {
     }
 }
 
-
 extension AppearanceInfo {
     static var `default`: AppearanceInfo {
         .init(displayName: "Default", appearance: .default)
     }
-    
+
     static var ogre: AppearanceInfo {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.colors.primary = UIColor(red: 90/255, green: 233/255, blue: 43/255, alpha: 1)
@@ -53,7 +52,7 @@ extension AppearanceInfo {
         appearance.buttonSecondary.colorText = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
         return .init(displayName: "Ogre", appearance: appearance)
     }
-    
+
     static var hotDog: AppearanceInfo {
         var appearance = EmbeddedComponentManager.Appearance()
 
@@ -71,10 +70,10 @@ extension AppearanceInfo {
         appearance.badgeWarning.colorBackground = UIColor(red: 249/255, green: 164/255, blue: 67/255, alpha: 1)
 
         appearance.cornerRadius.base = 0
-        
+
         return .init(displayName: "Hot Dog Stand", appearance: appearance)
     }
-    
+
     static var oceanBreeze: AppearanceInfo {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.colors.background = UIColor(red: 234/255, green: 246/255, blue: 251/255, alpha: 1)  // #EAF6FB
@@ -87,7 +86,7 @@ extension AppearanceInfo {
 
         return .init(displayName: "Ocean Breeze", appearance: appearance)
     }
-    
+
     static var link: AppearanceInfo {
         var appearance = EmbeddedComponentManager.Appearance()
 
@@ -107,10 +106,10 @@ extension AppearanceInfo {
         appearance.cornerRadius.base = 5
 
         appearance.spacingUnit = 9
-        
+
         return .init(displayName: "Link", appearance: appearance)
     }
-    
+
     static var customFont: AppearanceInfo {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.typography.font = UIFont(name: "Handjet-Regular", size: UIFont.systemFontSize)
