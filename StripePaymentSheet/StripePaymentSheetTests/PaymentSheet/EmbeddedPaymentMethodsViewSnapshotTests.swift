@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(EmbeddedPaymentMethodsViewBeta) @testable import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
@@ -79,7 +79,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             XCTAssertEqual((appearance.paymentOptionView.paymentMethodRow.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
         }
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatRadio_rowHeightSingleLine() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
@@ -329,7 +329,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             XCTAssertEqual((appearance.paymentOptionView.paymentMethodRow.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
         }
     }
-    
+
     func testEmbeddedPaymentMethodsView_floating_rowHeightSingleLine() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.paymentOptionView.style = .floating

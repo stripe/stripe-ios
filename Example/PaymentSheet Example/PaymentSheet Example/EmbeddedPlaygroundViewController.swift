@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(EmbeddedPaymentMethodsViewBeta) import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 import UIKit
 
 protocol EmbeddedPlaygroundViewControllerDelegate: AnyObject {
@@ -14,12 +14,12 @@ protocol EmbeddedPlaygroundViewControllerDelegate: AnyObject {
 }
 
 class EmbeddedPlaygroundViewController: UIViewController {
-    
+
     private let settings: PaymentSheetTestPlaygroundSettings
     private let appearance: PaymentSheet.Appearance
-    
+
     weak var delegate: EmbeddedPlaygroundViewControllerDelegate?
-    
+
     private lazy var checkoutButton: UIButton = {
         let checkoutButton = UIButton(type: .system)
         checkoutButton.backgroundColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
@@ -30,17 +30,17 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
         return checkoutButton
     }()
-    
+
     init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
         self.settings = settings
         self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-        
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(dynamicProvider: { traitCollection in

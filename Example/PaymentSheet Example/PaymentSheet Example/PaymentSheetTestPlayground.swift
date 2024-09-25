@@ -234,7 +234,7 @@ struct PaymentSheetTestPlayground: View {
             }
         }
     }
-    
+
     var uiStyleBinding: Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
         Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
             return playgroundController.settings.uiStyle
@@ -243,11 +243,11 @@ struct PaymentSheetTestPlayground: View {
             if newUIStyle == .embedded && playgroundController.settings.integrationType == .normal {
                 playgroundController.settings.integrationType = .deferred_csc
             }
-            
+
             playgroundController.settings.uiStyle = newUIStyle
         }
     }
-    
+
     var integrationTypeBinding: Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
         Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
             return playgroundController.settings.integrationType
@@ -403,7 +403,7 @@ struct PaymentSheetButtons: View {
                         }
                     }.padding(.horizontal)
 
-                    if let _ = playgroundController.embeddedPlaygroundController,
+                    if playgroundController.embeddedPlaygroundController != nil,
                        playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
                         HStack {
                             Button {
