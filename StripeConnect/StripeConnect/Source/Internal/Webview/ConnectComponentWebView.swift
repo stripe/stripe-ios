@@ -16,7 +16,7 @@ class ConnectComponentWebView: ConnectWebView {
     var componentManager: EmbeddedComponentManager
 
     /// The component type that should be loaded.
-    private var componentType: ComponentType
+    let componentType: ComponentType
 
     /// The content controller that registers JS -> Swift message handlers
     private let contentController: WKUserContentController

@@ -145,4 +145,18 @@ class ConnectComponentWebViewTests: XCTestCase {
                                                             {"appearance":{"variables":{"fontFamily":"-apple-system","fontSizeBase":"16px"}},"fonts":[{"family":".AppleSystemUIFont","src":"url(data:font\\/txt;charset=utf-8;base64,dGVzdAo=)","weight":"400"}],"locale":"fr-FR"}
                                                             """)
     }
+
+    @MainActor
+    func testLogout() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        let webView = ConnectComponentWebView(componentManager: componentManager,
+                                              componentType: .payouts,
+                                              webLocale: Locale(identifier: "fr_FR"),
+                                              loadContent: false)
+
+        let expectation = try webView.expectationForMessageReceived(sender: LogoutSender())
+        componentManager.logout()
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
 }
