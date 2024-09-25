@@ -214,6 +214,7 @@ import Foundation
     case paymentSheetUpdateCardBrand = "mc_update_card"
     case paymentSheetUpdateCardBrandFailed = "mc_update_card_failed"
     case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
+    case paymentSheetDisallowedCardBrand = "mc_disallowed_card_brand"
 
     // MARK: - CustomerSheet card brand choice
     case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"

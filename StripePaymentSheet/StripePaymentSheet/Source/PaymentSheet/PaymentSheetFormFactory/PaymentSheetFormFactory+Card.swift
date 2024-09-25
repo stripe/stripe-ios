@@ -58,6 +58,7 @@ extension PaymentSheetFormFactory {
             cardBrandChoiceEligible: cardBrandChoiceEligible,
             hostedSurface: .init(config: configuration),
             theme: theme,
+            cardBrandFilter: .init(cardBrandAcceptance: configuration.cardBrandAcceptance),
             analyticsHelper: analyticsHelper
         )
 

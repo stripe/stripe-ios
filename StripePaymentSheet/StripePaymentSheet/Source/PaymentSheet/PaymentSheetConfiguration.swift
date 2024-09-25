@@ -162,6 +162,11 @@ extension PaymentSheet {
                        "preferredNetworks must not contain any duplicate card brands")
             }
         }
+        
+        /// By default, PaymentSheet will accept all supported cards by Stripe.
+        /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
+        /// Note: This is only a client-side solution.
+        @_spi(CardBrandFilteringBeta) public var cardBrandAcceptance: CardBrandAcceptance = .all
 
         /// Initializes a Configuration with default values
         public init() {}
@@ -525,5 +530,30 @@ extension PaymentSheet.CustomerConfiguration {
         case .customerSession:
             return elementsSession?.customer?.customerSession.apiKey
         }
+    }
+}
+
+@_spi(CardBrandFilteringBeta) extension PaymentSheet {
+    /// Options to block certain card brands on the client
+    public enum CardBrandAcceptance: Equatable {
+        
+        /// Card brand categories that can be allowed or disallowed
+        public enum BrandCategory: Equatable  {
+            /// Visa branded cards
+            case visa
+            /// Mastercard branded cards
+            case mastercard
+            /// Amex branded cards
+            case amex
+            /// Encompasses all of Discover Global Network (Discover, Diners, JCB, UnionPay, Elo)
+            case discoverGlobalNetwork
+        }
+        
+        /// Accept all card brands supported by Stripe
+        case all
+        /// Accept only the card brands specified in the associated value
+        case allowed(brands: [BrandCategory])
+        /// Accept all card brands supported by Stripe except for those specified in the associated value
+        case disallowed(brands: [BrandCategory])
     }
 }

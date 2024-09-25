@@ -10,7 +10,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP)@_spi(CardBrandFilteringBeta) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
@@ -75,6 +75,39 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         ]
 
         let configuration = TextFieldElement.PANConfiguration()
+        for (text, expected) in testcases {
+            let actual = configuration.simulateValidationState(text)
+            XCTAssertTrue(
+                actual == expected,
+                "Input \"\(text)\": expected \(expected) but got \(actual)"
+            )
+        }
+    }
+    
+    func testPANValidation_cardBrandFiltering() throws {
+        typealias Error = TextFieldElement.PANConfiguration.Error
+        let testcases: [String: ElementValidationState] = [
+            // Valid (luhn-passing) PANs
+            "4012888888881881": .valid,
+            "2223000010089800": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard
+            "3530111333300000": .valid,
+            "4242424242424242": .valid,  // visa
+            "4000056655665556": .valid,  // visa (debit)
+            "5555555555554444": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard
+            "2223003122003222": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard (2-series)
+            "5200828282828210": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard (debit)
+            "5105105105105100": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard (prepaid)
+            "378282246310005": .invalid(error: Error.disallowedBrand(brand: .amex), shouldDisplay: true),  // amex
+            "371449635398431": .invalid(error: Error.disallowedBrand(brand: .amex), shouldDisplay: true),  // amex
+            "6011111111111117": .valid,  // discover
+            "6011000990139424": .valid,  // discover
+            "3056930009020004": .valid,  // diners club
+            "36227206271667": .valid,  // diners club (14 digit)
+            "3566002020360505": .valid,  // jcb
+            "6200000000000005": .valid,  // cup
+        ]
+
+        let configuration = TextFieldElement.PANConfiguration(cardFilter: .init(cardBrandAcceptance: .disallowed(brands: [.amex, .mastercard])))
         for (text, expected) in testcases {
             let actual = configuration.simulateValidationState(text)
             XCTAssertTrue(

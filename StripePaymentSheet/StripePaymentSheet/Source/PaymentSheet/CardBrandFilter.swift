@@ -1,0 +1,70 @@
+//
+//  CardBrandFilter.swift
+//  StripePaymentSheet
+//
+//  Created by Nick Porter on 9/18/24.
+//
+
+import Foundation
+@_spi(STP) import StripeCore
+
+struct CardBrandFilter {
+    
+    static let `default`: CardBrandFilter = .init(cardBrandAcceptance: .all)
+    
+    private let cardBrandAcceptance: PaymentSheet.CardBrandAcceptance
+    
+    init(cardBrandAcceptance: PaymentSheet.CardBrandAcceptance) {
+        self.cardBrandAcceptance = cardBrandAcceptance
+    }
+    
+    /// Determines if a merchant can accept a card brand based on `cardBrandAcceptance`
+    /// - Parameter cardBrand: The `STPCardBrand` to determine if acceptance
+    /// - Returns: Returns true if this merchant can accept this card brand, false otherwise
+    func isAccepted(cardBrand: STPCardBrand) -> Bool {
+        switch cardBrandAcceptance {
+        case .all:
+            return true
+        case .allowed(let allowedCardBrands):
+            // If a merchant has specified a list of brands to allow, block unknown brands
+            guard let brandCategory = cardBrand.asBrandCategory else {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDisallowedCardBrand,
+                                                                     params: ["brand": STPCardBrandUtilities.apiValue(from: cardBrand)])
+                return false
+            }
+            
+            if !allowedCardBrands.contains(brandCategory) {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDisallowedCardBrand,
+                                                                     params: ["brand": STPCardBrandUtilities.apiValue(from: cardBrand)])
+                return false
+            }
+        case .disallowed(let disallowedBrands):
+            if let brandCategory = cardBrand.asBrandCategory, disallowedBrands.contains(brandCategory) {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDisallowedCardBrand,
+                                                                     params: ["brand": STPCardBrandUtilities.apiValue(from: cardBrand)])
+                return false
+            }
+        }
+        
+        return true
+    }
+}
+
+extension STPCardBrand {
+    var asBrandCategory: PaymentSheet.CardBrandAcceptance.BrandCategory? {
+        switch self {
+        case .visa:
+            return .visa
+        case .amex:
+            return .amex
+        case .mastercard:
+            return .mastercard
+        case .discover, .JCB, .dinersClub, .unionPay:
+            return .discoverGlobalNetwork
+        case .cartesBancaires, .unknown:
+            return nil
+        @unknown default:
+            return nil
+        }
+    }
+}

@@ -351,6 +351,8 @@ extension PaymentSheet.Configuration {
         payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
         payload["payment_method_layout"] = paymentMethodLayout.description
+        payload["card_brand_acceptance"] = cardBrandAcceptance != .all
+        
         return payload
     }
 }

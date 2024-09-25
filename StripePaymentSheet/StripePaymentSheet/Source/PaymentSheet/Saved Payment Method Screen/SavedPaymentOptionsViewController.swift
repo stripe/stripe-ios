@@ -103,6 +103,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
+        let cardBrandFilter: CardBrandFilter
     }
 
     // MARK: - Internal Properties
@@ -560,7 +561,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
                                               canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                              isTestMode: configuration.isTestMode)
+                                              isTestMode: configuration.isTestMode,
+                                              cardBrandFilter: configuration.cardBrandFilter)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
