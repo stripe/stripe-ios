@@ -78,6 +78,10 @@ class ConnectComponentWebView: ConnectWebView {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: appearance, traitCollection: traitCollection))))
     }
 
+    func logout() {
+        sendMessage(LogoutSender())
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

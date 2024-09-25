@@ -15,4 +15,7 @@ enum ComponentType: String, Encodable {
     case onboarding = "account-onboarding"
     /// Show details of a given payment and allow users to manage disputes and perform refunds.
     case paymentDetails = "payment-details"
+
+    /// A fake component type used to proxy logout
+    case logoutProxy = ""
 }

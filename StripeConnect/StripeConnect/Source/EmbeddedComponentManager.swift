@@ -20,6 +20,10 @@ public class EmbeddedComponentManager {
     // Weakly held web views who get notified when appearance updates.
     private(set) var childWebViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
 
+    /// Strong reference to a logout proxy.
+    /// This is needed so that we can logout of the web view and clear cookies, even if there are no components in memory
+    private lazy var logoutProxyWebView = ConnectComponentWebView(componentManager: self, componentType: .logoutProxy)
+
     let fetchClientSecret: () async -> String?
     let fonts: [EmbeddedComponentManager.CustomFontSource]
     private(set) var appearance: EmbeddedComponentManager.Appearance
@@ -49,6 +53,7 @@ public class EmbeddedComponentManager {
         self.fetchClientSecret = fetchClientSecret
         self.fonts = fonts
         self.appearance = appearance
+        childWebViews.add(logoutProxyWebView)
     }
 
     /// Updates the appearance of components created from this EmbeddedComponentManager
@@ -57,6 +62,20 @@ public class EmbeddedComponentManager {
         self.appearance = appearance
         for item in childWebViews.allObjects {
             item.updateAppearance(appearance: appearance)
+        }
+    }
+
+    /// Invalidates the account session and removes any persisted authentication state
+    /// associated with account for all components created from this EmbeddedComponentManager.
+    ///
+    /// You must call this method when the user logs out from your app.
+    /// This will ensure that any persisted authentication state for embedded components,
+    /// such as authentication cookies, is also cleared during logout.
+    ///
+    /// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components#log-out
+    public func logout() {
+        childWebViews.allObjects.forEach {
+            $0.logout()
         }
     }
 

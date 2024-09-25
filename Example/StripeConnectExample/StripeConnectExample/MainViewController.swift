@@ -78,10 +78,10 @@ class MainViewController: UITableViewController {
         super.viewDidLoad()
         title = merchant.displayName ?? merchant.merchantId
         navigationItem.titleView = navbarTitleButton
-        addChangeAppearanceButtonNavigationItem(to: self)
+        addGlobalButtonNavigationItems(to: self)
     }
 
-    func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
+    func addGlobalButtonNavigationItems(to viewController: UIViewController) {
          // Add a button to change the appearance
          let button = UIBarButtonItem(
              image: UIImage(systemName: "paintpalette"),
@@ -112,7 +112,7 @@ class MainViewController: UITableViewController {
         }
 
         viewControllerToPush.navigationItem.backButtonDisplayMode = .minimal
-        addChangeAppearanceButtonNavigationItem(to: viewControllerToPush)
+        addGlobalButtonNavigationItems(to: viewControllerToPush)
         navigationController?.pushViewController(viewControllerToPush, animated: true)
     }
 
