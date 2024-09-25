@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(ExperimentalPaymentMethodLayoutAPI) @_spi(CardBrandFilteringAlpha) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(ExperimentalPaymentMethodLayoutAPI) @_spi(CardBrandFilteringAlpha) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -339,10 +339,25 @@ class PlaygroundController: ObservableObject {
             if newValue.autoreload == .on {
                 self.load()
             }
+            if newValue.shakeAmbiguousViews == .on {
+                self.ambiguousViewTimer?.invalidate()
+                self.ambiguousViewTimer = .scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { _ in
+                    self.checkForAmbiguousViews()
+                })
+            } else {
+                self.ambiguousViewTimer?.invalidate()
+            }
         }.store(in: &subscribers)
 
         // Listen for analytics
         STPAnalyticsClient.sharedClient.delegate = self
+    }
+
+    var ambiguousViewTimer: Timer?
+    func checkForAmbiguousViews() {
+        if let v = self.rootViewController.view.window!.ambiguousView() {
+            print(v)
+        }
     }
 
     func buildPaymentSheet() {

@@ -84,8 +84,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue((cvcField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(cvcField.typeText("1234"))
 
-        app.toolbars.buttons["Done"].tap()  // Country picker toolbar's "Done" button
-
         let postalField = app.textFields["ZIP"]
         XCTAssertTrue((postalField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(postalField.typeText("12345"))
@@ -219,8 +217,12 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Check analytics
         XCTAssertEqual(
-            analyticsLog.suffix(3).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped"]
+            analyticsLog.suffix(4).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
+        )
+        XCTAssertEqual(
+            analyticsLog.suffix(4).map({ $0[string: "selected_lpm"] }),
+            ["card", nil, "card", "card"]
         )
 
         app.buttons["Confirm"].tap()
@@ -236,7 +238,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         }
         // Make sure the appropriate events have "selected_lpm" = "card"
         for analytic in analyticsLog {
-            if ["mc_form_shown", "mc_form_interacted", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
+            if ["mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
                XCTAssertEqual(analytic[string: "selected_lpm"], "card")
             }
         }
@@ -280,6 +282,18 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         confirmRemoval.tap()
 
         XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
+
+        // Give time for analyticsLog to receive mc_custom_paymentoption_removed
+        sleep(1)
+
+        XCTAssertEqual(
+            analyticsLog.suffix(1).map({ $0[string: "event"] }),
+            ["mc_custom_paymentoption_removed"]
+        )
+        XCTAssertEqual(
+            analyticsLog.suffix(1).map({ $0[string: "selected_lpm"] }),
+            ["card"]
+        )
     }
 
     func testPaymentSheetSwiftUI() throws {
@@ -512,8 +526,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
         XCTAssertEqual(
-            analyticsLog.suffix(8).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            analyticsLog.suffix(9).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         // Make sure they all have the same session id
@@ -2633,7 +2647,6 @@ extension PaymentSheetUITestCase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled

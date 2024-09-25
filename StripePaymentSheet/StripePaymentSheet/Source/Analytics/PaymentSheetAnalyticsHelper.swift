@@ -125,42 +125,48 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
-        let event: STPAnalyticEvent = {
+        let (event, selectedLPM): (STPAnalyticEvent, String?) = {
             if isCustom {
                 switch option {
                 case .add:
-                    return .mcOptionSelectCustomNewPM
-                case .saved:
-                    return .mcOptionSelectCustomSavedPM
+                    return (.mcOptionSelectCustomNewPM, nil)
+                case .saved(let paymentMethod):
+                    return (.mcOptionSelectCustomSavedPM, paymentMethod.type.identifier)
                 case .applePay:
-                    return .mcOptionSelectCustomApplePay
+                    return (.mcOptionSelectCustomApplePay, nil)
                 case .link:
-                    return .mcOptionSelectCustomLink
+                    return (.mcOptionSelectCustomLink, nil)
                 }
             } else {
                 switch option {
                 case .add:
-                    return .mcOptionSelectCompleteNewPM
-                case .saved:
-                    return .mcOptionSelectCompleteSavedPM
+                    return (.mcOptionSelectCompleteNewPM, nil)
+                case .saved(let paymentMethod):
+                    return (.mcOptionSelectCompleteSavedPM, paymentMethod.type.identifier)
                 case .applePay:
-                    return .mcOptionSelectCompleteApplePay
+                    return (.mcOptionSelectCompleteApplePay, nil)
                 case .link:
-                    return .mcOptionSelectCompleteLink
+                    return (.mcOptionSelectCompleteLink, nil)
                 }
             }
         }()
-        log(event: event)
+        log(event: event, selectedLPM: selectedLPM)
     }
 
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
+    }
+    func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
+        let event: STPAnalyticEvent = isCustom ? .mcOptionRemoveCustomSavedPM : .mcOptionRemoveCompleteSavedPM
+        log(event: event, selectedLPM: paymentMethod.type.identifier)
     }
 
     /// Used to ensure we only send one `mc_form_interacted` event per `mc_form_shown` to avoid spamming.
     var didSendPaymentSheetFormInteractedEventAfterFormShown: Bool = false
     func logFormShown(paymentMethodTypeIdentifier: String) {
         didSendPaymentSheetFormInteractedEventAfterFormShown = false
+        didSendPaymentSheetFormCompletedEvent = false
+        lastLogFormShown = paymentMethodTypeIdentifier
         startTimeMeasurement(.formShown)
         log(
             event: .paymentSheetFormShown,
@@ -173,6 +179,20 @@ final class PaymentSheetAnalyticsHelper {
             didSendPaymentSheetFormInteractedEventAfterFormShown = true
             log(
                 event: .paymentSheetFormInteracted,
+                selectedLPM: paymentMethodTypeIdentifier
+            )
+        }
+    }
+
+    /// Used to ensure we only send one `mc_form_completed` event per `mc_form_shown` to avoid spamming.
+    var didSendPaymentSheetFormCompletedEvent: Bool = false
+    /// Used because it is possible for logFormCompleted to be called before logFormShown when switching payment methods
+    var lastLogFormShown: String?
+    func logFormCompleted(paymentMethodTypeIdentifier: String) {
+        if !didSendPaymentSheetFormCompletedEvent && paymentMethodTypeIdentifier == lastLogFormShown {
+            didSendPaymentSheetFormCompletedEvent = true
+            log(
+                event: .paymentSheetFormCompleted,
                 selectedLPM: paymentMethodTypeIdentifier
             )
         }
@@ -260,7 +280,7 @@ final class PaymentSheetAnalyticsHelper {
             guard let elementsSession else { return nil }
             return PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         }()
-        
+
         var additionalParams = [:] as [String: Any]
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled

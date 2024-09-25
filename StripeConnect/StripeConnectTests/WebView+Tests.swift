@@ -10,25 +10,24 @@ import UIKit
 import WebKit
 import XCTest
 
-
 extension WKWebView {
-    
+
     func evaluateDebugMessage(message: String) {
         evaluateMessage(name: "debug",
                         json: """
                         "\(message)"
                         """)
     }
-    
-    func evaluateSetOnExit() {
-        evaluateMessage(name: "onSetterFunctionCalled",
+
+    func evaluateSetOnExit() async throws {
+        try await evaluateMessage(name: "onSetterFunctionCalled",
                         json: """
                         {
                             "setter": "setOnExit"
                         }
                         """)
     }
-    
+
     func evaluateOnLoaderStart(elementTagName: String) {
         evaluateMessage(name: "onSetterFunctionCalled",
                                 json: """
@@ -40,30 +39,30 @@ extension WKWebView {
                         }
                         """)
     }
-    
+
     func evaluatePageDidLoad(pageViewId: String) {
         evaluateMessage(name: "pageDidLoad",
                         json: """
                         {"pageViewId": "\(pageViewId)"}
                         """)
     }
-    
+
     func evaluateAccountSessionClaimed(merchantId: String) {
         evaluateMessage(name: "accountSessionClaimed",
                         json: """
                         {"merchantId": "\(merchantId)"}
                         """)
     }
-    
+
     func evaluateOpenAuthenticatedWebView(url: String, id: String) {
         evaluateMessage(name: "openAuthenticatedWebView",
                         json: """
                         {"url": "\(url)", "id": "\(id)" }
                         """)
     }
-    
-    func evaluateOnLoadError(type: String, message: String) {
-        evaluateMessage(name: "onSetterFunctionCalled",
+
+    func evaluateOnLoadError(type: String, message: String) async throws {
+        try await evaluateMessage(name: "onSetterFunctionCalled",
                         json:
                         """
                         {
@@ -79,16 +78,15 @@ extension WKWebView {
     }
 }
 
-
 extension WKWebView {
     private class MessageHandler: NSObject, WKScriptMessageHandler {
         var messageReceived: ((Any) -> Void)?
-        
+
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             messageReceived?(message.body)
         }
     }
-    
+
     func expectationForMessageReceived<Sender: MessageSender>(sender: Sender) throws -> XCTestExpectation {
         let expectation = XCTestExpectation(description: "JavaScript execution")
         let messageHandler = MessageHandler()
@@ -104,7 +102,7 @@ extension WKWebView {
             XCTAssertEqual(String(data: responseData, encoding: .utf8), String(data: payloadData, encoding: .utf8))
             expectation.fulfill()
         }
-        
+
         // Inject the receiver function that validates the message was sent
         let receiverFunctionName = "receiver_" + sender.name
         evaluateJavaScript("""
@@ -115,25 +113,50 @@ extension WKWebView {
         configuration.userContentController.add(messageHandler, name: receiverFunctionName)
         return expectation
     }
-    
+
     func sendMessage<Sender: MessageSender>(sender: Sender) throws {
-        evaluateJavaScript(try XCTUnwrap(sender.javascriptMessage)) { (result, error) in
+        evaluateJavaScript(try XCTUnwrap(sender.javascriptMessage)) { (_, error) in
             if let error {
                 XCTFail("JavaScript execution failed: \(error)")
             }
         }
     }
-    
+
+    @discardableResult
+    func evaluateMessage(name: String,
+                         json: String) async throws -> Any? {
+        return try await withCheckedThrowingContinuation { continuation in
+            evaluateMessage(name: name, json: json, completionHandler: { response, _ in
+                continuation.resume(returning: response)
+            })
+        }
+    }
+
     func evaluateMessage(name: String,
                          json: String,
                          completionHandler: ((Any?, (any Error)?) -> Void)? = nil) {
         let script = """
         window.webkit.messageHandlers.\(name).postMessage(\(json));
         """
-        
+
         evaluateJavaScript(script, completionHandler: completionHandler)
     }
-    
+
+    func ensureMessagesNotSet(messages: [String],
+                              file: StaticString = #filePath,
+                              line: UInt = #line) async throws {
+        for message in messages {
+            do {
+                try await self.evaluateMessageWithReply(name: message,
+                                                        json: "{}",
+                                                        expectedResponse: "",
+                                                        file: file,
+                                                        line: line)
+                XCTFail("\(message) should not be set when it's nil", file: file, line: line)
+            } catch {}
+        }
+    }
+
     func evaluateMessageWithReply<Response: Encodable>(name: String,
                                                        json: String,
                                                        expectedResponse: Response,
@@ -144,7 +167,7 @@ extension WKWebView {
             return try await withCheckedThrowingContinuation { continuation in
                 let replyMessageHandler = DataScriptMessageHandler(name: self.replyKey(message: name)) { message in
                     let expectedMessage: String?
-                    
+
                     if let expectedResponse = expectedResponse as? String {
                         expectedMessage = expectedResponse
                     } else {
@@ -154,7 +177,7 @@ extension WKWebView {
                         }
                         expectedMessage = String(data: json, encoding: .utf8)
                     }
-                    
+
                     guard let actualMessage = String(data: message, encoding: .utf8) else {
                         XCTFail("Failed to get message \(message)", file: file, line: line)
                         return
@@ -162,14 +185,14 @@ extension WKWebView {
                     XCTAssertEqual(actualMessage, expectedMessage, file: file, line: line)
                     continuation.resume(returning: ())
                 }
-                
+
                 self.configuration.userContentController.add(replyMessageHandler, name: replyMessageHandler.name)
-                
+
                 let script = """
                 const result = await window.webkit.messageHandlers.\(name).postMessage(\(json));
                 window.webkit.messageHandlers.\(self.replyKey(message: name)).postMessage(result);
                 """
-                
+
                 Task {
                     do {
                         _ = try await self.callAsyncJavaScript(script, contentWorld: .page)
@@ -184,31 +207,30 @@ extension WKWebView {
     func addMessageReplyHandler<Payload, Response>(messageHandler: ScriptMessageHandlerWithReply<Payload, Response>) {
         configuration.userContentController.addScriptMessageHandler(messageHandler, contentWorld: .page, name: messageHandler.name)
     }
-    
+
     func replyKey(message: String) -> String {
         message + "_reply"
     }
-    
+
     func addMessageHandler<T>(messageHandler: ScriptMessageHandler<T>) {
         configuration.userContentController.add(messageHandler, name: messageHandler.name)
     }
-    
+
     struct Reply<R: Decodable>: Decodable {
         let result: R
     }
 }
 
-
 private class DataScriptMessageHandler: NSObject, WKScriptMessageHandler {
     let name: String
     let didReceiveMessage: (Data) -> Void
-    
+
     init(name: String,
          didReceiveMessage: @escaping (Data) -> Void) {
         self.name = name
         self.didReceiveMessage = didReceiveMessage
     }
-    
+
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
         guard message.name == name else {

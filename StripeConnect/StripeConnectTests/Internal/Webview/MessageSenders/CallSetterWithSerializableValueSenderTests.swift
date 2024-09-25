@@ -13,7 +13,7 @@ class CallSetterWithSerializableValueSenderTests: ScriptWebTestBase {
     func testSendMessage() throws {
         try validateMessageSent(sender: CallSetterWithSerializableValueSender(payload: .init(setter: "setPayment", value: "pi_1234")))
     }
-    
+
     func testSenderSignature() {
         XCTAssertEqual(
             CallSetterWithSerializableValueSender(payload: .init(setter: "setPayment", value: "pi_1234")).javascriptMessage,

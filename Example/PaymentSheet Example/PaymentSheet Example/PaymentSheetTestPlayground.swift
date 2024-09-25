@@ -52,6 +52,7 @@ struct PaymentSheetTestPlayground: View {
         }
         Group {
             SettingView(setting: $playgroundController.settings.autoreload)
+            SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
         }
     }
 

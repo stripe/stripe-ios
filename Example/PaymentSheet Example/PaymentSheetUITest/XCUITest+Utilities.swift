@@ -192,7 +192,6 @@ extension XCTestCase {
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
         if postalEnabled {
-            app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
             app.typeText("12345") // Postal
         }
     }

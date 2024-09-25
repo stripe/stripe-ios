@@ -316,6 +316,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                  intent: Intent._testValue(),
                                                  appearance: .default,
                                                  cbcEligible: cbcEligible,
+                                                 analyticsHelper: ._testValue(),
                                                  delegate: nil)
     }
 }

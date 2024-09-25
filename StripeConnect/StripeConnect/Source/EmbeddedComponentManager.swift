@@ -9,16 +9,25 @@ import JavaScriptCore
 import StripeCore
 import UIKit
 
+/// Manages Connect embedded components
+/// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components
+/// - Note: Connect embedded components are only available in private beta.
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public class EmbeddedComponentManager {
     let apiClient: STPAPIClient
-    
+
     // Weakly held web views who get notified when appearance updates.
     private(set) var childWebViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
-    
+
     let fetchClientSecret: () async -> String?
     let fonts: [EmbeddedComponentManager.CustomFontSource]
     private(set) var appearance: EmbeddedComponentManager.Appearance
+
+    // This should only be used for tests and determines if webview
+    // content should load.
+    var shouldLoadContent: Bool = true
+
     /**
      Initializes a StripeConnect instance.
 
@@ -41,7 +50,7 @@ public class EmbeddedComponentManager {
         self.fonts = fonts
         self.appearance = appearance
     }
-    
+
     /// Updates the appearance of components created from this EmbeddedComponentManager
     /// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components#customize-the-look-of-connect-embedded-components
     public func update(appearance: Appearance) {
@@ -50,10 +59,42 @@ public class EmbeddedComponentManager {
             item.updateAppearance(appearance: appearance)
         }
     }
-    
+
     /// Creates a payouts component
     /// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/payouts
     public func createPayoutsViewController() -> PayoutsViewController {
+        .init(componentManager: self, loadContent: shouldLoadContent)
+    }
+
+    /**
+        Creates an account-onboarding component.
+        - See also: https://docs.stripe.com/connect/supported-embedded-components/account-onboarding
+
+        - Parameters:
+          - fullTermsOfServiceUrl: URL to your [full terms of service agreement](https://docs.stripe.com/connect/service-agreement-types#full).
+          - recipientTermsOfServiceUrl: URL to your [recipient terms of service](https://docs.stripe.com/connect/service-agreement-types#recipient) agreement.
+          - privacyPolicyUrl: Absolute URL to your privacy policy.
+          - skipTermsOfServiceCollection: If true, embedded onboarding skips terms of service collection and you must [collect terms acceptance yourself](https://docs.stripe.com/connect/updating-service-agreements#indicating-acceptance).
+          - collectionOptions: Specifies the requirements that Stripe collects from connected accounts
+       */
+       public func createAccountOnboardingViewController(
+           fullTermsOfServiceUrl: URL? = nil,
+           recipientTermsOfServiceUrl: URL? = nil,
+           privacyPolicyUrl: URL? = nil,
+           skipTermsOfServiceCollection: Bool? = nil,
+           collectionOptions: AccountCollectionOptions = .init()
+       ) -> AccountOnboardingViewController {
+           return .init(fullTermsOfServiceUrl: fullTermsOfServiceUrl,
+                        recipientTermsOfServiceUrl: recipientTermsOfServiceUrl,
+                        privacyPolicyUrl: privacyPolicyUrl,
+                        skipTermsOfServiceCollection: skipTermsOfServiceCollection,
+                        collectionOptions: collectionOptions,
+                        componentManager: self,
+                        loadContent: shouldLoadContent)
+       }
+
+    @_spi(DashboardOnly)
+    public func createPaymentDetailsViewController() -> PaymentDetailsViewController {
         .init(componentManager: self)
     }
 

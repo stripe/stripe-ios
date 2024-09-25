@@ -38,6 +38,11 @@
 		413D18482C7FBAA70051AA42 /* CSSHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413D18472C7FBAA70051AA42 /* CSSHelpers.swift */; };
 		41542A692C88B6F2004E728E /* JSONEncoder+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */; };
 		41542A6B2C88B79E004E728E /* JSONSerialization+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41542A6A2C88B79E004E728E /* JSONSerialization+extension.swift */; };
+		4161C2732C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2722C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift */; };
+		4161C2752C9DB1B9005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2742C9DB1B9005BD67C /* StripeUICore.framework */; };
+		4161C2792C9DB1CE005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2782C9DB1CE005BD67C /* StripeUICore.framework */; };
+		4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */; };
+		4161C28C2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C28B2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift */; };
 		416E9E742C751A1A00A0B917 /* ConnectComponentWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E732C751A1A00A0B917 /* ConnectComponentWebView.swift */; };
 		416E9E762C751B0500A0B917 /* EmbeddedComponentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E752C751B0500A0B917 /* EmbeddedComponentManager.swift */; };
 		416E9E782C753B7900A0B917 /* ConnectComponentWebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E772C753B7900A0B917 /* ConnectComponentWebViewTests.swift */; };
@@ -48,6 +53,7 @@
 		416E9ECF2C77EAA400A0B917 /* EmbeddedComponentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ECE2C77EAA400A0B917 /* EmbeddedComponentError.swift */; };
 		416E9ED22C77F6E000A0B917 /* Locale+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ED12C77F6E000A0B917 /* Locale+extension.swift */; };
 		416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */; };
+		4171B1592C9A5EEC00547F7D /* AccountOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4171B1582C9A5EEC00547F7D /* AccountOnboardingViewController.swift */; };
 		41810D692C88C4B100F10EB7 /* AppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D682C88C4B100F10EB7 /* AppearanceTests.swift */; };
 		41810D6B2C88E71D00F10EB7 /* Appearance+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D6A2C88E71D00F10EB7 /* Appearance+Encoding.swift */; };
 		41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */; };
@@ -62,56 +68,6 @@
 		4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */; };
 		41A2A5642C5ABD6C0077FC74 /* StripeConnectTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */; };
 		41A2A5682C5AC5120077FC74 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A2A5672C5AC5120077FC74 /* StripeCore.framework */; };
-		41A2A5CD2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A56C2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5CE2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A56E2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5CF2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5702C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D02C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5722C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D12C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5742C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D22C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5762C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D32C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5782C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D42C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A57A2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D52C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A57C2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D62C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A57E2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D72C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5802C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D82C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5822C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5D92C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5842C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5DA2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5862C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5DB2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5882C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5DC2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A58A2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5DD2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A58C2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5DE2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A58E2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5DF2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5902C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E02C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5922C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E12C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5942C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E22C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5962C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E32C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5982C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E42C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A59A2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E52C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A59C2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E62C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A59E2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E72C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5A02C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E82C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5A22C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5E92C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5A42C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5EA2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5A62C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5EB2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5A82C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5EC2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5AA2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5ED2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5AC2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5EE2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5AE2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5EF2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5B02C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F02C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5B22C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F12C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5B42C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F22C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5B62C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F32C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5B82C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F42C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5BA2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F52C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5BC2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F62C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5BE2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F72C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5C02C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F82C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5C22C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5F92C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5C42C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5FA2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5C62C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5FB2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5C82C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5FC2C5ACBDD0077FC74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5CA2C5ACBDD0077FC74 /* Localizable.strings */; };
-		41A2A5FE2C5ACCAA0077FC74 /* StripeConnectBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2A5FD2C5ACCAA0077FC74 /* StripeConnectBundleLocator.swift */; };
-		41A2A6012C5ACD9F0077FC74 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2A6002C5ACD9F0077FC74 /* STPLocalizedString.swift */; };
 		41BCCFEB2C8B348500797E01 /* AppearanceWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFEA2C8B348500797E01 /* AppearanceWrapper.swift */; };
 		41BCCFED2C8B34F600797E01 /* StringCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFEC2C8B34F600797E01 /* StringCodingKey.swift */; };
 		41BCCFF02C8B3C8900797E01 /* AppearanceWrapper+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */; };
@@ -131,6 +87,10 @@
 		41D17A6C2C5A7429007C6EE6 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A612C5A7429007C6EE6 /* StripeiOS-Release.xcconfig */; };
 		41D17A6D2C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A622C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig */; };
 		41D17A6E2C5A7429007C6EE6 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A632C5A7429007C6EE6 /* Version.xcconfig */; };
+		E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */; };
+		E6F485FC2C9E360A000D914F /* ConnectJSURLParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */; };
+		E6F485FE2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485FD2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift */; };
+		E6F486092C9E8A40000D914F /* ConnectJSURLParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F486082C9E8A40000D914F /* ConnectJSURLParamsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -175,6 +135,11 @@
 		413D18472C7FBAA70051AA42 /* CSSHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSHelpers.swift; sourceTree = "<group>"; };
 		41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+extension.swift"; sourceTree = "<group>"; };
 		41542A6A2C88B79E004E728E /* JSONSerialization+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONSerialization+extension.swift"; sourceTree = "<group>"; };
+		4161C2722C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOnboardingViewControllerTests.swift; sourceTree = "<group>"; };
+		4161C2742C9DB1B9005BD67C /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4161C2782C9DB1CE005BD67C /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCollectionOptions.swift; sourceTree = "<group>"; };
+		4161C28B2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSetterFunctionCalledMessageHandlerTests.swift; sourceTree = "<group>"; };
 		416E9E732C751A1A00A0B917 /* ConnectComponentWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectComponentWebView.swift; sourceTree = "<group>"; };
 		416E9E752C751B0500A0B917 /* EmbeddedComponentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedComponentManager.swift; sourceTree = "<group>"; };
 		416E9E772C753B7900A0B917 /* ConnectComponentWebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectComponentWebViewTests.swift; sourceTree = "<group>"; };
@@ -185,6 +150,7 @@
 		416E9ECE2C77EAA400A0B917 /* EmbeddedComponentError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedComponentError.swift; sourceTree = "<group>"; };
 		416E9ED12C77F6E000A0B917 /* Locale+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+extension.swift"; sourceTree = "<group>"; };
 		416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKScriptMessage+extension.swift"; sourceTree = "<group>"; };
+		4171B1582C9A5EEC00547F7D /* AccountOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOnboardingViewController.swift; sourceTree = "<group>"; };
 		41810D682C88C4B100F10EB7 /* AppearanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceTests.swift; sourceTree = "<group>"; };
 		41810D6A2C88E71D00F10EB7 /* Appearance+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Appearance+Encoding.swift"; sourceTree = "<group>"; };
 		41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontSource.swift; sourceTree = "<group>"; };
@@ -199,56 +165,6 @@
 		4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandler.swift; sourceTree = "<group>"; };
 		41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectTests.xctestplan; sourceTree = "<group>"; };
 		41A2A5672C5AC5120077FC74 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		41A2A56B2C5ACBDD0077FC74 /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A56D2C5ACBDD0077FC74 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A56F2C5ACBDD0077FC74 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5712C5ACBDD0077FC74 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5732C5ACBDD0077FC74 /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5752C5ACBDD0077FC74 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		41A2A5772C5ACBDD0077FC74 /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it-IT"; path = "it-IT.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5792C5ACBDD0077FC74 /* zh-Hant-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-HK"; path = "zh-Hant-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A57B2C5ACBDD0077FC74 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A57D2C5ACBDD0077FC74 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A57F2C5ACBDD0077FC74 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5812C5ACBDD0077FC74 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5832C5ACBDD0077FC74 /* tr-TR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "tr-TR"; path = "tr-TR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5852C5ACBDD0077FC74 /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5872C5ACBDD0077FC74 /* en-SG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-SG"; path = "en-SG.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5892C5ACBDD0077FC74 /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A58B2C5ACBDD0077FC74 /* ja-JP */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja-JP"; path = "ja-JP.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A58D2C5ACBDD0077FC74 /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A58F2C5ACBDD0077FC74 /* ko-KR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko-KR"; path = "ko-KR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5912C5ACBDD0077FC74 /* id-ID */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "id-ID"; path = "id-ID.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5932C5ACBDD0077FC74 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5952C5ACBDD0077FC74 /* en-IE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-IE"; path = "en-IE.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5972C5ACBDD0077FC74 /* vi-VN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "vi-VN"; path = "vi-VN.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5992C5ACBDD0077FC74 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A59B2C5ACBDD0077FC74 /* fi-FI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fi-FI"; path = "fi-FI.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A59D2C5ACBDD0077FC74 /* en-NZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-NZ"; path = "en-NZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A59F2C5ACBDD0077FC74 /* hr-HR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "hr-HR"; path = "hr-HR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5A12C5ACBDD0077FC74 /* da-DK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "da-DK"; path = "da-DK.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5A32C5ACBDD0077FC74 /* en-AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-AU"; path = "en-AU.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5A52C5ACBDD0077FC74 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5A72C5ACBDD0077FC74 /* hu-HU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "hu-HU"; path = "hu-HU.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5A92C5ACBDD0077FC74 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5AB2C5ACBDD0077FC74 /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5AD2C5ACBDD0077FC74 /* nl-NL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl-NL"; path = "nl-NL.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5AF2C5ACBDD0077FC74 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5B12C5ACBDD0077FC74 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5B32C5ACBDD0077FC74 /* fil-PH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fil-PH"; path = "fil-PH.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5B52C5ACBDD0077FC74 /* en-US */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-US"; path = "en-US.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5B72C5ACBDD0077FC74 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5B92C5ACBDD0077FC74 /* de-DE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de-DE"; path = "de-DE.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5BB2C5ACBDD0077FC74 /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5BD2C5ACBDD0077FC74 /* es-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-BR"; path = "es-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5BF2C5ACBDD0077FC74 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5C12C5ACBDD0077FC74 /* sv-SE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sv-SE"; path = "sv-SE.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5C32C5ACBDD0077FC74 /* mt-MT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "mt-MT"; path = "mt-MT.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5C52C5ACBDD0077FC74 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5C72C5ACBDD0077FC74 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5C92C5ACBDD0077FC74 /* en-IN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-IN"; path = "en-IN.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		41A2A5FD2C5ACCAA0077FC74 /* StripeConnectBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectBundleLocator.swift; sourceTree = "<group>"; };
-		41A2A6002C5ACD9F0077FC74 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
 		41BCCFEA2C8B348500797E01 /* AppearanceWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceWrapper.swift; sourceTree = "<group>"; };
 		41BCCFEC2C8B34F600797E01 /* StringCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringCodingKey.swift; sourceTree = "<group>"; };
 		41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppearanceWrapper+Default.swift"; sourceTree = "<group>"; };
@@ -269,6 +185,10 @@
 		41D17A612C5A7429007C6EE6 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		41D17A622C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		41D17A632C5A7429007C6EE6 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewController.swift; sourceTree = "<group>"; };
+		E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectJSURLParams.swift; sourceTree = "<group>"; };
+		E6F485FD2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewControllerTests.swift; sourceTree = "<group>"; };
+		E6F486082C9E8A40000D914F /* ConnectJSURLParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectJSURLParamsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -276,6 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4161C2792C9DB1CE005BD67C /* StripeUICore.framework in Frameworks */,
 				41A2A5682C5AC5120077FC74 /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,6 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4161C2752C9DB1B9005BD67C /* StripeUICore.framework in Frameworks */,
 				41D17A4B2C5A73A7007C6EE6 /* StripeConnect.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,9 +216,9 @@
 		410D0FD52C6D07B1009B0E26 /* MessageSenders */ = {
 			isa = PBXGroup;
 			children = (
-				410D0FD82C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift */,
 				410D0FDA2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift */,
 				410D0FDC2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift */,
+				410D0FD82C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift */,
 			);
 			path = MessageSenders;
 			sourceTree = "<group>";
@@ -304,11 +226,11 @@
 		413987BD2C63F34B001D375E /* MessageHandlers */ = {
 			isa = PBXGroup;
 			children = (
+				4171B15C2C9B3AA300547F7D /* Onboarding */,
 				413987D92C64093C001D375E /* Helpers */,
 				413987B82C63F34B001D375E /* DebugMessageHandler.swift */,
 				413987B92C63F34B001D375E /* FetchClientSecretMessageHandler.swift */,
 				413987DC2C640A29001D375E /* FetchInitParamsMessageHandler.swift */,
-				413987DE2C640C50001D375E /* OnExitMessageHandler.swift */,
 				4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */,
 				4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */,
 				413987E02C641688001D375E /* PageDidLoadMessageHandler.swift */,
@@ -321,10 +243,10 @@
 		413987C02C63F34B001D375E /* MessageSenders */ = {
 			isa = PBXGroup;
 			children = (
-				413987BE2C63F34B001D375E /* MessageSender.swift */,
-				413987BF2C63F34B001D375E /* UpdateConnectInstanceSender.swift */,
 				413987D32C640848001D375E /* CallSetterWithSerializableValueSender.swift */,
+				413987BE2C63F34B001D375E /* MessageSender.swift */,
 				413987D52C64088E001D375E /* ReturnedFromAuthenticatedWebViewSender.swift */,
+				413987BF2C63F34B001D375E /* UpdateConnectInstanceSender.swift */,
 			);
 			path = MessageSenders;
 			sourceTree = "<group>";
@@ -365,11 +287,29 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		4161C2692C9CD0B1005BD67C /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		4161C27C2C9DB53C005BD67C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		416E9E792C762C6E00A0B917 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				416E9E852C76B35E00A0B917 /* PayoutsViewController.swift */,
+				4171B1582C9A5EEC00547F7D /* AccountOnboardingViewController.swift */,
 				416E9E832C76AE0900A0B917 /* ComponentType.swift */,
+				E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */,
+				416E9E852C76B35E00A0B917 /* PayoutsViewController.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -377,6 +317,8 @@
 		416E9E882C76B36F00A0B917 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				4161C2722C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift */,
+				E6F485FD2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift */,
 				416E9E872C76B36F00A0B917 /* PayoutsViewControllerTests.swift */,
 			);
 			path = Components;
@@ -392,6 +334,14 @@
 				41054E422C989AAD00383C09 /* Font+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		4171B15C2C9B3AA300547F7D /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				413987DE2C640C50001D375E /* OnExitMessageHandler.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		41814EE52C6BC8610014EB5E /* Webview */ = {
@@ -417,15 +367,16 @@
 		41814EE92C6BCA970014EB5E /* MessageHandlers */ = {
 			isa = PBXGroup;
 			children = (
+				4161C2692C9CD0B1005BD67C /* Onboarding */,
 				41814EEA2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift */,
 				41814EEC2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift */,
 				41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */,
-				41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */,
 				41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */,
 				410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */,
 				410D0FCF2C6D0319009B0E26 /* PageDidLoadMessageHandlerTests.swift */,
 				410D0FD12C6D047A009B0E26 /* AccountSessionClaimedMessageHandlerTests.swift */,
 				410D0FD32C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift */,
+				4161C28B2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift */,
 			);
 			path = MessageHandlers;
 			sourceTree = "<group>";
@@ -434,8 +385,9 @@
 			isa = PBXGroup;
 			children = (
 				416E9E792C762C6E00A0B917 /* Components */,
-				413987C62C63F34B001D375E /* Internal */,
 				41A2A5FF2C5ACD3E0077FC74 /* Helpers */,
+				413987C62C63F34B001D375E /* Internal */,
+				4161C27C2C9DB53C005BD67C /* Models */,
 				416E9E752C751B0500A0B917 /* EmbeddedComponentManager.swift */,
 				413D18452C7FB75B0051AA42 /* EmbeddedComponentManager+Appearance.swift */,
 				41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */,
@@ -446,83 +398,20 @@
 		41A2A5662C5AC5110077FC74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4161C2782C9DB1CE005BD67C /* StripeUICore.framework */,
+				4161C2742C9DB1B9005BD67C /* StripeUICore.framework */,
 				41A2A5672C5AC5120077FC74 /* StripeCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		41A2A5CB2C5ACBDD0077FC74 /* Localizations */ = {
-			isa = PBXGroup;
-			children = (
-				41A2A56C2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A56E2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5702C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5722C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5742C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5762C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5782C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A57A2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A57C2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A57E2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5802C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5822C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5842C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5862C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5882C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A58A2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A58C2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A58E2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5902C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5922C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5942C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5962C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5982C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A59A2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A59C2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A59E2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5A02C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5A22C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5A42C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5A62C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5A82C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5AA2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5AC2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5AE2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5B02C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5B22C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5B42C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5B62C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5B82C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5BA2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5BC2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5BE2C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5C02C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5C22C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5C42C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5C62C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5C82C5ACBDD0077FC74 /* Localizable.strings */,
-				41A2A5CA2C5ACBDD0077FC74 /* Localizable.strings */,
-			);
-			path = Localizations;
-			sourceTree = "<group>";
-		};
-		41A2A5CC2C5ACBDD0077FC74 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				41A2A5CB2C5ACBDD0077FC74 /* Localizations */,
-			);
-			name = Resources;
-			path = ../Resources;
-			sourceTree = "<group>";
-		};
 		41A2A5FF2C5ACD3E0077FC74 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				41A2A5FD2C5ACCAA0077FC74 /* StripeConnectBundleLocator.swift */,
-				41A2A6002C5ACD9F0077FC74 /* STPLocalizedString.swift */,
-				416E9ECE2C77EAA400A0B917 /* EmbeddedComponentError.swift */,
-				413D18472C7FBAA70051AA42 /* CSSHelpers.swift */,
 				41810D6A2C88E71D00F10EB7 /* Appearance+Encoding.swift */,
+				E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */,
+				413D18472C7FBAA70051AA42 /* CSSHelpers.swift */,
+				416E9ECE2C77EAA400A0B917 /* EmbeddedComponentError.swift */,
 				41BCCFEC2C8B34F600797E01 /* StringCodingKey.swift */,
 			);
 			path = Helpers;
@@ -532,6 +421,7 @@
 			isa = PBXGroup;
 			children = (
 				41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */,
+				E6F486082C9E8A40000D914F /* ConnectJSURLParamsTests.swift */,
 				41BCCFF22C8B449800797E01 /* TestHelpers.swift */,
 			);
 			path = Helpers;
@@ -569,7 +459,6 @@
 		41D17A422C5A73A6007C6EE6 /* StripeConnect */ = {
 			isa = PBXGroup;
 			children = (
-				41A2A5CC2C5ACBDD0077FC74 /* Resources */,
 				41A2A5602C5A97130077FC74 /* Source */,
 				41D17A432C5A73A6007C6EE6 /* StripeConnect.h */,
 			);
@@ -683,53 +572,6 @@
 			knownRegions = (
 				en,
 				Base,
-				"lt-LT",
-				"zh-Hant-TW",
-				"zh-Hans",
-				"el-GR",
-				"ms-MY",
-				"it-IT",
-				"zh-Hant-HK",
-				"nb-NO",
-				"en-GB",
-				"es-419",
-				"fr-CA",
-				"tr-TR",
-				"es-ES",
-				"en-SG",
-				"fr-FR",
-				"ja-JP",
-				"bg-BG",
-				"ko-KR",
-				"id-ID",
-				"es-AR",
-				"en-IE",
-				"vi-VN",
-				"ro-RO",
-				"fi-FI",
-				"en-NZ",
-				"hr-HR",
-				"da-DK",
-				"en-AU",
-				"et-EE",
-				"hu-HU",
-				"pt-BR",
-				"lv-LV",
-				"nl-NL",
-				"es-MX",
-				"cs-CZ",
-				"fil-PH",
-				"en-US",
-				"sk-SK",
-				"de-DE",
-				"sl-SI",
-				"es-BR",
-				"pl-PL",
-				"sv-SE",
-				"mt-MT",
-				"pt-PT",
-				"th-TH",
-				"en-IN",
 			);
 			mainGroup = 41D17A362C5A73A6007C6EE6;
 			packageReferences = (
@@ -750,63 +592,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41A2A5D22C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F02C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41D17A662C5A7429007C6EE6 /* Project-Release.xcconfig in Resources */,
-				41A2A5D82C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5CD2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5DC2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5E92C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41D17A6C2C5A7429007C6EE6 /* StripeiOS-Release.xcconfig in Resources */,
-				41A2A5CF2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F52C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5EC2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F22C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5D52C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41D17A6D2C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig in Resources */,
 				41D17A6A2C5A7429007C6EE6 /* StripeiOS Tests-Shared.xcconfig in Resources */,
-				41A2A5FC2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F12C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5FA2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5E42C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F62C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5ED2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5DB2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41D17A6B2C5A7429007C6EE6 /* StripeiOS-Debug.xcconfig in Resources */,
-				41A2A5E52C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5DA2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5E22C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5E12C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41A2A5642C5ABD6C0077FC74 /* StripeConnectTests.xctestplan in Resources */,
-				41A2A5D62C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5E32C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41D17A672C5A7429007C6EE6 /* Project-Shared.xcconfig in Resources */,
-				41A2A5E02C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5EF2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F72C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5E82C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5D92C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5DD2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F82C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5E62C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41D17A682C5A7429007C6EE6 /* StripeiOS Tests-Debug.xcconfig in Resources */,
-				41A2A5F42C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5D72C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F32C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5D02C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5CE2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5EB2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5DE2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5F92C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5EA2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5D32C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41D17A6E2C5A7429007C6EE6 /* Version.xcconfig in Resources */,
-				41A2A5DF2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5FB2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5D12C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5EE2C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5D42C5ACBDD0077FC74 /* Localizable.strings in Resources */,
-				41A2A5E72C5ACBDD0077FC74 /* Localizable.strings in Resources */,
 				41D17A652C5A7429007C6EE6 /* Project-Debug.xcconfig in Resources */,
 				41D17A692C5A7429007C6EE6 /* StripeiOS Tests-Release.xcconfig in Resources */,
 			);
@@ -833,14 +627,15 @@
 				413987C92C63F34B001D375E /* FetchClientSecretMessageHandler.swift in Sources */,
 				41BCCFEB2C8B348500797E01 /* AppearanceWrapper.swift in Sources */,
 				413987E12C641688001D375E /* PageDidLoadMessageHandler.swift in Sources */,
+				4171B1592C9A5EEC00547F7D /* AccountOnboardingViewController.swift in Sources */,
 				41054E432C989AAD00383C09 /* Font+Extension.swift in Sources */,
 				41542A692C88B6F2004E728E /* JSONEncoder+extension.swift in Sources */,
 				416E9E842C76AE0A00A0B917 /* ComponentType.swift in Sources */,
 				410D0FCE2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift in Sources */,
 				413D18482C7FBAA70051AA42 /* CSSHelpers.swift in Sources */,
 				413987CD2C63F34B001D375E /* MessageSender.swift in Sources */,
-				41A2A6012C5ACD9F0077FC74 /* STPLocalizedString.swift in Sources */,
 				41BCCFF52C8B5A0A00797E01 /* CustomFontSourceWrapper.swift in Sources */,
+				4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */,
 				413987CE2C63F34B001D375E /* UpdateConnectInstanceSender.swift in Sources */,
 				416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */,
 				410D0FE32C6D31C6009B0E26 /* StripeConnectConstants.swift in Sources */,
@@ -851,6 +646,7 @@
 				416E9E742C751A1A00A0B917 /* ConnectComponentWebView.swift in Sources */,
 				413D18462C7FB75B0051AA42 /* EmbeddedComponentManager+Appearance.swift in Sources */,
 				41810D6B2C88E71D00F10EB7 /* Appearance+Encoding.swift in Sources */,
+				E6F485FC2C9E360A000D914F /* ConnectJSURLParams.swift in Sources */,
 				410D0FE12C6D31A3009B0E26 /* PopupWebViewController.swift in Sources */,
 				413987CB2C63F34B001D375E /* ScriptMessageHandlerWithReply.swift in Sources */,
 				41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */,
@@ -863,9 +659,9 @@
 				41BCCFED2C8B34F600797E01 /* StringCodingKey.swift in Sources */,
 				4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */,
 				410D0FE52C6D32F0009B0E26 /* ApplicationURLOpener.swift in Sources */,
+				E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */,
 				416E9E762C751B0500A0B917 /* EmbeddedComponentManager.swift in Sources */,
 				416E9ECF2C77EAA400A0B917 /* EmbeddedComponentError.swift in Sources */,
-				41A2A5FE2C5ACCAA0077FC74 /* StripeConnectBundleLocator.swift in Sources */,
 				410D0FDF2C6D3176009B0E26 /* ConnectWebView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -876,12 +672,15 @@
 			files = (
 				410D0FDD2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift in Sources */,
 				410D0FD92C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift in Sources */,
+				E6F486092C9E8A40000D914F /* ConnectJSURLParamsTests.swift in Sources */,
 				416E9E892C76B36F00A0B917 /* PayoutsViewControllerTests.swift in Sources */,
 				41814EEB2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift in Sources */,
 				41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */,
 				41810D692C88C4B100F10EB7 /* AppearanceTests.swift in Sources */,
 				410D0FD22C6D047A009B0E26 /* AccountSessionClaimedMessageHandlerTests.swift in Sources */,
 				41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */,
+				4161C2732C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift in Sources */,
+				E6F485FE2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift in Sources */,
 				416E9E782C753B7900A0B917 /* ConnectComponentWebViewTests.swift in Sources */,
 				410D0FD42C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift in Sources */,
 				410D0FCA2C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift in Sources */,
@@ -894,6 +693,7 @@
 				41BCCFF02C8B3C8900797E01 /* AppearanceWrapper+Default.swift in Sources */,
 				416E9E822C76994C00A0B917 /* WebView+Tests.swift in Sources */,
 				41BCCFFB2C8B95BB00797E01 /* CustomFontSourceTests.swift in Sources */,
+				4161C28C2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift in Sources */,
 				41814EF32C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -907,393 +707,6 @@
 			targetProxy = 41D17A4C2C5A73A7007C6EE6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		41A2A56C2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A56B2C5ACBDD0077FC74 /* lt-LT */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A56E2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A56D2C5ACBDD0077FC74 /* zh-Hant-TW */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5702C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A56F2C5ACBDD0077FC74 /* zh-Hans */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5722C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5712C5ACBDD0077FC74 /* el-GR */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5742C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5732C5ACBDD0077FC74 /* ms-MY */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5762C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5752C5ACBDD0077FC74 /* en */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5782C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5772C5ACBDD0077FC74 /* it-IT */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A57A2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5792C5ACBDD0077FC74 /* zh-Hant-HK */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A57C2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A57B2C5ACBDD0077FC74 /* nb-NO */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A57E2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A57D2C5ACBDD0077FC74 /* en-GB */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5802C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A57F2C5ACBDD0077FC74 /* es-419 */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5822C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5812C5ACBDD0077FC74 /* fr-CA */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5842C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5832C5ACBDD0077FC74 /* tr-TR */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5862C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5852C5ACBDD0077FC74 /* es-ES */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5882C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5872C5ACBDD0077FC74 /* en-SG */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A58A2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5892C5ACBDD0077FC74 /* fr-FR */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A58C2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A58B2C5ACBDD0077FC74 /* ja-JP */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A58E2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A58D2C5ACBDD0077FC74 /* bg-BG */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5902C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A58F2C5ACBDD0077FC74 /* ko-KR */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5922C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5912C5ACBDD0077FC74 /* id-ID */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5942C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5932C5ACBDD0077FC74 /* es-AR */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5962C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5952C5ACBDD0077FC74 /* en-IE */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5982C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5972C5ACBDD0077FC74 /* vi-VN */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A59A2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5992C5ACBDD0077FC74 /* ro-RO */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A59C2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A59B2C5ACBDD0077FC74 /* fi-FI */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A59E2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A59D2C5ACBDD0077FC74 /* en-NZ */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5A02C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A59F2C5ACBDD0077FC74 /* hr-HR */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5A22C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5A12C5ACBDD0077FC74 /* da-DK */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5A42C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5A32C5ACBDD0077FC74 /* en-AU */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5A62C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5A52C5ACBDD0077FC74 /* et-EE */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5A82C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5A72C5ACBDD0077FC74 /* hu-HU */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5AA2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5A92C5ACBDD0077FC74 /* pt-BR */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5AC2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5AB2C5ACBDD0077FC74 /* lv-LV */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5AE2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5AD2C5ACBDD0077FC74 /* nl-NL */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5B02C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5AF2C5ACBDD0077FC74 /* es-MX */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5B22C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5B12C5ACBDD0077FC74 /* cs-CZ */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5B42C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5B32C5ACBDD0077FC74 /* fil-PH */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5B62C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5B52C5ACBDD0077FC74 /* en-US */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5B82C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5B72C5ACBDD0077FC74 /* sk-SK */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5BA2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5B92C5ACBDD0077FC74 /* de-DE */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5BC2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5BB2C5ACBDD0077FC74 /* sl-SI */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5BE2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5BD2C5ACBDD0077FC74 /* es-BR */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5C02C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5BF2C5ACBDD0077FC74 /* pl-PL */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5C22C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5C12C5ACBDD0077FC74 /* sv-SE */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5C42C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5C32C5ACBDD0077FC74 /* mt-MT */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5C62C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5C52C5ACBDD0077FC74 /* pt-PT */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5C82C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5C72C5ACBDD0077FC74 /* th-TH */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		41A2A5CA2C5ACBDD0077FC74 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				41A2A5C92C5ACBDD0077FC74 /* en-IN */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		41D17A522C5A73A7007C6EE6 /* Debug */ = {
@@ -1374,7 +787,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 41D17A5D2C5A7429007C6EE6 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1391,7 +803,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 41D17A5E2C5A7429007C6EE6 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				GENERATE_INFOPLIST_FILE = YES;
