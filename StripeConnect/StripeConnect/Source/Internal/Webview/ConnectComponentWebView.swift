@@ -16,7 +16,7 @@ class ConnectComponentWebView: ConnectWebView {
     var componentManager: EmbeddedComponentManager
 
     /// The component type that should be loaded.
-    let componentType: ComponentType
+    let componentType: ComponentType?
 
     /// The content controller that registers JS -> Swift message handlers
     private let contentController: WKUserContentController
@@ -38,7 +38,7 @@ class ConnectComponentWebView: ConnectWebView {
     }()
 
     init(componentManager: EmbeddedComponentManager,
-         componentType: ComponentType,
+         componentType: ComponentType?,
          // Should only be overridden for tests
          notificationCenter: NotificationCenter = NotificationCenter.default,
          webLocale: Locale = Locale.autoupdatingCurrent,

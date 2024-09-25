@@ -11,7 +11,7 @@ import Foundation
 /// Structured parameters for URL params accepted by the iOS ConnectJS wrapper
 struct ConnectJSURLParams: Encodable {
     /// The component type
-    let component: ComponentType
+    let component: ComponentType?
 
     /// The platform publishable key. Required for non-dashboard accounts
     private(set) var publicKey: String?
@@ -36,7 +36,7 @@ struct ConnectJSURLParams: Encodable {
 }
 
 extension ConnectJSURLParams {
-    init(component: ComponentType, apiClient: STPAPIClient) {
+    init(component: ComponentType?, apiClient: STPAPIClient) {
         self.component = component
 
         // Validate that publishable key has been set

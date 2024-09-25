@@ -22,7 +22,7 @@ public class EmbeddedComponentManager {
 
     /// Strong reference to a logout proxy.
     /// This is needed so that we can logout of the web view and clear cookies, even if there are no components in memory
-    private lazy var logoutProxyWebView = ConnectComponentWebView(componentManager: self, componentType: .logoutProxy)
+    private lazy var logoutProxyWebView = ConnectComponentWebView(componentManager: self, componentType: nil)
 
     let fetchClientSecret: () async -> String?
     let fonts: [EmbeddedComponentManager.CustomFontSource]

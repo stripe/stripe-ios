@@ -18,7 +18,7 @@ class EmbeddedComponentManagerTests: XCTestCase {
         // Expect a logout proxy
         let logoutProxy = try XCTUnwrap(componentManager.childWebViews.allObjects.first)
         XCTAssertEqual(componentManager.childWebViews.count, 1)
-        XCTAssertEqual(logoutProxy.componentType, .logoutProxy)
+        XCTAssertNil(logoutProxy.componentType)
 
         let expectation = try logoutProxy.expectationForMessageReceived(sender: LogoutSender())
 

@@ -93,7 +93,7 @@ class MainViewController: UITableViewController {
         appearanceButton.accessibilityLabel = "Change appearance"
 
         let logoutButton = UIBarButtonItem(
-            image: UIImage(systemName: "paintpalette"),
+            image: UIImage(systemName: "rectangle.portrait.and.arrow.right"),
             primaryAction: UIAction(handler: { [weak embeddedComponentManager] _ in
                 embeddedComponentManager?.logout()
             })
