@@ -17,10 +17,10 @@ struct AppSettingsView: View {
 
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
-
+    @State var onboardingSettings = AppSettings.shared.onboardingSettings
+    
     var isCustomEndpointValid: Bool {
-        guard let url = URL(string: serverURLString) else { return false }
-        return UIApplication.shared.canOpenURL(url)
+        URL(string: serverURLString)?.isValid == true
     }
 
     var saveEnabled: Bool {
@@ -48,6 +48,17 @@ struct AppSettingsView: View {
                     }
                 } header: {
                     Text("Select a demo account")
+                }
+                Section {
+                    NavigationLink {
+                        OnboardingSettingsView(onboardingSettings: $onboardingSettings)
+                    } label: {
+                        Text("Onboarding")
+                            .font(.body)
+                            .foregroundColor(.primary)
+                    }
+                } header: {
+                    Text("Component Settings")
                 }
                 Section {
                     TextInput(label: "", placeholder: "https://example.com", text: $serverURLString, isValid: isCustomEndpointValid)
