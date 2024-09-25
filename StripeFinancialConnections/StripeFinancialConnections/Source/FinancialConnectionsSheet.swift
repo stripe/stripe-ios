@@ -219,6 +219,7 @@ final public class FinancialConnectionsSheet {
             apiClient: financialConnectionsApiClient,
             analyticsClientV1: analyticsClient,
             clientSecret: financialConnectionsSessionClientSecret,
+            elementsSessionContext: elementsSessionContext,
             returnURL: returnURL,
             publishableKey: apiClient.publishableKey,
             stripeAccount: apiClient.stripeAccount

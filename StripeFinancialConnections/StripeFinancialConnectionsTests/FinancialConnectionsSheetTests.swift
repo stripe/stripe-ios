@@ -49,7 +49,8 @@ class FinancialConnectionsSheetTests: XCTestCase {
         let host = HostController(
             apiClient: mockApiClient,
             analyticsClientV1: mockAnalyticsClient,
-            clientSecret: "test",
+            clientSecret: "test", 
+            elementsSessionContext: nil,
             returnURL: nil,
             publishableKey: "test",
             stripeAccount: nil
