@@ -82,18 +82,26 @@ class MainViewController: UITableViewController {
     }
 
     func addGlobalButtonNavigationItems(to viewController: UIViewController) {
-         // Add a button to change the appearance
-         let button = UIBarButtonItem(
-             image: UIImage(systemName: "paintpalette"),
-             style: .plain,
-             target: self,
-             action: #selector(selectAppearance)
-         )
-         button.accessibilityLabel = "Change appearance"
-         var buttonItems = viewController.navigationItem.rightBarButtonItems ?? []
-         buttonItems = [button] + buttonItems
-         viewController.navigationItem.rightBarButtonItems = buttonItems
-     }
+        // Add a button to change the appearance
+        let appearanceButton = UIBarButtonItem(
+            image: UIImage(systemName: "paintpalette"),
+            primaryAction: UIAction(handler: { [weak self] _ in
+                guard let self else { return }
+                self.navigationController?.present(AppearanceSettings(componentManager: embeddedComponentManager).containerViewController, animated: true)
+            })
+        )
+        appearanceButton.accessibilityLabel = "Change appearance"
+
+        let logoutButton = UIBarButtonItem(
+            image: UIImage(systemName: "paintpalette"),
+            primaryAction: UIAction(handler: { [weak embeddedComponentManager] _ in
+                embeddedComponentManager?.logout()
+            })
+        )
+        logoutButton.accessibilityLabel = "Log out"
+
+        viewController.navigationItem.rightBarButtonItems = [appearanceButton, logoutButton]
+    }
 
     @objc
     func selectAppearance() {
