@@ -239,12 +239,9 @@ struct PaymentSheetTestPlayground: View {
         Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
             return playgroundController.settings.uiStyle
         } set: { newUIStyle in
-            // If we switch to embedded put style back to vertical and default back to deferred CSC if we are in an intent first integration
-            if newUIStyle == .embedded {
-                playgroundController.settings.layout = .vertical
-                if playgroundController.settings.integrationType == .normal {
-                    playgroundController.settings.integrationType = .deferred_csc
-                }
+            // If we switch to embedded set confirmation type to deferred CSC if in intent first confirmation type
+            if newUIStyle == .embedded && playgroundController.settings.integrationType == .normal {
+                playgroundController.settings.integrationType = .deferred_csc
             }
             
             playgroundController.settings.uiStyle = newUIStyle
