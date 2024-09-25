@@ -52,6 +52,7 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
+        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2525)
         let dummyView = await EmbeddedPaymentMethodsView(
             savedPaymentMethod: nil,
             appearance: .default,
@@ -79,11 +80,15 @@ public class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2524)
         return .canceled
     }
 
+    /// Completes the payment or setup.
     /// - Returns: The result of the payment after any presented view controllers are dismissed.
+    /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
     public func confirm() async -> EmbeddedPaymentElementResult {
+        // TODO
         return .canceled
     }
 
@@ -92,6 +97,68 @@ public class EmbeddedPaymentElement {
     private init(view: UIView, delegate: EmbeddedPaymentElementDelegate? = nil) {
         self.view = view
         self.delegate = delegate
+    }
+}
+
+// MARK: - Completion-block based APIs
+extension EmbeddedPaymentElement {
+    /// Creates an instance of `EmbeddedPaymentElement`
+    /// This loads the Customer's payment methods, their default payment method, etc.
+    /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the checkout.
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
+    /// - Parameter completion: A completion block containing a valid EmbeddedPaymentElement instance or an error. Called on the main thread.
+    /// - Returns: A valid EmbeddedPaymentElement instance
+    /// - Throws: An error if loading failed.
+    public static func create(
+        intentConfiguration: IntentConfiguration,
+        configuration: Configuration,
+        completion: @escaping (Result<EmbeddedPaymentElement, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let result = try await create(
+                    intentConfiguration: intentConfiguration,
+                    configuration: configuration
+                )
+                DispatchQueue.main.async {
+                    completion(.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    /// Call this method when the IntentConfiguration values you used to initialize `EmbeddedPaymentElement` (amount, currency, etc.) change.
+    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
+    /// - Parameter intentConfiguration: An updated IntentConfiguration.
+    /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
+    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
+    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    public func update(
+        intentConfiguration: IntentConfiguration,
+        completion: @escaping (UpdateResult) -> Void
+    ) {
+        Task {
+            let result = await update(intentConfiguration: intentConfiguration)
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+    }
+
+    /// Completes the payment or setup.
+    /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed. Called on the mai thread.
+    /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
+    public func confirm(completion: @escaping (EmbeddedPaymentElementResult) -> Void) {
+        Task {
+            let result = await confirm()
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
     }
 }
 
