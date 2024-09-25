@@ -37,6 +37,8 @@
 		45DAE581F74EF7E11C64212B /* InstallMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E64986F72C7BD8B1105A95 /* InstallMethod.swift */; };
 		48A6CCB4008A5060C2655C5F /* XCTestCase+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE48D0086BED21F9E837D0B /* XCTestCase+Stripe.swift */; };
 		4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */; };
+		492039932CA47A8600CE2072 /* ElementsSessionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492039922CA47A8600CE2072 /* ElementsSessionContext.swift */; };
+		493B33062CA3015600E3622F /* LinkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B33052CA3015600E3622F /* LinkMode.swift */; };
 		49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ECDA402CA340E100F647F0 /* AsyncTests.swift */; };
 		4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7727AEEFD2FC880BADDA1872 /* Dictionary+Stripe.swift */; };
 		53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCE36551600C3E53BEAF8F0 /* StripeCodableTest.swift */; };
@@ -227,6 +229,8 @@
 		4689F6B4384244D9FD282560 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		48A3D6592296104A1512AE92 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Extensions.swift"; sourceTree = "<group>"; };
+		492039922CA47A8600CE2072 /* ElementsSessionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsSessionContext.swift; sourceTree = "<group>"; };
+		493B33052CA3015600E3622F /* LinkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMode.swift; sourceTree = "<group>"; };
 		49424775D3233411D9C2473B /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
 		49538DBF8457D96707A2DA56 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49ECDA402CA340E100F647F0 /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
@@ -447,6 +451,8 @@
 				6A05FB462BCF24370001D128 /* FinancialConnectionsLinkedBank.swift */,
 				6A05FB482BCF244A0001D128 /* InstantDebitsLinkedBank.swift */,
 				6A05FB4A2BCF245C0001D128 /* FinancialConnectionsEvent.swift */,
+				493B33052CA3015600E3622F /* LinkMode.swift */,
+				492039922CA47A8600CE2072 /* ElementsSessionContext.swift */,
 			);
 			path = "Connections Bindings";
 			sourceTree = "<group>";
@@ -986,6 +992,7 @@
 				4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */,
 				42DE35681C71A931F65E0E7D /* Enums+CustomStringConvertible.swift in Sources */,
 				D8FEF16798A791F5BF7EA4B2 /* NSArray+Stripe.swift in Sources */,
+				492039932CA47A8600CE2072 /* ElementsSessionContext.swift in Sources */,
 				C318A6B6CD599B06DA7CE706 /* NSBundle+Stripe_AppName.swift in Sources */,
 				2AA9B01C8A2D2BADC4619629 /* NSCharacterSet+StripeCore.swift in Sources */,
 				C5BF4B8AE85FF72EC6382EC0 /* NSError+Stripe.swift in Sources */,
@@ -1024,6 +1031,7 @@
 				DFF3092E51B6C3ED81AB1448 /* String+Localized.swift in Sources */,
 				6B987BDD2C9111BC00DDFDB3 /* Notification+Stripe.swift in Sources */,
 				89DB623A200678B4E9845AF2 /* FraudDetectionData.swift in Sources */,
+				493B33062CA3015600E3622F /* LinkMode.swift in Sources */,
 				920832EE256E377572DD41EB /* STPTelemetryClient.swift in Sources */,
 				3B27DDDDC91F1599BF1469BB /* UserDefaults+PaymentsCore.swift in Sources */,
 				B6D129B2DC90FA1F8A1F5BCB /* UIActivityIndicatorView+Stripe.swift in Sources */,

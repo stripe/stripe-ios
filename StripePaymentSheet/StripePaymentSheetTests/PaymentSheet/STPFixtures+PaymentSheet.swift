@@ -37,7 +37,7 @@ extension STPElementsSession {
         customerSessionData: [String: Any]? = nil,
         cardBrandChoiceData: [String: Any]? = nil,
         isLinkPassthroughModeEnabled: Bool? = nil,
-        linkMode: LinkSettings.LinkMode? = nil,
+        linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         disableLinkSignup: Bool? = nil
     ) -> STPElementsSession {
@@ -88,7 +88,7 @@ extension STPElementsSession {
 
     static func _testValue(
         intent: Intent,
-        linkMode: LinkSettings.LinkMode? = nil,
+        linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = []
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
