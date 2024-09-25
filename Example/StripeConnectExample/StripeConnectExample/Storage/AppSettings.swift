@@ -90,3 +90,9 @@ class AppSettings {
         defaults.setValue(merchant?.id, forKey: Constants.selectedMerchantKey)
     }
 }
+
+private extension UserDefaults {
+    func string(forKey defaultName: String, defaultValue: String = "") -> String {
+        self.string(forKey: defaultName) ?? defaultValue
+    }
+}
