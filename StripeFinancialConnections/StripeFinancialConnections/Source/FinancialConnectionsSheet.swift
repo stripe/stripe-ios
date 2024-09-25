@@ -75,7 +75,7 @@ final public class FinancialConnectionsSheet {
     private var wrapperViewController: ModalPresentationWrapperViewController?
 
     // Any additional Elements context useful for the Financial Connections SDK.
-    @_spi(STP) public var elementsContext: ElementsContext?
+    @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
 
     // Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol

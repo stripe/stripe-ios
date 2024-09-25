@@ -51,7 +51,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
-        elementsContext: ElementsContext?,
+        elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void

@@ -188,7 +188,7 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
-        elementsContext: ElementsContext?,
+        elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -207,7 +207,7 @@ public class STPBankAccountCollector: NSObject {
             clientSecret: clientSecret,
             returnURL: returnURL,
             additionalParameters: additionalParameters,
-            elementsContext: elementsContext,
+            elementsSessionContext: elementsSessionContext,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -219,7 +219,7 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
-        elementsContext: ElementsContext? = nil,
+        elementsSessionContext: ElementsSessionContext? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -257,7 +257,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
-                elementsContext: elementsContext,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -446,7 +446,7 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
-        elementsContext: ElementsContext? = nil,
+        elementsSessionContext: ElementsSessionContext? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -465,7 +465,7 @@ public class STPBankAccountCollector: NSObject {
             clientSecret: clientSecret,
             returnURL: returnURL,
             additionalParameters: additionalParameters,
-            elementsContext: elementsContext,
+            elementsSessionContext: elementsSessionContext,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -477,7 +477,7 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
-        elementsContext: ElementsContext?,
+        elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -514,7 +514,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
-                elementsContext: elementsContext,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -565,7 +565,7 @@ public class STPBankAccountCollector: NSObject {
         currency: String?,
         onBehalfOf: String?,
         additionalParameters: [String: Any] = [:],
-        elementsContext: ElementsContext?,
+        elementsSessionContext: ElementsSessionContext?,
         from viewController: UIViewController,
         financialConnectionsCompletion: @escaping (
             FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?
@@ -605,7 +605,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
-                elementsContext: elementsContext,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
