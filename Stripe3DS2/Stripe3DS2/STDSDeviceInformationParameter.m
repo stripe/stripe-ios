@@ -428,7 +428,14 @@ static const NSString * const kParameterNilCode = @"RE04";
     return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"I010"
                                                       permissionCheck:nil
                                                            valueCheck:^id _Nullable{
-                                                               return [[NSLocale currentLocale].localeIdentifier stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
+                                                                NSLocale *locale = [NSLocale systemLocale];
+                                                                NSString *language = locale.languageCode;
+                                                                NSString *country = locale.countryCode;
+                                                                if (language != nil && country != nil) {
+                                                                    return [@[language, country] componentsJoinedByString:@"-"];
+                                                                } else {
+                                                                    return nil;
+                                                                }
                                                            }];
 }
 
