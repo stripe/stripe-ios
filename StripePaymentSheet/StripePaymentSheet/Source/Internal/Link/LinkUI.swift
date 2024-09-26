@@ -29,6 +29,8 @@ enum LinkUI {
 
     static let mediumCornerRadius: CGFloat = 8
 
+    static let smallCornerRadius: CGFloat = 4
+
     // MARK: - Margins
 
     static let buttonMargins: NSDirectionalEdgeInsets = .insets(amount: 16)

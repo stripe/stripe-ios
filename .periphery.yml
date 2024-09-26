@@ -6,18 +6,18 @@
 workspace: Stripe.xcworkspace
 
 schemes:
-  - AllStripeFrameworks
+  # - AllStripeFrameworks
   # - IntegrationTester
   # - Stripe3DS2
   # - Stripe3DS2DemoUI
   # - StripeApplePay
   # - StripeCameraCore
   # - StripeCardScan
-  - StripeConnect
+  # - StripeConnect
   # - StripeCore
   # - StripeFinancialConnections
   # - StripeIdentity
-  # - StripePaymentSheet
+  - StripePaymentSheet
   # - StripePayments
   # - StripePaymentsUI
   # - StripeUICore
@@ -49,42 +49,42 @@ targets:
   # - PaymentSheet Example
   # - PaymentSheetLocalizationScreenshotGenerator
   # - PaymentSheetUITest
-  - Stripe3DS2
-  - Stripe3DS2Tests
-  - StripeApplePay
-  - StripeApplePayTests
-  - StripeCameraCore
-  - StripeCameraCoreTestUtils
-  - StripeCameraCoreTests
-  - StripeCardScan
-  - StripeCardScanTests
-  - StripeConnect
+  # - Stripe3DS2
+  # - Stripe3DS2Tests
+  # - StripeApplePay
+  # - StripeApplePayTests
+  # - StripeCameraCore
+  # - StripeCameraCoreTestUtils
+  # - StripeCameraCoreTests
+  # - StripeCardScan
+  # - StripeCardScanTests
+  # - StripeConnect
   # - StripeConnect Example
   # - StripeConnect ExampleUITests
-  - StripeConnectTests
-  - StripeCore
-  - StripeCoreTestUtils
-  - StripeCoreTests
-  - StripeFinancialConnections
-  - StripeFinancialConnectionsTests
-  - StripeIdentity
-  - StripeIdentityTests
+  # - StripeConnectTests
+  # - StripeCore
+  # - StripeCoreTestUtils
+  # - StripeCoreTests
+  # - StripeFinancialConnections
+  # - StripeFinancialConnectionsTests
+  # - StripeIdentity
+  # - StripeIdentityTests
   - StripePaymentSheet
-  - StripePaymentSheetTestHostApp
-  - StripePaymentSheetTests
-  - StripePayments
-  - StripePaymentsObjcTestUtils
-  - StripePaymentsTestHostApp
-  - StripePaymentsTestUtils
-  - StripePaymentsTests
-  - StripePaymentsUI
-  - StripePaymentsUITests
-  - StripeUICore
-  - StripeUICoreTests
-  - StripeiOS
-  - StripeiOSAppHostedTests
-  - StripeiOSTestHostApp
-  - StripeiOSTests
+  # - StripePaymentSheetTestHostApp
+  # - StripePaymentSheetTests
+  # - StripePayments
+  # - StripePaymentsObjcTestUtils
+  # - StripePaymentsTestHostApp
+  # - StripePaymentsTestUtils
+  # - StripePaymentsTests
+  # - StripePaymentsUI
+  # - StripePaymentsUITests
+  # - StripeUICore
+  # - StripeUICoreTests
+  # - StripeiOS
+  # - StripeiOSAppHostedTests
+  # - StripeiOSTestHostApp
+  # - StripeiOSTests
   # - UI Examples
 
 retain_public: true

@@ -41,6 +41,8 @@ jobs:
           cp /tmp/.periphery.yml .periphery.yml
           mkdir -p ci_scripts/dead_code/
           cp /tmp/process_periphery_output.rb ci_scripts/dead_code/
+
+          # Run Periphery scan with the configuration file
           periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_master_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
 
