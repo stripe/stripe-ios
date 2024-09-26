@@ -17,16 +17,21 @@ public class AccountManagementViewController: UIViewController {
 
     public weak var delegate: AccountManagementViewControllerDelegate?
 
-    init(componentManager: EmbeddedComponentManager) {
+    init(componentManager: EmbeddedComponentManager,
+         collectionOptions: AccountCollectionOptions) {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
             componentType: .accountManagement
         )
         super.init(nibName: nil, bundle: nil)
+
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
             self.delegate?.accountManagementLoadDidFail(self, withError: value.error.connectEmbedError)
         })
+
+        // TODO(MXMOBILE-2796): Send collection options to web view
+
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
         }
