@@ -38,7 +38,7 @@ targets:
   # - AppClipExampleTests iOS
   # - CardImageVerification Example
   # - CardImageVerification ExampleUITests
-  - Common
+  # - Common
   # - FinancialConnections Example
   # - FinancialConnectionsUITests
   # - IdentityVerification Example
