@@ -27,7 +27,7 @@ public class AccountManagementViewController: UIViewController {
 
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
-            self.delegate?.accountManagementLoadDidFail(self, withError: value.error.connectEmbedError)
+            self.delegate?.accountManagement(self, didFailLoadWithError: value.error.connectEmbedError)
         })
 
         // TODO(MXMOBILE-2796): Send collection options to web view
@@ -55,13 +55,13 @@ public protocol AccountManagementViewControllerDelegate: AnyObject {
        - accountManagement: The payment details component that errored when loading
        - error: The error that occurred when loading the component
      */
-    func accountManagementLoadDidFail(_ accountManagement: AccountManagementViewController,
-                                      withError error: Error)
+    func accountManagement(_ accountManagement: AccountManagementViewController,
+                           didFailLoadWithError error: Error)
 }
 
 @available(iOS 15, *)
 public extension AccountManagementViewControllerDelegate {
     // Default implementation to make optional
-    func accountManagementLoadDidFail(_ accountManagement: AccountManagementViewController,
-                                      withError error: Error) { }
+    func accountManagement(_ accountManagement: AccountManagementViewController,
+                           didFailLoadWithError error: Error) { }
 }

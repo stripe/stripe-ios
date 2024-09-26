@@ -15,11 +15,6 @@ import UIKit
 public class PaymentDetailsViewController: UIViewController {
     let webView: ConnectComponentWebView
 
-    public var overlayStyle: EmbeddedComponentManager.OverlayStyle? {
-        get { webView.overlayStyle }
-        set { webView.overlayStyle = newValue }
-    }
-
     public weak var delegate: PaymentDetailsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager) {
@@ -30,7 +25,7 @@ public class PaymentDetailsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
-            self.delegate?.paymentDetailsLoadDidFail(self, withError: value.error.connectEmbedError)
+            self.delegate?.paymentDetails(self, didFailLoadWithError: value.error.connectEmbedError)
         })
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
@@ -64,14 +59,14 @@ public protocol PaymentDetailsViewControllerDelegate: AnyObject {
        - paymentDetails: The payment details component that errored when loading
        - error: The error that occurred when loading the component
      */
-    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController,
-                                   withError error: Error)
+    func paymentDetails(_ paymentDetails: PaymentDetailsViewController,
+                        didFailLoadWithError error: Error)
 
 }
 
 @available(iOS 15, *)
 public extension PaymentDetailsViewControllerDelegate {
     // Default implementation to make optional
-    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController,
-                                   withError error: Error) { }
+    func paymentDetails(_ paymentDetails: PaymentDetailsViewController,
+                        didFailLoadWithError error: Error) { }
 }
