@@ -25,7 +25,7 @@ jobs:
         run: |
 
           # Run Periphery scan with the configuration file
-          periphery scan --config .periphery.yml 2>&1 | sed 's#.*/##; s/:[0-9]\+:[0-9]\+:#: #' | grep 'is unused' | sort > periphery_report_feature_formatted_sorted.txt
+          periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_feature_formatted_sorted.txt
 
 
       - name: Compare Periphery output with master baseline
@@ -33,7 +33,7 @@ jobs:
         run: |
           git fetch origin master:master
           git checkout master
-          periphery scan --config .periphery.yml 2>&1 | sed 's#.*/##; s/:[0-9]\+:[0-9]\+:#: #' | grep 'is unused' | sort > periphery_report_master_formatted_sorted.txt
+          periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_master_formatted_sorted.txt
 
           # Compare the formatted reports
           diff_output=$(comm -13 periphery_report_master_formatted_sorted.txt periphery_report_feature_formatted_sorted.txt)

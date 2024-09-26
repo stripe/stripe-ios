@@ -28,7 +28,7 @@ schemes:
   - IdentityVerification Example
   - StripeConnect Example
   - Non-Card Payment Examples
-  - UI Examples
+  # - UI Examples
 
 targets:
   # - AppClipExample
@@ -84,7 +84,7 @@ targets:
   - StripeiOSAppHostedTests
   - StripeiOSTestHostApp
   - StripeiOSTests
-  - UI Examples
+  # - UI Examples
 
 retain_public: true
 retain_objc_accessible: true
