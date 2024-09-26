@@ -220,7 +220,7 @@ extension PaymentMethodFormViewController {
             } else {
                 return true
             }
-        } else if paymentMethodType == .instantDebits {
+        } else if paymentMethodType == .instantDebits || paymentMethodType == .linkCardBrand {
             // only override buy button (show "Continue") IF we don't have a linked bank
             return instantDebitsFormElement?.getLinkedBank() == nil
         }
@@ -230,11 +230,12 @@ extension PaymentMethodFormViewController {
     var overridePrimaryButtonState: OverridePrimaryButtonState? {
         guard shouldOverridePrimaryButton else { return nil }
         let isEnabled: Bool = {
-            if paymentMethodType == .stripe(.USBankAccount) && usBankAccountFormElement?.canLinkAccount ?? false {
-                true
-            } else if paymentMethodType == .instantDebits && instantDebitsFormElement?.enableCTA ?? false {
-                true
-            } else {
+            switch paymentMethodType {
+            case .stripe(let paymentMethod):
+                paymentMethod == .USBankAccount && (usBankAccountFormElement?.canLinkAccount ?? false)
+            case .instantDebits, .linkCardBrand:
+                instantDebitsFormElement?.enableCTA ?? false
+            default:
                 false
             }
         }()
@@ -259,6 +260,8 @@ extension PaymentMethodFormViewController {
         case .stripe(.USBankAccount):
             handleCollectBankAccount(from: viewController)
         case .instantDebits:
+            handleCollectInstantDebits(from: viewController)
+        case .linkCardBrand:
             handleCollectInstantDebits(from: viewController)
         default:
             return
