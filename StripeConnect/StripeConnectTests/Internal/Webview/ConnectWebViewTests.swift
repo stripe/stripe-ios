@@ -157,13 +157,13 @@ class MockNavigationAction: WKNavigationAction {
 
 class MockURLOpener: ApplicationURLOpener {
     var canOpenURLOverride: ((_ url: URL) -> Bool)?
-    var openURLOverride: ((_ url: URL, _ options: [UIApplication.OpenExternalURLOptionsKey: Any], _ completion: ((Bool) -> Void)?) -> Void)?
+    var openURLOverride: ((_ url: URL, _ options: [UIApplication.OpenExternalURLOptionsKey: Any], _ completion: (@MainActor @Sendable (Bool) -> Void)?) -> Void)?
 
     func canOpenURL(_ url: URL) -> Bool {
         canOpenURLOverride?(url) ?? false
     }
 
-    func open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any], completionHandler completion: ((Bool) -> Void)?) {
+    func open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any], completionHandler completion: (@MainActor @Sendable (Bool) -> Void)?) {
         openURLOverride?(url, options, completion)
     }
 }
