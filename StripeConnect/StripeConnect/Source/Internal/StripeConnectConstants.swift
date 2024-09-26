@@ -9,6 +9,8 @@ import Foundation
 
 enum StripeConnectConstants {
 
+    static let connectJSBaseURL: URL = URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!
+    
     /**'
      Pages or navigation requests matching any of these hosts will...
      - Automatically grant camera permissions
@@ -18,8 +20,6 @@ enum StripeConnectConstants {
         "connect-js.stripe.com",
         "connect.stripe.com",
     ]
-
-    static let connectJSBaseURL = URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!
 
     /// The authenticated web view will redirect back to the SDK when redirecting
     /// to the URL scheme `stripe-connect://`

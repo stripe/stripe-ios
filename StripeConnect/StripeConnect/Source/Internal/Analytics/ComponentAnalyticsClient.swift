@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 10/1/24.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 
 typealias ComponentAnalyticsClientFactory = (ComponentAnalyticsClient.CommonFields) -> ComponentAnalyticsClient
@@ -244,7 +245,7 @@ extension ComponentAnalyticsClient.CommonFields {
     ) {
         // Reuse logic in ConnectJSURLParams to determine when to use publicKey
         // platformId + livemode
-        let params = ConnectJSURLParams(component: component, apiClient: apiClient)
+        let params = ConnectJSURLParams(component: component, apiClient: apiClient, publishableKey: nil)
 
         // Ensures a secret key is never logged to analytics in the event
         // the platform uses a secret key in their app

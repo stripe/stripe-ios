@@ -33,6 +33,12 @@ public class EmbeddedComponentManager {
         ComponentAnalyticsClient(client: AnalyticsClientV2.sharedConnect,
                                  commonFields: $0)
     }
+    
+    @_spi(DashboardOnly)
+    public var baseURL: URL = StripeConnectConstants.connectJSBaseURL
+
+    @_spi(DashboardOnly)
+    public var publishableKeyOverride: String? = nil
 
     /**
      Initializes a StripeConnect instance.
@@ -60,6 +66,7 @@ public class EmbeddedComponentManager {
                "Embedded components require camera access. Add `NSCameraUsageDescription` to your app's Info.plist file to enable camera access.")
     }
 
+    
     /// Updates the appearance of components created from this EmbeddedComponentManager
     /// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components#customize-the-look-of-connect-embedded-components
     public func update(appearance: Appearance) {
