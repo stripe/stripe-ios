@@ -103,9 +103,17 @@ public class EmbeddedComponentManager {
 
     @_spi(DashboardOnly)
     public func createAccountManagementViewController(
-        collectionOptions: AccountCollectionOptions = .init()) -> AccountManagementViewController {
+        collectionOptions: AccountCollectionOptions = .init()
+    ) -> AccountManagementViewController {
         .init(componentManager: self,
               collectionOptions: collectionOptions)
+    }
+
+    @_spi(DashboardOnly)
+    public func createNotificationBannerViewController(
+        collectionOptions: AccountCollectionOptions = .init()
+    ) -> NotificationBannerViewController {
+        .init(componentManager: self, collectionOptions: collectionOptions)
     }
 
     /// Used to keep reference of all web views associated with this component manager.
