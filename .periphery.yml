@@ -6,7 +6,7 @@ workspace: Stripe.xcworkspace
 
 schemes:
   - AllStripeFrameworks
-  - IntegrationTester
+  # - IntegrationTester
   # - Stripe3DS2
   # - Stripe3DS2DemoUI
   # - StripeApplePay
@@ -21,13 +21,13 @@ schemes:
   # - StripePaymentsUI
   # - StripeUICore
   # - StripeiOS
-  - PaymentSheet Example
+  # - PaymentSheet Example
   # - AppClipExample
   # - CardImageVerification Example
-  - FinancialConnections Example
-  - IdentityVerification Example
-  - StripeConnect Example
-  - Non-Card Payment Examples
+  # - FinancialConnections Example
+  # - IdentityVerification Example
+  # - StripeConnect Example
+  # - Non-Card Payment Examples
   # - UI Examples
 
 targets:
@@ -39,15 +39,15 @@ targets:
   # - CardImageVerification Example
   # - CardImageVerification ExampleUITests
   - Common
-  - FinancialConnections Example
-  - FinancialConnectionsUITests
-  - IdentityVerification Example
-  - IntegrationTester
-  - IntegrationTesterUITests
-  - Non-Card Payment Examples
-  - PaymentSheet Example
-  - PaymentSheetLocalizationScreenshotGenerator
-  - PaymentSheetUITest
+  # - FinancialConnections Example
+  # - FinancialConnectionsUITests
+  # - IdentityVerification Example
+  # - IntegrationTester
+  # - IntegrationTesterUITests
+  # - Non-Card Payment Examples
+  # - PaymentSheet Example
+  # - PaymentSheetLocalizationScreenshotGenerator
+  # - PaymentSheetUITest
   - Stripe3DS2
   - Stripe3DS2Tests
   - StripeApplePay
@@ -58,8 +58,8 @@ targets:
   - StripeCardScan
   - StripeCardScanTests
   - StripeConnect
-  - StripeConnect Example
-  - StripeConnect ExampleUITests
+  # - StripeConnect Example
+  # - StripeConnect ExampleUITests
   - StripeConnectTests
   - StripeCore
   - StripeCoreTestUtils
