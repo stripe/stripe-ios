@@ -7,6 +7,7 @@
 
 import Foundation
 import StripePayments
+@_spi(STP) import StripeCore
 
 struct PaymentSheetDeferredValidator {
     /// Note: We don't validate amount (for any payment method) because there are use cases where the amount can change slightly between PM collection and confirmation.
@@ -26,7 +27,7 @@ struct PaymentSheetDeferredValidator {
         guard paymentIntent.captureMethod == captureMethod else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent captureMethod (\(paymentIntent.captureMethod)) does not match the PaymentSheet.IntentConfiguration amount (\(captureMethod)).")
         }
-        try validatePaymentMethodId(paymentIntent: paymentIntent, paymentMethod: paymentMethod)
+        try validatePaymentMethodId(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
         /*
          Manual confirmation is only available using FlowController because merchants own the final step of confirmation.
          Showing a successful payment in the complete flow may be misleading when merchants still need to do a final confirmation which could fail e.g., bad network
@@ -45,36 +46,22 @@ struct PaymentSheetDeferredValidator {
         guard setupIntent.usage == setupFutureUsage else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your SetupIntent usage (\(setupIntent.usage)) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (\(String(describing: setupFutureUsage))).")
         }
-        try validatePaymentMethodId(setupIntent: setupIntent, paymentMethod: paymentMethod)
+        try validatePaymentMethodId(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
     }
     
-    static func validatePaymentMethodId(paymentIntent: STPPaymentIntent, paymentMethod: STPPaymentMethod) throws {
-        guard let intentPaymentMethod = paymentIntent.paymentMethod else {
-            return
-        }
+    static func validatePaymentMethodId(intentPaymentMethod: STPPaymentMethod?, paymentMethod: STPPaymentMethod) throws {
+        guard let intentPaymentMethod = intentPaymentMethod else { return }
         guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
-            throw PaymentSheetError.deferredIntentValidationFailed(message: """
+            let errorMessage = """
                 \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
 
                 To resolve this issue, you can:
                 1. Create a new Intent each time before you call the `confirmHandler`, or
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
-            """)
-        }
-    }
-    
-    static func validatePaymentMethodId(setupIntent: STPSetupIntent, paymentMethod: STPPaymentMethod) throws {
-        guard let intentPaymentMethod = setupIntent.paymentMethod else {
-            return
-        }
-        guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
-            throw PaymentSheetError.deferredIntentValidationFailed(message: """
-                \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
-
-                To resolve this issue, you can:
-                1. Create a new Intent each time before you call the `confirmHandler`, or
-                2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
-            """)
+            """
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage))
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
         }
     }
 }

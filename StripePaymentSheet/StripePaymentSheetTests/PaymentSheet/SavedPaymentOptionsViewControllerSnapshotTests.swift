@@ -46,7 +46,13 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = sut
+        // Adding sut.view as the subview should be implied by the above line, but Autolayout can't lay out the view correctly on this pass of the runloop unless we explicitly addSubview. Maybe there are side effects that happen one turn of the runloop after setting the rootViewController.
+        testWindow.addSubview(sut.view)
         sut.view.autosizeHeight(width: 1000)
+        NSLayoutConstraint.activate([
+            sut.view.topAnchor.constraint(equalTo: testWindow.topAnchor),
+            sut.view.leftAnchor.constraint(equalTo: testWindow.leftAnchor),
+        ])
         STPSnapshotVerifyView(sut.view)
     }
 }

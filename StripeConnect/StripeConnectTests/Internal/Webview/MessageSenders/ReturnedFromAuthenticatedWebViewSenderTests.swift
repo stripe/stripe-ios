@@ -13,7 +13,7 @@ class ReturnedFromAuthenticatedWebViewSenderTests: ScriptWebTestBase {
     func testSendMessage() throws {
         try validateMessageSent(sender: ReturnedFromAuthenticatedWebViewSender(payload: .init(url: "https://dashboard.stripe.com")))
     }
-    
+
     func testSenderSignature() {
         XCTAssertEqual(
             ReturnedFromAuthenticatedWebViewSender(payload: .init(url: "https://dashboard.stripe.com")).javascriptMessage,

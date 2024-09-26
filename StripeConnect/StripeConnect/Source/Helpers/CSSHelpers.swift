@@ -14,7 +14,7 @@ extension CGFloat {
 }
 
 extension UIFont.Weight {
-    
+
     // https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#common_weight_name_mapping
     static var stringMappings: [UIFont.Weight: String] {
         [
@@ -26,10 +26,10 @@ extension UIFont.Weight {
             .semibold: "600",
             .bold: "700",
             .heavy: "800",
-            .black: "900"
+            .black: "900",
         ]
     }
-    
+
     var cssValue: String? {
         UIFont.Weight.stringMappings[self]
     }
@@ -42,9 +42,9 @@ extension UIColor {
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 1
-        
+
         getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        
+
         if includeAlpha {
             return String(
                 format: "rgba(%.0f, %.0f, %.0f, %f)",
@@ -62,11 +62,11 @@ extension UIColor {
             )
         }
     }
-    
+
     var cssRgbaValue: String {
         cssValue(includeAlpha: true)
     }
-    
+
     var cssRgbValue: String {
         cssValue(includeAlpha: false)
     }

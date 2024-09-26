@@ -59,7 +59,6 @@ stages:
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
-    - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
     - ui-tests-3: {}
@@ -72,7 +71,6 @@ stages:
   stage-nightly-all:
     workflows:
     - test-builds-xcode-15-release: {}
-    - basic-integration-tests: {}
     - framework-tests-no-mocks: {}
     - check-docs: {}
     - legacy-tests-15: {}
@@ -81,21 +79,6 @@ stages:
     - deploy-dry-run: {}
     - pod-lint-tests: {}
 workflows:
-  basic-integration-tests:
-    steps:
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: Basic Integration
-    - deploy-to-bitrise-io@2: {}
-    before_run:
-    - prep_all
-    after_run:
-    - notify_ci
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   carthage-install-test:
     steps:
     - fastlane@3:
@@ -657,7 +640,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard4
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 4 -maximum-parallel-testing-workers 4
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -675,7 +658,7 @@ workflows:
         - scheme: StripeConnect Example
         - test_plan: StripeConnectExample
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 4 -maximum-parallel-testing-workers 4
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all

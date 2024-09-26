@@ -15,7 +15,7 @@ extension WKScriptMessage {
         let jsonData = try toData()
         return try JSONDecoder().decode(DecodableType.self, from: jsonData)
     }
-    
+
     func toData() throws -> Data {
         if let bodyString = body as? String,
             let data = bodyString.data(using: .utf8) {

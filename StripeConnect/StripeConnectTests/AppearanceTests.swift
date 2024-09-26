@@ -5,13 +5,13 @@
 //  Created by Chris Mays on 9/4/24.
 //
 
-import XCTest
-import UIKit
 @_spi(PrivateBetaConnect) @testable import StripeConnect
+import UIKit
+import XCTest
 
 class AppearanceTests: XCTestCase {
     typealias Appearance = EmbeddedComponentManager.Appearance
-    
+
     let testAppearance: Appearance = {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.typography.font = UIFont(name: "Helvetica", size: 16)
@@ -85,7 +85,7 @@ class AppearanceTests: XCTestCase {
         appearance.cornerRadius.overlay = 12
         return appearance
     }()
-    
+
     func testAllFieldsAreFilledWithCorrectValuesInDictionary() {
         let actualValues = testAppearance.asDictionary(traitCollection: .init())
         let expectedValues: [String: String] = [
@@ -148,37 +148,52 @@ class AppearanceTests: XCTestCase {
             "buttonBorderRadius": "8px",
             "formBorderRadius": "6px",
             "badgeBorderRadius": "10px",
-            "overlayBorderRadius": "12px"
+            "overlayBorderRadius": "12px",
         ]
 
         XCTAssertEqual(actualValues, expectedValues)
     }
-    
-    
+
     func testDefaultAppearance() {
         let appearance: Appearance = .default
         XCTAssertEqual(appearance.asDictionary(traitCollection: .init()), [
-            "fontFamily": "-apple-system"
+            "fontFamily": "-apple-system",
+            "fontSizeBase": "16px",
         ])
     }
-    
+
     func testColorsChangeBasedOnTraitCollection() {
         var appearance: Appearance = .default
-        
+
         appearance.colors.actionPrimaryText = UIColor { $0.userInterfaceStyle == .light ? .red : .green }
         appearance.colors.background = UIColor { $0.userInterfaceStyle == .light ? .white : .black }
         appearance.colors.text = UIColor { $0.userInterfaceStyle == .light ? .black : .white }
-        
+
         let lightModeTraits = UITraitCollection(userInterfaceStyle: .light)
         let darkModeTraits =  UITraitCollection(userInterfaceStyle: .dark)
 
         XCTAssertEqual(appearance.asDictionary(traitCollection: lightModeTraits)["actionPrimaryColorText"], "rgb(255, 0, 0)")
         XCTAssertEqual(appearance.asDictionary(traitCollection: darkModeTraits)["actionPrimaryColorText"], "rgb(0, 255, 0)")
-        
+
         XCTAssertEqual(appearance.asDictionary(traitCollection: lightModeTraits)["colorBackground"], "rgb(255, 255, 255)")
         XCTAssertEqual(appearance.asDictionary(traitCollection: darkModeTraits)["colorBackground"], "rgb(0, 0, 0)")
-        
+
         XCTAssertEqual(appearance.asDictionary(traitCollection: lightModeTraits)["colorText"], "rgb(0, 0, 0)")
         XCTAssertEqual(appearance.asDictionary(traitCollection: darkModeTraits)["colorText"], "rgb(255, 255, 255)")
+    }
+
+    func testFontSizesChangeBasedOnTraitCollection() {
+        var appearance = Appearance.default
+
+        appearance.typography.fontSizeBase = 16
+        appearance.typography.headingLg.fontSize = 32
+
+        let xsFontDict = appearance.asDictionary(traitCollection: UITraitCollection(preferredContentSizeCategory: .extraSmall))
+        let axxxlDict = appearance.asDictionary(traitCollection: UITraitCollection(preferredContentSizeCategory: .accessibilityExtraExtraExtraLarge))
+
+        XCTAssertEqual(xsFontDict["fontSizeBase"], "13px")
+        XCTAssertEqual(xsFontDict["headingLgFontSize"], "27px")
+        XCTAssertEqual(axxxlDict["fontSizeBase"], "45px")
+        XCTAssertEqual(axxxlDict["headingLgFontSize"], "90px")
     }
 }

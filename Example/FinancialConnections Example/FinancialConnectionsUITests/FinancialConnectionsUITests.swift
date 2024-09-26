@@ -615,7 +615,9 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     // this tests going through "ResetFlowViewController"
-    func testNativeResetFlowWithErrorToSuccess() {
+    func testNativeResetFlowWithErrorToSuccess() throws {
+        throw XCTSkip("Skipping this test case until we edit this institution's name")
+
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -630,7 +632,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_scrollDown()
 
-        app.fc_nativeFeaturedInstitution(name: "Down bank (unscheduled)").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Down Bank (Unscheduled)").waitForExistenceAndTap()
 
         // selecting another bank will activate "reset flow"
         app.buttons["select_another_bank_button"].waitForExistenceAndTap()

@@ -208,6 +208,11 @@ extension PaymentMethodFormViewController {
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement? { form as? USBankAccountPaymentMethodElement }
     private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? { form as? InstantDebitsPaymentMethodElement }
 
+    private var elementsSessionContext: ElementsSessionContext? {
+        let linkMode = elementsSession.linkSettings?.linkMode
+        return ElementsSessionContext(linkMode: linkMode)
+    }
+
     private var shouldOverridePrimaryButton: Bool {
         if paymentMethodType == .stripe(.USBankAccount) {
             if case .new = paymentOption {
@@ -312,6 +317,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -322,6 +328,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -346,6 +353,7 @@ extension PaymentMethodFormViewController {
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
@@ -402,6 +410,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -412,6 +421,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,

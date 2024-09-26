@@ -11,15 +11,18 @@ import UIKit
  The balance summary, the payout schedule, and a list of payouts for the connected account. It can also allow the user to perform instant or manual payouts.
  */
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
     let webView: ConnectComponentWebView
-    
+
     public weak var delegate: PayoutsViewControllerDelegate?
 
-    init(componentManager: EmbeddedComponentManager) {
+    init(componentManager: EmbeddedComponentManager,
+         loadContent: Bool = true) {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
-            componentType: .payouts
+            componentType: .payouts,
+            loadContent: loadContent
         )
         super.init(nibName: nil, bundle: nil)
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
@@ -42,6 +45,7 @@ public class PayoutsViewController: UIViewController {
 
 /// Delegate of an `PayoutsViewController`
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public protocol PayoutsViewControllerDelegate: AnyObject {
 
     /**
@@ -55,9 +59,9 @@ public protocol PayoutsViewControllerDelegate: AnyObject {
 
 }
 
+@available(iOS 15, *)
 public extension PayoutsViewControllerDelegate {
     // Default implementation to make optional
     func payoutsLoadDidFail(_ payouts: PayoutsViewController,
                             withError error: Error) { }
 }
-

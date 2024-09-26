@@ -39,14 +39,14 @@ public extension PaymentSheet {
         /// The border width used for selected buttons and tabs in PaymentSheet
         /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-        @_spi(EmbeddedPaymentMethodsViewBeta) public var borderWidthSelected: CGFloat?
+        @_spi(EmbeddedPaymentElementPrivateBeta) public var borderWidthSelected: CGFloat?
 
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
 
         /// Describes the appearance of the embeddable payment element
-        @_spi(EmbeddedPaymentMethodsViewBeta) public var paymentOptionView: PaymentOptionView = PaymentOptionView()
+        @_spi(EmbeddedPaymentElementPrivateBeta) public var paymentOptionView: PaymentOptionView = PaymentOptionView()
 
         // MARK: Fonts
 
@@ -104,7 +104,7 @@ public extension PaymentSheet {
 
             /// The border color used for selected buttons and tabs in PaymentSheet
             /// - Note: If `nil`, defaults to  `appearance.colors.primary`
-            @_spi(EmbeddedPaymentMethodsViewBeta) public var componentBorderSelected: UIColor?
+            @_spi(EmbeddedPaymentElementPrivateBeta) public var componentBorderSelected: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
             public var componentDivider: UIColor = .systemGray3
@@ -190,7 +190,7 @@ public extension PaymentSheet {
             /// The text color of the primary button
             /// - Note: If `nil`, defaults to either white or black depending on the color of the button
             public var textColor: UIColor?
-            
+
             /// The background color of the primary button when in a disabled state.
              /// - Note: If `nil`, defaults to `backgroundColor`. If `backgroundColor` is `nil`, defaults to `appearance.colors.primary`.
             public var disabledBackgroundColor: UIColor?
@@ -233,7 +233,7 @@ public extension PaymentSheet {
     }
 }
 
-@_spi(EmbeddedPaymentMethodsViewBeta) public extension PaymentSheet.Appearance {
+@_spi(EmbeddedPaymentElementPrivateBeta) public extension PaymentSheet.Appearance {
     /// Describes the appearance of the embedded payment element
     struct PaymentOptionView: Equatable {
 

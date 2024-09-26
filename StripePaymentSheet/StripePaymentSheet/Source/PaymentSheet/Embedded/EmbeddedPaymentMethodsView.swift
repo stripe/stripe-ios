@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 // TODO(porter) Probably shouldn't be public, just easy for testing.
-@_spi(EmbeddedPaymentMethodsViewBeta) public class EmbeddedPaymentMethodsView: UIView {
+@_spi(EmbeddedPaymentElementPrivateBeta) public class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
 
     lazy var stackView: UIStackView = {
