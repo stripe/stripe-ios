@@ -67,10 +67,11 @@ jobs:
 
           # Check if new_dead_code.json exists and is not empty
           if [ -s new_dead_code.json ]; then
-            echo "New dead code detected."
-            echo "diff<<EOF" >> $GITHUB_ENV
-            cat new_dead_code.json >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+            # Extract values from the JSON and join them with newlines
+            dead_code_messages=$(ruby -r json -e 'puts JSON.parse(File.read("new_dead_code.json")).values.join("\n")')
+            # Escape special characters for GitHub Actions output
+            escaped_messages=$(echo "$dead_code_messages" | sed 's/%/%25/g; s/\r/%0D/g; s/\n/%0A/g')
+            echo "dead_code_messages=$escaped_messages" >> $GITHUB_OUTPUT
           else
             echo "No new dead code detected."
           fi
