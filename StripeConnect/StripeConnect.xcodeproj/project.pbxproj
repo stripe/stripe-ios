@@ -91,6 +91,8 @@
 		E6165CC12CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6165CC02CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift */; };
 		E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */; };
 		E65691202CA5248300E0DB00 /* AccountManagementViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E656911F2CA5248300E0DB00 /* AccountManagementViewControllerTests.swift */; };
+		E65691252CA52F9D00E0DB00 /* NotificationBannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */; };
+		E65691272CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */; };
 		E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */; };
 		E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */; };
 		E6F485FC2C9E360A000D914F /* ConnectJSURLParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */; };
@@ -192,6 +194,8 @@
 		41D17A632C5A7429007C6EE6 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
 		E6165CBE2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitComponentPropsMessageHandler.swift; sourceTree = "<group>"; };
 		E656911F2CA5248300E0DB00 /* AccountManagementViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewControllerTests.swift; sourceTree = "<group>"; };
+		E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewController.swift; sourceTree = "<group>"; };
+		E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandler.swift; sourceTree = "<group>"; };
 		E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
 		E6165CC02CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitComponentPropsMessageHandlerTests.swift; sourceTree = "<group>"; };
 		E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeConnect+Exports.swift"; sourceTree = "<group>"; };
@@ -244,6 +248,7 @@
 				E6165CBE2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift */,
 				4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */,
 				4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */,
+				E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */,
 				413987E02C641688001D375E /* PageDidLoadMessageHandler.swift */,
 				410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */,
 				410D0FCD2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift */,
@@ -320,6 +325,7 @@
 				E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */,
 				4171B1582C9A5EEC00547F7D /* AccountOnboardingViewController.swift */,
 				416E9E832C76AE0900A0B917 /* ComponentType.swift */,
+				E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */,
 				E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */,
 				416E9E852C76B35E00A0B917 /* PayoutsViewController.swift */,
 			);
@@ -655,9 +661,11 @@
 				413987CE2C63F34B001D375E /* UpdateConnectInstanceSender.swift in Sources */,
 				416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */,
 				E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */,
+				E65691252CA52F9D00E0DB00 /* NotificationBannerViewController.swift in Sources */,
 				410D0FE32C6D31C6009B0E26 /* StripeConnectConstants.swift in Sources */,
 				4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */,
 				413987CC2C63F34B001D375E /* VoidPayload.swift in Sources */,
+				E65691272CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift in Sources */,
 				413987DD2C640A29001D375E /* FetchInitParamsMessageHandler.swift in Sources */,
 				413987D42C640848001D375E /* CallSetterWithSerializableValueSender.swift in Sources */,
 				416E9E742C751A1A00A0B917 /* ConnectComponentWebView.swift in Sources */,
