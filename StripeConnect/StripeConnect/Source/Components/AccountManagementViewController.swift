@@ -13,6 +13,15 @@ import UIKit
 @_spi(DashboardOnly)
 @available(iOS 15, *)
 public class AccountManagementViewController: UIViewController {
+
+    struct Props: Encodable {
+        let collectionOptions: AccountCollectionOptions
+
+        enum CodingKeys: String, CodingKey {
+            case collectionOptions = "setCollectionOptions"
+        }
+    }
+
     let webView: ConnectComponentWebView
 
     public weak var delegate: AccountManagementViewControllerDelegate?
@@ -22,7 +31,9 @@ public class AccountManagementViewController: UIViewController {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
             componentType: .accountManagement
-        )
+        ) {
+            Props(collectionOptions: collectionOptions)
+        }
         super.init(nibName: nil, bundle: nil)
 
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
@@ -50,9 +61,9 @@ public class AccountManagementViewController: UIViewController {
 @available(iOS 15, *)
 public protocol AccountManagementViewControllerDelegate: AnyObject {
     /**
-     Triggered when an error occurs loading the payment details component
+     Triggered when an error occurs loading the account management component
      - Parameters:
-       - accountManagement: The payment details component that errored when loading
+       - accountManagement: The account management component that errored when loading
        - error: The error that occurred when loading the component
      */
     func accountManagement(_ accountManagement: AccountManagementViewController,

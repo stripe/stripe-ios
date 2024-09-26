@@ -38,6 +38,25 @@ class AccountManagementViewControllerTests: XCTestCase {
         try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         await fulfillment(of: [expectationDidFail], timeout: TestHelpers.defaultTimeout)
     }
+
+    @MainActor
+    func testFetchInitComponentProps() async throws {
+        let vc = componentManager.createAccountManagementViewController(
+            collectionOptions: {
+                var collectionOptions = AccountCollectionOptions()
+                collectionOptions.fields = .eventuallyDue
+                collectionOptions.futureRequirements = .include
+                return collectionOptions
+            }()
+        )
+
+        try await vc.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                   json: "{}",
+                                                   expectedResponse: """
+            {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include"}}
+            """)
+    }
+
 }
 
 private class AccountManagementViewControllerDelegatePassThrough: AccountManagementViewControllerDelegate {
