@@ -259,9 +259,7 @@ extension PaymentMethodFormViewController {
         switch paymentMethodType {
         case .stripe(.USBankAccount):
             handleCollectBankAccount(from: viewController)
-        case .instantDebits:
-            handleCollectInstantDebits(from: viewController)
-        case .linkCardBrand:
+        case .instantDebits, .linkCardBrand:
             handleCollectInstantDebits(from: viewController)
         default:
             return
