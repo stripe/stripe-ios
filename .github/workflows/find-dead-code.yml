@@ -26,17 +26,23 @@ jobs:
 
           # Run Periphery scan with the configuration file
           periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_feature_formatted_sorted.txt
+          ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_feature_formatted_sorted.txt unused_code_feature.json
 
       - name: Copy .periphery.yml to temporary location
-        run: cp .periphery.yml /tmp/periphery.yml
+        run: |
+            # Copy necessary files to /tmp/ before checking out master
+            cp .periphery.yml /tmp/
+            cp ci_scripts/dead_code/process_periphery_output.rb /tmp/
 
       - name: Compare Periphery output with master baseline
-        id: compare-dead-code
         run: |
           git fetch origin master:master
           git checkout master
           cp /tmp/periphery.yml .periphery.yml
+          mkdir -p ci_scripts/dead_code/
+          cp /tmp/process_periphery_output.rb ci_scripts/dead_code/
           periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_master_formatted_sorted.txt
+          ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
 
           # Compare the formatted reports
           diff_output=$(comm -13 periphery_report_master_formatted_sorted.txt periphery_report_feature_formatted_sorted.txt)
@@ -46,6 +52,37 @@ jobs:
             echo "diff<<EOF" >> $GITHUB_ENV
             echo "$diff_output" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
+          fi
+
+      - name: Compare Unused Code JSON Files
+        id: compare-dead-code
+        run: |
+          # Compare the keys in the JSON files to find new dead code
+          ruby -r json -e '
+            master_file = "unused_code_master.json"
+            feature_file = "unused_code_feature.json"
+            output_file = "new_dead_code.json"
+
+            master_unused_code = JSON.parse(File.read(master_file))
+            feature_unused_code = JSON.parse(File.read(feature_file))
+
+            new_dead_code = feature_unused_code.reject { |k, _| master_unused_code.key?(k) }
+
+            if new_dead_code.empty?
+              puts "No new dead code detected."
+            else
+              File.write(output_file, JSON.pretty_generate(new_dead_code))
+            end
+          '
+
+          # Check if new_dead_code.json exists and is not empty
+          if [ -s new_dead_code.json ]; then
+            echo "New dead code detected."
+            echo "diff<<EOF" >> $GITHUB_ENV
+            cat new_dead_code.json >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          else
+            echo "No new dead code detected."
           fi
 
       - uses: peter-evans/find-comment@v3
