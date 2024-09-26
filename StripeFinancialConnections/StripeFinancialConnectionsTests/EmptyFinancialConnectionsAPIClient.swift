@@ -216,6 +216,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         Promise<StripeFinancialConnections.FinancialConnectionsPaymentDetails>()
     }
 
+    func sharePaymentDetails(consumerSessionClientSecret: String, paymentDetailsId: String, expectedPaymentMethodType: String) -> Future<FinancialConnectionsSharePaymentDetails> {
+        Promise<StripeFinancialConnections.FinancialConnectionsSharePaymentDetails>()
+    }
+
     func paymentMethods(consumerSessionClientSecret: String, paymentDetailsId: String) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentMethod> {
         Promise<StripeFinancialConnections.FinancialConnectionsPaymentMethod>()
     }
