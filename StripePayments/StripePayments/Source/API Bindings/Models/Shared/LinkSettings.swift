@@ -89,13 +89,5 @@ import Foundation
             allResponseFields: response
         ) as? Self
     }
-
-    func deadFunction() {
-        
-    }
-    
-}
-
-struct DeadStruct {
     
 }
