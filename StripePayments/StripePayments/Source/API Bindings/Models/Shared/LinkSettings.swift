@@ -90,4 +90,12 @@ import Foundation
         ) as? Self
     }
 
+    func deadFunction() {
+        
+    }
+    
+}
+
+struct DeadStruct {
+    
 }
