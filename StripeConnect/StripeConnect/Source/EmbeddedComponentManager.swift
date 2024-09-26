@@ -33,6 +33,12 @@ public class EmbeddedComponentManager {
         ComponentAnalyticsClient(client: AnalyticsClientV2.sharedConnect,
                                  commonFields: $0)
     }
+    
+    @_spi(DashboardOnly)
+    public var baseURL: URL = StripeConnectConstants.connectJSBaseURL
+
+    @_spi(DashboardOnly)
+    public var publicKeyOverride: String? = nil
 
     /**
      Initializes a StripeConnect instance.

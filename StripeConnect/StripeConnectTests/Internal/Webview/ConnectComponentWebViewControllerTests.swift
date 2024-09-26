@@ -7,7 +7,7 @@
 
 import Foundation
 import SafariServices
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@_spi(DashboardOnly) @_spi(PrivateBetaConnect) @testable import StripeConnect
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import WebKit
@@ -414,6 +414,18 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
         let event = try analyticsClient.lastEvent(ofType: UnrecognizedSetterEvent.self)
         XCTAssertEqual(event.metadata.setter, "unknownSetter")
+    }
+    
+    @MainActor
+    func testAllowedHosts() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        componentManager.baseURL = URL(string: "https://test.stripe.com")!
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+        XCTAssertEqual(webVC.allowedHosts, StripeConnectConstants.allowedHosts + ["test.stripe.com"])
     }
 
     @MainActor

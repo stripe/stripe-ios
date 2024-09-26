@@ -27,6 +27,7 @@ class ConnectWebViewControllerTests: XCTestCase {
         mockAnalyticsClient = .init(commonFields: .mock)
         webVC = .init(configuration: .init(),
                       analyticsClient: mockAnalyticsClient,
+                      allowedHosts: [],
                       urlOpener: mockURLOpener,
                       fileManager: mockFileManager,
                       sdkVersion: "1.2.3")

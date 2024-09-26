@@ -21,6 +21,7 @@ class AnalyticsCommonFieldsTests: XCTestCase {
         let fields = ComponentAnalyticsClient.CommonFields(
             apiClient: client,
             component: .payouts,
+            publicKeyOverride: nil,
             componentInstance: mockUUID
         )
 
@@ -30,6 +31,20 @@ class AnalyticsCommonFieldsTests: XCTestCase {
         XCTAssertEqual(fields.livemode, false)
         XCTAssertEqual(fields.component, .payouts)
         XCTAssertEqual(fields.componentInstance, mockUUID)
+    }
+    
+    func testPublicKeyOverride() {
+        let client = STPAPIClient()
+        client.publishableKey = "uk_123"
+
+        let fields = ComponentAnalyticsClient.CommonFields(
+            apiClient: client,
+            component: .payouts,
+            publicKeyOverride: "pk_123",
+            componentInstance: mockUUID
+        )
+
+        XCTAssertEqual(fields.publishableKey, "pk_123")
     }
 
     func testInitFromPublicKey() {
@@ -41,6 +56,7 @@ class AnalyticsCommonFieldsTests: XCTestCase {
         let fields = ComponentAnalyticsClient.CommonFields(
             apiClient: client,
             component: .payouts,
+            publicKeyOverride: nil,
             componentInstance: mockUUID
         )
 
@@ -59,6 +75,7 @@ class AnalyticsCommonFieldsTests: XCTestCase {
         let fields = ComponentAnalyticsClient.CommonFields(
             apiClient: client,
             component: .payouts,
+            publicKeyOverride: nil,
             componentInstance: mockUUID
         )
 

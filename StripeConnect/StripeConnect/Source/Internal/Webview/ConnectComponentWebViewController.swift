@@ -66,13 +66,15 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         // embedded in the web view instead of full screen. Also works for
         // embedded YouTube videos.
         config.allowsInlineMediaPlayback = true
+        let allowedHosts = (StripeConnectConstants.allowedHosts + [self.componentManager.baseURL.host]).compactMap({$0})
 
         super.init(
             configuration: config,
             analyticsClient: analyticsClientFactory(.init(
                 apiClient: componentManager.apiClient,
-                component: componentType
-            ))
+                component: componentType,
+                publicKeyOverride: componentManager.publicKeyOverride
+            )), allowedHosts: allowedHosts
         )
 
         // Setup views
@@ -97,7 +99,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         if loadContent {
             activityIndicator.startAnimating()
             do {
-                let url = try ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url()
+                let url = try ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient, publicKeyOverride: componentManager.publicKeyOverride).url(baseURL: componentManager.baseURL)
                 analyticsClient.loadStart = .now
                 webView.load(.init(url: url))
             } catch {
@@ -151,7 +153,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         super.webViewDidFinishNavigation(to: url)
 
         guard let url,
-              url.absoluteStringRemovingParams == StripeConnectConstants.connectJSBaseURL.absoluteString else {
+              url.absoluteStringRemovingParams == componentManager.baseURL.absoluteString else {
             analyticsClient.log(event: UnexpectedNavigationEvent(metadata: .init(url: url)))
             return
         }
@@ -172,7 +174,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         // If the component web page fails to load with an HTTP error, send a
         // load failure to event
         if let response = navigationResponse.response as? HTTPURLResponse,
-           response.url?.absoluteStringRemovingParams == StripeConnectConstants.connectJSBaseURL.absoluteString,
+           response.url?.absoluteStringRemovingParams == componentManager.baseURL.absoluteString,
            response.hasErrorStatus {
             let error = HTTPStatusError(errorCode: response.statusCode)
             didFailLoad(error: error)
