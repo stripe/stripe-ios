@@ -37,7 +37,7 @@ jobs:
           fi
 
           # Compare the formatted reports
-          diff_output=$(diff ci_scripts/dead_code/periphery_report_master_formatted.txt periphery_report_feature_formatted.txt || true)
+          diff_output=$(comm -13 ci_scripts/dead_code/periphery_report_master_formatted_sorted.txt periphery_report_feature_formatted_sorted.txt)
 
           # If there is a difference, output it
           if [ -n "$diff_output" ]; then
