@@ -426,12 +426,12 @@ extension FinancialConnectionsWebFlowViewController {
         startingAdditionalParameters: String?,
         isInstantDebits: Bool,
         linkMode: LinkMode?
-    ) -> String? {
-        var additionalQueryParameters = startingAdditionalParameters
+    ) -> String {
+        var additionalQueryParameters = startingAdditionalParameters ?? ""
         if isInstantDebits {
-            additionalQueryParameters = (additionalQueryParameters ?? "") + "&return_payment_method=true"
+            additionalQueryParameters = additionalQueryParameters + "&return_payment_method=true"
             if let linkMode {
-                additionalQueryParameters = (additionalQueryParameters ?? "") + "&link_mode=\(linkMode.rawValue)"
+                additionalQueryParameters = additionalQueryParameters + "&link_mode=\(linkMode.rawValue)"
             }
         }
         return additionalQueryParameters

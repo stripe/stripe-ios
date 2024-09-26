@@ -5,9 +5,9 @@
 //  Created by Mat Schmid on 2024-09-25.
 //
 
-import XCTest
 @_spi(STP) import StripeCore
 @testable import StripeFinancialConnections
+import XCTest
 
 final class FinancialConnectionsWebFlowTests: XCTestCase {
     func test_noAdditionalParameters_empty() {
@@ -16,7 +16,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             isInstantDebits: false,
             linkMode: nil
         )
-        XCTAssertNil(additionalParamers)
+        XCTAssertEqual(additionalParamers, "")
     }
 
     func test_someAdditionalParameters_notInstantDebits_noLinkMode() {
@@ -36,7 +36,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
         )
         XCTAssertEqual(additionalParamers, "&testmode=true&return_payment_method=true")
     }
-    
+
     func test_additionalParameters_instantDebits_noLinkMode() {
         let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
             startingAdditionalParameters: "",
@@ -45,7 +45,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
         )
         XCTAssertEqual(additionalParamers, "&return_payment_method=true")
     }
-    
+
     func test_additionalParameters_notInstantDebits_someLinkMode() {
         let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
             startingAdditionalParameters: "",
@@ -63,7 +63,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
         )
         XCTAssertEqual(additionalParamers, "&testmode=true&return_payment_method=true&link_mode=PASSTHROUGH")
     }
-    
+
     func test_additionalParameters_instantDebits_linkCardBrandLinkMode() {
         let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
             startingAdditionalParameters: "",
