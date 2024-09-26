@@ -24,11 +24,11 @@ class RadioButton: UIView {
     }
 
     private var selectedColor: CGColor {
-        appearance.paymentOptionView.paymentMethodRow.flat.radio.colorSelected?.cgColor ?? appearance.colors.primary.cgColor
+        appearance.embeddedPaymentElement.row.flat.radio.selectedColor?.cgColor ?? appearance.colors.primary.cgColor
     }
 
     private var unselectedColor: CGColor {
-        appearance.paymentOptionView.paymentMethodRow.flat.radio.colorUnselected?.cgColor ?? appearance.colors.componentBorder.cgColor
+        appearance.embeddedPaymentElement.row.flat.radio.unselectedColor?.cgColor ?? appearance.colors.componentBorder.cgColor
     }
 
     private let didTap: () -> Void
