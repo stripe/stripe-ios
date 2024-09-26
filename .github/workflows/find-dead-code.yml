@@ -61,7 +61,7 @@ jobs:
             if new_dead_code.empty?
               puts "No new dead code detected."
             else
-              File.write(output_file, JSON.pretty_generate(new_dead_code))
+              File.write(output_file, JSON.pretty_generate(new_dead_code) + "\n")
             end
           '
 
