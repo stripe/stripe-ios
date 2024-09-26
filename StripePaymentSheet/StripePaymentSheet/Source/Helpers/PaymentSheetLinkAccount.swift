@@ -78,8 +78,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     private var currentSession: ConsumerSession?
-
-    let deadVar = false
     
     init(
         email: String,
@@ -166,6 +164,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 completion: completionWrapper
             )
         }
+    }
+    
+    func notUsedFunction() {
+        print("test")
     }
 
     func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
