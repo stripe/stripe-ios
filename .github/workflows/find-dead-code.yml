@@ -67,11 +67,10 @@ jobs:
 
           # Check if new_dead_code.json exists and is not empty
           if [ -s new_dead_code.json ]; then
-            # Extract values from the JSON and join them with newlines
-            dead_code_messages=$(ruby -r json -e 'puts JSON.parse(File.read("new_dead_code.json")).values.join("\n")')
-            # Escape special characters for GitHub Actions output
-            escaped_messages=$(echo "$dead_code_messages" | sed 's/%/%25/g; s/\r/%0D/g; s/\n/%0A/g')
-            echo "dead_code_messages=$escaped_messages" >> $GITHUB_OUTPUT
+            echo "New dead code detected."
+            echo "diff<<EOF" >> $GITHUB_ENV
+            cat new_dead_code.json >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
           else
             echo "No new dead code detected."
           fi
@@ -84,14 +83,14 @@ jobs:
 
       - uses: peter-evans/create-or-update-comment@v3
         id: create_update_comment
-        if: steps.compare-dead-code.outputs.dead_code_messages != ''
+        if: env.diff != ''
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             🚨 New dead code detected in this PR:
 
-            ```
-            ${{ steps.compare-dead-code.outputs.dead_code_messages }}
+            ```diff
+            ${{ env.diff }}
             ```
 
             Please remove the dead code before merging.
@@ -105,5 +104,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail if not acknowledged
-        if: steps.compare-dead-code.outputs.dead_code_messages != '' && !contains(github.event.pull_request.labels.*.name, 'skip dead code check')
+        if: env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'skip dead code check')
         run: exit 1
