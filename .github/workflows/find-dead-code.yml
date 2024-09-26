@@ -44,16 +44,6 @@ jobs:
           periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_master_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
 
-          # Compare the formatted reports
-          diff_output=$(comm -13 periphery_report_master_formatted_sorted.txt periphery_report_feature_formatted_sorted.txt)
-
-          # If there is a difference, output it
-          if [ -n "$diff_output" ]; then
-            echo "diff<<EOF" >> $GITHUB_ENV
-            echo "$diff_output" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          fi
-
       - name: Compare Unused Code JSON Files
         id: compare-dead-code
         run: |
