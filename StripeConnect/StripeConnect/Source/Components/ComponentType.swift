@@ -10,6 +10,7 @@ import Foundation
 /// The name of the embedded component tag in JS ([docs](https://docs.stripe.com/connect/supported-embedded-components))
 enum ComponentType: String, Encodable {
     /// Displays the balance summary, the payout schedule, and a list of payouts for the connected account
+    case accountManagement = "account-management"
     case payouts
     /// The onboarding flow for the account.
     case onboarding = "account-onboarding"

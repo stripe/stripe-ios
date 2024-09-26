@@ -15,6 +15,11 @@ import UIKit
 public class PaymentDetailsViewController: UIViewController {
     let webView: ConnectComponentWebView
 
+    public var overlayStyle: EmbeddedComponentManager.OverlayStyle? {
+        get { webView.overlayStyle }
+        set { webView.overlayStyle = newValue }
+    }
+
     public weak var delegate: PaymentDetailsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager) {
