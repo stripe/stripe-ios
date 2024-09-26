@@ -27,12 +27,15 @@ jobs:
           # Run Periphery scan with the configuration file
           periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_feature_formatted_sorted.txt
 
+      - name: Copy .periphery.yml to temporary location
+        run: cp .periphery.yml /tmp/periphery.yml
 
       - name: Compare Periphery output with master baseline
         id: compare-dead-code
         run: |
           git fetch origin master:master
           git checkout master
+          cp /tmp/periphery.yml .periphery.yml
           periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_master_formatted_sorted.txt
 
           # Compare the formatted reports
