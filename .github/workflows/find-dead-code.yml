@@ -25,7 +25,7 @@ jobs:
         run: |
 
           # Run Periphery scan with the configuration file
-          periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_feature_formatted_sorted.txt
+          periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' > periphery_report_feature_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_feature_formatted_sorted.txt unused_code_feature.json
 
       - name: Copy .periphery.yml to temporary location
@@ -42,8 +42,7 @@ jobs:
           mkdir -p ci_scripts/dead_code/
           cp /tmp/process_periphery_output.rb ci_scripts/dead_code/
 
-          # Run Periphery scan with the configuration file
-          periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' | sort > periphery_report_master_formatted_sorted.txt
+          periphery scan --config .periphery.yml 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' > periphery_report_master_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
 
       - name: Compare Unused Code JSON Files
@@ -66,7 +65,8 @@ jobs:
 
             new_dead_code = feature_unused_code.reject { |k, _| master_unused_code.key?(k) }
 
-            if new_dead_code.empty?
+            # Sometimes the build can fail and we think all dead code is new, in that case ignore.
+            if new_dead_code.empty? || new_dead_code.size > 200
               puts "No new dead code detected."
             else
               File.write(output_file, JSON.pretty_generate(new_dead_code) + "\n")
