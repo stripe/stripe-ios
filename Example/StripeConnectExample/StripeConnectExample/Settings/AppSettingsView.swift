@@ -18,7 +18,7 @@ struct AppSettingsView: View {
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
     @State var onboardingSettings = AppSettings.shared.onboardingSettings
-    
+
     var isCustomEndpointValid: Bool {
         URL(string: serverURLString)?.isValid == true
     }
