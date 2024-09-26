@@ -1,4 +1,4 @@
-name: Dead Code Detection
+name: Dead code detection
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]

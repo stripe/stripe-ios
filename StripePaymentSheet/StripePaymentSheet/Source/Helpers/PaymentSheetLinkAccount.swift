@@ -62,7 +62,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     var isLoggedIn: Bool {
         return sessionState == .verified
     }
-//trigger ci
+
     var sessionState: SessionState {
         if let currentSession = currentSession {
             // sms verification is not required if we are in the signup flow
@@ -79,6 +79,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     private var currentSession: ConsumerSession?
 
+    let deadVar = false
+    
     init(
         email: String,
         session: ConsumerSession?,

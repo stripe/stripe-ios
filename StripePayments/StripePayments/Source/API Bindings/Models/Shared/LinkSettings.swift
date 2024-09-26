@@ -89,5 +89,5 @@ import Foundation
             allResponseFields: response
         ) as? Self
     }
-    
+
 }
