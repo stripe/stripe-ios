@@ -12,7 +12,7 @@ protocol ApplicationURLOpener {
     func canOpenURL(_ url: URL) -> Bool
     func open(
         _ url: URL,
-        options: [UIApplication.OpenExternalURLOptionsKey : Any],
+        options: [UIApplication.OpenExternalURLOptionsKey: Any],
         completionHandler completion: OpenCompletionHandler?
     )
 }
