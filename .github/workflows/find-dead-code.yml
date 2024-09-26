@@ -53,8 +53,12 @@ jobs:
             feature_file = "unused_code_feature.json"
             output_file = "new_dead_code.json"
 
-            master_unused_code = JSON.parse(File.read(master_file))
-            feature_unused_code = JSON.parse(File.read(feature_file))
+            puts 'master_unused_code debug:'
+            puts JSON.pretty_generate(master_unused_code)
+
+            puts 'feature_unused_code debug:'
+            puts JSON.pretty_generate(feature_unused_code)
+
 
             new_dead_code = feature_unused_code.reject { |k, _| master_unused_code.key?(k) }
 
