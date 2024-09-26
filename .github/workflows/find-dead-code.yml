@@ -30,14 +30,12 @@ jobs:
       - name: Compare Periphery output with master baseline
         id: compare-dead-code
         run: |
-          # Ensure the baseline report exists
-          if [ ! -f ci_scripts/dead_code/periphery_report_master_formatted.txt ]; then
-            echo "Baseline Periphery report not found at ci_scripts/dead_code/periphery_report_master_formatted.txt"
-            exit 1
-          fi
+          git fetch origin master:master
+          git checkout master
+          periphery scan --config .periphery.yml 2>&1 | sed 's#.*/##' | grep 'is unused' | sort > periphery_report_master_formatted_sorted.txt
 
           # Compare the formatted reports
-          diff_output=$(comm -13 ci_scripts/dead_code/periphery_report_master_formatted_sorted.txt periphery_report_feature_formatted_sorted.txt)
+          diff_output=$(comm -13 periphery_report_master_formatted_sorted.txt periphery_report_feature_formatted_sorted.txt)
 
           # If there is a difference, output it
           if [ -n "$diff_output" ]; then
