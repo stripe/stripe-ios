@@ -69,23 +69,23 @@ public class STPCoreViewController: UIViewController {
             _theme = .defaultTheme
         }
 
-        if !useSystemBackButton() {
-            cancelItem = UIBarButtonItem(
-                barButtonSystemItem: .cancel,
-                target: self,
-                action: #selector(STPAddCardViewController.handleCancelTapped(_:))
-            )
-            cancelItem?.accessibilityIdentifier = "CoreViewControllerCancelIdentifier"
-
-            stp_navigationItemProxy?.leftBarButtonItem = cancelItem
-        }
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(STPAddCardViewController.updateAppearance),
-            name: UIContentSizeCategory.didChangeNotification,
-            object: nil
-        )
+//        if !useSystemBackButton() {
+//            cancelItem = UIBarButtonItem(
+//                barButtonSystemItem: .cancel,
+//                target: self,
+//                action: #selector(STPAddCardViewController.handleCancelTapped(_:))
+//            )
+//            cancelItem?.accessibilityIdentifier = "CoreViewControllerCancelIdentifier"
+//
+//            stp_navigationItemProxy?.leftBarButtonItem = cancelItem
+//        }
+//
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(STPAddCardViewController.updateAppearance),
+//            name: UIContentSizeCategory.didChangeNotification,
+//            object: nil
+//        )
     }
 
     /// Called in viewDidLoad after doing base implementation, before
