@@ -87,20 +87,8 @@ targets:
   - StripeiOSTests
   # - UI Examples
 
-retain_public: true
-retain_objc_accessible: true
-retain_objc_annotated: true
-retain_objc_protocols: true
-
-retain_ibaction: true
-retain_iboutlet: true
-retain_ibinspectable: true
-
-analyze_tests: true
-
 verbose: true
 
 build_arguments:
   - -destination
   - 'generic/platform=iOS Simulator'
-  
