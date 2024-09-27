@@ -116,6 +116,29 @@ final class PaymentSheetLoader {
             }
         }
     }
+    
+    public static func load(
+        mode: PaymentSheet.InitializationMode,
+        configuration: PaymentSheet.Configuration,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        isFlowController: Bool
+    ) async throws -> LoadResult {
+        return try await withCheckedThrowingContinuation { continuation in
+            load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                isFlowController: isFlowController
+            ) { result in
+                switch result {
+                case .success(let loadResult):
+                    continuation.resume(returning: loadResult)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
 
     // MARK: - Helper methods that load things
 
