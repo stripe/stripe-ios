@@ -30,7 +30,7 @@ jobs:
         run: |
             # Copy necessary files to /tmp/ before checking out master
             cp .periphery.yml /tmp/
-            cp ci_scripts/dead_code/. /tmp/
+            cp -r ci_scripts/dead_code/ /tmp/
 
       - name: Compare Periphery output with master baseline
         run: |
@@ -38,7 +38,7 @@ jobs:
           git checkout master
           cp /tmp/.periphery.yml .periphery.yml
           mkdir -p ci_scripts/dead_code/
-          cp /tmp/process_periphery_output.rb ci_scripts/dead_code/
+          cp -r /tmp/ ci_scripts/dead_code/
 
           periphery scan --config .periphery.yml --clean-build 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'warning' > periphery_report_master_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
