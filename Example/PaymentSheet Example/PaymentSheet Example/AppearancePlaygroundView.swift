@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(STP) @_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -88,6 +88,11 @@ struct AppearancePlaygroundView: View {
         let borderWidthBinding = Binding(
             get: { self.appearance.borderWidth },
             set: { self.appearance.borderWidth = $0 }
+        )
+        
+        let selectedBorderWidthBinding = Binding(
+            get: { appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5 },
+            set: { self.appearance.selectedBorderWidth = $0 }
         )
 
         let componentShadowColorBinding = Binding(
@@ -284,7 +289,7 @@ struct AppearancePlaygroundView: View {
                 Section(header: Text("Miscellaneous")) {
                     Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
                     Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
-                    Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
+                    Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: selectedBorderWidthBinding, in: 0.0...2.0, step: 0.5)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
