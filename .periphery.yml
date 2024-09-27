@@ -88,6 +88,14 @@ targets:
   # - UI Examples
 
 verbose: true
+retain_public: true
+retain_objc_accessible: false
+retain_objc_annotated: true
+retain_objc_protocols: true
+
+retain_ibaction: true
+retain_iboutlet: true
+retain_ibinspectable: true
 
 build_arguments:
   - -destination
