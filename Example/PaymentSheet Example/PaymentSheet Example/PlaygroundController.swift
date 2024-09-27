@@ -597,7 +597,7 @@ extension PlaygroundController {
                         )
                     }
                 } else if self.settings.uiStyle == .embedded {
-                    self.embeddedPaymentElement()
+                    self.makeEmbeddedPaymentElement()
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
                 }
@@ -807,9 +807,8 @@ class AnalyticsLogObserver: ObservableObject {
 
 // MARK: Embedded helpers
 extension PlaygroundController: EmbeddedPlaygroundViewControllerDelegate {
-    func embeddedPaymentElement() {
-        embeddedPlaygroundController = EmbeddedPlaygroundViewController(settings: settings, appearance: appearance)
-        embeddedPlaygroundController?.delegate = self
+    func makeEmbeddedPaymentElement() {
+        embeddedPlaygroundController = EmbeddedPlaygroundViewController(configuration: configuration, intentConfig: intentConfig, appearance: appearance, delegate: self)
     }
     
     func presentEmbedded() {
