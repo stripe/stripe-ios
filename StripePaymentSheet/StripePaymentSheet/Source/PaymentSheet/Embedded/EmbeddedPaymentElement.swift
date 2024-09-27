@@ -20,6 +20,9 @@ public class EmbeddedPaymentElement {
     /// A view controller to present on.
     public var presentingViewController: UIViewController?
 
+    /// This contains the `configuration` you passed in to `create`.
+    public let configuration: Configuration
+
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
 
@@ -88,8 +91,8 @@ public class EmbeddedPaymentElement {
     }
 
     /// The result of an `update` call
-    public enum UpdateResult {
-        /// The update succeeded
+    @frozen public enum UpdateResult {
+        /// The update succeded
         case succeeded
         /// The update was canceled. This is only returned when a subsequent `update` call cancels previous ones.
         case canceled
@@ -106,7 +109,7 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
         // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2524)
-        return .canceled
+        return .succeeded
     }
 
     /// Completes the payment or setup.
@@ -119,9 +122,10 @@ public class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
-    private init(view: UIView, delegate: EmbeddedPaymentElementDelegate? = nil) {
+    private init(view: UIView, configuration: Configuration, delegate: EmbeddedPaymentElementDelegate? = nil) {
         self.view = view
         self.delegate = delegate
+        self.configuration = configuration
     }
 }
 
@@ -189,7 +193,7 @@ extension EmbeddedPaymentElement {
 
 // MARK: - Typealiases
 
-@_spi(STP) public typealias EmbeddedPaymentElementResult = PaymentSheetResult
+@_spi(EmbeddedPaymentElementPrivateBeta) public typealias EmbeddedPaymentElementResult = PaymentSheetResult
 extension EmbeddedPaymentElement {
     public typealias IntentConfiguration = PaymentSheet.IntentConfiguration
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
