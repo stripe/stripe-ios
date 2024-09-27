@@ -21,17 +21,6 @@ import UIKit
         return stackView
     }()
 
-    // TODO(porter) Remove later, just for use in EmbeddedPlaygroundViewController since PaymentMethodType and AccessoryType aren't public
-    public convenience init(savedPaymentMethod: STPPaymentMethod?,
-                            appearance: PaymentSheet.Appearance,
-                            shouldShowApplePay: Bool,
-                            shouldShowLink: Bool) {
-        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.bancontact), .stripe(.klarna), .stripe(.card)]
-        let savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? = .viewMore
-
-        self.init(paymentMethodTypes: paymentMethodTypes, savedPaymentMethod: savedPaymentMethod, appearance: appearance, shouldShowApplePay: shouldShowApplePay, shouldShowLink: shouldShowLink, savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
-    }
-
     init(paymentMethodTypes: [PaymentSheet.PaymentMethodType],
          savedPaymentMethod: STPPaymentMethod?,
          appearance: PaymentSheet.Appearance,
