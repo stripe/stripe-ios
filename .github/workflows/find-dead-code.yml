@@ -30,7 +30,7 @@ jobs:
         run: |
             # Copy necessary files to /tmp/ before checking out master
             cp .periphery.yml /tmp/
-            cp ci_scripts/dead_code/process_periphery_output.rb /tmp/
+            cp ci_scripts/dead_code/. /tmp/
 
       - name: Compare Periphery output with master baseline
         run: |
