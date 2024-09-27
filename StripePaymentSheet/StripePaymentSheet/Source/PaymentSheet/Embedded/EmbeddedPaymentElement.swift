@@ -87,12 +87,12 @@ public class EmbeddedPaymentElement {
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType
         )
-        return .init(view: embeddedPaymentMethodsView)
+        return .init(view: embeddedPaymentMethodsView, configuration: configuration)
     }
 
     /// The result of an `update` call
     @frozen public enum UpdateResult {
-        /// The update succeded
+        /// The update succeeded
         case succeeded
         /// The update was canceled. This is only returned when a subsequent `update` call cancels previous ones.
         case canceled
@@ -206,6 +206,7 @@ extension EmbeddedPaymentElement {
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
 }
 
+// TODO(porter) Create a protocol for the commonalities between PaymentSheet.Configuration <> EmbeddedPaymentElement.Configuration
 extension EmbeddedPaymentElement.Configuration {
     func makePaymentSheetConfiguration() -> PaymentSheet.Configuration {
         var paymentConfig = PaymentSheet.Configuration()
