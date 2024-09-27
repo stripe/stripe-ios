@@ -70,7 +70,7 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
 
-        otpView.lookupConsumerAndStartVerification()
+        otpView.startVerification()
     }
 
     private func handleFailure(error: Error, errorName: String) {
@@ -131,7 +131,7 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     }
 
     private func didSelectResendCode() {
-        otpView.lookupConsumerAndStartVerification()
+        otpView.startVerification()
     }
 }
 

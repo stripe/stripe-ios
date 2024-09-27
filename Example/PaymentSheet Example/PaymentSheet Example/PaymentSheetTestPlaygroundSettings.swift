@@ -13,6 +13,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case paymentSheet
         case flowController
+        case embedded
     }
 
     enum Mode: String, PickerEnum {

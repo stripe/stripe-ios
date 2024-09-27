@@ -196,7 +196,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
         XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
         // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
         XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_form_shown")
@@ -2341,6 +2341,9 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         case .flowController:
             app.buttons["Continue"].tap()
             app.buttons["Confirm"].waitForExistenceAndTap()
+        case .embedded:
+            // TODO(porter) Fill in embedded UI test steps
+            break
         }
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         // Roundabout way to validate that signup completed successfully
