@@ -11,27 +11,56 @@ periphery_output_file = ARGV[0]
 output_json_file = ARGV[1]
 
 unused_code = {}
+processed_lines = 0
+matched_lines = 0
+skipped_lines = 0
 
 File.foreach(periphery_output_file) do |line|
   line.chomp!
 
-  # Remove full file path and extract relevant information
-  # Example line:
-  # /path/to/file/SimpleMandateTextView.swift:29:17: warning: Initializer 'init(mandateText:theme:)' is unused
+  # Increment the total processed lines
+  processed_lines += 1
 
-  if line =~ %r{^(?:.*/)?(.+?)(?::\d+:\d+)?\s*:?\s*warning:\s*(?:.+?)\s+'(.+?)'\s+is unused$}
-    filename = $1
-    identifier = $2
+  # Process lines that contain ".swift" and either "unused" or "warning" (case-insensitive)
+  if line.include?('.swift') && (line.downcase.include?('unused') || line.downcase.include?('warning'))
+    # Split the line into up to 4 parts based on colon
+    # Example line:
+    # /path/to/file/SimpleMandateTextView.swift:29:17: warning: Initializer 'init(mandateText:theme:)' is unused
 
-    key = "#{filename}_#{identifier}"
+    parts = line.split(':', 4) # Split into 4 parts at most
 
-    unused_code[key] = "#{filename}: warning: #{identifier} is unused"
+    if parts.length >= 4
+      file_path = parts[0].strip
+      # line_num = parts[1].strip # Not needed
+      # col_num = parts[2].strip  # Not needed
+      warning_message = parts[3].strip
+
+      # Extract the filename from the file path
+      filename = File.basename(file_path)
+
+      # Remove 'warning:' from the warning_message if present (case-insensitive)
+      warning_text = warning_message.sub(/^warning:\s*/i, '')
+
+      # Construct the full warning message without line and column numbers
+      # Format: Filename.swift: warning: Message
+      full_warning = "#{filename}: warning: #{warning_text}"
+
+      # Assign the same string as both key and value
+      unused_code[full_warning] = full_warning
+
+      matched_lines += 1
+    else
+      puts "Skipping improperly formatted line: #{line}"
+      skipped_lines += 1
+    end
   else
-    # Handle lines that don't match the expected pattern
-    puts "Skipping unrecognized line: #{line}"
+    # Handle lines that don't match criteria
+    skipped_lines += 1
   end
 end
 
+
+# Write the unused_code hash to the output JSON file with a newline at the end
 File.open(output_json_file, 'w') do |f|
-  f.write(JSON.pretty_generate(unused_code))
+  f.write(JSON.pretty_generate(unused_code) + "\n")
 end
