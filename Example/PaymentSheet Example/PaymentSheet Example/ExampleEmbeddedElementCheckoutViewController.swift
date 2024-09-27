@@ -5,8 +5,7 @@
 //  Created by Yuki Tokuhiro on 9/25/24.
 //
 
-// TODO: Not testable
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
@@ -40,13 +39,26 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
     private var computedTotals: ComputedTotals!
 
+    // MARK: - Create an IntentConfiguration
     private var intentConfig: PaymentSheet.IntentConfiguration {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
         ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            // TODO(yuki): Show client-side confirm, not server-side confirm.
-            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
+            Task {
+                do {
+                    // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret or an error.
+                    // TODO(yuki): Show client-side confirm, not server-side confirm.
+                    guard let self else {
+                        intentCreationCallback(.failure(ExampleError()))
+                        return
+                    }
+                    let clientSecret = try await self.confirmIntent(paymentMethodID: paymentMethod.stripeId, shouldSavePaymentMethod: shouldSavePaymentMethod)
+                    intentCreationCallback(.success(clientSecret))
+                } catch {
+                    intentCreationCallback(.failure(error))
+                }
+            }
         }
     }
 
@@ -70,10 +82,10 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         saladStepper.isEnabled = false
         subscribeSwitch.isEnabled = false
 
-        self.loadCheckout()
+        Task {
+            await self.loadCheckout()
+        }
     }
-
-    // MARK: - Button handlers
 
     @objc
     func didTapPaymentMethodButton() {
@@ -83,7 +95,10 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     }
 
     @objc
-    func didTapCheckoutButton() {
+    func didTapCheckoutButton() async {
+        // MARK: - Confirm the payment
+        let result = await embeddedPaymentElement.confirm()
+        handlePaymentResult(result)
     }
 
     @IBAction func hotDogStepperDidChange() {
@@ -98,55 +113,45 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         updateUI()
     }
 
-    // MARK: - Helper methods
-
     private func updateUI() {
-        // Disable buy and payment method buttons
+        // Disable buy and payment method buttons while we're updating
         buyButton.isEnabled = false
         paymentMethodButton.isEnabled = false
 
+        // Update the payment details
         fetchTotals { [weak self] in
             guard let self = self else { return }
             self.updateLabels()
 
             Task {
-                // Update PaymentSheet with the latest `intentConfig`
+                // MARK: - Update payment details
+                // Update Embedded Payment Element with the latest `intentConfig`
                 let updateResult = await self.embeddedPaymentElement.update(intentConfiguration: self.intentConfig)
-                Task.detached { @MainActor in
+                Task.detached { @MainActor [weak self] in
+                    guard let self else { return }
+                    paymentMethodButton.isEnabled = true
                     switch updateResult {
                     case .canceled:
                         // Do nothing; this happens when a subsequent `update` call cancels this one
                         break
                     case .failed(error: let error):
-                        print(error)
-// Display error to user in an alert, let them retry
-                                            case .succeeded:
-                        // e.g. stop showing a progress spinner
+                        // Display error to user in an alert, let them retry
+                        let alertController = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
+                            self.updateUI()
+                        })
+                        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in })
+                        present(alertController, animated: true, completion: nil)
+                    case .succeeded:
                         self.updateButtons()
                     }
                 }
             }
-
-//            self.paymentSheetFlowController.update(intentConfiguration: self.intentConfig) { [weak self] error in
-//                if let error = error {
-//                    print(error)
-//                    self?.displayAlert("\(error)", success: false)
-//                    // Retry - production code should use an exponential backoff
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-//                        self?.updateUI()
-//                    }
-//                } else {
-//                    // Re-enable your "Buy" and "Payment method" buttons
-//                    self?.updateButtons()
-//                  }
-//            }
         }
     }
 
     func updateButtons() {
-        paymentMethodButton.isEnabled = true
-
-        // MARK: Update the payment method and buy buttons
+        // MARK: Update the payment method and buy buttons using `paymentOption`
         if let paymentOption = embeddedPaymentElement.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
             paymentMethodButton.setTitleColor(.black, for: .normal)
@@ -169,11 +174,11 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         totalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.total / 100)) ?? "")"
     }
 
-    func displayAlert(_ message: String, success: Bool) {
+    func displayAlert(_ message: String, shouldDismiss: Bool) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
             alertController.dismiss(animated: true) {
-                if success {
+                if shouldDismiss {
                     self.navigationController?.popViewController(animated: true)
                 }
             }
@@ -182,26 +187,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    // MARK: Server-side confirm handler
-
-    func serverSideConfirmHandler(_ paymentMethodID: String,
-                                  _ shouldSavePaymentMethod: Bool,
-                                  _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret
-        confirmIntent(paymentMethodID: paymentMethodID, shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
-            switch result {
-            case .success(let clientSecret):
-                intentCreationCallback(.success(clientSecret))
-            case .failure(let error):
-                intentCreationCallback(.failure(error))
-            }
-        }
-    }
-
-    // MARK: Networking helpers
-
     private func fetchTotals(completion: @escaping () -> Void) {
-        // MARK: Fetch the current amounts from the server
         var request = URLRequest(url: computeTotalsUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -231,8 +217,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         task.resume()
     }
 
-    private func loadCheckout() {
-        // MARK: Fetch the publishable key, order information, and Customer information from the backend
+    private func loadCheckout() async {
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -242,76 +227,75 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "salad_count": saladStepper.value,
             "is_subscribing": subscribeSwitch.isOn,
         ]
-
-        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
-
-        let task = URLSession.shared.dataTask(
-            with: request,
-            completionHandler: { [weak self] (data, _, error) in
-                guard let data = data,
-                    let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                        as? [String: Any],
-                    let customerId = json["customer"] as? String,
-                    let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
-                    let publishableKey = json["publishableKey"] as? String,
-                    let subtotal = json["subtotal"] as? Double,
-                    let tax = json["tax"] as? Double,
-                    let total = json["total"] as? Double,
-                    let self = self
-                else {
-                    // Handle error
-                    return
-                }
-
-                self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
-                // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
-                STPAPIClient.shared.publishableKey = publishableKey
-
-                // MARK: Create a EmbeddedPaymentElement instance
-                var configuration = EmbeddedPaymentElement.Configuration(
-                    formSheetAction: .confirm(completion: { [weak self] result in
-                        self?.handlePaymentResult(result)
-                    })
-                )
-                configuration.merchantDisplayName = "Example, Inc."
-                configuration.applePay = .init(
-                    merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
-                    merchantCountryCode: "US"
-                )
-                configuration.customer = .init(
-                    id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
-                configuration.returnURL = "payments-example://stripe-redirect"
-                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
-                configuration.allowsDelayedPaymentMethods = true
-                Task {
-                    do {
-                        let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-                            intentConfiguration: self.intentConfig,
-                            configuration: configuration
-                        )
-                        self.embeddedPaymentElement = embeddedPaymentElement
-                        self.paymentMethodButton.isEnabled = true
-                        self.hotDogStepper.isEnabled = true
-                        self.saladStepper.isEnabled = true
-                        self.subscribeSwitch.isEnabled = true
-                        self.updateButtons()
-                        self.updateLabels()
-                    } catch {
-                        print(error) // Your integration could show the error to the user and prompt them to retry
-                    }
-                }
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            weak var weakSelf = self
+            let (data, _) = try await URLSession.shared.data(for: request)
+            guard
+                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                let customerId = json["customer"] as? String,
+                let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
+                let publishableKey = json["publishableKey"] as? String,
+                let subtotal = json["subtotal"] as? Double,
+                let tax = json["tax"] as? Double,
+                let total = json["total"] as? Double,
+                let self = weakSelf
+            else {
+                weakSelf?.displayAlert("Bad network response", shouldDismiss: true)
+                return
             }
-        )
-        task.resume()
+            self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
+
+            // MARK: - Create a EmbeddedPaymentElement instance
+            var configuration = EmbeddedPaymentElement.Configuration(
+                formSheetAction: .confirm(completion: { [weak self] result in
+                    self?.handlePaymentResult(result)
+                })
+            )
+            configuration.merchantDisplayName = "Example, Inc."
+            // Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
+            configuration.apiClient.publishableKey = publishableKey
+            configuration.applePay = .init(
+                merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
+                merchantCountryCode: "US"
+            )
+            configuration.customer = .init(
+                id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            configuration.returnURL = "payments-example://stripe-redirect"
+            // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
+            configuration.allowsDelayedPaymentMethods = true
+            let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+                intentConfiguration: self.intentConfig,
+                configuration: configuration
+            )
+            self.embeddedPaymentElement = embeddedPaymentElement
+            self.paymentMethodButton.isEnabled = true
+            self.hotDogStepper.isEnabled = true
+            self.saladStepper.isEnabled = true
+            self.subscribeSwitch.isEnabled = true
+            self.updateButtons()
+            self.updateLabels()
+        } catch {
+            // Handle error here
+            self.displayAlert("Error: \(error)", shouldDismiss: true)
+        }
     }
 
+    // MARK: - Handle payment result
     func handlePaymentResult(_ result: EmbeddedPaymentElementResult) {
-        // ...explained later
+        switch result {
+        case .completed:
+            displayAlert("Your order is confirmed!", shouldDismiss: true)
+        case .canceled:
+            print("Canceled!")
+        case .failed(let error):
+            print(error)
+            displayAlert("Payment failed: \n\(error)", shouldDismiss: false)
+        }
     }
 
-    func confirmIntent(paymentMethodID: String,
-                       shouldSavePaymentMethod: Bool,
-                       completion: @escaping (Result<String, Error>) -> Void) {
+    func confirmIntent(paymentMethodID: String, shouldSavePaymentMethod: Bool) async throws -> String {
         var request = URLRequest(url: confirmIntentUrl)
         request.httpMethod = "POST"
 
@@ -323,31 +307,20 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
-//            "customer_id": paymentSheetFlowController.configuration.customer?.id,
+            "customer_id": embeddedPaymentElement.configuration.customer?.id,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
 
-        let task = URLSession.shared.dataTask(
-            with: request,
-            completionHandler: { (data, _, error) in
-                guard
-                    error == nil,
-                    let data = data,
-                    let json = try? JSONDecoder().decode([String: String].self, from: data)
-                else {
-                    completion(.failure(error ?? ExampleError(errorDescription: "An unknown error occurred.")))
-                    return
-                }
-                if let clientSecret = json["intentClientSecret"] {
-                    completion(.success(clientSecret))
-                } else {
-                    completion(.failure(error ?? ExampleError(errorDescription: json["error"] ?? "An unknown error occurred.")))
-                }
-        })
-
-        task.resume()
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let json = try JSONDecoder().decode([String: String].self, from: data)
+        guard
+            let clientSecret = json["intentClientSecret"]
+        else {
+            throw ExampleError(errorDescription: json["error"] ?? "An unknown error occurred.")
+        }
+        return clientSecret
     }
 
     struct ExampleError: LocalizedError {
@@ -355,7 +328,6 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     }
 }
 
-// MARK: - PaymentMethodsViewController
 private class PaymentMethodsViewController: UIViewController {
     let embeddedPaymentElement: EmbeddedPaymentElement
     lazy var scrollView: UIScrollView = {
@@ -366,6 +338,7 @@ private class PaymentMethodsViewController: UIViewController {
     init(embeddedPaymentElement: EmbeddedPaymentElement) {
         self.embeddedPaymentElement = embeddedPaymentElement
         super.init(nibName: nil, bundle: nil)
+        // MARK: - Set Embedded Payment Element properties
         self.embeddedPaymentElement.presentingViewController = self
         self.embeddedPaymentElement.delegate = self
     }
@@ -375,7 +348,6 @@ private class PaymentMethodsViewController: UIViewController {
     }
 
     override func loadView() {
-        super.loadView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         view.addSubview(scrollView)
@@ -409,6 +381,7 @@ private class PaymentMethodsViewController: UIViewController {
     }
 }
 
+// MARK: - EmbeddedPaymentElementDelegate
 extension PaymentMethodsViewController: EmbeddedPaymentElementDelegate {
   func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
     // Lay out the scroll view that contains the Embedded Payment Element view
