@@ -112,15 +112,6 @@ extension TextFieldElement {
                     return "\(cardBrandDisplayName) is not accepted"
                 }
             }
-            
-            var isDisallowedBrand: Bool {
-                switch self {
-                case .empty, .incomplete, .invalidBrand, .invalidLuhn:
-                    return false
-                case .disallowedBrand:
-                    return true
-                }
-            }
         }
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
