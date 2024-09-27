@@ -23,7 +23,7 @@ jobs:
       - name: Build project and run Periphery scan
         id: periphery-scan
         run: |
-          periphery scan --config .periphery.yml --clean-build 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' > periphery_report_feature_formatted_sorted.txt
+          periphery scan --config .periphery.yml --clean-build 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'warning' > periphery_report_feature_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_feature_formatted_sorted.txt unused_code_feature.json
           
       - name: Copy .periphery.yml to temporary location
@@ -40,7 +40,7 @@ jobs:
           mkdir -p ci_scripts/dead_code/
           cp /tmp/process_periphery_output.rb ci_scripts/dead_code/
 
-          periphery scan --config .periphery.yml --clean-build 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' > periphery_report_master_formatted_sorted.txt
+          periphery scan --config .periphery.yml --clean-build 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'warning' > periphery_report_master_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
 
       - name: Compare Unused Code JSON Files
