@@ -11,15 +11,9 @@ periphery_output_file = ARGV[0]
 output_json_file = ARGV[1]
 
 unused_code = {}
-processed_lines = 0
-matched_lines = 0
-skipped_lines = 0
 
 File.foreach(periphery_output_file) do |line|
   line.chomp!
-
-  # Increment the total processed lines
-  processed_lines += 1
 
   # Process lines that contain ".swift" and either "unused" or "warning" (case-insensitive)
   if line.include?('.swift') && (line.downcase.include?('unused') || line.downcase.include?('warning'))
@@ -48,14 +42,11 @@ File.foreach(periphery_output_file) do |line|
       # Assign the same string as both key and value
       unused_code[full_warning] = full_warning
 
-      matched_lines += 1
     else
       puts "Skipping improperly formatted line: #{line}"
-      skipped_lines += 1
     end
   else
     # Handle lines that don't match criteria
-    skipped_lines += 1
   end
 end
 
