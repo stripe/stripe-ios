@@ -152,13 +152,11 @@ private extension ConnectComponentWebView {
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler { payload in
+        addMessageHandler(PageDidLoadMessageHandler { _ in
             // TODO: MXMOBILE-2491 Use this for analytics
-            debugPrint("pageDidLoad: \(payload.pageViewId)")
         })
-        addMessageHandler(AccountSessionClaimedMessageHandler { payload in
+        addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
             // TODO: MXMOBILE-2491 Use this for analytics
-            debugPrint("accountSessionClaimed: \(payload.merchantId)")
         })
     }
 
