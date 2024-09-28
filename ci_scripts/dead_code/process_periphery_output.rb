@@ -16,7 +16,7 @@ File.foreach(periphery_output_file) do |line|
   line.chomp!
 
   # Process lines that contain ".swift" and either "unused" or "warning" (case-insensitive)
-  if line.include?('.swift') && (line.downcase.include?('unused') || line.downcase.include?('warning'))
+  if line.include?('.swift') && line.downcase.include?('warning')
     # Split the line into up to 4 parts based on colon
     # Example line:
     # /path/to/file/SimpleMandateTextView.swift:29:17: warning: Initializer 'init(mandateText:theme:)' is unused
@@ -53,5 +53,6 @@ end
 
 # Write the unused_code hash to the output JSON file with a newline at the end
 File.open(output_json_file, 'w') do |f|
+  puts unused_code
   f.write(JSON.pretty_generate(unused_code) + "\n")
 end
