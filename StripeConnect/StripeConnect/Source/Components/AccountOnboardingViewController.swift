@@ -44,10 +44,9 @@ public class AccountOnboardingViewController: UIViewController {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
             componentType: .onboarding,
+            fetchInitProps: { props },
             loadContent: loadContent
-        ) {
-            props
-        }
+        )
         super.init(nibName: nil, bundle: nil)
 
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in

@@ -13,10 +13,10 @@ import WebKit
 @available(iOS 15, *)
 class ConnectComponentWebView: ConnectWebView {
     /// The embedded component manager that will be used for requests.
-    private(set) var componentManager: EmbeddedComponentManager
+    let componentManager: EmbeddedComponentManager
 
     /// The component type that should be loaded.
-    private var componentType: ComponentType
+    private let componentType: ComponentType
 
     /// The content controller that registers JS -> Swift message handlers
     private let contentController: WKUserContentController
@@ -40,11 +40,11 @@ class ConnectComponentWebView: ConnectWebView {
     init<InitProps: Encodable>(
         componentManager: EmbeddedComponentManager,
         componentType: ComponentType,
+        fetchInitProps: @escaping () -> InitProps,
         // Should only be overridden for tests
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
-        loadContent: Bool = true,
-        fetchInitProps: @escaping () -> InitProps
+        loadContent: Bool = true
     ) {
         self.componentManager = componentManager
         self.componentType = componentType
@@ -94,10 +94,10 @@ class ConnectComponentWebView: ConnectWebView {
                      loadContent: Bool = true) {
         self.init(componentManager: componentManager,
                   componentType: componentType,
+                  fetchInitProps: VoidPayload.init,
                   notificationCenter: notificationCenter,
                   webLocale: webLocale,
-                  loadContent: loadContent,
-                  fetchInitProps: VoidPayload.init)
+                  loadContent: loadContent)
     }
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: appearance, traitCollection: traitCollection))))
