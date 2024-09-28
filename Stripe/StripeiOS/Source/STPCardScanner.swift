@@ -17,7 +17,7 @@ import Vision
 enum STPCardScannerError: Int {
     /// Camera not available.
     case cameraNotAvailable
-}//trigger ci
+}
 
 @available(macCatalyst 14.0, *)
 @objc protocol STPCardScannerDelegate: NSObjectProtocol {
