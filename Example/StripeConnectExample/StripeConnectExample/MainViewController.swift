@@ -32,13 +32,18 @@ class MainViewController: UITableViewController {
         var label: String { rawValue }
 
         var attributedLabel: NSAttributedString {
-            let attributeString = NSMutableAttributedString(string: label)
+            let attributeString = NSMutableAttributedString(
+                string: label,
+                attributes: [
+                    .font: UIFont.boldSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize),
+                ]
+            )
             if isBeta {
                 attributeString.append(NSAttributedString(
                     string: " Beta",
                     attributes: [
                         .font: UIFont.preferredFont(forTextStyle: .footnote),
-                        .foregroundColor: UIColor.secondaryLabel
+                        .foregroundColor: UIColor.secondaryLabel,
                     ]
                 ))
             }
@@ -160,9 +165,7 @@ class MainViewController: UITableViewController {
         cell.textLabel?.attributedText = row.attributedLabel
         cell.detailTextLabel?.text = row.detailText
         cell.detailTextLabel?.numberOfLines = 0
-        cell.accessoryType = AppSettings.shared.presentationSettings.presentationStyleIsPush
-        ? .disclosureIndicator
-        : .none
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
 

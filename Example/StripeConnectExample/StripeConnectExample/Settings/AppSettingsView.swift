@@ -50,11 +50,8 @@ struct AppSettingsView: View {
     var saveEnabled: Bool {
         isCustomEndpointValid &&
         isMerchantIdValid &&
-        (
-            AppSettings.shared.selectedMerchant(appInfo: appInfo)?.id != selectedMerchant?.id ||
-            AppSettings.shared.selectedServerBaseURL != serverURLString ||
-            AppSettings.shared.presentationSettings != presentationSettings
-        )
+        (AppSettings.shared.selectedMerchant(appInfo: appInfo)?.id != selectedMerchant?.id ||
+         AppSettings.shared.selectedServerBaseURL != serverURLString)
     }
 
     init(appInfo: AppInfo?) {
@@ -102,7 +99,7 @@ struct AppSettingsView: View {
                     NavigationLink {
                         OnboardingSettingsView(onboardingSettings: $onboardingSettings)
                     } label: {
-                        Text("Onboarding")
+                        Text("Account Onboarding")
                             .font(.body)
                             .foregroundColor(.primary)
                     }
@@ -110,7 +107,13 @@ struct AppSettingsView: View {
                     Text("Component Settings")
                 }
 
-                PresentationSettingsSections(presentationSettings: $presentationSettings)
+                NavigationLink {
+                    PresentationSettingsView(presentationSettings: $presentationSettings)
+                } label: {
+                    Text("View Controller Options")
+                        .font(.body)
+                        .foregroundColor(.primary)
+                }
 
                 Section {
                     TextInput(label: "", placeholder: "https://example.com", text: $serverURLString, isValid: isCustomEndpointValid)
@@ -143,7 +146,6 @@ struct AppSettingsView: View {
                     Button {
                         AppSettings.shared.setSelectedMerchant(merchant: selectedMerchant)
                         AppSettings.shared.selectedServerBaseURL = serverURLString
-                        AppSettings.shared.presentationSettings = presentationSettings
                         viewControllerPresenter?.setRootViewController(AppLoadingView().containerViewController)
                     } label: {
                         Text("Save")
