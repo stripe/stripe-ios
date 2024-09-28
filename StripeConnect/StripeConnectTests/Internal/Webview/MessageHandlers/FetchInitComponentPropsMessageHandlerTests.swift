@@ -12,19 +12,20 @@ class FetchInitComponentPropsMessageHandlerTests: ScriptWebTestBase {
 
     @MainActor
     func testMessageSend() async throws {
-        let componentType = ComponentType.onboarding(.init(
-            fullTermsOfServiceUrl: URL(string: "https://fullTermsOfServiceUrl.com")!,
-            recipientTermsOfServiceUrl: URL(string: "https://recipientTermsOfServiceUrl.com")!,
-            privacyPolicyUrl: URL(string: "https://privacyPolicyUrl.com")!,
-            skipTermsOfServiceCollection: true,
-            collectionOptions: {
-                var collectionOptions = AccountCollectionOptions()
-                collectionOptions.fields = .eventuallyDue
-                collectionOptions.futureRequirements = .include
-                return collectionOptions
-            }()
-        ))
-        webView.addMessageReplyHandler(messageHandler: FetchInitComponentPropsMessageHandler(componentType: componentType))
+        webView.addMessageReplyHandler(messageHandler: FetchInitComponentPropsMessageHandler {
+            AccountOnboardingViewController.Props(
+                fullTermsOfServiceUrl: URL(string: "https://fullTermsOfServiceUrl.com")!,
+                recipientTermsOfServiceUrl: URL(string: "https://recipientTermsOfServiceUrl.com")!,
+                privacyPolicyUrl: URL(string: "https://privacyPolicyUrl.com")!,
+                skipTermsOfServiceCollection: true,
+                collectionOptions: {
+                    var collectionOptions = AccountCollectionOptions()
+                    collectionOptions.fields = .eventuallyDue
+                    collectionOptions.futureRequirements = .include
+                    return collectionOptions
+                }()
+            )
+        })
 
         try await webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                    json: "{}",

@@ -147,14 +147,11 @@ private extension ConnectComponentWebView {
                          appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection),
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
-        addMessageHandler(FetchInitComponentPropsMessageHandler(componentType: componentType))
         addMessageHandler(DebugMessageHandler())
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler { _ in
-            // TODO: MXMOBILE-2491 Use this for analytics
-        })
+        addMessageHandler(PageDidLoadMessageHandler { _ in })
         addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
             // TODO: MXMOBILE-2491 Use this for analytics
         })

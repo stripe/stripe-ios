@@ -47,6 +47,28 @@ class AccountOnboardingViewControllerTests: XCTestCase {
         await fulfillment(of: [expectationDidFail], timeout: TestHelpers.defaultTimeout)
     }
 
+    @MainActor
+    func testFetchOnboarding() async throws {
+        let vc = componentManager.createAccountOnboardingViewController(
+            fullTermsOfServiceUrl: URL(string: "https://fullTermsOfServiceUrl.com")!,
+            recipientTermsOfServiceUrl: URL(string: "https://recipientTermsOfServiceUrl.com")!,
+            privacyPolicyUrl: URL(string: "https://privacyPolicyUrl.com")!,
+            skipTermsOfServiceCollection: true,
+            collectionOptions: {
+                var collectionOptions = AccountCollectionOptions()
+                collectionOptions.fields = .eventuallyDue
+                collectionOptions.futureRequirements = .include
+                return collectionOptions
+            }()
+        )
+
+        try await vc.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                   json: "{}",
+                                                   expectedResponse: """
+            {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include"},"setFullTermsOfServiceUrl":"https:\\/\\/fullTermsOfServiceUrl.com","setPrivacyPolicyUrl":"https:\\/\\/privacyPolicyUrl.com","setRecipientTermsOfServiceUrl":"https:\\/\\/recipientTermsOfServiceUrl.com","setSkipTermsOfServiceCollection":true}
+            """)
+    }
+
     private class AccountOnboardingViewControllerDelegatePassThrough: AccountOnboardingViewControllerDelegate {
 
         var accountOnboardingDidExit: ((_ accountOnboarding: AccountOnboardingViewController) -> Void)?

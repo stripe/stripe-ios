@@ -21,8 +21,7 @@ class ConnectJSURLParamsTests: XCTestCase {
     func testInitFromApiClient_publicKey() {
         apiClient.publishableKey = "pk_1234"
 
-        let urlParams = ConnectJSURLParams(component: .payouts, apiClient: apiClient)
-        XCTAssertEqual(urlParams.component, "payouts")
+        let urlParams = ConnectJSURLParams(component: .onboarding, apiClient: apiClient)
         XCTAssertEqual(urlParams.publicKey, "pk_1234")
         XCTAssertNil(urlParams.apiKeyOverride)
         XCTAssertNil(urlParams.merchantIdOverride)
@@ -33,8 +32,7 @@ class ConnectJSURLParamsTests: XCTestCase {
     func testInitFromApiClient_userKeyIncludesOverrideParams() {
         apiClient.publishableKey = "uk_1234"
 
-        let urlParams = ConnectJSURLParams(component: .payouts, apiClient: apiClient)
-        XCTAssertEqual(urlParams.component, "payouts")
+        let urlParams = ConnectJSURLParams(component: .onboarding, apiClient: apiClient)
         XCTAssertNil(urlParams.publicKey)
         XCTAssertEqual(urlParams.apiKeyOverride, "uk_1234")
         XCTAssertEqual(urlParams.merchantIdOverride, "acct_123")

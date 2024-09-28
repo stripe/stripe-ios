@@ -42,7 +42,7 @@ public class AccountOnboardingViewController: UIViewController {
     ) {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
-            componentType: .onboarding(props),
+            componentType: .onboarding,
             loadContent: loadContent
         )
         super.init(nibName: nil, bundle: nil)
@@ -51,6 +51,10 @@ public class AccountOnboardingViewController: UIViewController {
             guard let self else { return }
             self.delegate?.accountOnboarding(self, didFailLoadWithError: value.error.connectEmbedError)
         })
+
+        webView.addMessageHandler(FetchInitComponentPropsMessageHandler({
+            props
+        }))
 
         webView.addMessageHandler(OnExitMessageHandler(didReceiveMessage: { [weak self] in
             guard let self else { return }
