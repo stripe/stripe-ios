@@ -31,7 +31,23 @@ class MainViewController: UITableViewController {
 
         var label: String { rawValue }
 
-        var description: String {
+        var attributedLabel: NSAttributedString {
+            let attributeString = NSMutableAttributedString(string: label)
+            if isBeta {
+                attributeString.append(NSAttributedString(
+                    string: " Beta",
+                    attributes: [
+                        .font: UIFont.preferredFont(forTextStyle: .footnote),
+                        .foregroundColor: UIColor.secondaryLabel
+                    ]
+                ))
+            }
+            return attributeString
+        }
+
+        var isBeta: Bool { true }
+
+        var detailText: String {
             switch self {
             case .onboarding:
                 return "Show a localized onboarding form that validates data."
@@ -140,10 +156,13 @@ class MainViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row.allCases[indexPath.row]
-        let cell = UITableViewCell()
-        cell.textLabel?.text = row.label
-        cell.detailTextLabel?.text = row.description
-        cell.accessoryType = .disclosureIndicator
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        cell.textLabel?.attributedText = row.attributedLabel
+        cell.detailTextLabel?.text = row.detailText
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.accessoryType = AppSettings.shared.presentationSettings.presentationStyleIsPush
+        ? .disclosureIndicator
+        : .none
         return cell
     }
 
