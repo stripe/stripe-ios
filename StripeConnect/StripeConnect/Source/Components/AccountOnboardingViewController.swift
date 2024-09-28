@@ -10,6 +10,7 @@ import UIKit
 /// A view controller representing an account-onboarding component
 /// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/account-onboarding
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public class AccountOnboardingViewController: UIViewController {
 
     struct Props: Encodable {
@@ -44,17 +45,15 @@ public class AccountOnboardingViewController: UIViewController {
             componentManager: componentManager,
             componentType: .onboarding,
             loadContent: loadContent
-        )
+        ) {
+            props
+        }
         super.init(nibName: nil, bundle: nil)
 
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
             self.delegate?.accountOnboarding(self, didFailLoadWithError: value.error.connectEmbedError)
         })
-
-        webView.addMessageHandler(FetchInitComponentPropsMessageHandler({
-            props
-        }))
 
         webView.addMessageHandler(OnExitMessageHandler(didReceiveMessage: { [weak self] in
             guard let self else { return }
@@ -77,6 +76,7 @@ public class AccountOnboardingViewController: UIViewController {
 
 /// Delegate of an `AccountOnboardingViewController`
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public protocol AccountOnboardingViewControllerDelegate: AnyObject {
     /**
      The connected account has exited the onboarding process
@@ -95,6 +95,7 @@ public protocol AccountOnboardingViewControllerDelegate: AnyObject {
 
 }
 
+@available(iOS 15, *)
 public extension AccountOnboardingViewControllerDelegate {
     // Add default implementation of delegate methods to make them optional
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingViewController) { }
