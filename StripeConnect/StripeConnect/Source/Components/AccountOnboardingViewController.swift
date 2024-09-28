@@ -12,23 +12,37 @@ import UIKit
 @_spi(PrivateBetaConnect)
 public class AccountOnboardingViewController: UIViewController {
 
-    /// Delegate that recieves callbacks for this component
+    struct Props: Encodable {
+        let fullTermsOfServiceUrl: URL?
+        let recipientTermsOfServiceUrl: URL?
+        let privacyPolicyUrl: URL?
+        let skipTermsOfServiceCollection: Bool?
+        let collectionOptions: AccountCollectionOptions
+
+        // Used in FetchInitComponentPropsMessageHandler
+        // Each property key should match its JS setter name
+        enum CodingKeys: String, CodingKey {
+            case fullTermsOfServiceUrl = "setFullTermsOfServiceUrl"
+            case recipientTermsOfServiceUrl = "setRecipientTermsOfServiceUrl"
+            case privacyPolicyUrl = "setPrivacyPolicyUrl"
+            case skipTermsOfServiceCollection = "setSkipTermsOfServiceCollection"
+            case collectionOptions = "setCollectionOptions"
+        }
+    }
+
+    /// Delegate that receives callbacks for this component
     public weak var delegate: AccountOnboardingViewControllerDelegate?
 
     let webView: ConnectComponentWebView
 
-    init(fullTermsOfServiceUrl: URL? = nil,
-         recipientTermsOfServiceUrl: URL? = nil,
-         privacyPolicyUrl: URL? = nil,
-         skipTermsOfServiceCollection: Bool? = nil,
-         collectionOptions: AccountCollectionOptions = .init(),
+    init(props: Props,
          componentManager: EmbeddedComponentManager,
          // Test Only
          loadContent: Bool = true
     ) {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
-            componentType: .onboarding,
+            componentType: .onboarding(props),
             loadContent: loadContent
         )
         super.init(nibName: nil, bundle: nil)

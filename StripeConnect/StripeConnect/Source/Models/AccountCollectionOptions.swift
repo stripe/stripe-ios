@@ -9,7 +9,7 @@ import Foundation
 
 @_spi(PrivateBetaConnect)
 /// Collection options for account onboarding
-public struct AccountCollectionOptions: Codable {
+public struct AccountCollectionOptions: Codable, Equatable {
 
     public enum FieldOption: String, Codable {
         case currentlyDue = "currently_due"
