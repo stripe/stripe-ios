@@ -17,9 +17,3 @@ struct CallSetterWithSerializableValueSender<Value: Codable & Equatable>: Messag
     let name: String = "callSetterWithSerializableValue"
     let payload: Payload
 }
-
-extension CallSetterWithSerializableValueSender {
-    init(_ setter: String, with value: Value) {
-        self.init(payload: .init(setter: setter, value: value))
-    }
-}
