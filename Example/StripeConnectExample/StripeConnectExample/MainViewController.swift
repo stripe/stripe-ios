@@ -112,6 +112,7 @@ class MainViewController: UITableViewController {
     func performAction(_ row: Row, cell: UITableViewCell) {
         var viewControllerToPresent: UIViewController
 
+        // Create a view controller for the selected component
         switch row {
         case .onboarding:
             let savedOnboardingSettings = AppSettings.shared.onboardingSettings
@@ -125,8 +126,11 @@ class MainViewController: UITableViewController {
             viewControllerToPresent = embeddedComponentManager.createPayoutsViewController()
         }
 
+        // Fetch ViewController presentation settings
         let presentationSettings = AppSettings.shared.presentationSettings
+
         if presentationSettings.embedInTabBar {
+            // Embed in a tab bar
             let tabBarController = UITabBarController()
             viewControllerToPresent.tabBarItem = .init(title: row.label, image: UIImage(systemName: "star"), tag: 0)
 
@@ -135,18 +139,24 @@ class MainViewController: UITableViewController {
             viewControllerToPresent = tabBarController
         }
 
+        // Configure the component VC's navbar
         viewControllerToPresent.navigationItem.backButtonDisplayMode = .minimal
         addChangeAppearanceButtonNavigationItem(to: viewControllerToPresent)
         viewControllerToPresent.title = row.label
 
         if presentationSettings.presentationStyleIsPush {
+            // Push to navigation stack
             navigationController?.pushViewController(viewControllerToPresent, animated: true)
         } else {
+            // Modally present
+
+            // Add a close button
             viewControllerToPresent.navigationItem.leftBarButtonItem = .init(systemItem: .close, primaryAction: .init(handler: { [weak viewControllerToPresent] _ in
                 viewControllerToPresent?.dismiss(animated: true)
             }))
 
             if presentationSettings.embedInNavBar {
+                // Embed inside a navbar
                 viewControllerToPresent = UINavigationController(rootViewController: viewControllerToPresent)
             }
             present(viewControllerToPresent, animated: true)
@@ -230,10 +240,15 @@ class MainViewController: UITableViewController {
 
 extension MainViewController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+
+        // Hide the navbar on the component VC if it's disabled in presentation settings
+
         navigationController.isNavigationBarHidden = !AppSettings.shared.presentationSettings.embedInNavBar && viewController != self
 
         if navigationController.isNavigationBarHidden {
-            // Add floating back button
+
+            // Add floating back button so we can still navigate back
+
             let backButton = UIButton(
                 type: .system,
                 primaryAction: UIAction(
