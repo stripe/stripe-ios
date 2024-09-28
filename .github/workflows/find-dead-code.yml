@@ -59,6 +59,7 @@ jobs:
 
       - uses: peter-evans/find-comment@v3
         id: find_comment
+        if: env.diff != ''
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: '🚨 New dead code detected'
