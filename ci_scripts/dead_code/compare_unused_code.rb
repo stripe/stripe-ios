@@ -9,7 +9,7 @@ end
 
 master_json_file = ARGV[0]
 feature_json_file = ARGV[1]
-diff_json_file = "new_dead_code.json"
+diff_text_file = "new_dead_code.txt"
 
 # Load JSON data
 begin
@@ -35,10 +35,15 @@ end
 # Compute the difference: keys present in feature_data but not in master_data
 new_dead_code = feature_unused_code.reject { |k, _| master_unused_code.key?(k) }
 
-if new_dead_code.size > 200
-  puts "More than 200 keys present, skipping. This usually happens if a build fails"
+if new_dead_code.size > 300
+  puts "More than 300 keys present, skipping. This usually happens if a build fails"
 elsif new_dead_code.empty?
   puts "No new dead code detected."
 else
-  File.write(diff_json_file, JSON.pretty_generate(new_dead_code) + "\n")
+  # Extract values and write to the file as plain text
+  File.open(diff_text_file, 'w') do |file|
+    new_dead_code.each_value do |value|
+      file.puts(value)
+    end
+  end
 end
