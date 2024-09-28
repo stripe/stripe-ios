@@ -26,38 +26,18 @@ class MainViewController: UITableViewController {
 
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
-        case onboarding = "Onboarding"
+        case onboarding = "Account Onboarding"
         case payouts = "Payouts"
 
         var label: String { rawValue }
 
-        var accessoryType: UITableViewCell.AccessoryType {
-            .disclosureIndicator
-        }
-
-        var labelColor: UIColor {
-            return .label
-        }
-    }
-
-    /// Navbar button title view
-    lazy var navbarTitleButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle(title, for: .normal)
-        button.setImage(UIImage(systemName: "chevron.down",
-                                withConfiguration: UIImage.SymbolConfiguration(pointSize: 10)),
-                        for: .normal)
-        button.semanticContentAttribute = .forceRightToLeft
-        button.tintColor = .label
-        button.addTarget(self, action: #selector(presentServerSettings), for: .touchUpInside)
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.accessibilityLabel = "Configure server"
-        return button
-    }()
-
-    override var title: String? {
-        didSet {
-            navbarTitleButton.setTitle(title, for: .normal)
+        var description: String {
+            switch self {
+            case .onboarding:
+                return "Show a localized onboarding form that validates data."
+            case .payouts:
+                return "Show payout information and allow your users to perform payouts."
+            }
         }
     }
 
@@ -76,9 +56,16 @@ class MainViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = merchant.displayName ?? merchant.merchantId
-        navigationItem.titleView = navbarTitleButton
+        title = merchant.displayName.map { "Demo account: \($0)" } ?? merchant.merchantId
+        navigationController?.delegate = self
         addChangeAppearanceButtonNavigationItem(to: self)
+
+        navigationItem.leftBarButtonItem = .init(
+            image: UIImage(systemName: "gearshape.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(presentServerSettings)
+        )
     }
 
     func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
@@ -102,24 +89,47 @@ class MainViewController: UITableViewController {
 
     /// Called when table row is selected
     func performAction(_ row: Row, cell: UITableViewCell) {
-        let viewControllerToPush: UIViewController
+        var viewControllerToPresent: UIViewController
 
         switch row {
         case .onboarding:
             let savedOnboardingSettings = AppSettings.shared.onboardingSettings
-            viewControllerToPush = embeddedComponentManager.createAccountOnboardingViewController(
+            viewControllerToPresent = embeddedComponentManager.createAccountOnboardingViewController(
                 fullTermsOfServiceUrl: savedOnboardingSettings.fullTermsOfServiceUrl,
                 recipientTermsOfServiceUrl: savedOnboardingSettings.recipientTermsOfServiceUrl,
                 privacyPolicyUrl: savedOnboardingSettings.privacyPolicyUrl,
                 skipTermsOfServiceCollection: savedOnboardingSettings.skipTermsOfService.boolValue,
                 collectionOptions: savedOnboardingSettings.accountCollectionOptions)
         case .payouts:
-            viewControllerToPush = embeddedComponentManager.createPayoutsViewController()
+            viewControllerToPresent = embeddedComponentManager.createPayoutsViewController()
         }
 
-        viewControllerToPush.navigationItem.backButtonDisplayMode = .minimal
-        addChangeAppearanceButtonNavigationItem(to: viewControllerToPush)
-        navigationController?.pushViewController(viewControllerToPush, animated: true)
+        let presentationSettings = AppSettings.shared.presentationSettings
+        if presentationSettings.embedInTabBar {
+            let tabBarController = UITabBarController()
+            viewControllerToPresent.tabBarItem = .init(title: row.label, image: UIImage(systemName: "star"), tag: 0)
+
+            tabBarController.viewControllers = [viewControllerToPresent]
+
+            viewControllerToPresent = tabBarController
+        }
+
+        viewControllerToPresent.navigationItem.backButtonDisplayMode = .minimal
+        addChangeAppearanceButtonNavigationItem(to: viewControllerToPresent)
+        viewControllerToPresent.title = row.label
+
+        if presentationSettings.presentationStyleIsPush {
+            navigationController?.pushViewController(viewControllerToPresent, animated: true)
+        } else {
+            viewControllerToPresent.navigationItem.leftBarButtonItem = .init(systemItem: .close, primaryAction: .init(handler: { [weak viewControllerToPresent] _ in
+                viewControllerToPresent?.dismiss(animated: true)
+            }))
+
+            if presentationSettings.embedInNavBar {
+                viewControllerToPresent = UINavigationController(rootViewController: viewControllerToPresent)
+            }
+            present(viewControllerToPresent, animated: true)
+        }
     }
 
     // MARK: - UITableViewDataSource
@@ -132,8 +142,8 @@ class MainViewController: UITableViewController {
         let row = Row.allCases[indexPath.row]
         let cell = UITableViewCell()
         cell.textLabel?.text = row.label
-        cell.textLabel?.textColor = row.labelColor
-        cell.accessoryType = row.accessoryType
+        cell.detailTextLabel?.text = row.description
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
 
@@ -193,5 +203,32 @@ class MainViewController: UITableViewController {
         }
 
         return fontSources
+    }
+}
+
+extension MainViewController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        navigationController.isNavigationBarHidden = !AppSettings.shared.presentationSettings.embedInNavBar && viewController != self
+
+        if navigationController.isNavigationBarHidden {
+            // Add floating back button
+            let backButton = UIButton(
+                type: .system,
+                primaryAction: UIAction(
+                    title: "Back",
+                    image: UIImage(systemName: "chevron.backward"),
+                    handler: { _ in
+                        navigationController.popViewController(animated: true)
+                    }
+                ))
+            backButton.backgroundColor = .systemBackground.withAlphaComponent(0.5)
+            backButton.layer.cornerRadius = 4
+            backButton.translatesAutoresizingMaskIntoConstraints = false
+            viewController.view.addSubview(backButton)
+            NSLayoutConstraint.activate([
+                backButton.topAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+                backButton.leadingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            ])
+        }
     }
 }

@@ -13,11 +13,11 @@
 		413D18422C7FA30A0051AA42 /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413D18412C7FA30A0051AA42 /* TextInput.swift */; };
 		413D18442C7FAE280051AA42 /* OptionListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413D18432C7FAE280051AA42 /* OptionListRow.swift */; };
 		413D184A2C7FCE5E0051AA42 /* StripeConnectExample.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */; };
-		4161C2892CA1B438005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2882CA1B438005BD67C /* StripeUICore.framework */; };
-		4161C28A2CA1B438005BD67C /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2882CA1B438005BD67C /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4161C2822C9DBB92005BD67C /* OnboardingSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2812C9DBB92005BD67C /* OnboardingSettingsView.swift */; };
 		4161C2852C9DC235005BD67C /* OnboardingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2842C9DC235005BD67C /* OnboardingSettings.swift */; };
 		4161C2872C9DD035005BD67C /* URL+Valid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2862C9DD035005BD67C /* URL+Valid.swift */; };
+		4161C2892CA1B438005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2882CA1B438005BD67C /* StripeUICore.framework */; };
+		4161C28A2CA1B438005BD67C /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2882CA1B438005BD67C /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		416E9E972C76BD4400A0B917 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E962C76BD4400A0B917 /* AppDelegate.swift */; };
 		416E9E992C76BD4400A0B917 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E982C76BD4400A0B917 /* SceneDelegate.swift */; };
 		416E9E9B2C76BD4400A0B917 /* AppStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E9A2C76BD4400A0B917 /* AppStartViewController.swift */; };
@@ -40,6 +40,8 @@
 		41E9A1C12C7CE30000EDE131 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E9A1C02C7CE30000EDE131 /* AppSettingsView.swift */; };
 		E62B3CD72C99EA020098B607 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E62B3CD62C99EA020098B607 /* StripeCore.framework */; };
 		E62B3CD82C99EA020098B607 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E62B3CD62C99EA020098B607 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E6C5E52B2CA76B0F0021444D /* PresentationSettingsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5E52A2CA76B030021444D /* PresentationSettingsSections.swift */; };
+		E6C5E52D2CA771730021444D /* PresentationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5E52C2CA771700021444D /* PresentationSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,10 +77,10 @@
 		413D18412C7FA30A0051AA42 /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInput.swift; sourceTree = "<group>"; };
 		413D18432C7FAE280051AA42 /* OptionListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionListRow.swift; sourceTree = "<group>"; };
 		413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectExample.xctestplan; sourceTree = "<group>"; };
-		4161C2882CA1B438005BD67C /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4161C2812C9DBB92005BD67C /* OnboardingSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSettingsView.swift; sourceTree = "<group>"; };
 		4161C2842C9DC235005BD67C /* OnboardingSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSettings.swift; sourceTree = "<group>"; };
 		4161C2862C9DD035005BD67C /* URL+Valid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Valid.swift"; sourceTree = "<group>"; };
+		4161C2882CA1B438005BD67C /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		416E9E932C76BD4400A0B917 /* StripeConnect Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StripeConnect Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		416E9E962C76BD4400A0B917 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		416E9E982C76BD4400A0B917 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +104,8 @@
 		41E9A1BE2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+NavigationEmbed.swift"; sourceTree = "<group>"; };
 		41E9A1C02C7CE30000EDE131 /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
 		E62B3CD62C99EA020098B607 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6C5E52A2CA76B030021444D /* PresentationSettingsSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationSettingsSections.swift; sourceTree = "<group>"; };
+		E6C5E52C2CA771700021444D /* PresentationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,8 +151,9 @@
 		4161C27F2C9DBB70005BD67C /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				4161C2802C9DBB7E005BD67C /* Components */,
 				41E9A1C02C7CE30000EDE131 /* AppSettingsView.swift */,
+				4161C2802C9DBB7E005BD67C /* Components */,
+				E6C5E5272CA76AD20021444D /* PresentationSettings */,
 				41810D742C8A004F00F10EB7 /* Appearance */,
 			);
 			path = Settings;
@@ -292,6 +297,15 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		E6C5E5272CA76AD20021444D /* PresentationSettings */ = {
+			isa = PBXGroup;
+			children = (
+				E6C5E52C2CA771700021444D /* PresentationSettings.swift */,
+				E6C5E52A2CA76B030021444D /* PresentationSettingsSections.swift */,
+			);
+			path = PresentationSettings;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -405,6 +419,7 @@
 				41E9A1C12C7CE30000EDE131 /* AppSettingsView.swift in Sources */,
 				416E9ED62C78BD9900A0B917 /* API.swift in Sources */,
 				416E9E992C76BD4400A0B917 /* SceneDelegate.swift in Sources */,
+				E6C5E52D2CA771730021444D /* PresentationSettings.swift in Sources */,
 				4161C2822C9DBB92005BD67C /* OnboardingSettingsView.swift in Sources */,
 				416E9EDA2C78BDC300A0B917 /* AccountSessionResponse.swift in Sources */,
 				416E9EE32C7B988100A0B917 /* AppSettings.swift in Sources */,
@@ -412,6 +427,7 @@
 				413D18422C7FA30A0051AA42 /* TextInput.swift in Sources */,
 				41E9A1BD2C7CC85100EDE131 /* SwiftUIContainerViewController.swift in Sources */,
 				4161C2852C9DC235005BD67C /* OnboardingSettings.swift in Sources */,
+				E6C5E52B2CA76B0F0021444D /* PresentationSettingsSections.swift in Sources */,
 				416E9EDE2C78C0BA00A0B917 /* AppInfo.swift in Sources */,
 				41810D762C8A005D00F10EB7 /* AppearanceInfo.swift in Sources */,
 				41810D712C89F4CD00F10EB7 /* AppearanceSettings.swift in Sources */,

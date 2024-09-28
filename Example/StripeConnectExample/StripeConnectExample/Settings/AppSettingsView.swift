@@ -18,6 +18,7 @@ struct AppSettingsView: View {
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
     @State var onboardingSettings = AppSettings.shared.onboardingSettings
+    @State var presentationSettings = AppSettings.shared.presentationSettings
 
     var isCustomEndpointValid: Bool {
         URL(string: serverURLString)?.isValid == true
@@ -49,8 +50,11 @@ struct AppSettingsView: View {
     var saveEnabled: Bool {
         isCustomEndpointValid &&
         isMerchantIdValid &&
-        (AppSettings.shared.selectedMerchant(appInfo: appInfo)?.id != selectedMerchant?.id ||
-         AppSettings.shared.selectedServerBaseURL != serverURLString)
+        (
+            AppSettings.shared.selectedMerchant(appInfo: appInfo)?.id != selectedMerchant?.id ||
+            AppSettings.shared.selectedServerBaseURL != serverURLString ||
+            AppSettings.shared.presentationSettings != presentationSettings
+        )
     }
 
     init(appInfo: AppInfo?) {
@@ -105,6 +109,9 @@ struct AppSettingsView: View {
                 } header: {
                     Text("Component Settings")
                 }
+
+                PresentationSettingsSections(presentationSettings: $presentationSettings)
+
                 Section {
                     TextInput(label: "", placeholder: "https://example.com", text: $serverURLString, isValid: isCustomEndpointValid)
                     Button {
@@ -122,7 +129,7 @@ struct AppSettingsView: View {
             .animation(.easeOut(duration: 0.2), value: selectedMerchant)
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
-            .navigationTitle("Configure server")
+            .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -136,6 +143,7 @@ struct AppSettingsView: View {
                     Button {
                         AppSettings.shared.setSelectedMerchant(merchant: selectedMerchant)
                         AppSettings.shared.selectedServerBaseURL = serverURLString
+                        AppSettings.shared.presentationSettings = presentationSettings
                         viewControllerPresenter?.setRootViewController(AppLoadingView().containerViewController)
                     } label: {
                         Text("Save")
