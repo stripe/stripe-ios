@@ -26,7 +26,7 @@ class MainViewController: UITableViewController {
 
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
-        case onboarding = "Account Onboarding"
+        case onboarding = "Account onboarding"
         case payouts = "Payouts"
 
         var label: String { rawValue }

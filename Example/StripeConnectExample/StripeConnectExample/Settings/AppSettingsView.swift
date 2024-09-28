@@ -99,7 +99,7 @@ struct AppSettingsView: View {
                     NavigationLink {
                         OnboardingSettingsView(onboardingSettings: $onboardingSettings)
                     } label: {
-                        Text("Account Onboarding")
+                        Text("Account onboarding")
                             .font(.body)
                             .foregroundColor(.primary)
                     }
