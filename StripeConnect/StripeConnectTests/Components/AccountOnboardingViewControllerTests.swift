@@ -48,7 +48,7 @@ class AccountOnboardingViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testFetchOnboarding() async throws {
+    func testFetchInitComponentProps() async throws {
         let vc = componentManager.createAccountOnboardingViewController(
             fullTermsOfServiceUrl: URL(string: "https://fullTermsOfServiceUrl.com")!,
             recipientTermsOfServiceUrl: URL(string: "https://recipientTermsOfServiceUrl.com")!,
