@@ -10,6 +10,15 @@ import UIKit
 @_spi(DashboardOnly)
 @available(iOS 15, *)
 public class NotificationBannerViewController: UIViewController {
+
+    struct Props: Encodable {
+        let collectionOptions: AccountCollectionOptions
+
+        enum CodingKeys: String, CodingKey {
+            case collectionOptions = "setCollectionOptions"
+        }
+    }
+
     let webView: ConnectComponentWebView
 
     public weak var delegate: NotificationBannerViewControllerDelegate?
@@ -19,7 +28,9 @@ public class NotificationBannerViewController: UIViewController {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
             componentType: .notificationBanner
-        )
+        ) {
+            Props(collectionOptions: collectionOptions)
+        }
         super.init(nibName: nil, bundle: nil)
 
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
@@ -30,9 +41,6 @@ public class NotificationBannerViewController: UIViewController {
             guard let self else { return }
             self.delegate?.notificationBanner(self, didChangeWithTotal: value.total, andActionRequired: value.actionRequired)
         })
-
-        // TODO(MXMOBILE-2796): Send collection options to web view
-
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
         }
