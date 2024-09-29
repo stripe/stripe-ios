@@ -86,6 +86,7 @@ class ConnectComponentWebView: ConnectWebView {
         }
     }
 
+    /// Convenience init for empty init props
     convenience init(componentManager: EmbeddedComponentManager,
                      componentType: ComponentType,
                      // Should only be overridden for tests
