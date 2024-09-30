@@ -41,7 +41,9 @@ import UIKit
         if let savedPaymentMethod {
             let accessoryButton: RowButton.RightAccessoryButton? = {
                 if let savedPaymentMethodAccessoryType {
-                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
+                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance) { [weak self] in
+                        self?.didTapAccessoryButton()
+                    }
                 } else {
                     return nil
                 }
