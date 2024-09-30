@@ -56,15 +56,16 @@ public class EmbeddedPaymentElement {
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration()
-        
+
         // TODO(porter) When we do analytics decide how to handle `isCustom`
         let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: paymentSheetConfiguration)
         AnalyticsHelper.shared.generateSessionID()
-        
+
         let loadResult = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfiguration),
                                                            configuration: paymentSheetConfiguration,
-                                                           analyticsHelper: analyticsHelper, isFlowController: true)
-        
+                                                           analyticsHelper: analyticsHelper,
+                                                           integrationShape: .embedded)
+
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: .deferredIntent(intentConfig: intentConfiguration),
                                                                                            elementsSession: loadResult.elementsSession,
                                                                                            configuration: paymentSheetConfiguration,
@@ -78,8 +79,22 @@ public class EmbeddedPaymentElement {
             allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         )
-        
+
+        let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
+            // Default to the customer's default or the first saved payment method, if any
+            let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+            switch customerDefault {
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link
+            case .stripeId, nil:
+                return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
+            }
+        }()
+
         let embeddedPaymentMethodsView = await EmbeddedPaymentMethodsView(
+            initialSelection: initialSelection,
             paymentMethodTypes: paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             appearance: configuration.appearance,

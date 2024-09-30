@@ -17,17 +17,16 @@ class EmbeddedPlaygroundViewController: UIViewController {
     private let appearance: PaymentSheet.Appearance
     private let intentConfig: PaymentSheet.IntentConfiguration
     private let configuration: EmbeddedPaymentElement.Configuration
-    
+
     private var embeddedPaymentElement: EmbeddedPaymentElement!
     weak var delegate: EmbeddedPlaygroundViewControllerDelegate?
-    
+
     private lazy var loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.hidesWhenStopped = true
         return indicator
     }()
-    
 
     private lazy var checkoutButton: UIButton = {
         let checkoutButton = UIButton(type: .system)
@@ -47,7 +46,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             // TODO(porter) Probably pass in formSheetAction from PlaygroundController based on some toggle in the UI
             delegate?.didComplete(with: result)
         }), hidesMandateText: false)
-        
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -67,18 +66,18 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
         setupLoadingIndicator()
         loadingIndicator.startAnimating()
-        
+
         Task {
             do {
                 try await setupUI()
             } catch {
                 presentError(error)
             }
-            
+
             loadingIndicator.stopAnimating()
         }
     }
-    
+
     private func setupUI() async throws {
         embeddedPaymentElement = try await EmbeddedPaymentElement.create(
              intentConfiguration: intentConfig,
@@ -97,13 +96,13 @@ class EmbeddedPlaygroundViewController: UIViewController {
             checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
     }
-    
+
     private func setupLoadingIndicator() {
         view.addSubview(loadingIndicator)
-        
+
         NSLayoutConstraint.activate([
             loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
 
@@ -119,7 +118,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 }
 
 extension EmbeddedPaymentElement.Configuration {
-    
+
     /// Initializes an EmbeddedPaymentElement.Configuration from a given PaymentSheet.Configuration.
     ///
     /// - Parameters:
@@ -132,7 +131,7 @@ extension EmbeddedPaymentElement.Configuration {
         hidesMandateText: Bool = false
     ) {
         self = .init(formSheetAction: formSheetAction)
-        
+
         self.allowsDelayedPaymentMethods = paymentSheetConfig.allowsDelayedPaymentMethods
         self.allowsPaymentMethodsRequiringShippingAddress = paymentSheetConfig.allowsPaymentMethodsRequiringShippingAddress
         self.apiClient = paymentSheetConfig.apiClient
@@ -154,7 +153,7 @@ extension EmbeddedPaymentElement.Configuration {
         self.externalPaymentMethodConfiguration = paymentSheetConfig.externalPaymentMethodConfiguration
         self.paymentMethodOrder = paymentSheetConfig.paymentMethodOrder
         self.allowsRemovalOfLastSavedPaymentMethod = paymentSheetConfig.allowsRemovalOfLastSavedPaymentMethod
-        
+
         // Handle unique properties for EmbeddedPaymentElement.Configuration
         self.hidesMandateText = hidesMandateText
     }

@@ -804,13 +804,12 @@ class AnalyticsLogObserver: ObservableObject {
     @Published var analyticsLog: [[String: Any]] = []
 }
 
-
 // MARK: Embedded helpers
 extension PlaygroundController: EmbeddedPlaygroundViewControllerDelegate {
     func makeEmbeddedPaymentElement() {
         embeddedPlaygroundController = EmbeddedPlaygroundViewController(configuration: configuration, intentConfig: intentConfig, appearance: appearance, delegate: self)
     }
-    
+
     func presentEmbedded() {
         guard let embeddedPlaygroundController else { return }
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
@@ -823,7 +822,7 @@ extension PlaygroundController: EmbeddedPlaygroundViewControllerDelegate {
     @objc func dismissEmbedded() {
         embeddedPlaygroundController?.dismiss(animated: true, completion: nil)
     }
-    
+
     func didComplete(with result: StripePaymentSheet.PaymentSheetResult) {
         lastPaymentResult = result
     }

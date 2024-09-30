@@ -260,7 +260,7 @@ extension PaymentSheet {
                 mode: mode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
-                isFlowController: true
+                integrationShape: .flowController
             ) { result in
                 switch result {
                 case .success(let loadResult):
@@ -423,7 +423,7 @@ extension PaymentSheet {
                 mode: .deferredIntent(intentConfiguration),
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
-                isFlowController: true
+                integrationShape: .flowController
             ) { [weak self] result in
                 assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
