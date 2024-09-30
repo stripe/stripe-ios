@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
+@_spi(STP) import StripeUICore
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
@@ -36,6 +37,8 @@ extension STPElementsSession {
         customerSessionData: [String: Any]? = nil,
         cardBrandChoiceData: [String: Any]? = nil,
         isLinkPassthroughModeEnabled: Bool? = nil,
+        linkMode: LinkMode? = nil,
+        linkFundingSources: Set<LinkSettings.FundingSource> = [],
         disableLinkSignup: Bool? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
@@ -69,6 +72,12 @@ extension STPElementsSession {
             json[jsonDict: "link_settings"]!["link_passthrough_mode_enabled"] = isLinkPassthroughModeEnabled
         }
 
+        if let linkMode {
+            json[jsonDict: "link_settings"]!["link_mode"] = linkMode.rawValue
+        }
+
+        json[jsonDict: "link_settings"]!["link_funding_sources"] = linkFundingSources.map(\.rawValue)
+
         if let disableLinkSignup {
             json[jsonDict: "link_settings"]!["link_mobile_disable_signup"] = disableLinkSignup
         }
@@ -77,7 +86,11 @@ extension STPElementsSession {
         return elementsSession
     }
 
-    static func _testValue(intent: Intent) -> STPElementsSession {
+    static func _testValue(
+        intent: Intent,
+        linkMode: LinkMode? = nil,
+        linkFundingSources: Set<LinkSettings.FundingSource> = []
+    ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
             switch intent {
             case .paymentIntent(let paymentIntent):
@@ -88,7 +101,11 @@ extension STPElementsSession {
                 return intentConfig.paymentMethodTypes ?? []
             }
         }()
-        return STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes)
+        return STPElementsSession._testValue(
+            paymentMethodTypes: paymentMethodTypes,
+            linkMode: linkMode,
+            linkFundingSources: linkFundingSources
+        )
     }
 }
 
@@ -112,14 +129,10 @@ extension Intent {
         customerSessionData: [String: Any]? = nil
     ) -> Intent {
         let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: paymentMethodTypes)
-        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: customerSessionData)
         return .setupIntent(setupIntent)
     }
 
     static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType], setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil) -> Intent {
-        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes, customerSessionData: nil)
         return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage), confirmHandler: { _, _, _ in }))
     }
 }
@@ -245,6 +258,35 @@ extension PaymentSheetLoader.LoadResult {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods
+        )
+    }
+}
+
+extension PaymentSheetAnalyticsHelper {
+    static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
+        return .init(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+    }
+}
+
+extension PaymentSheetFormFactory {
+    convenience init(
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        configuration: PaymentSheetFormFactoryConfig,
+        paymentMethod: PaymentSheet.PaymentMethodType,
+        previousCustomerInput: IntentConfirmParams? = nil,
+        addressSpecProvider: AddressSpecProvider = .shared,
+        linkAccount: PaymentSheetLinkAccount? = nil
+    ) {
+        self.init(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            paymentMethod: paymentMethod,
+            previousCustomerInput: previousCustomerInput,
+            addressSpecProvider: addressSpecProvider,
+            linkAccount: linkAccount,
+            analyticsHelper: ._testValue()
         )
     }
 }

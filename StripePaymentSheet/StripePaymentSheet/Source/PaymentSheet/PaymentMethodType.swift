@@ -16,7 +16,11 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
+
+        // Synthetic payment methods. These are payment methods which don't have an `STPPaymentMethodType` defined for the same name.
+        // That is, the payment method manifest for a synthetic PMT will show a PMT that doesn't match the form name.
         case instantDebits
+        case linkCardBrand
 
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
@@ -27,7 +31,7 @@ extension PaymentSheet {
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.label
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
             }
         }
@@ -42,6 +46,8 @@ extension PaymentSheet {
                 return externalPaymentMethod.type
             case .instantDebits:
                 return "instant_debits"
+            case .linkCardBrand:
+                return "link_card_brand"
             }
         }
 
@@ -103,7 +109,7 @@ extension PaymentSheet {
                     }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
             }
         }
@@ -114,7 +120,7 @@ extension PaymentSheet {
                 return stpPaymentMethodType.iconRequiresTinting
             case .external:
                 return false
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return true
             }
         }
@@ -159,12 +165,29 @@ extension PaymentSheet {
                 // External Payment Methods
                 + elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
 
-            if
-                elementsSession.orderedPaymentMethodTypes.contains(.link),
-                !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount),
-                !intent.isDeferredIntent,
+            // We should manually add Instant Debits as a payment method when:
+            // - Link is an available payment method.
+            // - US Bank Account is *not* an available payment method.
+            // - Not a deferred intent flow.
+            // - Link Funding Sources contains Bank Account.
+            var eligibleForInstantDebits: Bool {
+                elementsSession.orderedPaymentMethodTypes.contains(.link) &&
+                !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
+                !intent.isDeferredIntent &&
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true
-            {
+            }
+
+            // We should manually add Link Card Brand as a payment method when:
+            // - Link Funding Sources contains Bank Account.
+            // - US Bank Account is *not* an available payment method.
+            // - Link Card Brand is the Link Mode
+            var eligibleForLinkCardBrand: Bool {
+                elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
+                !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
+                elementsSession.linkSettings?.linkMode == .linkCardBrand
+            }
+
+            if eligibleForInstantDebits {
                 let availabilityStatus = configurationSatisfiesRequirements(
                     requirements: [.financialConnectionsSDK],
                     configuration: configuration,
@@ -172,6 +195,16 @@ extension PaymentSheet {
                 )
                 if availabilityStatus == .supported {
                     recommendedPaymentMethodTypes.append(.instantDebits)
+                }
+            // Else if here so we don't show both Instant Debits and Link Card Brand together.
+            } else if eligibleForLinkCardBrand {
+                let availabilityStatus = configurationSatisfiesRequirements(
+                    requirements: [.financialConnectionsSDK],
+                    configuration: configuration,
+                    intent: intent
+                )
+                if availabilityStatus == .supported {
+                    recommendedPaymentMethodTypes.append(.linkCardBrand)
                 }
             }
 

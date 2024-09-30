@@ -11,6 +11,7 @@ struct FinancialConnectionsNetworkedAccountsResponse: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
     let display: Display?
     let nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane?
+    let acquireConsentOnPrimaryCtaClick: Bool?
 
     struct Display: Decodable {
         let text: Text?
@@ -26,6 +27,8 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
     let defaultCta: String
     let addNewAccount: AddNewAccount
     let accounts: [FinancialConnectionsNetworkingAccountPicker.Account]
+    let aboveCta: String?
+    let multipleAccountTypesSelectedDataAccessNotice: FinancialConnectionsDataAccessNotice?
 
     struct AddNewAccount: Decodable {
         let body: String
@@ -42,5 +45,8 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
         // trailing icon on the account row
         let icon: FinancialConnectionsImage?
         let selectionCtaIcon: FinancialConnectionsImage?
+        let drawerOnSelection: FinancialConnectionsGenericInfoScreen?
+        let accountIcon: FinancialConnectionsImage?
+        let dataAccessNotice: FinancialConnectionsDataAccessNotice?
     }
 }

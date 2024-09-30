@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li platby/platieb bez úrokov vo výške %2$@";
-
 "+ Add" = "+ Pridať";
 
 "Add US bank account" = "Pridať americký bankový účet";
@@ -25,6 +23,12 @@
 "Bank" = "Banka";
 
 "Bank account" = "Bankový účet";
+
+"Buy now or pay later with <img/>" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby <img/>";
+
+"Buy now or pay later with Afterpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Afterpay";
+
+"Buy now or pay later with Clearpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Clearpay";
 
 "Buy now or pay later with Klarna" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Potvrďte CVC";
 
-"Confirm your CVV" = "Potvrďte CVV";
-
 "Contact information" = "Kontaktné informácie";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plaťte rýchlejšie u obchodníka %@ a tisícov ďalších spoločností.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zaplaťte v <num_installments/>bezúročných splátkach čiastku <installment_price/> pomocou <img/>";
-
 "Pay over time with %@" = "Zaplatiť postupne pomocou %@";
+
+"Pay over time with Affirm" = "Zaplaťte postupne pomocou služby Affirm";
 
 "Pay with Link" = "Zaplatiť pomocou služby Link";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Uložiť pre budúce platby";
 
-"Save this account for future %@ payments" = "Uložiť tento účet pre budúce platby obchodníkovi %@";
+"Save payment details to %@ for future purchases" = "Uložiť údaje o platbe na %@ pre budúce nákupy";
 
-"Save this card for future %@ payments" = "Uložiť túto kartu pre budúce platby obchodníkovi %@";
+"Save this account for future %@ payments" = "Uložiť tento účet pre budúce platby obchodníkovi %@";
 
 "Save your bank account in just a few steps." = "Uložte svoj bankový účet v niekoľkých krokoch.";
 

@@ -32,17 +32,17 @@ class PaymentSheetFormFactory {
 
     let isPaymentIntent: Bool
     let isSettingUp: Bool
-    let currency: String?
-    let amount: Int?
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
-    let analyticsClient: STPAnalyticsClient
+    let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
-        case .legacy, .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+        case .legacy:
             return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+            return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
             return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
@@ -67,7 +67,7 @@ class PaymentSheetFormFactory {
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -93,11 +93,9 @@ class PaymentSheetFormFactory {
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
-                  currency: intent.currency,
-                  amount: intent.amount,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
-                  analyticsClient: analyticsClient)
+                  analyticsHelper: analyticsHelper)
     }
 
     required init(
@@ -110,11 +108,9 @@ class PaymentSheetFormFactory {
         cardBrandChoiceEligible: Bool = false,
         isPaymentIntent: Bool,
         isSettingUp: Bool,
-        currency: String?,
-        amount: Int?,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -129,17 +125,15 @@ class PaymentSheetFormFactory {
         }
         self.isPaymentIntent = isPaymentIntent
         self.isSettingUp = isSettingUp
-        self.currency = currency
-        self.amount = amount
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
-        self.analyticsClient = analyticsClient
+        self.analyticsHelper = analyticsHelper
     }
 
     func make() -> PaymentMethodElement {
         switch paymentMethod {
-        case .instantDebits:
+        case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
         case .external:
             return makeExternalPaymentMethodForm()
@@ -188,7 +182,7 @@ class PaymentSheetFormFactory {
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
                 stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-                analyticsClient.log(analytic: errorAnalytic)
+                analyticsHelper.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
             }
             if paymentMethod == .iDEAL {
@@ -609,18 +603,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> StaticElement? {
-        guard let amount = amount, let currency = currency else {
-            assertionFailure("After requires a non-nil amount and currency")
-            return nil
-        }
-
-        return StaticElement(
-            view: AfterpayPriceBreakdownView(
-                amount: amount,
-                currency: currency,
-                theme: theme
-            )
-        )
+        return StaticElement(view: AfterpayPriceBreakdownView(theme: theme))
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {

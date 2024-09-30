@@ -15,7 +15,7 @@ protocol NetworkingLinkStepUpVerificationDataSource: AnyObject {
     var networkingOTPDataSource: NetworkingOTPDataSource { get }
 
     func markLinkStepUpAuthenticationVerified() -> Future<FinancialConnectionsSessionManifest>
-    func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList>
+    func selectNetworkedAccount() -> Future<ShareNetworkedAccountsResponse>
 }
 
 final class NetworkingLinkStepUpVerificationDataSourceImplementation: NetworkingLinkStepUpVerificationDataSource {
@@ -48,7 +48,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
             customEmailType: "NETWORKED_CONNECTIONS_OTP_EMAIL",
             connectionsMerchantName: manifest.businessName,
             pane: .networkingLinkStepUpVerification,
-            consumerSession: nil,
+            consumerSession: consumerSession,
             apiClient: apiClient,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient,
@@ -63,11 +63,12 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         return apiClient.markLinkStepUpAuthenticationVerified(clientSecret: clientSecret)
     }
 
-    func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList> {
+    func selectNetworkedAccount() -> Future<ShareNetworkedAccountsResponse> {
         return apiClient.selectNetworkedAccounts(
             selectedAccountIds: selectedAccountIds,
             clientSecret: clientSecret,
-            consumerSessionClientSecret: consumerSession.clientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret,
+            consentAcquired: nil
         )
     }
 }

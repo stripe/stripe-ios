@@ -28,6 +28,12 @@ struct LinkURLParams: Encodable {
         case payment
         case setup
     }
+    struct CardBrandChoiceInfo: Encodable {
+        var isMerchantEligibleForCBC: Bool
+        var stripePreferredNetworks: [String]
+        var supportedCobrandedNetworks: [String: Bool]
+    }
+    
     var path = "mobile_pay"
     var integrationType = "mobile"
     var paymentObject: PaymentObjectMode
@@ -43,6 +49,7 @@ struct LinkURLParams: Encodable {
     var locale: String
     var intentMode: IntentMode
     var setupFutureUsage: Bool
+    var cardBrandChoice: CardBrandChoiceInfo?
 }
 
 class LinkURLGenerator {
@@ -82,6 +89,15 @@ class LinkURLGenerator {
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
         let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
+        
+        let cardBrandChoiceInfo: LinkURLParams.CardBrandChoiceInfo? = {
+            guard let cardBrandChoice = elementsSession.cardBrandChoice else { return nil }
+            return LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: cardBrandChoice.eligible,
+                                                     stripePreferredNetworks: cardBrandChoice.preferredNetworks,
+                                                     supportedCobrandedNetworks: cardBrandChoice.supportedCobrandedNetworks)
+        }()
+
+        let flags = elementsSession.linkFlags.merging(elementsSession.flags) { (current, _) in current }
 
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
@@ -91,11 +107,12 @@ class LinkURLGenerator {
                              customerInfo: customerInfo,
                              paymentInfo: paymentInfo,
                              experiments: [:],
-                             flags: elementsSession.linkFlags,
+                             flags: flags,
                              loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag(),
                              intentMode: intentMode,
-                             setupFutureUsage: intent.isSettingUp)
+                             setupFutureUsage: intent.isSettingUp,
+                             cardBrandChoice: cardBrandChoiceInfo)
     }
 
     static func url(params: LinkURLParams) throws -> URL {

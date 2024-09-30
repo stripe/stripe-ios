@@ -9,7 +9,6 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -195,11 +194,11 @@ extension PaymentSheet {
 
         /// The layout of payment methods in PaymentSheet. Defaults to `.horizontal`.
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
-        @_spi(STP) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
+        @_spi(ExperimentalPaymentMethodLayoutAPI) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
-    @_spi(STP) public enum PaymentMethodLayout {
+    @_spi(ExperimentalPaymentMethodLayoutAPI) public enum PaymentMethodLayout {
         /// Payment methods are arranged horizontally. Users can swipe left or right to navigate through different payment methods.
         case horizontal
 

@@ -28,6 +28,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 configuration: ._testValue_MostPermissive(),
                 loadResult: loadResult,
                 isFlowController: false,
+                analyticsHelper: ._testValue(),
                 previousPaymentOption: nil
             )
 

@@ -14,6 +14,7 @@ protocol NativeFlowDataManager: AnyObject {
     var merchantLogo: [String]? { get }
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent? { get }
+    var accountPickerPane: FinancialConnectionsAccountPickerPane? { get }
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
@@ -31,8 +32,17 @@ protocol NativeFlowDataManager: AnyObject {
     var consumerPublishableKey: String? { get set }
     var saveToLinkWithStripeSucceeded: Bool? { get set }
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
-    var customSuccessPaneMessage: String? { get set }
+    var customSuccessPaneCaption: String? { get set }
+    var customSuccessPaneSubCaption: String? { get set }
 
+    func createPaymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentDetails>
+    func createPaymentMethod(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String
+    ) -> Future<FinancialConnectionsPaymentMethod>
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
 }
@@ -69,6 +79,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent?
+    let accountPickerPane: FinancialConnectionsAccountPickerPane?
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -83,7 +94,8 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var accountNumberLast4: String?
     var saveToLinkWithStripeSucceeded: Bool?
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
-    var customSuccessPaneMessage: String?
+    var customSuccessPaneCaption: String?
+    var customSuccessPaneSubCaption: String?
 
     var consumerSession: ConsumerSessionData? {
         didSet {
@@ -102,6 +114,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent?,
+        accountPickerPane: FinancialConnectionsAccountPickerPane?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
@@ -110,6 +123,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.visualUpdate = visualUpdate
         self.returnURL = returnURL
         self.consentPaneModel = consentPaneModel
+        self.accountPickerPane = accountPickerPane
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
@@ -118,6 +132,26 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         // If the server returns active institution use that, otherwise resort to initial institution.
         self.institution = manifest.activeInstitution ?? manifest.initialInstitution
         didUpdateManifest()
+    }
+
+    func createPaymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentDetails> {
+        apiClient.paymentDetails(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            bankAccountId: bankAccountId
+        )
+    }
+
+    func createPaymentMethod(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String
+    ) -> Future<FinancialConnectionsPaymentMethod> {
+        apiClient.paymentMethods(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            paymentDetailsId: paymentDetailsId
+        )
     }
 
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession> {

@@ -37,7 +37,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     return .new(confirmParams: params)
                 case .external(let type):
                     return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
-                case .instantDebits:
+                case .instantDebits, .linkCardBrand:
                     return .new(confirmParams: params)
                 }
             case .saved(paymentMethod: let paymentMethod):
@@ -75,6 +75,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
+    let analyticsHelper: PaymentSheetAnalyticsHelper
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
     private var savedPaymentMethods: [STPPaymentMethod]
@@ -96,6 +97,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var paymentMethodListContentOffsetPercentage: CGFloat?
     /// True while we are showing the CVC recollection UI (`cvcRecollectionViewController`)
     var isRecollectingCVC: Bool = false
+    /// Variable to decide we should collect CVC
+    var isCVCRecollectionEnabled: Bool
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
@@ -139,7 +142,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // MARK: - Initializers
 
-    init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool, previousPaymentOption: PaymentOption? = nil) {
+    init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool, analyticsHelper: PaymentSheetAnalyticsHelper, previousPaymentOption: PaymentOption? = nil) {
+        // Only call loadResult.intent.cvcRecollectionEnabled once per load
+        self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
+
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
@@ -156,6 +162,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && shouldShowApplePayInList
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
 
         regenerateUI()
@@ -341,9 +348,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
                 switch customerDefault {
                 case .applePay:
-                    return .applePay
+                    return isFlowController ? .applePay : nil // Only default to Apple Pay in flow controller mode
                 case .link:
-                    return .link
+                    return isFlowController ? .link : nil // Only default to Link in flow controller mode
                 case .stripeId, nil:
                     return savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
                 }
@@ -429,6 +436,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         ])
     }
 
+    var didSendLogShow: Bool = false
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !didSendLogShow {
+            // Only send this once to match the behavior of horizontal mode
+            didSendLogShow = true
+            analyticsHelper.logShow(showingSavedPMList: false) // We never show the saved PM list first
+        }
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isLinkWalletButtonSelected = false
@@ -470,20 +487,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) { [self] in
-                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
-                    isCustom: false,
-                    paymentMethod: paymentOption.analyticsValue,
+                analyticsHelper.logPayment(
+                    paymentOption: paymentOption,
                     result: result,
-                    linkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
-                    activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    linkSessionType: elementsSession.linkPopupWebviewOption,
-                    currency: intent.currency,
-                    intentConfig: intent.intentConfig,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType,
-                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
-                    error: result.error,
-                    linkContext: paymentOption.linkContext,
-                    apiClient: configuration.apiClient
+                    deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
 
                 self.isPaymentInFlight = false
@@ -493,13 +500,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
-                    #if !canImport(CompositorServices)
+#if !canImport(CompositorServices)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
-                    #endif
+#endif
 
                     let nsError = error as NSError
                     let isCVCError = nsError.domain == STPError.stripeDomain && nsError.userInfo[STPError.errorParameterKey] as? String == "cvc"
-                    if isRecollectingCVC, !isCVCError {
+                    if isRecollectingCVC,
+                       !isCVCError {
                         // If we're recollecting CVC, pop back to the main list unless the error is for the cvc field
                         sheetNavigationBarDidBack(navigationBar)
                     }
@@ -536,16 +544,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return
         }
 
-        // Send analytic when primary button is tapped
-        let paymentMethodType = selectedPaymentMethodType ?? .stripe(.unknown)
-        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentMethodType.identifier, linkContext: selectedPaymentOption?.linkContext)
-
-        // If FlowController, simply close the sheet
-        if isFlowController {
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-            return
-        }
-
         // Otherwise, grab the payment option
         guard let selectedPaymentOption else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError, error: Error.noPaymentOptionOnBuyButtonTap)
@@ -554,8 +552,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return
         }
 
+        // Send analytic when primary button is tapped
+        analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
+
+        // If FlowController, simply close the sheet
+        if isFlowController {
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            return
+        }
+
         // If the selected payment option is a saved card, CVC is enabled, and we are PS, handle CVC specially:
-        if case let .saved(paymentMethod, _) = selectedPaymentOption, paymentMethod.type == .card, intent.cvcRecollectionEnabled, !isFlowController, !isRecollectingCVC {
+        if case let .saved(paymentMethod, _) = selectedPaymentOption, paymentMethod.type == .card, isCVCRecollectionEnabled, !isFlowController, !isRecollectingCVC {
             let cvcRecollectionViewController = CVCReconfirmationVerticalViewController(
                 paymentMethod: paymentMethod,
                 intent: intent,
@@ -597,7 +604,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             configuration: configuration,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
-            elementsSession: elementsSession
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
@@ -661,6 +669,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) {
+        analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
         error = nil
 #if !canImport(CompositorServices)
         UISelectionFeedbackGenerator().selectionChanged()
@@ -720,6 +729,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             formCache: formCache,
             configuration: configuration,
             headerView: headerView,
+            analyticsHelper: analyticsHelper,
             delegate: self
         )
     }
@@ -731,7 +741,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: .paymentSheet(configuration),
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
-            linkAccount: LinkAccountContext.shared.account
+            linkAccount: LinkAccountContext.shared.account,
+            analyticsHelper: analyticsHelper
         ).make().collectsUserInput
     }
 
@@ -777,6 +788,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
         // Detach the payment method from the customer
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // Update savedPaymentMethods
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
@@ -805,6 +817,9 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         error = nil  // clear error
         updateUI()
+        if viewController.paymentOption != nil {
+            analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
+        }
     }
 
     func updateErrorLabel(for error: Swift.Error?) {

@@ -67,11 +67,6 @@ class STPAddressTests: XCTestCase {
     }
 
     func testInitWithCNContact_complete() {
-        if CNContact.self == nil {
-            // Method not supported by iOS version
-            return
-        }
-
         let contact = CNMutableContact()
         do {
             contact.givenName = "John"
@@ -263,7 +258,7 @@ class STPAddressTests: XCTestCase {
     }
 
     func testContainsContentForBillingAddressFields() {
-        var address = STPAddress()
+        let address = STPAddress()
 
         // Empty address should return false for everything
         XCTAssertFalse(address.containsContent(for: .none))
@@ -327,7 +322,7 @@ class STPAddressTests: XCTestCase {
             STPContactField.emailAddress,
             STPContactField.phoneNumber,
             STPContactField.name,
-        ]) as? Set<STPContactField>
+        ])
         XCTAssertFalse(address.containsRequiredShippingAddressFields(allFields))
 
         address.name = "John Smith"
@@ -370,7 +365,7 @@ class STPAddressTests: XCTestCase {
     }
 
     func testContainsContentForShippingAddressFields() {
-        var address = STPAddress()
+        let address = STPAddress()
 
         // Empty address should return false for everything
         XCTAssertFalse((address.containsContent(forShippingAddressFields: nil)))
@@ -466,8 +461,8 @@ class STPAddressTests: XCTestCase {
             "postal_code": address.postalCode,
             "state": address.state,
         ],
-            "name": address.name,
-            "phone": address.phone,
+            "name": address.name as Any,
+            "phone": address.phone as Any,
             "carrier": method.label,
         ]
         XCTAssertEqual(expected, info)
@@ -485,9 +480,6 @@ class STPAddressTests: XCTestCase {
         let mapping = STPAddress.propertyNamesToFormFieldNamesMapping()
 
         for propertyName in mapping.keys {
-            guard let propertyName = propertyName as? String else {
-                continue
-            }
             XCTAssertFalse(propertyName.contains(":"))
             XCTAssert(address.responds(to: NSSelectorFromString(propertyName)))
         }

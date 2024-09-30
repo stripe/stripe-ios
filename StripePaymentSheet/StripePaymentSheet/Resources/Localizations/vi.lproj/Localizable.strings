@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li khoản thanh toán không lãi suất %2$@";
-
 "+ Add" = "+ Thêm";
 
 "Add US bank account" = "Thêm tài khoản ngân hàng Hoa Kỳ";
@@ -25,6 +23,12 @@
 "Bank" = "Ngân hàng";
 
 "Bank account" = "Tài khoản ngân hàng";
+
+"Buy now or pay later with <img/>" = "Mua ngay hoặc thanh toán sau bằng <img/>";
+
+"Buy now or pay later with Afterpay" = "Mua ngay hoặc thanh toán sau bằng Afterpay";
+
+"Buy now or pay later with Clearpay" = "Mua ngay hoặc thanh toán sau bằng Clearpay";
 
 "Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Xác nhận CVC của bạn";
 
-"Confirm your CVV" = "Xác nhận CVV của bạn";
-
 "Contact information" = "Thông tin liên lạc";
 
 "EPS Bank" = "Ngân hàng EPS";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Thanh toán nhanh hơn tại %@ và hàng ngàn doanh nghiệp.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Trả bằng <num_installments/> khoản thanh toán không lãi suất là <installment_price/> bằng <img/>";
-
 "Pay over time with %@" = "Trả dần bằng %@";
+
+"Pay over time with Affirm" = "Trả dần bằng Affirm";
 
 "Pay with Link" = "Thanh toán bằng Link";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
 
-"Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
+"Save payment details to %@ for future purchases" = "Lưu thông tin thanh toán vào %@ để mua hàng trong tương lai";
 
-"Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
+"Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
 
 "Save your bank account in just a few steps." = "Lưu tài khoản ngân hàng chỉ trong vài bước.";
 

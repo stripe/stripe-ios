@@ -13,5 +13,6 @@ import Foundation
 
     public override func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
         events.append(analytic)
+        super.log(analytic: analytic)
     }
 }

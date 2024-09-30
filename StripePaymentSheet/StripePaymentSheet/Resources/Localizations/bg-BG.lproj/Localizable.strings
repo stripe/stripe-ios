@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@••••%2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li безлихвени плащания на стойност %2$@";
-
 "+ Add" = "+ Добавяне";
 
 "Add US bank account" = "Добавяне на банкова сметка в САЩ";
@@ -25,6 +23,12 @@
 "Bank" = "Банка";
 
 "Bank account" = "Банкова сметка";
+
+"Buy now or pay later with <img/>" = "Платете сега или платете по-късно чрез <img/>";
+
+"Buy now or pay later with Afterpay" = "Платете сега или платете по-късно чрез Afterpay";
+
+"Buy now or pay later with Clearpay" = "Платете сега или платете по-късно чрез Clearpay";
 
 "Buy now or pay later with Klarna" = "Платете сега или платете по-късно чрез Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Потвърдете своя CVC";
 
-"Confirm your CVV" = "Потвърдете своя CVV";
-
 "Contact information" = "Информация за контакт";
 
 "EPS Bank" = "Банка EPS";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Плащайте по-бързо в %@ и хиляди други фирми.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Платете на <num_installments/> безлихвени плащания от <installment_price/> с <img/>";
-
 "Pay over time with %@" = "Плащане на разсрочени вноски с %@";
+
+"Pay over time with Affirm" = "Плащане на разсрочени вноски с Affirm";
 
 "Pay with Link" = "Плащане с Link";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Запазване за бъдещи плащания";
 
-"Save this account for future %@ payments" = "Запазете тази сметка за следващи %@ плащания";
+"Save payment details to %@ for future purchases" = "Запазване на платежните данни в %@ за бъдещи покупки";
 
-"Save this card for future %@ payments" = "Запазете тази карта за следващи %@ плащания";
+"Save this account for future %@ payments" = "Запазете тази сметка за следващи %@ плащания";
 
 "Save your bank account in just a few steps." = "Запазете банковата си сметка само с няколко стъпки.";
 

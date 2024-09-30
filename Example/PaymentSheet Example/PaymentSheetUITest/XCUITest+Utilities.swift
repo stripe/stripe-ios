@@ -192,7 +192,6 @@ extension XCTestCase {
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
         if postalEnabled {
-            app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
             app.typeText("12345") // Postal
         }
     }
@@ -214,6 +213,10 @@ extension XCTestCase {
         let routingField = context.textFields["manual_entry_routing_number_text_field"]
         routingField.forceTapWhenHittableInTestCase(self)
         app.typeText("110000000")
+
+        // Dismiss keyboard, otherwise we can not see the next field
+        // This is only an artifact in the (test) native version of the flow
+        app.tapCoordinate(at: .init(x: 150, y: 150))
 
         let acctField = context.textFields["manual_entry_account_number_text_field"]
         acctField.forceTapWhenHittableInTestCase(self)

@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li pagamentos sem juros de %2$@";
-
 "+ Add" = "+ Adicionar";
 
 "Add US bank account" = "Adicionar conta bancária dos EUA";
@@ -25,6 +23,12 @@
 "Bank" = "Banco";
 
 "Bank account" = "Conta bancária";
+
+"Buy now or pay later with <img/>" = "Compre agora ou pague depois com <img/>.";
+
+"Buy now or pay later with Afterpay" = "Compre agora ou pague depois com Afterpay.";
+
+"Buy now or pay later with Clearpay" = "Compre agora ou pague depois com Clearpay";
 
 "Buy now or pay later with Klarna" = "Compre agora ou pague mais tarde com Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Confirme seu CVC";
 
-"Confirm your CVV" = "Confirme seu CVV";
-
 "Contact information" = "Dados de contato";
 
 "EPS Bank" = "Banco EPS";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Pague mais rápido em %@ e milhares de empresas.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pague em <num_installments/> vezes sem juros de <installment_price/> com <img/>";
-
 "Pay over time with %@" = "Pagar depois com %@";
+
+"Pay over time with Affirm" = "Parcelar com Affirm";
 
 "Pay with Link" = "Pagar com Link";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Salvar para pagamentos futuros";
 
-"Save this account for future %@ payments" = "Salvar esta conta para pagamentos futuros de %@";
+"Save payment details to %@ for future purchases" = "Salvar dados de pagamento para compras futuras em %@";
 
-"Save this card for future %@ payments" = "Salvar este cartão para pagamentos futuros a %@";
+"Save this account for future %@ payments" = "Salvar esta conta para pagamentos futuros de %@";
 
 "Save your bank account in just a few steps." = "Salve sua conta bancária em poucos passos.";
 

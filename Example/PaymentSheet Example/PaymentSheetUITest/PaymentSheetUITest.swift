@@ -73,25 +73,23 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         numberField.tap()
         numberField.typeText("378282246310005")
 
-        // Test that Amex card changes "CVC" -> "CVV" and allows 4 digits
-        let cvvField = app.textFields["CVV"]
-        XCTAssertTrue(cvvField.waitForExistence(timeout: 10.0))
+        // Test that Amex card allows 4 digits
+        let cvcField = app.textFields["CVC"]
+        XCTAssertTrue(cvcField.waitForExistence(timeout: 10.0))
 
         let expField = app.textFields["expiration date"]
         XCTAssertTrue((expField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(expField.typeText("1228"))
 
-        XCTAssertTrue((cvvField.value as? String)?.isEmpty ?? true)
-        XCTAssertNoThrow(cvvField.typeText("1234"))
-
-        app.toolbars.buttons["Done"].tap()  // Country picker toolbar's "Done" button
+        XCTAssertTrue((cvcField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(cvcField.typeText("1234"))
 
         let postalField = app.textFields["ZIP"]
         XCTAssertTrue((postalField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(postalField.typeText("12345"))
     }
 
-    func testPaymentSheetCustom() throws {
+    func testPaymentSheetFlowController() throws {
         app.launch()
 
         app.staticTexts["PaymentSheet.FlowController"].tap()
@@ -121,7 +119,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         okButton.tap()
     }
 
-    func testPaymentSheetCustomDeferred_update() throws {
+    func testPaymentSheetFlowControllerDeferred_update() throws {
         app.launch()
 
         app.staticTexts["PaymentSheet.FlowController (Deferred)"].tap()
@@ -182,7 +180,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         okButton.tap()
     }
 
-    func testPaymentSheetCustomSaveAndRemoveCard() throws {
+    func testPaymentSheetFlowControllerSaveAndRemoveCard() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.customerMode = .new
@@ -198,7 +196,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
         XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
         // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
         XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_form_shown")
@@ -207,7 +205,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         try! fillCardData(app)
 
         // toggle save this card on and off
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -219,8 +217,12 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Check analytics
         XCTAssertEqual(
-            analyticsLog.suffix(3).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped"]
+            analyticsLog.suffix(4).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
+        )
+        XCTAssertEqual(
+            analyticsLog.suffix(4).map({ $0[string: "selected_lpm"] }),
+            ["card", nil, "card", "card"]
         )
 
         app.buttons["Confirm"].tap()
@@ -236,7 +238,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         }
         // Make sure the appropriate events have "selected_lpm" = "card"
         for analytic in analyticsLog {
-            if ["mc_form_shown", "mc_form_interacted", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
+            if ["mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
                XCTAssertEqual(analytic[string: "selected_lpm"], "card")
             }
         }
@@ -250,7 +252,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
         // toggle save this card on
-        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -280,6 +282,18 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         confirmRemoval.tap()
 
         XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
+
+        // Give time for analyticsLog to receive mc_custom_paymentoption_removed
+        sleep(1)
+
+        XCTAssertEqual(
+            analyticsLog.suffix(1).map({ $0[string: "event"] }),
+            ["mc_custom_paymentoption_removed"]
+        )
+        XCTAssertEqual(
+            analyticsLog.suffix(1).map({ $0[string: "selected_lpm"] }),
+            ["card"]
+        )
     }
 
     func testPaymentSheetSwiftUI() throws {
@@ -297,7 +311,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertNotNil(successText.label.range(of: "Success!"))
     }
 
-    func testPaymentSheetSwiftUICustom() throws {
+    func testPaymentSheetSwiftUIFlowController() throws {
         app.launch()
 
         app.staticTexts["PaymentSheet.FlowController (SwiftUI)"].tap()
@@ -512,8 +526,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
         XCTAssertEqual(
-            analyticsLog.suffix(8).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            analyticsLog.suffix(9).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         // Make sure they all have the same session id
@@ -672,13 +686,13 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
-    func testDeferredIntent_ApplePayCustomFlow_ClientSideConfirmation() throws {
+    func testDeferredIntent_ApplePayFlowControllerFlow_ClientSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
         settings.customerMode = .new
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         loadPlayground(app, settings)
 
         let paymentMethodButton = app.buttons["Payment method"]
@@ -772,7 +786,7 @@ class PaymentSheetDeferredUIBankAccountTests: PaymentSheetUITestCase {
      }
      */
     /* Disable Link test
-     func testDeferredIntentLinkCustomFlow_ClientSideConfirmation() throws {
+     func testDeferredIntentLinkFlowControllerFlow_ClientSideConfirmation() throws {
      loadPlayground(
      app,
      settings: [
@@ -1035,14 +1049,14 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
-    func testPaymentSheetCustomSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
+    func testPaymentSheetFlowControllerSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePayEnabled = .off // disable Apple Pay
         settings.apmsEnabled = .off
         // This test case is testing a feature not available when Link is on,
         // so we must manually turn off Link.
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.integrationType = .deferred_ssc
         settings.uiStyle = .flowController
 
@@ -1055,7 +1069,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try! fillCardData(app)
 
         // toggle save this card on and off
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1075,7 +1089,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
 
         // toggle save this card on
-        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -1184,7 +1198,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
@@ -1248,7 +1262,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
@@ -1320,7 +1334,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
@@ -1373,7 +1387,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
@@ -1530,7 +1544,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         try fillCardData(app)
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -1559,7 +1573,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.requireCVCRecollection = .on
 
         loadPlayground(app, settings)
@@ -1572,7 +1586,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         try! fillCardData(app)
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -1605,7 +1619,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.requireCVCRecollection = .on
 
         loadPlayground(app, settings)
@@ -1614,7 +1628,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1646,7 +1660,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.requireCVCRecollection = .on
 
         loadPlayground(app, settings)
@@ -1658,7 +1672,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1691,7 +1705,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.requireCVCRecollection = .on
 
         loadPlayground(app, settings)
@@ -1700,7 +1714,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1729,7 +1743,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.applePayEnabled = .off
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
 
         loadPlayground(app, settings)
         app.buttons["Payment method"].waitForExistenceAndTap()
@@ -1806,7 +1820,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
      }
      */
     /* Disable Link test
-     func testDeferredIntentLinkCustomFlow_SeverSideConfirmation() throws {
+     func testDeferredIntentLinkFlowControllerFlow_SeverSideConfirmation() throws {
      loadPlayground(
      app,
      settings: [
@@ -1842,7 +1856,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -1854,7 +1868,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -1874,7 +1888,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -1886,7 +1900,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -1906,7 +1920,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -1914,7 +1928,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
 
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1931,7 +1945,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
-        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1951,7 +1965,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -1960,7 +1974,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
 
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -1989,7 +2003,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2003,7 +2017,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2027,7 +2041,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2041,7 +2055,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2065,7 +2079,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2073,7 +2087,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
 
-        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -2090,7 +2104,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
-        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
@@ -2103,7 +2117,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.applePayEnabled = .on
 
         loadPlayground(app, settings)
@@ -2133,7 +2147,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2144,7 +2158,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -2168,7 +2182,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.applePayEnabled = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2184,7 +2198,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkEnabled = .on
+        settings.linkMode = .link_pm
         settings.userOverrideCountry = .GB
 
         loadPlayground(app, settings)
@@ -2215,6 +2229,17 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Pay $50.99"].tap()
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    func testLinkInlineSignup_deferred() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkMode = .link_pm
+        settings.integrationType = .deferred_ssc
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        fillLinkAndPay(mode: .checkbox)
     }
 
     // MARK: Link test helpers
@@ -2264,8 +2289,16 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         case .flowController:
             app.buttons["Continue"].tap()
             app.buttons["Confirm"].waitForExistenceAndTap()
+        case .embedded:
+            // TODO(porter) Fill in embedded UI test steps
+            break
         }
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        // Roundabout way to validate that signup completed successfully
+        let signupCompleteAnalytic = analyticsLog.first { payload in
+            payload["event"] as? String == "link.signup.complete"
+        }
+        XCTAssertNotNil(signupCompleteAnalytic)
     }
 
     private func assertLinkInlineSignupNotShown() {
@@ -2279,7 +2312,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 //    func testLinkWebFlow() throws {
 //        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
 //        settings.customerMode = .guest
-//        settings.linkEnabled = .on
+//        settings.linkMode = .on
 //
 //        loadPlayground(app, settings)
 //
@@ -2418,56 +2451,44 @@ extension PaymentSheetUITestCase {
         app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10)
 
         // "Sign Up" pane
-        app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
-            .firstMatch
-            .waitForExistenceAndTap(timeout: 10)
-        app.typeText(email + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Phone number"].tap()
-        // the `XCUIKeyboardKey.return.rawValue` will automatically
-        // press the "Continue with Link" button to proceed to next
-        // screen
-        app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
+        let emailTextField = app.textFields["email_text_field"]
+        XCTAssertTrue(emailTextField.waitForExistence(timeout: 10.0), "Failed to find email text field")
+        emailTextField.typeText("\(UUID().uuidString)@uitest.com")
 
-        // "Institution Picker" pane
-        let searchTextField = app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Search'"))
-            .firstMatch
-        searchTextField.waitForExistenceAndTap(timeout: 10)
-        app.typeText("Test Institution" + XCUIKeyboardKey.return.rawValue)
-        searchTextField
-            .coordinate(
-                withNormalizedOffset: CGVector(
-                    dx: 0.5,
-                    // bottom of search text field
-                    dy: 1.0
-                )
-            )
-        // at this point, we searched "Test Institution"
-        // and the only search result is "Test Institution,"
-        // so here we guess that 80 pixels below search bar
-        // there will be a "Test Institution"
-        //
-        // we do this "guess" because every other method of
-        // selecting the institution did not work on iOS 17
-            .withOffset(CGVector(dx: 0, dy: 80))
-            .tap()
+        let phoneTextField = app.textFields["phone_text_field"]
+        XCTAssertTrue(phoneTextField.waitForExistence(timeout: 10.0), "Failed to find phone text field")
 
-        // "Account Picker" pane
-        _ = app.staticTexts["Select account"].waitForExistence(timeout: 10)
-        // `swipeUp` is necessary to see the `High Balance` account
-        app.swipeUp()
-        sleep(1) // wait for swipe up to finish
-        app.webViews
-            .buttons
-            .containing(NSPredicate(format: "label CONTAINS 'High Balance'"))
-            .firstMatch
-            .tap()
-        app.buttons["Connect account"].tap()
+        let countryCodeSelector = app.otherElements["phone_country_code_selector"]
+        XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
+        countryCodeSelector.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
+        app.toolbars.buttons["Done"].tap()
+
+        phoneTextField.tap()
+        phoneTextField.typeText("4015006000")
+
+        let linkLoginCtaButton = app.buttons["link_login.primary_button"]
+        XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
+        linkLoginCtaButton.tap()
+
+        // "Institution picker" pane
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
+        featuredLegacyTestInstitution.tap()
+
+        let prepaneContinueButton = app.buttons["prepane_continue_button"]
+        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "Failed to open Partner Auth Prepane - \(#function) waiting failed")
+        prepaneContinueButton.tap()
+
+        let accountPickerLinkAccountsButton = app.buttons["connect_accounts_button"]
+        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
+        XCTAssert(accountPickerLinkAccountsButton.isEnabled, "no account selected")
+        accountPickerLinkAccountsButton.tap()
 
         // "Success" pane
-        XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
-        app.buttons["Done"].forceTapWhenHittableInTestCase(self)
+        let successDoneButton = app.buttons["success_done_button"]
+        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
+        successDoneButton.tap()
 
         // Back to Payment Sheet
         app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
@@ -2577,7 +2598,6 @@ extension PaymentSheetUITestCase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled
