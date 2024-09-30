@@ -38,6 +38,7 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-15: {}
+    - test-builds-xcode-16: {}
     - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -53,7 +54,9 @@ stages:
     workflows:
     - framework-tests-no-mocks: {}
     - test-builds-xcode-15: {}
+    - test-builds-xcode-16: {}
     - test-builds-xcode-15-release: {}
+    - test-builds-xcode-16-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
@@ -71,6 +74,7 @@ stages:
   stage-nightly-all:
     workflows:
     - test-builds-xcode-15-release: {}
+    - test-builds-xcode-16-release: {}
     - framework-tests-no-mocks: {}
     - check-docs: {}
     - legacy-tests-15: {}
@@ -348,6 +352,21 @@ workflows:
       bitrise.io:
         stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
+  test-builds-xcode-16:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: AllStripeFrameworks
+        - destination: generic/platform=iOS Simulator
+    - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=18.0
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-16.0.x
+        machine_type_id: g2-m1.8core
   test-builds-xcode-15-release:
     steps:
     - script@1:
@@ -359,6 +378,18 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
+  test-builds-xcode-16-release:
+    steps:
+    - script@1:
+        inputs:
+        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
+        title: Build release builds
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-16.0.x
         machine_type_id: g2-m1.8core
   test-builds-vision:
     steps:
