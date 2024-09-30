@@ -95,6 +95,8 @@ extension PaymentSheet.PaymentMethodLayout {
             return "horizontal"
         case .vertical:
             return "vertical"
+        case .automatic:
+            return "automatic"
         }
     }
 }

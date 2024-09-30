@@ -6,7 +6,6 @@
 //
 
 @_spi(PrivateBetaConnect) import StripeConnect
-import StripeCore
 import SwiftUI
 import UIKit
 
