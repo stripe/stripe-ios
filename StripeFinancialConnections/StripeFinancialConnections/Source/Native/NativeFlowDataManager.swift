@@ -18,6 +18,7 @@ protocol NativeFlowDataManager: AnyObject {
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var elementsSessionContext: ElementsSessionContext? { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
 
     var institution: FinancialConnectionsInstitution? { get set }
@@ -83,6 +84,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let elementsSessionContext: ElementsSessionContext?
 
     var institution: FinancialConnectionsInstitution?
     var authSession: FinancialConnectionsAuthSession?
@@ -117,7 +119,8 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
         self.visualUpdate = visualUpdate
@@ -127,6 +130,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.elementsSessionContext = elementsSessionContext
         // Use server provided active AuthSession.
         self.authSession = manifest.activeAuthSession
         // If the server returns active institution use that, otherwise resort to initial institution.
