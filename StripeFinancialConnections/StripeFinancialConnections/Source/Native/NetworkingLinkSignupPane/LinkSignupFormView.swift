@@ -119,8 +119,6 @@ extension LinkSignupFormView: EmailTextFieldDelegate {
         didChangeEmailAddress emailAddress: String,
         isValid: Bool
     ) {
-        delegate?.linkSignupFormViewDidUpdateFields(self)
-
         if isValid {
             debounceEmailTimer?.invalidate()
             debounceEmailTimer = Timer.scheduledTimer(
@@ -134,6 +132,8 @@ extension LinkSignupFormView: EmailTextFieldDelegate {
                 repeats: false
             ) { [weak self] _ in
                 guard let self = self else { return }
+                self.delegate?.linkSignupFormViewDidUpdateFields(self)
+
                 if
                     // make sure the email inputted is still valid
                     // even after the debounce
@@ -151,6 +151,7 @@ extension LinkSignupFormView: EmailTextFieldDelegate {
             }
         } else {
             // errors are displayed automatically by the component
+            delegate?.linkSignupFormViewDidUpdateFields(self)
             lastValidEmail = nil
         }
     }

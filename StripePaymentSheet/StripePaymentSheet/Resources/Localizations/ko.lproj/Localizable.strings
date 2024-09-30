@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li%2$@회 무이자 결제";
-
 "+ Add" = "+ 추가";
 
 "Add US bank account" = "미국 은행 계좌 추가";
@@ -25,6 +23,12 @@
 "Bank" = "은행";
 
 "Bank account" = "은행 계좌";
+
+"Buy now or pay later with <img/>" = "<img/>(으)로 지금 구매하거나 나중에 결제하십시오.";
+
+"Buy now or pay later with Afterpay" = "지금 구매하거나 Afterpay로 나중에 결제";
+
+"Buy now or pay later with Clearpay" = "지금 구매하거나 Clearpay로 나중에 결제";
 
 "Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "CVC 확인";
 
-"Confirm your CVV" = "CVV 확인";
-
 "Contact information" = "연락처 정보";
 
 "EPS Bank" = "EPS 은행";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
-
 "Pay over time with %@" = "%@으로 할부 결제";
+
+"Pay over time with Affirm" = "Affirm으로 할부 결제";
 
 "Pay with Link" = "Link로 결제";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "향후 결제에 사용하도록 저장";
 
-"Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
+"Save payment details to %@ for future purchases" = "향후 구매를 위해 결제 세부사항 %@에 저장";
 
-"Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
+"Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
 
 "Save your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌를 저장하십시오.";
 

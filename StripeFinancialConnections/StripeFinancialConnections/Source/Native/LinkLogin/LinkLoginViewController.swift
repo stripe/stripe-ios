@@ -49,6 +49,7 @@ final class LinkLoginViewController: UIViewController {
         return formView
     }()
 
+    private var paneLayoutView: PaneLayoutView?
     private var footerButton: StripeUICore.Button?
 
     init(dataSource: LinkLoginDataSource) {
@@ -80,6 +81,11 @@ final class LinkLoginViewController: UIViewController {
             }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setContinueWithLinkButtonDisabledState()
+    }
+
     private func showContent(linkLoginPane: FinancialConnectionsLinkLoginPane) {
         let contentView = PaneLayoutView.createContentView(
             iconView: nil,
@@ -90,6 +96,7 @@ final class LinkLoginViewController: UIViewController {
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
                 title: linkLoginPane.cta,
+                accessibilityIdentifier: "link_login.primary_button",
                 action: didSelectContinueWithLink
             ),
             topText: linkLoginPane.aboveCta,
@@ -98,23 +105,27 @@ final class LinkLoginViewController: UIViewController {
         )
         self.footerButton = footerView.primaryButton
 
-        let paneLayoutView = PaneLayoutView(
+        self.paneLayoutView = PaneLayoutView(
             contentView: contentView,
-            footerView: footerView.footerView
+            footerView: footerView.footerView,
+            keepFooterAboveKeyboard: true
         )
 
-        paneLayoutView.addTo(view: view)
+        paneLayoutView?.addTo(view: view)
 
         #if !canImport(CompositorServices)
         // if user drags, dismiss keyboard so the CTA buttons can be shown
-        paneLayoutView.scrollView.keyboardDismissMode = .onDrag
+        paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif
 
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
         if let emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(emailAddress)
         } else {
-            formView.beginEditingEmailAddressField()
+            // Slightly delay opening the keyboard to avoid a janky animation.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+                self?.formView.beginEditingEmailAddressField()
+            }
         }
 
         setContinueWithLinkButtonDisabledState()
@@ -130,6 +141,45 @@ final class LinkLoginViewController: UIViewController {
     }
 
     private func didSelectContinueWithLink() {
+        if formView.phoneNumber.isEmpty {
+            lookupAccount(with: formView.email)
+        } else {
+            createAccount()
+        }
+    }
+
+    private func lookupAccount(with emailAddress: String) {
+        formView.emailTextField.showLoadingView(true)
+
+        dataSource
+            .lookup(emailAddress: emailAddress)
+            .observe { [weak self, weak formView] result in
+                formView?.emailTextField.showLoadingView(false)
+                guard let self else { return }
+
+                switch result {
+                case .success(let response):
+                    if response.exists {
+                        if response.consumerSession != nil {
+                            self.delegate?.linkLoginViewController(self, foundReturningUserWith: response)
+                        } else {
+                            self.delegate?.linkLoginViewController(
+                                self,
+                                didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
+                                    debugDescription: "No consumer session returned from lookupConsumerSession for emailAddress: \(emailAddress)"
+                                )
+                            )
+                        }
+                    } else {
+                        formView?.showAndEditPhoneNumberFieldIfNeeded()
+                    }
+                case .failure(let error):
+                    self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
+                }
+            }
+    }
+
+    private func createAccount() {
         footerButton?.isLoading = true
 
         dataSource.signUp(
@@ -163,47 +213,25 @@ final class LinkLoginViewController: UIViewController {
             url: url,
             pane: .linkLogin,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { _ in /* Stripe scheme URLs are not expected. */ }
+            handleURL: { _, _ in /* Stripe scheme URLs are not expected. */ }
         )
     }
 
     private func setContinueWithLinkButtonDisabledState() {
         let isEmailValid = formView.emailTextField.isEmailValid
-        let isPhoneNumberValid = formView.phoneTextField.isPhoneNumberValid
-        footerButton?.isEnabled = isEmailValid && isPhoneNumberValid
+
+        if formView.phoneTextField.isHidden {
+            footerButton?.isEnabled = isEmailValid
+        } else {
+            let isPhoneNumberValid = formView.phoneTextField.isPhoneNumberValid
+            footerButton?.isEnabled = isEmailValid && isPhoneNumberValid
+        }
     }
 }
 
 extension LinkLoginViewController: LinkSignupFormViewDelegate {
     func linkSignupFormView(_ view: LinkSignupFormView, didEnterValidEmailAddress emailAddress: String) {
-        formView.emailTextField.showLoadingView(true)
-
-        dataSource
-            .lookup(emailAddress: emailAddress)
-            .observe { [weak self, weak formView] result in
-                formView?.emailTextField.showLoadingView(false)
-                guard let self else { return }
-
-                switch result {
-                case .success(let response):
-                    if response.exists {
-                        if response.consumerSession != nil {
-                            self.delegate?.linkLoginViewController(self, foundReturningUserWith: response)
-                        } else {
-                            self.delegate?.linkLoginViewController(
-                                self,
-                                didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
-                                    debugDescription: "No consumer session returned from lookupConsumerSession for emailAddress: \(emailAddress)"
-                                )
-                            )
-                        }
-                    } else {
-                        formView?.showAndEditPhoneNumberFieldIfNeeded()
-                    }
-                case .failure(let error):
-                    self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
-                }
-            }
+        lookupAccount(with: emailAddress)
     }
 
     func linkSignupFormViewDidUpdateFields(_ view: LinkSignupFormView) {

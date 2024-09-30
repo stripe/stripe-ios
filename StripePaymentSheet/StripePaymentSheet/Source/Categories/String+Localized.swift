@@ -47,11 +47,11 @@ extension String.Localized {
         )
     }
 
-    static func save_this_card_for_future_$merchant_payments(merchantDisplayName: String) -> String {
+    static func save_payment_details_for_future_$merchant_payments(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
-                "Save this card for future %@ payments",
-                "The label of a switch indicating whether to save the user's card for future payment"
+                "Save payment details to %@ for future purchases",
+                "The label of a switch indicating whether to save the user's payment details for future payment"
             ),
             merchantDisplayName
         )
@@ -326,10 +326,17 @@ extension String.Localized {
         )
     }
 
-    static var after_pay_subtitle_text: String {
+    static var buy_now_or_pay_later_with_afterpay: String {
         STPLocalizedString(
-            "%1$d interest-free payments of %2$@",
-            "Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99"
+            "Buy now or pay later with Afterpay",
+            "Subtitle shown on a button allowing a user to select to pay with Afterpay."
+        )
+    }
+
+    static var buy_now_or_pay_later_with_clearpay: String {
+        STPLocalizedString(
+            "Buy now or pay later with Clearpay",
+            "Subtitle shown on a button allowing a user to select to pay with Clearpay."
         )
     }
 
@@ -358,15 +365,18 @@ extension String.Localized {
         STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
     }
 
-    static var confirm_your_cvv: String {
-        STPLocalizedString("Confirm your CVV", "Title for prompting for a card's CVV on confirming the payment")
-    }
-
     static var confirm: String {
         STPLocalizedString("Confirm", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
     }
 
     static var bank: String {
         STPLocalizedString("Bank", "A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.")
+    }
+
+    static var pay_over_time_with_affirm: String {
+        STPLocalizedString(
+            "Pay over time with Affirm",
+            "Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm"
+        )
     }
 }

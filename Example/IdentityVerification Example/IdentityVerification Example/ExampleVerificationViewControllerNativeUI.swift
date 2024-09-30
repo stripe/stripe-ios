@@ -19,7 +19,7 @@ import UIKit
 class ExampleVerificationViewControllerNativeUI: UIViewController {
 
     // Constants
-    let baseURL = "https://stripe-mobile-identity-verification-example-nativeui.glitch.me"
+    let baseURL = "https://stripe-mobile-identity-verification-example.glitch.me"
     let verifyEndpoint = "/create-verification-session"
 
     // Outlets

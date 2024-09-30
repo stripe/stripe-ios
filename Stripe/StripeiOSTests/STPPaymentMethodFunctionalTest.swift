@@ -43,8 +43,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
                 "test_key": "test_value",
             ])
         let expectation = self.expectation(description: "Payment Method Card create")
-        client.createPaymentMethod(
-            with: params) { paymentMethod, error in
+        client.createPaymentMethod(with: params) { paymentMethod, error in
             XCTAssertNil(error)
             XCTAssertNotNil(paymentMethod)
             XCTAssertNotNil(paymentMethod?.stripeId)
@@ -66,10 +65,10 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(paymentMethod?.billingDetails!.address!.postalCode, "94103")
 
             // Card
-                XCTAssertEqual(paymentMethod?.card!.brand, .visa)
-                XCTAssertEqual(paymentMethod?.card!.checks!.cvcCheck, .unknown)
-                XCTAssertEqual(paymentMethod?.card!.checks!.addressLine1Check, .unknown)
-                XCTAssertEqual(paymentMethod?.card!.checks!.addressPostalCodeCheck, .unknown)
+            XCTAssertEqual(paymentMethod?.card!.brand, .visa)
+            XCTAssertEqual(paymentMethod?.card!.checks!.cvcCheck, .unknown)
+            XCTAssertEqual(paymentMethod?.card!.checks!.addressLine1Check, .unknown)
+            XCTAssertEqual(paymentMethod?.card!.checks!.addressPostalCodeCheck, .unknown)
             XCTAssertEqual(paymentMethod?.card!.country, "US")
             XCTAssertEqual(paymentMethod?.card!.expMonth, 10)
             XCTAssertEqual(paymentMethod?.card!.expYear, 2028)
@@ -141,7 +140,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
 
         // Element/Sessions endpoint should de-dupe payment methods with CustomerSesssion
         let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
-                                                                                               merchantCountry: nil)
+                                                                                                      merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         let elementSession = try await client.retrieveDeferredElementsSession(

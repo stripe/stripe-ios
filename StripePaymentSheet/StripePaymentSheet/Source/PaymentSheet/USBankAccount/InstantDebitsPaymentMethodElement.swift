@@ -65,7 +65,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var enableCTA: Bool {
-        return !email.isEmpty
+        return STPEmailAddressValidator.stringIsValidEmailAddress(email)
     }
     var email: String {
         return emailElement.text

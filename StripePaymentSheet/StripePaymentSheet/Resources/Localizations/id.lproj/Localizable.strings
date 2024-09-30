@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li pembayaran bebas bunga sebesar %2$@";
-
 "+ Add" = "+ Tambahkan";
 
 "Add US bank account" = "Tambahkan rekening bank AS";
@@ -25,6 +23,12 @@
 "Bank" = "Bank";
 
 "Bank account" = "Rekening bank";
+
+"Buy now or pay later with <img/>" = "Beli sekarang atau bayar nanti dengan <img/>";
+
+"Buy now or pay later with Afterpay" = "Beli sekarang atau bayar nanti dengan Afterpay";
+
+"Buy now or pay later with Clearpay" = "Beli sekarang atau bayar nanti dengan Clearpay";
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Konfirmasikan CVC Anda";
 
-"Confirm your CVV" = "Konfirmasikan CVV Anda";
-
 "Contact information" = "Informasi kontak";
 
 "EPS Bank" = "Bank EPS";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Bayar lebih cepat di %@ dan ribuan bisnis.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> angsuran bebas bunga sebesar <installment_price/> dengan <img/>";
-
 "Pay over time with %@" = "Bayar dengan jangka waktu dengan %@";
+
+"Pay over time with Affirm" = "Bayar seiring waktu dengan Affirm";
 
 "Pay with Link" = "Bayar dengan Link";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Simpan untuk pembayaran mendatang";
 
-"Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
+"Save payment details to %@ for future purchases" = "Simpan detail pembayaran pada %@ untuk pembelian mendatang";
 
-"Save this card for future %@ payments" = "Simpan kartu ini untuk pembayaran %@ mendatang";
+"Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
 
 "Save your bank account in just a few steps." = "Simpan rekening bank Anda hanya dalam beberapa langkah.";
 

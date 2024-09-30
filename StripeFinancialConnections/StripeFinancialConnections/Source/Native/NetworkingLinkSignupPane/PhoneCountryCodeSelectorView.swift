@@ -48,7 +48,7 @@ final class PhoneCountryCodeSelectorView: UIView {
         var theme: ElementsUITheme = .default
         theme.colors = {
             var colors = ElementsUITheme.Color()
-            colors.primary = .brand500
+            colors.primary = self.theme.primaryColor
             colors.secondaryText = .textSubdued
             return colors
         }()
@@ -60,20 +60,23 @@ final class PhoneCountryCodeSelectorView: UIView {
         return keyboardToolbar
     }()
     private let pickerView: PhoneCountryCodePickerView
+    private let theme: FinancialConnectionsTheme
     var selectedCountryCode: String {
         return pickerView.selectedCountryCode
     }
 
     weak var delegate: PhoneCountryCodeSelectorViewDelegate?
 
-    init(defaultCountryCode: String?) {
+    init(defaultCountryCode: String?, theme: FinancialConnectionsTheme) {
         self.pickerView = PhoneCountryCodePickerView(defaultCountryCode: defaultCountryCode)
+        self.theme = theme
         super.init(frame: .zero)
         pickerView.delegate = self
 
         backgroundColor = .backgroundOffset
         layer.cornerRadius = 8
         clipsToBounds = true
+        accessibilityIdentifier = "phone_country_code_selector"
 
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
@@ -167,7 +170,7 @@ private struct PhoneCountryCodeSelectorViewUIViewRepresentable: UIViewRepresenta
     let defaultCountryCode: String?
 
     func makeUIView(context: Context) -> PhoneCountryCodeSelectorView {
-        PhoneCountryCodeSelectorView(defaultCountryCode: defaultCountryCode)
+        PhoneCountryCodeSelectorView(defaultCountryCode: defaultCountryCode, theme: .light)
     }
 
     func updateUIView(

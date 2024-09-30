@@ -1,3 +1,36 @@
+## X.Y.Z X-Y-Z
+### PaymentSheet
+* [Fixed] Fixes an issue where ISK was not correctly formatted as a zero-decimal currency when using PaymentSheet or Apple Pay. (Thanks [@Thithip](https://github.com/Thithip)!)
+
+## 23.31.0 2024-09-23
+### PaymentSheet
+* [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
+* [Added] CVC Recollection is now in GA. For more information see our docs for [here](https://docs.stripe.com/payments/accept-a-payment?platform=ios#ios-cvc-recollection) for intent first integrations or [here](https://docs.stripe.com/payments/accept-a-payment-deferred?platform=ios&type=payment#ios-cvc-recollection) for deferred intent integrations.
+* [Fixed] Fixed an issue where checkboxes were not visible when `appearance.colors.componentBorder` was transparent.
+
+### CardScan
+* [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
+
+## 23.30.0 2024-09-09
+### PaymentSheet
+* [Added] CustomerSessions is now in private beta.
+* [Fixed] PaymentSheet now uses a border width of 1.5 instead of 0 when `PaymentSheet.Appearance.borderWidth' is 0.
+* [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
+
+## 23.29.2 2024-08-19
+### PaymentSheet
+* [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
+* [Fixed] Fixed an issue in SwiftUI where setting `isPresented=false` wouldn't dismiss the sheet.
+
+## 23.29.1 2024-08-12
+### PaymentSheet
+* [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
+* [Fixed] Fixed PaymentSheet.FlowController returning unlocalized labels for certain payment methods e.g. "AfterPay ClearPay" instead of "Afterpay" or "Clearpay" depending on locale.
+* [Added] `PaymentSheet.IntentConfiguration` now validates that its `amount` is non-zero.
+
+### PaymentsUI
+* [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed.
+
 ## 23.29.0 2024-08-05
 ### PaymentSheet
 * [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
@@ -13,6 +46,9 @@
 * [Added] Support for Sunbit (Private Beta) bindings.
 * [Added] Support for Billie (Private Beta) bindings.
 * [Added] Support for Satispay (Private Beta) bindings.
+
+## 23.28.3 2024-09-03
+This release was made in error, and contains changes from 23.29.0, 23.29.1, and 23.29.2.
 
 ## 23.28.1 2024-07-16
 ### Payments

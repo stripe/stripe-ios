@@ -25,6 +25,9 @@ final class STPElementsSession: NSObject {
 
     /// Link-specific settings for this ElementsSession.
     let linkSettings: LinkSettings?
+    
+    /// Flags for this ElementsSession.
+    let flags: [String: Bool]
 
     /// Country code of the user.
     let countryCode: String?
@@ -58,6 +61,7 @@ final class STPElementsSession: NSObject {
         countryCode: String?,
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
+        flags: [String: Bool],
         paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
         isApplePayEnabled: Bool,
@@ -72,6 +76,7 @@ final class STPElementsSession: NSObject {
         self.countryCode = countryCode
         self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
+        self.flags = flags
         self.paymentMethodSpecs = paymentMethodSpecs
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
@@ -106,6 +111,7 @@ final class STPElementsSession: NSObject {
             countryCode: nil,
             merchantCountryCode: nil,
             linkSettings: nil,
+            flags: [:],
             paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
             isApplePayEnabled: true,
@@ -173,6 +179,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
             ),
+            flags: response["flags"] as? [String: Bool] ?? [:],
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
@@ -191,8 +198,8 @@ extension STPElementsSession {
     func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {
-            if customerSession.paymentSheetComponent.enabled,
-               let features = customerSession.paymentSheetComponent.features {
+            if customerSession.mobilePaymentElementComponent.enabled,
+               let features = customerSession.mobilePaymentElementComponent.features {
                 allowsRemovalOfPaymentMethods = features.paymentMethodRemove
             }
         } else {
@@ -217,7 +224,7 @@ extension STPElementsSession {
 
 extension STPElementsSession {
     var savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
-        guard let paymentMethodSave = customerSessionPaymentSheetFeatures?.paymentMethodSave else {
+        guard let paymentMethodSave = customerSessionMobilePaymentElementFeatures?.paymentMethodSave else {
             return .legacy
         }
         return paymentMethodSave
@@ -225,12 +232,12 @@ extension STPElementsSession {
         : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
     }
 
-    var customerSessionPaymentSheetFeatures: PaymentSheetComponentFeature? {
+    var customerSessionMobilePaymentElementFeatures: MobilePaymentElementComponentFeature? {
         guard let customerSession = customer?.customerSession,
-              customerSession.paymentSheetComponent.enabled else {
+              customerSession.mobilePaymentElementComponent.enabled else {
             return nil
         }
-        return customerSession.paymentSheetComponent.features
+        return customerSession.mobilePaymentElementComponent.features
     }
 }
 

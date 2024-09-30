@@ -53,7 +53,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
         settings.collectName = .always
@@ -117,7 +117,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.attachDefaults = .off
         settings.collectName = .automatic
         settings.collectEmail = .automatic
@@ -181,7 +181,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
         settings.collectName = .always
@@ -236,7 +236,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
         settings.collectName = .never

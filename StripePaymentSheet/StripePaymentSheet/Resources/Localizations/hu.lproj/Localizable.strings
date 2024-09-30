@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li kamatmentes kifizetés %2$@ értékben";
-
 "+ Add" = "+ Hozzáadás";
 
 "Add US bank account" = "Amerikai bankszámla hozzáadása";
@@ -26,7 +24,13 @@
 
 "Bank account" = "Bankszámla";
 
-"Buy now or pay later with Klarna" = "Vegye meg most, vagy fizetés később Klarnával";
+"Buy now or pay later with <img/>" = "Vegye meg most vagy fizessen később a következővel: <img/>";
+
+"Buy now or pay later with Afterpay" = "Vegye meg most, vagy fizessen később Afterpayjel";
+
+"Buy now or pay later with Clearpay" = "Vegye meg most, vagy fizessen később Clearpayjel";
+
+"Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
 
 "Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "CVC megerősítése";
 
-"Confirm your CVV" = "CVV megerősítése";
-
 "Contact information" = "Kapcsolattartási adatok";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Gyorsabban fizethet a(z) %@ számára és még ezernyi vállalkozásnak.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Fizetés <num_installments/>, egyenként <installment_price/> összegű kamatmentes részletben <img/> használatával";
-
 "Pay over time with %@" = "Fizessen később a következővel: %@";
+
+"Pay over time with Affirm" = "Fizetés később az Affirmmel";
 
 "Pay with Link" = "Fizetés Linkkel";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Mentés a későbbi fizetésekhez";
 
-"Save this account for future %@ payments" = "Számla mentése a(z) %@ részére történő fizetésekhez";
+"Save payment details to %@ for future purchases" = "Fizetési adatok mentése %@ vállalkozó részére későbbi vásárlásokhoz";
 
-"Save this card for future %@ payments" = "A kártya mentése a(z) %@ részére történő fizetésekhez";
+"Save this account for future %@ payments" = "Számla mentése a(z) %@ részére történő fizetésekhez";
 
 "Save your bank account in just a few steps." = "Mentse el egyszerűen bankszámláját.";
 

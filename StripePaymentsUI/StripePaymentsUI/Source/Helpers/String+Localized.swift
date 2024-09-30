@@ -76,11 +76,8 @@ extension String.Localized {
     @_spi(STP) public static var cvc_section_title: String {
         STPLocalizedString(
             "Confirm your %@",
-            "Section title for entering your CVC/CVV. e.g. 'Confirm your CVC' or 'Confirm your CVV'"
+            "Section title for entering your CVC. e.g. 'Confirm your CVC'"
         )
-    }
-    @_spi(STP) public static var cvv: String {
-        STPLocalizedString("CVV", "Label for entering CVV in text field")
     }
 
     @_spi(STP) public static var cvc: String {
@@ -98,7 +95,7 @@ extension String.Localized {
     @_spi(STP) public static var your_cards_security_code_is_incomplete: String {
         STPLocalizedString(
             "Your card's security code is incomplete.",
-            "Error message for card entry form when CVC/CVV is incomplete."
+            "Error message for card entry form when CVC is incomplete."
         )
     }
 

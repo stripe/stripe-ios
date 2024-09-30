@@ -57,8 +57,8 @@ extension PaymentSheet {
             _preconfirmShim?(hostingController)
         } else if case let .saved(paymentMethod, _) = paymentOption,
                   paymentMethod.type == .card,
-                  intent.cvcRecollectionEnabled,
-                  isFlowController {
+                  isFlowController,
+                  intent.cvcRecollectionEnabled {
             // MARK: - CVC Recollection
             let presentingViewController = authenticationContext.authenticationPresentingViewController()
 
@@ -133,8 +133,7 @@ extension PaymentSheet {
         case let .new(confirmParams):
             // Set allow_redisplay on params
             confirmParams.setAllowRedisplay(
-                paymentMethodSave: elementsSession.customerSessionPaymentSheetFeatures?.paymentMethodSave,
-                allowRedisplayOverride: elementsSession.customerSessionPaymentSheetFeatures?.paymentMethodSaveAllowRedisplayOverride,
+                mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                 isSettingUp: intent.isSettingUp
             )
             switch intent {
@@ -153,6 +152,10 @@ extension PaymentSheet {
                     if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
                         params.paymentMethodId = paymentMethodId
                         params.paymentMethodParams = nil
+
+                        if paymentIntent.isSetupFutureUsageSet {
+                            params.mandateData = STPMandateDataParams.makeWithInferredValues()
+                        }
                     }
                 }
                 paymentHandler.confirmPayment(
@@ -180,14 +183,7 @@ extension PaymentSheet {
                     if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
                         setupIntentParams.paymentMethodID = paymentMethodId
                         setupIntentParams.paymentMethodParams = nil
-
-                        let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
-                        let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
-                        // Tell Stripe to infer mandate info from client
-                        onlineParams.inferFromClient = true
-                        mandateCustomerAcceptanceParams.onlineParams = onlineParams
-                        mandateCustomerAcceptanceParams.type = .online
-                        setupIntentParams.mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
+                        setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                     }
                 }
                 paymentHandler.confirmSetupIntent(
@@ -417,8 +413,8 @@ extension PaymentSheet {
                                 // If passthrough mode, share payment details
                                 linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
                                     switch result {
-                                    case .success(let shareResponse):
-                                        confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod, type: .card), linkAccount, shouldSave)
+                                    case .success(let paymentDetailsShareResponse):
+                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
                                     case .failure(let error):
                                         STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
@@ -448,7 +444,6 @@ extension PaymentSheet {
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
@@ -484,12 +479,7 @@ extension PaymentSheet {
         var isSetupFutureUsageSet: Bool {
             switch self {
             case .paymentIntent(let paymentIntent):
-                return paymentIntent.setupFutureUsage != .none || (paymentIntent.paymentMethodOptions?.allResponseFields.values.contains(where: {
-                    if let value = $0 as? [String: Any] {
-                        return value["setup_future_usage"] != nil
-                    }
-                    return false
-                }) ?? false)
+                return paymentIntent.isSetupFutureUsageSet
             case .setupIntent:
                 return true
             }

@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@_spi(STP)@_spi(EarlyAccessCVCRecollectionFeature)@testable import StripePaymentSheet
+@_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
@@ -431,9 +431,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
                                                             confirmHandler: confirmHandler(_:_:_:),
-                                                            isCVCRecollectionEnabledCallback: {
-            return true
-        })
+                                                            requireCVCRecollection: true)
 
         preparePaymentSheet(
             customer: "snapshot",
