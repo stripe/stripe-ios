@@ -9,17 +9,12 @@ import Foundation
 @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import UIKit
 
-protocol EmbeddedPlaygroundViewControllerDelegate: AnyObject {
-    func didComplete(with result: PaymentSheetResult)
-}
-
 class EmbeddedPlaygroundViewController: UIViewController {
     private let appearance: PaymentSheet.Appearance
     private let intentConfig: PaymentSheet.IntentConfiguration
     private let configuration: EmbeddedPaymentElement.Configuration
 
     private var embeddedPaymentElement: EmbeddedPaymentElement!
-    weak var delegate: EmbeddedPlaygroundViewControllerDelegate?
 
     private lazy var loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
@@ -39,13 +34,10 @@ class EmbeddedPlaygroundViewController: UIViewController {
         return checkoutButton
     }()
 
-    init(configuration: PaymentSheet.Configuration, intentConfig: PaymentSheet.IntentConfiguration, appearance: PaymentSheet.Appearance, delegate: EmbeddedPlaygroundViewControllerDelegate?) {
+    init(configuration: EmbeddedPaymentElement.Configuration, intentConfig: PaymentSheet.IntentConfiguration, appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         self.intentConfig = intentConfig
-        self.configuration = .init(from: configuration, formSheetAction: .confirm(completion: { result in
-            // TODO(porter) Probably pass in formSheetAction from PlaygroundController based on some toggle in the UI
-            delegate?.didComplete(with: result)
-        }), hidesMandateText: false)
+        self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -114,47 +106,5 @@ class EmbeddedPlaygroundViewController: UIViewController {
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             self.present(alert, animated: true)
         }
-    }
-}
-
-extension EmbeddedPaymentElement.Configuration {
-
-    /// Initializes an EmbeddedPaymentElement.Configuration from a given PaymentSheet.Configuration.
-    ///
-    /// - Parameters:
-    ///   - paymentSheetConfig: The PaymentSheet.Configuration instance to convert from.
-    ///   - formSheetAction: The FormSheetAction specific to EmbeddedPaymentElement.Configuration.
-    ///   - hidesMandateText: Determines whether to hide mandate text. Defaults to `false`.
-    public init(
-        from paymentSheetConfig: PaymentSheet.Configuration,
-        formSheetAction: FormSheetAction,
-        hidesMandateText: Bool = false
-    ) {
-        self = .init(formSheetAction: formSheetAction)
-
-        self.allowsDelayedPaymentMethods = paymentSheetConfig.allowsDelayedPaymentMethods
-        self.allowsPaymentMethodsRequiringShippingAddress = paymentSheetConfig.allowsPaymentMethodsRequiringShippingAddress
-        self.apiClient = paymentSheetConfig.apiClient
-        self.applePay = paymentSheetConfig.applePay
-        self.primaryButtonColor = paymentSheetConfig.primaryButtonColor
-        self.primaryButtonLabel = paymentSheetConfig.primaryButtonLabel
-        self.style = paymentSheetConfig.style
-        self.customer = paymentSheetConfig.customer
-        self.merchantDisplayName = paymentSheetConfig.merchantDisplayName
-        self.returnURL = paymentSheetConfig.returnURL
-        self.defaultBillingDetails = paymentSheetConfig.defaultBillingDetails
-        self.savePaymentMethodOptInBehavior = paymentSheetConfig.savePaymentMethodOptInBehavior
-        self.appearance = paymentSheetConfig.appearance
-        self.shippingDetails = paymentSheetConfig.shippingDetails
-        self.preferredNetworks = paymentSheetConfig.preferredNetworks
-        self.userOverrideCountry = paymentSheetConfig.userOverrideCountry
-        self.billingDetailsCollectionConfiguration = paymentSheetConfig.billingDetailsCollectionConfiguration
-        self.removeSavedPaymentMethodMessage = paymentSheetConfig.removeSavedPaymentMethodMessage
-        self.externalPaymentMethodConfiguration = paymentSheetConfig.externalPaymentMethodConfiguration
-        self.paymentMethodOrder = paymentSheetConfig.paymentMethodOrder
-        self.allowsRemovalOfLastSavedPaymentMethod = paymentSheetConfig.allowsRemovalOfLastSavedPaymentMethod
-
-        // Handle unique properties for EmbeddedPaymentElement.Configuration
-        self.hidesMandateText = hidesMandateText
     }
 }
