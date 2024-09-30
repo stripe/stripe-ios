@@ -171,14 +171,3 @@ private struct MockAnalyticsClass1: STPAnalyticsProtocol {
 private struct MockAnalyticsClass2: STPAnalyticsProtocol {
     static let stp_analyticsIdentifier = "MockAnalyticsClass2"
 }
-
-private class MockKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
-    func createCustomerKey(
-        withAPIVersion apiVersion: String,
-        completion: @escaping STPJSONResponseCompletionBlock
-    ) {
-        guard apiVersion == "1" else { return }
-
-        completion(nil, NSError.stp_genericConnectionError())
-    }
-}

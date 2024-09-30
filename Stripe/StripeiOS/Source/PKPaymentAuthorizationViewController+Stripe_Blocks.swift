@@ -24,38 +24,7 @@ typealias STPShippingAddressSelectionBlock = (
     STPAddress, @escaping STPShippingAddressValidationBlock
 ) -> Void
 typealias STPPaymentAuthorizationBlock = (PKPayment) -> Void
-extension PKPaymentAuthorizationViewController {
-    class func stp_controller(
-        with paymentRequest: PKPaymentRequest,
-        apiClient: STPAPIClient,
-        onShippingAddressSelection: @escaping STPShippingAddressSelectionBlock,
-        onShippingMethodSelection: @escaping STPShippingMethodSelectionBlock,
-        onPaymentAuthorization: @escaping STPPaymentAuthorizationBlock,
-        onPaymentMethodCreation: @escaping STPApplePayPaymentMethodHandlerBlock,
-        onFinish: @escaping STPPaymentCompletionBlock
-    ) -> Self? {
-        let delegate = STPBlockBasedApplePayDelegate()
-        delegate.apiClient = apiClient
-        delegate.onShippingAddressSelection = onShippingAddressSelection
-        delegate.onShippingMethodSelection = onShippingMethodSelection
-        delegate.onPaymentAuthorization = onPaymentAuthorization
-        delegate.onPaymentMethodCreation = onPaymentMethodCreation
-        delegate.onFinish = onFinish
-        let viewController = self.init(paymentRequest: paymentRequest)
-        viewController?.delegate = delegate
-        if let viewController = viewController {
-            objc_setAssociatedObject(
-                viewController,
-                UnsafeRawPointer(&kSTPBlockBasedApplePayDelegateAssociatedObjectKey),
-                delegate,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
-        }
-        return viewController
-    }
-}
 
-private var kSTPBlockBasedApplePayDelegateAssociatedObjectKey = 0
 typealias STPApplePayShippingMethodCompletionBlock = (
     PKPaymentAuthorizationStatus, [PKPaymentSummaryItem]?
 ) -> Void

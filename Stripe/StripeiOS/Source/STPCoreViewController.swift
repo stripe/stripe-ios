@@ -69,23 +69,6 @@ public class STPCoreViewController: UIViewController {
             _theme = .defaultTheme
         }
 
-//        if !useSystemBackButton() {
-//            cancelItem = UIBarButtonItem(
-//                barButtonSystemItem: .cancel,
-//                target: self,
-//                action: #selector(STPAddCardViewController.handleCancelTapped(_:))
-//            )
-//            cancelItem?.accessibilityIdentifier = "CoreViewControllerCancelIdentifier"
-//
-//            stp_navigationItemProxy?.leftBarButtonItem = cancelItem
-//        }
-//
-//        NotificationCenter.default.addObserver(
-//            self,
-//            selector: #selector(STPAddCardViewController.updateAppearance),
-//            name: UIContentSizeCategory.didChangeNotification,
-//            object: nil
-//        )
     }
 
     /// Called in viewDidLoad after doing base implementation, before
@@ -151,12 +134,4 @@ public class STPCoreViewController: UIViewController {
         }
     }
 
-    /// If you override this and return YES, then your CoreVC implementation will not
-    /// create and set up a cancel and instead just use the default
-    /// UIViewController back button behavior.
-    /// You won't receive calls to `handleCancelTapped` if this is YES.
-    /// Defaults to NO.
-    func useSystemBackButton() -> Bool {
-        return false
-    }
 }

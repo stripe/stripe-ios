@@ -115,10 +115,10 @@ class STPAPIClientTest: XCTestCase {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: MockUAUsageClass.self)
         var params: [String: Any] = [:]
         params = STPAPIClient.paramsAddingPaymentUserAgent(params)
-        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.legacy; MockUAUsageClass")
+        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.paymentsheet; MockUAUsageClass")
 
         params = STPAPIClient.paramsAddingPaymentUserAgent(params, additionalValues: ["foo"])
-        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.legacy; MockUAUsageClass; foo")
+        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.paymentsheet; MockUAUsageClass; foo")
     }
 
     func testSetAppInfo() {

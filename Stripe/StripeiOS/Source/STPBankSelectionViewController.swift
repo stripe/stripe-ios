@@ -91,7 +91,6 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
     private var selectedBank: STPFPXBankBrand = .unknown
     private var configuration: STPPaymentConfiguration?
     private weak var imageView: UIImageView?
-    private var headerView: STPSectionHeaderView?
     private var loading = false
     private var bankStatus: STPFPXBankStatusResponse?
 
@@ -126,10 +125,6 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
         super.updateAppearance()
 
         tableView?.reloadData()
-    }
-
-    @objc override func useSystemBackButton() -> Bool {
-        return true
     }
 
     func _update(withBankStatus bankStatusResponse: STPFPXBankStatusResponse) {

@@ -13,15 +13,6 @@ import UIKit
 class STPCameraView: UIView {
     private var flashLayer: CALayer?
 
-    var captureSession: AVCaptureSession? {
-        get {
-            return (videoPreviewLayer.session)!
-        }
-        set(captureSession) {
-            videoPreviewLayer.session = captureSession
-        }
-    }
-
     var videoPreviewLayer: AVCaptureVideoPreviewLayer {
         return layer as! AVCaptureVideoPreviewLayer
     }
