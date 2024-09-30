@@ -151,16 +151,19 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
                     }
-                    Divider().hidden(playgroundController.settings.uiStyle != .embedded)
-                    Group {
-                        HStack {
-                            Text("Embedded only configuration")
-                                .font(.headline)
-                            Spacer()
+                    
+                    if playgroundController.settings.uiStyle == .embedded {
+                        Divider()
+                        Group {
+                            HStack {
+                                Text("Embedded only configuration")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                            SettingView(setting: $playgroundController.settings.formSheetAction)
+                            SettingView(setting: $playgroundController.settings.hidesMandateText)
                         }
-                        SettingView(setting: $playgroundController.settings.formSheetAction)
-                        SettingView(setting: $playgroundController.settings.hidesMandateText)
-                    }.hidden(playgroundController.settings.uiStyle != .embedded)
+                    }
 
                 }.padding()
             }
@@ -586,11 +589,5 @@ struct SettingPickerView<S: PickerEnum>: View {
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
         PaymentSheetTestPlayground(settings: .defaultValues())
-    }
-}
-
-extension View {
-    func hidden(_ shouldHide: Bool) -> some View {
-        opacity(shouldHide ? 0 : 1)
     }
 }
