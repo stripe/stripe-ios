@@ -50,41 +50,41 @@ targets:
   # - PaymentSheetLocalizationScreenshotGenerator
   # - PaymentSheetUITest
   - Stripe3DS2
-  - Stripe3DS2Tests
+  # - Stripe3DS2Tests
   - StripeApplePay
-  - StripeApplePayTests
+  # - StripeApplePayTests
   - StripeCameraCore
-  - StripeCameraCoreTestUtils
-  - StripeCameraCoreTests
+  # - StripeCameraCoreTestUtils
+  # - StripeCameraCoreTests
   - StripeCardScan
-  - StripeCardScanTests
+  # - StripeCardScanTests
   - StripeConnect
   # - StripeConnect Example
   # - StripeConnect ExampleUITests
-  - StripeConnectTests
+  # - StripeConnectTests
   - StripeCore
-  - StripeCoreTestUtils
-  - StripeCoreTests
+  # - StripeCoreTestUtils
+  # - StripeCoreTests
   - StripeFinancialConnections
-  - StripeFinancialConnectionsTests
+  # - StripeFinancialConnectionsTests
   - StripeIdentity
-  - StripeIdentityTests
+  # - StripeIdentityTests
   - StripePaymentSheet
-  - StripePaymentSheetTestHostApp
-  - StripePaymentSheetTests
+  # - StripePaymentSheetTestHostApp
+  # - StripePaymentSheetTests
   - StripePayments
-  - StripePaymentsObjcTestUtils
-  - StripePaymentsTestHostApp
-  - StripePaymentsTestUtils
-  - StripePaymentsTests
+  # - StripePaymentsObjcTestUtils
+  # - StripePaymentsTestHostApp
+  # - StripePaymentsTestUtils
+  # - StripePaymentsTests
   - StripePaymentsUI
-  - StripePaymentsUITests
+  # - StripePaymentsUITests
   - StripeUICore
-  - StripeUICoreTests
+  # - StripeUICoreTests
   - StripeiOS
-  - StripeiOSAppHostedTests
-  - StripeiOSTestHostApp
-  - StripeiOSTests
+  # - StripeiOSAppHostedTests
+  # - StripeiOSTestHostApp
+  # - StripeiOSTests
   # - UI Examples
 
 retain_public: true
