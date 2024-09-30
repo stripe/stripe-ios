@@ -55,6 +55,7 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
+        // TODO(porter) MOBILESDK-2533 Make a protocol for our configurations
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration()
 
         // TODO(porter) When we do analytics decide how to handle `isCustom`
@@ -221,7 +222,7 @@ extension EmbeddedPaymentElement {
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
 }
 
-// TODO(porter) Create a protocol for the commonalities between PaymentSheet.Configuration <> EmbeddedPaymentElement.Configuration
+// TODO(porter) MOBILESDK-2533 Create a protocol for the commonalities between PaymentSheet.Configuration <> EmbeddedPaymentElement.Configuration
 extension EmbeddedPaymentElement.Configuration {
     func makePaymentSheetConfiguration() -> PaymentSheet.Configuration {
         var paymentConfig = PaymentSheet.Configuration()
