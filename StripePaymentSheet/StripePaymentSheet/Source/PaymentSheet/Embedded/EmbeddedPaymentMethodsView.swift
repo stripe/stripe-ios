@@ -12,7 +12,11 @@ import UIKit
 
 // TODO(porter) Probably shouldn't be public, just easy for testing.
 @_spi(EmbeddedPaymentElementPrivateBeta) public class EmbeddedPaymentMethodsView: UIView {
+
+    typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
+
     private let appearance: PaymentSheet.Appearance
+    private(set) var selection: Selection?
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -21,40 +25,43 @@ import UIKit
         return stackView
     }()
 
-    // TODO(porter) Remove later, just for use in EmbeddedPlaygroundViewController since PaymentMethodType and AccessoryType aren't public
-    public convenience init(savedPaymentMethod: STPPaymentMethod?,
-                            appearance: PaymentSheet.Appearance,
-                            shouldShowApplePay: Bool,
-                            shouldShowLink: Bool) {
-        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.bancontact), .stripe(.klarna), .stripe(.card)]
-        let savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? = .viewMore
-
-        self.init(paymentMethodTypes: paymentMethodTypes, savedPaymentMethod: savedPaymentMethod, appearance: appearance, shouldShowApplePay: shouldShowApplePay, shouldShowLink: shouldShowLink, savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
-    }
-
-    init(paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+    init(initialSelection: Selection?,
+         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
          savedPaymentMethod: STPPaymentMethod?,
          appearance: PaymentSheet.Appearance,
          shouldShowApplePay: Bool,
          shouldShowLink: Bool,
          savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
         self.appearance = appearance
+        self.selection = initialSelection
+
         super.init(frame: .zero)
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
 
         if let savedPaymentMethod {
             let accessoryButton: RowButton.RightAccessoryButton? = {
                 if let savedPaymentMethodAccessoryType {
-                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
+                    return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance) { [weak self] in
+                        self?.didTapAccessoryButton()
+                    }
                 } else {
                     return nil
                 }
             }()
-            stackView.addArrangedSubview(RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
-                                                                             appearance: rowButtonAppearance,
-                                                                             rightAccessoryView: accessoryButton,
-                                                                             isEmbedded: true,
-                                                                             didTap: handleRowSelection(selectedRowButton:)))
+            let selection: Selection = .saved(paymentMethod: savedPaymentMethod)
+            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
+                                                                               appearance: rowButtonAppearance,
+                                                                               rightAccessoryView: accessoryButton,
+                                                                               isEmbedded: true,
+                                                                               didTap: { [weak self] rowButton in
+               self?.didTap(selectedRowButton: rowButton, selection: selection)
+            })
+
+            if initialSelection == selection {
+                savedPaymentMethodButton.isSelected = true
+            }
+
+            stackView.addArrangedSubview(savedPaymentMethodButton)
         }
 
         // Add card before Apple Pay and Link if present and before any other LPMs
@@ -64,19 +71,37 @@ import UIKit
                                                                             appearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,
                                                                             isEmbedded: true,
-                                                                            didTap: handleRowSelection(selectedRowButton:)))
+                                                                            didTap: { [weak self] rowButton in
+                self?.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: .stripe(.card)))
+            }))
         }
 
         if shouldShowApplePay {
-            stackView.addArrangedSubview(RowButton.makeForApplePay(appearance: rowButtonAppearance,
-                                                                   isEmbedded: true,
-                                                                   didTap: handleRowSelection(selectedRowButton:)))
+            let selection: Selection = .applePay
+            let applePayRowButton = RowButton.makeForApplePay(appearance: rowButtonAppearance,
+                                                              isEmbedded: true,
+                                                              didTap: { [weak self] rowButton in
+                self?.didTap(selectedRowButton: rowButton, selection: selection)
+            })
+
+            if initialSelection == selection {
+                applePayRowButton.isSelected = true
+            }
+
+            stackView.addArrangedSubview(applePayRowButton)
         }
 
         if shouldShowLink {
-            stackView.addArrangedSubview(RowButton.makeForLink(appearance: rowButtonAppearance,
-                                                               isEmbedded: true,
-                                                               didTap: handleRowSelection(selectedRowButton:)))
+            let selection: Selection = .link
+            let linkRowButton = RowButton.makeForLink(appearance: rowButtonAppearance, isEmbedded: true) { [weak self] rowButton in
+                self?.didTap(selectedRowButton: rowButton, selection: selection)
+            }
+
+            if initialSelection == selection {
+                linkRowButton.isSelected = true
+            }
+
+            stackView.addArrangedSubview(linkRowButton)
         }
 
         for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) {
@@ -86,7 +111,9 @@ import UIKit
                                                                             appearance: rowButtonAppearance,
                                                                             shouldAnimateOnPress: true,
                                                                             isEmbedded: true,
-                                                                            didTap: handleRowSelection(selectedRowButton:)))
+                                                                            didTap: { [weak self] rowButton in
+                self?.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: paymentMethodType))
+            }))
         }
 
         if appearance.embeddedPaymentElement.style != .floatingButton {
@@ -106,10 +133,12 @@ import UIKit
     }
 
     // MARK: Tap handling
-    func handleRowSelection(selectedRowButton: RowButton) {
+    func didTap(selectedRowButton: RowButton, selection: Selection) {
         for case let rowButton as RowButton in stackView.arrangedSubviews {
             rowButton.isSelected = rowButton === selectedRowButton
         }
+
+        self.selection = selection
     }
 
     func didTapAccessoryButton() {

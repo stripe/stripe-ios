@@ -82,7 +82,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     mode: .paymentIntentClientSecret(clientSecret),
                     configuration: self.configuration,
                     analyticsHelper: .init(isCustom: false, configuration: self.configuration),
-                    isFlowController: false
+                    integrationShape: .complete
                 ) { result in
                     switch result {
                     case .success(let loadResult):
@@ -166,7 +166,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration),
-            isFlowController: false
+            integrationShape: .complete
         ) { result in
             switch result {
             case .success(let loadResult):
@@ -233,7 +233,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration),
-            isFlowController: false
+            integrationShape: .complete
         ) { result in
             switch result {
             case .success(let loadResult):
@@ -291,7 +291,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 mode: .paymentIntentClientSecret(clientSecret),
                 configuration: self.configuration,
                 analyticsHelper: .init(isCustom: false, configuration: self.configuration),
-                isFlowController: false
+                integrationShape: .complete
             ) { result in
                 guard case .success(let loadResult) = result else {
                     XCTFail()
