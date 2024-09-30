@@ -16,7 +16,7 @@ import UIKit
     typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
 
     private let appearance: PaymentSheet.Appearance
-    private var selection: Selection?
+    private(set) var selection: Selection?
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()

@@ -504,7 +504,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     // MARK: Initial selection tests
 
     func testEmbeddedPaymentMethodsView_flatRadio_initialApplePay() {
-        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .applePay,
+        let initialSelection: EmbeddedPaymentMethodsView.Selection = .applePay
+
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: .default,
@@ -512,11 +514,13 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none)
 
+        XCTAssertEqual(embeddedView.selection, initialSelection)
         verify(embeddedView)
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_initialLink() {
-        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .link,
+        let initialSelection: EmbeddedPaymentMethodsView.Selection = .link
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: .default,
@@ -524,11 +528,14 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none)
 
+        XCTAssertEqual(embeddedView.selection, initialSelection)
         verify(embeddedView)
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_initialSavedCard() {
-        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .saved(paymentMethod: STPPaymentMethod._testCard()),
+        let initialSelection: EmbeddedPaymentMethodsView.Selection = .saved(paymentMethod: ._testCard())
+
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: ._testCard(),
                                                       appearance: .default,
@@ -536,6 +543,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .edit)
 
+        XCTAssertEqual(embeddedView.selection, initialSelection)
         verify(embeddedView)
     }
 
