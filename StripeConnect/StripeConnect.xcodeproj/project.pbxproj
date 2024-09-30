@@ -87,6 +87,7 @@
 		41D17A6C2C5A7429007C6EE6 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A612C5A7429007C6EE6 /* StripeiOS-Release.xcconfig */; };
 		41D17A6D2C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A622C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig */; };
 		41D17A6E2C5A7429007C6EE6 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A632C5A7429007C6EE6 /* Version.xcconfig */; };
+		E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */; };
 		E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */; };
 		E6F485FC2C9E360A000D914F /* ConnectJSURLParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */; };
 		E6F485FE2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485FD2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift */; };
@@ -185,6 +186,7 @@
 		41D17A612C5A7429007C6EE6 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		41D17A622C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		41D17A632C5A7429007C6EE6 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeConnect+Exports.swift"; sourceTree = "<group>"; };
 		E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewController.swift; sourceTree = "<group>"; };
 		E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectJSURLParams.swift; sourceTree = "<group>"; };
 		E6F485FD2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewControllerTests.swift; sourceTree = "<group>"; };
@@ -391,6 +393,7 @@
 				416E9E752C751B0500A0B917 /* EmbeddedComponentManager.swift */,
 				413D18452C7FB75B0051AA42 /* EmbeddedComponentManager+Appearance.swift */,
 				41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */,
+				E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -638,6 +641,7 @@
 				4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */,
 				413987CE2C63F34B001D375E /* UpdateConnectInstanceSender.swift in Sources */,
 				416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */,
+				E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */,
 				410D0FE32C6D31C6009B0E26 /* StripeConnectConstants.swift in Sources */,
 				4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */,
 				413987CC2C63F34B001D375E /* VoidPayload.swift in Sources */,

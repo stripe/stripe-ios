@@ -39,6 +39,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Layout" }
         case horizontal
         case vertical
+        case automatic
     }
 
     enum IntegrationType: String, PickerEnum {
