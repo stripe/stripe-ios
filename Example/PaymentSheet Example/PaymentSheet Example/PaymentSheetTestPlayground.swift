@@ -23,8 +23,8 @@ struct PaymentSheetTestPlayground: View {
         // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
         //  (each view can hold 10 direct subviews)
         Group {
-            SettingView(setting: $playgroundController.settings.uiStyle)
-            SettingView(setting: $playgroundController.settings.layout)
+            SettingView(setting: uiStyleBinding)
+            SettingView(setting: $playgroundController.settings.layout).disabled(playgroundController.settings.uiStyle == .embedded)
             SettingView(setting: $playgroundController.settings.shippingInfo)
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
@@ -90,7 +90,7 @@ struct PaymentSheetTestPlayground: View {
                                 })
                         }
                         SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: $playgroundController.settings.integrationType)
+                        SettingPickerView(setting: integrationTypeBinding).disabled(playgroundController.settings.uiStyle == .embedded)
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
                         SettingPickerView(setting: $playgroundController.settings.amount)
@@ -234,12 +234,38 @@ struct PaymentSheetTestPlayground: View {
             }
         }
     }
+
+    var uiStyleBinding: Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
+        Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
+            return playgroundController.settings.uiStyle
+        } set: { newUIStyle in
+            // If we switch to embedded set confirmation type to deferred CSC if in intent first confirmation type
+            if newUIStyle == .embedded && playgroundController.settings.integrationType == .normal {
+                playgroundController.settings.integrationType = .deferred_csc
+            }
+
+            playgroundController.settings.uiStyle = newUIStyle
+        }
+    }
+
+    var integrationTypeBinding: Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
+        Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
+            return playgroundController.settings.integrationType
+        } set: { newIntegrationType in
+            // If switching to CSC and embedded is selected, reset to PaymentSheet
+            if newIntegrationType == .normal && playgroundController.settings.uiStyle == .embedded {
+                playgroundController.settings.uiStyle = .paymentSheet
+            }
+            playgroundController.settings.integrationType = newIntegrationType
+        }
+    }
 }
 
 @available(iOS 14.0, *)
 struct PaymentSheetButtons: View {
     @EnvironmentObject var playgroundController: PlaygroundController
     @State var psIsPresented: Bool = false
+    @State var embeddedIsPresented: Bool = false
     @State var psFCOptionsIsPresented: Bool = false
     @State var psFCIsConfirming: Bool = false
 
@@ -298,7 +324,7 @@ struct PaymentSheetButtons: View {
                         ExamplePaymentStatusView(result: result)
                     }
                 }
-            } else {
+            } else if playgroundController.settings.uiStyle == .flowController {
                 VStack {
                     HStack {
                         Text("PaymentSheet.FlowController")
@@ -350,6 +376,55 @@ struct PaymentSheetButtons: View {
                             .foregroundColor(.gray)
                             .padding()
                         }
+                    }
+                    if let result = playgroundController.lastPaymentResult {
+                        ExamplePaymentStatusView(result: result)
+                    }
+                }
+            } else if playgroundController.settings.uiStyle == .embedded {
+                VStack {
+                    HStack {
+                        Text("Embedded mobile payment element")
+                            .font(.subheadline.smallCaps())
+                        Spacer()
+                        if playgroundController.isLoading {
+                            ProgressView()
+                        } else {
+                            if playgroundController.settings != playgroundController.currentlyRenderedSettings {
+                                StaleView()
+                            }
+                            Button {
+                                reloadPlaygroundController()
+                            } label: {
+                                Image(systemName: "arrow.clockwise.circle")
+                            }
+                            .accessibility(identifier: "Reload")
+                            .frame(alignment: .topLeading)
+                        }
+                    }.padding(.horizontal)
+
+                    if playgroundController.embeddedPlaygroundController != nil,
+                       playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
+                        HStack {
+                            Button {
+                                embeddedIsPresented = true
+                                playgroundController.presentEmbedded()
+                            } label: {
+                                Text("Present embedded payment element")
+                            }
+                            Spacer()
+                            Button {
+                                playgroundController.didTapShippingAddressButton()
+                            } label: {
+                                Text("\(playgroundController.addressDetails?.localizedDescription ?? "Address")")
+                                    .accessibility(identifier: "Address")
+                            }
+                        }
+                        .padding()
+                    } else {
+                        Text("Embedded payment element is nil")
+                        .foregroundColor(.gray)
+                        .padding()
                     }
                     if let result = playgroundController.lastPaymentResult {
                         ExamplePaymentStatusView(result: result)

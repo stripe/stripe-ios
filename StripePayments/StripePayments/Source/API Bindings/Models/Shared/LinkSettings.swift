@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkSettings)
@@ -19,12 +20,6 @@ import Foundation
     @_spi(STP) @frozen public enum PopupWebviewOption: String {
         case shared
         case ephemeral
-    }
-
-    @_spi(STP) @frozen public enum LinkMode: String {
-        case linkPaymentMethod = "LINK_PAYMENT_METHOD"
-        case passthrough = "PASSTHROUGH"
-        case linkCardBrand = "LINK_CARD_BRAND"
     }
 
     @_spi(STP) public let fundingSources: Set<FundingSource>

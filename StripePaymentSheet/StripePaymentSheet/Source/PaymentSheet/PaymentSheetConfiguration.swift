@@ -9,7 +9,6 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -205,6 +204,9 @@ extension PaymentSheet {
 
         /// Payment methods are arranged vertically. Users can scroll up or down to navigate through different payment methods.
         case vertical
+        
+        /// Stripe automatically chooses between `horizontal` and `vertical`.
+        case automatic
     }
 
     internal enum CustomerAccessProvider {

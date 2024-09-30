@@ -208,6 +208,11 @@ extension PaymentMethodFormViewController {
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement? { form as? USBankAccountPaymentMethodElement }
     private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? { form as? InstantDebitsPaymentMethodElement }
 
+    private var elementsSessionContext: ElementsSessionContext? {
+        let linkMode = elementsSession.linkSettings?.linkMode
+        return ElementsSessionContext(linkMode: linkMode)
+    }
+
     private var shouldOverridePrimaryButton: Bool {
         if paymentMethodType == .stripe(.USBankAccount) {
             if case .new = paymentOption {
@@ -215,7 +220,7 @@ extension PaymentMethodFormViewController {
             } else {
                 return true
             }
-        } else if paymentMethodType == .instantDebits {
+        } else if paymentMethodType == .instantDebits || paymentMethodType == .linkCardBrand {
             // only override buy button (show "Continue") IF we don't have a linked bank
             return instantDebitsFormElement?.getLinkedBank() == nil
         }
@@ -225,11 +230,12 @@ extension PaymentMethodFormViewController {
     var overridePrimaryButtonState: OverridePrimaryButtonState? {
         guard shouldOverridePrimaryButton else { return nil }
         let isEnabled: Bool = {
-            if paymentMethodType == .stripe(.USBankAccount) && usBankAccountFormElement?.canLinkAccount ?? false {
-                true
-            } else if paymentMethodType == .instantDebits && instantDebitsFormElement?.enableCTA ?? false {
-                true
-            } else {
+            switch paymentMethodType {
+            case .stripe(let paymentMethod):
+                paymentMethod == .USBankAccount && (usBankAccountFormElement?.canLinkAccount ?? false)
+            case .instantDebits, .linkCardBrand:
+                instantDebitsFormElement?.enableCTA ?? false
+            default:
                 false
             }
         }()
@@ -253,7 +259,7 @@ extension PaymentMethodFormViewController {
         switch paymentMethodType {
         case .stripe(.USBankAccount):
             handleCollectBankAccount(from: viewController)
-        case .instantDebits:
+        case .instantDebits, .linkCardBrand:
             handleCollectInstantDebits(from: viewController)
         default:
             return
@@ -312,6 +318,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -322,6 +329,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -346,6 +354,7 @@ extension PaymentMethodFormViewController {
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
@@ -402,6 +411,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -412,6 +422,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,

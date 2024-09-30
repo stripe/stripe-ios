@@ -492,7 +492,7 @@ extension PaymentSheet {
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
-            case .vertical:
+            case .vertical, .automatic:
                 return PaymentSheetVerticalViewController(
                     configuration: configuration,
                     loadResult: loadResult,

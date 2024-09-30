@@ -42,6 +42,7 @@ class HostController {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let returnURL: String?
+    private let elementsSessionContext: ElementsSessionContext?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
     private let analyticsClientV1: STPAnalyticsClientProtocol
 
@@ -63,6 +64,7 @@ class HostController {
         apiClient: FinancialConnectionsAPIClient,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
+        elementsSessionContext: ElementsSessionContext?,
         returnURL: String?,
         publishableKey: String?,
         stripeAccount: String?
@@ -70,6 +72,7 @@ class HostController {
         self.apiClient = apiClient
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
+        self.elementsSessionContext = elementsSessionContext
         self.returnURL = returnURL
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
         analyticsClient.setAdditionalParameters(
@@ -154,7 +157,8 @@ private extension HostController {
             apiClient: apiClient,
             manifest: manifest,
             sessionFetcher: sessionFetcher,
-            returnURL: returnURL
+            returnURL: returnURL,
+            elementsSessionContext: elementsSessionContext
         )
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)

@@ -21,6 +21,7 @@ import UIKit
 class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
+    @Published var embeddedPlaygroundController: EmbeddedPlaygroundViewController?
     @Published var settings: PaymentSheetTestPlaygroundSettings
     @Published var currentlyRenderedSettings: PaymentSheetTestPlaygroundSettings
     @Published var addressDetails: AddressViewController.AddressDetails?
@@ -170,6 +171,8 @@ class PlaygroundController: ObservableObject {
             configuration.paymentMethodLayout = .horizontal
         case .vertical:
             configuration.paymentMethodLayout = .vertical
+        case .automatic:
+            configuration.paymentMethodLayout = .automatic
         }
         return configuration
     }
@@ -460,6 +463,7 @@ extension PlaygroundController {
         paymentSheetFlowController = nil
         addressViewController = nil
         paymentSheet = nil
+        embeddedPlaygroundController = nil
         lastPaymentResult = nil
         isLoading = true
         let settingsToLoad = self.settings
@@ -551,7 +555,7 @@ extension PlaygroundController {
                     self.buildPaymentSheet()
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
-                } else {
+                } else if self.settings.uiStyle == .flowController {
                     let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
                         self.currentlyRenderedSettings = self.settings
                         switch result {
@@ -594,6 +598,10 @@ extension PlaygroundController {
                             completion: completion
                         )
                     }
+                } else if self.settings.uiStyle == .embedded {
+                    self.embeddedPaymentElement()
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
                 }
             }
         }
@@ -796,4 +804,30 @@ class AnalyticsLogObserver: ObservableObject {
     static let shared: AnalyticsLogObserver = .init()
     /// All analytic events sent by the SDK since the playground was loaded.
     @Published var analyticsLog: [[String: Any]] = []
+}
+
+
+// MARK: Embedded helpers
+extension PlaygroundController: EmbeddedPlaygroundViewControllerDelegate {
+    func embeddedPaymentElement() {
+        embeddedPlaygroundController = EmbeddedPlaygroundViewController(settings: settings, appearance: appearance)
+        embeddedPlaygroundController?.delegate = self
+    }
+    
+    func presentEmbedded() {
+        guard let embeddedPlaygroundController else { return }
+        let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
+        embeddedPlaygroundController.navigationItem.leftBarButtonItem = closeButton
+
+        let navController = UINavigationController(rootViewController: embeddedPlaygroundController)
+        rootViewController.present(navController, animated: true)
+    }
+
+    @objc func dismissEmbedded() {
+        embeddedPlaygroundController?.dismiss(animated: true, completion: nil)
+    }
+    
+    func didComplete(with result: StripePaymentSheet.PaymentSheetResult) {
+        lastPaymentResult = result
+    }
 }

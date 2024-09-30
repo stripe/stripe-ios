@@ -11,13 +11,13 @@ import Foundation
 import UIKit
 
 // TODO(porter) Probably shouldn't be public, just easy for testing.
-@_spi(EmbeddedPaymentMethodsViewBeta) public class EmbeddedPaymentMethodsView: UIView {
+@_spi(EmbeddedPaymentElementPrivateBeta) public class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = appearance.paymentOptionView.style == .floating ? appearance.paymentOptionView.paymentMethodRow.floating.spacing : 0
+        stackView.spacing = appearance.embeddedPaymentElement.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
         return stackView
     }()
 
@@ -40,7 +40,7 @@ import UIKit
          savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
         self.appearance = appearance
         super.init(frame: .zero)
-        let rowButtonAppearance = appearance.paymentOptionView.style.appearanceForStyle(appearance: appearance)
+        let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
 
         if let savedPaymentMethod {
             let accessoryButton: RowButton.RightAccessoryButton? = {
@@ -89,13 +89,13 @@ import UIKit
                                                                             didTap: handleRowSelection(selectedRowButton:)))
         }
 
-        if appearance.paymentOptionView.style != .floating {
-            stackView.addSeparators(color: appearance.paymentOptionView.paymentMethodRow.flat.separatorColor ?? appearance.colors.componentBorder,
+        if appearance.embeddedPaymentElement.style != .floatingButton {
+            stackView.addSeparators(color: appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder,
                                     backgroundColor: appearance.colors.componentBackground,
-                                    thickness: appearance.paymentOptionView.paymentMethodRow.flat.separatorThickness,
-                                    inset: appearance.paymentOptionView.paymentMethodRow.flat.separatorInset ?? appearance.paymentOptionView.style.defaultInsets,
-                                    addTopSeparator: appearance.paymentOptionView.paymentMethodRow.flat.topSeparatorEnabled,
-                                    addBottomSeparator: appearance.paymentOptionView.paymentMethodRow.flat.bottomSeparatorEnabled)
+                                    thickness: appearance.embeddedPaymentElement.row.flat.separatorThickness,
+                                    inset: appearance.embeddedPaymentElement.row.flat.separatorInsets ?? appearance.embeddedPaymentElement.style.defaultInsets,
+                                    addTopSeparator: appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled,
+                                    addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
 
         addAndPinSubview(stackView)
@@ -117,28 +117,28 @@ import UIKit
     }
 }
 
-extension PaymentSheet.Appearance.PaymentOptionView.Style {
+extension PaymentSheet.Appearance.EmbeddedPaymentElement.Style {
 
     var defaultInsets: UIEdgeInsets {
         switch self {
-        case .flatRadio:
+        case .flatWithRadio:
             return UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        case .floating:
+        case .floatingButton:
             return .zero
         }
     }
 
     fileprivate func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
         switch self {
-        case .flatRadio:
+        case .flatWithRadio:
             // TODO(porter) See if there is a better way to do this, less sneaky
             var appearance = appearance
             appearance.borderWidth = 0.0
-            appearance.colors.componentBorderSelected = .clear
+            appearance.colors.selectedComponentBorder = .clear
             appearance.cornerRadius = 0.0
             appearance.shadow = .disabled
             return appearance
-        case .floating:
+        case .floatingButton:
             return appearance
         }
     }
