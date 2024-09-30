@@ -18,12 +18,36 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
     }
 
+    enum IntegrationShape {
+        case complete
+        case flowController
+        case embedded
+
+        var canDefaultToLinkOrApplePay: Bool {
+            switch self {
+            case .complete:
+                return false
+            case .flowController, .embedded:
+                return true
+            }
+        }
+
+        var shouldStartCheckoutMeasurementOnLoad: Bool {
+            switch self {
+            case .complete, .embedded: // TODO(porter) Figure out when we want to start checkout measurement for embedded
+                return false
+            case .flowController:
+                return true
+            }
+        }
+    }
+
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentSheet.Configuration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        isFlowController: Bool,
+        integrationShape: IntegrationShape,
         completion: @escaping (Result<LoadResult, Error>) -> Void
     ) {
         analyticsHelper.logLoadStarted()
@@ -89,8 +113,8 @@ final class PaymentSheetLoader {
                 let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
                     savedPaymentMethods: filteredSavedPaymentMethods,
                     customerID: configuration.customer?.id,
-                    showApplePay: isFlowController ? isApplePayEnabled : false,
-                    showLink: isFlowController ? isLinkEnabled : false
+                    showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
+                    showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: false)
                 analyticsHelper.logLoadSucceeded(
@@ -99,7 +123,7 @@ final class PaymentSheetLoader {
                     defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                     orderedPaymentMethodTypes: paymentMethodTypes
                 )
-                if isFlowController {
+                if integrationShape.shouldStartCheckoutMeasurementOnLoad {
                     analyticsHelper.startTimeMeasurement(.checkout)
                 }
 
@@ -113,6 +137,29 @@ final class PaymentSheetLoader {
             } catch {
                 analyticsHelper.logLoadFailed(error: error)
                 completion(.failure(error))
+            }
+        }
+    }
+
+    public static func load(
+        mode: PaymentSheet.InitializationMode,
+        configuration: PaymentSheet.Configuration,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        integrationShape: IntegrationShape
+    ) async throws -> LoadResult {
+        return try await withCheckedThrowingContinuation { continuation in
+            load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                integrationShape: integrationShape
+            ) { result in
+                switch result {
+                case .success(let loadResult):
+                    continuation.resume(returning: loadResult)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }
