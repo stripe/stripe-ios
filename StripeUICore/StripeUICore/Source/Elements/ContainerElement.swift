@@ -78,7 +78,6 @@ extension ContainerElement {
 
     public var subElementDebugDescription: String  {
         elements.reduce("") { partialResult, element in
-            // 
             partialResult + "\n└─ \(String(describing: element).replacingOccurrences(of: "└─", with: "   └─"))"
         }
     }

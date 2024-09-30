@@ -142,7 +142,7 @@ import UIKit
     // MARK: Helpers
 
     static var didShowTestmodeKeyWarning = false
-    class func validateKey(_ publishableKey: String?) {
+    @_spi(STP) public class func validateKey(_ publishableKey: String?) {
         guard NSClassFromString("XCTest") == nil else {
             return  // no asserts in unit tests
         }
@@ -506,7 +506,7 @@ extension STPAPIClient {
         }
 
         do {
-            /// HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
+            // HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
             if T.self == EmptyResponse.self,
                 let decodedStripeError = decodeStripeErrorResponse(data: data, response: response)
             {

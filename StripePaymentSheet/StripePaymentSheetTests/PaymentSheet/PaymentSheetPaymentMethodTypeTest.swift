@@ -340,6 +340,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(elementsSession.orderedPaymentMethodTypes, [.klarna, .card])
     }
 
+    // MARK: - Payment Method Types
+
     func testPaymentIntentFilteredPaymentMethodTypes() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .klarna, .przelewy24])
         var configuration = PaymentSheet.Configuration()
@@ -406,6 +408,23 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         XCTAssertEqual(types, [.stripe(.card)])
     }
+
+    func testPaymentMethodTypesLinkCardBrand() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let configuration = PaymentSheet.Configuration()
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(
+                intent: intent,
+                linkMode: .linkCardBrand,
+                linkFundingSources: [.card, .bankAccount]
+            ),
+            configuration: configuration
+        )
+        XCTAssertEqual(types, [.stripe(.card), .linkCardBrand])
+    }
+
+    // MARK: Other
 
     func testUnknownPMTypeIsUnsupported() {
         let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.unknown])
@@ -517,7 +536,8 @@ extension STPFixtures {
         paymentMethodOptions: STPPaymentMethodOptions? = nil,
         captureMethod: String = "automatic",
         confirmationMethod: String = "automatic",
-        shippingProvided: Bool = false
+        shippingProvided: Bool = false,
+        paymentMethodJson: [String: Any]? = nil
     ) -> STPPaymentIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)!
         if let setupFutureUsage = setupFutureUsage {
@@ -536,6 +556,10 @@ extension STPFixtures {
             // The payment intent json already has shipping on it, so just remove it if needed
             json["shipping"] = nil
         }
+        if let paymentMethodJson = paymentMethodJson {
+            json["payment_method"] = paymentMethodJson
+
+        }
         if let paymentMethodOptions = paymentMethodOptions {
             json["payment_method_options"] = paymentMethodOptions.dictionaryValue
         }
@@ -544,12 +568,17 @@ extension STPFixtures {
 
     static func makeSetupIntent(
         paymentMethodTypes: [STPPaymentMethodType] = [.card],
-        usage: String = "off_session"
+        usage: String = "off_session",
+        paymentMethodJson: [String: Any]? = nil
     ) -> STPSetupIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONSetupIntent)!
         json["usage"] = usage
         json["payment_method_types"] = paymentMethodTypes.map {
             STPPaymentMethod.string(from: $0)
+        }
+        if let paymentMethodJson = paymentMethodJson {
+            json["payment_method"] = paymentMethodJson
+
         }
         return STPSetupIntent.decodedObject(fromAPIResponse: json)!
     }

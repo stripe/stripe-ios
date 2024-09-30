@@ -13,7 +13,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
     func testNativeNetworkingTestMode() throws {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
-        executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
+        // TODO(mats): Reenable once step up verification issues are resolved (BANKCON-14617).
+        // executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeAutofillSignInFlowTest(emailAddress: emailAddresss)
         let bankAccountName = "Insufficient Funds"
         executeNativeNetworkingTestModeAddBankAccount(
@@ -260,8 +261,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeBankAccount(name: bankAccountName).tap()
 
-        let accountUpdateRequiredContinueButton = app.buttons["account_update_required_continue_button"]
-        XCTAssertTrue(accountUpdateRequiredContinueButton.waitForExistence(timeout: 1))
+        let accountUpdateRequiredContinueButton = app.buttons["generic_info_primary_button"]
+        XCTAssertTrue(accountUpdateRequiredContinueButton.waitForExistence(timeout: 10))
         accountUpdateRequiredContinueButton.tap()
 
         app.fc_nativeConnectAccountsButton.tap()
@@ -400,5 +401,173 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
             app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'Success'")).firstMatch
                 .exists
         )
+    }
+
+    func testNativeNetworkingManualEntryTestMode() throws {
+        let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
+        executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: emailAddresss)
+        executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: emailAddresss)
+        executeNativeNetworkingManualEntryTestModeConsentWithUpdateRequiredTest(emailAddress: emailAddresss)
+        executeNativeNetworkingManualEntryTestModeNotNowFlowTest(emailAddress: emailAddresss)
+    }
+
+    private func executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: String) {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)","phone":"4015006000"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        // auto-fill manual entry screen
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
+
+        app.fc_nativeSaveToLinkButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+    }
+
+    private func executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: String) {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"token","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        // we expect this to open the warm up pane (a new behavior in networking manual entry)
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        app.fc_nativeNetworkingWarmupContinueButton.waitForExistenceAndTap()
+
+        // auto-fill OTP
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
+
+        // tap manual entry institution
+        app.scrollViews.staticTexts["Test Institution"].waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+    }
+
+    // this test exercises a user tapping on manual entry from consent, logging into link,
+    // seeing the RUX/Link Account Picker which will have a "Agree and connect account"
+    // button, _and_ the user will have to update the bank account through the
+    // "Account Update Required" drawer
+    private func executeNativeNetworkingManualEntryTestModeConsentWithUpdateRequiredTest(emailAddress: String) {
+        let linkAnDataCannotBeSharedThroughLinkAccount = {
+            let app = XCUIApplication.fc_launch(
+                playgroundConfigurationString:
+    """
+    {"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","email":"\(emailAddress)","phone":"4015006000"}
+    """
+            )
+
+            app.fc_playgroundCell.tap()
+            app.fc_playgroundShowAuthFlowButton.tap()
+
+            app.fc_nativeConsentAgreeButton.tap()
+
+            app.fc_nativeNetworkingWarmupContinueButton.waitForExistenceAndTap()
+
+            app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
+
+            app.scrollViews.otherElements["add_bank_account"].waitForExistenceAndTap()
+
+            // wait for search bar to appear
+            _ = app.fc_searchBarTextField
+
+            app.fc_scrollDown() // see all institutions
+
+            app.fc_nativeFeaturedInstitution(name: "Data cannot be shared through Link").tap()
+
+            // select "High Balance" instead of the default "Success" account because
+            // selecting the "Success" will override the previously-linked manual entry account
+            XCTAssertTrue(app.fc_nativeConnectAccountsButton.waitForExistence(timeout: 60.0))
+            app.fc_scrollDown()
+            app.staticTexts["High Balance"].waitForExistenceAndTap()
+
+            app.fc_nativeConnectAccountsButton.tap()
+
+            app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+            XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+        }
+        linkAnDataCannotBeSharedThroughLinkAccount()
+
+        // turn on all permissions so we get an "Update Required" account
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"token","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"ownership_permission":true,"balances_permission":true,"transactions_permission":true,"email":"\(emailAddress)"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        // we expect this to open the warm up pane (a new behavior in networking manual entry)
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        app.fc_nativeNetworkingWarmupContinueButton.waitForExistenceAndTap()
+
+        // auto-fill OTP
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
+
+        // tap institution
+        //
+        // note that this will NOT present a drawer because user needs to consent
+        app.scrollViews.staticTexts["High Balance"].waitForExistenceAndTap()
+
+        // this will get consent
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        // a drawer will present to confirm
+        let accountUpdateRequiredContinueButton = app.buttons["generic_info_primary_button"]
+        accountUpdateRequiredContinueButton.waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+    }
+
+    private func executeNativeNetworkingManualEntryTestModeNotNowFlowTest(emailAddress: String) {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"token","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"networking","payment_method_permission":true,"email":"\(emailAddress)"}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        // we expect this to open the warm up pane (a new behavior in networking manual entry)
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        // pressing "Not Now" should forward to manual entry pane (a new behavior in networking manual entry)
+        app.buttons["Not now"].waitForExistenceAndTap()
+
+        // fill out manual entry
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
     }
 }

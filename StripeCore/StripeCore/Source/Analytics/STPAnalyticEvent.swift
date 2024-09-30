@@ -78,12 +78,8 @@ import Foundation
     // MARK: - PaymentSheet Show
     case mcShowCustomNewPM = "mc_custom_sheet_newpm_show"
     case mcShowCustomSavedPM = "mc_custom_sheet_savedpm_show"
-    case mcShowCustomApplePay = "mc_custom_sheet_applepay_show"
-    case mcShowCustomLink = "mc_custom_sheet_link_show"
     case mcShowCompleteNewPM = "mc_complete_sheet_newpm_show"
     case mcShowCompleteSavedPM = "mc_complete_sheet_savedpm_show"
-    case mcShowCompleteApplePay = "mc_complete_sheet_applepay_show"
-    case mcShowCompleteLink = "mc_complete_sheet_link_show"
 
     // MARK: - PaymentSheet Payment
     case mcPaymentCustomNewPMSuccess = "mc_custom_payment_newpm_success"
@@ -115,6 +111,10 @@ import Foundation
     case mcOptionSelectCompleteSavedPM = "mc_complete_paymentoption_savedpm_select"
     case mcOptionSelectCompleteApplePay = "mc_complete_paymentoption_applepay_select"
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
+
+    // MARK: - PaymentSheet Saved Payment Method Removed
+    case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
+    case mcOptionRemoveCompleteSavedPM = "mc_complete_paymentoption_removed"
 
     // MARK: - Link Signup
     case linkSignupCheckboxChecked = "link.signup.checkbox_checked"
@@ -197,7 +197,9 @@ import Foundation
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
     case paymentSheetFormShown = "mc_form_shown"
     case paymentSheetFormInteracted = "mc_form_interacted"
+    case paymentSheetFormCompleted = "mc_form_completed"
     case paymentSheetCardNumberCompleted = "mc_card_number_completed"
+    case paymentSheetDeferredIntentPaymentMethodIdMismatch = "mc_deferred_intent_payment_method_id_mismatch"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
@@ -270,4 +272,7 @@ import Foundation
     case refreshSetupIntentSuccess = "stripeios.refresh_setup_intent_success"
     case refreshPaymentIntentFailed = "stripeios.refresh_payment_intent_failed"
     case refreshSetupIntentFailed = "stripeios.refresh_setup_intent_failed"
+
+    // MARK: - Telemetry Client
+    case fraudDetectionApiFailure = "fraud_detection_data_repository.api_failure"
 }

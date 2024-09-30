@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li plăți fără dobândă de %2$@";
-
 "+ Add" = "+ Adăugare";
 
 "Add US bank account" = "Adăugați un cont bancar din SUA";
@@ -25,6 +23,12 @@
 "Bank" = "Bancă";
 
 "Bank account" = "Cont bancar";
+
+"Buy now or pay later with <img/>" = "Cumpărați acum sau plătiți mai târziu folosind <img/>";
+
+"Buy now or pay later with Afterpay" = "Cumpărați acum sau plătiți mai târziu folosind Afterpay";
+
+"Buy now or pay later with Clearpay" = "Cumpărați acum sau plătiți mai târziu folosind Clearpay";
 
 "Buy now or pay later with Klarna" = "Cumpărați acum sau plătiți mai târziu folosind Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Confirmați-vă CVC-ul";
 
-"Confirm your CVV" = "Confirmați-vă CVV-ul";
-
 "Contact information" = "Informații de contact";
 
 "EPS Bank" = "Banca EPS";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plătiți mai rapid la %@ și la alte mii de întreprinderi.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Plătiți în <num_installments/> plăți fără dobândă a câte <installment_price/> cu <img/>";
-
 "Pay over time with %@" = "Folosiți ca metodă de plată de-a lungul timpului %@";
+
+"Pay over time with Affirm" = "Folosiți ca metodă de plată de-a lungul timpului Affirm";
 
 "Pay with Link" = "Plătiți cu Link";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Salvați pentru plăți viitoare";
 
-"Save this account for future %@ payments" = "Salvați acest cont pentru plăți viitoare către %@";
+"Save payment details to %@ for future purchases" = "Salvați detaliile de plată pe %@ pentru achiziții viitoare";
 
-"Save this card for future %@ payments" = "Salvați acest card pentru plăți viitoare către %@";
+"Save this account for future %@ payments" = "Salvați acest cont pentru plăți viitoare către %@";
 
 "Save your bank account in just a few steps." = "Salvați-vă contul bancar în doar câțiva pași.";
 

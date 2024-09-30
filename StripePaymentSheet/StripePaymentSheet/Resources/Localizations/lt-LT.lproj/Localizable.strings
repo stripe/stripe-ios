@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li %2$@ mokėjimai be palūkanų";
-
 "+ Add" = "+ Pridėti";
 
 "Add US bank account" = "Pridėti JAV banko sąskaitą";
@@ -25,6 +23,12 @@
 "Bank" = "Bankas";
 
 "Bank account" = "Banko sąskaita";
+
+"Buy now or pay later with <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami „<img/>“";
+
+"Buy now or pay later with Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami „Afterpay“";
+
+"Buy now or pay later with Clearpay" = "Pirkite dabar arba mokėkite vėliau naudodami „Clearpay“";
 
 "Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami „Klarna“";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Patvirtinkite savo CVC";
 
-"Confirm your CVV" = "Patvirtinkite savo CVV";
-
 "Contact information" = "Kontaktinė informacija";
 
 "EPS Bank" = "EPS bankas";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau „%@“ ir daugybei kitų įmonių.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Mokėti <num_installments/> be palūkanų <installment_price/> mokėjimus naudojant <img/>";
-
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
+
+"Pay over time with Affirm" = "Mokėkite per tam tikrą laikotarpį naudodami „Affirm“";
 
 "Pay with Link" = "Mokėti naudojant „Link“";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Išsaugokite vėlesniems mokėjimams";
 
-"Save this account for future %@ payments" = "Išsaugoti šią sąskaitą vėlesniems %@ mokėjimams";
+"Save payment details to %@ for future purchases" = "Išsaugoti mokėjimo duomenis „%@” būsimiems pirkimams";
 
-"Save this card for future %@ payments" = "Išsaugoti kortelę vėlesniems %@ mokėjimams";
+"Save this account for future %@ payments" = "Išsaugoti šią sąskaitą vėlesniems %@ mokėjimams";
 
 "Save your bank account in just a few steps." = "Vos keliais veiksmais įrašykite savo banko sąskaitą.";
 

@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li interest-free payments of %2$@";
-
 "+ Add" = "+ Add";
 
 "Add US bank account" = "Add US bank account";
@@ -25,6 +23,12 @@
 "Bank" = "Bank";
 
 "Bank account" = "Bank account";
+
+"Buy now or pay later with <img/>" = "Buy now or pay later with <img/>";
+
+"Buy now or pay later with Afterpay" = "Buy now or pay later with Afterpay";
+
+"Buy now or pay later with Clearpay" = "Buy now or pay later with Clearpay";
 
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Confirm your CVC";
 
-"Confirm your CVV" = "Confirm your CVV";
-
 "Contact information" = "Contact information";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
-
 "Pay over time with %@" = "Pay over time with %@";
+
+"Pay over time with Affirm" = "Pay over time with Affirm";
 
 "Pay with Link" = "Pay with Link";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Save for future payments";
 
-"Save this account for future %@ payments" = "Save this account for future %@ payments";
+"Save payment details to %@ for future purchases" = "Save payment details to %@ for future purchases";
 
-"Save this card for future %@ payments" = "Save this card for future %@ payments";
+"Save this account for future %@ payments" = "Save this account for future %@ payments";
 
 "Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
 

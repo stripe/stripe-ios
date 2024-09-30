@@ -42,6 +42,7 @@ class HostController {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let returnURL: String?
+    private let elementsSessionContext: ElementsSessionContext?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
     private let analyticsClientV1: STPAnalyticsClientProtocol
 
@@ -63,6 +64,7 @@ class HostController {
         apiClient: FinancialConnectionsAPIClient,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
+        elementsSessionContext: ElementsSessionContext?,
         returnURL: String?,
         publishableKey: String?,
         stripeAccount: String?
@@ -70,6 +72,7 @@ class HostController {
         self.apiClient = apiClient
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
+        self.elementsSessionContext = elementsSessionContext
         self.returnURL = returnURL
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
         analyticsClient.setAdditionalParameters(
@@ -154,7 +157,8 @@ private extension HostController {
             apiClient: apiClient,
             manifest: manifest,
             sessionFetcher: sessionFetcher,
-            returnURL: returnURL
+            returnURL: returnURL,
+            elementsSessionContext: elementsSessionContext
         )
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)
@@ -168,6 +172,7 @@ private extension HostController {
             visualUpdate: synchronizePayload.visual,
             returnURL: returnURL,
             consentPaneModel: synchronizePayload.text?.consentPane,
+            accountPickerPane: synchronizePayload.text?.accountPickerPane,
             apiClient: apiClient,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient
@@ -205,22 +210,13 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
 extension HostController: NativeFlowControllerDelegate {
     func nativeFlowController(
         _ nativeFlowController: NativeFlowController,
-        didFinish result: FinancialConnectionsSheet.Result
+        didFinish result: HostControllerResult
     ) {
         guard let viewController = navigationController.topViewController else {
             assertionFailure("Navigation stack is empty")
             return
         }
-        let hostControllerResult: HostControllerResult
-        switch result {
-        case .completed(let session):
-            hostControllerResult = .completed(.financialConnections(session))
-        case .canceled:
-            hostControllerResult = .canceled
-        case .failed(let error):
-            hostControllerResult = .failed(error: error)
-        }
-        delegate?.hostController(self, viewController: viewController, didFinish: hostControllerResult)
+        delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
 
     func nativeFlowController(

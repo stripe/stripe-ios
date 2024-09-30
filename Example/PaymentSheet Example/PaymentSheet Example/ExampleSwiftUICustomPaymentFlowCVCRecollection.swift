@@ -23,7 +23,7 @@ struct ExampleSwiftUICustomPaymentFlowCVCRecollection: View {
                         Text("Reset").font(.callout.smallCaps())
                     }.buttonStyle(.bordered)
                 }
-                SettingView(setting: $model.recollectCVC)
+                SettingView(setting: recollectCVCBinding)
                 PaymentSheet.FlowController.PaymentOptionsButton(
                     paymentSheetFlowController: paymentSheetFlowController,
                     onSheetDismissed: model.onOptionsCompletion
@@ -56,6 +56,18 @@ struct ExampleSwiftUICustomPaymentFlowCVCRecollection: View {
             }
         }.onAppear { model.preparePaymentSheet() }
     }
+    var recollectCVCBinding: Binding<RecollectCVCEnabled> {
+        Binding<RecollectCVCEnabled> {
+            return model.recollectCVC
+        } set: { newValue in
+            let oldValue = model.recollectCVC
+            model.recollectCVC = newValue
+            if oldValue != newValue {
+                model.updateFlowController()
+            }
+        }
+    }
+
 }
 
 enum RecollectCVCEnabled: String, PickerEnum {
@@ -116,12 +128,7 @@ class MyCustomBackendCVCRecollectionModel: ObservableObject {
                     // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
                     configuration.allowsDelayedPaymentMethods = true
 
-                    let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
-                                                                               confirmHandler: { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-                        self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
-                    }, isCVCRecollectionEnabledCallback: { [weak self] in
-                        return self?.isCVCRecollectionEnabledCallback() ?? false
-                    })
+                    let intentConfiguration = self.intentConfiguration()
 
                     PaymentSheet.FlowController.create(intentConfiguration: intentConfiguration, configuration: configuration) { [weak self] result in
                         switch result {
@@ -136,6 +143,19 @@ class MyCustomBackendCVCRecollectionModel: ObservableObject {
                 }
             })
         task.resume()
+    }
+    func intentConfiguration() -> PaymentSheet.IntentConfiguration {
+        return PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
+                                                confirmHandler: { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
+        }, requireCVCRecollection: self.recollectCVC == .on)
+    }
+    func updateFlowController() {
+        self.paymentSheetFlowController?.update(intentConfiguration: intentConfiguration(), completion: { error in
+            if let error {
+                print(error)
+            }
+        })
     }
     func serverSideConfirmHandler(_ paymentMethodID: String,
                                   _ shouldSavePaymentMethod: Bool,

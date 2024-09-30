@@ -13,6 +13,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case paymentSheet
         case flowController
+        case embedded
     }
 
     enum Mode: String, PickerEnum {
@@ -237,11 +238,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum LinkEnabled: String, PickerEnum {
-        static var enumName: String { "Link" }
+    enum LinkMode: String, PickerEnum {
+        static var enumName: String { "Link mode" }
 
-        case on
-        case off
+        case link_pm = "Link PM"
+        case passthrough
     }
 
     enum UserOverrideCountry: String, PickerEnum {
@@ -288,6 +289,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
     enum Autoreload: String, PickerEnum {
         static var enumName: String { "Autoreload" }
+
+        case on
+        case off
+    }
+    enum ShakeAmbiguousViews: String, PickerEnum {
+        static var enumName: String { "Shake Ambiguous Views" }
 
         case on
         case off
@@ -426,12 +433,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
-    var linkEnabled: LinkEnabled
+    var linkMode: LinkMode
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
-    var checkoutEndpoint: String?
+    var checkoutEndpoint: String
     var autoreload: Autoreload
+    var shakeAmbiguousViews: ShakeAmbiguousViews
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
@@ -466,12 +474,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodAllowRedisplayFilters: .always,
             defaultBillingAddress: .off,
             customEmail: nil,
-            linkEnabled: .off,
+            linkMode: .passthrough,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
+            shakeAmbiguousViews: .off,
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,

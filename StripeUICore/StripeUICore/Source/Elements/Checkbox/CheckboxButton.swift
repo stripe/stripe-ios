@@ -265,7 +265,7 @@ class CheckBox: UIView {
             return theme.colors.primary
         }
 
-        return theme.colors.background
+        return theme.colors.parentBackground
     }
 
     var theme: ElementsUITheme {
@@ -313,7 +313,12 @@ class CheckBox: UIView {
             fillColor.setFill()
         }
         borderPath.fill()
-        theme.colors.border.setStroke()
+        if theme.colors.border.rgba.alpha != 0 {
+            theme.colors.border.setStroke()
+        } else {
+            // If the border is clear, fall back to secondaryText
+            theme.colors.secondaryText.setStroke()
+        }
         borderPath.stroke()
 
         if isSelected {

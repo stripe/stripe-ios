@@ -15,6 +15,10 @@ final class FinancialConnectionsAPIClient {
     var consumerPublishableKey: String?
     var consumerSession: ConsumerSessionData?
 
+    var requestSurface: String {
+        isLinkWithStripe ? "ios_instant_debits" : "ios_connections"
+    }
+
     init(apiClient: STPAPIClient) {
         self.backingAPIClient = apiClient
     }
@@ -121,7 +125,8 @@ protocol FinancialConnectionsAPI {
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
-        routingNumber: String
+        routingNumber: String,
+        consumerSessionClientSecret: String?
     ) -> Future<FinancialConnectionsPaymentAccountResource>
 
     func attachLinkedAccountIdToLinkAccountSession(
@@ -141,7 +146,7 @@ protocol FinancialConnectionsAPI {
 
     func saveAccountsToNetworkAndLink(
         shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
@@ -154,6 +159,7 @@ protocol FinancialConnectionsAPI {
 
     func disableNetworking(
         disabledReason: String?,
+        clientSuggestedNextPaneOnDisableNetworking: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest>
 
@@ -165,8 +171,9 @@ protocol FinancialConnectionsAPI {
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
-        consumerSessionClientSecret: String
-    ) -> Future<FinancialConnectionsInstitutionList>
+        consumerSessionClientSecret: String,
+        consentAcquired: Bool?
+    ) -> Future<ShareNetworkedAccountsResponse>
 
     func markLinkStepUpAuthenticationVerified(
         clientSecret: String
@@ -197,17 +204,25 @@ protocol FinancialConnectionsAPI {
     ) -> Future<FinancialConnectionsSessionManifest>
 
     func linkAccountSignUp(
-        requestSurface: String,
         emailAddress: String,
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse>
 
     func attachLinkConsumerToLinkAccountSession(
-        requestSurface: String,
         linkAccountSession: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse>
+
+    func paymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentDetails>
+
+    func paymentMethods(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String
+    ) -> Future<FinancialConnectionsPaymentMethod>
 }
 
 extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
@@ -261,8 +276,9 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
-        let parameters = [
+        let parameters: [String: Any] = [
             "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
         ]
         return self.post(
             resource: APIEndpointConsentAcquired,
@@ -278,7 +294,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointFeaturedInstitutions,
             parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -291,7 +307,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointSearchInstitutions,
             parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -306,7 +322,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessions,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -318,7 +334,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsCancel,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -333,7 +349,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsRetrieve,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -354,7 +370,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAuthSessionsOAuthResults,
                     parameters: body,
-                    useConsumerPublishableKeyIfNeeded: false
+                    useConsumerPublishableKeyIfNeeded: true
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsMixedOAuthParams>.PollTimingOptions(
@@ -379,7 +395,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsAuthorized,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -403,7 +419,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAuthSessionsAccounts,
                     parameters: body,
-                    useConsumerPublishableKeyIfNeeded: false
+                    useConsumerPublishableKeyIfNeeded: true
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSessionAccounts>.PollTimingOptions(
@@ -427,18 +443,19 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsSelectedAccounts,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
-        let body = [
+        let body: [String: Any] = [
             "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
         ]
         return self.post(
             resource: APIEndpointLinkMoreAccounts,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -493,12 +510,14 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
-        routingNumber: String
+        routingNumber: String,
+        consumerSessionClientSecret: String?
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return attachPaymentAccountToLinkAccountSession(
             clientSecret: clientSecret,
             accountNumber: accountNumber,
-            routingNumber: routingNumber
+            routingNumber: routingNumber,
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
@@ -524,6 +543,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         var body: [String: Any] = [
             "client_secret": clientSecret,
         ]
+        body["consumer_session_client_secret"] = consumerSessionClientSecret  // optional for Link
         if let accountNumber = accountNumber, let routingNumber = routingNumber {
             body["type"] = "bank_account"
             body["bank_account"] = [
@@ -535,7 +555,6 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             body["linked_account"] = [
                 "id": linkedAccountId,
             ]
-            body["consumer_session_client_secret"] = consumerSessionClientSecret  // optional for Link
         } else {
             assertionFailure()
             return Promise(
@@ -555,7 +574,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 return self.post(
                     resource: APIEndpointAttachPaymentAccount,
                     parameters: body,
-                    useConsumerPublishableKeyIfNeeded: false
+                    useConsumerPublishableKeyIfNeeded: true
                 )
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsPaymentAccountResource>.PollTimingOptions(
@@ -589,7 +608,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsEvents,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -597,7 +616,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func saveAccountsToNetworkAndLink(
         shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
@@ -615,7 +634,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 emailAddress: emailAddress,
                 phoneNumber: phoneNumber,
                 country: country,
-                selectedAccountIds: selectedAccounts.map({ $0.id }),
+                selectedAccountIds: selectedAccounts?.map({ $0.id }),
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 clientSecret: clientSecret
             )
@@ -628,8 +647,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 )
             }
         }
-        let linkedAccountIds = selectedAccounts.compactMap({ $0.linkedAccountId })
         if
+            let linkedAccountIds = selectedAccounts?.compactMap({ $0.linkedAccountId }),
             shouldPollAccounts,
             !linkedAccountIds.isEmpty
         {
@@ -650,6 +669,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 case .failure(let error):
                     self.disableNetworking(
                         disabledReason: "account_numbers_not_available",
+                        clientSuggestedNextPaneOnDisableNetworking: nil,
                         clientSecret: clientSecret
                     ).observe { _ in } // ignoring return is intentional
 
@@ -695,15 +715,15 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,
-        selectedAccountIds: [String],
+        selectedAccountIds: [String]?,
         consumerSessionClientSecret: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         var body: [String: Any] = [
             "client_secret": clientSecret,
-            "selected_accounts": selectedAccountIds,
             "expand": ["active_auth_session"],
         ]
+        body["selected_accounts"] = selectedAccountIds // null for manual entry
         body["email_address"] = emailAddress?
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
@@ -720,6 +740,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func disableNetworking(
         disabledReason: String?,
+        clientSuggestedNextPaneOnDisableNetworking: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         var body: [String: Any] = [
@@ -727,6 +748,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "expand": ["active_auth_session"],
         ]
         body["disabled_reason"] = disabledReason
+        body["client_requested_next_pane_on_disable_networking"] = clientSuggestedNextPaneOnDisableNetworking
         return post(
             resource: APIEndpointDisableNetworking,
             parameters: body,
@@ -767,13 +789,15 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
-        consumerSessionClientSecret: String
-    ) -> Future<FinancialConnectionsInstitutionList> {
-        let parameters: [String: Any] = [
+        consumerSessionClientSecret: String,
+        consentAcquired: Bool?
+    ) -> Future<ShareNetworkedAccountsResponse> {
+        var parameters: [String: Any] = [
             "selected_accounts": selectedAccountIds,
             "client_secret": clientSecret,
             "consumer_session_client_secret": consumerSessionClientSecret,
         ]
+        parameters["consent_acquired"] = consentAcquired
         return post(
             resource: APIEndpointShareNetworkedAccount,
             parameters: parameters,
@@ -822,7 +846,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         consumerSessionClientSecret: String
     ) -> Future<ConsumerSessionResponse> {
         var parameters: [String: Any] = [
-            "request_surface": "ios_connections",
+            "request_surface": requestSurface,
             "type": otpType,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
@@ -849,7 +873,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
-            "request_surface": "ios_connections",
+            "request_surface": requestSurface,
         ]
         return post(
             resource: "consumers/sessions/confirm_verification",
@@ -859,7 +883,6 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func linkAccountSignUp(
-        requestSurface: String, // "ios_instant_debits"
         emailAddress: String,
         phoneNumber: String,
         country: String
@@ -883,7 +906,6 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     }
 
     func attachLinkConsumerToLinkAccountSession(
-        requestSurface: String,
         linkAccountSession: String,
         consumerSessionClientSecret: String
     ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
@@ -896,6 +918,47 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         ]
         return post(
             resource: APIEndpointAttachLinkConsumerToLinkAccountSession,
+            parameters: parameters,
+            useConsumerPublishableKeyIfNeeded: false
+        )
+    }
+
+    func paymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String
+    ) -> Future<FinancialConnectionsPaymentDetails> {
+        let parameters: [String: Any] = [
+            "request_surface": requestSurface,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ],
+            "bank_account": [
+                "account": bankAccountId
+            ],
+            "type": "bank_account",
+        ]
+        return post(
+            resource: APIEndpointPaymentDetails,
+            parameters: parameters,
+            useConsumerPublishableKeyIfNeeded: true
+        )
+    }
+
+    func paymentMethods(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String
+    ) -> Future<FinancialConnectionsPaymentMethod> {
+        let parameters: [String: Any] = [
+            "link": [
+                "credentials": [
+                    "consumer_session_client_secret": consumerSessionClientSecret
+                ],
+                "payment_details_id": paymentDetailsId,
+            ],
+            "type": "link",
+        ]
+        return post(
+            resource: APIEndpointPaymentMethods,
             parameters: parameters,
             useConsumerPublishableKeyIfNeeded: false
         )
@@ -928,5 +991,8 @@ private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts
 private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
 private let APIEndpointConsumerSessions = "connections/link_account_sessions/consumer_sessions"
 private let APIEndpointPollAccountNumbers = "link_account_sessions/poll_account_numbers"
+// Instant Debits
 private let APIEndpointLinkAccountsSignUp = "consumers/accounts/sign_up"
 private let APIEndpointAttachLinkConsumerToLinkAccountSession = "consumers/attach_link_consumer_to_link_account_session"
+private let APIEndpointPaymentDetails = "consumers/payment_details"
+private let APIEndpointPaymentMethods = "payment_methods"

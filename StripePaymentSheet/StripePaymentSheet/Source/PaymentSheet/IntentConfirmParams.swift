@@ -69,6 +69,9 @@ class IntentConfirmParams {
         case .instantDebits:
             let params = STPPaymentMethodParams(type: .link)
             self.init(params: params, type: type)
+        case .linkCardBrand:
+            let params = STPPaymentMethodParams(type: .card)
+            self.init(params: params, type: type)
         }
     }
 
@@ -107,14 +110,15 @@ class IntentConfirmParams {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
         }
     }
-    func setAllowRedisplay(paymentMethodSave: Bool?,
-                           allowRedisplayOverride: STPPaymentMethodAllowRedisplay?,
+    func setAllowRedisplay(mobilePaymentElementFeatures: MobilePaymentElementComponentFeature?,
                            isSettingUp: Bool) {
-        guard let paymentMethodSave else {
+        guard let mobilePaymentElementFeatures else {
             // Legacy Ephemeral Key
             paymentMethodParams.allowRedisplay = .unspecified
             return
         }
+        let paymentMethodSave = mobilePaymentElementFeatures.paymentMethodSave
+        let allowRedisplayOverride = mobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
 
         // Customer Session is enabled
         if paymentMethodSave {
@@ -132,15 +136,12 @@ class IntentConfirmParams {
                 }
             }
         } else {
+            stpAssert(saveForFutureUseCheckboxState == .hidden, "Checkbox should be hidden")
             if isSettingUp {
-                // Checkbox is hidden
                 paymentMethodParams.allowRedisplay = allowRedisplayOverride ?? .limited
             } else {
-                if saveForFutureUseCheckboxState == .selected {
-                    paymentMethodParams.allowRedisplay = .always
-                } else if saveForFutureUseCheckboxState == .deselected {
-                    paymentMethodParams.allowRedisplay = .unspecified
-                }
+                // PaymentMethod won't be attached to customer
+                paymentMethodParams.allowRedisplay = .unspecified
             }
         }
     }

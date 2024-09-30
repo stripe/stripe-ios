@@ -81,6 +81,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 PaymentSheetLoader.load(
                     mode: .paymentIntentClientSecret(clientSecret),
                     configuration: self.configuration,
+                    analyticsHelper: .init(isCustom: false, configuration: self.configuration),
                     isFlowController: false
                 ) { result in
                     switch result {
@@ -164,6 +165,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
+            analyticsHelper: .init(isCustom: false, configuration: configuration),
             isFlowController: false
         ) { result in
             switch result {
@@ -230,6 +232,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
+            analyticsHelper: .init(isCustom: false, configuration: configuration),
             isFlowController: false
         ) { result in
             switch result {
@@ -287,6 +290,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             PaymentSheetLoader.load(
                 mode: .paymentIntentClientSecret(clientSecret),
                 configuration: self.configuration,
+                analyticsHelper: .init(isCustom: false, configuration: self.configuration),
                 isFlowController: false
             ) { result in
                 guard case .success(let loadResult) = result else {

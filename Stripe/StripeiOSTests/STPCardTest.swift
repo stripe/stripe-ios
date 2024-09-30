@@ -215,20 +215,15 @@ class STPCardTest: XCTestCase {
         XCTAssertEqual(card.address?.state, "PA")
         XCTAssertEqual(card.address?.postalCode, "19219")
 
-        // #pragma clang diagnostic push
-        // #pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertEqual(card.perform(NSSelectorFromString("cardId")).takeUnretainedValue() as? NSString, "card_103kbR2eZvKYlo2CDczLmw4K")
 
-        XCTAssertEqual(card.cardId, "card_103kbR2eZvKYlo2CDczLmw4K")
-
-        XCTAssertEqual(card.addressCity, "Pittsburgh")
-        XCTAssertEqual(card.addressCountry, "US")
-        XCTAssertEqual(card.addressLine1, "123 Fake St")
-        XCTAssertEqual(card.addressLine2, "Apt 1")
-        XCTAssertEqual(card.addressState, "PA")
-        XCTAssertEqual(card.addressZip, "19219")
-        XCTAssertNil(card.metadata)
-
-        // #pragma clang diagnostic pop
+        XCTAssertEqual(card.perform(NSSelectorFromString("addressCity")).takeUnretainedValue() as? NSString, "Pittsburgh")
+        XCTAssertEqual(card.perform(NSSelectorFromString("addressCountry")).takeUnretainedValue() as? NSString, "US")
+        XCTAssertEqual(card.perform(NSSelectorFromString("addressLine1")).takeUnretainedValue() as? NSString, "123 Fake St")
+        XCTAssertEqual(card.perform(NSSelectorFromString("addressLine2")).takeUnretainedValue() as? NSString, "Apt 1")
+        XCTAssertEqual(card.perform(NSSelectorFromString("addressState")).takeUnretainedValue() as? NSString, "PA")
+        XCTAssertEqual(card.perform(NSSelectorFromString("addressZip")).takeUnretainedValue() as? NSString, "19219")
+        XCTAssertNil(card.perform(NSSelectorFromString("metadata")))
 
         XCTAssertEqual(card.brand, .visa)
         XCTAssertEqual(card.country, "US")

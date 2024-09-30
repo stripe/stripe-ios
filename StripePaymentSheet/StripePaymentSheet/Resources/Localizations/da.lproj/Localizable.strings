@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li rentefrie betalinger på %2$@";
-
 "+ Add" = "+ Tilføj";
 
 "Add US bank account" = "Tilføj amerikansk bankkonto";
@@ -25,6 +23,12 @@
 "Bank" = "Bank";
 
 "Bank account" = "Bankkonto";
+
+"Buy now or pay later with <img/>" = "Køb nu eller betal senere med <img/>";
+
+"Buy now or pay later with Afterpay" = "Køb nu eller betal senere med Afterpay";
+
+"Buy now or pay later with Clearpay" = "Køb nu eller betal senere med Clearpay";
 
 "Buy now or pay later with Klarna" = "Køb nu eller betal senere med Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Bekræft dit CVC";
 
-"Confirm your CVV" = "Bekræft dit CVV";
-
 "Contact information" = "Kontaktoplysninger";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Betal hurtigere hos %@ og tusinder af virksomheder.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal i <num_installments/> rentefri afdrag på <installment_price/> hver med <img/>";
-
 "Pay over time with %@" = "Betal over tid med %@";
+
+"Pay over time with Affirm" = "Betal over tid med Affirm";
 
 "Pay with Link" = "Betal med Link";
 
@@ -148,9 +150,9 @@
 
 "Save for future payments" = "Gem til fremtidige betalinger";
 
-"Save this account for future %@ payments" = "Gem denne konto til fremtidige %@-betalinger";
+"Save payment details to %@ for future purchases" = "Gem betalingsoplysninger for %@ til senere køb";
 
-"Save this card for future %@ payments" = "Gem dette kort til fremtidige %@ betalinger";
+"Save this account for future %@ payments" = "Gem denne konto til fremtidige %@-betalinger";
 
 "Save your bank account in just a few steps." = "Gem din bankkonto med blot nogle få trin.";
 

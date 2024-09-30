@@ -9,6 +9,21 @@ import XCTest
 
 // MARK: Vertical mode tests
 class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
+
+    func testCanPayWithCard() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+        app.buttons["Pay €50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+
     func testFlowController_verticalMode() {
         // Sets the right paymentOption values
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -89,6 +104,16 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, 123 Main, San Francisco, CA, 94016, US")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        XCTAssertEqual(
+            analyticsLog.map({ $0[string: "event"]! }).filter({ $0.starts(with: "mc") }),
+            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"]
+        )
+
+        let eventsWithSelectedLPM = ["mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped"]
+        XCTAssertEqual(
+            analyticsLog.filter({ eventsWithSelectedLPM.contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
+            ["sepa_debit", "sepa_debit", "sepa_debit", "sepa_debit", "sepa_debit"]
+        )
 
         // Reload
         reload(app, settings: settings)
@@ -100,6 +125,16 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["••••4242"].waitForExistenceAndTap()
         app.buttons["Continue"].tap() // For some reason, waitForExistenceAndTap() does not tap this!
+        XCTAssertEqual(
+            analyticsLog.map({ $0[string: "event"] }),
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
+        )
+        XCTAssertEqual(
+            analyticsLog.filter({ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
+                .contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
+            ["card", "card"]
+        )
+
         // ...reload...
         reload(app, settings: settings)
         // ...and the saved card should be the default
@@ -253,14 +288,14 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkMode = .passthrough
         settings.requireCVCRecollection = .on
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
-        app.switches["Save this card for future Example, Inc. payments"].waitForExistenceAndTap()
+        app.switches["Save payment details to Example, Inc. for future purchases"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]

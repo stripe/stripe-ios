@@ -1,0 +1,69 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pv61PAOnZToJom10WlJglWX\/confirm$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_intents%2F%3Aintent%2Fconfirm; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_xVK2AUIrn338VZ
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1047
+Vary: Origin
+Date: Tue, 03 Sep 2024 23:20:27 GMT
+original-request: req_xVK2AUIrn338VZ
+stripe-version: 2020-08-27
+idempotency-key: 65c80dfc-e14d-4a35-827c-5c23a4598711
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: client_secret=pi_3Pv61PAOnZToJom10WlJglWX_secret_TmMO1sJ4shtOPFGSTeMDTFWKm&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Jenny%20Rosen&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=grabpay&return_url=example-app-scheme%3A\/\/authorized
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 100,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "sgd",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "example-app-scheme:\/\/authorized",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1H7oXMAOnZToJom1\/pa_nonce_QmfMWpZ5HvtEhFllXqDG11LgE33YDp5"
+    }
+  },
+  "payment_method" : "pm_1Pv61PAOnZToJom1vPAv7Heq",
+  "client_secret" : "pi_3Pv61PAOnZToJom10WlJglWX_secret_TmMO1sJ4shtOPFGSTeMDTFWKm",
+  "id" : "pi_3Pv61PAOnZToJom10WlJglWX",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "grabpay"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1725405627,
+  "description" : null
+}

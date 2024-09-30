@@ -72,6 +72,27 @@ extension XCUIApplication {
         return consentAgreeButton
     }
 
+    var fc_nativeManuallyVerifyLabel: XCUIElement {
+        let consentManuallyVerifyLabel = otherElements["consent_manually_verify_label"]
+        // wait so `consentManuallyVerifyLabel.links` returns correct values
+        _ = consentManuallyVerifyLabel.waitForExistence(timeout: 10.0)
+        // we need to dig into "links" (instead of just accessing the label directly)
+        // because the label is part-label, part a link, and we want to tap the link
+        //
+        // the `lastMatch` is important for token flows:
+        // - for unknown reason, the "Token" flow label returns "2" links for UI tests (iOS 17.2),
+        //   where only the second one is tappable
+        return consentManuallyVerifyLabel.links.lastMatch
+    }
+
+    var fc_nativeNetworkingWarmupContinueButton: XCUIElement {
+        return buttons["link_continue_button"]
+    }
+
+    var fc_nativeTestModeAutofillButton: XCUIElement {
+        return buttons["test_mode_autofill_button"]
+    }
+
     var fc_nativePrepaneContinueButton_noWait: XCUIElement {
         let prepaneContinueButton = buttons["prepane_continue_button"]
         return prepaneContinueButton
@@ -114,6 +135,14 @@ extension XCUIApplication {
         return accountPickerLinkAccountsButton
     }
 
+    var fc_nativeSaveToLinkButton: XCUIElement {
+        return buttons["Save with Link"]
+    }
+
+    var fc_nativeNetworkingNotNowButton: XCUIElement {
+        return buttons["Not now"]
+    }
+
     var fc_nativeSuccessDoneButton: XCUIElement {
         let successDoneButton = buttons["success_done_button"]
         XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
@@ -144,6 +173,10 @@ extension XCUIApplication {
         let bankAccount = scrollViews.staticTexts[name]
         XCTAssertTrue(bankAccount.waitForExistence(timeout: 120.0))
         return bankAccount
+    }
+
+    func fc_nativeBackButton() -> XCUIElement {
+        return navigationBars["fc_navigation_bar"].buttons["Back"]
     }
 
     func fc_scrollDown() {

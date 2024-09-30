@@ -83,12 +83,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         try await _testAndAssert(intentKind: .paymentIntent_intentFirst_csc,
                                  elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .checked,
-                                 expectedAllowRedisplay: .attached(.always))
-
-        try await _testAndAssert(intentKind: .paymentIntent_intentFirst_csc,
-                                 elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .unchecked,
+                                 checkbox: .hidden,
                                  expectedAllowRedisplay: .unattached)
     }
 
@@ -105,12 +100,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_csc,
                                  elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .checked,
-                                 expectedAllowRedisplay: .attached(.always))
-
-        try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_csc,
-                                 elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .unchecked,
+                                 checkbox: .hidden,
                                  expectedAllowRedisplay: .unattached)
     }
 
@@ -126,11 +116,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_ssc,
                                  elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .checked,
-                                 expectedAllowRedisplay: .attached(.always))
-        try await _testAndAssert(intentKind: .paymentIntent_deferredIntent_ssc,
-                                 elementsSession: elementsSession(paymentMethodSave: false),
-                                 checkbox: .unchecked,
+                                 checkbox: .hidden,
                                  expectedAllowRedisplay: .unattached)
     }
 
@@ -349,7 +335,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
             form.getTextFieldElement("MM / YY").setText("1232")
             form.getTextFieldElement("CVC").setText("123")
             form.getTextFieldElement("ZIP").setText("65432")
-            let saveCardForFuture = "Save this card for future"
+            let saveCardForFuture = "Save payment details to"
             switch checkbox {
             case .checked:
                 form.getCheckboxElement(startingWith: saveCardForFuture)!.isSelected = true
@@ -508,7 +494,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
 
         return STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                              customerSessionData: [
-                                                "payment_sheet": [
+                                                "mobile_payment_element": [
                                                     "enabled": true,
                                                     "features": features,
                                                 ],

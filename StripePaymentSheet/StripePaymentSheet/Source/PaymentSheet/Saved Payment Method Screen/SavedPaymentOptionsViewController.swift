@@ -78,6 +78,19 @@ class SavedPaymentOptionsViewController: UIViewController {
                 return paymentMethod
             }
         }
+
+        var analyticsValue: String {
+            switch self {
+            case .add:
+                return "add"
+            case .saved:
+                return "saved"
+            case .applePay:
+                return "applePay"
+            case .link:
+                return "link"
+            }
+        }
     }
 
     struct Configuration {
@@ -145,6 +158,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     let configuration: Configuration
     private let intent: Intent
     private let paymentSheetConfiguration: PaymentSheet.Configuration
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
@@ -298,6 +312,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         intent: Intent,
         appearance: PaymentSheet.Appearance,
         cbcEligible: Bool = false,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
@@ -307,6 +322,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.appearance = appearance
         self.cbcEligible = cbcEligible
         self.delegate = delegate
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
         updateUI()
     }
@@ -559,7 +575,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               error: Error.paymentOptionCellDidSelectRemoveOnNonSavedItem,
                                               additionalNonPIIParams: [
                                                 "indexPathRow": collectionView.indexPath(for: paymentOptionCell)?.row ?? "nil",
-                                                "viewModels": viewModels.map { $0.analyticsValue.rawValue },
+                                                "viewModels": viewModels.map { $0.analyticsValue },
                                               ]
             )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)

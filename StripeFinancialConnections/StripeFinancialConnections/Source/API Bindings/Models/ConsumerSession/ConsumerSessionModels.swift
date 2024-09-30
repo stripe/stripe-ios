@@ -14,25 +14,27 @@ struct ConsumerSessionData: Decodable {
     let redactedFormattedPhoneNumber: String
     let verificationSessions: [VerificationSession]
 
+    /// A consumer session is considered verified if the `state == .verified` or the `type == .signUp`.
     var isVerified: Bool {
         verificationSessions.contains(where: { $0.state == .verified })
+        || verificationSessions.contains(where: { $0.type == .signUp })
     }
 }
 
 struct VerificationSession: Decodable {
     enum SessionType: String, SafeEnumDecodable, Equatable {
-        case signUp = "signup"
-        case email = "email"
-        case sms = "sms"
+        case signUp = "SIGNUP"
+        case email = "EMAIL"
+        case sms = "SMS"
         case unparsable
     }
 
     enum SessionState: String, SafeEnumDecodable, Equatable {
-        case started
-        case failed
-        case verified
-        case canceled
-        case expired
+        case started = "STARTED"
+        case failed = "FAILED"
+        case verified = "VERIFIED"
+        case canceled = "CANCELED"
+        case expired = "EXPIRED"
         case unparsable
     }
 

@@ -15,7 +15,8 @@ protocol SuccessDataSource: AnyObject {
     var saveToLinkWithStripeSucceeded: Bool? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var showLinkMoreAccountsButton: Bool { get }
-    var customSuccessPaneMessage: String? { get }
+    var customSuccessPaneCaption: String? { get }
+    var customSuccessPaneSubCaption: String? { get }
 }
 
 final class SuccessDataSourceImplementation: SuccessDataSource {
@@ -26,7 +27,8 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    var customSuccessPaneMessage: String?
+    var customSuccessPaneCaption: String?
+    var customSuccessPaneSubCaption: String?
     var showLinkMoreAccountsButton: Bool {
         !manifest.singleAccount && !manifest.disableLinkMoreAccounts && !(manifest.isNetworkingUserFlow ?? false)
     }
@@ -38,7 +40,8 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
-        customSuccessPaneMessage: String?
+        customSuccessPaneCaption: String?,
+        customSuccessPaneSubCaption: String?
     ) {
         self.manifest = manifest
         self.linkedAccountsCount = linkedAccountsCount
@@ -46,6 +49,7 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-        self.customSuccessPaneMessage = customSuccessPaneMessage
+        self.customSuccessPaneCaption = customSuccessPaneCaption
+        self.customSuccessPaneSubCaption = customSuccessPaneSubCaption
     }
 }
