@@ -418,7 +418,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
     
     enum FormSheetAction: String, PickerEnum {
-        static let enumName: String = "FormSheetAction"
+        static let enumName: String = "formSheetAction"
         case confirm
         case `continue`
     }
