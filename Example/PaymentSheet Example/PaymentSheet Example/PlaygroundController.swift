@@ -171,6 +171,8 @@ class PlaygroundController: ObservableObject {
             configuration.paymentMethodLayout = .horizontal
         case .vertical:
             configuration.paymentMethodLayout = .vertical
+        case .automatic:
+            configuration.paymentMethodLayout = .automatic
         }
         return configuration
     }
