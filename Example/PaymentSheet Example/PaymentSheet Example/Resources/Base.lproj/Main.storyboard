@@ -426,19 +426,12 @@
                             <constraint firstItem="kak-cQ-O3h" firstAttribute="trailing" secondItem="uGe-f3-L0f" secondAttribute="trailing" constant="20" id="mfd-2f-0Lw"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="nqb-WL-zAW">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="lcj-Wj-fUw">
-                            <connections>
-                                <segue destination="Lfi-my-ako" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="pri-vN-b8s"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="nqb-WL-zAW"/>
                     <connections>
                         <outlet property="buyButton" destination="2L4-Af-OWD" id="m6f-Bk-h4t"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eUy-Tk-WLb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="Lfi-my-ako" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1942" y="151"/>
         </scene>
@@ -686,6 +679,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Payment method" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FmQ-m2-UMG">
                                                 <rect key="frame" x="0.0" y="0.0" width="123" height="50"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ak-EM-HPh">
@@ -761,13 +755,7 @@
                             <constraint firstItem="Cwu-4O-ebm" firstAttribute="top" secondItem="gTD-BO-qTx" secondAttribute="top" constant="20" id="s8n-Zn-4XF"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="Dx4-DE-XXb">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="Nyb-VL-QCJ">
-                            <connections>
-                                <segue destination="R6T-sP-SYz" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="KqI-CF-HBD"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="Dx4-DE-XXb"/>
                     <connections>
                         <outlet property="buyButton" destination="dR6-E2-Ycx" id="n1r-aH-BRR"/>
                         <outlet property="paymentMethodButton" destination="0ak-EM-HPh" id="G04-IK-A2j"/>
@@ -775,7 +763,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ck6-kU-VBb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="R6T-sP-SYz" userLabel="Exit" sceneMemberID="exit"/>
                 <view contentMode="scaleToFill" id="LaQ-PE-oM8" userLabel="Line Item Row">
                     <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1180,13 +1167,7 @@
                             <constraint firstItem="R8D-17-fgc" firstAttribute="trailing" secondItem="mr3-z9-EDE" secondAttribute="trailing" constant="20" id="Yg6-M5-Hjf"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="un6-9S-QPk">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="vwN-KE-Ym4">
-                            <connections>
-                                <segue destination="9uV-vk-dlm" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="vWG-Uf-lI2"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="un6-9S-QPk"/>
                     <connections>
                         <outlet property="buyButton" destination="kTk-4z-jfw" id="OOy-Hf-5Nz"/>
                         <outlet property="hotDogQuantityLabel" destination="uqy-nk-Dz2" id="HL9-qA-qNb"/>
@@ -1202,7 +1183,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OJw-Ay-9K8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="9uV-vk-dlm" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="190" y="825"/>
         </scene>
@@ -1531,13 +1511,7 @@
                             <constraint firstItem="lj2-Un-smr" firstAttribute="top" secondItem="YH7-df-wjF" secondAttribute="top" constant="20" id="vjS-OQ-W5b"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="flE-aD-pVb">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="itc-0U-M2M">
-                            <connections>
-                                <segue destination="vB1-Vc-rYP" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="q2k-qZ-uGz"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="flE-aD-pVb"/>
                     <connections>
                         <outlet property="buyButton" destination="Zuz-2b-zIK" id="9ta-yT-sA2"/>
                         <outlet property="hotDogQuantityLabel" destination="Xpa-aB-4LK" id="u4A-jW-dRj"/>
@@ -1551,7 +1525,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ed5-zJ-2JO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="vB1-Vc-rYP" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-564" y="825"/>
         </scene>
@@ -1881,13 +1854,7 @@
                             <constraint firstItem="oL1-pO-vWD" firstAttribute="top" secondItem="eVZ-nf-NMO" secondAttribute="top" constant="20" id="xwL-UT-4fp"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="cGQ-kJ-cW9">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="0Sj-KX-miM">
-                            <connections>
-                                <segue destination="FPH-68-aH9" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="zOp-sU-acI"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="cGQ-kJ-cW9"/>
                     <connections>
                         <outlet property="buyButton" destination="Uji-cN-Xui" id="hUb-Oa-tBS"/>
                         <outlet property="deferredSwitch" destination="aUa-5K-Tis" id="B9y-Hf-ya8"/>
@@ -1896,7 +1863,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fMa-PS-TwA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="FPH-68-aH9" userLabel="Exit" sceneMemberID="exit"/>
                 <view contentMode="scaleToFill" id="dxJ-8l-8b3" userLabel="Line Item Row">
                     <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -2301,13 +2267,7 @@
                             <constraint firstItem="LKX-dc-2Dj" firstAttribute="top" secondItem="Vjh-I8-9w8" secondAttribute="top" constant="20" id="wT7-Ye-p3e"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="eDU-cW-pD2">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="dZe-Zq-K7u">
-                            <connections>
-                                <segue destination="wdJ-bs-KF9" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="9Sx-o2-fso"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Checkout" largeTitleDisplayMode="always" id="eDU-cW-pD2"/>
                     <connections>
                         <outlet property="buyButton" destination="9bN-BK-U2p" id="MD2-TL-5hm"/>
                         <outlet property="hotDogQuantityLabel" destination="5J3-N0-Zkw" id="KnP-wB-pbw"/>
@@ -2323,7 +2283,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wUC-BD-90v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="wdJ-bs-KF9" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="161" y="-514"/>
         </scene>
