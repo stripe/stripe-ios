@@ -149,7 +149,7 @@ public class PaymentSheet {
             mode: mode,
             configuration: configuration,
             analyticsHelper: analyticsHelper,
-            isFlowController: false
+            integrationShape: .complete
         ) { result in
             switch result {
             case .success(let loadResult):
