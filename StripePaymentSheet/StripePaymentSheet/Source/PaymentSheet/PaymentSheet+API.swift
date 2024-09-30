@@ -149,9 +149,13 @@ extension PaymentSheet {
                     configuration: configuration
                 )
                 if case .new(let confirmParams) = paymentOption {
-                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
-                        params.paymentMethodId = paymentMethodId
+                    if let linkedBank = confirmParams.instantDebitsLinkedBank {
+                        params.paymentMethodId = linkedBank.paymentMethodId
                         params.paymentMethodParams = nil
+
+                        if let expectedPaymentMethodType = linkedBank.expectedPaymentMethodType {
+                            params.additionalAPIParameters["expected_payment_method_type"] = expectedPaymentMethodType
+                        }
 
                         if paymentIntent.isSetupFutureUsageSet {
                             params.mandateData = STPMandateDataParams.makeWithInferredValues()

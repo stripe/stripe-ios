@@ -14,14 +14,17 @@ struct InstantDebitsLinkedBankImplementation: InstantDebitsLinkedBank {
     public let paymentMethodId: String
     public let bankName: String?
     public let last4: String?
+    public let expectedPaymentMethodType: String?
 
     public init(
         paymentMethodId: String,
         bankName: String?,
-        last4: String?
+        last4: String?,
+        expectedPaymentMethodType: String?
     ) {
         self.paymentMethodId = paymentMethodId
         self.bankName = bankName
         self.last4 = last4
+        self.expectedPaymentMethodType = expectedPaymentMethodType
     }
 }

@@ -174,7 +174,8 @@ extension FinancialConnectionsWebFlowViewController {
                                 bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
                                 // backend can return "+" instead of a more-common encoding of "%20" for spaces
                                     .replacingOccurrences(of: "+", with: " "),
-                                last4: Self.extractValue(from: returnUrl, key: "last4")
+                                last4: Self.extractValue(from: returnUrl, key: "last4"),
+                                expectedPaymentMethodType: Self.extractValue(from: returnUrl, key: "expected_payment_method_type")
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
                         } else {

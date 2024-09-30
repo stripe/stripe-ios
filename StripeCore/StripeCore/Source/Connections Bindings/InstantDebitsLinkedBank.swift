@@ -11,4 +11,5 @@ import Foundation
     var paymentMethodId: String { get }
     var bankName: String? { get }
     var last4: String? { get }
+    var expectedPaymentMethodType: String? { get }
 }
