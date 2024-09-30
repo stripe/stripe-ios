@@ -114,9 +114,10 @@ import Foundation
     }
 
     public func transformed<T>(
+        on queue: DispatchQueue = .main,
         with closure: @escaping (Value) throws -> T
     ) -> Future<T> {
-         chained { value in
+        chained(on: queue) { value in
              try Promise(value: closure(value))
         }
     }
