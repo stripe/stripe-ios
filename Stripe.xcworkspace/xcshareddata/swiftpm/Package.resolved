@@ -24,7 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/erikdoe/ocmock",
       "state" : {
-        "revision" : "2c0bfd373289f4a7716db5d6db471640f91a6507"
+        "branch" : "master",
+        "revision" : "7f6e9e9b6c9ffa19a9040860da9f7a1f202b9f4d"
       }
     },
     {

@@ -87,7 +87,7 @@ targets:
   # - StripeiOSTests
   # - UI Examples
 
-retain_public: true
+retain_public: false
 retain_objc_accessible: false
 retain_objc_annotated: true
 retain_objc_protocols: true
