@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripePayments
 
-/// Represents shared configuration properties shared between integration surfaces in mobile payment element.
+/// Represents shared configuration properties between integration surfaces in mobile payment element.
 /// - Note: See the concrete implementations of `IntegrationConfigurable` for detailed doc comments.
 /// - Note: Not currently used by CustomerSheet.
 protocol IntegrationConfigurable: PaymentMethodRequirementProvider {
