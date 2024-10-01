@@ -15,7 +15,7 @@ class ScriptWebTestBase: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        webView = WKWebView(frame: .zero, configuration: .init())
+        webView = WKWebView(frame: .zero, PaymentSheet.Configuration())
     }
 
     override func tearDown() {
