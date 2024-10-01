@@ -71,6 +71,7 @@
 		3844F0E21742F43BCB32499A /* STDSDeviceInformationParameter+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4869D6E14F01EDB960CB3065 /* STDSDeviceInformationParameter+Private.h */; };
 		390691CA0EAF81418B0C65DB /* UIView+LayoutSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0F0485B7048DDAA7DA8F9B /* UIView+LayoutSupport.m */; };
 		3909D8028AC485BCCF17B48B /* STDSStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D6269F8B91341C387A911DB /* STDSStackView.m */; };
+		3AD384AE2C76634D009AB784 /* STDSAnalyticsDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AD384AD2C76634D009AB784 /* STDSAnalyticsDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3B430F172A3AD6AA9AFDFC04 /* STDSNavigationBarCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = E1630D876436E43547FF69CE /* STDSNavigationBarCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3C6D16D8E7B5BC865D956A0B /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 0118969F6608A92583CC6C98 /* iOSSnapshotTestCase */; };
 		3C88AE37A760B91E93D423CF /* STDSException.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F030410FDABFF833CD8FE46 /* STDSException.m */; };
@@ -393,6 +394,7 @@
 		3A8CD68A006F970DDC54469A /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		3A9F828840A3B361842E38DE /* STDSChallengeResponseImageObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseImageObject.m; sourceTree = "<group>"; };
 		3AA2E6DA60350400C5270E08 /* STDSJSONWebSignature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSJSONWebSignature.h; sourceTree = "<group>"; };
+		3AD384AD2C76634D009AB784 /* STDSAnalyticsDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSAnalyticsDelegate.h; sourceTree = "<group>"; };
 		3B6B71C61CF5ADC7796441F5 /* STDSCompletionEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSCompletionEvent.m; sourceTree = "<group>"; };
 		3B9A821F35B93898A7AC1ADF /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3C22D410C297E2C3AFE727A6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -988,6 +990,7 @@
 				97163B5E9598CA3A298920B9 /* STDSTextFieldCustomization.m */,
 				5EAA444FA7C82BDA4AD907BF /* STDSThreeDS2Service.h */,
 				77646CEC7EE754F47EDBDA4F /* STDSThreeDS2Service.m */,
+				3AD384AD2C76634D009AB784 /* STDSAnalyticsDelegate.h */,
 				5E6A9565E97DF2544254AA94 /* STDSThreeDSProtocolVersion.h */,
 				F40CC91AA69F5296B0AA985C /* STDSTransaction.h */,
 				5FDE2481364C454058BF2377 /* STDSTransaction.m */,
@@ -1051,6 +1054,7 @@
 				0615DD02C0B022AE207DADF0 /* STDSUICustomization.h in Headers */,
 				9F0F6085FBD892BF5F14CF86 /* STDSWarning.h in Headers */,
 				893713F4464A88FAB92BC2C6 /* Stripe3DS2.h in Headers */,
+				3AD384AE2C76634D009AB784 /* STDSAnalyticsDelegate.h in Headers */,
 				425849564519D6454DDA3424 /* NSData+JWEHelpers.h in Headers */,
 				1134F81C7D015BA5EA52BFD1 /* NSDictionary+DecodingHelpers.h in Headers */,
 				3617B07ABD719F1A5F8302FA /* NSError+Stripe3DS2.h in Headers */,
