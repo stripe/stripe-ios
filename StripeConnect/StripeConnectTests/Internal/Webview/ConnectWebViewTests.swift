@@ -21,7 +21,7 @@ class ConnectWebViewTests: XCTestCase {
     override func setUp() {
         mockURLOpener = .init()
         webView = ConnectWebView(frame: .zero,
-                                 PaymentSheet.Configuration(),
+                                 configuration: .init(),
                                  urlOpener: mockURLOpener,
                                  sdkVersion: "1.2.3")
     }
