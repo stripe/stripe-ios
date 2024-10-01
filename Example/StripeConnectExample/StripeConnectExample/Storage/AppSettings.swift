@@ -15,6 +15,11 @@ class AppSettings {
 
         static let selectedMerchantKey = "SelectedMerchant"
 
+        static let presentationIsModal = "PresentationIsModal"
+        static let disableEmbedInNavbar = "DisableEmbedInNavbar"
+        static let embedInTabbar = "EmbedInTabbar"
+
+        // MARK: Onboarding
         static let onboardingTermsOfServiceURL = "OnboardingTermsOfServiceURL"
         static let onboardingrecipientTermsOfServiceString = "OnboardingrecipientTermsOfServiceString"
         static let onboardingPrivacyPolicyString = "OnboardingPrivacyPolicyString"
@@ -69,6 +74,21 @@ class AppSettings {
             defaults.setValue(newValue.fieldOption.rawValue, forKey: Constants.onboardingFieldOption)
             defaults.setValue(newValue.futureRequirement.rawValue, forKey: Constants.onboardingFutureRequirements)
             defaults.synchronize()
+        }
+    }
+
+    var presentationSettings: PresentationSettings {
+        get {
+            .init(
+                presentationStyleIsPush: !defaults.bool(forKey: Constants.presentationIsModal),
+                embedInTabBar: defaults.bool(forKey: Constants.embedInTabbar),
+                embedInNavBar: !defaults.bool(forKey: Constants.disableEmbedInNavbar)
+            )
+        }
+        set {
+            defaults.set(!newValue.presentationStyleIsPush, forKey: Constants.presentationIsModal)
+            defaults.set(newValue.embedInTabBar, forKey: Constants.embedInTabbar)
+            defaults.set(!newValue.embedInNavBar, forKey: Constants.disableEmbedInNavbar)
         }
     }
 

@@ -13,10 +13,10 @@ import WebKit
 @available(iOS 15, *)
 class ConnectComponentWebView: ConnectWebView {
     /// The embedded component manager that will be used for requests.
-    var componentManager: EmbeddedComponentManager
+    let componentManager: EmbeddedComponentManager
 
     /// The component type that should be loaded.
-    private var componentType: ComponentType
+    private let componentType: ComponentType
 
     /// The content controller that registers JS -> Swift message handlers
     private let contentController: WKUserContentController
@@ -37,12 +37,15 @@ class ConnectComponentWebView: ConnectWebView {
         return activityIndicator
     }()
 
-    init(componentManager: EmbeddedComponentManager,
-         componentType: ComponentType,
-         // Should only be overridden for tests
-         notificationCenter: NotificationCenter = NotificationCenter.default,
-         webLocale: Locale = Locale.autoupdatingCurrent,
-         loadContent: Bool = true) {
+    init<InitProps: Encodable>(
+        componentManager: EmbeddedComponentManager,
+        componentType: ComponentType,
+        fetchInitProps: @escaping () -> InitProps,
+        // Should only be overridden for tests
+        notificationCenter: NotificationCenter = NotificationCenter.default,
+        webLocale: Locale = Locale.autoupdatingCurrent,
+        loadContent: Bool = true
+    ) {
         self.componentManager = componentManager
         self.componentType = componentType
         self.notificationCenter = notificationCenter
@@ -72,7 +75,7 @@ class ConnectComponentWebView: ConnectWebView {
 
         // Register observers
         componentManager.registerChild(self)
-        addMessageHandlers()
+        addMessageHandlers(fetchInitProps: fetchInitProps)
         addNotificationObservers()
 
         // Load the web page
@@ -83,6 +86,20 @@ class ConnectComponentWebView: ConnectWebView {
         }
     }
 
+    /// Convenience init for empty init props
+    convenience init(componentManager: EmbeddedComponentManager,
+                     componentType: ComponentType,
+                     // Should only be overridden for tests
+                     notificationCenter: NotificationCenter = NotificationCenter.default,
+                     webLocale: Locale = Locale.autoupdatingCurrent,
+                     loadContent: Bool = true) {
+        self.init(componentManager: componentManager,
+                  componentType: componentType,
+                  fetchInitProps: VoidPayload.init,
+                  notificationCenter: notificationCenter,
+                  webLocale: webLocale,
+                  loadContent: loadContent)
+    }
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: appearance, traitCollection: traitCollection))))
         updateColors(appearance: appearance)
@@ -132,7 +149,9 @@ extension ConnectComponentWebView {
 @available(iOS 15, *)
 private extension ConnectComponentWebView {
     /// Registers JS -> Swift message handlers
-    func addMessageHandlers() {
+    func addMessageHandlers<InitProps: Encodable>(
+        fetchInitProps: @escaping () -> InitProps
+    ) {
         addMessageHandler(setterMessageHandler)
         addMessageHandler(OnLoaderStartMessageHandler { [activityIndicator] _ in
             activityIndicator.stopAnimating()
@@ -147,11 +166,14 @@ private extension ConnectComponentWebView {
                          appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection),
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
+        addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps))
         addMessageHandler(DebugMessageHandler())
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler { _ in })
+        addMessageHandler(PageDidLoadMessageHandler { _ in
+            // TODO: MXMOBILE-2491 Use this for analytics
+        })
         addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
             // TODO: MXMOBILE-2491 Use this for analytics
         })
