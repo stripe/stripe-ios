@@ -7,94 +7,27 @@ workspace: Stripe.xcworkspace
 
 schemes:
   - AllStripeFrameworks
-  # - IntegrationTester
-  # - Stripe3DS2
-  # - Stripe3DS2DemoUI
-  # - StripeApplePay
-  # - StripeCameraCore
-  # - StripeCardScan
   - StripeConnect
-  # - StripeCore
-  # - StripeFinancialConnections
-  # - StripeIdentity
-  # - StripePaymentSheet
-  # - StripePayments
-  # - StripePaymentsUI
-  # - StripeUICore
-  # - StripeiOS
-  # - PaymentSheet Example
-  # - AppClipExample
-  # - CardImageVerification Example
-  # - FinancialConnections Example
-  # - IdentityVerification Example
-  # - StripeConnect Example
-  # - Non-Card Payment Examples
-  # - UI Examples
 
 targets:
-  # - AppClipExample
-  # - AppClipExampleClip
-  # - AppClipExampleClipTests
-  # - AppClipExampleClipUITests
-  # - AppClipExampleTests iOS
-  # - CardImageVerification Example
-  # - CardImageVerification ExampleUITests
-  # - Common
-  # - FinancialConnections Example
-  # - FinancialConnectionsUITests
-  # - IdentityVerification Example
-  # - IntegrationTester
-  # - IntegrationTesterUITests
-  # - Non-Card Payment Examples
-  # - PaymentSheet Example
-  # - PaymentSheetLocalizationScreenshotGenerator
-  # - PaymentSheetUITest
   - Stripe3DS2
-  # - Stripe3DS2Tests
   - StripeApplePay
-  # - StripeApplePayTests
   - StripeCameraCore
-  # - StripeCameraCoreTestUtils
-  # - StripeCameraCoreTests
   - StripeCardScan
-  # - StripeCardScanTests
   - StripeConnect
-  # - StripeConnect Example
-  # - StripeConnect ExampleUITests
-  # - StripeConnectTests
   - StripeCore
-  # - StripeCoreTestUtils
-  # - StripeCoreTests
   - StripeFinancialConnections
-  # - StripeFinancialConnectionsTests
   - StripeIdentity
-  # - StripeIdentityTests
   - StripePaymentSheet
-  # - StripePaymentSheetTestHostApp
-  # - StripePaymentSheetTests
   - StripePayments
-  # - StripePaymentsObjcTestUtils
-  # - StripePaymentsTestHostApp
-  # - StripePaymentsTestUtils
-  # - StripePaymentsTests
   - StripePaymentsUI
-  # - StripePaymentsUITests
   - StripeUICore
-  # - StripeUICoreTests
   - StripeiOS
-  # - StripeiOSAppHostedTests
-  # - StripeiOSTestHostApp
-  # - StripeiOSTests
-  # - UI Examples
 
 retain_public: true
 retain_objc_accessible: false
-retain_objc_annotated: true
-retain_objc_protocols: true
+retain_objc_annotated: false
 
-retain_ibaction: true
-retain_iboutlet: true
-retain_ibinspectable: true
 verbose: true
 
 build_arguments:
