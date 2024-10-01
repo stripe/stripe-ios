@@ -426,11 +426,18 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testCashAppConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+        try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
                                paymentMethodType: .cashApp,
                                merchantCountry: .US) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "USD",
+                               paymentMethodType: .cashApp,
+                               merchantCountry: .US) { form in
+            XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
         }
     }
 
@@ -625,13 +632,17 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
             // Generate params from the form
             guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .stripe(paymentMethodType))) else {
-                XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
+                XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState) \n Form: \(paymentMethodForm)")
                 return
             }
 
             // Re-generate the form and validate that it carries over all previous customer input
             let regeneratedFormVC = makeFormVC(previousCustomerInput: intentConfirmParams)
-            XCTAssertEqual(regeneratedFormVC.form.updateParams(params: .init(type: .stripe(paymentMethodType))), intentConfirmParams)
+            guard let regeneratedIntentConfirmParams = regeneratedFormVC.form.updateParams(params: IntentConfirmParams(type: .stripe(paymentMethodType))) else {
+                XCTFail("Regenerated form failed to create params. Validation state: \(regeneratedFormVC.form.validationState) \n Form: \(regeneratedFormVC.form)")
+                return
+            }
+            XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
 
             let e = expectation(description: "Confirm")
             let paymentHandler = STPPaymentHandler(apiClient: apiClient)
@@ -908,14 +919,28 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDele
     }
 }
 
+// MARK: - IntentConfirmParams
+
+extension PaymentSheet_LPM_ConfirmFlowTests {
+    func testIntentConfirmParamsEquatable() {
+        let lhs = IntentConfirmParams(type: .stripe(.card))
+        let rhs = IntentConfirmParams(type: .stripe(.card))
+        // When lhs has an obscure difference w/ rhs...
+        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customer: .init(id: "", ephemeralKeySecret: ""))
+        // ...they should not be equal
+        XCTAssertNotEqual(lhs, rhs)
+    }
+}
+
 extension IntentConfirmParams: Equatable {
     static public func == (lhs: StripePaymentSheet.IntentConfirmParams, rhs: StripePaymentSheet.IntentConfirmParams) -> Bool {
-        let lhsParams = STPFormEncoder.dictionary(forObject: lhs.paymentMethodParams)
-        let lhsParamsStr = URLEncoder.queryString(from: lhsParams)
-        let rhsParams = STPFormEncoder.dictionary(forObject: rhs.paymentMethodParams)
-        let rhsParamsStr = URLEncoder.queryString(from: rhsParams)
-        if lhsParamsStr != rhsParamsStr {
-            print("Params not equal: \(lhsParamsStr) vs \(rhsParamsStr)")
+        // Hack to compare `paymentMethodParams` objects; consider them equal if their serialized versions are the same
+        let lhsParamsDict = STPFormEncoder.dictionary(forObject: lhs.paymentMethodParams)
+        let lhsParamsQueryString = URLEncoder.queryString(from: lhsParamsDict)
+        let rhsParamsDict = STPFormEncoder.dictionary(forObject: rhs.paymentMethodParams)
+        let rhsParamsQueryString = URLEncoder.queryString(from: rhsParamsDict)
+        if lhsParamsQueryString != rhsParamsQueryString {
+            print("Params not equal: \(lhsParamsQueryString) vs \(rhsParamsQueryString)")
             return false
         }
         if lhs.paymentMethodType != rhs.paymentMethodType {

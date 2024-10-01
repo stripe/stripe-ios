@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3PiTGvFY0qyl6XeW07Oz79VA\?client_secret=pi_3PiTGvFY0qyl6XeW07Oz79VA_secret_Hc5UDvPvgXPzyR4U01Gutbr5s&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Q5BJ2FY0qyl6XeW0YgU1qNj\?client_secret=pi_3Q5BJ2FY0qyl6XeW0YgU1qNj_secret_WXnxNk5CxXGqg1b6wTlbCr3ho$
 200
 application/json
 access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
@@ -7,16 +7,17 @@ content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayme
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+x-wc: A
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_5TzhTasWsiwheG
-Content-Length: 892
+request-id: req_mzekZKAxm7ZAZG
+Content-Length: 901
 Vary: Origin
-Date: Wed, 31 Jul 2024 03:32:18 GMT
+Date: Tue, 01 Oct 2024 19:00:20 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -45,8 +46,8 @@ x-content-type-options: nosniff
     "amount_tax" : 0
   },
   "payment_method" : null,
-  "client_secret" : "pi_3PiTGvFY0qyl6XeW07Oz79VA_secret_Hc5UDvPvgXPzyR4U01Gutbr5s",
-  "id" : "pi_3PiTGvFY0qyl6XeW07Oz79VA",
+  "client_secret" : "pi_3Q5BJ2FY0qyl6XeW0YgU1qNj_secret_WXnxNk5CxXGqg1b6wTlbCr3ho",
+  "id" : "pi_3Q5BJ2FY0qyl6XeW0YgU1qNj",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -58,7 +59,7 @@ x-content-type-options: nosniff
   "payment_method_types" : [
     "cashapp"
   ],
-  "setup_future_usage" : null,
-  "created" : 1722396737,
+  "setup_future_usage" : "off_session",
+  "created" : 1727809220,
   "description" : null
 }

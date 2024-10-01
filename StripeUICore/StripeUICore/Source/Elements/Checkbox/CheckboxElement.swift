@@ -61,3 +61,10 @@ extension CheckboxElement: Element {
         return checkboxButton
     }
 }
+
+// MARK: - DebugDescription
+extension CheckboxElement {
+    public var debugDescription: String {
+        return "<CheckboxElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(label); isSelected = \(isSelected); validationState = \(validationState)"
+    }
+}
