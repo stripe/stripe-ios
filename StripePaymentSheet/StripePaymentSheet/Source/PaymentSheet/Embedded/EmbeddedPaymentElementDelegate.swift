@@ -19,7 +19,7 @@ public protocol EmbeddedPaymentElementDelegate: AnyObject {
   func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement)
 }
 
-extension EmbeddedPaymentElementDelegate {
+public extension EmbeddedPaymentElementDelegate {
     func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
         // Default implementation does nothing
     }

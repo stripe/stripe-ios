@@ -20,6 +20,9 @@ public class EmbeddedPaymentElement {
     /// A view controller to present on.
     public var presentingViewController: UIViewController?
 
+    /// This contains the `configuration` you passed in to `create`.
+    public let configuration: Configuration
+
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
 
@@ -52,19 +55,60 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2525)
-        let dummyView = await EmbeddedPaymentMethodsView(
-            savedPaymentMethod: nil,
-            appearance: .default,
-            shouldShowApplePay: true,
-            shouldShowLink: true
+        // TODO(porter) MOBILESDK-2533 Make a protocol for our configurations
+        let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration()
+
+        // TODO(porter) When we do analytics decide how to handle `isCustom`
+        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: paymentSheetConfiguration)
+        AnalyticsHelper.shared.generateSessionID()
+
+        let loadResult = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfiguration),
+                                                           configuration: paymentSheetConfiguration,
+                                                           analyticsHelper: analyticsHelper,
+                                                           integrationShape: .embedded)
+
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: .deferredIntent(intentConfig: intentConfiguration),
+                                                                                           elementsSession: loadResult.elementsSession,
+                                                                                           configuration: paymentSheetConfiguration,
+                                                                                           logAvailability: true)
+        let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: paymentSheetConfiguration)
+        let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: paymentSheetConfiguration)
+        let savedPaymentMethodAccessoryType = await RowButton.RightAccessoryButton.getAccessoryButtonType(
+            savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
+            isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
+            isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
+            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         )
-        return .init(view: dummyView)
+
+        let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
+            // Default to the customer's default or the first saved payment method, if any
+            let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+            switch customerDefault {
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link
+            case .stripeId, nil:
+                return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
+            }
+        }()
+
+        let embeddedPaymentMethodsView = await EmbeddedPaymentMethodsView(
+            initialSelection: initialSelection,
+            paymentMethodTypes: paymentMethodTypes,
+            savedPaymentMethod: loadResult.savedPaymentMethods.first,
+            appearance: configuration.appearance,
+            shouldShowApplePay: shouldShowApplePay,
+            shouldShowLink: shouldShowLink,
+            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType
+        )
+        return .init(view: embeddedPaymentMethodsView, configuration: configuration)
     }
 
     /// The result of an `update` call
-    public enum UpdateResult {
-        /// The update succeded
+    @frozen public enum UpdateResult {
+        /// The update succeeded
         case succeeded
         /// The update was canceled. This is only returned when a subsequent `update` call cancels previous ones.
         case canceled
@@ -81,7 +125,7 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
         // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2524)
-        return .canceled
+        return .succeeded
     }
 
     /// Completes the payment or setup.
@@ -94,9 +138,10 @@ public class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
-    private init(view: UIView, delegate: EmbeddedPaymentElementDelegate? = nil) {
+    private init(view: UIView, configuration: Configuration, delegate: EmbeddedPaymentElementDelegate? = nil) {
         self.view = view
         self.delegate = delegate
+        self.configuration = configuration
     }
 }
 
@@ -164,7 +209,7 @@ extension EmbeddedPaymentElement {
 
 // MARK: - Typealiases
 
-@_spi(STP) public typealias EmbeddedPaymentElementResult = PaymentSheetResult
+@_spi(EmbeddedPaymentElementPrivateBeta) public typealias EmbeddedPaymentElementResult = PaymentSheetResult
 extension EmbeddedPaymentElement {
     public typealias IntentConfiguration = PaymentSheet.IntentConfiguration
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
@@ -175,4 +220,42 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
+}
+
+// TODO(porter) MOBILESDK-2533 Create a protocol for the commonalities between PaymentSheet.Configuration <> EmbeddedPaymentElement.Configuration
+extension EmbeddedPaymentElement.Configuration {
+    func makePaymentSheetConfiguration() -> PaymentSheet.Configuration {
+        var paymentConfig = PaymentSheet.Configuration()
+
+        paymentConfig.allowsDelayedPaymentMethods = allowsDelayedPaymentMethods
+        paymentConfig.allowsPaymentMethodsRequiringShippingAddress = allowsPaymentMethodsRequiringShippingAddress
+        paymentConfig.apiClient = apiClient
+        paymentConfig.applePay = applePay
+        paymentConfig.primaryButtonColor = primaryButtonColor
+        paymentConfig.primaryButtonLabel = primaryButtonLabel
+        paymentConfig.style = style
+        paymentConfig.customer = customer
+        paymentConfig.merchantDisplayName = merchantDisplayName
+        paymentConfig.returnURL = returnURL
+        paymentConfig.defaultBillingDetails = defaultBillingDetails
+        paymentConfig.savePaymentMethodOptInBehavior = savePaymentMethodOptInBehavior
+        paymentConfig.appearance = appearance
+        paymentConfig.shippingDetails = shippingDetails
+        paymentConfig.preferredNetworks = preferredNetworks
+        paymentConfig.userOverrideCountry = userOverrideCountry
+        paymentConfig.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
+        paymentConfig.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
+        paymentConfig.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
+        paymentConfig.paymentMethodOrder = paymentMethodOrder
+        paymentConfig.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
+
+        /* Note:
+         There are 3 properties that differ today:
+         hidesMandateText
+         formSheetAction
+         paymentMethodLayout
+         */
+
+        return paymentConfig
+    }
 }

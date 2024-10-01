@@ -6,19 +6,22 @@
 //
 
 import Foundation
-@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import UIKit
 
-protocol EmbeddedPlaygroundViewControllerDelegate: AnyObject {
-    func didComplete(with result: PaymentSheetResult)
-}
-
 class EmbeddedPlaygroundViewController: UIViewController {
-
-    private let settings: PaymentSheetTestPlaygroundSettings
     private let appearance: PaymentSheet.Appearance
+    private let intentConfig: PaymentSheet.IntentConfiguration
+    private let configuration: EmbeddedPaymentElement.Configuration
 
-    weak var delegate: EmbeddedPlaygroundViewControllerDelegate?
+    private var embeddedPaymentElement: EmbeddedPaymentElement!
+
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
 
     private lazy var checkoutButton: UIButton = {
         let checkoutButton = UIButton(type: .system)
@@ -31,9 +34,11 @@ class EmbeddedPlaygroundViewController: UIViewController {
         return checkoutButton
     }()
 
-    init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
-        self.settings = settings
+    init(configuration: EmbeddedPaymentElement.Configuration, intentConfig: PaymentSheet.IntentConfiguration, appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
+        self.intentConfig = intentConfig
+        self.configuration = configuration
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -51,41 +56,55 @@ class EmbeddedPlaygroundViewController: UIViewController {
             return .systemBackground
         })
 
-        // TODO: pass in an embedded configuration built from `PaymentSheetTestPlaygroundSettings`
-        let paymentMethodsView = EmbeddedPaymentMethodsView(savedPaymentMethod: settings.customerMode == .returning ? .mockPaymentMethod : nil,
-                                                            appearance: appearance,
-                                                            shouldShowApplePay: settings.applePayEnabled == .on,
-                                                            shouldShowLink: settings.linkMode == .link_pm)
-        paymentMethodsView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(paymentMethodsView)
+        setupLoadingIndicator()
+        loadingIndicator.startAnimating()
+
+        Task {
+            do {
+                try await setupUI()
+            } catch {
+                presentError(error)
+            }
+
+            loadingIndicator.stopAnimating()
+        }
+    }
+
+    private func setupUI() async throws {
+        embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+             intentConfiguration: intentConfig,
+             configuration: configuration)
+             embeddedPaymentElement.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(embeddedPaymentElement.view)
         self.view.addSubview(checkoutButton)
 
         NSLayoutConstraint.activate([
-            paymentMethodsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            paymentMethodsView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            paymentMethodsView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            embeddedPaymentElement.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            embeddedPaymentElement.view.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            embeddedPaymentElement.view.widthAnchor.constraint(equalTo: view.widthAnchor),
             checkoutButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50),
             checkoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
     }
-}
 
-extension STPPaymentMethod {
-    static var mockPaymentMethod: STPPaymentMethod? {
-        let amex =
-            [
-                "card": [
-                    "id": "preloaded_amex",
-                    "exp_month": "10",
-                    "exp_year": "2020",
-                    "last4": "0005",
-                    "brand": "amex",
-                ],
-                "type": "card",
-                "id": "preloaded_amex",
-            ] as [String: Any]
-        return STPPaymentMethod.decodedObject(fromAPIResponse: amex)
+    private func setupLoadingIndicator() {
+        view.addSubview(loadingIndicator)
+
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+    }
+
+    private func presentError(_ error: Error) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error",
+                                          message: error.localizedDescription,
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alert, animated: true)
+        }
     }
 }

@@ -17,7 +17,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     // MARK: Flat radio snapshot tests
 
     func testEmbeddedPaymentMethodsView_flatRadio() {
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
@@ -28,7 +29,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_savedPaymentMethod() {
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .saved(paymentMethod: STPPaymentMethod._testCard()),
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: STPPaymentMethod._testCard(),
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
@@ -39,7 +41,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_noApplePay() {
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: false,
@@ -50,7 +53,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_noLink() {
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
@@ -62,9 +66,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_flatRadio_rowHeight() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
+        appearance.embeddedPaymentElement.row.additionalInsets = 20
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.klarna)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.klarna)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -73,18 +78,19 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
         // Assert height
         let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
-        let defaultInset = PaymentSheet.Appearance.default.paymentOptionView.paymentMethodRow.additionalInsets
+        let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
-            XCTAssertEqual((appearance.paymentOptionView.paymentMethodRow.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
+            XCTAssertEqual((appearance.embeddedPaymentElement.row.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
         }
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_rowHeightSingleLine() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
+        appearance.embeddedPaymentElement.row.additionalInsets = 20
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -95,18 +101,19 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         // Assert height
         let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
-        let defaultInset = PaymentSheet.Appearance.default.paymentOptionView.paymentMethodRow.additionalInsets
+        let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
-            XCTAssertEqual((appearance.paymentOptionView.paymentMethodRow.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
+            XCTAssertEqual((appearance.embeddedPaymentElement.row.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
         }
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_separatorThickness() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.flat.separatorThickness = 10
+        appearance.embeddedPaymentElement.row.flat.separatorThickness = 10
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -118,9 +125,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_flatRadio_separatorColor() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.flat.separatorColor = .red
+        appearance.embeddedPaymentElement.row.flat.separatorColor = .red
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -132,9 +140,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_flatRadio_separatorInset() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.flat.separatorInset = UIEdgeInsets(top: 0, left: 50, bottom: 0, right: 50)
+        appearance.embeddedPaymentElement.row.flat.separatorInsets = UIEdgeInsets(top: 0, left: 50, bottom: 0, right: 50)
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -146,9 +155,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_flatRadio_topSeparatorDisabled() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.flat.topSeparatorEnabled = false
+        appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled = false
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -160,9 +170,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_flatRadio_bottomSeparatorDisabled() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.flat.bottomSeparatorEnabled = false
+        appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled = false
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -174,9 +185,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_flatRadio_colorSelected() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.flat.radio.colorSelected = .red
+        appearance.embeddedPaymentElement.row.flat.radio.selectedColor = .red
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -185,7 +197,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         // Simulate tapping the last button
         if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.handleRowSelection(selectedRowButton: rowButton)
+            embeddedView.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: .stripe(.cashApp)))
         }
 
         verify(embeddedView)
@@ -193,9 +205,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_flatRadio_colorUnselected() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.paymentMethodRow.flat.radio.colorUnselected = .red
+        appearance.embeddedPaymentElement.row.flat.radio.unselectedColor = .red
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -209,7 +222,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         var appearance: PaymentSheet.Appearance = .default
         appearance.colors.componentBackground = .purple
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -224,7 +238,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         appearance.font.sizeScaleFactor = 0.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -239,7 +254,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         appearance.font.sizeScaleFactor = 1.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -253,9 +269,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
+        appearance.embeddedPaymentElement.style = .floatingButton
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -267,9 +284,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_savedPaymentMethod() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
+        appearance.embeddedPaymentElement.style = .floatingButton
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .saved(paymentMethod: STPPaymentMethod._testCard()),
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: STPPaymentMethod._testCard(),
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -281,9 +299,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_noApplePay() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
+        appearance.embeddedPaymentElement.style = .floatingButton
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: false,
@@ -295,9 +314,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_noLink() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
+        appearance.embeddedPaymentElement.style = .floatingButton
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -309,10 +329,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_rowHeight() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
-        appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
+        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.additionalInsets = 20
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -323,19 +344,20 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         // Assert height
         let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
-        let defaultInset = PaymentSheet.Appearance.default.paymentOptionView.paymentMethodRow.additionalInsets
+        let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
-            XCTAssertEqual((appearance.paymentOptionView.paymentMethodRow.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
+            XCTAssertEqual((appearance.embeddedPaymentElement.row.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
         }
     }
 
     func testEmbeddedPaymentMethodsView_floating_rowHeightSingleLine() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
-        appearance.paymentOptionView.paymentMethodRow.additionalInsets = 20
+        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.additionalInsets = 20
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -346,19 +368,20 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         // Assert height
         let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
-        let defaultInset = PaymentSheet.Appearance.default.paymentOptionView.paymentMethodRow.additionalInsets
+        let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
-            XCTAssertEqual((appearance.paymentOptionView.paymentMethodRow.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
+            XCTAssertEqual((appearance.embeddedPaymentElement.row.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
         }
     }
 
     func testEmbeddedPaymentMethodsView_floating_spacing() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
-        appearance.paymentOptionView.paymentMethodRow.floating.spacing = 30
+        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.floating.spacing = 30
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -370,11 +393,12 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_selectedBorder() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView .style = .floating
-        appearance.borderWidthSelected = 5.0
-        appearance.colors.componentBorderSelected = .red
+        appearance.embeddedPaymentElement .style = .floatingButton
+        appearance.selectedBorderWidth = 5.0
+        appearance.colors.selectedComponentBorder = .red
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -383,7 +407,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         // Simulate tapping the last button
         if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.handleRowSelection(selectedRowButton: rowButton)
+            embeddedView.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: .stripe(.cashApp)))
         }
 
         verify(embeddedView)
@@ -391,11 +415,12 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_borderWidth() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView .style = .floating
+        appearance.embeddedPaymentElement .style = .floatingButton
         appearance.borderWidth = 5.0
         appearance.colors.primary = .red
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -404,7 +429,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         // Simulate tapping the last button
         if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.handleRowSelection(selectedRowButton: rowButton)
+            embeddedView.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: .stripe(.cashApp)))
         }
 
         verify(embeddedView)
@@ -412,10 +437,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_componentBackgroundColor() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
+        appearance.embeddedPaymentElement.style = .floatingButton
         appearance.colors.componentBackground = .purple
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -427,10 +453,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_cornerRadius() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
+        appearance.embeddedPaymentElement.style = .floatingButton
         appearance.cornerRadius = 15
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -442,11 +469,12 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_smallFont() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
+        appearance.embeddedPaymentElement.style = .floatingButton
         appearance.font.sizeScaleFactor = 0.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
@@ -458,17 +486,64 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_largeFont() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.paymentOptionView.style = .floating
+        appearance.embeddedPaymentElement.style = .floatingButton
         appearance.font.sizeScaleFactor = 1.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
 
-        let embeddedView = EmbeddedPaymentMethodsView(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none)
 
+        verify(embeddedView)
+    }
+
+    // MARK: Initial selection tests
+
+    func testEmbeddedPaymentMethodsView_flatRadio_initialApplePay() {
+        let initialSelection: EmbeddedPaymentMethodsView.Selection = .applePay
+
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: .default,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none)
+
+        XCTAssertEqual(embeddedView.selection, initialSelection)
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatRadio_initialLink() {
+        let initialSelection: EmbeddedPaymentMethodsView.Selection = .link
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: .default,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none)
+
+        XCTAssertEqual(embeddedView.selection, initialSelection)
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatRadio_initialSavedCard() {
+        let initialSelection: EmbeddedPaymentMethodsView.Selection = .saved(paymentMethod: ._testCard())
+
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: ._testCard(),
+                                                      appearance: .default,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .edit)
+
+        XCTAssertEqual(embeddedView.selection, initialSelection)
         verify(embeddedView)
     }
 

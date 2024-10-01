@@ -82,6 +82,20 @@ class ConnectComponentWebViewTests: XCTestCase {
     }
 
     @MainActor
+    func testFetchInitComponentPropsMessageHandler() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        let webView = ConnectComponentWebView(componentManager: componentManager,
+                                              componentType: .payouts,
+                                              webLocale: Locale(identifier: "fr_FR"),
+                                              loadContent: false)
+
+        try await webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                   json: "{}",
+                                                   expectedResponse: "{}")
+    }
+
+    @MainActor
     func testUpdateTraitCollection() async throws {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.colors.actionPrimaryText = UIColor { $0.userInterfaceStyle == .light ? .red : .green }
