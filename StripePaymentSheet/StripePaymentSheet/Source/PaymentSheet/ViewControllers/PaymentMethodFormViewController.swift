@@ -24,7 +24,6 @@ class PaymentMethodFormViewController: UIViewController {
     let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
-
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
 

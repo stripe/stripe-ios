@@ -624,6 +624,10 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
                 return
             }
+            // Re-generate the form and validate that it doesn't drop information
+            // TODO
+            // 1. Make intentConfirmparams equatable
+
             let e = expectation(description: "Confirm")
             let paymentHandler = STPPaymentHandler(apiClient: apiClient)
             var redirectShimCalled = false
@@ -896,5 +900,18 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDele
     }
 
     nonisolated func updateErrorLabel(for error: (any Error)?) {
+    }
+}
+
+
+extension IntentConfirmParams: Equatable {
+    static public func == (lhs: StripePaymentSheet.IntentConfirmParams, rhs: StripePaymentSheet.IntentConfirmParams) -> Bool {
+        return lhs.paymentMethodParams == rhs.paymentMethodParams &&
+        lhs.paymentMethodType == rhs.paymentMethodType &&
+        lhs.confirmPaymentMethodOptions == rhs.confirmPaymentMethodOptions &&
+        lhs.saveForFutureUseCheckboxState == rhs.saveForFutureUseCheckboxState &&
+        lhs.didDisplayMandate == rhs.didDisplayMandate &&
+        lhs.financialConnectionsLinkedBank == rhs.financialConnectionsLinkedBank &&
+        lhs.instantDebitsLinkedBank == rhs.instantDebitsLinkedBank
     }
 }
