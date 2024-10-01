@@ -151,6 +151,20 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
                     }
+                    
+                    if playgroundController.settings.uiStyle == .embedded {
+                        Divider()
+                        Group {
+                            HStack {
+                                Text("Embedded only configuration")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                            SettingView(setting: $playgroundController.settings.formSheetAction)
+                            SettingView(setting: $playgroundController.settings.hidesMandateText)
+                        }
+                    }
+
                 }.padding()
             }
             Spacer()

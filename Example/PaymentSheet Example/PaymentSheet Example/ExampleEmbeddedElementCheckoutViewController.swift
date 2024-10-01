@@ -154,7 +154,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         // MARK: Update the payment method and buy buttons using `paymentOption`
         if let paymentOption = embeddedPaymentElement.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
+            paymentMethodButton.setTitleColor(.label, for: .normal)
             paymentMethodImage.image = paymentOption.image
             buyButton.isEnabled = true
         } else {
@@ -227,7 +227,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "salad_count": saladStepper.value,
             "is_subscribing": subscribeSwitch.isOn,
         ]
-        
+
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             weak var weakSelf = self

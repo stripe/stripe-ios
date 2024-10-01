@@ -126,7 +126,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
         // MARK: Update the payment method and buy buttons
         if let paymentOption = linkPaymentController.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
+            paymentMethodButton.setTitleColor(.label, for: .normal)
             paymentMethodImage.image = paymentOption.image
             buyButton.isEnabled = true
         } else {
@@ -181,9 +181,9 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
                 if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400,
-                   let errorMessage = String(data: data, encoding: .utf8){
+                   (response as? HTTPURLResponse)?.statusCode == 400 {
                     // read the error message
+                    let errorMessage = String(decoding: data, as: UTF8.self)
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
                     intentCreationCallback(.failure(error ?? ConfirmHandlerError.unknown))
