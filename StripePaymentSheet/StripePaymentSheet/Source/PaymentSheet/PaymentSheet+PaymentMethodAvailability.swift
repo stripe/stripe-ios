@@ -42,14 +42,14 @@ extension PaymentSheet {
     ]
 
     /// Canonical source of truth for whether Apple Pay is enabled
-    static func isApplePayEnabled(elementsSession: STPElementsSession, configuration: Configuration) -> Bool {
+    static func isApplePayEnabled(elementsSession: STPElementsSession, configuration: IntegrationConfigurable) -> Bool {
         return StripeAPI.deviceSupportsApplePay()
             && configuration.applePay != nil
             && elementsSession.isApplePayEnabled
     }
 
     /// Canonical source of truth for whether Link is enabled
-    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: Configuration) -> Bool {
+    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: IntegrationConfigurable) -> Bool {
         guard elementsSession.supportsLink else {
             return false
         }
@@ -64,19 +64,6 @@ protocol PaymentMethodRequirementProvider {
 
     /// The set of payment requirements provided by this instance
     var fulfilledRequirements: [PaymentMethodTypeRequirement] { get }
-}
-
-extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
-    var fulfilledRequirements: [PaymentMethodTypeRequirement] {
-        var reqs = [PaymentMethodTypeRequirement]()
-        if returnURL != nil { reqs.append(.returnURL) }
-        if allowsDelayedPaymentMethods { reqs.append(.userSupportsDelayedPaymentMethods) }
-        if allowsPaymentMethodsRequiringShippingAddress { reqs.append(.shippingAddress) }
-        if FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
-            reqs.append(.financialConnectionsSDK)
-        }
-        return reqs
-    }
 }
 
 extension Intent: PaymentMethodRequirementProvider {
