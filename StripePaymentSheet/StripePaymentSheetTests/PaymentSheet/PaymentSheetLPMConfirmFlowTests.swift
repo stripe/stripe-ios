@@ -426,7 +426,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testCashAppConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent],
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
                                currency: "USD",
                                paymentMethodType: .cashApp,
                                merchantCountry: .US) { form in
@@ -606,8 +606,12 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)
 
         for (description, intent) in intents {
+
+            func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+            }
             // Make the form
-            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+            let formVC = makeFormVC(previousCustomerInput: nil)
             let paymentMethodForm = formVC.form
 
             // Add to window to avoid layout errors due to zero size and presentation errors
@@ -624,9 +628,10 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
                 return
             }
-            // Re-generate the form and validate that it doesn't drop information
-            // TODO
-            // 1. Make intentConfirmparams equatable
+
+            // Re-generate the form and validate that it carries over all previous customer input
+            let regeneratedFormVC = makeFormVC(previousCustomerInput: intentConfirmParams)
+            XCTAssertEqual(regeneratedFormVC.form.updateParams(params: .init(type: .stripe(paymentMethodType))), intentConfirmParams)
 
             let e = expectation(description: "Confirm")
             let paymentHandler = STPPaymentHandler(apiClient: apiClient)
@@ -903,15 +908,47 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDele
     }
 }
 
-
 extension IntentConfirmParams: Equatable {
     static public func == (lhs: StripePaymentSheet.IntentConfirmParams, rhs: StripePaymentSheet.IntentConfirmParams) -> Bool {
-        return lhs.paymentMethodParams == rhs.paymentMethodParams &&
-        lhs.paymentMethodType == rhs.paymentMethodType &&
-        lhs.confirmPaymentMethodOptions == rhs.confirmPaymentMethodOptions &&
-        lhs.saveForFutureUseCheckboxState == rhs.saveForFutureUseCheckboxState &&
-        lhs.didDisplayMandate == rhs.didDisplayMandate &&
-        lhs.financialConnectionsLinkedBank == rhs.financialConnectionsLinkedBank &&
-        lhs.instantDebitsLinkedBank == rhs.instantDebitsLinkedBank
+        let lhsParams = STPFormEncoder.dictionary(forObject: lhs.paymentMethodParams)
+        let lhsParamsStr = URLEncoder.queryString(from: lhsParams)
+        let rhsParams = STPFormEncoder.dictionary(forObject: rhs.paymentMethodParams)
+        let rhsParamsStr = URLEncoder.queryString(from: rhsParams)
+        if lhsParamsStr != rhsParamsStr {
+            print("Params not equal: \(lhsParamsStr) vs \(rhsParamsStr)")
+            return false
+        }
+        if lhs.paymentMethodType != rhs.paymentMethodType {
+            print("Payment method types not equal: \(lhs.paymentMethodType) vs \(rhs.paymentMethodType)")
+            return false
+        }
+
+        let lhsConfirmPaymentMethodOptions = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: lhs.confirmPaymentMethodOptions))
+        let rhsConfirmPaymentMethodOptions = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: rhs.confirmPaymentMethodOptions))
+        if lhsConfirmPaymentMethodOptions != rhsConfirmPaymentMethodOptions {
+            print("Confirm payment method options not equal: \(lhs.confirmPaymentMethodOptions) vs \(rhs.confirmPaymentMethodOptions)")
+            return false
+        }
+
+        if lhs.saveForFutureUseCheckboxState != rhs.saveForFutureUseCheckboxState {
+            print("Save for future use checkbox states not equal: \(lhs.saveForFutureUseCheckboxState) vs \(rhs.saveForFutureUseCheckboxState)")
+            return false
+        }
+
+        if lhs.didDisplayMandate != rhs.didDisplayMandate {
+            print("Did display mandate states not equal: \(lhs.didDisplayMandate) vs \(rhs.didDisplayMandate)")
+            return false
+        }
+
+        if lhs.financialConnectionsLinkedBank != rhs.financialConnectionsLinkedBank {
+            print("Financial connections linked banks not equal: \(lhs.financialConnectionsLinkedBank.debugDescription) vs \(rhs.financialConnectionsLinkedBank.debugDescription)")
+            return false
+        }
+
+        if lhs.instantDebitsLinkedBank != rhs.instantDebitsLinkedBank {
+            print("Instant debits linked banks not equal: \(lhs.instantDebitsLinkedBank.debugDescription) vs \(rhs.instantDebitsLinkedBank.debugDescription)")
+            return false
+        }
+        return true
     }
 }
