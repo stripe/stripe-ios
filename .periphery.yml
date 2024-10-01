@@ -8,20 +8,20 @@ workspace: Stripe.xcworkspace
 schemes:
   - AllStripeFrameworks
   # - IntegrationTester
-  # - Stripe3DS2
+  - Stripe3DS2
   # - Stripe3DS2DemoUI
-  # - StripeApplePay
-  # - StripeCameraCore
-  # - StripeCardScan
+  - StripeApplePay
+  - StripeCameraCore
+  - StripeCardScan
   - StripeConnect
-  # - StripeCore
-  # - StripeFinancialConnections
-  # - StripeIdentity
-  # - StripePaymentSheet
-  # - StripePayments
-  # - StripePaymentsUI
-  # - StripeUICore
-  # - StripeiOS
+  - StripeCore
+  - StripeFinancialConnections
+  - StripeIdentity
+  - StripePaymentSheet
+  - StripePayments
+  - StripePaymentsUI
+  - StripeUICore
+  - StripeiOS
   # - PaymentSheet Example
   # - AppClipExample
   # - CardImageVerification Example
