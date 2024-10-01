@@ -14,14 +14,8 @@ typealias STPApplePayPaymentMethodHandlerBlock = (STPPaymentMethod, @escaping ST
     -> Void
 typealias STPPaymentCompletionBlock = (STPPaymentStatus, Error?) -> Void
 typealias STPPaymentSummaryItemCompletionBlock = ([PKPaymentSummaryItem]) -> Void
-typealias STPShippingMethodSelectionBlock = (
-    PKShippingMethod, @escaping STPPaymentSummaryItemCompletionBlock
-) -> Void
 typealias STPShippingAddressValidationBlock = (
     STPShippingStatus, [PKShippingMethod], [PKPaymentSummaryItem]
-) -> Void
-typealias STPShippingAddressSelectionBlock = (
-    STPAddress, @escaping STPShippingAddressValidationBlock
 ) -> Void
 typealias STPPaymentAuthorizationBlock = (PKPayment) -> Void
 
