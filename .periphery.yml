@@ -89,7 +89,7 @@ targets:
 
 retain_public: false
 retain_objc_accessible: false
-retain_objc_annotated: true
+retain_objc_annotated: false
 
 verbose: true
 
