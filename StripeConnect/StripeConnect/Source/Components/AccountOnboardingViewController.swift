@@ -10,18 +10,33 @@ import UIKit
 /// A view controller representing an account-onboarding component
 /// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/account-onboarding
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public class AccountOnboardingViewController: UIViewController {
 
-    /// Delegate that recieves callbacks for this component
+    struct Props: Encodable {
+        let fullTermsOfServiceUrl: URL?
+        let recipientTermsOfServiceUrl: URL?
+        let privacyPolicyUrl: URL?
+        let skipTermsOfServiceCollection: Bool?
+        let collectionOptions: AccountCollectionOptions
+
+        // Used in FetchInitComponentPropsMessageHandler
+        // Each property key should match its JS setter name
+        enum CodingKeys: String, CodingKey {
+            case fullTermsOfServiceUrl = "setFullTermsOfServiceUrl"
+            case recipientTermsOfServiceUrl = "setRecipientTermsOfServiceUrl"
+            case privacyPolicyUrl = "setPrivacyPolicyUrl"
+            case skipTermsOfServiceCollection = "setSkipTermsOfServiceCollection"
+            case collectionOptions = "setCollectionOptions"
+        }
+    }
+
+    /// Delegate that receives callbacks for this component
     public weak var delegate: AccountOnboardingViewControllerDelegate?
 
     let webView: ConnectComponentWebView
 
-    init(fullTermsOfServiceUrl: URL? = nil,
-         recipientTermsOfServiceUrl: URL? = nil,
-         privacyPolicyUrl: URL? = nil,
-         skipTermsOfServiceCollection: Bool? = nil,
-         collectionOptions: AccountCollectionOptions = .init(),
+    init(props: Props,
          componentManager: EmbeddedComponentManager,
          // Test Only
          loadContent: Bool = true
@@ -29,6 +44,7 @@ public class AccountOnboardingViewController: UIViewController {
         webView = ConnectComponentWebView(
             componentManager: componentManager,
             componentType: .onboarding,
+            fetchInitProps: { props },
             loadContent: loadContent
         )
         super.init(nibName: nil, bundle: nil)
@@ -59,6 +75,7 @@ public class AccountOnboardingViewController: UIViewController {
 
 /// Delegate of an `AccountOnboardingViewController`
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 public protocol AccountOnboardingViewControllerDelegate: AnyObject {
     /**
      The connected account has exited the onboarding process
@@ -77,6 +94,7 @@ public protocol AccountOnboardingViewControllerDelegate: AnyObject {
 
 }
 
+@available(iOS 15, *)
 public extension AccountOnboardingViewControllerDelegate {
     // Add default implementation of delegate methods to make them optional
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingViewController) { }
