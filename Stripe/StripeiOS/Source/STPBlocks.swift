@@ -31,14 +31,3 @@ typealias STPFPXBankStatusCompletionBlock = (STPFPXBankStatusResponse?, Error?) 
     /// The shipping address is invalid.
     case invalid
 }
-
-/// A callback to be run with a validation result and shipping methods for a
-/// shipping address.
-/// - Parameters:
-///   - status: An enum representing whether the shipping address is valid.
-///   - shippingValidationError: If the shipping address is invalid, an error describing the issue with the address. If no error is given and the address is invalid, the default error message will be used.
-///   - shippingMethods: The shipping methods available for the address.
-///   - selectedShippingMethod: The default selected shipping method for the address.
-public typealias STPShippingMethodsCompletionBlock = (
-    STPShippingStatus, Error?, [PKShippingMethod]?, PKShippingMethod?
-) -> Void

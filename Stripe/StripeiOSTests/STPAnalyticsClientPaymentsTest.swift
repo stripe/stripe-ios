@@ -32,10 +32,6 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         client.addAdditionalInfo("how are you?")
 
         XCTAssertEqual(client.additionalInfo(), ["hello", "how are you?", "i'm additional info"])
-
-        // Clear it
-        client.clearAdditionalInfo()
-        XCTAssertEqual(client.additionalInfo(), [])
     }
 
     func testPayloadFromAnalytic() throws {
