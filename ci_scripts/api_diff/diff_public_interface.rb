@@ -28,7 +28,8 @@ def build_swift_package(swift_package_dir, swift_script_path)
               .executableTarget(
                   name: "ProcessDiff",
                   dependencies: [
-                      .product(name: "SwiftSyntax", package: "swift-syntax")
+                      .product(name: "SwiftSyntax", package: "swift-syntax"),
+                      .product(name: "SwiftSyntaxParser", package: "swift-syntax")
                   ]
               ),
           ]
