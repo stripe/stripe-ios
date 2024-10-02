@@ -160,11 +160,13 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         )
     }
 
-    class func attributedMandateText(for linkedBank: FinancialConnectionsLinkedBank?,
-                                     merchantName: String,
-                                     isSaving: Bool,
-                                     configuration: PaymentSheetFormFactoryConfig,
-                                     theme: ElementsUITheme = .default) -> NSMutableAttributedString? {
+    static func attributedMandateText(
+        for linkedBank: FinancialConnectionsLinkedBank?,
+        merchantName: String,
+        isSaving: Bool,
+        configuration: PaymentSheetFormFactoryConfig,
+        theme: ElementsUITheme = .default
+    ) -> NSMutableAttributedString? {
         guard let linkedBank else {
             return nil
         }
@@ -180,14 +182,14 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         return formattedString
     }
 
-    class func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsUITheme) -> NSMutableAttributedString {
+    static func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsUITheme) -> NSMutableAttributedString {
         let mandateText = Self.ContinueMandateText
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, alignment: alignment, theme: theme)
         return formattedString
     }
 
-    private class func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsUITheme = .default) {
+    private static func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsUITheme = .default) {
         let style = NSMutableParagraphStyle()
         style.alignment = alignment
         formattedString.addAttributes([.paragraphStyle: style,
