@@ -134,6 +134,9 @@ extension AnalyticsClientV2Protocol {
             "install": InstallMethod.current.rawValue,
             "app_bundle_id": Bundle.stp_applicationBundleId() ?? "",
         ]
+        if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
+            payload["device_id"] = deviceId
+        }
 
         return payload
     }
