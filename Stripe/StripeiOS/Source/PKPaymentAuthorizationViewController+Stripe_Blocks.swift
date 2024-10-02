@@ -12,10 +12,6 @@ import PassKit
 typealias STPApplePayPaymentMethodHandlerBlock = (STPPaymentMethod, @escaping STPPaymentStatusBlock)
     -> Void
 typealias STPPaymentCompletionBlock = (STPPaymentStatus, Error?) -> Void
-typealias STPPaymentSummaryItemCompletionBlock = ([PKPaymentSummaryItem]) -> Void
-typealias STPShippingAddressValidationBlock = (
-    STPShippingStatus, [PKShippingMethod], [PKPaymentSummaryItem]
-) -> Void
 typealias STPPaymentAuthorizationBlock = (PKPayment) -> Void
 
 typealias STPApplePayShippingMethodCompletionBlock = (

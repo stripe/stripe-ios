@@ -242,35 +242,8 @@ class STPImageLibraryTestSwift: XCTestCase {
 
     func testMiscImages() {
         STPAssertEqualImages(
-            STPLegacyImageLibrary.addIcon(),
-            STPLegacyImageLibrary.safeImageNamed("stp_icon_add", templateIfAvailable: false)
-        )
-        STPAssertEqualImages(
             STPImageLibrary.bankIcon(),
             STPImageLibrary.safeImageNamed("stp_icon_bank", templateIfAvailable: false)
-        )
-        STPAssertEqualImages(
-            STPLegacyImageLibrary.checkmarkIcon(),
-            STPLegacyImageLibrary.safeImageNamed("stp_icon_checkmark", templateIfAvailable: false)
-        )
-        STPAssertEqualImages(
-            STPLegacyImageLibrary.largeCardFrontImage(),
-            STPLegacyImageLibrary.safeImageNamed("stp_card_form_front", templateIfAvailable: false)
-        )
-        STPAssertEqualImages(
-            STPLegacyImageLibrary.largeCardBackImage(),
-            STPLegacyImageLibrary.safeImageNamed("stp_card_form_back", templateIfAvailable: false)
-        )
-        STPAssertEqualImages(
-            STPLegacyImageLibrary.largeCardAmexCVCImage(),
-            STPLegacyImageLibrary.safeImageNamed(
-                "stp_card_form_amex_cvc",
-                templateIfAvailable: false
-            )
-        )
-        STPAssertEqualImages(
-            STPLegacyImageLibrary.largeShippingImage(),
-            STPLegacyImageLibrary.safeImageNamed("stp_shipping_form", templateIfAvailable: false)
         )
     }
 

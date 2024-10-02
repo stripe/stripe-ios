@@ -444,8 +444,24 @@ extension STPPaymentMethodParams {
             return rawTypeString ?? ""
         case .card:
             return "••••\(card?.last4 ?? "")"
+        case .FPX:
+            if let fpx = fpx {
+                return STPFPXBank.stringFrom(fpx.bank) ?? ""
+            } else {
+                fallthrough
+            }
+        case .USBankAccount:
+            if let usBankAccount = usBankAccount {
+                return String(
+                    format: String.Localized.bank_name_account_ending_in_last_4,
+                    usBankAccount.bankName,
+                    usBankAccount.last4
+                )
+            } else {
+                fallthrough
+            }
         default:
-            return label
+                return type.displayName
         }
     }
 }
