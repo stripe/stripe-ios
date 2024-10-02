@@ -423,6 +423,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .FR) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "EUR",
+                               paymentMethodType: .payPal,
+                               merchantCountry: .FR) { form in
+            XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
+        }
     }
 
     func testCashAppConfirmFlows() async throws {
@@ -935,12 +942,10 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 extension IntentConfirmParams: Equatable {
     static public func == (lhs: StripePaymentSheet.IntentConfirmParams, rhs: StripePaymentSheet.IntentConfirmParams) -> Bool {
         // Hack to compare `paymentMethodParams` objects; consider them equal if their serialized versions are the same
-        let lhsParamsDict = STPFormEncoder.dictionary(forObject: lhs.paymentMethodParams)
-        let lhsParamsQueryString = URLEncoder.queryString(from: lhsParamsDict)
-        let rhsParamsDict = STPFormEncoder.dictionary(forObject: rhs.paymentMethodParams)
-        let rhsParamsQueryString = URLEncoder.queryString(from: rhsParamsDict)
-        if lhsParamsQueryString != rhsParamsQueryString {
-            print("Params not equal: \(lhsParamsQueryString) vs \(rhsParamsQueryString)")
+        let lhsPaymentMethodParams = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: lhs.paymentMethodParams))
+        let rhsPaymentMethodParams = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: rhs.paymentMethodParams))
+        if lhsPaymentMethodParams != rhsPaymentMethodParams {
+            print("Params not equal: \(lhsPaymentMethodParams) vs \(rhsPaymentMethodParams)")
             return false
         }
         if lhs.paymentMethodType != rhs.paymentMethodType {
@@ -974,6 +979,12 @@ extension IntentConfirmParams: Equatable {
             print("Instant debits linked banks not equal: \(lhs.instantDebitsLinkedBank.debugDescription) vs \(rhs.instantDebitsLinkedBank.debugDescription)")
             return false
         }
+
+        // Sanity check to make sure when we add new properties, we check them here
+        let mirror = Mirror(reflecting: lhs)
+        let propertyCount = mirror.children.count
+        XCTAssertEqual(propertyCount, 7)
+
         return true
     }
 }

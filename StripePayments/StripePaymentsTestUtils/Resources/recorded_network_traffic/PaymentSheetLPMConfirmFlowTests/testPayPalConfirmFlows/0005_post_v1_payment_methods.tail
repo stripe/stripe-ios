@@ -7,20 +7,21 @@ content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayme
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+x-wc: A
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_LV7d4AtcRohOCE
+request-id: req_r8dBcVbbCWP5N8
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 518
 Vary: Origin
-Date: Wed, 31 Jul 2024 03:33:42 GMT
-original-request: req_LV7d4AtcRohOCE
+Date: Wed, 02 Oct 2024 02:40:53 GMT
+original-request: req_r8dBcVbbCWP5N8
 stripe-version: 2020-08-27
-idempotency-key: 060e555e-bb80-4e44-9627-bf62ff4f353f
+idempotency-key: df253f32-eef2-4c90-b5e2-d9058cca2620
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -35,7 +36,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&payment_user_agent=.*&type=pa
     "payer_id" : null,
     "payer_email" : null
   },
-  "id" : "pm_1PiTIIKG6vc7r7YC2mxWoAJy",
+  "id" : "pm_1Q5IUjKG6vc7r7YCcNmkfy07",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -50,7 +51,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&payment_user_agent=.*&type=pa
     }
   },
   "livemode" : false,
-  "created" : 1722396822,
+  "created" : 1727836853,
   "allow_redisplay" : "unspecified",
   "type" : "paypal",
   "customer" : null
