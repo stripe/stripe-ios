@@ -2,7 +2,6 @@
 
 import Foundation
 import SwiftSyntax
-import SwiftSemantics
 import SwiftSyntaxParser
 
 // Ensure we have the correct number of arguments
@@ -17,10 +16,25 @@ let newFilePath = CommandLine.arguments[2]
 // Function to parse declarations from a Swift interface file
 func parseDeclarations(from filePath: String) throws -> Set<String> {
     let sourceFile = try SyntaxParser.parse(URL(fileURLWithPath: filePath))
+    var declarations = Set<String>()
+
+    class DeclarationCollector: SyntaxVisitor {
+        var declarations = Set<String>()
+
+        override func visit(_ node: MemberDeclListItemSyntax) -> SyntaxVisitorContinueKind {
+            declarations.insert(node.description.trimmingCharacters(in: .whitespacesAndNewlines))
+            return .skipChildren
+        }
+
+        override func visit(_ node: DeclSyntax) -> SyntaxVisitorContinueKind {
+            declarations.insert(node.description.trimmingCharacters(in: .whitespacesAndNewlines))
+            return .skipChildren
+        }
+    }
+
     let collector = DeclarationCollector()
     collector.walk(sourceFile)
-    let declarations = collector.declarations.map { $0.description.trimmingCharacters(in: .whitespacesAndNewlines) }
-    return Set(declarations)
+    return collector.declarations
 }
 
 do {
