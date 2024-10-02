@@ -31,10 +31,6 @@ class STPImageLibraryTestSwift: XCTestCase {
 
     func testCardIconMethods() {
         STPAssertEqualImages(
-            STPImageLibrary.applePayCardImage(),
-            STPImageLibrary.safeImageNamed("stp_card_applepay", templateIfAvailable: false)
-        )
-        STPAssertEqualImages(
             STPImageLibrary.amexCardImage(),
             STPImageLibrary.safeImageNamed("stp_card_amex", templateIfAvailable: false)
         )
@@ -120,84 +116,6 @@ class STPImageLibraryTestSwift: XCTestCase {
                 STPAssertEqualImages(
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: false)
-                )
-            }
-        }
-    }
-
-    func testTemplatedBrandImageForCardBrand() {
-        for brand in Self.cardBrands {
-            let image = STPImageLibrary.templatedBrandImage(for: brand)
-
-            switch brand {
-            case .visa:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_visa_template",
-                        templateIfAvailable: true
-                    )
-                )
-            case .amex:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_amex_template",
-                        templateIfAvailable: true
-                    )
-                )
-            case .mastercard:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_mastercard_template",
-                        templateIfAvailable: true
-                    )
-                )
-            case .discover:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_discover_template",
-                        templateIfAvailable: true
-                    )
-                )
-            case .JCB:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_jcb_template",
-                        templateIfAvailable: true
-                    )
-                )
-            case .dinersClub:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_diners_template",
-                        templateIfAvailable: true
-                    )
-                )
-            case .unionPay:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_unionpay_template",
-                        templateIfAvailable: true
-                    )
-                )
-            case .cartesBancaires:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_cartes_bancaires_template",
-                        templateIfAvailable: true
-                    )
-                )
-            case .unknown:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: true)
                 )
             }
         }
