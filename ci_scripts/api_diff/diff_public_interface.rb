@@ -31,8 +31,7 @@ def build_swift_package(swift_package_dir, swift_script_path)
                   dependencies: [
                       .product(name: "SwiftSyntax", package: "swift-syntax"),
                       .product(name: "SwiftSemantics", package: "SwiftSemantics")
-                  ],
-                  path: "."
+                  ]
               ),
           ]
       )
@@ -40,8 +39,16 @@ def build_swift_package(swift_package_dir, swift_script_path)
 
     File.write(package_swift_path, package_swift_content)
 
-    # Copy the Swift script into the package directory
-    FileUtils.cp(swift_script_path, 'main.swift')
+    # Copy the Swift script into the correct directory
+    sources_dir = File.join('Sources', 'ProcessDiff')
+    FileUtils.mkdir_p(sources_dir)
+
+    # Remove any existing main.swift files to avoid conflicts
+    existing_main_swift = File.join(sources_dir, 'main.swift')
+    FileUtils.rm_f(existing_main_swift)
+
+    # Copy your process_diff.swift to main.swift in the sources directory
+    FileUtils.cp(swift_script_path, existing_main_swift)
 
     # Build the Swift package
     build_status = system('swift build -c release')
