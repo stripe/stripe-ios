@@ -1,5 +1,5 @@
 //
-//  IntegrationConfigurable.swift
+//  PaymentElementConfiguration.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 10/1/24.
@@ -10,9 +10,9 @@ import UIKit
 @_spi(STP) import StripePayments
 
 /// Represents shared configuration properties between integration surfaces in mobile payment element.
-/// - Note: See the concrete implementations of `IntegrationConfigurable` for detailed doc comments.
+/// - Note: See the concrete implementations of `PaymentElementConfiguration` for detailed doc comments.
 /// - Note: Not currently used by CustomerSheet.
-protocol IntegrationConfigurable: PaymentMethodRequirementProvider {
+protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var allowsDelayedPaymentMethods: Bool { get set }
     var allowsPaymentMethodsRequiringShippingAddress: Bool { get set }
     var apiClient: STPAPIClient { get set }
@@ -34,10 +34,9 @@ protocol IntegrationConfigurable: PaymentMethodRequirementProvider {
     var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? { get set }
     var paymentMethodOrder: [String]? { get set }
     var allowsRemovalOfLastSavedPaymentMethod: Bool { get set }
-    var analyticPayload: [String: Any] { get }
 }
 
-extension IntegrationConfigurable {
+extension PaymentElementConfiguration {
     
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
@@ -59,5 +58,5 @@ extension IntegrationConfigurable {
     }
 }
 
-extension PaymentSheet.Configuration: IntegrationConfigurable {}
-extension EmbeddedPaymentElement.Configuration: IntegrationConfigurable {}
+extension PaymentSheet.Configuration: PaymentElementConfiguration {}
+extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {}

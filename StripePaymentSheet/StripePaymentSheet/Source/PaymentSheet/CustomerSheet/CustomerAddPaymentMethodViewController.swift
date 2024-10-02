@@ -244,7 +244,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             isSettingUp: true,
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
-            analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration.init()) // Just use a dummy analytics helper; we don't look at these analytics.
+            analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration.init()) // TODO(MOBILESDK-2548) Just use a dummy analytics helper; we don't look at these analytics.
         ).make()
         formElement.delegate = self
         return formElement

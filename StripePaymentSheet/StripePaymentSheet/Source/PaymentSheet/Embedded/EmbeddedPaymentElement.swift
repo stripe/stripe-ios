@@ -55,8 +55,8 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(porter) When we do analytics decide how to handle `isCustom`
-        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: configuration)
+        // TODO(porter) Should we create a new analytics helper specific to embedded? Figured this out when we do analytics.
+        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
         AnalyticsHelper.shared.generateSessionID()
 
         let loadResult = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfiguration),

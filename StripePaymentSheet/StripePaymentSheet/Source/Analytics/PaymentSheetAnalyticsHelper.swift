@@ -12,7 +12,7 @@ import Foundation
 final class PaymentSheetAnalyticsHelper {
     let analyticsClient: STPAnalyticsClient
     let isCustom: Bool
-    let configuration: IntegrationConfigurable
+    let configuration: PaymentSheet.Configuration
 
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
@@ -22,7 +22,7 @@ final class PaymentSheetAnalyticsHelper {
 
     init(
         isCustom: Bool,
-        configuration: IntegrationConfigurable,
+        configuration: PaymentSheet.Configuration,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         self.isCustom = isCustom
@@ -352,38 +352,5 @@ extension PaymentSheet.Configuration {
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
         payload["payment_method_layout"] = paymentMethodLayout.description
         return payload
-    }
-}
-
-extension EmbeddedPaymentElement.Configuration {
-    /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
-    var analyticPayload: [String: Any] {
-        var payload = [String: Any]()
-        payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
-        payload["apple_pay_config"] = applePay != nil
-        payload["style"] = style.rawValue
-        payload["customer"] = customer != nil
-        payload["customer_access_provider"] = customer?.customerAccessProvider.analyticValue
-        payload["return_url"] = returnURL != nil
-        payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
-        payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
-        payload["appearance"] = appearance.analyticPayload
-        payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
-        payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
-        payload["form_sheet_action"] = formSheetAction.analyticValue
-        payload["hide_mandate_text"] = hidesMandateText
-
-        return payload
-    }
-}
-
-extension EmbeddedPaymentElement.Configuration.FormSheetAction {
-    var analyticValue: String {
-        switch self {
-        case .confirm:
-            return "confirm"
-        case .continue:
-            return "continue"
-        }
     }
 }

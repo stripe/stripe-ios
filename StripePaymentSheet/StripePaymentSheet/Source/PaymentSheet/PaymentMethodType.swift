@@ -129,7 +129,7 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
-        static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: IntegrationConfigurable, logAvailability: Bool = false) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
             var recommendedStripePaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
@@ -245,7 +245,7 @@ extension PaymentSheet {
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func supportsAdding(
             paymentMethod: STPPaymentMethodType,
-            configuration: IntegrationConfigurable,
+            configuration: PaymentElementConfiguration,
             intent: Intent,
             elementsSession: STPElementsSession,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
@@ -344,7 +344,7 @@ extension PaymentSheet {
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
-            configuration: IntegrationConfigurable,
+            configuration: PaymentElementConfiguration,
             intent: Intent
         ) -> PaymentMethodAvailabilityStatus {
             let fulfilledRequirements = [configuration, intent].reduce([]) {
@@ -373,7 +373,7 @@ extension PaymentSheet {
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
-            configuration: IntegrationConfigurable,
+            configuration: PaymentElementConfiguration,
             intent: Intent,
             elementsSession: STPElementsSession,
             supportedPaymentMethods: [STPPaymentMethodType]
@@ -414,7 +414,7 @@ extension STPPaymentMethod {
     /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
     /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
     /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
-    func supportsSavedPaymentMethod(configuration: IntegrationConfigurable, intent: Intent, elementsSession: STPElementsSession) -> Bool {
+    func supportsSavedPaymentMethod(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) -> Bool {
         let requirements: [PaymentMethodTypeRequirement] = {
             switch type {
             case .card:

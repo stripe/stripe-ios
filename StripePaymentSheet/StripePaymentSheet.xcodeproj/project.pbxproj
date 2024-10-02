@@ -119,7 +119,7 @@
 		61C0D3B8C63EB4558AB74A7E /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1C7CFA5C9C1A8A73CFA1C0 /* StripePayments.framework */; };
 		61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */; };
 		61CBE6662BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */; };
-		61D842442CAC50C5009D2D51 /* IntegrationConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D842432CAC50C5009D2D51 /* IntegrationConfigurable.swift */; };
+		61D842892CADE4B9009D2D51 /* PaymentElementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D842882CADE4B9009D2D51 /* PaymentElementConfiguration.swift */; };
 		61D8688E2C06553E001FAD84 /* RightAccessoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */; };
 		61FB6BCD2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */; };
 		623C2D9F87929D6DA9C09E23 /* STPCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39B31D0B890A4F8E4819B15 /* STPCameraView.swift */; };
@@ -472,7 +472,7 @@
 		619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewControllerTests.swift; sourceTree = "<group>"; };
 		61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
-		61D842432CAC50C5009D2D51 /* IntegrationConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationConfigurable.swift; sourceTree = "<group>"; };
+		61D842882CADE4B9009D2D51 /* PaymentElementConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentElementConfiguration.swift; sourceTree = "<group>"; };
 		61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightAccessoryButton.swift; sourceTree = "<group>"; };
 		61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentMethodsViewSnapshotTests.swift; sourceTree = "<group>"; };
 		62CE362B80042827F47ABC3F /* AffirmCopyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmCopyLabel.swift; sourceTree = "<group>"; };
@@ -840,7 +840,6 @@
 				B9A9FDAE66ADA08D85D74E19 /* PaymentSheet+SwiftUI.swift */,
 				B61FFE76D0960C7F1E34B405 /* PaymentSheetAppearance.swift */,
 				C46CB5AB992F8EEFE4E5460A /* PaymentSheetConfiguration.swift */,
-				61D842432CAC50C5009D2D51 /* IntegrationConfigurable.swift */,
 				0DF4D51EEAB1092637BE144E /* PaymentSheetDeferredValidator.swift */,
 				E6DDBBAAC2892467CED23402 /* PaymentSheetError.swift */,
 				58A85D630BDEA7408391EB8B /* PaymentSheetFlowController.swift */,
@@ -849,6 +848,7 @@
 				966339C092711FED8EFE98FB /* STPAnalyticsClient+PaymentSheet.swift */,
 				446E3BBF316178C04343B193 /* STPApplePayContext+PaymentSheet.swift */,
 				2C59FD8C17CA1D740BCAFA4D /* STPPaymentIntentShippingDetailsParams+PaymentSheet.swift */,
+				61D842882CADE4B9009D2D51 /* PaymentElementConfiguration.swift */,
 			);
 			path = PaymentSheet;
 			sourceTree = "<group>";
@@ -1763,6 +1763,7 @@
 				4E5A3324BBD882A780925E2B /* STPAnalyticsClient+Address.swift in Sources */,
 				0FB52E5B87B1854B28362BF3 /* STPAnalyticsClient+CustomerSheet.swift in Sources */,
 				6A529F76ECB33C9154314C1F /* STPAnalyticsClient+LUXE.swift in Sources */,
+				61D842892CADE4B9009D2D51 /* PaymentElementConfiguration.swift in Sources */,
 				06976DDC67A61176FC54AA76 /* Data+SHA256.swift in Sources */,
 				6180A5CB2C8249D2009D1536 /* UIStackView+Separator.swift in Sources */,
 				B63B2CF52BFBEEAD003810F3 /* PaymentMethodFormViewController.swift in Sources */,
@@ -1796,7 +1797,6 @@
 				B8A7575878C5124CF5482097 /* VerificationSession.swift in Sources */,
 				9326393E775D29F8C661624B /* STPAPIClient+PaymentSheet.swift in Sources */,
 				AA3A96D74B1659CB5725E95F /* CardExpiryDate.swift in Sources */,
-				61D842442CAC50C5009D2D51 /* IntegrationConfigurable.swift in Sources */,
 				64DE5688E4FBE92E1F49810C /* ExternalPaymentMethod.swift in Sources */,
 				229A4A578609A3711F02682E /* STPCardBrandChoice.swift in Sources */,
 				3EDFACA133567159875143C5 /* STPElementsSession.swift in Sources */,

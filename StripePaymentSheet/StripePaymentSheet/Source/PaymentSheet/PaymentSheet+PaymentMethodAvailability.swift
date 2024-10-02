@@ -42,14 +42,14 @@ extension PaymentSheet {
     ]
 
     /// Canonical source of truth for whether Apple Pay is enabled
-    static func isApplePayEnabled(elementsSession: STPElementsSession, configuration: IntegrationConfigurable) -> Bool {
+    static func isApplePayEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
         return StripeAPI.deviceSupportsApplePay()
             && configuration.applePay != nil
             && elementsSession.isApplePayEnabled
     }
 
     /// Canonical source of truth for whether Link is enabled
-    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: IntegrationConfigurable) -> Bool {
+    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
         guard elementsSession.supportsLink else {
             return false
         }
