@@ -126,8 +126,27 @@ GetFrameworks.framework_names(File.join('./modules.yaml')).each do |framework_na
   end
 end
 
-# Write the final diff string to a file
+# Process the final diff string
 unless final_diff_string.empty?
+  # Split the string into lines and process each line
+  processed_lines = final_diff_string.lines.map do |line|
+    # Preserve the diff indicator at the beginning
+    if line =~ /^(\+|-)\s*(.*)$/
+      diff_symbol = $1
+      rest_of_line = $2
+      # Remove all occurrences of "@objc"
+      rest_of_line.gsub!(/@objc\s*/, '')
+      "#{diff_symbol} #{rest_of_line}"
+    else
+      # If the line doesn't start with + or -, just remove "@objc"
+      line.gsub(/@objc\s*/, '')
+    end
+  end
+
+  # Join the processed lines back into a single string
+  formatted_diff_string = processed_lines.join
+
+  # Write the formatted diff string to a file
   diff_result_path = File.join(base_dir, 'diff_result.txt')
-  File.open(diff_result_path, 'w') { |f| f.write(final_diff_string) }
+  File.open(diff_result_path, 'w') { |f| f.write(formatted_diff_string) }
 end
