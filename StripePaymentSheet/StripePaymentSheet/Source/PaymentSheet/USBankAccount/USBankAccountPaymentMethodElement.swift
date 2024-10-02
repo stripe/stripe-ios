@@ -33,7 +33,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let checkboxElement: PaymentMethodElement?
     private var savingAccount: BoolReference
     private let theme: ElementsUITheme
-    private var linkedBank: FinancialConnectionsLinkedBank? {
+    private(set) var linkedBank: FinancialConnectionsLinkedBank? {
         didSet {
             self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value, configuration: configuration, theme: theme)
         }
@@ -154,9 +154,6 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             formElement.toggleElements(linkedAccountElements, hidden: false, animated: true)
         }
         self.delegate?.didUpdate(element: self)
-    }
-    func getLinkedBank() -> FinancialConnectionsLinkedBank? {
-        return linkedBank
     }
 
     class func attributedMandateText(for linkedBank: FinancialConnectionsLinkedBank?,

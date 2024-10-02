@@ -181,7 +181,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         guard let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
             return false
         }
-        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.getLinkedBank() != nil
+        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.linkedBank != nil
         return customerHasLinkedBankAccount
     }
 
