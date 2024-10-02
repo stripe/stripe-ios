@@ -135,6 +135,7 @@ import UIKit
     struct BlikCodeConfiguration: TextFieldElementConfiguration {
         public let label = String.Localized.blik_code
         public let disallowedCharacters: CharacterSet = .decimalDigits.inverted
+        public let defaultValue: String?
         let invalidError = Error.invalid(
             localizedDescription: .Localized.invalid_blik_code
         )
@@ -155,8 +156,8 @@ import UIKit
         }
     }
 
-    static func makeBlikCode(theme: ElementsUITheme = .default) -> TextFieldElement {
-        return TextFieldElement(configuration: BlikCodeConfiguration(), theme: theme)
+    static func makeBlikCode(defaultValue: String?, theme: ElementsUITheme) -> TextFieldElement {
+        return TextFieldElement(configuration: BlikCodeConfiguration(defaultValue: defaultValue), theme: theme)
     }
 
     // MARK: - Konbini confirmation/phone number
