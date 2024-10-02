@@ -19,23 +19,21 @@ func parseDeclarations(from filePath: String) throws -> Set<String> {
     let sourceFile = Parser.parse(source: source)
     var declarations = Set<String>()
 
-    class DeclarationCollector: SyntaxVisitor {
+    class DeclarationCollector: SyntaxAnyVisitor {
         var declarations = Set<String>()
 
-        override func visit(_ node: MemberDeclListItemSyntax) -> SyntaxVisitorContinueKind {
-            declarations.insert(node.description.trimmingCharacters(in: .whitespacesAndNewlines))
-            return .skipChildren
-        }
-
-        override func visit(_ node: DeclSyntax) -> SyntaxVisitorContinueKind {
-            declarations.insert(node.description.trimmingCharacters(in: .whitespacesAndNewlines))
-            return .skipChildren
+        override func visitAny(_ node: Syntax) -> SyntaxVisitorContinueKind {
+            if let declNode = node.asProtocol(DeclSyntaxProtocol.self) {
+                declarations.insert(declNode.description.trimmingCharacters(in: .whitespacesAndNewlines))
+            }
+            return .visitChildren
         }
     }
 
-    let collector = DeclarationCollector()
+    let collector = DeclarationCollector(viewMode: .sourceAccurate)
     collector.walk(sourceFile)
-    return collector.declarations
+    declarations = collector.declarations
+    return declarations
 }
 
 do {
