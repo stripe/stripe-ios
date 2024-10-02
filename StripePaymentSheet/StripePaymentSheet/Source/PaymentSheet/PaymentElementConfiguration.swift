@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripePayments
+import UIKit
 
 /// Represents shared configuration properties between integration surfaces in mobile payment element.
 /// - Note: See the concrete implementations of `PaymentElementConfiguration` for detailed doc comments.
@@ -37,7 +37,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
 }
 
 extension PaymentElementConfiguration {
-    
+
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
         return billingDetailsCollectionConfiguration.name == .always
@@ -45,7 +45,7 @@ extension PaymentElementConfiguration {
         || billingDetailsCollectionConfiguration.email == .always
         || billingDetailsCollectionConfiguration.address == .full
     }
-    
+
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         var reqs = [PaymentMethodTypeRequirement]()
         if returnURL != nil { reqs.append(.returnURL) }

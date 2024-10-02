@@ -227,7 +227,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "salad_count": saladStepper.value,
             "is_subscribing": subscribeSwitch.isOn,
         ]
-        
+
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             weak var weakSelf = self
