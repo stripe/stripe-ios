@@ -19,6 +19,11 @@ import WebKit
 @available(iOS 15, *)
 class ConnectWebView: WKWebView {
 
+    /// A dictionary tracking download destinations
+    /// - key: The download request URL
+    /// - value: The local file URL it was downloaded to
+    private var downloadDestinations: [URL: URL] = [:]
+
     private var optionalPresentPopup: ((UIViewController) -> Void)?
 
     /// Closure to present a popup web view controller.
@@ -74,8 +79,8 @@ class ConnectWebView: WKWebView {
 @available(iOS 15, *)
 private extension ConnectWebView {
     // Opens the given navigation in a PopupWebViewController
-    func openInPopup(configuration: WKWebViewConfiguration,
-                     navigationAction: WKNavigationAction) -> WKWebView? {
+    func openInPopupWebViewController(configuration: WKWebViewConfiguration,
+                             navigationAction: WKNavigationAction) -> WKWebView? {
         let popupVC = PopupWebViewController(configuration: configuration,
                                              navigationAction: navigationAction,
                                              urlOpener: urlOpener,
@@ -101,6 +106,37 @@ private extension ConnectWebView {
     func openOnSystem(url: URL) {
         urlOpener.openIfPossible(url)
     }
+
+    func shouldNavigate(toURL url: URL) -> Bool {
+        // Only open popups to known hosts inside PopupWebViewController,
+        // otherwise use an SFSafariViewController
+
+        ["http", "https"].contains(url.scheme)
+        && url.host.map(StripeConnectConstants.allowedHosts.contains) != false
+    }
+
+    /// Returns true if URL is handled externally
+    func openInSystemOrSafari(_ url: URL) {
+        // Only `http` or `https` URL schemes can be opened in WKWebView or
+        // SFSafariViewController. Opening other schemes, like `mailto`, will
+        // cause a fatal error.
+        if !["http", "https"].contains(url.scheme) {
+            openOnSystem(url: url)
+        } else {
+            openInAppSafari(url: url)
+        }
+    }
+
+    func showErrorAlert(for error: Error) {
+        // TODO: Log error
+        debugPrint(error)
+
+        let alert = UIAlertController(
+            title: nil,
+            message: NSError.stp_unexpectedErrorMessage(),
+            preferredStyle: .alert)
+        presentPopup(alert)
+    }
 }
 
 // MARK: - WKUIDelegate
@@ -114,25 +150,13 @@ extension ConnectWebView: WKUIDelegate {
         // If targetFrame is nil, this is a popup
         guard navigationAction.targetFrame == nil else { return nil }
 
-        if let url = navigationAction.request.url {
-            // Only `http` or `https` URL schemes can be opened in WKWebView or
-            // SFSafariViewController. Opening other schemes, like `mailto`, will
-            // cause a fatal error.
-            guard Set(["http", "https"]).contains(url.scheme) else {
-                openOnSystem(url: url)
-                return nil
-            }
-
-            // Only open popups to known hosts inside PopupWebViewController,
-            // otherwise use an SFSafariViewController
-            guard let host = url.host,
-                    StripeConnectConstants.allowedHosts.contains(host) else {
-                openInAppSafari(url: url)
-                return nil
-            }
+        if let url = navigationAction.request.url,
+           !shouldNavigate(toURL: url) {
+            openInSystemOrSafari(url)
         }
 
-        return openInPopup(configuration: configuration, navigationAction: navigationAction)
+        return openInPopupWebViewController(configuration: configuration,
+                                            navigationAction: navigationAction)
     }
 
     func webView(_ webView: WKWebView,
@@ -158,27 +182,100 @@ extension ConnectWebView: WKNavigationDelegate {
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction
     ) async -> WKNavigationActionPolicy {
-        // TODO: MXMOBILE-2485 Handle downloads
-        .allow
+        navigationAction.shouldPerformDownload ? .download : .allow
     }
 
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse
     ) async -> WKNavigationResponsePolicy {
-        // TODO: MXMOBILE-2485 Handle downloads
-        .allow
+        // Response is not an HTML response
+        if let mimeType = navigationResponse.response.mimeType,
+           !mimeType.lowercased().split(separator: "/").contains("html") {
+            return .download
+        }
+
+        // Not an HTTP request
+        guard let response = navigationResponse.response as? HTTPURLResponse else {
+            return .allow
+        }
+
+        // Attachment content type
+        if navigationResponse.canShowMIMEType,
+           let contentType = response.value(forHTTPHeaderField: "Content-Type"),
+           contentType.range(of: "attachment", options: .caseInsensitive) != nil {
+            return .download
+        }
+
+        // Response is from an unrecognized host, don't open in an embedded web view
+        if let url = response.url,
+           !shouldNavigate(toURL: url) {
+            openInSystemOrSafari(url)
+            return .cancel
+        }
+
+        return .allow
     }
 
     func webView(_ webView: WKWebView,
                  navigationAction: WKNavigationAction,
                  didBecome download: WKDownload) {
-        // TODO: MXMOBILE-2485 Handle downloads
+        download.delegate = self
     }
 
     func webView(_ webView: WKWebView,
                  navigationResponse: WKNavigationResponse,
                  didBecome download: WKDownload) {
-        // TODO: MXMOBILE-2485 Handle downloads
+        download.delegate = self
+    }
+}
+
+// MARK: - WKDownloadDelegate
+
+extension ConnectWebView: WKDownloadDelegate {
+    func download(_ download: WKDownload,
+                  decideDestinationUsing response: URLResponse,
+                  suggestedFilename: String) async -> URL? {
+        guard let requestUrl = download.originalRequest?.url else {
+            // TODO: MXMOBILE-2491 log error
+            return nil
+        }
+
+        // Create uniquely named directory in case a file by the same name has already been
+        // downloaded from this app
+        let tempDir = FileManager.default
+            .temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        do {
+            try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        } catch {
+            showErrorAlert(for: error)
+            return nil
+        }
+
+        let tempUrl = tempDir.appendingPathComponent(suggestedFilename)
+        downloadDestinations[requestUrl] = tempUrl
+        return tempUrl
+    }
+
+    func download(_ download: WKDownload,
+                  didFailWithError error: any Error,
+                  resumeData: Data?) {
+        showErrorAlert(for: error)
+    }
+
+    func downloadDidFinish(_ download: WKDownload) {
+        guard let requestUrl = download.originalRequest?.url,
+              let tempUrl = downloadDestinations[requestUrl] else {
+            // TODO: MXMOBILE-2491 log error
+            return
+        }
+
+        let activityViewController = UIActivityViewController(activityItems: [tempUrl], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self
+        presentPopup(activityViewController)
+
+        // Cleanup download URL
+        downloadDestinations.removeValue(forKey: requestUrl)
     }
 }
