@@ -92,7 +92,7 @@ swift_diff_tool = File.join(swift_package_dir, '.build', 'release', 'ProcessDiff
 final_diff_string = ""
 
 # Iterate over the modules
-GetFrameworks.framework_names(File.join(base_dir, 'modules.yaml')).each do |framework_name|
+GetFrameworks.framework_names(File.join('./modules.yaml')).each do |framework_name|
   master_interface_path = File.join(
     base_dir,
     "#{framework_name}-master.xcframework",
