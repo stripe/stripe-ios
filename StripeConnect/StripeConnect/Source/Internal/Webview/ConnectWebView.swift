@@ -84,7 +84,7 @@ class ConnectWebView: WKWebView {
 private extension ConnectWebView {
     // Opens the given navigation in a PopupWebViewController
     func openInPopupWebViewController(configuration: WKWebViewConfiguration,
-                             navigationAction: WKNavigationAction) -> WKWebView? {
+                                      navigationAction: WKNavigationAction) -> WKWebView? {
         let popupVC = PopupWebViewController(configuration: configuration,
                                              navigationAction: navigationAction,
                                              urlOpener: urlOpener,
