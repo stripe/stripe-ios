@@ -305,7 +305,7 @@ extension CustomerAddPaymentMethodViewController {
                 break
             case .completed(let completedResult):
                 if case .financialConnections(let linkedBank) = completedResult {
-                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+                    usBankAccountPaymentMethodElement.linkedBank = linkedBank
                 } else {
                     self.delegate?.updateErrorLabel(for: genericError)
                 }

@@ -23,8 +23,14 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     var view: UIView {
         return formElement.view
     }
-    var mandateString: NSMutableAttributedString?
+    var linkedBank: FinancialConnectionsLinkedBank? {
+        didSet {
+            updateLinkedBankUI()
+            self.delegate?.didUpdate(element: self)
+        }
+    }
 
+    private(set) var mandateString: NSMutableAttributedString?
     private let configuration: PaymentSheetFormFactoryConfig
     private let merchantName: String
     private let formElement: FormElement
@@ -33,11 +39,6 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let checkboxElement: PaymentMethodElement?
     private var savingAccount: BoolReference
     private let theme: ElementsUITheme
-    private(set) var linkedBank: FinancialConnectionsLinkedBank? {
-        didSet {
-            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value, configuration: configuration, theme: theme)
-        }
-    }
 
     private var linkedAccountElements: [Element] {
         var elements: [Element] = [bankInfoSectionElement]
@@ -144,16 +145,24 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             self.delegate?.didUpdate(element: self)
         }
     }
-
-    func setLinkedBank(_ linkedBank: FinancialConnectionsLinkedBank) {
-        self.linkedBank = linkedBank
-        if let last4ofBankAccount = linkedBank.last4,
-           let bankName = linkedBank.bankName {
-            self.bankInfoView.setBankName(text: bankName)
-            self.bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
+    
+    func updateLinkedBankUI() {
+        // Why are last4 and bank name optional? What does it mean if we set `self.linkedBank` but we're not showing the linked bank to the customer?
+        if let last4ofBankAccount = linkedBank?.last4,
+           let bankName = linkedBank?.bankName {
+            bankInfoView.setBankName(text: bankName)
+            bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
             formElement.toggleElements(linkedAccountElements, hidden: false, animated: true)
+        } else {
+            formElement.toggleElements(linkedAccountElements, hidden: true, animated: true)
         }
-        self.delegate?.didUpdate(element: self)
+        mandateString = Self.attributedMandateText(
+            for: linkedBank,
+            merchantName: merchantName,
+            isSaving: savingAccount.value,
+            configuration: configuration,
+            theme: theme
+        )
     }
 
     class func attributedMandateText(for linkedBank: FinancialConnectionsLinkedBank?,
@@ -161,7 +170,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
                                      isSaving: Bool,
                                      configuration: PaymentSheetFormFactoryConfig,
                                      theme: ElementsUITheme = .default) -> NSMutableAttributedString? {
-        guard let linkedBank = linkedBank else {
+        guard let linkedBank else {
             return nil
         }
 
@@ -197,8 +206,8 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
     func didTapXIcon() {
         let completionClosure = {
-            self.formElement.toggleElements(self.linkedAccountElements, hidden: true, animated: true)
             self.linkedBank = nil
+            self.updateLinkedBankUI()
             self.delegate?.didUpdate(element: self)
         }
 
