@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 5/3/24.
 //
 
+import QuickLook
 import SafariServices
 @_spi(STP) import StripeCore
 import WebKit
@@ -14,15 +15,13 @@ import WebKit
  - Camera access
  - Popup windows
  - Opening email links
- - Downloads  TODO MXMOBILE-2485
+ - Downloads 
  */
 @available(iOS 15, *)
 class ConnectWebView: WKWebView {
 
-    /// A dictionary tracking download destinations
-    /// - key: The download request URL
-    /// - value: The local file URL it was downloaded to
-    private var downloadDestinations: [URL: URL] = [:]
+    /// File URL for a downloaded file
+    private var downloadedFile: URL?
 
     private var optionalPresentPopup: ((UIViewController) -> Void)?
 
@@ -45,6 +44,9 @@ class ConnectWebView: WKWebView {
     /// The instance that will handle opening external urls
     let urlOpener: ApplicationURLOpener
 
+    /// The file manager responsible for creating temporary file directories
+    let fileManager: FileManager
+
     /// The current version for the SDK
     let sdkVersion: String?
 
@@ -52,8 +54,10 @@ class ConnectWebView: WKWebView {
          configuration: WKWebViewConfiguration,
          // Only override for tests
          urlOpener: ApplicationURLOpener = UIApplication.shared,
+         fileManager: FileManager = .default,
          sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
         self.urlOpener = urlOpener
+        self.fileManager = fileManager
         self.sdkVersion = sdkVersion
         configuration.applicationNameForUserAgent = "- stripe-ios/\(sdkVersion ?? "")"
         super.init(frame: frame, configuration: configuration)
@@ -232,30 +236,26 @@ extension ConnectWebView: WKNavigationDelegate {
 
 // MARK: - WKDownloadDelegate
 
+@available(iOS 15, *)
 extension ConnectWebView: WKDownloadDelegate {
     func download(_ download: WKDownload,
                   decideDestinationUsing response: URLResponse,
                   suggestedFilename: String) async -> URL? {
-        guard let requestUrl = download.originalRequest?.url else {
-            // TODO: MXMOBILE-2491 log error
-            return nil
-        }
-
-        // Create uniquely named directory in case a file by the same name has already been
-        // downloaded from this app
-        let tempDir = FileManager.default
+        // The temporary filename must be unique or the download will fail.
+        // To ensure uniqueness, append a UUID to the directory path in case a
+        // file with the same name was already downloaded from this app.
+        let tempDir = fileManager
             .temporaryDirectory
             .appendingPathComponent(UUID().uuidString)
         do {
-            try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+            try fileManager.createDirectory(at: tempDir, withIntermediateDirectories: true)
         } catch {
             showErrorAlert(for: error)
             return nil
         }
 
-        let tempUrl = tempDir.appendingPathComponent(suggestedFilename)
-        downloadDestinations[requestUrl] = tempUrl
-        return tempUrl
+        downloadedFile = tempDir.appendingPathComponent(suggestedFilename)
+        return downloadedFile
     }
 
     func download(_ download: WKDownload,
@@ -265,17 +265,27 @@ extension ConnectWebView: WKDownloadDelegate {
     }
 
     func downloadDidFinish(_ download: WKDownload) {
-        guard let requestUrl = download.originalRequest?.url,
-              let tempUrl = downloadDestinations[requestUrl] else {
-            // TODO: MXMOBILE-2491 log error
-            return
+        // Display a preview of the file to the user
+        let previewController = QLPreviewController()
+        previewController.dataSource = self
+        previewController.modalPresentationStyle = .pageSheet
+        presentPopup(previewController)
+    }
+}
+
+// MARK: - QLPreviewControllerDataSource
+
+@available(iOS 15, *)
+extension ConnectWebView: QLPreviewControllerDataSource {
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        guard let downloadedFile,
+              fileManager.fileExists(atPath: downloadedFile.path) else {
+            return 0
         }
+        return 1
+    }
 
-        let activityViewController = UIActivityViewController(activityItems: [tempUrl], applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self
-        presentPopup(activityViewController)
-
-        // Cleanup download URL
-        downloadDestinations.removeValue(forKey: requestUrl)
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem {
+        downloadedFile! as QLPreviewItem
     }
 }
