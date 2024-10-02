@@ -180,10 +180,12 @@ extension PaymentSheet {
             // We should manually add Link Card Brand as a payment method when:
             // - Link Funding Sources contains Bank Account.
             // - US Bank Account is *not* an available payment method.
+            // - Not a deferred intent flow.
             // - Link Card Brand is the Link Mode
             var eligibleForLinkCardBrand: Bool {
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
+                !intent.isDeferredIntent &&
                 elementsSession.linkSettings?.linkMode == .linkCardBrand
             }
 
