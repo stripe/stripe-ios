@@ -94,7 +94,6 @@ final_diff_string = ""
 # Iterate over the modules
 GetFrameworks.framework_names(File.join('./modules.yaml')).each do |framework_name|
   master_interface_path = File.join(
-    base_dir,
     "#{framework_name}-master.xcframework",
     "ios-arm64_x86_64-simulator",
     "#{framework_name}.framework",
@@ -104,7 +103,6 @@ GetFrameworks.framework_names(File.join('./modules.yaml')).each do |framework_na
   )
 
   branch_interface_path = File.join(
-    base_dir,
     "#{framework_name}-new.xcframework",
     "ios-arm64_x86_64-simulator",
     "#{framework_name}.framework",
@@ -116,6 +114,7 @@ GetFrameworks.framework_names(File.join('./modules.yaml')).each do |framework_na
   # Check if interface files exist
   unless File.exist?(master_interface_path) && File.exist?(branch_interface_path)
     puts "Interface files not found for #{framework_name}. Skipping..."
+    puts branch_interface_path
     next
   end
 
