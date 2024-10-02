@@ -22,7 +22,7 @@ def build_swift_package(swift_package_dir, swift_script_path)
               .macOS(.v14),
           ],
           dependencies: [
-              .package(url: "https://github.com/apple/swift-syntax.git", exact: "509.0.0"),
+              .package(url: "https://github.com/apple/swift-syntax.git", exact: "0.50300.0"),
               .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", from: "0.3.0")
           ],
           targets: [
