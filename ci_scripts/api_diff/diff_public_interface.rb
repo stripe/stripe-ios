@@ -22,14 +22,14 @@ def build_swift_package(swift_package_dir, swift_script_path)
               .macOS(.v14),
           ],
           dependencies: [
-              .package(url: "https://github.com/apple/swift-syntax.git", exact: "509.0.0")
+              .package(url: "https://github.com/apple/swift-syntax.git", exact: "600.0.1")
           ],
           targets: [
               .executableTarget(
                   name: "ProcessDiff",
                   dependencies: [
                       .product(name: "SwiftSyntax", package: "swift-syntax"),
-                      .product(name: "SwiftSyntaxParser", package: "swift-syntax")
+                      .product(name: "SwiftParser", package: "swift-syntax")
                   ]
               ),
           ]

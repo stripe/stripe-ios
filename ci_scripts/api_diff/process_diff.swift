@@ -2,7 +2,7 @@
 
 import Foundation
 import SwiftSyntax
-import SwiftSyntaxParser
+import SwiftParser
 
 // Ensure we have the correct number of arguments
 guard CommandLine.arguments.count == 3 else {
@@ -15,7 +15,8 @@ let newFilePath = CommandLine.arguments[2]
 
 // Function to parse declarations from a Swift interface file
 func parseDeclarations(from filePath: String) throws -> Set<String> {
-    let sourceFile = try SyntaxParser.parse(URL(fileURLWithPath: filePath))
+    let source = try String(contentsOfFile: filePath)
+    let sourceFile = Parser.parse(source: source)
     var declarations = Set<String>()
 
     class DeclarationCollector: SyntaxVisitor {
