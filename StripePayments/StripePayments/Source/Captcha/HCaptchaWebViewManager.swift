@@ -7,6 +7,7 @@ import WebKit
 
 /** Handles comunications with the webview containing the HCaptcha challenge.
  */
+@available(iOSApplicationExtension, unavailable)
 internal class HCaptchaWebViewManager: NSObject {
     enum JSCommand: String {
         case execute = "execute();"
@@ -219,6 +220,7 @@ internal class HCaptchaWebViewManager: NSObject {
 
 /** Private methods for HCaptchaWebViewManager
  */
+@available(iOSApplicationExtension, unavailable)
 fileprivate extension HCaptchaWebViewManager {
     /**
      - returns: An instance of `WKWebViewConfiguration`
