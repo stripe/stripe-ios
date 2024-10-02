@@ -10,23 +10,19 @@ def build_swift_package(swift_package_dir, swift_script_path)
   Dir.chdir(swift_package_dir) do
     system('swift package init --type executable')
 
-    # Add dependencies
-    system('swift package add https://github.com/apple/swift-syntax.git')
-    system('swift package add https://github.com/SwiftDocOrg/SwiftSemantics.git')
-
-    # Update Package.swift to specify tool versions (optional)
+    # Modify Package.swift to add dependencies
     package_swift_path = 'Package.swift'
     package_swift_content = <<~SWIFT
-      // swift-tools-version:5.8
+      // swift-tools-version:5.9
       import PackageDescription
 
       let package = Package(
           name: "ProcessDiff",
           platforms: [
-              .macOS(.v10_15),
+              .macOS(.v14),
           ],
           dependencies: [
-              .package(url: "https://github.com/apple/swift-syntax.git", exact: "508.0.0"),
+              .package(url: "https://github.com/apple/swift-syntax.git", exact: "509.0.0"),
               .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", from: "0.3.0")
           ],
           targets: [
@@ -48,7 +44,11 @@ def build_swift_package(swift_package_dir, swift_script_path)
     FileUtils.cp(swift_script_path, 'main.swift')
 
     # Build the Swift package
-    system('swift build -c release')
+    build_status = system('swift build -c release')
+    unless build_status
+      puts "Error building the Swift package."
+      exit 1
+    end
   end
 end
 
@@ -66,11 +66,14 @@ def swift_diff(old_path, new_path, swift_diff_tool)
   return diff_output
 end
 
+# Base directory where the scripts are located
+base_dir = File.expand_path(__dir__)
+
 # Path to the process_diff.swift script
-swift_script_path = File.expand_path('process_diff.swift')
+swift_script_path = File.join(base_dir, 'process_diff.swift')
 
 # Directory for the Swift package
-swift_package_dir = File.expand_path('ProcessDiff')
+swift_package_dir = File.join(base_dir, 'ProcessDiff')
 
 # Build the Swift package (only once)
 unless File.exist?(File.join(swift_package_dir, '.build', 'release', 'ProcessDiff'))
@@ -83,9 +86,26 @@ swift_diff_tool = File.join(swift_package_dir, '.build', 'release', 'ProcessDiff
 final_diff_string = ""
 
 # Iterate over the modules
-GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
-  master_interface_path = "#{framework_name}-master.xcframework/ios-arm64_x86_64-simulator/#{framework_name}.framework/Modules/#{framework_name}.swiftmodule/arm64-apple-ios-simulator.swiftinterface"
-  branch_interface_path = "#{framework_name}-new.xcframework/ios-arm64_x86_64-simulator/#{framework_name}.framework/Modules/#{framework_name}.swiftmodule/arm64-apple-ios-simulator.swiftinterface"
+GetFrameworks.framework_names(File.join(base_dir, 'modules.yaml')).each do |framework_name|
+  master_interface_path = File.join(
+    base_dir,
+    "#{framework_name}-master.xcframework",
+    "ios-arm64_x86_64-simulator",
+    "#{framework_name}.framework",
+    "Modules",
+    "#{framework_name}.swiftmodule",
+    "arm64-apple-ios-simulator.swiftinterface"
+  )
+
+  branch_interface_path = File.join(
+    base_dir,
+    "#{framework_name}-new.xcframework",
+    "ios-arm64_x86_64-simulator",
+    "#{framework_name}.framework",
+    "Modules",
+    "#{framework_name}.swiftmodule",
+    "arm64-apple-ios-simulator.swiftinterface"
+  )
 
   # Check if interface files exist
   unless File.exist?(master_interface_path) && File.exist?(branch_interface_path)
@@ -103,5 +123,6 @@ end
 
 # Write the final diff string to a file
 unless final_diff_string.empty?
-  File.open('diff_result.txt', 'w') { |f| f.write(final_diff_string) }
+  diff_result_path = File.join(base_dir, 'diff_result.txt')
+  File.open(diff_result_path, 'w') { |f| f.write(final_diff_string) }
 end

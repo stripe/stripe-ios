@@ -1,4 +1,4 @@
-#!/usr/bin/env swift
+#!/usr/bin/swift
 
 import Foundation
 import SwiftSyntax
@@ -27,13 +27,13 @@ do {
     // Parse declarations from both files
     let oldDeclarations = try parseDeclarations(from: oldFilePath)
     let newDeclarations = try parseDeclarations(from: newFilePath)
-    
+
     // Find added and removed declarations
     let removedDeclarations = oldDeclarations.subtracting(newDeclarations)
     let addedDeclarations = newDeclarations.subtracting(oldDeclarations)
-    
+
     var diffOutput = ""
-    
+
     // Format the output similar to a diff
     if !removedDeclarations.isEmpty || !addedDeclarations.isEmpty {
         for decl in removedDeclarations.sorted() {
@@ -43,7 +43,7 @@ do {
             diffOutput += "+ \(decl)\n"
         }
     }
-    
+
     // Print the diff output
     print(diffOutput)
 } catch {
