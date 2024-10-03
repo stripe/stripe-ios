@@ -210,13 +210,6 @@ extension ConnectWebView: WKNavigationDelegate {
             return .download
         }
 
-        // Response is from an unrecognized host, don't open in an embedded web view
-        if let url = navigationResponse.response.url,
-           !shouldNavigate(toURL: url) {
-            openInSystemOrSafari(url)
-            return .cancel
-        }
-
         return .allow
     }
 
