@@ -284,9 +284,6 @@ is not supported by the merchant */
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
-/* Default missing source type label */
-"Unknown" = "Unknown";
-
 /* Title for a button that when tapped, updates a card brand. */
 "Update" = "Update";
 
