@@ -15,9 +15,16 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
 }
 
+struct LinkSignupDetails: Equatable {
+    let account: PaymentSheetLinkAccount
+    let phoneNumber: PhoneNumber
+    let legalName: String?
+    let consentAction: PaymentSheetLinkAccount.ConsentAction
+}
+
 final class LinkInlineSignupViewModel {
     enum Action: Equatable {
-        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
+        case signupAndPay(LinkSignupDetails)
         case continueWithoutLink
     }
 
@@ -227,9 +234,12 @@ final class LinkInlineSignupViewModel {
             }
 
             return .signupAndPay(
-                account: linkAccount,
-                phoneNumber: phoneNumber,
-                legalName: requiresNameCollection ? legalName : nil
+                .init(
+                    account: linkAccount,
+                    phoneNumber: phoneNumber,
+                    legalName: requiresNameCollection ? legalName : nil,
+                    consentAction: consentAction
+                )
             )
         case .verified, .requiresVerification:
             // This should never happen: The session should only be verified as part of the signup request,

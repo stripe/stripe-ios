@@ -11,6 +11,7 @@ import UIKit
 
 // TODO: Refactor this to be a ContainerElement and contain its sub-elements.
 final class LinkInlineSignupElement: Element {
+
     let collectsUserInput: Bool = true
 
     let signupView: LinkInlineSignupView
@@ -55,7 +56,6 @@ final class LinkInlineSignupElement: Element {
         self.signupView = LinkInlineSignupView(viewModel: viewModel)
         self.signupView.delegate = self
     }
-
 }
 
 extension LinkInlineSignupElement: LinkInlineSignupViewDelegate {
@@ -63,5 +63,4 @@ extension LinkInlineSignupElement: LinkInlineSignupViewDelegate {
     func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView) {
         delegate?.didUpdate(element: self)
     }
-
 }

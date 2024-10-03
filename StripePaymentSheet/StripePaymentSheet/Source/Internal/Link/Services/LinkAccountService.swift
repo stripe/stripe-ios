@@ -48,6 +48,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             for: email,
             with: apiClient
         ) { [apiClient] result in
+            sleep(10)
             switch result {
             case .success(let lookupResponse):
                 STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)

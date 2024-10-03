@@ -438,17 +438,17 @@ extension PaymentSheet {
                 let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration)
                 linkController.present(from: authenticationContext.authenticationPresentingViewController(),
                                        completion: completion)
-            case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let intentConfirmParams):
-                linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in
+            case let .signUp(details: details, intentConfirmParams: intentConfirmParams):
+                details.account.signUp(with: details.phoneNumber, legalName: details.legalName, consentAction: details.consentAction) { result in
                     UserDefaults.standard.markLinkAsUsed()
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-                        createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
+                        createPaymentDetailsAndConfirm(details.account, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                         // Attempt to confirm directly with params as a fallback.
-                        confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
+                        confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, details.account, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     }
                 }
             case .withPaymentMethod(let paymentMethod):
