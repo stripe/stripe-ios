@@ -82,9 +82,9 @@ class ConnectWebView: WKWebView {
 
 @available(iOS 15, *)
 private extension ConnectWebView {
-    /// Opens the given navigation in a PopupWebViewController
-    func openInPopupWebViewController(configuration: WKWebViewConfiguration,
-                                      navigationAction: WKNavigationAction) -> WKWebView? {
+    // Opens the given navigation in a PopupWebViewController
+    func openInPopup(configuration: WKWebViewConfiguration,
+                     navigationAction: WKNavigationAction) -> WKWebView? {
         let popupVC = PopupWebViewController(configuration: configuration,
                                              navigationAction: navigationAction,
                                              urlOpener: urlOpener,
@@ -98,7 +98,7 @@ private extension ConnectWebView {
         return popupVC.webView
     }
 
-    /// Opens the given URL in an SFSafariViewController
+    // Opens the given URL in an SFSafariViewController
     func openInAppSafari(url: URL) {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .done
@@ -106,30 +106,9 @@ private extension ConnectWebView {
         presentPopup(safariVC)
     }
 
-    /// Opens with UIApplication.open, if supported
+    // Opens with UIApplication.open, if supported
     func openOnSystem(url: URL) {
         urlOpener.openIfPossible(url)
-    }
-
-    /// Returns true if this URL should open in an embedded web view
-    func shouldNavigate(toURL url: URL) -> Bool {
-        // Only open known hosts inside an embedded web view, otherwise use
-        // an SFSafariViewController so the user can have navigation controls
-
-        ["http", "https"].contains(url.scheme)
-        && url.host.map(StripeConnectConstants.allowedHosts.contains) != false
-    }
-
-    /// Returns true if URL is handled externally
-    func openInSystemOrSafari(_ url: URL) {
-        // Only `http` or `https` URL schemes can be opened in WKWebView or
-        // SFSafariViewController. Opening other schemes, like `mailto`, will
-        // cause a fatal error.
-        if !["http", "https"].contains(url.scheme) {
-            openOnSystem(url: url)
-        } else {
-            openInAppSafari(url: url)
-        }
     }
 
     func showErrorAlert(for error: Error) {
@@ -152,18 +131,28 @@ extension ConnectWebView: WKUIDelegate {
                  createWebViewWith configuration: WKWebViewConfiguration,
                  for navigationAction: WKNavigationAction,
                  windowFeatures: WKWindowFeatures) -> WKWebView? {
-        // If targetFrame is non-nil, this is not a popup and will be handled in
-        // the navigation delegate's `decidePolicyFor navigationResponse` method
+        // If targetFrame is nil, this is a popup
         guard navigationAction.targetFrame == nil else { return nil }
 
-        if let url = navigationAction.request.url,
-           !shouldNavigate(toURL: url) {
-            openInSystemOrSafari(url)
-            return nil
+        if let url = navigationAction.request.url {
+            // Only `http` or `https` URL schemes can be opened in WKWebView or
+            // SFSafariViewController. Opening other schemes, like `mailto`, will
+            // cause a fatal error.
+            guard Set(["http", "https"]).contains(url.scheme) else {
+                openOnSystem(url: url)
+                return nil
+            }
+
+            // Only open popups to known hosts inside PopupWebViewController,
+            // otherwise use an SFSafariViewController
+            guard let host = url.host,
+                    StripeConnectConstants.allowedHosts.contains(host) else {
+                openInAppSafari(url: url)
+                return nil
+            }
         }
 
-        return openInPopupWebViewController(configuration: configuration,
-                                            navigationAction: navigationAction)
+        return openInPopup(configuration: configuration, navigationAction: navigationAction)
     }
 
     func webView(_ webView: WKWebView,
