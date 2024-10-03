@@ -82,7 +82,7 @@ class ConnectWebView: WKWebView {
 
 @available(iOS 15, *)
 private extension ConnectWebView {
-    // Opens the given navigation in a PopupWebViewController
+    /// Opens the given navigation in a PopupWebViewController
     func openInPopupWebViewController(configuration: WKWebViewConfiguration,
                                       navigationAction: WKNavigationAction) -> WKWebView? {
         let popupVC = PopupWebViewController(configuration: configuration,
@@ -98,7 +98,7 @@ private extension ConnectWebView {
         return popupVC.webView
     }
 
-    // Opens the given URL in an SFSafariViewController
+    /// Opens the given URL in an SFSafariViewController
     func openInAppSafari(url: URL) {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .done
@@ -106,14 +106,15 @@ private extension ConnectWebView {
         presentPopup(safariVC)
     }
 
-    // Opens with UIApplication.open, if supported
+    /// Opens with UIApplication.open, if supported
     func openOnSystem(url: URL) {
         urlOpener.openIfPossible(url)
     }
 
+    /// Returns true if this URL should open in an embedded web view
     func shouldNavigate(toURL url: URL) -> Bool {
-        // Only open popups to known hosts inside PopupWebViewController,
-        // otherwise use an SFSafariViewController
+        // Only open known hosts inside an embedded web view, otherwise use
+        // an SFSafariViewController so the user can have navigation controls
 
         ["http", "https"].contains(url.scheme)
         && url.host.map(StripeConnectConstants.allowedHosts.contains) != false
@@ -132,7 +133,7 @@ private extension ConnectWebView {
     }
 
     func showErrorAlert(for error: Error) {
-        // TODO: Log error
+        // TODO: MXMOBILE-2491 Log analytic when receiving an eror
         debugPrint(error)
 
         let alert = UIAlertController(
