@@ -18,11 +18,10 @@ extension PaymentSheet {
 
         /// Signup for Link then pay.
         case signUp(
-            details: LinkSignupDetails,
-//            account: PaymentSheetLinkAccount,
-//            phoneNumber: PhoneNumber,
-//            consentAction: PaymentSheetLinkAccount.ConsentAction,
-//            legalName: String?,
+            account: PaymentSheetLinkAccount,
+            phoneNumber: PhoneNumber,
+            consentAction: PaymentSheetLinkAccount.ConsentAction,
+            legalName: String?,
             intentConfirmParams: IntentConfirmParams
         )
 
@@ -38,13 +37,12 @@ extension PaymentSheet {
 
 extension PaymentSheet.LinkConfirmOption {
 
-    // TODO: Can we get rid of this? Can we remove details from the signup case assoc val?
     var account: PaymentSheetLinkAccount? {
         switch self {
         case .wallet:
             return nil
-        case .signUp(let details, _):
-            return details.account
+        case .signUp(let account, _, _, _, _):
+            return account
         case .withPaymentMethod:
             return nil
         }
@@ -54,7 +52,7 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet:
             return STPPaymentMethodType.link.displayName
-        case .signUp(_, let intentConfirmParams):
+        case .signUp(_, _, _, _, let intentConfirmParams):
             return intentConfirmParams.paymentMethodParams.paymentSheetLabel
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel
@@ -65,7 +63,7 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet:
             return nil
-        case .signUp(_, let intentConfirmParams):
+        case .signUp(_, _, _, _, let intentConfirmParams):
             return intentConfirmParams.paymentMethodParams.billingDetails
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.billingDetails

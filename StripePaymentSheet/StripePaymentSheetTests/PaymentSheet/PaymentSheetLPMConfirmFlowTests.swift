@@ -980,11 +980,6 @@ extension IntentConfirmParams: Equatable {
             return false
         }
 
-        if lhs.linkSignupDetails != rhs.linkSignupDetails {
-            print("Link signup details not equal: \(lhs.linkSignupDetails.debugDescription) vs \(rhs.linkSignupDetails.debugDescription)")
-            return false
-        }
-
         // Sanity check to make sure when we add new properties, we check them here
         let mirror = Mirror(reflecting: lhs)
         let propertyCount = mirror.children.count

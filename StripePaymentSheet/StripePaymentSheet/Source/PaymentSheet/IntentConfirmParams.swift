@@ -34,8 +34,6 @@ final class IntentConfirmParams {
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
 
-    /// Populated when Link signup is filled out in the form.
-    var linkSignupDetails: LinkSignupDetails?
     var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
 

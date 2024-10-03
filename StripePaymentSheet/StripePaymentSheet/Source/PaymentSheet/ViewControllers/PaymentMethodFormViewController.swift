@@ -28,12 +28,18 @@ class PaymentMethodFormViewController: UIViewController {
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
 
         if let params = form.updateParams(params: params) {
-            // Hack: determine this is a Link signup by looking for the LinkInlineSignupElement
             if let linkInlineSignupElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? LinkInlineSignupElement }).first {
                 switch linkInlineSignupElement.action {
-                case .signupAndPay(let signupDetails):
-                    params.linkSignupDetails = signupDetails // Hack: instead of this, the LinkInlineSignupElement should update its params with these details
-                    return .link(option: .signUp(details: signupDetails, intentConfirmParams: params))
+                case .signupAndPay(let account, let phoneNumber, let legalName):
+                    return .link(
+                        option: .signUp(
+                            account: account,
+                            phoneNumber: phoneNumber,
+                            consentAction: linkInlineSignupElement.viewModel.consentAction,
+                            legalName: legalName,
+                            intentConfirmParams: params
+                        )
+                    )
                 case .continueWithoutLink:
                     return .new(confirmParams: params)
                 case .none:

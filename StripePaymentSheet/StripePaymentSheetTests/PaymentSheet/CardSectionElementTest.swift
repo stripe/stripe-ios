@@ -5,13 +5,13 @@
 //  Created by Yuki Tokuhiro on 10/2/24.
 //
 
+import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
-import XCTest
 
 @MainActor
 final class CardSectionElementTest: XCTestCase {
@@ -46,18 +46,19 @@ final class CardSectionElementTest: XCTestCase {
         let checkbox = form.getCheckboxElement(startingWith: "Save payment details")!
         let linkInlineSignupElement: LinkInlineSignupElement = form.getElement()!
         let linkInlineView = linkInlineSignupElement.signupView
-
+        
         XCTAssertNotNil(checkbox) // Checkbox should appear since this is a PI w/ customer
         form.getTextFieldElement("Card number")?.setText("4242424242424242")
         form.getTextFieldElement("MM / YY").setText("1232")
         form.getTextFieldElement("CVC").setText("123")
         form.getTextFieldElement("ZIP").setText("65432")
-
+        
         XCTAssertEqual(form.getAllUnwrappedSubElements().count, 14)
+//        XCTAssertNotNil(form.mandateString)
         // Simulate selecting checkbox
         checkbox.isSelected = true
         checkbox.didToggleCheckbox()
-
+        
         // Set the email & phone number
         linkInlineView.emailElement.emailAddressElement.setText("\(UUID().uuidString)@foo.com")
         linkInlineView.phoneNumberElement.countryDropdownElement.setRawData("GB")
@@ -78,10 +79,10 @@ final class CardSectionElementTest: XCTestCase {
         // Ensure checkbox remains selected
         XCTAssertTrue(regeneratedForm.getCheckboxElement(startingWith: "Save payment details")!.isSelected)
         XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
-        let regeneratedLinkInlineSignupElement: LinkInlineSignupElement = regeneratedForm.getElement()!
-        let regeneratedLinkInlineView = regeneratedLinkInlineSignupElement.signupView
-        XCTAssertEqual(regeneratedLinkInlineView.phoneNumberElement.phoneNumber, PhoneNumber(number: "1234567890", countryCode: "GB"))
-//        print(linkInlineView2)
+        let linkInlineSignupElement2: LinkInlineSignupElement = regeneratedForm.getElement()!
+        let linkInlineView2 = linkInlineSignupElement2.signupView
+        print(linkInlineView2)
+
     }
 }
 
