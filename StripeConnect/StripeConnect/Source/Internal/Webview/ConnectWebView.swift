@@ -21,7 +21,7 @@ import WebKit
 class ConnectWebView: WKWebView {
 
     /// File URL for a downloaded file
-    private var downloadedFile: URL?
+    var downloadedFile: URL?
 
     private var optionalPresentPopup: ((UIViewController) -> Void)?
 
@@ -151,12 +151,14 @@ extension ConnectWebView: WKUIDelegate {
                  createWebViewWith configuration: WKWebViewConfiguration,
                  for navigationAction: WKNavigationAction,
                  windowFeatures: WKWindowFeatures) -> WKWebView? {
-        // If targetFrame is nil, this is a popup
+        // If targetFrame is non-nil, this is not a popup and will be handled in
+        // the navigation delegate's `decidePolicyFor navigationResponse` method
         guard navigationAction.targetFrame == nil else { return nil }
 
         if let url = navigationAction.request.url,
            !shouldNavigate(toURL: url) {
             openInSystemOrSafari(url)
+            return nil
         }
 
         return openInPopupWebViewController(configuration: configuration,
@@ -186,6 +188,13 @@ extension ConnectWebView: WKNavigationDelegate {
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction
     ) async -> WKNavigationActionPolicy {
+        // `shouldPerformDownload` will be true if the request has MIME types
+        // or a `Content-Type` header indicating it's a download or it originated
+        // as a JS download.
+        //
+        // This is not entirely accurate and we can't know a request should be a
+        // download until evaluating the response.
+
         navigationAction.shouldPerformDownload ? .download : .allow
     }
 
@@ -193,26 +202,24 @@ extension ConnectWebView: WKNavigationDelegate {
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse
     ) async -> WKNavigationResponsePolicy {
-        // Response is not an HTML response
-        if let mimeType = navigationResponse.response.mimeType,
-           !mimeType.lowercased().split(separator: "/").contains("html") {
-            return .download
-        }
 
-        // Not an HTTP request
-        guard let response = navigationResponse.response as? HTTPURLResponse else {
-            return .allow
-        }
+        // Downloads will typically originate from a non-allow-listed host (e.g. S3)
+        // so first check if the response is a download before evaluating the host
 
-        // Attachment content type
+        // The response should be a download if its Content-Disposition is
+        // shaped like `attachment; filename=payouts.csv`
         if navigationResponse.canShowMIMEType,
-           let contentType = response.value(forHTTPHeaderField: "Content-Type"),
-           contentType.range(of: "attachment", options: .caseInsensitive) != nil {
+           let response = navigationResponse.response as? HTTPURLResponse,
+           let contentDisposition = response.value(forHTTPHeaderField: "Content-Disposition"),
+           contentDisposition
+            .split(separator: ";")
+            .map({ $0.trimmingCharacters(in: .whitespaces) })
+            .caseInsensitiveContains("attachment") {
             return .download
         }
 
         // Response is from an unrecognized host, don't open in an embedded web view
-        if let url = response.url,
+        if let url = navigationResponse.response.url,
            !shouldNavigate(toURL: url) {
             openInSystemOrSafari(url)
             return .cancel
@@ -234,12 +241,15 @@ extension ConnectWebView: WKNavigationDelegate {
     }
 }
 
-// MARK: - WKDownloadDelegate
+// MARK: - WKDownloadDelegate implementation
 
 @available(iOS 15, *)
-extension ConnectWebView: WKDownloadDelegate {
-    func download(_ download: WKDownload,
-                  decideDestinationUsing response: URLResponse,
+extension ConnectWebView {
+    // This extension is an abstraction layer to implement `WKDownloadDelegate`
+    // functionality and make it testable. There's no way to instantiate
+    // `WKDownload` in tests without causing an EXC_BAD_ACCESS error.
+
+    func download(decideDestinationUsing response: URLResponse,
                   suggestedFilename: String) async -> URL? {
         // The temporary filename must be unique or the download will fail.
         // To ensure uniqueness, append a UUID to the directory path in case a
@@ -258,13 +268,13 @@ extension ConnectWebView: WKDownloadDelegate {
         return downloadedFile
     }
 
-    func download(_ download: WKDownload,
-                  didFailWithError error: any Error,
+    func download(didFailWithError error: any Error,
                   resumeData: Data?) {
         showErrorAlert(for: error)
     }
 
-    func downloadDidFinish(_ download: WKDownload) {
+    func downloadDidFinish() {
+
         // Display a preview of the file to the user
         let previewController = QLPreviewController()
         previewController.dataSource = self
@@ -273,19 +283,38 @@ extension ConnectWebView: WKDownloadDelegate {
     }
 }
 
+// MARK: - WKDownloadDelegate
+
+@available(iOS 15, *)
+extension ConnectWebView: WKDownloadDelegate {
+    func download(_ download: WKDownload,
+                  decideDestinationUsing response: URLResponse,
+                  suggestedFilename: String) async -> URL? {
+        await self.download(decideDestinationUsing: response,
+                            suggestedFilename: suggestedFilename)
+    }
+
+    func download(_ download: WKDownload,
+                  didFailWithError error: any Error,
+                  resumeData: Data?) {
+        self.download(didFailWithError: error, resumeData: resumeData)
+    }
+
+    func downloadDidFinish(_ download: WKDownload) {
+        self.downloadDidFinish()
+    }
+}
+
 // MARK: - QLPreviewControllerDataSource
 
 @available(iOS 15, *)
 extension ConnectWebView: QLPreviewControllerDataSource {
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-        guard let downloadedFile,
-              fileManager.fileExists(atPath: downloadedFile.path) else {
-            return 0
-        }
-        return 1
+        downloadedFile == nil ? 0 : 1
     }
 
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem {
+        // Okay to force-unwrap since numberOfPreviewItems returns 0 when downloadFile is nil
         downloadedFile! as QLPreviewItem
     }
 }
