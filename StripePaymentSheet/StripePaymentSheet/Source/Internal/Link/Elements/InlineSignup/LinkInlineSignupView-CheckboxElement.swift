@@ -21,6 +21,7 @@ extension LinkInlineSignupView {
         private let appearance: PaymentSheet.Appearance
         /// Controls the stroke color of the checkbox
         private let borderColor: UIColor
+        let initialIsSelectedValue: Bool
 
         var view: UIView {
             return checkboxButton
@@ -56,15 +57,16 @@ extension LinkInlineSignupView {
 
             let checkbox = CheckboxButton(text: text, description: description, theme: appearanceCopy.asElementsTheme)
             checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
-            checkbox.isSelected = false
+            checkbox.isSelected = initialIsSelectedValue
 
             return checkbox
         }()
 
-        init(merchantName: String, appearance: PaymentSheet.Appearance, borderColor: UIColor) {
+        init(merchantName: String, appearance: PaymentSheet.Appearance, borderColor: UIColor, isSelected: Bool) {
             self.merchantName = merchantName
             self.appearance = appearance
             self.borderColor = borderColor
+            self.initialIsSelectedValue = isSelected
         }
 
         func setUserInteraction(isUserInteractionEnabled: Bool) {

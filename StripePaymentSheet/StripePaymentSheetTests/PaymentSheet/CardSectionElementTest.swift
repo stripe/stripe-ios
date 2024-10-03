@@ -5,19 +5,19 @@
 //  Created by Yuki Tokuhiro on 10/2/24.
 //
 
-import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
+import XCTest
 
 @MainActor
 final class CardSectionElementTest: XCTestCase {
     let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
 
-    func testPreservesPreviousCustomerInput() async {
+    func testLinkSignupPreservesPreviousCustomerInput() async {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
         func makeForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
             let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card])
@@ -27,7 +27,7 @@ final class CardSectionElementTest: XCTestCase {
                 elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
                 previousCustomerInput: previousCustomerInput,
                 formCache: .init(),
-                configuration: configuration,
+                configuration: .init(),
                 headerView: nil,
                 analyticsHelper: ._testValue(),
                 delegate: self
@@ -40,29 +40,25 @@ final class CardSectionElementTest: XCTestCase {
             formVC.viewDidAppear(false)
             return formVC.form
         }
-        var configuration = PaymentSheet.Configuration()
-        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         let form = makeForm(previousCustomerInput: nil)
-        let checkbox = form.getCheckboxElement(startingWith: "Save payment details")!
         let linkInlineSignupElement: LinkInlineSignupElement = form.getElement()!
         let linkInlineView = linkInlineSignupElement.signupView
-        
-        XCTAssertNotNil(checkbox) // Checkbox should appear since this is a PI w/ customer
+        XCTAssertNotNil(linkInlineView.checkboxElement) // Checkbox should appear since this is a PI w/o customer
         form.getTextFieldElement("Card number")?.setText("4242424242424242")
         form.getTextFieldElement("MM / YY").setText("1232")
         form.getTextFieldElement("CVC").setText("123")
         form.getTextFieldElement("ZIP").setText("65432")
-        
-        XCTAssertEqual(form.getAllUnwrappedSubElements().count, 14)
-//        XCTAssertNotNil(form.mandateString)
+
         // Simulate selecting checkbox
-        checkbox.isSelected = true
-        checkbox.didToggleCheckbox()
-        
+        linkInlineView.checkboxElement.isChecked = true
+        linkInlineView.checkboxElement.didToggleCheckbox()
+
         // Set the email & phone number
-        linkInlineView.emailElement.emailAddressElement.setText("\(UUID().uuidString)@foo.com")
+        let email = "\(UUID().uuidString)@foo.com"
+        linkInlineView.emailElement.emailAddressElement.setText(email)
         linkInlineView.phoneNumberElement.countryDropdownElement.setRawData("GB")
         linkInlineView.phoneNumberElement.textFieldElement.setText("1234567890")
+        linkInlineView.nameElement.setText("John Doe")
 
         // Generate params from the form
         guard let intentConfirmParams = form.updateParams(params: IntentConfirmParams(type: .stripe(.card))) else {
@@ -72,17 +68,17 @@ final class CardSectionElementTest: XCTestCase {
 
         // Re-generate the form and validate that it carries over all previous customer input
         let regeneratedForm = makeForm(previousCustomerInput: intentConfirmParams)
+        let regeneratedLinkInlineSignupElement: LinkInlineSignupElement = regeneratedForm.getElement()!
+        let regeneratedLinkInlineView = linkInlineSignupElement.signupView
         guard let regeneratedIntentConfirmParams = regeneratedForm.updateParams(params: IntentConfirmParams(type: .stripe(.card))) else {
             XCTFail("Regenerated form failed to create params. Validation state: \(regeneratedForm.validationState) \n Form: \(regeneratedForm)")
             return
         }
-        // Ensure checkbox remains selected
-        XCTAssertTrue(regeneratedForm.getCheckboxElement(startingWith: "Save payment details")!.isSelected)
         XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
-        let linkInlineSignupElement2: LinkInlineSignupElement = regeneratedForm.getElement()!
-        let linkInlineView2 = linkInlineSignupElement2.signupView
-        print(linkInlineView2)
-
+        XCTAssertTrue(regeneratedLinkInlineSignupElement.isChecked)
+        XCTAssertEqual(regeneratedLinkInlineView.emailElement.emailAddressString, email)
+        XCTAssertEqual(regeneratedLinkInlineView.nameElement.text, "John Doe")
+        XCTAssertEqual(regeneratedLinkInlineView.phoneNumberElement.phoneNumber, PhoneNumber(number: "1234567890", countryCode: "GB"))
     }
 }
 

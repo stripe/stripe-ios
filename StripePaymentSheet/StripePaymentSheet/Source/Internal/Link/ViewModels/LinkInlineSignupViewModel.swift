@@ -15,6 +15,13 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
 }
 
+struct LinkInlineSignupCustomerInput: Equatable {
+    let phoneNumber: PhoneNumber?
+    let name: String?
+    let email: String?
+    let checkboxSelected: Bool?
+}
+
 final class LinkInlineSignupViewModel {
     enum Action: Equatable {
         case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
@@ -38,8 +45,11 @@ final class LinkInlineSignupViewModel {
     let configuration: PaymentSheet.Configuration
 
     let mode: Mode
+    let initialEmail: String?
+    let initialPhoneNumber: PhoneNumber?
+    let initialName: String?
 
-    var saveCheckboxChecked: Bool = false {
+    var saveCheckboxChecked: Bool {
         didSet {
             if saveCheckboxChecked != oldValue {
                 notifyUpdate()
@@ -291,6 +301,7 @@ final class LinkInlineSignupViewModel {
         configuration: PaymentSheet.Configuration,
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
+        previousCustomerInput: LinkInlineSignupCustomerInput?,
         linkAccount: PaymentSheetLinkAccount? = nil,
         country: String? = nil
     ) {
@@ -298,6 +309,10 @@ final class LinkInlineSignupViewModel {
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
+        self.saveCheckboxChecked = previousCustomerInput?.checkboxSelected ?? false
+        self.initialEmail = previousCustomerInput?.email
+        self.initialPhoneNumber = previousCustomerInput?.phoneNumber
+        self.initialName = previousCustomerInput?.name
         if let email = self.emailAddress,
            !email.isEmpty {
             emailWasPrefilled = true

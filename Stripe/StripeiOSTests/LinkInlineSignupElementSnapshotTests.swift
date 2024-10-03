@@ -148,6 +148,7 @@ extension LinkInlineSignupElementSnapshotTests {
             configuration: configuration,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
+            previousCustomerInput: nil,
             linkAccount: linkAccount,
             country: country
         )

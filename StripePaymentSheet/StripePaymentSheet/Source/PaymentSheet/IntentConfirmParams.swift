@@ -36,6 +36,8 @@ final class IntentConfirmParams {
 
     var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
+    /// Hack: Contains the customer input in the link inline signup element (e.g. email, checkbox state) so that it can be preserved across `FlowController.update` etc.
+    var linkInlineSignupCustomerInput: LinkInlineSignupCustomerInput?
 
     var paymentSheetLabel: String {
         if let last4 = (financialConnectionsLinkedBank?.last4 ?? instantDebitsLinkedBank?.last4) {
