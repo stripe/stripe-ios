@@ -44,7 +44,7 @@ class ConnectWebView: WKWebView {
     /// The instance that will handle opening external urls
     let urlOpener: ApplicationURLOpener
 
-    /// The file manager responsible for creating temporary file directories
+    /// The file manager responsible for creating temporary file directories to store downloads
     let fileManager: FileManager
 
     /// The current version for the SDK
@@ -189,13 +189,15 @@ extension ConnectWebView: WKNavigationDelegate {
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction
     ) async -> WKNavigationActionPolicy {
-        // `shouldPerformDownload` will be true if the request has MIME types
-        // or a `Content-Type` header indicating it's a download or it originated
-        // as a JS download.
-        //
-        // This is not entirely accurate and we can't know a request should be a
-        // download until evaluating the response.
+        /*
+         `shouldPerformDownload` will be true if the request has MIME types
+         or a `Content-Type` header indicating it's a download or it originated
+         as a JS download.
 
+         NOTE: We sometimes can't know if a request should be a download until
+         after its response is received. Those cases are handled by
+         `decidePolicyFor navigationResponse` below.
+         */
         navigationAction.shouldPerformDownload ? .download : .allow
     }
 
