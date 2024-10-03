@@ -9,6 +9,7 @@
 import Stripe
 import StripeApplePay
 import StripeCardScan
+@_spi(PrivateBetaConnect) import StripeConnect
 import StripeFinancialConnections
 import StripeIdentity
 import StripePaymentSheet
@@ -44,7 +45,11 @@ class ViewController: UIViewController {
             setupIntentClientSecret: "",
             configuration: PaymentSheet.Configuration()
         )
-        // Do any additional setup after loading the view.
 
+        if #available(iOS 15.0, *) {
+            let _ = EmbeddedComponentManager {
+                nil
+            }
+        }
     }
 }
