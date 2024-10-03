@@ -8,7 +8,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 enum PaymentSheetFormFactoryConfig {
-    case paymentSheet(PaymentSheet.Configuration)
+    case paymentSheet(PaymentElementConfiguration) // TODO figure this out
     case customerSheet(CustomerSheet.Configuration)
 
     var hasCustomer: Bool {

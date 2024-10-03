@@ -10,6 +10,10 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
+    func buildMandate(for paymentMethodType: PaymentSheet.PaymentMethodType) -> NSAttributedString?
+}
+
 // TODO(porter) Probably shouldn't be public, just easy for testing.
 @_spi(EmbeddedPaymentElementPrivateBeta) public class EmbeddedPaymentMethodsView: UIView {
 
@@ -24,17 +28,24 @@ import UIKit
         stackView.spacing = appearance.embeddedPaymentElement.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
         return stackView
     }()
+    
+    private lazy var mandateView = { MandateContainerView(appearance: appearance) }()
 
+    // Intentionally not `weak`, EmbeddedPaymentElement does not hold an instance of `EmbeddedPaymentMethodsViewDelegate`
+    private var delegate: EmbeddedPaymentMethodsViewDelegate?
+    
     init(initialSelection: Selection?,
          paymentMethodTypes: [PaymentSheet.PaymentMethodType],
          savedPaymentMethod: STPPaymentMethod?,
          appearance: PaymentSheet.Appearance,
          shouldShowApplePay: Bool,
          shouldShowLink: Bool,
-         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
+         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
+         delegate: EmbeddedPaymentMethodsViewDelegate?) {
         self.appearance = appearance
         self.selection = initialSelection
-
+        self.delegate = delegate
+        
         super.init(frame: .zero)
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
 
@@ -124,8 +135,12 @@ import UIKit
                                     addTopSeparator: appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled,
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
-
+        
+        stackView.setCustomSpacing(12.0, after: stackView.arrangedSubviews.last ?? .init(frame: .zero))
+        stackView.addArrangedSubview(mandateView)
         addAndPinSubview(stackView)
+        
+        updateMandate()
     }
 
     required init?(coder: NSCoder) {
@@ -139,10 +154,35 @@ import UIKit
         }
 
         self.selection = selection
+        updateMandate()
     }
 
     func didTapAccessoryButton() {
         // TODO(porter)
+    }
+    
+    // MARK: Mandate handling
+    private func updateMandate(animated: Bool = true) {
+        let theme = appearance.asElementsTheme
+        let newMandateText: NSAttributedString? = {
+            guard let selectedPaymentMethodType = selection?.paymentMethodType else { return nil }
+            if selection?.savedPaymentMethod != nil {
+                // 1. For saved PMs, manually build mandates
+                switch selectedPaymentMethodType {
+                case .stripe(.USBankAccount):
+                    return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(alignment: .natural, theme: theme)
+                case .stripe(.SEPADebit):
+                    return .init(string: String(format: String.Localized.sepa_mandate_text, "TODO merchant name"))
+                default:
+                    return nil
+                }
+            } else {
+                return delegate?.buildMandate(for: selectedPaymentMethodType)
+            }
+        }()
+            self.mandateView.attributedText = newMandateText
+            self.mandateView.setHiddenIfNecessary(newMandateText == nil)
+            // TODO(porter) invoke handle on config that height changed
     }
 }
 
@@ -170,5 +210,40 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Style {
         case .floatingButton:
             return appearance
         }
+    }
+}
+
+class MandateContainerView: UIView {
+    private let mandateView: SimpleMandateTextView
+
+    var attributedText: NSAttributedString? {
+        get {
+            return mandateView.attributedText
+        }
+        
+        set {
+            mandateView.attributedText = newValue
+        }
+    }
+
+    // MARK: - Initializers
+
+    init(appearance: PaymentSheet.Appearance) {
+        self.mandateView = SimpleMandateTextView(theme: appearance.asElementsTheme)
+        super.init(frame: .zero)
+        
+        addSubview(mandateView)
+        mandateView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            mandateView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
+            mandateView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
+            mandateView.topAnchor.constraint(equalTo: topAnchor),
+            mandateView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
