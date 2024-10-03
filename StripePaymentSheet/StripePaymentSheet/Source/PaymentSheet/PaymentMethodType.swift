@@ -129,7 +129,7 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
-        static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
             var recommendedStripePaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
@@ -247,7 +247,7 @@ extension PaymentSheet {
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func supportsAdding(
             paymentMethod: STPPaymentMethodType,
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             intent: Intent,
             elementsSession: STPElementsSession,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
@@ -334,9 +334,9 @@ extension PaymentSheet {
             }
         }
 
-        /// Returns true if the passed configuration satsifies the passed in `requirements`
+        /// Returns true if the passed configuration satisfies the passed in `requirements`
         /// This function is to be used with dynamic payment method types that do not have bindings support and cannot be represented as a `STPPaymentMethodType`.
-        /// It's required for the client to specfiy dynamic payment method type requirements (rather than being server driven) because dynamically delivering new LPMS to clients that don't know about them is no longer/currently a priority.
+        /// It's required for the client to specify dynamic payment method type requirements (rather than being server driven) because dynamically delivering new LPMS to clients that don't know about them is no longer/currently a priority.
         /// - Note: Use this function over `configurationSupports` when the payment method does not have bindings support e.g. cannot be represented as
         /// a `STPPaymentMethodType`.
         /// - Parameters:
@@ -346,7 +346,7 @@ extension PaymentSheet {
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             intent: Intent
         ) -> PaymentMethodAvailabilityStatus {
             let fulfilledRequirements = [configuration, intent].reduce([]) {
@@ -375,7 +375,7 @@ extension PaymentSheet {
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             intent: Intent,
             elementsSession: STPElementsSession,
             supportedPaymentMethods: [STPPaymentMethodType]
@@ -416,7 +416,7 @@ extension STPPaymentMethod {
     /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
     /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
     /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
-    func supportsSavedPaymentMethod(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) -> Bool {
+    func supportsSavedPaymentMethod(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) -> Bool {
         let requirements: [PaymentMethodTypeRequirement] = {
             switch type {
             case .card:

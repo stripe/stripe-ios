@@ -407,8 +407,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
-            configuration: ._testValue_MostPermissive(),
-            analyticsHelper: .init(isCustom: false, configuration: ._testValue_MostPermissive(), analyticsClient: analyticsClient),
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
+            analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration._testValue_MostPermissive(), analyticsClient: analyticsClient),
             integrationShape: .complete
         ) { result in
             loadExpectation.fulfill()

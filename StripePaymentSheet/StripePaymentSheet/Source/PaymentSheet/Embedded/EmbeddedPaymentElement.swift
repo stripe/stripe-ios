@@ -55,24 +55,21 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(porter) MOBILESDK-2533 Make a protocol for our configurations
-        let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration()
-
-        // TODO(porter) When we do analytics decide how to handle `isCustom`
-        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: paymentSheetConfiguration)
+        // TODO(porter) Should we create a new analytics helper specific to embedded? Figured this out when we do analytics.
+        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
         AnalyticsHelper.shared.generateSessionID()
 
         let loadResult = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfiguration),
-                                                           configuration: paymentSheetConfiguration,
+                                                           configuration: configuration,
                                                            analyticsHelper: analyticsHelper,
                                                            integrationShape: .embedded)
 
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: .deferredIntent(intentConfig: intentConfiguration),
                                                                                            elementsSession: loadResult.elementsSession,
-                                                                                           configuration: paymentSheetConfiguration,
+                                                                                           configuration: configuration,
                                                                                            logAvailability: true)
-        let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: paymentSheetConfiguration)
-        let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: paymentSheetConfiguration)
+        let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+        let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
         let savedPaymentMethodAccessoryType = await RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
@@ -220,42 +217,4 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
-}
-
-// TODO(porter) MOBILESDK-2533 Create a protocol for the commonalities between PaymentSheet.Configuration <> EmbeddedPaymentElement.Configuration
-extension EmbeddedPaymentElement.Configuration {
-    func makePaymentSheetConfiguration() -> PaymentSheet.Configuration {
-        var paymentConfig = PaymentSheet.Configuration()
-
-        paymentConfig.allowsDelayedPaymentMethods = allowsDelayedPaymentMethods
-        paymentConfig.allowsPaymentMethodsRequiringShippingAddress = allowsPaymentMethodsRequiringShippingAddress
-        paymentConfig.apiClient = apiClient
-        paymentConfig.applePay = applePay
-        paymentConfig.primaryButtonColor = primaryButtonColor
-        paymentConfig.primaryButtonLabel = primaryButtonLabel
-        paymentConfig.style = style
-        paymentConfig.customer = customer
-        paymentConfig.merchantDisplayName = merchantDisplayName
-        paymentConfig.returnURL = returnURL
-        paymentConfig.defaultBillingDetails = defaultBillingDetails
-        paymentConfig.savePaymentMethodOptInBehavior = savePaymentMethodOptInBehavior
-        paymentConfig.appearance = appearance
-        paymentConfig.shippingDetails = shippingDetails
-        paymentConfig.preferredNetworks = preferredNetworks
-        paymentConfig.userOverrideCountry = userOverrideCountry
-        paymentConfig.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
-        paymentConfig.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
-        paymentConfig.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
-        paymentConfig.paymentMethodOrder = paymentMethodOrder
-        paymentConfig.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
-
-        /* Note:
-         There are 3 properties that differ today:
-         hidesMandateText
-         formSheetAction
-         paymentMethodLayout
-         */
-
-        return paymentConfig
-    }
 }
