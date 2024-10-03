@@ -22,32 +22,26 @@ for framework_name in GetFrameworks.framework_names("./modules.yaml")
   branch_interface_path = "#{framework_name}-new.xcframework/ios-arm64_x86_64-simulator/#{framework_name}.framework/Modules/#{framework_name}.swiftmodule/arm64-apple-ios-simulator.swiftinterface"
   module_diff = diff(master_interface_path, branch_interface_path)
 
+  processed_lines = final_diff_string.lines.map do |line|
+    if line.include?('public')
+      # Remove everything before 'public', including any leading characters
+      line.sub(/^.*?(public)/, '- \1')
+    else
+      # Keep the line as is
+      line
+    end
+  end
+  
+  # Join the processed lines back into a string
+  processed_string = processed_lines.join
+
 	# Add the framework headers and the diff to the final diff string
 	unless module_diff.empty?
-		final_diff_string += "\n### #{framework_name}\n```diff\n#{module_diff}\n```\n"
+		final_diff_string += "\n### #{framework_name}\n```diff\n#{processed_string}\n```\n"
 	end
 end
 
-# Process the final diff string
-unless final_diff_string.empty?
-  # Split the string into lines and process each line
-  processed_lines = final_diff_string.lines.map do |line|
-    # Preserve the diff indicator at the beginning
-    if line =~ /^(\+|-)\s*(.*)$/
-      diff_symbol = $1
-      rest_of_line = $2
-      # Remove all occurrences of "@objc"
-      rest_of_line.gsub!(/@objc\s*/, '')
-      "#{diff_symbol} #{rest_of_line}"
-    else
-      # If the line doesn't start with + or -, just remove "@objc"
-      line.gsub(/@objc\s*/, '')
-    end
-  end
-
-  # Join the processed lines back into a single string
-  formatted_diff_string = processed_lines.join
-
-  # Write the formatted diff string to a file
-  File.open('diff_result.txt', 'w') { |f| f.write(formatted_diff_string) }
+# Write the final diff string to a file
+if not final_diff_string.empty?
+	File.open("diff_result.txt", 'w') { |f| f.write final_diff_string }
 end
