@@ -251,7 +251,7 @@ enum VerticalPaymentMethodListSelection: Equatable {
             return type.identifier
         }
     }
-    
+
     var savedPaymentMethod: STPPaymentMethod? {
         switch self {
         case .applePay, .link, .new:
@@ -260,7 +260,7 @@ enum VerticalPaymentMethodListSelection: Equatable {
             return paymentMethod
         }
     }
-    
+
     var paymentMethodType: PaymentSheet.PaymentMethodType? {
         switch self {
         case .new(let paymentMethodType):

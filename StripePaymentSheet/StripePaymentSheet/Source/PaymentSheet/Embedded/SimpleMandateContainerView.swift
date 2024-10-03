@@ -15,7 +15,7 @@ class SimpleMandateContainerView: UIView {
         get {
             return mandateView.attributedText
         }
-        
+
         set {
             mandateView.attributedText = newValue
         }
@@ -24,7 +24,7 @@ class SimpleMandateContainerView: UIView {
     init(appearance: PaymentSheet.Appearance) {
         self.mandateView = SimpleMandateTextView(theme: appearance.asElementsTheme)
         super.init(frame: .zero)
-        
+
         addSubview(mandateView)
         mandateView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -32,7 +32,7 @@ class SimpleMandateContainerView: UIView {
             mandateView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
             mandateView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
             mandateView.topAnchor.constraint(equalTo: topAnchor),
-            mandateView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            mandateView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 

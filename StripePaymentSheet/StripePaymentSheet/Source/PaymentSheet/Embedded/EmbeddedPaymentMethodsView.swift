@@ -10,7 +10,11 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// Tthe view for an embedded payment element
+protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
+    func heightDidChange()
+}
+
+/// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
 
     typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
@@ -25,9 +29,11 @@ class EmbeddedPaymentMethodsView: UIView {
         stackView.spacing = appearance.embeddedPaymentElement.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
         return stackView
     }()
-    
+
     private lazy var mandateView = { SimpleMandateContainerView(appearance: appearance) }()
-    
+
+    weak var delegate: EmbeddedPaymentMethodsViewDelegate?
+
     init(initialSelection: Selection?,
          paymentMethodTypes: [PaymentSheet.PaymentMethodType],
          savedPaymentMethod: STPPaymentMethod?,
@@ -39,7 +45,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.appearance = appearance
         self.selection = initialSelection
         self.mandateProvider = mandateProvider
-        
+
         super.init(frame: .zero)
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
 
@@ -129,11 +135,11 @@ class EmbeddedPaymentMethodsView: UIView {
                                     addTopSeparator: appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled,
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
-        
+
         stackView.setCustomSpacing(12.0, after: stackView.arrangedSubviews.last ?? .init(frame: .zero))
         stackView.addArrangedSubview(mandateView)
         addAndPinSubview(stackView)
-        
+
         updateMandate()
     }
 
@@ -154,12 +160,21 @@ class EmbeddedPaymentMethodsView: UIView {
     func didTapAccessoryButton() {
         // TODO(porter)
     }
-    
+
     // MARK: Mandate handling
     private func updateMandate(animated: Bool = true) {
+        let previousHeight = frame.size.height
         self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType, savedPaymentMethod: selection?.savedPaymentMethod)
         self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText == nil)
-        // TODO(porter) call EmbeddedPaymentElementDelegate.embeddedPaymentElementDidUpdateHeight handle on config that height changed
+
+        // Force the layout to update so we get the new height
+        setNeedsLayout()
+        layoutIfNeeded()
+
+        let newHeight = frame.size.height
+        if previousHeight != newHeight {
+            delegate?.heightDidChange()
+        }
     }
 }
 

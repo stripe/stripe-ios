@@ -6,20 +6,20 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 class MandateProvider {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let intent: Intent
-    
+
     init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.intent = intent
     }
-    
+
     /// Builds the attributed string for a given payment method type
     /// - Parameter paymentMethodType: The payment method type who's mandate should be constructed
     /// - Parameter savedPaymentMethod: The currently selected saved payment method if any
@@ -28,7 +28,7 @@ class MandateProvider {
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString? = nil) -> NSAttributedString? {
         // Merchant will display the mandate
         guard !configuration.hidesMandateText else {  return nil }
-        
+
         let newMandateText: NSAttributedString? = {
             guard let paymentMethodType else { return nil }
             if savedPaymentMethod != nil {
@@ -42,7 +42,7 @@ class MandateProvider {
                     return nil
                 }
             } else {
-                // 2. For new PMs, see if we have a bottomNoticeAttributedString
+                // 2. For new PMs, see if we have a bottomNoticeAttributedString, typically just US bank acct. and Link Instant Debits
                 if let bottomNoticeAttributedString {
                     return bottomNoticeAttributedString
                 }
@@ -67,7 +67,7 @@ class MandateProvider {
                 return form.getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first?.mandateTextView.attributedText
             }
         }()
-        
+
         return newMandateText
     }
 }
@@ -77,7 +77,7 @@ private extension PaymentElementConfiguration {
         if let embeddedConfig = self as? EmbeddedPaymentElement.Configuration {
             return embeddedConfig.hidesMandateText
         }
-        
+
         return false
     }
 }
@@ -85,11 +85,11 @@ private extension PaymentElementConfiguration {
 // MARK: PaymentMethodFormViewControllerDelegate
 
 extension MandateProvider: PaymentMethodFormViewControllerDelegate {
-    
+
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         // no-op
     }
-    
+
     func updateErrorLabel(for error: Error?) {
         // no-op
     }

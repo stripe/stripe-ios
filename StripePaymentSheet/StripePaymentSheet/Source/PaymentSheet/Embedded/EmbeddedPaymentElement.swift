@@ -45,7 +45,6 @@ public class EmbeddedPaymentElement {
     /// The customer's currently selected payment option.
     public var paymentOption: PaymentOptionDisplayData? { return nil /* computed */ }
 
-    
     /// An asynchronous failable initializer
     /// This loads the Customer's payment methods, their default payment method, etc.
     /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the checkout.
@@ -104,8 +103,13 @@ public class EmbeddedPaymentElement {
                                              elementsSession: loadResult.elementsSession,
                                              intent: .deferredIntent(intentConfig: intentConfiguration))
         )
-        
-        return .init(view: embeddedPaymentMethodsView, configuration: configuration)
+
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(view: embeddedPaymentMethodsView, configuration: configuration)
+        await MainActor.run {
+            embeddedPaymentMethodsView.delegate = embeddedPaymentElement
+        }
+
+        return embeddedPaymentElement
     }
 
     /// The result of an `update` call
@@ -222,4 +226,10 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
+}
+
+extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
+    func heightDidChange() {
+        delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+    }
 }
