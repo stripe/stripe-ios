@@ -58,7 +58,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
     ) {
         DispatchQueue.main.async {
             let stubbedBank = FinancialConnectionsLinkedBank(
-                with: "las_123",
+                sessionId: "las_123",
                 accountId: "fca_123",
                 displayName: "Test Bank",
                 bankName: "Test Bank",
