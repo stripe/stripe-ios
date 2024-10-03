@@ -26,7 +26,6 @@ class BrowseViewController: UITableViewController
         case STPCardFormViewControllerCBC
         case SwiftUICardFormViewController
         case PaymentMethodMessagingView
-        case ChangeTheme
 
         var title: String {
             switch self {
@@ -37,7 +36,6 @@ class BrowseViewController: UITableViewController
             case .STPCardFormViewControllerCBC: return "Card Form (CBC)"
             case .SwiftUICardFormViewController: return "Card Form (SwiftUI)"
             case .PaymentMethodMessagingView: return "Payment Method Messaging View"
-            case .ChangeTheme: return "Change Theme"
             }
         }
 
@@ -50,18 +48,23 @@ class BrowseViewController: UITableViewController
             case .STPCardFormViewControllerCBC: return "STPCardFormViewController (CBC)"
             case .SwiftUICardFormViewController: return "STPCardFormView.Representable"
             case .PaymentMethodMessagingView: return "PaymentMethodMessagingView"
-            case .ChangeTheme: return ""
             }
         }
     }
-
-    let themeViewController = ThemeViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Stripe UI Examples"
         tableView.tableFooterView = UIView()
         tableView.rowHeight = 60
+        switch traitCollection.userInterfaceStyle {
+        case .light, .unspecified:
+            UINavigationBar.appearance().backgroundColor = .white
+        case .dark:
+            UINavigationBar.appearance().backgroundColor = .black
+        @unknown default:
+            fatalError()
+        }
     }
 
     // MARK: UITableViewDelegate
@@ -88,42 +91,28 @@ class BrowseViewController: UITableViewController
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard let example = Demo(rawValue: indexPath.row) else { return }
-        let theme = themeViewController.theme.stpTheme
-
         switch example {
         case .STPPaymentCardTextField:
             let viewController = CardFieldViewController()
-            viewController.theme = theme
             let navigationController = UINavigationController(rootViewController: viewController)
-            navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .STPPaymentCardTextFieldWithCBC:
             let viewController = CardFieldViewController()
-            viewController.theme = theme
             viewController.alwaysEnableCBC = true
             let navigationController = UINavigationController(rootViewController: viewController)
-            navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .STPAUBECSFormViewController:
             let viewController = AUBECSDebitFormViewController()
-            viewController.theme = theme
             let navigationController = UINavigationController(rootViewController: viewController)
-            navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .STPCardFormViewController:
             let viewController = CardFormViewController()
             let navigationController = UINavigationController(rootViewController: viewController)
-            navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .STPCardFormViewControllerCBC:
             let viewController = CardFormViewController()
             viewController.alwaysEnableCBC = true
             let navigationController = UINavigationController(rootViewController: viewController)
-            navigationController.navigationBar.stp_theme = theme
-            present(navigationController, animated: true, completion: nil)
-        case .ChangeTheme:
-            let navigationController = UINavigationController(
-                rootViewController: self.themeViewController)
             present(navigationController, animated: true, completion: nil)
         case .SwiftUICardFormViewController:
             let controller = UIHostingController(rootView: SwiftUICardFormView())

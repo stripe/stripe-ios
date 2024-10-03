@@ -165,21 +165,6 @@ class STPImageLibraryTestSwift: XCTestCase {
         )
     }
 
-    func testFPXImages() {
-        // Probably better to make STPFPXBankBrand conform to CaseIterable,
-        // but let's not change behavior of a legacy product just for this test.
-        for i in 0...(STPFPXBankBrand.unknown.rawValue - 1) {
-            let brand = STPFPXBankBrand(rawValue: i)!
-            let bankIdentifier = STPFPXBank.identifierFrom(brand)!
-            let bankImageName = "stp_bank_fpx_" + bankIdentifier
-            STPAssertEqualImages(
-                STPLegacyImageLibrary.fpxBrandImage(for: brand),
-                STPLegacyImageLibrary.safeImageNamed(bankImageName, templateIfAvailable: false)
-            )
-
-        }
-    }
-
     func testBankIconCodeImagesExist() {
         for iconCode in PaymentSheetImageLibrary.BankIconCodeRegexes.keys {
             XCTAssertNotNil(

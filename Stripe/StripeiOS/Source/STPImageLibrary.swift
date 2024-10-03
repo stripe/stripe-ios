@@ -14,20 +14,6 @@ import UIKit
 /// This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
 @objc class STPLegacyImageLibrary: NSObject {
 
-    /// This returns the appropriate icon for the specified bank brand.
-    @objc(brandImageForFPXBankBrand:) public class func fpxBrandImage(
-        for brand: STPFPXBankBrand
-    )
-        -> UIImage
-    {
-        let imageName = "stp_bank_fpx_\(STPFPXBank.identifierFrom(brand) ?? "")"
-        let image = self.safeImageNamed(
-            imageName,
-            templateIfAvailable: false
-        )
-        return image
-    }
-
     /// An icon representing FPX.
     @objc
     public class func fpxLogo() -> UIImage {
