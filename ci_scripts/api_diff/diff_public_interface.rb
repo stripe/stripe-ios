@@ -49,6 +49,5 @@ unless final_diff_string.empty?
   formatted_diff_string = processed_lines.join
 
   # Write the formatted diff string to a file
-  diff_result_path = File.join(base_dir, 'diff_result.txt')
-  File.open(diff_result_path, 'w') { |f| f.write(formatted_diff_string) }
+  File.open('diff_result.txt', 'w') { |f| f.write(formatted_diff_string) }
 end
