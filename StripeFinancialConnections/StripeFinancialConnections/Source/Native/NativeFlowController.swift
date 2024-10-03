@@ -508,6 +508,7 @@ extension NativeFlowController {
 
         // Bank account details extraction for the linked bank
         var bankAccountDetails: BankAccountDetails?
+        let linkMode = dataManager.elementsSessionContext?.linkMode
         dataManager.createPaymentDetails(
             consumerSessionClientSecret: consumerSession.clientSecret,
             bankAccountId: bankAccountId
@@ -520,11 +521,11 @@ extension NativeFlowController {
             bankAccountDetails = paymentDetails.redactedPaymentDetails.bankAccountDetails
 
             // Decide which API to call based on the payment mode
-            if self.dataManager.elementsSessionContext?.linkMode?.isPantherPayment == true {
+            if let linkMode, linkMode.isPantherPayment {
                 return self.dataManager.apiClient.sharePaymentDetails(
                     consumerSessionClientSecret: consumerSession.clientSecret,
                     paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
-                    expectedPaymentMethodType: "card"
+                    expectedPaymentMethodType: linkMode.expectedPaymentMethodType
                 )
                 .transformed { $0 as PaymentMethodIDProvider }
             } else {
@@ -541,7 +542,8 @@ extension NativeFlowController {
                 let linkedBank = InstantDebitsLinkedBank(
                     paymentMethodId: paymentMethod.id,
                     bankName: bankAccountDetails?.bankName,
-                    last4: bankAccountDetails?.last4
+                    last4: bankAccountDetails?.last4,
+                    linkMode: linkMode
                 )
                 completion(.success(linkedBank))
             case .failure(let error):
