@@ -40,30 +40,6 @@ import UIKit
         return self.safeImageNamed("stp_fpx_big_logo", templateIfAvailable: false)
     }
 
-    @objc class func addIcon() -> UIImage {
-        return self.safeImageNamed("stp_icon_add", templateIfAvailable: true)
-    }
-
-    @objc class func checkmarkIcon() -> UIImage {
-        return self.safeImageNamed("stp_icon_checkmark", templateIfAvailable: true)
-    }
-
-    @objc class func largeCardFrontImage() -> UIImage {
-        return self.safeImageNamed("stp_card_form_front", templateIfAvailable: true)
-    }
-
-    @objc class func largeCardBackImage() -> UIImage {
-        return self.safeImageNamed("stp_card_form_back", templateIfAvailable: true)
-    }
-
-    @objc class func largeCardAmexCVCImage() -> UIImage {
-        return self.safeImageNamed("stp_card_form_amex_cvc", templateIfAvailable: true)
-    }
-
-    @objc class func largeShippingImage() -> UIImage {
-        return self.safeImageNamed("stp_shipping_form", templateIfAvailable: true)
-    }
-
     class func image(
         withTintColor color: UIColor,
         for image: UIImage

@@ -9,18 +9,6 @@
 import SwiftUI
 
 /// :nodoc:
-extension STPBankSelectionMethod: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .FPX:
-            return "FPX"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
 extension STPBillingAddressFields: CustomStringConvertible {
     public var description: String {
         switch self {

@@ -9,35 +9,6 @@
 import UIKit
 
 typealias STPKeyboardFrameBlock = (CGRect, UIView?) -> Void
-extension UIViewController {
-    @objc(stp_beginObservingKeyboardAndInsettingScrollView:onChangeBlock:)
-    func stp_beginObservingKeyboardAndInsettingScrollView(
-        _ scrollView: UIScrollView?,
-        onChange block: STPKeyboardFrameBlock?
-    ) {
-        if let existing = stp_keyboardDetectingViewController() {
-            existing.removeFromParent()
-            existing.view.removeFromSuperview()
-            existing.didMove(toParent: nil)
-        }
-        let keyboardAvoiding = STPKeyboardDetectingViewController(
-            keyboardFrameBlock: block,
-            scrollView: scrollView
-        )
-        addChild(keyboardAvoiding)
-        view.addSubview(keyboardAvoiding.view)
-        keyboardAvoiding.didMove(toParent: self)
-    }
-
-    @objc func stp_keyboardDetectingViewController() -> STPKeyboardDetectingViewController? {
-        return
-            (children as NSArray).filtered(
-                using: NSPredicate(block: { viewController, _ in
-                    return viewController is STPKeyboardDetectingViewController
-                })
-            ).first as? STPKeyboardDetectingViewController
-    }
-}
 
 // This is a private class that is only a UIViewController subclass by virtue of the fact
 // that that makes it easier to attach to another UIViewController as a child.

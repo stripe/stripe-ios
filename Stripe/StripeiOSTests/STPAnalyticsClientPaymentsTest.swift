@@ -125,13 +125,6 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         _ = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: nil)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPApplePayContext"))
     }
-
-    func testBankSelectionVCAddsUsage() {
-        _ = STPBankSelectionViewController()
-        XCTAssertTrue(
-            STPAnalyticsClient.sharedClient.productUsage.contains("STPBankSelectionViewController")
-        )
-    }
 }
 
 // MARK: - Helpers

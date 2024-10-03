@@ -55,25 +55,6 @@ extension FBSnapshotTestCase {
         XCTAssertNotNil(navController?.view)
         XCTAssertNotNil(viewController?.view)
 
-        if viewController is STPCoreScrollViewController {
-            guard let scrollView = (viewController as? STPCoreScrollViewController)?.scrollView,
-                let navController = navController
-            else {
-                return nil
-            }
-            navController.view.layoutIfNeeded()
-
-            let topOffset = scrollView.convert(scrollView.frame.origin, to: navController.view).y
-            navController.view.frame = CGRect(
-                x: 0,
-                y: 0,
-                width: 320,
-                height: (topOffset) + (scrollView.contentSize.height)
-                    + (scrollView.contentInset.top)
-                    + (scrollView.contentInset.bottom)
-            )
-        }
-
         return navController?.view
     }
 }
