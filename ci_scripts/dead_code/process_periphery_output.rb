@@ -25,7 +25,7 @@ File.foreach(periphery_output_file) do |line|
 
     if parts.length >= 4
       file_path = parts[0].strip
-      # line_num = parts[1].strip # Not needed
+      line_num = parts[1].strip # Not needed
       # col_num = parts[2].strip  # Not needed
       warning_message = parts[3].strip
 
@@ -37,10 +37,11 @@ File.foreach(periphery_output_file) do |line|
 
       # Construct the full warning message without line and column numbers
       # Format: Filename.swift: warning: Message
-      full_warning = "#{filename}: warning: #{warning_text}"
+      full_warning_key = "#{filename}: warning: #{warning_text}"
+      full_warning_value = "#{filename}:#{line_num} warning: #{warning_text}"
 
       # Assign the same string as both key and value
-      unused_code[full_warning] = full_warning
+      unused_code[full_warning_key] = full_warning_value
 
     else
       puts "Skipping improperly formatted line: #{line}"

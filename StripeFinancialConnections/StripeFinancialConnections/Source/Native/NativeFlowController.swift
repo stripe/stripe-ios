@@ -538,7 +538,7 @@ extension NativeFlowController {
         .observe { result in
             switch result {
             case .success(let paymentMethod):
-                let linkedBank = InstantDebitsLinkedBankImplementation(
+                let linkedBank = InstantDebitsLinkedBank(
                     paymentMethodId: paymentMethod.id,
                     bankName: bankAccountDetails?.bankName,
                     last4: bankAccountDetails?.last4

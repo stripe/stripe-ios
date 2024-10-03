@@ -264,7 +264,7 @@ extension PaymentSheetLoader.LoadResult {
 
 extension PaymentSheetAnalyticsHelper {
     static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
-        return .init(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        return .init(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
     }
 }
 

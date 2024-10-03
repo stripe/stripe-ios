@@ -45,7 +45,7 @@ final class PaymentSheetLoader {
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         mode: PaymentSheet.InitializationMode,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         completion: @escaping (Result<LoadResult, Error>) -> Void
@@ -143,7 +143,7 @@ final class PaymentSheetLoader {
 
     public static func load(
         mode: PaymentSheet.InitializationMode,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape
     ) async throws -> LoadResult {
@@ -183,7 +183,7 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
+    static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> PaymentSheetLinkAccount? {
         // Only lookup the consumer account if Link is supported
         guard PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
             return nil
@@ -217,7 +217,7 @@ final class PaymentSheetLoader {
     }
 
     typealias ElementSessionAndIntent = (elementsSession: STPElementsSession, intent: Intent)
-    static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
+    static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod = defaultStripePaymentMethodId(forCustomerID: configuration.customer?.id)
@@ -298,7 +298,7 @@ final class PaymentSheetLoader {
     }
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
-    static func fetchSavedPaymentMethods(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethods(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
@@ -321,7 +321,7 @@ final class PaymentSheetLoader {
         return savedPaymentMethods
     }
 
-    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
         guard let customerID = configuration.customer?.id,
               let ephemeralKey = configuration.customer?.ephemeralKeySecret,
               !ephemeralKey.isEmpty else {

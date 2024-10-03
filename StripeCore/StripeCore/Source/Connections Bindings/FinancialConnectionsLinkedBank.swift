@@ -7,11 +7,27 @@
 
 import Foundation
 
-@_spi(STP) public protocol FinancialConnectionsLinkedBank {
-    var sessionId: String { get }
-    var accountId: String { get }
-    var displayName: String? { get }
-    var bankName: String? { get }
-    var last4: String? { get }
-    var instantlyVerified: Bool { get }
+@_spi(STP) public struct FinancialConnectionsLinkedBank: Equatable {
+    public let sessionId: String
+    public let accountId: String
+    public let displayName: String?
+    public let bankName: String?
+    public let last4: String?
+    public let instantlyVerified: Bool
+
+    public init(
+        sessionId: String,
+        accountId: String,
+        displayName: String?,
+        bankName: String?,
+        last4: String?,
+        instantlyVerified: Bool
+    ) {
+        self.sessionId = sessionId
+        self.accountId = accountId
+        self.displayName = displayName
+        self.bankName = bankName
+        self.last4 = last4
+        self.instantlyVerified = instantlyVerified
+    }
 }

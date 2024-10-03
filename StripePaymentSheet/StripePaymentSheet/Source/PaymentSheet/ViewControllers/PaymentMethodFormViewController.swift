@@ -24,7 +24,6 @@ class PaymentMethodFormViewController: UIViewController {
     let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
-
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
 
@@ -301,7 +300,7 @@ extension PaymentMethodFormViewController {
                 break
             case .completed(let completedResult):
                 if case .financialConnections(let linkedBank) = completedResult {
-                    usBankAccountFormElement.setLinkedBank(linkedBank)
+                    usBankAccountFormElement.linkedBank = linkedBank
                 } else {
                     self.delegate?.updateErrorLabel(for: genericError)
                 }

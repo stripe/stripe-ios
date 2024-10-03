@@ -169,7 +169,7 @@ extension FinancialConnectionsWebFlowViewController {
                         if
                             let paymentMethodId = Self.extractValue(from: returnUrl, key: "payment_method_id")
                         {
-                            let instantDebitsLinkedBank = InstantDebitsLinkedBankImplementation(
+                            let instantDebitsLinkedBank = InstantDebitsLinkedBank(
                                 paymentMethodId: paymentMethodId,
                                 bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
                                 // backend can return "+" instead of a more-common encoding of "%20" for spaces
