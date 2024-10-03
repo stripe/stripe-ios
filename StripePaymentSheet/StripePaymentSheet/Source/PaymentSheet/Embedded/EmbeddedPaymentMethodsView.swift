@@ -162,7 +162,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     // MARK: Mandate handling
-    private func updateMandate(animated: Bool = true) {
+    private func updateMandate() {
         let previousHeight = frame.size.height
         self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType, savedPaymentMethod: selection?.savedPaymentMethod)
         self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText == nil)
