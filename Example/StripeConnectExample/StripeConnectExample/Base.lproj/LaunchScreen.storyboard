@@ -17,8 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StripeConnect Example" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tpl-NI-fTA">
-                                <rect key="frame" x="49.666666666666657" y="408.66666666666669" width="294" height="35"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StripeConnect Example" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tpl-NI-fTA">
+                                <rect key="frame" x="20" y="408.66666666666669" width="353" height="35"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="29"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -27,7 +27,8 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="tpl-NI-fTA" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="MG3-T5-zZj"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tpl-NI-fTA" secondAttribute="trailing" constant="20" id="C34-2d-4Rw"/>
+                            <constraint firstItem="tpl-NI-fTA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="HH7-od-x32"/>
                             <constraint firstItem="tpl-NI-fTA" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="fIw-p1-lqC"/>
                         </constraints>
                     </view>
