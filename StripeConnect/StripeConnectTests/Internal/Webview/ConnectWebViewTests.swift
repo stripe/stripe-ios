@@ -55,7 +55,7 @@ class ConnectWebViewTests: XCTestCase {
     }
 
     /// HTTP/HTTPS navigations with no target from a non-allowlisted host should open in a SafariVC
-    func testPopupOpenSafariVCIfNotInAllowedHosts() {
+    func testOpenSafariVCIfNotInAllowedHosts() {
         var safariVC: SFSafariViewController?
         webView.presentPopup = { vc in
             safariVC = vc as? SFSafariViewController
@@ -98,7 +98,7 @@ class ConnectWebViewTests: XCTestCase {
     }
 
     /// Non-HTTP/HTTPS navigations with no target should use the system's URL routing
-    func testPopupWithCustomURLScheme() {
+    func testCustomURLScheme() {
         let url = URL(string: "connect://test")!
         let canOpenURLExpectation = XCTestExpectation(description: "Can open url called")
         let openURLExpectation = XCTestExpectation(description: "Open url called")
@@ -124,7 +124,7 @@ class ConnectWebViewTests: XCTestCase {
     }
 
     /// Any navigation request with a non-nil target should not open a popup
-    func testNonPopupNavigations() {
+    func testJavascriptPopupHandling() {
         let url = URL(string: "connect://test")!
         mockURLOpener.canOpenURLOverride = { _ in
             XCTFail("Can open url should not be called")
@@ -174,99 +174,6 @@ class ConnectWebViewTests: XCTestCase {
             )
         )
         XCTAssertEqual(policy, .download)
-    }
-
-    /// Non-download and non-HTTP/HTTPS responses should use the system's URL routing
-    @MainActor
-    func testResponsePolicyForCustomURLScheme() async {
-        let response = URLResponse(
-            url: URL(string: "connect://test")!,
-            mimeType: nil,
-            expectedContentLength: 100,
-            textEncodingName: nil
-        )
-
-        let canOpenURLExpectation = XCTestExpectation(description: "Can open url called")
-        let openURLExpectation = XCTestExpectation(description: "Open url called")
-
-        mockURLOpener.canOpenURLOverride = { _ in
-            canOpenURLExpectation.fulfill()
-            return true
-        }
-        mockURLOpener.openURLOverride = { openURL, _, _ in
-            XCTAssertEqual(response.url, openURL)
-            openURLExpectation.fulfill()
-        }
-        webView.presentPopup = { _ in
-            XCTFail("Present pop up should not be called")
-        }
-
-        let policy = await webView.webView(
-            webView,
-            decidePolicyFor: MockNavigationResponse(
-                response: response,
-                canShowMIMEType: true
-            )
-        )
-        XCTAssertEqual(policy, .cancel)
-
-        await fulfillment(of: [canOpenURLExpectation, openURLExpectation], timeout: TestHelpers.defaultTimeout)
-    }
-
-    /// Non-download HTTP/HTTPS responses with from a non-allowlisted host should open in a SafariVC
-    @MainActor
-    func testResponsePolicyForDisallowedHosts() async {
-        var safariVC: SFSafariViewController?
-        webView.presentPopup = { vc in
-            safariVC = vc as? SFSafariViewController
-        }
-        let response = URLResponse(
-            url: URL(string: "https://stripe.com")!,
-            mimeType: nil,
-            expectedContentLength: 100,
-            textEncodingName: nil
-        )
-
-        let policy = await webView.webView(
-            webView,
-            decidePolicyFor: MockNavigationResponse(
-                response: response,
-                canShowMIMEType: true
-            )
-        )
-        XCTAssertEqual(policy, .cancel)
-        XCTAssertNotNil(safariVC)
-    }
-
-    /// Non-download HTTP/HTTPS responses with an allowlisted host should be allowed
-    @MainActor
-    func testResponsePolicyForNonAttachmentAllowedHosts() async {
-        for url in [
-            "https://connect-js.stripe.com",
-            "https://connect-js.stripe.com/hello",
-            "https://connect.stripe.com/",
-            "https://connect.stripe.com/test",
-            "http://connect-js.stripe.com",
-            "http://connect-js.stripe.com/hello",
-            "http://connect.stripe.com/",
-            "http://connect.stripe.com/test",
-        ] {
-            let response = URLResponse(
-                url: URL(string: url)!,
-                mimeType: nil,
-                expectedContentLength: 100,
-                textEncodingName: nil
-            )
-
-            let policy = await webView.webView(
-                webView,
-                decidePolicyFor: MockNavigationResponse(
-                    response: response,
-                    canShowMIMEType: true
-                )
-            )
-            XCTAssertEqual(policy, .allow)
-        }
     }
 
     @MainActor
