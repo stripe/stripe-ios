@@ -9,10 +9,11 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+// TODO: Refactor this to be a ContainerElement and contain its sub-elements.
 final class LinkInlineSignupElement: Element {
     let collectsUserInput: Bool = true
 
-    private let signupView: LinkInlineSignupView
+    let signupView: LinkInlineSignupView
 
     lazy var view: UIView = {
 
