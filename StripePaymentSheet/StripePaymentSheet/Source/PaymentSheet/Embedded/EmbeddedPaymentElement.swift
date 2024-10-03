@@ -100,8 +100,11 @@ public class EmbeddedPaymentElement {
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            delegate: MandateProvider(configuration: configuration, elementsSession: loadResult.elementsSession, intent: .deferredIntent(intentConfig: intentConfiguration))
+            mandateProvider: MandateProvider(configuration: configuration,
+                                             elementsSession: loadResult.elementsSession,
+                                             intent: .deferredIntent(intentConfig: intentConfiguration))
         )
+        
         return .init(view: embeddedPaymentMethodsView, configuration: configuration)
     }
 
@@ -219,51 +222,4 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
-}
-
-class MandateProvider: EmbeddedPaymentMethodsViewDelegate, PaymentMethodFormViewControllerDelegate {
-        
-    let configuration: EmbeddedPaymentElement.Configuration
-    let elementsSession: STPElementsSession
-    let intent: Intent
-    
-    init(configuration: EmbeddedPaymentElement.Configuration, elementsSession: STPElementsSession, intent: Intent) {
-        self.configuration = configuration
-        self.elementsSession = elementsSession
-        self.intent = intent
-    }
-    
-    func buildMandate(for paymentMethodType: PaymentSheet.PaymentMethodType) -> NSAttributedString? {
-        // Merchant will display the mandate
-        guard !configuration.hidesMandateText else {  return nil }
-        
-        let form = PaymentMethodFormViewController(
-            type: paymentMethodType,
-            intent: intent,
-            elementsSession: elementsSession,
-            previousCustomerInput: nil,
-            formCache: .init(),
-            configuration: configuration,
-            headerView: nil,
-            analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration()), // Dummy, not used
-            delegate: self
-        ).form
-        
-        guard !form.collectsUserInput else {
-            // If it collects user input, the mandate will be displayed in the form and not here
-            return nil
-        }
-        
-        return form.getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first?.mandateTextView.attributedText
-    }
-    
-    // MARK: PaymentMethodFormViewControllerDelegate
-    
-    func didUpdate(_ viewController: PaymentMethodFormViewController) {
-        // no-op
-    }
-    
-    func updateErrorLabel(for error: Error?) {
-        // no-op
-    }
 }

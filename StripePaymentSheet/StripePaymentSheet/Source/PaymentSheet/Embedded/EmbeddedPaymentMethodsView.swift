@@ -10,17 +10,14 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
-    func buildMandate(for paymentMethodType: PaymentSheet.PaymentMethodType) -> NSAttributedString?
-}
-
-// TODO(porter) Probably shouldn't be public, just easy for testing.
-@_spi(EmbeddedPaymentElementPrivateBeta) public class EmbeddedPaymentMethodsView: UIView {
+/// Tthe view for an embedded payment element
+class EmbeddedPaymentMethodsView: UIView {
 
     typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
 
     private let appearance: PaymentSheet.Appearance
     private(set) var selection: Selection?
+    private let mandateProvider: MandateProvider
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -29,10 +26,7 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
         return stackView
     }()
     
-    private lazy var mandateView = { MandateContainerView(appearance: appearance) }()
-
-    // Intentionally not `weak`, EmbeddedPaymentElement does not hold an instance of `EmbeddedPaymentMethodsViewDelegate`
-    private var delegate: EmbeddedPaymentMethodsViewDelegate?
+    private lazy var mandateView = { SimpleMandateContainerView(appearance: appearance) }()
     
     init(initialSelection: Selection?,
          paymentMethodTypes: [PaymentSheet.PaymentMethodType],
@@ -41,10 +35,10 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
          shouldShowApplePay: Bool,
          shouldShowLink: Bool,
          savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
-         delegate: EmbeddedPaymentMethodsViewDelegate?) {
+         mandateProvider: MandateProvider) {
         self.appearance = appearance
         self.selection = initialSelection
-        self.delegate = delegate
+        self.mandateProvider = mandateProvider
         
         super.init(frame: .zero)
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
@@ -163,26 +157,9 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     
     // MARK: Mandate handling
     private func updateMandate(animated: Bool = true) {
-        let theme = appearance.asElementsTheme
-        let newMandateText: NSAttributedString? = {
-            guard let selectedPaymentMethodType = selection?.paymentMethodType else { return nil }
-            if selection?.savedPaymentMethod != nil {
-                // 1. For saved PMs, manually build mandates
-                switch selectedPaymentMethodType {
-                case .stripe(.USBankAccount):
-                    return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(alignment: .natural, theme: theme)
-                case .stripe(.SEPADebit):
-                    return .init(string: String(format: String.Localized.sepa_mandate_text, "TODO merchant name"))
-                default:
-                    return nil
-                }
-            } else {
-                return delegate?.buildMandate(for: selectedPaymentMethodType)
-            }
-        }()
-            self.mandateView.attributedText = newMandateText
-            self.mandateView.setHiddenIfNecessary(newMandateText == nil)
-            // TODO(porter) invoke handle on config that height changed
+        self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType, savedPaymentMethod: selection?.savedPaymentMethod)
+        self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText == nil)
+        // TODO(porter) call EmbeddedPaymentElementDelegate.embeddedPaymentElementDidUpdateHeight handle on config that height changed
     }
 }
 
@@ -210,40 +187,5 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Style {
         case .floatingButton:
             return appearance
         }
-    }
-}
-
-class MandateContainerView: UIView {
-    private let mandateView: SimpleMandateTextView
-
-    var attributedText: NSAttributedString? {
-        get {
-            return mandateView.attributedText
-        }
-        
-        set {
-            mandateView.attributedText = newValue
-        }
-    }
-
-    // MARK: - Initializers
-
-    init(appearance: PaymentSheet.Appearance) {
-        self.mandateView = SimpleMandateTextView(theme: appearance.asElementsTheme)
-        super.init(frame: .zero)
-        
-        addSubview(mandateView)
-        mandateView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            mandateView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
-            mandateView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
-            mandateView.topAnchor.constraint(equalTo: topAnchor),
-            mandateView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

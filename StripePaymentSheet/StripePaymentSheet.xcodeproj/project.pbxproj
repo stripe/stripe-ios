@@ -120,6 +120,8 @@
 		61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */; };
 		61CBE6662BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */; };
 		61D842892CADE4B9009D2D51 /* PaymentElementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D842882CADE4B9009D2D51 /* PaymentElementConfiguration.swift */; };
+		61D8428D2CAF3C62009D2D51 /* SimpleMandateContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D8428C2CAF3C62009D2D51 /* SimpleMandateContainerView.swift */; };
+		61D8428F2CAF3CA5009D2D51 /* MandateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D8428E2CAF3CA5009D2D51 /* MandateProvider.swift */; };
 		61D8688E2C06553E001FAD84 /* RightAccessoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */; };
 		61FB6BCD2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */; };
 		623C2D9F87929D6DA9C09E23 /* STPCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39B31D0B890A4F8E4819B15 /* STPCameraView.swift */; };
@@ -473,6 +475,8 @@
 		61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		61D842882CADE4B9009D2D51 /* PaymentElementConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentElementConfiguration.swift; sourceTree = "<group>"; };
+		61D8428C2CAF3C62009D2D51 /* SimpleMandateContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMandateContainerView.swift; sourceTree = "<group>"; };
+		61D8428E2CAF3CA5009D2D51 /* MandateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MandateProvider.swift; sourceTree = "<group>"; };
 		61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightAccessoryButton.swift; sourceTree = "<group>"; };
 		61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentMethodsViewSnapshotTests.swift; sourceTree = "<group>"; };
 		62CE362B80042827F47ABC3F /* AffirmCopyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmCopyLabel.swift; sourceTree = "<group>"; };
@@ -919,6 +923,8 @@
 				6180A5C02C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift */,
 				6180A5C62C824377009D1536 /* RadioButton.swift */,
 				6180A5CA2C8249D2009D1536 /* UIStackView+Separator.swift */,
+				61D8428E2CAF3CA5009D2D51 /* MandateProvider.swift */,
+				61D8428C2CAF3C62009D2D51 /* SimpleMandateContainerView.swift */,
 			);
 			path = Embedded;
 			sourceTree = "<group>";
@@ -1800,6 +1806,7 @@
 				64DE5688E4FBE92E1F49810C /* ExternalPaymentMethod.swift in Sources */,
 				229A4A578609A3711F02682E /* STPCardBrandChoice.swift in Sources */,
 				3EDFACA133567159875143C5 /* STPElementsSession.swift in Sources */,
+				61D8428D2CAF3C62009D2D51 /* SimpleMandateContainerView.swift in Sources */,
 				1BFC617EED154D32BFCADAE7 /* SeparatorLabel.swift in Sources */,
 				01D46644D87983FC4387B92C /* InstantDebitsOnlyFinancialConnectionsAuthManager.swift in Sources */,
 				367BB57FA826A82EEF074A70 /* PayWithLinkWebController.swift in Sources */,
@@ -1901,6 +1908,7 @@
 				5E00512CDFBC1C93781E20AB /* PaymentSheetLoader.swift in Sources */,
 				6A5997192BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift in Sources */,
 				E5571A970EB9DFC4B690636F /* STPAnalyticsClient+PaymentSheet.swift in Sources */,
+				61D8428F2CAF3CA5009D2D51 /* MandateProvider.swift in Sources */,
 				0B142FE21B861925B513143D /* STPApplePayContext+PaymentSheet.swift in Sources */,
 				6103F2BC2BE45990002D67F8 /* SavedPaymentMethodManager.swift in Sources */,
 				ED75C8F47475E4BE5D496C93 /* STPPaymentIntentShippingDetailsParams+PaymentSheet.swift in Sources */,
