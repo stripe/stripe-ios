@@ -1,15 +1,3 @@
-/* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ - Offline";
-
-/* Source type brand name */
-"3D Secure" = "3D Secure";
-
-/* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Apt.";
-
-/* Source type brand name */
-"Multibanco" = "Multibanco";
-
 /* Button to move to the next text entry field */
 "Next" = "Next";
 
