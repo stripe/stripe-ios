@@ -30,7 +30,9 @@ class EmbeddedPaymentMethodsView: UIView {
         return stackView
     }()
 
-    private lazy var mandateView = { SimpleMandateContainerView(appearance: appearance) }()
+    private lazy var mandateView = {
+        SimpleMandateContainerView(appearance: appearance)
+    }()
 
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
 
@@ -45,8 +47,8 @@ class EmbeddedPaymentMethodsView: UIView {
         self.appearance = appearance
         self.selection = initialSelection
         self.mandateProvider = mandateProvider
-
         super.init(frame: .zero)
+
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
 
         if let savedPaymentMethod {
@@ -136,11 +138,9 @@ class EmbeddedPaymentMethodsView: UIView {
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
 
-        stackView.setCustomSpacing(12.0, after: stackView.arrangedSubviews.last ?? .init(frame: .zero))
+        updateMandate(updateHeight: false)
         stackView.addArrangedSubview(mandateView)
         addAndPinSubview(stackView)
-
-        updateMandate()
     }
 
     required init?(coder: NSCoder) {
@@ -162,10 +162,13 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     // MARK: Mandate handling
-    private func updateMandate() {
+    private func updateMandate(updateHeight: Bool = true) {
         let previousHeight = frame.size.height
-        self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType, savedPaymentMethod: selection?.savedPaymentMethod)
-        self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText == nil)
+        self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType, savedPaymentMethod: selection?.savedPaymentMethod, bottomNoticeAttributedString: nil)
+
+        self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+
+        guard updateHeight else { return }
 
         // Force the layout to update so we get the new height
         setNeedsLayout()

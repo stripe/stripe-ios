@@ -31,9 +31,13 @@ class SimpleMandateContainerView: UIView {
         NSLayoutConstraint.activate([
             mandateView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
             mandateView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
-            mandateView.topAnchor.constraint(equalTo: topAnchor),
+            mandateView.topAnchor.constraint(equalTo: topAnchor, constant: appearance.embeddedPaymentElement.style == .floatingButton ? 0 : 12),
             mandateView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+
+        if appearance.embeddedPaymentElement.style != .floatingButton {
+            self.backgroundColor = appearance.colors.componentBackground
+        }
     }
 
     required init?(coder: NSCoder) {

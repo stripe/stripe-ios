@@ -9,7 +9,11 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-class MandateProvider {
+protocol MandateProvider {
+    func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString?
+}
+
+class FormMandateProvider: MandateProvider {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let intent: Intent
@@ -84,7 +88,7 @@ private extension PaymentElementConfiguration {
 
 // MARK: PaymentMethodFormViewControllerDelegate
 
-extension MandateProvider: PaymentMethodFormViewControllerDelegate {
+extension FormMandateProvider: PaymentMethodFormViewControllerDelegate {
 
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         // no-op

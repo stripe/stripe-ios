@@ -99,7 +99,7 @@ public class EmbeddedPaymentElement {
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            mandateProvider: MandateProvider(configuration: configuration,
+            mandateProvider: FormMandateProvider(configuration: configuration,
                                              elementsSession: loadResult.elementsSession,
                                              intent: .deferredIntent(intentConfig: intentConfiguration))
         )
