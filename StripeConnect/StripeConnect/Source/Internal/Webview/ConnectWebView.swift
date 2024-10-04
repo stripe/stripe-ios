@@ -344,12 +344,8 @@ extension ConnectWebView: WKDownloadDelegate {
 extension ConnectWebView: QLPreviewControllerDataSource {
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
         guard let downloadedFile else {
-            // This should never happen, so log error if it does
-            // TODO: MXMOBILE-2491 Log error analytic
-            return 0
-        }
-        guard fileManager.fileExists(atPath: downloadedFile.path) else {
-            // The temp file was likely auto-deleted too quickly
+            // `downloadFile` should always be non-nil
+            // If the temp file doesn't exist, it was likely auto-deleted too quickly
             // TODO: MXMOBILE-2491 Log error analytic
             return 0
         }
