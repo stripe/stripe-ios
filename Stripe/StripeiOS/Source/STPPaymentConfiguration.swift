@@ -18,7 +18,7 @@ import Foundation
 public class STPPaymentConfiguration: NSObject, NSCopying {
     /// This is a convenience singleton configuration that uses the default values for
     /// every property
-    @objc(sharedConfiguration) public static var shared = STPPaymentConfiguration()
+    @objc(sharedConfiguration) public static let shared = STPPaymentConfiguration()
 
     private var _applePayEnabled = true
     /// The user is allowed to pay with Apple Pay if it's configured and available on their device.
