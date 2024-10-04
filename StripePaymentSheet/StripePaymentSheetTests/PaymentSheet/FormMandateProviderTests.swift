@@ -8,10 +8,22 @@
 import Foundation
 @testable @_spi(STP) import StripeCore
 @testable @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) import StripePaymentSheet
-@testable import StripeUICore
+@testable @_spi(STP) import StripeUICore
 import XCTest
 
 class FormMandateProviderTests: XCTestCase {
+
+    override func setUp() async throws {
+        await withCheckedContinuation { continuation in
+            Task {
+                AddressSpecProvider.shared.loadAddressSpecs {
+                    FormSpecProvider.shared.load { _ in
+                        continuation.resume()
+                    }
+                }
+            }
+        }
+    }
 
     func testFormMandateProvider_WhenConfigurationHidesMandateText_ShouldReturnNil() {
         var embeddedConfiguration = EmbeddedPaymentElement.Configuration(formSheetAction: .continue)
@@ -114,4 +126,55 @@ class FormMandateProviderTests: XCTestCase {
         let result = formMandateProvider.mandate(for: .stripe(.USBankAccount), savedPaymentMethod: nil, bottomNoticeAttributedString: bottomNoticeAttributedString)
         XCTAssertEqual(result, bottomNoticeAttributedString)
     }
+
+    func testFormMandateProvider_cashApp_settingUp_shouldReturnMandate() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .setup(currency: "USD", setupFutureUsage: .offSession),
+            confirmHandler: { _, _, _ in }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = FormMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+
+        let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        let expected = "By continuing, you authorize Test Merchant to debit your Cash App account for this payment and future payments in accordance with Test Merchant\'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings."
+        XCTAssertEqual(result?.string, expected)
+    }
+
+    func testFormMandateProvider_cashApp_settingWithSetupFutureUsage_shouldReturnMandate() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
+            confirmHandler: { _, _, _ in }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = FormMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+
+        let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        let expected = "By continuing, you authorize Test Merchant to debit your Cash App account for this payment and future payments in accordance with Test Merchant\'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings."
+        XCTAssertEqual(result?.string, expected)
+    }
+
+    func testFormMandateProvider_cashApp_settingUp_shouldNotReturnMandate() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 100, currency: "USD"),
+            confirmHandler: { _, _, _ in }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = FormMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+
+        let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        XCTAssertNil(result)
+    }
+
 }
