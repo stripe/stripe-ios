@@ -148,13 +148,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
         view.backgroundColor = appearance.colors.background
     }
 
-    func clearSelection() {
-        currentSelection = nil
-        for rowButton in rowButtons {
-            rowButton.isSelected = false
-        }
-    }
-
     // MARK: - Helpers
 
     func didTap(rowButton: RowButton, selection: VerticalPaymentMethodListSelection) {

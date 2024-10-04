@@ -773,9 +773,6 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
             didCancel()
             return
         }
-        if !isRecollectingCVC {
-            paymentMethodListViewController.clearSelection()
-        }
         isRecollectingCVC = false
         switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView, contentOffsetPercentage: paymentMethodListContentOffsetPercentage)
         navigationBar.setStyle(.close(showAdditionalButton: false))
