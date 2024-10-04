@@ -23,6 +23,9 @@ class ConnectWebView: WKWebView {
     /// File URL for a downloaded file
     var downloadedFile: URL?
 
+    /// Injected for tests to determine if a file URL can be previewed in a QLPreviewController
+    private var canPreviewItem: (any QLPreviewItem) -> Bool
+
     private var optionalPresentPopup: ((UIViewController) -> Void)?
 
     /// Closure to present a popup web view controller.
@@ -55,10 +58,12 @@ class ConnectWebView: WKWebView {
          // Only override for tests
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          fileManager: FileManager = .default,
-         sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
+         sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion,
+         canPreviewItem: @escaping (any QLPreviewItem) -> Bool = QLPreviewController.canPreview) {
         self.urlOpener = urlOpener
         self.fileManager = fileManager
         self.sdkVersion = sdkVersion
+        self.canPreviewItem = canPreviewItem
         configuration.applicationNameForUserAgent = "- stripe-ios/\(sdkVersion ?? "")"
         super.init(frame: frame, configuration: configuration)
 
@@ -111,15 +116,30 @@ private extension ConnectWebView {
         urlOpener.openIfPossible(url)
     }
 
-    func showErrorAlert(for error: Error) {
+    func showErrorAlert(for error: Error?) {
         // TODO: MXMOBILE-2491 Log analytic when receiving an eror
-        debugPrint(error)
+        debugPrint(String(describing: error))
 
         let alert = UIAlertController(
             title: nil,
             message: NSError.stp_unexpectedErrorMessage(),
             preferredStyle: .alert)
         presentPopup(alert)
+    }
+
+    func cleanupDownloadedFile() {
+        guard let downloadedFile else { return }
+
+        // Delete file since we don't need it anymore
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            try? self?.fileManager.removeItem(at: downloadedFile)
+            // Note: no need to handle failures since:
+            // - It's best-effort to clean up the file
+            // - Expected in cases where there was an error creating the temp file
+        }
+
+        // Remove reference so we can log if we inadvertently get simultaneous downloads
+        self.downloadedFile = nil
     }
 }
 
@@ -236,6 +256,13 @@ extension ConnectWebView {
 
     func download(decideDestinationUsing response: URLResponse,
                   suggestedFilename: String) async -> URL? {
+        if downloadedFile != nil {
+            // If there's already a downloaded file, it means there were multiple
+            // simultaneous downloads or we didn't clean up the URL correctly
+            // TODO: MXMOBILE-2491 Log error analytic
+            debugPrint("Multiple downloads")
+        }
+
         // The temporary filename must be unique or the download will fail.
         // To ensure uniqueness, append a UUID to the directory path in case a
         // file with the same name was already downloaded from this app.
@@ -259,10 +286,31 @@ extension ConnectWebView {
     }
 
     func downloadDidFinish() {
+        guard let downloadedFile,
+        fileManager.fileExists(atPath: downloadedFile.path) else {
+            // `downloadedFile` should never be nil here
+            // If file doesn't exist, it indicates something went wrong creating
+            // the temp file or the system deleted the temp file too quickly
+            // TODO: MXMOBILE-2491 Log error analytic
+            showErrorAlert(for: nil)
+            cleanupDownloadedFile()
+            return
+        }
+
+        guard canPreviewItem(downloadedFile as QLPreviewItem) else {
+            // File is not previewable, so directly open share sheet instead
+            let activityViewController = UIActivityViewController(activityItems: [downloadedFile], applicationActivities: nil)
+            activityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
+                self?.cleanupDownloadedFile()
+            }
+            presentPopup(activityViewController)
+            return
+        }
 
         // Display a preview of the file to the user
         let previewController = QLPreviewController()
         previewController.dataSource = self
+        previewController.delegate = self
         previewController.modalPresentationStyle = .pageSheet
         presentPopup(previewController)
     }
@@ -295,11 +343,30 @@ extension ConnectWebView: WKDownloadDelegate {
 @available(iOS 15, *)
 extension ConnectWebView: QLPreviewControllerDataSource {
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-        downloadedFile == nil ? 0 : 1
+        guard let downloadedFile else {
+            // This should never happen, so log error if it does
+            // TODO: MXMOBILE-2491 Log error analytic
+            return 0
+        }
+        guard fileManager.fileExists(atPath: downloadedFile.path) else {
+            // The temp file was likely auto-deleted too quickly
+            // TODO: MXMOBILE-2491 Log error analytic
+            return 0
+        }
+        return 1
     }
 
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem {
         // Okay to force-unwrap since numberOfPreviewItems returns 0 when downloadFile is nil
         downloadedFile! as QLPreviewItem
+    }
+}
+
+// MARK: - QLPreviewControllerDelegate
+
+@available(iOS 15, *)
+extension ConnectWebView: QLPreviewControllerDelegate {
+    func previewControllerDidDismiss(_ controller: QLPreviewController) {
+        cleanupDownloadedFile()
     }
 }

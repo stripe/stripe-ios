@@ -20,15 +20,19 @@ class ConnectWebViewTests: XCTestCase {
     private var mockFileManager: MockFileManager!
     var webView: ConnectWebView!
 
+    var canPreviewFile = true
+
     override func setUp() {
         super.setUp()
         mockFileManager = .init()
         mockURLOpener = .init()
+        canPreviewFile = true
         webView = ConnectWebView(frame: .zero,
                                  configuration: .init(),
                                  urlOpener: mockURLOpener,
                                  fileManager: mockFileManager,
-                                 sdkVersion: "1.2.3")
+                                 sdkVersion: "1.2.3",
+                                 canPreviewItem: { _ in self.canPreviewFile })
     }
 
     func testUserAgent() {
@@ -248,7 +252,7 @@ class ConnectWebViewTests: XCTestCase {
         XCTAssertEqual(alertController?.preferredStyle, .alert)
     }
 
-    func testDownloadFinishedShowsPreview() {
+    func testDownloadFinishedShowsPreview() throws {
         let mockFileURL = URL(string: "file:///temp/example.csv")!
 
         var previewController: QLPreviewController?
@@ -259,6 +263,58 @@ class ConnectWebViewTests: XCTestCase {
 
         webView.downloadDidFinish()
         XCTAssertNotNil(previewController)
+
+        // Shows 1 item matching the downloaded file
+        XCTAssertEqual(previewController?.dataSource?.numberOfPreviewItems(in: try XCTUnwrap(previewController)), 1)
+        XCTAssertEqual(previewController?.dataSource?.previewController(try XCTUnwrap(previewController), previewItemAt: 0) as? URL, mockFileURL)
+
+        // Dismissing should cleanup downloaded file
+        previewController?.delegate?.previewControllerDidDismiss?(try XCTUnwrap(previewController))
+        XCTAssertNil(webView.downloadedFile)
+        wait(for: [mockFileManager.removeItemExpectation])
+        XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
+    }
+
+    func testUnsupportedFileTypeDownloadFinishedShowsShareSheet() {
+        let mockFileURL = URL(string: "file:///temp/example.exe")!
+        canPreviewFile = false
+
+        var activityVC: UIActivityViewController?
+        webView.presentPopup = { vc in
+            activityVC = vc as? UIActivityViewController
+        }
+        webView.downloadedFile = mockFileURL
+
+        webView.downloadDidFinish()
+        XCTAssertNotNil(activityVC)
+
+        // Dismissing should cleanup downloaded file
+        activityVC?.completionWithItemsHandler?(nil, false, nil, nil)
+        XCTAssertNil(webView.downloadedFile)
+        wait(for: [mockFileManager.removeItemExpectation])
+        XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
+    }
+
+    func testNonExistentFileShowsError() {
+        let mockFileURL = URL(string: "file:///temp/example.csv")!
+
+        var alertController: UIAlertController?
+        webView.presentPopup = { vc in
+            alertController = vc as? UIAlertController
+        }
+        webView.downloadedFile = mockFileURL
+        mockFileManager.overrideFileExists = false
+
+        webView.downloadDidFinish()
+        XCTAssertNotNil(alertController)
+        XCTAssertEqual(alertController?.message,
+                       "There was an unexpected error -- try again in a few seconds")
+        XCTAssertEqual(alertController?.preferredStyle, .alert)
+
+        // Should cleanup downloaded file
+        XCTAssertNil(webView.downloadedFile)
+        wait(for: [mockFileManager.removeItemExpectation])
+        XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
     }
 }
 
@@ -319,9 +375,28 @@ private class MockFileManager: FileManager {
         URL(string: "file:///temp")!
     }
 
+    var overrideFileExists = true
+
+    var removedItems: [URL] = []
+
+    var removeItemExpectation = XCTestExpectation(description: "removeItem called")
+
     var overrideCreateDirectory: ((_ url: URL, _ createIntermediates: Bool, _ attributes: [FileAttributeKey: Any]?) throws -> Void)?
 
     override func createDirectory(at url: URL, withIntermediateDirectories createIntermediates: Bool, attributes: [FileAttributeKey: Any]? = nil) throws {
         try overrideCreateDirectory?(url, createIntermediates, attributes)
+    }
+
+    override func fileExists(atPath path: String) -> Bool {
+        overrideFileExists
+    }
+
+    override func removeItem(at url: URL) throws {
+        removedItems.append(url)
+        removeItemExpectation.fulfill()
+    }
+
+    override func removeItem(atPath path: String) throws {
+        try self.removeItem(at: URL(fileURLWithPath: path))
     }
 }
