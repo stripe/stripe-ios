@@ -38,7 +38,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let bankInfoView: BankAccountInfoView
     private let checkboxElement: PaymentMethodElement?
     private var savingAccount: BoolReference
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
     private var linkedAccountElements: [Element] {
         [bankInfoSectionElement, checkboxElement].compactMap { $0 }
@@ -91,7 +91,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         savingAccount: BoolReference,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
-        theme: ElementsUITheme = .default
+        theme: ElementsAppearance = .default
     ) {
         let collectingName = configuration.billingDetailsCollectionConfiguration.name != .never
         let collectingEmail = configuration.billingDetailsCollectionConfiguration.email != .never
@@ -165,7 +165,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         merchantName: String,
         isSaving: Bool,
         configuration: PaymentSheetFormFactoryConfig,
-        theme: ElementsUITheme = .default
+        theme: ElementsAppearance = .default
     ) -> NSMutableAttributedString? {
         guard let linkedBank else {
             return nil
@@ -182,14 +182,14 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         return formattedString
     }
 
-    static func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsUITheme) -> NSMutableAttributedString {
+    static func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsAppearance) -> NSMutableAttributedString {
         let mandateText = Self.ContinueMandateText
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, alignment: alignment, theme: theme)
         return formattedString
     }
 
-    private static func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsUITheme = .default) {
+    private static func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsAppearance = .default) {
         let style = NSMutableParagraphStyle()
         style.alignment = alignment
         formattedString.addAttributes([.paragraphStyle: style,

@@ -37,7 +37,7 @@ class SimpleMandateElement: PaymentMethodElement {
     let mandateTextView: SimpleMandateTextView
     let customerAlreadySawMandate: Bool
 
-    init(mandateText: String, customerAlreadySawMandate: Bool, theme: ElementsUITheme = .default) {
+    init(mandateText: String, customerAlreadySawMandate: Bool, theme: ElementsAppearance = .default) {
         mandateTextView = SimpleMandateTextView(mandateText: mandateText, theme: theme)
         self.customerAlreadySawMandate = customerAlreadySawMandate
     }

@@ -30,9 +30,9 @@ final class LinkMoreInfoView: UIView {
         return imageView
     }()
 
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
-    init(theme: ElementsUITheme = .default) {
+    init(theme: ElementsAppearance = .default) {
         self.theme = theme
         super.init(frame: .zero)
         let stackView = UIStackView(arrangedSubviews: [logoView])

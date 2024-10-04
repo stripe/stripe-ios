@@ -50,7 +50,7 @@ class PaymentSheetFormFactory {
         }
     }
 
-    var theme: ElementsUITheme {
+    var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
     }
 
@@ -810,7 +810,7 @@ extension PaymentSheetFormFactory {
 
 extension FormElement {
     /// Conveniently nests single TextField, PhoneNumber, and DropdownFields in a Section
-    convenience init(autoSectioningElements: [Element], theme: ElementsUITheme = .default) {
+    convenience init(autoSectioningElements: [Element], theme: ElementsAppearance = .default) {
         let elements: [Element] = autoSectioningElements.map {
             if $0 is PaymentMethodElementWrapper<TextFieldElement>
                 || $0 is PaymentMethodElementWrapper<DropdownFieldElement>
@@ -872,10 +872,10 @@ private extension PaymentSheet.Address {
 extension PaymentSheet.Appearance {
 
     /// Creates an `ElementsUITheme` based on this PaymentSheet appearance
-    var asElementsTheme: ElementsUITheme {
-        var theme = ElementsUITheme.default
+    var asElementsTheme: ElementsAppearance {
+        var theme = ElementsAppearance.default
 
-        var colors = ElementsUITheme.Color()
+        var colors = ElementsAppearance.Color()
         colors.primary = self.colors.primary
         colors.parentBackground = self.colors.background
         colors.background = self.colors.componentBackground
@@ -891,7 +891,7 @@ extension PaymentSheet.Appearance {
         theme.cornerRadius = cornerRadius
         theme.shadow = shadow.asElementThemeShadow
 
-        var fonts = ElementsUITheme.Font()
+        var fonts = ElementsAppearance.Font()
         fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
         fonts.subheadlineBold = scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
         fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
@@ -909,11 +909,11 @@ extension PaymentSheet.Appearance {
 extension PaymentSheet.Appearance.Shadow {
 
     /// Creates an `ElementsUITheme.Shadow` based on this PaymentSheet appearance shadow
-    var asElementThemeShadow: ElementsUITheme.Shadow? {
-        return ElementsUITheme.Shadow(color: color, opacity: opacity, offset: offset, radius: radius)
+    var asElementThemeShadow: ElementsAppearance.Shadow? {
+        return ElementsAppearance.Shadow(color: color, opacity: opacity, offset: offset, radius: radius)
     }
 
-    init(elementShadow: ElementsUITheme.Shadow) {
+    init(elementShadow: ElementsAppearance.Shadow) {
         self.color = elementShadow.color
         self.opacity = elementShadow.opacity
         self.offset = elementShadow.offset

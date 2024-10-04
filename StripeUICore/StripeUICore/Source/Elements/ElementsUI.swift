@@ -35,7 +35,7 @@ import UIKit
         )
     }()
 
-    public static func makeErrorLabel(theme: ElementsUITheme) -> UILabel {
+    public static func makeErrorLabel(theme: ElementsAppearance) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.footnote
         label.textColor = theme.colors.danger
@@ -44,7 +44,7 @@ import UIKit
         return label
     }
 
-    public static func makeNoticeTextField(theme: ElementsUITheme) -> UITextView {
+    public static func makeNoticeTextField(theme: ElementsAppearance) -> UITextView {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
@@ -55,7 +55,7 @@ import UIKit
         return textView
     }
 
-    public static func makeSectionTitleLabel(theme: ElementsUITheme) -> UILabel {
+    public static func makeSectionTitleLabel(theme: ElementsAppearance) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.sectionHeader
         label.textColor = theme.colors.secondaryText
@@ -65,10 +65,11 @@ import UIKit
 }
 
 /// Describes the appearance of an Element
-@_spi(STP) public struct ElementsUITheme {
+/// A superset of `StripePaymentSheet.PaymentSheetAppearance`. This exists b/c we can't see that type from `StripeUICore`, and we don't want to the public StripePaymentSheet API to be a typealias of this.
+@_spi(STP) public struct ElementsAppearance {
 
     /// The default appearance used for Elements
-    public static let `default` = ElementsUITheme()
+    public static let `default` = ElementsAppearance()
 
     public var fonts = Font()
     public var colors = Color()
