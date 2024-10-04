@@ -126,7 +126,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
                 break
             case .bacsDebit, .sepaDebit:
                 testNoInputIntegrationMethod(integrationMethod, shouldConfirm: false)
-            case .card, .cardSetupIntents, .aubecsDebit, .applePay, .klarna, .fpx:
+            case .card, .cardSetupIntents, .aubecsDebit, .applePay, .klarna:
                 // Tested in method-specific functions.
                 break
             case .grabpay:
