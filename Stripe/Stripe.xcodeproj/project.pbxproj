@@ -14,7 +14,6 @@
 				317695222CB0A01500B16B67 /* ShellScript */,
 			);
 			dependencies = (
-				317695272CB0B41D00B16B67 /* PBXTargetDependency */,
 			);
 			name = ReleaseFrameworks;
 			packageProductDependencies = (
@@ -394,13 +393,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		317695262CB0B41D00B16B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E63832AA5BB4225708B7C838 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = ADF894AA8F6022D9BED17346;
-			remoteInfo = StripeiOS;
-		};
 		32221E5BA07FB5AA4EBFE81C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E63832AA5BB4225708B7C838 /* Project object */;
@@ -2035,11 +2027,6 @@
 			name = StripeiOSTestHostApp;
 			target = 1628E8B14F1F7C63CF8C9962 /* StripeiOSTestHostApp */;
 			targetProxy = 32221E5BA07FB5AA4EBFE81C /* PBXContainerItemProxy */;
-		};
-		317695272CB0B41D00B16B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = ADF894AA8F6022D9BED17346 /* StripeiOS */;
-			targetProxy = 317695262CB0B41D00B16B67 /* PBXContainerItemProxy */;
 		};
 		4E57D9EF1E91091C57E49111 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
