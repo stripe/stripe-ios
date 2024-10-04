@@ -126,6 +126,13 @@ extension String.Localized {
             "String to describe an invalid year in expiry date."
         )
     }
+    
+    @_spi(STP) public static var brand_not_allowed: String {
+        STPLocalizedString(
+            "%1$@ is not accepted",
+            "String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted"
+        )
+    }
 }
 
 @_spi(STP) public struct StripeSharedStrings {

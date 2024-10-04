@@ -109,7 +109,7 @@ extension TextFieldElement {
                     return String.Localized.your_card_number_is_invalid
                 case .disallowedBrand(let brand):
                     let cardBrandDisplayName =  STPCardBrandUtilities.stringFrom(brand) ?? "This card brand"
-                    return "\(cardBrandDisplayName) is not accepted"
+                    return .localizedStringWithFormat(.Localized.brand_not_allowed, cardBrandDisplayName)
                 }
             }
         }
