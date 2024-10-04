@@ -1,5 +1,5 @@
 //
-//  SimpleMandateContainerView.swift
+//  EmbeddedMandateContainerView.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 10/3/24.
@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 
-class SimpleMandateContainerView: UIView {
+/// A simple container that holds a mandate text view for the embedded payment element
+class EmbeddedMandateContainerView: UIView {
     private let mandateView: SimpleMandateTextView
 
     var attributedText: NSAttributedString? {
