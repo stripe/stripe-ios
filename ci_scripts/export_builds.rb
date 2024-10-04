@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'fileutils'
-require 'zip'
 require 'yaml'
 
 # MARK: - Helpers
@@ -125,13 +124,17 @@ Dir.chdir(root_dir) do
   end # modules.each
 end # Dir.chdir
 
-Zip::File.open(File.join_if_safe(build_dir, 'Stripe.xcframework.zip'), create: true) do |zipfile|
-  # Add module framework directories to zip
-  modules.each do |m|
-    framework_name = m['framework_name']
-    Dir.glob("#{build_dir}/#{framework_name}.xcframework/**/*").each do |file|
-      file_name = Pathname.new(file).relative_path_from(Pathname.new(build_dir))
-      zipfile.add(file_name, file)
-    end
-  end
+Dir.chdir(build_dir) do
+  `zip -r Stripe.xcframework.zip *.xcframework`
 end
+
+# Zip::File.open(File.join_if_safe(build_dir, 'Stripe.xcframework.zip'), create: true) do |zipfile|
+#   # Add module framework directories to zip
+#   modules.each do |m|
+#     framework_name = m['framework_name']
+#     Dir.glob("#{build_dir}/#{framework_name}.xcframework/**/*").each do |file|
+#       file_name = Pathname.new(file).relative_path_from(Pathname.new(build_dir))
+#       zipfile.add(file_name, file)
+#     end
+#   end
+# end
