@@ -604,7 +604,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
 
         let embeddedView = EmbeddedPaymentMethodsView(
-            initialSelection: .new(paymentMethodType: .stripe(.cashApp)),
+            initialSelection: .applePay,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
             savedPaymentMethod: nil,
             appearance: .default,
@@ -626,7 +626,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
 
         let embeddedView = EmbeddedPaymentMethodsView(
-            initialSelection: .new(paymentMethodType: .stripe(.cashApp)),
+            initialSelection: .link,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
             savedPaymentMethod: nil,
             appearance: appearance,

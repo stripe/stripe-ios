@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import XCTest
-@testable @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeCore
+@testable @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) import StripePaymentSheet
 @testable import StripeUICore
+import XCTest
 
 class FormMandateProviderTests: XCTestCase {
 
