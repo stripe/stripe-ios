@@ -1,5 +1,5 @@
 {
-  "originHash" : "c2f4a8c2436760fc0134632c1cdcb8e7f9b44493c60679a155d27d6838da7d8e",
+  "originHash" : "2ad13697f5d60ad400147e34535361f52e72d2f7a280df77bb3c3521cc5623bc",
   "pins" : [
     {
       "identity" : "capture-core-sp",
@@ -24,8 +24,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/erikdoe/ocmock",
       "state" : {
-        "branch" : "master",
-        "revision" : "05cbc9d934e84ad32530fa53fd7d29c7966d5828"
+        "revision" : "2c0bfd373289f4a7716db5d6db471640f91a6507"
       }
     },
     {
@@ -38,5 +37,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }
