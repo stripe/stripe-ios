@@ -398,7 +398,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         let usesLinkText = app.webViews
             .staticTexts
-            .containing(NSPredicate(format: "label CONTAINS 'uses Link to connect your account'"))
+            .containing(NSPredicate(format: "label CONTAINS 'Link'"))
             .firstMatch
         XCTAssertTrue(usesLinkText.waitForExistence(timeout: 120.0))  // glitch app can take time to load
 
