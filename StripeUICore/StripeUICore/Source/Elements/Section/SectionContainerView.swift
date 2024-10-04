@@ -119,7 +119,7 @@ class SectionContainerView: UIView {
         layer.cornerRadius = theme.cornerRadius
 
         if isUserInteractionEnabled || UITraitCollection.current.isDarkMode {
-            backgroundColor = theme.colors.background
+            backgroundColor = theme.colors.componentBackground
         } else {
             backgroundColor = .tertiarySystemGroupedBackground
         }
@@ -221,7 +221,7 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.separatorColor = theme.colors.divider
     stackView.borderColor = theme.colors.border
     stackView.borderCornerRadius = theme.cornerRadius
-    stackView.customBackgroundColor = theme.colors.background
+    stackView.customBackgroundColor = theme.colors.componentBackground
     stackView.drawBorder = true
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
     return stackView

@@ -12,7 +12,7 @@ import Foundation
     static func makeUnknownCardImageView(theme: ElementsAppearance) -> DynamicImageView {
         return DynamicImageView(
             dynamicImage: STPImageLibrary.unknownCardCardImage(),
-            pairedColor: theme.colors.background
+            pairedColor: theme.colors.componentBackground
         )
     }
 }

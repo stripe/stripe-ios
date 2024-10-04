@@ -96,7 +96,7 @@ import UIKit
 
         public var primary = UIColor.systemBlue
         public var parentBackground = UIColor.systemBackground
-        public var background = ElementsUI.backgroundColor
+        public var componentBackground = ElementsUI.backgroundColor
         public var disabledBackground = ElementsUI.disabledBackgroundColor
         public var border = ElementsUI.fieldBorderColor
         public var divider = ElementsUI.fieldBorderColor

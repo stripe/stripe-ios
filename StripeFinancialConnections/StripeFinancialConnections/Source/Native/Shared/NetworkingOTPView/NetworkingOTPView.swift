@@ -76,7 +76,7 @@ final class NetworkingOTPView: UIView {
         theme.colors = {
             var colors = ElementsAppearance.Color()
             colors.border = .borderDefault
-            colors.background = .customBackgroundColor
+            colors.componentBackground = .customBackgroundColor
             colors.textFieldText = .textDefault
             colors.danger = .textFeedbackCritical
             return colors
