@@ -1654,10 +1654,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"\"$PROJECT_DIR/build/Stripe.xcframework.zip\"",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd \"$PROJECT_DIR/../\"\nruby \"ci_scripts/export_builds.rb\"\n";
+			shellPath = /bin/bash;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd \"$PROJECT_DIR/../\"\nruby \"ci_scripts/export_builds.rb\"\ncp \"$PROJECT_DIR/../build/Stripe.xcframework.zip\" \"$INSTALL_ROOT/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

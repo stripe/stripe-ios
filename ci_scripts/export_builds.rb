@@ -54,6 +54,7 @@ Dir.chdir(root_dir) do
       -scheme "AllStripeFrameworks" \
       -configuration "Release" \
       -archivePath "#{build_dir}/StripeFrameworks-iOS.xcarchive" \
+      -derivedDataPath "#{build_dir}/DerivedData" \
       -sdk iphoneos \
       -destination 'generic/platform=iOS' \
       SUPPORTS_MACCATALYST=NO \
@@ -74,6 +75,7 @@ Dir.chdir(root_dir) do
     -destination 'generic/platform=iOS Simulator' \
     -configuration "Release" \
     -archivePath "#{build_dir}/StripeFrameworks-sim.xcarchive" \
+    -derivedDataPath "#{build_dir}/DerivedData" \
     -sdk iphonesimulator \
     SUPPORTS_MACCATALYST=NO \
     BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
@@ -92,6 +94,7 @@ Dir.chdir(root_dir) do
       -scheme "AllStripeFrameworksCatalyst" \
       -configuration "Release" \
       -archivePath "#{build_dir}/StripeFrameworks-mac.xcarchive" \
+      -derivedDataPath "#{build_dir}/DerivedData" \
       -sdk macosx \
       -destination 'generic/platform=macOS,variant=Mac Catalyst' \
       SUPPORTS_MACCATALYST=YES \
