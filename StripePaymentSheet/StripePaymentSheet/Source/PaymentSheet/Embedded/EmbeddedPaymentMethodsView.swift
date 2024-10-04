@@ -21,7 +21,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private(set) var selection: Selection?
-    private let mandateProvider: MandateProvider
+    private let mandateProvider: MandateTextProvider
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -31,7 +31,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }()
 
     private lazy var mandateView = {
-        SimpleMandateContainerView(appearance: appearance)
+        EmbeddedMandateContainerView(appearance: appearance)
     }()
 
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
@@ -43,7 +43,7 @@ class EmbeddedPaymentMethodsView: UIView {
          shouldShowApplePay: Bool,
          shouldShowLink: Bool,
          savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
-         mandateProvider: MandateProvider) {
+         mandateProvider: MandateTextProvider) {
         self.appearance = appearance
         self.selection = initialSelection
         self.mandateProvider = mandateProvider

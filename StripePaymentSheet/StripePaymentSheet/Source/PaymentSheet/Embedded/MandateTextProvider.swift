@@ -1,5 +1,5 @@
 //
-//  MandateProvider.swift
+//  MandateTextProvider.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 10/3/24.
@@ -9,11 +9,12 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-protocol MandateProvider {
+protocol MandateTextProvider {
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString?
 }
 
-class FormMandateProvider: MandateProvider {
+/// A class that can provide the attributed string for a given payment method type and configuration
+class FormMandateProvider: MandateTextProvider {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let intent: Intent
