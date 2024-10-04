@@ -531,6 +531,7 @@ extension PaymentSheetFormFactory {
             checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             savingAccount: isSaving,
             merchantName: merchantName,
+            initialLinkedBank: previousCustomerInput?.financialConnectionsLinkedBank,
             theme: theme
         )
     }

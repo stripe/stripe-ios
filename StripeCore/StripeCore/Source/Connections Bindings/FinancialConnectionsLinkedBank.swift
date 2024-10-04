@@ -16,7 +16,7 @@ import Foundation
     public let instantlyVerified: Bool
 
     public init(
-        with sessionId: String,
+        sessionId: String,
         accountId: String,
         displayName: String?,
         bankName: String?,
