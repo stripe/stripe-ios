@@ -287,7 +287,7 @@ extension ConnectWebView {
 
     func downloadDidFinish() {
         guard let downloadedFile,
-        fileManager.fileExists(atPath: downloadedFile.path) else {
+              fileManager.fileExists(atPath: downloadedFile.path) else {
             // `downloadedFile` should never be nil here
             // If file doesn't exist, it indicates something went wrong creating
             // the temp file or the system deleted the temp file too quickly
@@ -343,7 +343,8 @@ extension ConnectWebView: WKDownloadDelegate {
 @available(iOS 15, *)
 extension ConnectWebView: QLPreviewControllerDataSource {
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-        guard let downloadedFile else {
+        guard let downloadedFile,
+              fileManager.fileExists(atPath: downloadedFile.path) else {
             // `downloadFile` should always be non-nil
             // If the temp file doesn't exist, it was likely auto-deleted too quickly
             // TODO: MXMOBILE-2491 Log error analytic
