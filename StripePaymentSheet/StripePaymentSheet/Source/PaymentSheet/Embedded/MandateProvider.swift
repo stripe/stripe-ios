@@ -76,7 +76,7 @@ class FormMandateProvider: MandateProvider {
     }
 }
 
-private extension PaymentElementConfiguration {
+extension PaymentElementConfiguration {
     var hidesMandateText: Bool {
         if let embeddedConfig = self as? EmbeddedPaymentElement.Configuration {
             return embeddedConfig.hidesMandateText
