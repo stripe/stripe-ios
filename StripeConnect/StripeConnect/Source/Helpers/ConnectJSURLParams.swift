@@ -54,13 +54,14 @@ extension ConnectJSURLParams {
     }
 
     var url: URL {
-        guard let data = try? JSONEncoder().encode(self),
-              let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+        do {
+            let dict = try jsonDictionary(with: .connectEncoder)
+
+            // Append as hash params
+            return URL(string: "#\(URLEncoder.queryString(from: dict))", relativeTo: StripeConnectConstants.connectJSBaseURL)!
+        } catch {
             // TODO: MXMOBILE-2491 Log error
             return StripeConnectConstants.connectJSBaseURL
         }
-
-        // Append as hash params
-        return URL(string: "#\(URLEncoder.queryString(from: dict))", relativeTo: StripeConnectConstants.connectJSBaseURL)!
     }
 }

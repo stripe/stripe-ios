@@ -29,6 +29,8 @@ class ConnectComponentWebView: ConnectWebView {
 
     private let setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init()
 
+    let analyticsClient: ConnectAnalyticsClient
+
     let activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator()
         activityIndicator.hidesWhenStopped = true
@@ -42,14 +44,23 @@ class ConnectComponentWebView: ConnectWebView {
         componentType: ComponentType,
         fetchInitProps: @escaping () -> InitProps,
         // Should only be overridden for tests
+        analyticsClient: AnalyticsClientV2Protocol = AnalyticsClientV2.sharedConnect,
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
         loadContent: Bool = true
     ) {
         self.componentManager = componentManager
         self.componentType = componentType
+        self.analyticsClient = .init(
+            client: analyticsClient,
+            commonFields: .init(
+                apiClient: componentManager.apiClient,
+                component: componentType
+            )
+        )
         self.notificationCenter = notificationCenter
         self.webLocale = webLocale
+
         contentController = WKUserContentController()
         let config = WKWebViewConfiguration()
 
@@ -84,6 +95,8 @@ class ConnectComponentWebView: ConnectWebView {
             let url = ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url
             load(.init(url: url))
         }
+
+        self.analyticsClient.log(event: ComponentCreatedAnalytic())
     }
 
     /// Convenience init for empty init props
@@ -171,11 +184,11 @@ private extension ConnectComponentWebView {
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler { _ in
-            // TODO: MXMOBILE-2491 Use this for analytics
+        addMessageHandler(PageDidLoadMessageHandler { [weak self] payload in
+            self?.analyticsClient.pageViewId = payload.pageViewId
         })
-        addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
-            // TODO: MXMOBILE-2491 Use this for analytics
+        addMessageHandler(AccountSessionClaimedMessageHandler { [weak self] payload in
+            self?.analyticsClient.merchantId = payload.merchantId
         })
     }
 
