@@ -8,8 +8,8 @@
 protocol ConnectAnalyticEvent {
     associatedtype Metadata: Encodable
 
-    var eventName: String { get }
+    var name: String { get }
 
     /// Event-specific metadata
-    var eventMetadata: Metadata { get }
+    var metadata: Metadata { get }
 }

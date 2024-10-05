@@ -11,24 +11,28 @@ import WebKit
 class ScriptMessageHandler<Payload: Decodable>: NSObject, WKScriptMessageHandler {
     let name: String
     let didReceiveMessage: (Payload) -> Void
+    let analyticsClient: ComponentAnalyticsClient
 
     init(name: String,
+         analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (Payload) -> Void) {
         self.name = name
         self.didReceiveMessage = didReceiveMessage
+        self.analyticsClient = analyticsClient
     }
 
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
         guard message.name == name else {
+            // TODO: MXMOBILE-2491 Log as analytics
             debugPrint("Unexpected message name: \(message.name)")
             return
         }
         do {
             didReceiveMessage(try message.toDecodable())
         } catch {
-            // TODO: MXMOBILE-2491 Log as analytics
-            debugPrint("Failed to decode body for message with name: \(message.name) \(error.localizedDescription)")
+            analyticsClient.logDeserializeMessageErrorEvent(message: message.name, error: error)
+            debugPrint("[StripeConnect] Failed to decode body for message with name: \(message.name) \(error.localizedDescription)")
         }
     }
 }

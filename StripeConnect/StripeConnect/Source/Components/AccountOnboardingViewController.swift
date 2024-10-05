@@ -51,7 +51,10 @@ public class AccountOnboardingViewController: UIViewController {
 
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
-            self.delegate?.accountOnboarding(self, didFailLoadWithError: value.error.connectEmbedError)
+            delegate?.accountOnboarding(
+                self,
+                didFailLoadWithError: value.error.connectEmbedError(analyticsClient: webView.analyticsClient)
+            )
         })
 
         webView.addMessageHandler(OnExitMessageHandler(didReceiveMessage: { [weak self] in

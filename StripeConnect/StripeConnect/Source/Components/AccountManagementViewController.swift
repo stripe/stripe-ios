@@ -38,7 +38,10 @@ public class AccountManagementViewController: UIViewController {
 
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
-            self.delegate?.accountManagement(self, didFailLoadWithError: value.error.connectEmbedError)
+            delegate?.accountManagement(
+                self,
+                didFailLoadWithError: value.error.connectEmbedError(analyticsClient: webView.analyticsClient)
+            )
         })
 
         // TODO(MXMOBILE-2796): Send collection options to web view

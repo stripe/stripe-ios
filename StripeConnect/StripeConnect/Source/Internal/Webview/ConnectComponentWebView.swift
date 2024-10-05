@@ -27,9 +27,7 @@ class ConnectComponentWebView: ConnectWebView {
     /// The current notification center instance
     private let notificationCenter: NotificationCenter
 
-    private let setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init()
-
-    let analyticsClient: ConnectAnalyticsClient
+    private lazy var setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init(analyticsClient: analyticsClient)
 
     let activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator()
@@ -44,20 +42,13 @@ class ConnectComponentWebView: ConnectWebView {
         componentType: ComponentType,
         fetchInitProps: @escaping () -> InitProps,
         // Should only be overridden for tests
-        analyticsClient: AnalyticsClientV2Protocol = AnalyticsClientV2.sharedConnect,
+        analyticsClient aClient: AnalyticsClientV2Protocol = AnalyticsClientV2.sharedConnect,
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
         loadContent: Bool = true
     ) {
         self.componentManager = componentManager
         self.componentType = componentType
-        self.analyticsClient = .init(
-            client: analyticsClient,
-            commonFields: .init(
-                apiClient: componentManager.apiClient,
-                component: componentType
-            )
-        )
         self.notificationCenter = notificationCenter
         self.webLocale = webLocale
 
@@ -72,7 +63,14 @@ class ConnectComponentWebView: ConnectWebView {
         // embedded YouTube videos.
         config.allowsInlineMediaPlayback = true
 
-        super.init(frame: .zero, configuration: config)
+        super.init(frame: .zero, configuration: config, analyticsClient: ComponentAnalyticsClient(
+            client: aClient,
+            commonFields: .init(
+                apiClient: componentManager.apiClient,
+                component: componentType
+            )
+        ))
+//        self[keyPath: loadError](self, NSError())
 
         // Setup views
         self.addSubview(activityIndicator)
@@ -93,10 +91,11 @@ class ConnectComponentWebView: ConnectWebView {
         if loadContent {
             activityIndicator.startAnimating()
             let url = ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url
+            analyticsClient.loadStart = .now
             load(.init(url: url))
         }
 
-        self.analyticsClient.log(event: ComponentCreatedAnalytic())
+        analyticsClient.log(event: ComponentCreatedEvent())
     }
 
     /// Convenience init for empty init props
@@ -166,8 +165,9 @@ private extension ConnectComponentWebView {
         fetchInitProps: @escaping () -> InitProps
     ) {
         addMessageHandler(setterMessageHandler)
-        addMessageHandler(OnLoaderStartMessageHandler { [activityIndicator] _ in
-            activityIndicator.stopAnimating()
+        addMessageHandler(OnLoaderStartMessageHandler { [weak self] _ in
+            self?.analyticsClient.logComponentLoaded(loadEnd: .now)
+            self?.activityIndicator.stopAnimating()
         })
         addMessageHandler(FetchInitParamsMessageHandler.init(didReceiveMessage: {[weak self] _ in
             guard let self else {
@@ -180,14 +180,14 @@ private extension ConnectComponentWebView {
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
         addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps))
-        addMessageHandler(DebugMessageHandler())
+        addMessageHandler(DebugMessageHandler(analyticsClient: analyticsClient))
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler { [weak self] payload in
+        addMessageHandler(PageDidLoadMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
             self?.analyticsClient.pageViewId = payload.pageViewId
         })
-        addMessageHandler(AccountSessionClaimedMessageHandler { [weak self] payload in
+        addMessageHandler(AccountSessionClaimedMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
             self?.analyticsClient.merchantId = payload.merchantId
         })
     }

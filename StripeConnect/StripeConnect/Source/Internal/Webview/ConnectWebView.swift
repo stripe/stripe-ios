@@ -47,15 +47,20 @@ class ConnectWebView: WKWebView {
     /// The file manager responsible for creating temporary file directories to store downloads
     let fileManager: FileManager
 
+    /// The analytics client used to log load errors
+    let analyticsClient: ComponentAnalyticsClient
+
     /// The current version for the SDK
     let sdkVersion: String?
 
     init(frame: CGRect,
          configuration: WKWebViewConfiguration,
+         analyticsClient: ComponentAnalyticsClient,
          // Only override for tests
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          fileManager: FileManager = .default,
          sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
+        self.analyticsClient = analyticsClient
         self.urlOpener = urlOpener
         self.fileManager = fileManager
         self.sdkVersion = sdkVersion
@@ -87,6 +92,7 @@ private extension ConnectWebView {
                      navigationAction: WKNavigationAction) -> WKWebView? {
         let popupVC = PopupWebViewController(configuration: configuration,
                                              navigationAction: navigationAction,
+                                             analyticsClient: analyticsClient,
                                              urlOpener: urlOpener,
                                              sdkVersion: sdkVersion)
         let navController = UINavigationController(rootViewController: popupVC)
@@ -174,6 +180,26 @@ extension ConnectWebView: WKUIDelegate {
 
 @available(iOS 15, *)
 extension ConnectWebView: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        // To be overridden by subclass
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
+        // Log error
+        analyticsClient.log(event: PageLoadErrorEvent(metadata: .init(
+            error: error,
+            url: webView.url
+        )))
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
+        // Log error
+        analyticsClient.log(event: PageLoadErrorEvent(metadata: .init(
+            error: error,
+            url: webView.url
+        )))
+    }
+
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction
@@ -194,6 +220,14 @@ extension ConnectWebView: WKNavigationDelegate {
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse
     ) async -> WKNavigationResponsePolicy {
+        // Log erroneous status code if applicable
+        if let httpResponse = navigationResponse.response as? HTTPURLResponse,
+           httpResponse.statusCode != 200 {
+            analyticsClient.log(event: PageLoadErrorEvent(metadata: .init(
+                status: httpResponse.statusCode,
+                url: httpResponse.url
+            )))
+        }
 
         // Downloads will typically originate from a non-allow-listed host (e.g. S3)
         // so first check if the response is a download before evaluating the host

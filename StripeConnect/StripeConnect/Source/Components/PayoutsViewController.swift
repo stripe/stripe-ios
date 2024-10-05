@@ -27,7 +27,10 @@ public class PayoutsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
-            self.delegate?.payouts(self, didFailLoadWithError: value.error.connectEmbedError)
+            delegate?.payouts(
+                self,
+                didFailLoadWithError: value.error.connectEmbedError(analyticsClient: webView.analyticsClient)
+            )
         })
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)

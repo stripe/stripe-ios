@@ -35,7 +35,10 @@ public class NotificationBannerViewController: UIViewController {
 
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
-            self.delegate?.notificationBanner(self, didFailLoadWithError: value.error.connectEmbedError)
+            delegate?.notificationBanner(
+                self,
+                didFailLoadWithError: value.error.connectEmbedError(analyticsClient: webView.analyticsClient)
+            )
         })
         webView.addMessageHandler(OnNotificationsChangeHandler { [weak self] value in
             guard let self else { return }

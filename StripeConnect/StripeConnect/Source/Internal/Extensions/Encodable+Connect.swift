@@ -26,5 +26,6 @@ extension Encodable {
         guard let dict = json as? [String: Any] else {
             throw JSONSerializationError.expectedDictionary
         }
+        return dict
     }
 }
