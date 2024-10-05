@@ -687,7 +687,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "cd \"$PROJECT_DIR/../../\"\nruby \"ci_scripts/export_builds.rb\"\n# Copy the xcframework into $INSTALL_ROOT, which is what Xcode uses to build the .xcarchive\n# This tricks Xcode Cloud into uploading it as an artifact\n# If we don't hide it in the PaymentSheetExample.app's resource bundle,\n# then the built-in Xcode Cloud \"Export archive for ad-hoc distribution\" steps will fail, which is noisy\n# This way, Xcode Cloud we'll think we're building a completely normal app. \ncp \"build/Stripe.xcframework.zip\" \"$INSTALL_ROOT/Applications/PaymentSheetExample.app/\"\n";
+			shellScript = "# Xcode Cloud won't let us build and archive a framework, they only support distributing apps.\n# Even if we create a framework archive target, it'll try to also export ad-hoc and App Store archives, which will fail becuase exportBuilds will detect that the archive has invalid non-app products in it. \n# So we'll lie. We'll build PaymentSheet Example (the expected app), run export_frameworks, then\n# copy the reuslting xcframeworks into the app's bundle in INSTALL_ROOT.\n# Xcode will then package the app bundle into an .xcarchive, and none of the Xcode Cloud tooling will notice that it's not a normal app.\n\ncd \"$PROJECT_DIR/../../\"\nruby \"ci_scripts/export_builds.rb\"\n\ncp \"build/Stripe.xcframework.zip\" \"$INSTALL_ROOT/Applications/PaymentSheetExample.app/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
