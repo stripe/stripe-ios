@@ -85,16 +85,3 @@ extension PaymentElementConfiguration {
         return false
     }
 }
-
-// MARK: PaymentMethodFormViewControllerDelegate
-
-extension FormMandateProvider: PaymentMethodFormViewControllerDelegate {
-
-    func didUpdate(_ viewController: PaymentMethodFormViewController) {
-        // no-op
-    }
-
-    func updateErrorLabel(for error: Error?) {
-        // no-op
-    }
-}
