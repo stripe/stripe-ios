@@ -27,6 +27,7 @@ class EmbeddedPaymentMethodsView: UIView {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = appearance.embeddedPaymentElement.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
+        stackView.setCustomSpacing(0, after: mandateView)
         return stackView
     }()
 
@@ -136,13 +137,30 @@ class EmbeddedPaymentMethodsView: UIView {
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
 
-        updateMandate(updateHeight: false)
+        // Setup mandate
+        stackView.setCustomSpacing(0, after: stackView.arrangedSubviews.last ?? UIView())
+        updateMandate(animated: false)
         stackView.addArrangedSubview(mandateView)
         addAndPinSubview(stackView)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private var previousHeight: CGFloat?
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        guard let previousHeight else {
+            previousHeight = frame.height
+            return
+        }
+
+        if frame.height != previousHeight {
+            self.previousHeight = frame.height
+            delegate?.heightDidChange()
+        }
     }
 
     // MARK: Tap handling
@@ -160,22 +178,21 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     // MARK: Mandate handling
-    private func updateMandate(updateHeight: Bool = true) {
-        let previousHeight = frame.size.height
-        self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType, savedPaymentMethod: selection?.savedPaymentMethod, bottomNoticeAttributedString: nil)
+    private func updateMandate(animated: Bool = true) {
+        self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType,
+                                                                  savedPaymentMethod: selection?.savedPaymentMethod,
+                                                                  bottomNoticeAttributedString: nil)
 
-        self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
-
-        guard updateHeight else { return }
-
-        // Force the layout to update so we get the new height
-        setNeedsLayout()
-        layoutIfNeeded()
-
-        let newHeight = frame.size.height
-        if previousHeight != newHeight {
-            delegate?.heightDidChange()
+        guard animated else {
+            self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+            return
         }
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        })
     }
 }
 
