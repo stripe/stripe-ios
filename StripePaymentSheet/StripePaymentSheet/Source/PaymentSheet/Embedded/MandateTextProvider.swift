@@ -52,17 +52,16 @@ class FormMandateProvider: MandateTextProvider {
                     return bottomNoticeAttributedString
                 }
                 // 3. If not, generate the form
-                let form = PaymentMethodFormViewController(
-                    type: paymentMethodType,
+                let form = PaymentSheetFormFactory(
                     intent: intent,
                     elementsSession: elementsSession,
+                    configuration: .paymentSheet(configuration),
+                    paymentMethod: paymentMethodType,
                     previousCustomerInput: nil,
-                    formCache: .init(),
-                    configuration: configuration,
-                    headerView: nil,
-                    analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration()), // Dummy, not used
-                    delegate: self
-                ).form
+                    linkAccount: LinkAccountContext.shared.account,
+                    analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration()) // Dummy, not used
+                ).make()
+
                 guard !form.collectsUserInput else {
                     // If it collects user input, the mandate will be displayed in the form and not here
                     return nil

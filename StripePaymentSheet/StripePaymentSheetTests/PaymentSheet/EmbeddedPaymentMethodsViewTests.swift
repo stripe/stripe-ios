@@ -11,7 +11,7 @@ import XCTest
 final class EmbeddedPaymentMethodsViewTests: XCTestCase {
 
     // MARK: EmbeddedPaymentMethodsViewDelegate.heightDidChange test
-    
+
     func testEmbeddedPaymentMethodsView_heightDidChange() {
         let mockMandateProvider = MockMandateProvider { paymentMethodType in
             if paymentMethodType == .stripe(.cashApp) {
