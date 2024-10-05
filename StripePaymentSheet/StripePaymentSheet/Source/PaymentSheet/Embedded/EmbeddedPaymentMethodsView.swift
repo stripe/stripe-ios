@@ -30,9 +30,7 @@ class EmbeddedPaymentMethodsView: UIView {
         return stackView
     }()
 
-    private lazy var mandateView = {
-        EmbeddedMandateContainerView(appearance: appearance)
-    }()
+    private lazy var mandateView = EmbeddedMandateContainerView(appearance: appearance)
 
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
 
