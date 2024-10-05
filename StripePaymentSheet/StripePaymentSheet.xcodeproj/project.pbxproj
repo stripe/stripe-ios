@@ -109,6 +109,7 @@
 		610EAAF02C0F5D9400124AB2 /* FormHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610EAAEF2C0F5D9400124AB2 /* FormHeaderView.swift */; };
 		6117D7102CB0654B005C4EC1 /* EmbeddedMandateContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6117D70F2CB0654B005C4EC1 /* EmbeddedMandateContainerView.swift */; };
 		6117D7122CB065E7005C4EC1 /* MandateTextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6117D7112CB065E7005C4EC1 /* MandateTextProvider.swift */; };
+		614068E22CB0BF10003D2F12 /* EmbeddedPaymentMethodsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614068E12CB0BF10003D2F12 /* EmbeddedPaymentMethodsViewTests.swift */; };
 		6141C5072C0A47A700E81735 /* RightAccessoryButtonTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6141C5062C0A47A700E81735 /* RightAccessoryButtonTest.swift */; };
 		614A8AE72BE53C6900E8688B /* SavedPaymentMethodManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103F2BD2BE53737002D67F8 /* SavedPaymentMethodManagerTest.swift */; };
 		6151DDC02B14FDCF00ED4F7E /* UpdateCardViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151DDBF2B14FDCF00ED4F7E /* UpdateCardViewControllerSnapshotTests.swift */; };
@@ -466,6 +467,7 @@
 		6117D70F2CB0654B005C4EC1 /* EmbeddedMandateContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmbeddedMandateContainerView.swift; sourceTree = "<group>"; };
 		6117D7112CB065E7005C4EC1 /* MandateTextProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MandateTextProvider.swift; sourceTree = "<group>"; };
 		6139AA50F07A1E2AC7E9827F /* AUBECSMandate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUBECSMandate.swift; sourceTree = "<group>"; };
+		614068E12CB0BF10003D2F12 /* EmbeddedPaymentMethodsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentMethodsViewTests.swift; sourceTree = "<group>"; };
 		6141C5062C0A47A700E81735 /* RightAccessoryButtonTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightAccessoryButtonTest.swift; sourceTree = "<group>"; };
 		6151DDBF2B14FDCF00ED4F7E /* UpdateCardViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCardViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		617C44F9338DE2E93E318291 /* PayWithLinkWebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWithLinkWebController.swift; sourceTree = "<group>"; };
@@ -1421,6 +1423,7 @@
 				31699A822BE183D40048677F /* DownloadManagerTest.swift */,
 				73FB30705EC36BD0868904A2 /* Elements+TestHelpers.swift */,
 				61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */,
+				614068E12CB0BF10003D2F12 /* EmbeddedPaymentMethodsViewTests.swift */,
 				64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */,
 				6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */,
 				61D842902CB06047009D2D51 /* FormMandateProviderTests.swift */,
@@ -1733,6 +1736,7 @@
 				B6D1B3662C5DFCE800A9E0D7 /* PaymentSheetAnalyticsHelperTest.swift in Sources */,
 				FBAC012322FE99046A484E65 /* PaymentSheetFormFactoryTest.swift in Sources */,
 				B6BF12392C2F2E790033601E /* PaymentSheetImageTests.swift in Sources */,
+				614068E22CB0BF10003D2F12 /* EmbeddedPaymentMethodsViewTests.swift in Sources */,
 				44D0F92C4AA2DF0C9DC4C9B4 /* PaymentSheetLPMConfirmFlowTests.swift in Sources */,
 				ABE13E65678673EC4DE14EF4 /* PaymentSheetLinkAccountTests.swift in Sources */,
 				142C03879DC4CD43BB743022 /* PaymentSheetLoaderStubbedTest.swift in Sources */,
