@@ -6,6 +6,23 @@
 	objectVersion = 55;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		317695282CB0BC9400B16B67 /* ReleaseFrameworks */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 3176952B2CB0BC9400B16B67 /* Build configuration list for PBXAggregateTarget "ReleaseFrameworks" */;
+			buildPhases = (
+				3176952C2CB0BCA600B16B67 /* ShellScript */,
+			);
+			dependencies = (
+				3176952E2CB0BCF300B16B67 /* PBXTargetDependency */,
+			);
+			name = ReleaseFrameworks;
+			packageProductDependencies = (
+			);
+			productName = ReleaseFrameworks;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		000D59C19A60AB637CE65EE9 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; };
 		09FA1391DCA2717DBC962562 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1E565B552830E657F863C4F8 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -73,6 +90,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3176952D2CB0BCF300B16B67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA7B1F35244C75557507E31F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D017784615929C0DD3717FE8;
+			remoteInfo = "PaymentSheet Example";
+		};
 		4AE35256297064B8CB3D7B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA7B1F35244C75557507E31F /* Project object */;
@@ -542,6 +566,9 @@
 			isa = PBXProject;
 			attributes = {
 				TargetAttributes = {
+					317695282CB0BC9400B16B67 = {
+						CreatedOnToolsVersion = 16.0;
+					};
 					5BBB41069612B9B628C5E65D = {
 						TestTargetID = D017784615929C0DD3717FE8;
 					};
@@ -609,6 +636,7 @@
 				D017784615929C0DD3717FE8 /* PaymentSheet Example */,
 				AAF1424C7F0424C3506712E6 /* PaymentSheetUITest */,
 				5BBB41069612B9B628C5E65D /* PaymentSheetLocalizationScreenshotGenerator */,
+				317695282CB0BC9400B16B67 /* ReleaseFrameworks */,
 			);
 		};
 /* End PBXProject section */
@@ -641,6 +669,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3176952C2CB0BCA600B16B67 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "cd \"$PROJECT_DIR/../\"\nruby \"ci_scripts/export_builds.rb\"\n# Copy the xcframework into $INSTALL_ROOT, which is what Xcode uses to build the .xcarchive\n# This tricks Xcode Cloud into uploading it as an artifact \ncp \"$PROJECT_DIR/../build/Stripe.xcframework.zip\" \"$INSTALL_ROOT/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		97ED86BA768569081C380374 /* Sources */ = {
@@ -705,6 +754,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3176952E2CB0BCF300B16B67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D017784615929C0DD3717FE8 /* PaymentSheet Example */;
+			targetProxy = 3176952D2CB0BCF300B16B67 /* PBXContainerItemProxy */;
+		};
 		4E27102B097427E5F2F4ECCA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "PaymentSheet Example";
@@ -842,6 +896,24 @@
 			};
 			name = Release;
 		};
+		317695292CB0BC9400B16B67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3176952A2CB0BC9400B16B67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		4E900227E99B33992820534A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */;
@@ -921,6 +993,15 @@
 			buildConfigurations = (
 				4E900227E99B33992820534A /* Debug */,
 				04B451E4262EF8B42D36A6AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3176952B2CB0BC9400B16B67 /* Build configuration list for PBXAggregateTarget "ReleaseFrameworks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				317695292CB0BC9400B16B67 /* Debug */,
+				3176952A2CB0BC9400B16B67 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

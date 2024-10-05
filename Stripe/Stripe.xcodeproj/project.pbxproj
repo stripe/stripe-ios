@@ -6,22 +6,6 @@
 	objectVersion = 55;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		3176951E2CB0955F00B16B67 /* ReleaseFrameworks */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 317695212CB0955F00B16B67 /* Build configuration list for PBXAggregateTarget "ReleaseFrameworks" */;
-			buildPhases = (
-				317695222CB0A01500B16B67 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = ReleaseFrameworks;
-			packageProductDependencies = (
-			);
-			productName = ReleaseFrameworks;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		013F991AB34E38BDBA6E4521 /* STPFormViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44327A2B2C9483F52EE343B /* STPFormViewSnapshotTests.swift */; };
 		0185AC6B123CD73E877D4FCE /* STPPaymentMethodCashAppParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABB2CA7E96BE249CE8C0566 /* STPPaymentMethodCashAppParamsTests.swift */; };
@@ -1524,9 +1508,6 @@
 			isa = PBXProject;
 			attributes = {
 				TargetAttributes = {
-					3176951E2CB0955F00B16B67 = {
-						CreatedOnToolsVersion = 16.0;
-					};
 					49A14BBD10B1E97F2B43C448 = {
 						TestTargetID = 1628E8B14F1F7C63CF8C9962;
 					};
@@ -1595,7 +1576,6 @@
 				8BE23AD5D9A3D939AF46F31E /* StripeiOSTests */,
 				1628E8B14F1F7C63CF8C9962 /* StripeiOSTestHostApp */,
 				49A14BBD10B1E97F2B43C448 /* StripeiOSAppHostedTests */,
-				3176951E2CB0955F00B16B67 /* ReleaseFrameworks */,
 			);
 		};
 /* End PBXProject section */
@@ -1639,28 +1619,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		317695222CB0A01500B16B67 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"\"$PROJECT_DIR/build/Stripe.xcframework.zip\"",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "cd \"$PROJECT_DIR/../\"\nruby \"ci_scripts/export_builds.rb\"\n# Copy the xcframework into $INSTALL_ROOT, which is what Xcode uses to build the .xcarchive\n# This tricks Xcode Cloud into uploading it as an artifact \ncp \"$PROJECT_DIR/../build/Stripe.xcframework.zip\" \"$INSTALL_ROOT/\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		24CDC502E3D468F309116FE1 /* Sources */ = {
@@ -2159,24 +2117,6 @@
 			};
 			name = Debug;
 		};
-		3176951F2CB0955F00B16B67 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		317695202CB0955F00B16B67 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		4CFD88FE3BC957D5059302C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D609FFD051FC01BF566665A0 /* StripeiOS Tests-Debug.xcconfig */;
@@ -2261,15 +2201,6 @@
 			buildConfigurations = (
 				610AD56E6CBB9E6781424682 /* Debug */,
 				008139FD6C1D3C3903E1FBC4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		317695212CB0955F00B16B67 /* Build configuration list for PBXAggregateTarget "ReleaseFrameworks" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3176951F2CB0955F00B16B67 /* Debug */,
-				317695202CB0955F00B16B67 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
