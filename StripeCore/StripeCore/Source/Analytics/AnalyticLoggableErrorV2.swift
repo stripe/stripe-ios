@@ -33,9 +33,6 @@ where Self: RawRepresentable, Self.RawValue == String {
 @_spi(STP) extension Error {
     /// Serialize an Error for logging, suitable for the Identity and Financial Connections SDK.
     public func serializeForV2Logging() -> [String: Any] {
-        if let loggableError = self as? AnalyticLoggableErrorV2 {
-            return loggableError.analyticLoggableSerializeForLogging()
-        }
         let nsError = self as NSError
 
         var payload: [String: Any] = [
@@ -46,6 +43,11 @@ where Self: RawRepresentable, Self.RawValue == String {
             payload["type"] = stringError.loggableType
         } else {
             payload["code"] = nsError.code
+        }
+
+        if let loggableError = self as? AnalyticLoggableErrorV2 {
+            payload.merge(loggableError.analyticLoggableSerializeForLogging(),
+                          uniquingKeysWith: { a, _ in a })
         }
 
         return payload

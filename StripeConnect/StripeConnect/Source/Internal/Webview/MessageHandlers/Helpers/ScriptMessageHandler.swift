@@ -5,10 +5,23 @@
 //  Created by Mel Ludowise on 5/1/24.
 //
 
+@_spi(STP) import StripeCore
 import WebKit
 
 /// Convenience class that conforms to WKScriptMessageHandler and can be instantiated with a closure
 class ScriptMessageHandler<Payload: Decodable>: NSObject, WKScriptMessageHandler {
+    struct UnexpectedMessageNameError: Error, AnalyticLoggableErrorV2 {
+        let actual: String
+        let expected: String
+
+        func analyticLoggableSerializeForLogging() -> [String: Any] {
+            [
+                "actual": actual,
+                "expected": expected,
+            ]
+        }
+    }
+
     let name: String
     let didReceiveMessage: (Payload) -> Void
     let analyticsClient: ComponentAnalyticsClient
@@ -24,15 +37,16 @@ class ScriptMessageHandler<Payload: Decodable>: NSObject, WKScriptMessageHandler
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
         guard message.name == name else {
-            // TODO: MXMOBILE-2491 Log as analytics
-            debugPrint("Unexpected message name: \(message.name)")
+            analyticsClient.logError(UnexpectedMessageNameError(
+                actual: message.name,
+                expected: name
+            ))
             return
         }
         do {
             didReceiveMessage(try message.toDecodable())
         } catch {
             analyticsClient.logDeserializeMessageErrorEvent(message: message.name, error: error)
-            debugPrint("[StripeConnect] Failed to decode body for message with name: \(message.name) \(error.localizedDescription)")
         }
     }
 }

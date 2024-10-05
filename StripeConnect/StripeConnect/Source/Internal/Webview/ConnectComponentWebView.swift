@@ -70,7 +70,6 @@ class ConnectComponentWebView: ConnectWebView {
                 component: componentType
             )
         ))
-//        self[keyPath: loadError](self, NSError())
 
         // Setup views
         self.addSubview(activityIndicator)
@@ -90,9 +89,16 @@ class ConnectComponentWebView: ConnectWebView {
         // Load the web page
         if loadContent {
             activityIndicator.startAnimating()
-            let url = ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url
-            analyticsClient.loadStart = .now
-            load(.init(url: url))
+            do {
+                let url = try ConnectJSURLParams(
+                    component: componentType,
+                    apiClient: componentManager.apiClient
+                ).url()
+                analyticsClient.loadStart = .now
+                load(.init(url: url))
+            } catch {
+                showAlertAndLog(error: error)
+            }
         }
 
         analyticsClient.log(event: ComponentCreatedEvent())
@@ -150,8 +156,11 @@ extension ConnectComponentWebView {
 
     /// Convenience method to send messages to the webview.
     func sendMessage(_ sender: any MessageSender) {
-        if let message = sender.javascriptMessage {
+        do {
+            let message = try sender.javascriptMessage()
             evaluateJavaScript(message)
+        } catch {
+            analyticsClient.logError(error)
         }
     }
 }

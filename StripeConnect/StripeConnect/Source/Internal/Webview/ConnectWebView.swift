@@ -10,6 +10,10 @@ import SafariServices
 @_spi(STP) import StripeCore
 import WebKit
 
+enum ConnectWebViewError: Int, Error {
+    case popupNotSet = 0
+}
+
 /**
  Custom implementation of a web view that handles:
  - Camera access
@@ -30,7 +34,7 @@ class ConnectWebView: WKWebView {
     var presentPopup: (UIViewController) -> Void {
         get {
             assert(optionalPresentPopup != nil, "Cannot present popup")
-            // TODO: MXMOBILE-2491 Log as analytics when pop up is not set.
+            analyticsClient.logError(ConnectWebViewError.popupNotSet)
             return optionalPresentPopup ?? { _ in }
         }
         set {
@@ -81,6 +85,15 @@ class ConnectWebView: WKWebView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    func showAlertAndLog(error: Error) {
+        analyticsClient.logError(error)
+        let alert = UIAlertController(
+            title: nil,
+            message: NSError.stp_unexpectedErrorMessage(),
+            preferredStyle: .alert)
+        presentPopup(alert)
+    }
 }
 
 // MARK: - Private
@@ -114,18 +127,11 @@ private extension ConnectWebView {
 
     // Opens with UIApplication.open, if supported
     func openOnSystem(url: URL) {
-        urlOpener.openIfPossible(url)
-    }
-
-    func showErrorAlert(for error: Error) {
-        // TODO: MXMOBILE-2491 Log analytic when receiving an eror
-        debugPrint(error)
-
-        let alert = UIAlertController(
-            title: nil,
-            message: NSError.stp_unexpectedErrorMessage(),
-            preferredStyle: .alert)
-        presentPopup(alert)
+        do {
+            try urlOpener.openIfPossible(url)
+        } catch {
+            analyticsClient.logError(error)
+        }
     }
 }
 
@@ -279,7 +285,7 @@ extension ConnectWebView {
         do {
             try fileManager.createDirectory(at: tempDir, withIntermediateDirectories: true)
         } catch {
-            showErrorAlert(for: error)
+            showAlertAndLog(error: error)
             return nil
         }
 
@@ -289,7 +295,7 @@ extension ConnectWebView {
 
     func download(didFailWithError error: any Error,
                   resumeData: Data?) {
-        showErrorAlert(for: error)
+        showAlertAndLog(error: error)
     }
 
     func downloadDidFinish() {

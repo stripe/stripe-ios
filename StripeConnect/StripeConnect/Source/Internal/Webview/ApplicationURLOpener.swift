@@ -5,7 +5,16 @@
 //  Created by Chris Mays on 8/14/24.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
+
+private struct URLOpenError: Error, AnalyticLoggableErrorV2 {
+    let url: URL
+
+    func analyticLoggableSerializeForLogging() -> [String: Any] {
+        ["url": url.sanitizedForLogging]
+    }
+}
 
 /// Protocol used to dependency inject `UIApplication.open` for use in tests
 protocol ApplicationURLOpener {
@@ -26,10 +35,9 @@ extension ApplicationURLOpener {
     typealias OpenCompletionHandler = (Bool) -> Void
     #endif
 
-    func openIfPossible(_ url: URL) {
+    func openIfPossible(_ url: URL) throws {
         guard canOpenURL(url) else {
-            // TODO: MXMOBILE-2491 Log as analytics when url can't be opened.
-            return
+            throw URLOpenError(url: url)
         }
         open(url, options: [:], completionHandler: nil)
     }

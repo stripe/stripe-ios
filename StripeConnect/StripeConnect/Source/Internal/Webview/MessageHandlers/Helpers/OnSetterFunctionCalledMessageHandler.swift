@@ -87,8 +87,7 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
         do {
             try handler.didReceiveMessage(payload)
         } catch {
-            // TODO: MXMOBILE-2491 Log as analytics
-            debugPrint("Received unexpected setter function message for setter: \(payload.setter) \(error.localizedDescription)")
+            analyticsClient.logDeserializeMessageErrorEvent(message: "\(name).\(payload.setter)", error: error)
         }
     }
 }

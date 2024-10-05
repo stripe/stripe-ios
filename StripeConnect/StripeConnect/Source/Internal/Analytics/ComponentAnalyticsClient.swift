@@ -148,6 +148,14 @@ class ComponentAnalyticsClient {
             )
         )
     }
+
+    func withErrorLogging(_ block: @escaping () throws -> Void) {
+        do {
+            try block()
+        } catch {
+            logError(error)
+        }
+    }
 }
 
 extension ComponentAnalyticsClient.CommonFields {
