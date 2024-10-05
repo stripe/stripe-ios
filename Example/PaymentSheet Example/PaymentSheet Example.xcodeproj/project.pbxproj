@@ -687,7 +687,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "cd \"$PROJECT_DIR/../\"\nruby \"ci_scripts/export_builds.rb\"\n# Copy the xcframework into $INSTALL_ROOT, which is what Xcode uses to build the .xcarchive\n# This tricks Xcode Cloud into uploading it as an artifact \ncp \"$PROJECT_DIR/../build/Stripe.xcframework.zip\" \"$INSTALL_ROOT/\"\n";
+			shellScript = "cd \"$PROJECT_DIR/../../\"\nruby \"ci_scripts/export_builds.rb\"\n# Copy the xcframework into $INSTALL_ROOT, which is what Xcode uses to build the .xcarchive\n# This tricks Xcode Cloud into uploading it as an artifact \ncp \"build/Stripe.xcframework.zip\" \"$INSTALL_ROOT/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
