@@ -14,15 +14,7 @@ import XCTest
 class FormMandateProviderTests: XCTestCase {
 
     override func setUp() async throws {
-        await withCheckedContinuation { continuation in
-            Task {
-                AddressSpecProvider.shared.loadAddressSpecs {
-                    FormSpecProvider.shared.load { _ in
-                        continuation.resume()
-                    }
-                }
-            }
-        }
+        await PaymentSheetLoader.loadMiscellaneousSingletons()
     }
 
     func testFormMandateProvider_WhenConfigurationHidesMandateText_ShouldReturnNil() {
