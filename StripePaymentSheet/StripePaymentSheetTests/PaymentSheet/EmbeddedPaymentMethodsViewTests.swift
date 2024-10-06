@@ -10,9 +10,8 @@ import XCTest
 
 final class EmbeddedPaymentMethodsViewTests: XCTestCase {
 
-    // MARK: EmbeddedPaymentMethodsViewDelegate.heightDidChange test
-
-    func testEmbeddedPaymentMethodsView_heightDidChange() {
+    // MARK: EmbeddedPaymentMethodsViewDelegate test
+    func testEmbeddedPaymentMethodsView_delegateTest() {
         let mockMandateProvider = MockMandateProvider { paymentMethodType in
             if paymentMethodType == .stripe(.cashApp) {
                 let longText = String(repeating: "This is a long mandate text. ", count: 20)
@@ -45,40 +44,81 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         embeddedView.autosizeHeight(width: 300)
 
         let rowButtons = embeddedView.stackView.arrangedSubviews.compactMap { $0 as? RowButton }
-        // Height did change should not be called after init
-        XCTAssertFalse(mockDelegate.didCallHeightDidChange)
+        
+        // Delegate methods should not be called upon initialization
+        XCTAssertFalse(mockDelegate.didCallHeightDidChange, "heightDidChange should not be called on init")
+        XCTAssertFalse(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should not be called on init")
 
-        // Simulate tapping Cash App
+        // Simulate tapping Cash App and verify delegate is called
         embeddedView.didTap(selectedRowButton: rowButtons[1], selection: .new(paymentMethodType: .stripe(.cashApp)))
-        XCTAssertTrue(mockDelegate.didCallHeightDidChange)
-        mockDelegate.reset()
+        XCTAssertTrue(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should be called when selection changes")
+        XCTAssertEqual(
+            mockDelegate.updatedSelection,
+            .new(paymentMethodType: .stripe(.cashApp)),
+            "selectionDidUpdate should receive the correct selection"
+        )
+        mockDelegate.resetAll()
 
-        // Simulate tapping Klarna
+        // Simulate tapping Klarna and verify delegate is called
         embeddedView.didTap(selectedRowButton: rowButtons[2], selection: .new(paymentMethodType: .stripe(.klarna)))
-        XCTAssertTrue(mockDelegate.didCallHeightDidChange)
-        mockDelegate.reset()
+        XCTAssertTrue(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should be called when selection changes")
+        XCTAssertEqual(
+            mockDelegate.updatedSelection,
+            .new(paymentMethodType: .stripe(.klarna)),
+            "selectionDidUpdate should receive the correct selection"
+        )
+        mockDelegate.resetAll()
 
-        // Simulate tapping PayPal
+        // Simulate tapping PayPal and verify delegate is called
         embeddedView.didTap(selectedRowButton: rowButtons[3], selection: .new(paymentMethodType: .stripe(.payPal)))
-        XCTAssertTrue(mockDelegate.didCallHeightDidChange)
-        mockDelegate.reset()
+        XCTAssertTrue(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should be called when selection changes")
+        XCTAssertEqual(
+            mockDelegate.updatedSelection,
+            .new(paymentMethodType: .stripe(.payPal)),
+            "selectionDidUpdate should receive the correct selection"
+        )
+        mockDelegate.resetAll()
 
-        // Simulate tapping PayPal again
+        // Simulate tapping PayPal again (same selection) and verify delegate is NOT called
         embeddedView.didTap(selectedRowButton: rowButtons[3], selection: .new(paymentMethodType: .stripe(.payPal)))
-        XCTAssertFalse(mockDelegate.didCallHeightDidChange)
+        XCTAssertFalse(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should not be called when the same selection is selected again")
     }
 
 }
 
 private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsViewDelegate {
-
+    
+    // Existing properties
     private(set) var didCallHeightDidChange = false
-
+    
+    // New properties for selectionDidUpdate
+    private(set) var didCallSelectionDidUpdate = false
+    private(set) var updatedSelection: StripePaymentSheet.EmbeddedPaymentMethodsView.Selection?
+    
+    // MARK: - Delegate Methods
+    
     func heightDidChange() {
         didCallHeightDidChange = true
     }
-
-    func reset() {
+    
+    func selectionDidUpdate(_ selection: StripePaymentSheet.EmbeddedPaymentMethodsView.Selection?) {
+        didCallSelectionDidUpdate = true
+        updatedSelection = selection
+    }
+    
+    // MARK: - Reset Methods
+    
+    func resetHeightDidChange() {
         didCallHeightDidChange = false
+    }
+    
+    func resetSelectionDidUpdate() {
+        didCallSelectionDidUpdate = false
+        updatedSelection = nil
+    }
+    
+    func resetAll() {
+        resetHeightDidChange()
+        resetSelectionDidUpdate()
     }
 }

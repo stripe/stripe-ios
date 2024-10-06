@@ -10,6 +10,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 protocol MandateTextProvider {
+    var merchantDisplaysMandate: Bool { get }
+    
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString?
 }
 
@@ -19,6 +21,10 @@ class FormMandateProvider: MandateTextProvider {
     private let elementsSession: STPElementsSession
     private let intent: Intent
 
+    var merchantDisplaysMandate: Bool {
+        return configuration.hidesMandateText
+    }
+    
     init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
         self.configuration = configuration
         self.elementsSession = elementsSession
@@ -31,9 +37,6 @@ class FormMandateProvider: MandateTextProvider {
     /// - Parameter bottomNoticeAttributedString: Passing this in just makes this method return it as long as `configuration` doesn't hide mandate text
     /// - Returns: An `NSAttributedString` representing the mandate to be displayed for `paymentMethodType`, returns `nil` if no mandate should be shown
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString? = nil) -> NSAttributedString? {
-        // Merchant will display the mandate
-        guard !configuration.hidesMandateText else {  return nil }
-
         let newMandateText: NSAttributedString? = {
             guard let paymentMethodType else { return nil }
             if savedPaymentMethod != nil {

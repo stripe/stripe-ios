@@ -33,6 +33,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
         return checkoutButton
     }()
+    
+    private let paymentOptionView = EmbeddedPaymentOptionView()
 
     init(configuration: EmbeddedPaymentElement.Configuration, intentConfig: PaymentSheet.IntentConfiguration, appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
@@ -75,18 +77,26 @@ class EmbeddedPlaygroundViewController: UIViewController {
                                                                          configuration: configuration)
         embeddedPaymentElement.delegate = self
         embeddedPaymentElement.view.translatesAutoresizingMaskIntoConstraints = false
+        paymentOptionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(embeddedPaymentElement.view)
+        self.view.addSubview(paymentOptionView)
         self.view.addSubview(checkoutButton)
 
         NSLayoutConstraint.activate([
+            embeddedPaymentElement.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             embeddedPaymentElement.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            embeddedPaymentElement.view.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             embeddedPaymentElement.view.widthAnchor.constraint(equalTo: view.widthAnchor),
+            paymentOptionView.topAnchor.constraint(equalTo: embeddedPaymentElement.view.bottomAnchor, constant: 25),
+            paymentOptionView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
+            paymentOptionView.heightAnchor.constraint(equalToConstant: 50),
+            paymentOptionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             checkoutButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50),
             checkoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
+        
+        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption)
     }
 
     private func setupLoadingIndicator() {
@@ -114,4 +124,89 @@ extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
     }
+    
+    func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
+        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption)
+    }
 }
+
+
+class EmbeddedPaymentOptionView: UIView {
+    
+    // MARK: - Properties
+    
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let label: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let mandateTextLabel: UILabel = {
+        let mandateLabel = UILabel()
+        mandateLabel.font = UIFont.systemFont(ofSize: 12)
+        mandateLabel.numberOfLines = 0
+        mandateLabel.textColor = .gray
+        mandateLabel.translatesAutoresizingMaskIntoConstraints = false
+        mandateLabel.textAlignment = .left
+        return mandateLabel
+    }()
+    
+    // MARK: - Initializers
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    // MARK: - Setup
+    
+    private func setupView() {
+        addSubview(imageView)
+        addSubview(label)
+        addSubview(mandateTextLabel)
+        // Setup constraints
+        NSLayoutConstraint.activate([
+            // Image View Constraints
+            imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            imageView.topAnchor.constraint(equalTo: self.topAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 25),
+            imageView.heightAnchor.constraint(equalToConstant: 25),
+            
+            // Label Constraints
+            label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
+            label.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            label.topAnchor.constraint(equalTo: self.topAnchor),
+            label.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+            
+            // Mandate Text Label Constraints
+            mandateTextLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            mandateTextLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            mandateTextLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
+            mandateTextLabel.heightAnchor.constraint(equalToConstant: 70),
+        ])
+    }
+    
+    // MARK: - Configuration
+    
+    func configure(with data: EmbeddedPaymentElement.PaymentOptionDisplayData?) {
+        imageView.image = data?.image
+        label.text = data?.label
+        mandateTextLabel.attributedText = data?.mandateText
+        mandateTextLabel.sizeToFit()
+    }
+}
+
