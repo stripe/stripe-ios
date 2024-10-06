@@ -129,6 +129,7 @@ extension TextFieldElement {
             
             
             let cardBrand = cardBrand(for: text)
+            // If the merchant is CBC eligible, don't show the disallowed error until we have time to hit the card metadata service to determine brands (at 8 digits)
             let shouldShowDisallowedError = cardBrandDropDown == nil || text.count > 8
             if !cardFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
