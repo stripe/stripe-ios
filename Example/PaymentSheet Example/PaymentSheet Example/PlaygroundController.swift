@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(ExperimentalPaymentMethodLayoutAPI) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(ExperimentalPaymentMethodLayoutAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -171,6 +171,8 @@ class PlaygroundController: ObservableObject {
             configuration.paymentMethodLayout = .horizontal
         case .vertical:
             configuration.paymentMethodLayout = .vertical
+        case .automatic:
+            configuration.paymentMethodLayout = .automatic
         }
         
         switch settings.cardBrandAcceptance {
@@ -182,6 +184,84 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
         
+        return configuration
+    }
+
+    var embeddedConfiguration: EmbeddedPaymentElement.Configuration {
+        let formSheetAction: EmbeddedPaymentElement.Configuration.FormSheetAction = {
+            switch settings.formSheetAction {
+            case .confirm:
+                return .confirm { [weak self] result in
+                    self?.lastPaymentResult = result
+                }
+            case .continue:
+                return .continue
+            }
+        }()
+        
+        var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: formSheetAction)
+        configuration.hidesMandateText = settings.hidesMandateText == .on
+        configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
+        switch settings.externalPaymentMethods {
+        case .paypal:
+            configuration.paymentMethodOrder = ["card", "external_paypal"]
+        case .off, .all: // When using all EPMs, alphabetize the order by not setting `paymentMethodOrder`.
+            break
+        }
+        configuration.merchantDisplayName = "Example, Inc."
+        configuration.applePay = applePayConfiguration
+        configuration.customer = customerConfiguration
+        configuration.appearance = appearance
+        if settings.userOverrideCountry != .off {
+            configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
+        }
+        configuration.returnURL = "payments-example://stripe-redirect"
+
+        if settings.defaultBillingAddress != .off {
+            configuration.defaultBillingDetails.name = "Jane Doe"
+            configuration.defaultBillingDetails.address = .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            )
+        }
+        switch settings.defaultBillingAddress {
+        case .on:
+            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.phone = "+13105551234"
+        case .randomEmail:
+            configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"
+            configuration.defaultBillingDetails.phone = "+13105551234"
+        case .randomEmailNoPhone:
+            configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"
+        case .customEmail:
+            configuration.defaultBillingDetails.email = settings.customEmail
+        case .off:
+            break
+        }
+
+        if settings.allowsDelayedPMs == .on {
+            configuration.allowsDelayedPaymentMethods = true
+        }
+
+        if settings.shippingInfo != .off {
+            configuration.allowsPaymentMethodsRequiringShippingAddress = true
+            configuration.shippingDetails = { [weak self] in
+                return self?.addressDetails
+            }
+        }
+        configuration.primaryButtonLabel = settings.customCtaLabel
+
+        configuration.billingDetailsCollectionConfiguration.name = .init(rawValue: settings.collectName.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.phone = .init(rawValue: settings.collectPhone.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
+        configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
+        configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
+
         return configuration
     }
 
@@ -607,7 +687,7 @@ extension PlaygroundController {
                         )
                     }
                 } else if self.settings.uiStyle == .embedded {
-                    self.embeddedPaymentElement()
+                    self.makeEmbeddedPaymentElement()
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
                 }
@@ -814,14 +894,14 @@ class AnalyticsLogObserver: ObservableObject {
     @Published var analyticsLog: [[String: Any]] = []
 }
 
-
 // MARK: Embedded helpers
-extension PlaygroundController: EmbeddedPlaygroundViewControllerDelegate {
-    func embeddedPaymentElement() {
-        embeddedPlaygroundController = EmbeddedPlaygroundViewController(settings: settings, appearance: appearance)
-        embeddedPlaygroundController?.delegate = self
+extension PlaygroundController {
+    func makeEmbeddedPaymentElement() {
+        embeddedPlaygroundController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
+                                                                        intentConfig: intentConfig,
+                                                                        appearance: appearance)
     }
-    
+
     func presentEmbedded() {
         guard let embeddedPlaygroundController else { return }
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
@@ -833,9 +913,5 @@ extension PlaygroundController: EmbeddedPlaygroundViewControllerDelegate {
 
     @objc func dismissEmbedded() {
         embeddedPlaygroundController?.dismiss(animated: true, completion: nil)
-    }
-    
-    func didComplete(with result: StripePaymentSheet.PaymentSheetResult) {
-        lastPaymentResult = result
     }
 }

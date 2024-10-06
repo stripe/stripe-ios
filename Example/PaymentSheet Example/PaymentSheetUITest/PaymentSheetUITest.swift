@@ -2294,6 +2294,10 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         fillLinkAndPay(mode: .checkbox)
     }
 
+    func testLinkCardBrand() {
+        _testInstantDebits(mode: .payment, useLinkCardBrand: true)
+    }
+
     // MARK: Link test helpers
 
     private enum LinkMode {
@@ -2471,11 +2475,16 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
-    func _testInstantDebits(mode: PaymentSheetTestPlaygroundSettings.Mode, vertical: Bool = false) {
+    func _testInstantDebits(
+        mode: PaymentSheetTestPlaygroundSettings.Mode,
+        vertical: Bool = false,
+        useLinkCardBrand: Bool = false
+    ) {
+        
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = mode
         settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = "card,link"
+        settings.supportedPaymentMethods = useLinkCardBrand ? "card" : "card,link"
         if vertical {
             settings.layout = .vertical
         }

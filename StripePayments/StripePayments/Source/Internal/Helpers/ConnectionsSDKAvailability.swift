@@ -57,25 +57,19 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
         DispatchQueue.main.async {
+            let stubbedBank = FinancialConnectionsLinkedBank(
+                sessionId: "las_123",
+                accountId: "fca_123",
+                displayName: "Test Bank",
+                bankName: "Test Bank",
+                last4: "1234",
+                instantlyVerified: true
+            )
             completion(
                 FinancialConnectionsSDKResult.completed(
-                    .financialConnections(StubbedFinancialConnectionsLinkedBank())
+                    .financialConnections(stubbedBank)
                 )
             )
         }
     }
-}
-
-struct StubbedFinancialConnectionsLinkedBank: FinancialConnectionsLinkedBank {
-    var sessionId: String = "las_123"
-
-    var accountId: String = "fca_123"
-
-    var displayName: String? = "Test Bank"
-
-    var bankName: String? = "Test Bank"
-
-    var last4: String? = "1234"
-
-    var instantlyVerified: Bool = true
 }

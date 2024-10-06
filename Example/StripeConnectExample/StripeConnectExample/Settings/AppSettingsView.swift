@@ -18,6 +18,7 @@ struct AppSettingsView: View {
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
     @State var onboardingSettings = AppSettings.shared.onboardingSettings
+    @State var presentationSettings = AppSettings.shared.presentationSettings
 
     var isCustomEndpointValid: Bool {
         URL(string: serverURLString)?.isValid == true
@@ -98,13 +99,22 @@ struct AppSettingsView: View {
                     NavigationLink {
                         OnboardingSettingsView(onboardingSettings: $onboardingSettings)
                     } label: {
-                        Text("Onboarding")
+                        Text("Account onboarding")
                             .font(.body)
                             .foregroundColor(.primary)
                     }
                 } header: {
                     Text("Component Settings")
                 }
+
+                NavigationLink {
+                    PresentationSettingsView(presentationSettings: $presentationSettings)
+                } label: {
+                    Text("View Controller Options")
+                        .font(.body)
+                        .foregroundColor(.primary)
+                }
+
                 Section {
                     TextInput(label: "", placeholder: "https://example.com", text: $serverURLString, isValid: isCustomEndpointValid)
                     Button {
@@ -122,7 +132,7 @@ struct AppSettingsView: View {
             .animation(.easeOut(duration: 0.2), value: selectedMerchant)
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
-            .navigationTitle("Configure server")
+            .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

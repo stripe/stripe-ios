@@ -55,19 +55,57 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2525)
-        let dummyView = await EmbeddedPaymentMethodsView(
-            savedPaymentMethod: nil,
-            appearance: .default,
-            shouldShowApplePay: true,
-            shouldShowLink: true
+        // TODO(porter) Should we create a new analytics helper specific to embedded? Figured this out when we do analytics.
+        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
+        AnalyticsHelper.shared.generateSessionID()
+
+        let loadResult = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfiguration),
+                                                           configuration: configuration,
+                                                           analyticsHelper: analyticsHelper,
+                                                           integrationShape: .embedded)
+
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: .deferredIntent(intentConfig: intentConfiguration),
+                                                                                           elementsSession: loadResult.elementsSession,
+                                                                                           configuration: configuration,
+                                                                                           logAvailability: true)
+        let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+        let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+        let savedPaymentMethodAccessoryType = await RowButton.RightAccessoryButton.getAccessoryButtonType(
+            savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
+            isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
+            isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
+            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         )
-        return .init(view: dummyView, configuration: configuration)
+
+        let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
+            // Default to the customer's default or the first saved payment method, if any
+            let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+            switch customerDefault {
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link
+            case .stripeId, nil:
+                return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
+            }
+        }()
+
+        let embeddedPaymentMethodsView = await EmbeddedPaymentMethodsView(
+            initialSelection: initialSelection,
+            paymentMethodTypes: paymentMethodTypes,
+            savedPaymentMethod: loadResult.savedPaymentMethods.first,
+            appearance: configuration.appearance,
+            shouldShowApplePay: shouldShowApplePay,
+            shouldShowLink: shouldShowLink,
+            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType
+        )
+        return .init(view: embeddedPaymentMethodsView, configuration: configuration)
     }
 
     /// The result of an `update` call
     @frozen public enum UpdateResult {
-        /// The update succeded
+        /// The update succeeded
         case succeeded
         /// The update was canceled. This is only returned when a subsequent `update` call cancels previous ones.
         case canceled

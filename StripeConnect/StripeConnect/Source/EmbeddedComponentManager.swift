@@ -84,18 +84,36 @@ public class EmbeddedComponentManager {
            skipTermsOfServiceCollection: Bool? = nil,
            collectionOptions: AccountCollectionOptions = .init()
        ) -> AccountOnboardingViewController {
-           return .init(fullTermsOfServiceUrl: fullTermsOfServiceUrl,
-                        recipientTermsOfServiceUrl: recipientTermsOfServiceUrl,
-                        privacyPolicyUrl: privacyPolicyUrl,
-                        skipTermsOfServiceCollection: skipTermsOfServiceCollection,
-                        collectionOptions: collectionOptions,
-                        componentManager: self,
-                        loadContent: shouldLoadContent)
+           return .init(
+            props: .init(
+                fullTermsOfServiceUrl: fullTermsOfServiceUrl,
+                recipientTermsOfServiceUrl: recipientTermsOfServiceUrl,
+                privacyPolicyUrl: privacyPolicyUrl,
+                skipTermsOfServiceCollection: skipTermsOfServiceCollection,
+                collectionOptions: collectionOptions
+            ),
+            componentManager: self,
+            loadContent: shouldLoadContent)
        }
 
     @_spi(DashboardOnly)
     public func createPaymentDetailsViewController() -> PaymentDetailsViewController {
         .init(componentManager: self)
+    }
+
+    @_spi(DashboardOnly)
+    public func createAccountManagementViewController(
+        collectionOptions: AccountCollectionOptions = .init()
+    ) -> AccountManagementViewController {
+        .init(componentManager: self,
+              collectionOptions: collectionOptions)
+    }
+
+    @_spi(DashboardOnly)
+    public func createNotificationBannerViewController(
+        collectionOptions: AccountCollectionOptions = .init()
+    ) -> NotificationBannerViewController {
+        .init(componentManager: self, collectionOptions: collectionOptions)
     }
 
     /// Used to keep reference of all web views associated with this component manager.

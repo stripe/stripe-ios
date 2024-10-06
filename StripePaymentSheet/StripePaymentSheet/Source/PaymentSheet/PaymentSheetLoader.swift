@@ -18,12 +18,36 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
     }
 
+    enum IntegrationShape {
+        case complete
+        case flowController
+        case embedded
+
+        var canDefaultToLinkOrApplePay: Bool {
+            switch self {
+            case .complete:
+                return false
+            case .flowController, .embedded:
+                return true
+            }
+        }
+
+        var shouldStartCheckoutMeasurementOnLoad: Bool {
+            switch self {
+            case .complete, .embedded: // TODO(porter) Figure out when we want to start checkout measurement for embedded
+                return false
+            case .flowController:
+                return true
+            }
+        }
+    }
+
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         mode: PaymentSheet.InitializationMode,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        isFlowController: Bool,
+        integrationShape: IntegrationShape,
         completion: @escaping (Result<LoadResult, Error>) -> Void
     ) {
         analyticsHelper.logLoadStarted()
@@ -89,8 +113,8 @@ final class PaymentSheetLoader {
                 let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
                     savedPaymentMethods: filteredSavedPaymentMethods,
                     customerID: configuration.customer?.id,
-                    showApplePay: isFlowController ? isApplePayEnabled : false,
-                    showLink: isFlowController ? isLinkEnabled : false
+                    showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
+                    showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: false)
                 analyticsHelper.logLoadSucceeded(
@@ -99,7 +123,7 @@ final class PaymentSheetLoader {
                     defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                     orderedPaymentMethodTypes: paymentMethodTypes
                 )
-                if isFlowController {
+                if integrationShape.shouldStartCheckoutMeasurementOnLoad {
                     analyticsHelper.startTimeMeasurement(.checkout)
                 }
 
@@ -113,6 +137,29 @@ final class PaymentSheetLoader {
             } catch {
                 analyticsHelper.logLoadFailed(error: error)
                 completion(.failure(error))
+            }
+        }
+    }
+
+    public static func load(
+        mode: PaymentSheet.InitializationMode,
+        configuration: PaymentElementConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        integrationShape: IntegrationShape
+    ) async throws -> LoadResult {
+        return try await withCheckedThrowingContinuation { continuation in
+            load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                integrationShape: integrationShape
+            ) { result in
+                switch result {
+                case .success(let loadResult):
+                    continuation.resume(returning: loadResult)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }
@@ -136,7 +183,7 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
+    static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> PaymentSheetLinkAccount? {
         // Only lookup the consumer account if Link is supported
         guard PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
             return nil
@@ -170,7 +217,7 @@ final class PaymentSheetLoader {
     }
 
     typealias ElementSessionAndIntent = (elementsSession: STPElementsSession, intent: Intent)
-    static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
+    static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod = defaultStripePaymentMethodId(forCustomerID: configuration.customer?.id)
@@ -251,7 +298,7 @@ final class PaymentSheetLoader {
     }
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
-    static func fetchSavedPaymentMethods(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethods(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
@@ -277,7 +324,7 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
         guard let customerID = configuration.customer?.id,
               let ephemeralKey = configuration.customer?.ephemeralKeySecret,
               !ephemeralKey.isEmpty else {

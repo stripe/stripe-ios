@@ -39,6 +39,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Layout" }
         case horizontal
         case vertical
+        case automatic
     }
 
     enum IntegrationType: String, PickerEnum {
@@ -409,7 +410,19 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+
+    enum HidesMandateTextEnabled: String, PickerEnum {
+        static let enumName: String = "hidesMandateText"
+        case on
+        case off
+    }
     
+    enum FormSheetAction: String, PickerEnum {
+        static let enumName: String = "formSheetAction"
+        case confirm
+        case `continue`
+    }
+
     enum CardBrandAcceptance: String, PickerEnum {
         static let enumName: String = "cardBrandAcceptance"
         case all
@@ -457,6 +470,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectEmail: BillingDetailsEmail
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
+    var formSheetAction: FormSheetAction
+    var hidesMandateText: HidesMandateTextEnabled
     var cardBrandAcceptance: CardBrandAcceptance
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
@@ -498,6 +513,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectEmail: .automatic,
             collectPhone: .automatic,
             collectAddress: .automatic,
+            formSheetAction: .confirm,
+            hidesMandateText: .off,
             cardBrandAcceptance: .all)
     }
 

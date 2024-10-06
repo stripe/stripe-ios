@@ -2264,8 +2264,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/erikdoe/ocmock";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = revision;
+				revision = 2c0bfd373289f4a7716db5d6db471640f91a6507;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

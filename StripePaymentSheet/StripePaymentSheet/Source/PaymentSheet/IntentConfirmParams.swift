@@ -13,7 +13,7 @@ import UIKit
 
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
 /// - Note: Assumes you're confirming with a new payment method, unless a payment method ID is provided
-class IntentConfirmParams {
+final class IntentConfirmParams {
     /// An enum for the three possible states of the e.g. "Save this card for future payments" checkbox
     enum SaveForFutureUseCheckboxState {
         /// The checkbox wasn't displayed

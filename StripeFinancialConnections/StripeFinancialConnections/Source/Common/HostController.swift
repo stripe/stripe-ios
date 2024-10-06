@@ -175,7 +175,8 @@ private extension HostController {
             accountPickerPane: synchronizePayload.text?.accountPickerPane,
             apiClient: apiClient,
             clientSecret: clientSecret,
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            elementsSessionContext: elementsSessionContext
         )
         nativeFlowController = NativeFlowController(
             dataManager: dataManager,

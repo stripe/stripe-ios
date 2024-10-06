@@ -23,55 +23,35 @@ jobs:
       - name: Build project and run Periphery scan
         id: periphery-scan
         run: |
-          periphery scan --config .periphery.yml --clean-build 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' > periphery_report_feature_formatted_sorted.txt
+          periphery scan --config .periphery.yml --clean-build --retain-codable-properties 2>&1 > periphery_report_feature_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_feature_formatted_sorted.txt unused_code_feature.json
           
       - name: Copy .periphery.yml to temporary location
         run: |
             # Copy necessary files to /tmp/ before checking out master
             cp .periphery.yml /tmp/
-            cp ci_scripts/dead_code/process_periphery_output.rb /tmp/
+            cp -r ci_scripts/dead_code/ /tmp/
 
       - name: Compare Periphery output with master baseline
         run: |
-          git fetch origin master:master
-          git checkout master
+          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
+          git checkout ${{ github.base_ref }}
           cp /tmp/.periphery.yml .periphery.yml
           mkdir -p ci_scripts/dead_code/
-          cp /tmp/process_periphery_output.rb ci_scripts/dead_code/
+          cp -r /tmp/ ci_scripts/dead_code/
 
-          periphery scan --config .periphery.yml --clean-build 2>&1 | sed -E 's#.*/##; s/:[0-9]+:[0-9]+:/: /' | grep 'is unused' > periphery_report_master_formatted_sorted.txt
+          periphery scan --config .periphery.yml --clean-build --retain-codable-properties 2>&1 > periphery_report_master_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
 
       - name: Compare Unused Code JSON Files
         id: compare-dead-code
         run: |
-          # Compare the keys in the JSON files to find new dead code
-          ruby -r json -e '
-            master_file = "unused_code_master.json"
-            feature_file = "unused_code_feature.json"
-            output_file = "new_dead_code.json"
-
-            master_unused_code = JSON.parse(File.read(master_file))
-            feature_unused_code = JSON.parse(File.read(feature_file))
-
-
-            new_dead_code = feature_unused_code.reject { |k, _| master_unused_code.key?(k) }
-
-              if new_dead_code.size > 200
-                puts "More than 200 keys present, skipping. This usually happens if a build fails"
-              elsif new_dead_code.empty?
-                puts "No new dead code detected."
-              else
-              File.write(output_file, JSON.pretty_generate(new_dead_code) + "\n")
-            end
-          '
-
-          # Check if new_dead_code.json exists and is not empty
-          if [ -s new_dead_code.json ]; then
+          ruby ci_scripts/dead_code/compare_unused_code.rb unused_code_master.json unused_code_feature.json
+          # Check if new_dead_code.txt exists and is not empty
+          if [ -s new_dead_code.txt ]; then
             echo "New dead code detected."
             echo "diff<<EOF" >> $GITHUB_ENV
-            cat new_dead_code.json >> $GITHUB_ENV
+            cat new_dead_code.txt >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
           else
             echo "No new dead code detected."
@@ -79,6 +59,7 @@ jobs:
 
       - uses: peter-evans/find-comment@v3
         id: find_comment
+        if: env.diff != ''
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: '🚨 New dead code detected'
@@ -99,7 +80,7 @@ jobs:
 
             If this is intentional, you can bypass this check by adding the label `skip dead code check` to this PR.
 
-            ℹ️ If this comment appears to be left in error, make sure your branch is up-to-date with `master`.
+            ℹ️ If this comment appears to be left in error, double check that the flagged code is actually used and/or make sure your branch is up-to-date with `master`.
 
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}

@@ -141,7 +141,7 @@ extension CustomerSheetDataSource {
         case .customerAdapter:
             return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: setupIntentClientSecret,
                                                                                               clientDefaultPaymentMethod: nil,
-                                                                                              configuration: .init())
+                                                                                              configuration: PaymentSheet.Configuration.init())
         case .customerSession(let customerSessionAdapter):
            return try await customerSessionAdapter.elementsSession(setupIntentClientSecret: setupIntentClientSecret)
         }

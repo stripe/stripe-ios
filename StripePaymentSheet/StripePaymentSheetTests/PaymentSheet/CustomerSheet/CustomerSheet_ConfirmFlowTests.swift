@@ -398,7 +398,7 @@ extension CustomerSheet_ConfirmFlowTests {
                 case .completed(let completedResult):
                     if case .financialConnections(let linkedBank) = completedResult {
                         if let usBankElement = paymentMethodForm as? USBankAccountPaymentMethodElement {
-                            usBankElement.setLinkedBank(linkedBank)
+                            usBankElement.linkedBank = linkedBank
                         }
                     } else {
                         XCTFail("no linked account")
