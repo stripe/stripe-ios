@@ -35,12 +35,7 @@ modules = YAML.load_file('modules.yaml')['modules']
 modules.append({ 'scheme' => 'Stripe3DS2', 'framework_name' => 'Stripe3DS2', 'supports_catalyst' => true })
 
 # Clean build directory
-# build_dir = File.join_if_safe(root_dir, 'build')
-build_dir = if ARGV.empty?
-              File.join_if_safe(root_dir, 'build')
-            else
-              ARGV[0]
-            end
+build_dir = File.join_if_safe(root_dir, 'build')
 
 info 'Cleaning build directory...'
 

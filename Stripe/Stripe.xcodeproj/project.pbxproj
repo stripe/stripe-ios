@@ -1657,7 +1657,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -x\necho \"BUILT_PRODUCTS_DIR: ${BUILT_PRODUCTS_DIR}\"\necho \"PROJECT_DIR: ${PROJECT_DIR}\"\ncd \"${PROJECT_DIR}/..\"\necho $(pwd)\nruby ci_scripts/export_builds.rb \"${BUILT_PRODUCTS_DIR}\"\n";
+			shellScript = "cd \"${PROJECT_DIR}/..\"\nruby ci_scripts/export_builds.rb \ncp \"${PROJECT_DIR}/../build/Stripe.xcframework.zip\" \"${BUILT_PRODUCTS_DIR}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
