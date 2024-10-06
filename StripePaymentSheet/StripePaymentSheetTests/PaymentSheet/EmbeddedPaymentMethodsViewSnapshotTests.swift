@@ -744,6 +744,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 }
 
 class MockMandateProvider: MandateTextProvider {
+    let merchantDisplaysMandate: Bool = false
+    
     private let mandateResolver: (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)
 
     init(mandateResolver: @escaping (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)) {

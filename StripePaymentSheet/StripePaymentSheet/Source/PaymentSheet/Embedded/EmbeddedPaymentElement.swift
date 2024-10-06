@@ -43,7 +43,9 @@ public class EmbeddedPaymentElement {
     }
 
     /// The customer's currently selected payment option.
-    public var paymentOption: PaymentOptionDisplayData? { return nil /* computed */ }
+    public var paymentOption: PaymentOptionDisplayData? {
+        return (view as? EmbeddedPaymentMethodsView)?.displayData
+    }
 
     /// An asynchronous failable initializer
     /// This loads the Customer's payment methods, their default payment method, etc.
@@ -231,5 +233,9 @@ extension EmbeddedPaymentElement {
 extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func heightDidChange() {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+    }
+    
+    func selectionDidUpdate() {
+        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
 }
