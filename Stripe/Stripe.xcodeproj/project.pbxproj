@@ -6,6 +6,22 @@
 	objectVersion = 55;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		E652E5F22CB20B7200081F83 /* ReleaseFrameworksTarget */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = E652E5F52CB20B7200081F83 /* Build configuration list for PBXAggregateTarget "ReleaseFrameworksTarget" */;
+			buildPhases = (
+				E652E5F62CB20BA200081F83 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = ReleaseFrameworksTarget;
+			packageProductDependencies = (
+			);
+			productName = ReleaseFrameworksTarget;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		013F991AB34E38BDBA6E4521 /* STPFormViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44327A2B2C9483F52EE343B /* STPFormViewSnapshotTests.swift */; };
 		0185AC6B123CD73E877D4FCE /* STPPaymentMethodCashAppParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABB2CA7E96BE249CE8C0566 /* STPPaymentMethodCashAppParamsTests.swift */; };
@@ -1511,6 +1527,9 @@
 					49A14BBD10B1E97F2B43C448 = {
 						TestTargetID = 1628E8B14F1F7C63CF8C9962;
 					};
+					E652E5F22CB20B7200081F83 = {
+						CreatedOnToolsVersion = 16.0;
+					};
 				};
 			};
 			buildConfigurationList = 2804CCD7A91C99DF32596147 /* Build configuration list for PBXProject "Stripe" */;
@@ -1576,6 +1595,7 @@
 				8BE23AD5D9A3D939AF46F31E /* StripeiOSTests */,
 				1628E8B14F1F7C63CF8C9962 /* StripeiOSTestHostApp */,
 				49A14BBD10B1E97F2B43C448 /* StripeiOSAppHostedTests */,
+				E652E5F22CB20B7200081F83 /* ReleaseFrameworksTarget */,
 			);
 		};
 /* End PBXProject section */
@@ -1619,6 +1639,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E652E5F62CB20BA200081F83 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -x\necho \"BUILT_PRODUCTS_DIR: ${BUILT_PRODUCTS_DIR}\"\necho \"PROJECT_DIR: ${PROJECT_DIR}\"\ncd \"${PROJECT_DIR}/..\"\necho $(pwd)\nruby ci_scripts/export_builds.rb \"${BUILT_PRODUCTS_DIR}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		24CDC502E3D468F309116FE1 /* Sources */ = {
@@ -2193,6 +2234,22 @@
 			};
 			name = Release;
 		};
+		E652E5F32CB20B7200081F83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E652E5F42CB20B7200081F83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2219,6 +2276,15 @@
 			buildConfigurations = (
 				D3B5E5117D5D1C186CC75505 /* Debug */,
 				A71DB2DB45060267821F91EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E652E5F52CB20B7200081F83 /* Build configuration list for PBXAggregateTarget "ReleaseFrameworksTarget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E652E5F32CB20B7200081F83 /* Debug */,
+				E652E5F42CB20B7200081F83 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
