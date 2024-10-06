@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'fileutils'
-require 'zip'
 require 'yaml'
 
 # MARK: - Helpers
@@ -36,7 +35,12 @@ modules = YAML.load_file('modules.yaml')['modules']
 modules.append({ 'scheme' => 'Stripe3DS2', 'framework_name' => 'Stripe3DS2', 'supports_catalyst' => true })
 
 # Clean build directory
-build_dir = File.join_if_safe(root_dir, 'build')
+# build_dir = File.join_if_safe(root_dir, 'build')
+build_dir = if ARGV.empty?
+              File.join_if_safe(root_dir, 'build')
+            else
+              ARGV[0]
+            end
 
 info 'Cleaning build directory...'
 
@@ -55,6 +59,7 @@ Dir.chdir(root_dir) do
       -scheme "AllStripeFrameworks" \
       -configuration "Release" \
       -archivePath "#{build_dir}/StripeFrameworks-iOS.xcarchive" \
+      -derivedDataPath "#{build_dir}/DerivedData" \
       -sdk iphoneos \
       -destination 'generic/platform=iOS' \
       SUPPORTS_MACCATALYST=NO \
@@ -75,6 +80,7 @@ Dir.chdir(root_dir) do
     -destination 'generic/platform=iOS Simulator' \
     -configuration "Release" \
     -archivePath "#{build_dir}/StripeFrameworks-sim.xcarchive" \
+    -derivedDataPath "#{build_dir}/DerivedData" \
     -sdk iphonesimulator \
     SUPPORTS_MACCATALYST=NO \
     BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
@@ -93,6 +99,7 @@ Dir.chdir(root_dir) do
       -scheme "AllStripeFrameworksCatalyst" \
       -configuration "Release" \
       -archivePath "#{build_dir}/StripeFrameworks-mac.xcarchive" \
+      -derivedDataPath "#{build_dir}/DerivedData" \
       -sdk macosx \
       -destination 'generic/platform=macOS,variant=Mac Catalyst' \
       SUPPORTS_MACCATALYST=YES \
@@ -125,13 +132,17 @@ Dir.chdir(root_dir) do
   end # modules.each
 end # Dir.chdir
 
-Zip::File.open(File.join_if_safe(build_dir, 'Stripe.xcframework.zip'), create: true) do |zipfile|
-  # Add module framework directories to zip
-  modules.each do |m|
-    framework_name = m['framework_name']
-    Dir.glob("#{build_dir}/#{framework_name}.xcframework/**/*").each do |file|
-      file_name = Pathname.new(file).relative_path_from(Pathname.new(build_dir))
-      zipfile.add(file_name, file)
-    end
-  end
+Dir.chdir(build_dir) do
+  `zip -r Stripe.xcframework.zip *.xcframework`
 end
+
+# Zip::File.open(File.join_if_safe(build_dir, 'Stripe.xcframework.zip'), create: true) do |zipfile|
+#   # Add module framework directories to zip
+#   modules.each do |m|
+#     framework_name = m['framework_name']
+#     Dir.glob("#{build_dir}/#{framework_name}.xcframework/**/*").each do |file|
+#       file_name = Pathname.new(file).relative_path_from(Pathname.new(build_dir))
+#       zipfile.add(file_name, file)
+#     end
+#   end
+# end
