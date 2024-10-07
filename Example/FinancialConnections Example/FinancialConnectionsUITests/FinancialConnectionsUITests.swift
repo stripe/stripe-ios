@@ -396,11 +396,12 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
 
-        let usesLinkText = app.webViews
-            .staticTexts
-            .containing(NSPredicate(format: "label CONTAINS 'uses Link to connect your account'"))
+        let authFlowWebViewUrl = app
+            .otherElements["TopBrowserBar"]
+            .otherElements
+            .containing(NSPredicate(format: "value CONTAINS 'auth.stripe.com'"))
             .firstMatch
-        XCTAssertTrue(usesLinkText.waitForExistence(timeout: 120.0))  // glitch app can take time to load
+        XCTAssertTrue(authFlowWebViewUrl.waitForExistence(timeout: 120.0)) // glitch app can take time to load
 
         app.fc_secureWebViewCancelButton.tap()
 
