@@ -97,6 +97,11 @@ extension EmbeddedPaymentElement {
       }
     }
 
+    /// By default, embedded payment element will accept all supported cards by Stripe.
+    /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
+    /// Note: This is only a client-side solution.
+      @_spi(CardBrandFilteringBeta) public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+
     /// Override country for test purposes
     @_spi(STP) public var userOverrideCountry: String?
 

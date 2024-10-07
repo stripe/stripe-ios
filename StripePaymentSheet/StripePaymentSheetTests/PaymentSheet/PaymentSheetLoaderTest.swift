@@ -239,7 +239,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     func testPaymentSheetLoadFiltersCardBrandAcceptance() async throws {
         let apiClient = STPAPIClient(publishableKey: STPTestingJPPublishableKey)
         var configuration = PaymentSheet.Configuration()
@@ -270,13 +270,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             XCTFail("Confirm handler shouldn't be called.")
         }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
-        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), isFlowController: true) { result in
+        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(isCustom: false, configuration: configuration), integrationShape: .complete) { result in
             loadExpectation.fulfill()
             switch result {
             case .success(let loadResult):
                 // ...check that it filters out the saved Visa card
                 XCTAssertTrue(loadResult.savedPaymentMethods.isEmpty)
-                
+
             case .failure:
                 XCTFail()
             }
