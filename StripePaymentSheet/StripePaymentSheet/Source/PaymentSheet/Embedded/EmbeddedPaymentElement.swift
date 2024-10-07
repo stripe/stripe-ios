@@ -98,9 +98,18 @@ public class EmbeddedPaymentElement {
             appearance: configuration.appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
-            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType
+            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
+            mandateProvider: FormMandateProvider(configuration: configuration,
+                                             elementsSession: loadResult.elementsSession,
+                                             intent: .deferredIntent(intentConfig: intentConfiguration))
         )
-        return .init(view: embeddedPaymentMethodsView, configuration: configuration)
+
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(view: embeddedPaymentMethodsView, configuration: configuration)
+        await MainActor.run {
+            embeddedPaymentMethodsView.delegate = embeddedPaymentElement
+        }
+
+        return embeddedPaymentElement
     }
 
     /// The result of an `update` call
@@ -217,4 +226,10 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
+}
+
+extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
+    func heightDidChange() {
+        delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+    }
 }

@@ -20,7 +20,7 @@ class PaymentMethodFormViewController: UIViewController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let paymentMethodType: PaymentSheet.PaymentMethodType
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
@@ -81,7 +81,7 @@ class PaymentMethodFormViewController: UIViewController {
         elementsSession: STPElementsSession,
         previousCustomerInput: IntentConfirmParams?,
         formCache: PaymentMethodFormCache,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: PaymentMethodFormViewControllerDelegate

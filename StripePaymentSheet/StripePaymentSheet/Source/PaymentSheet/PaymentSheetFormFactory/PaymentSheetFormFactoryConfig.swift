@@ -8,7 +8,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 enum PaymentSheetFormFactoryConfig {
-    case paymentSheet(PaymentSheet.Configuration)
+    case paymentSheet(PaymentElementConfiguration) // TODO(porter) Change this back to PaymentSheet.Configuration when implementing embedded showing forms, and add a .embedded(EmbeddedPaymentElement.Configuration) case or consider just renaming this case to `paymentElement`.
     case customerSheet(CustomerSheet.Configuration)
 
     var hasCustomer: Bool {
