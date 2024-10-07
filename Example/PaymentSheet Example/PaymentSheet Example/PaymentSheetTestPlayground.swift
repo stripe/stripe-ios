@@ -90,7 +90,10 @@ struct PaymentSheetTestPlayground: View {
                                 })
                         }
                         SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: integrationTypeBinding).disabled(playgroundController.settings.uiStyle == .embedded)
+                        SettingPickerView(
+                            setting: integrationTypeBinding,
+                            disabledSettings: playgroundController.settings.uiStyle == .embedded ? [.normal] : []
+                        )
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
                         HStack {
@@ -570,13 +573,14 @@ struct SettingView<S: PickerEnum>: View {
 
 struct SettingPickerView<S: PickerEnum>: View {
     var setting: Binding<S>
+    var disabledSettings: [S] = []
 
     var body: some View {
         HStack {
             Text(S.enumName).font(.subheadline)
             Spacer()
             Picker(S.enumName, selection: setting) {
-                ForEach(S.allCases, id: \.self) { t in
+                ForEach(S.allCases.filter({ !disabledSettings.contains($0) }), id: \.self) { t in
                     Text(t.displayName)
                 }
             }.layoutPriority(0.8)
