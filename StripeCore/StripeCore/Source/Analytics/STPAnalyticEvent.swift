@@ -148,6 +148,8 @@ import Foundation
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
     // MARK: - CustomerSheet initialization
+    case customerSheetInitWithCustomerAdapter = "cs_init_with_customer_adapter"
+    case customerSheetInitWithCustomerSession = "cs_init_with_customer_session"
     case customerSheetLoadStarted = "cs_load_started"
     case customerSheetLoadSucceeded = "cs_load_succeeded"
     case customerSheetLoadFailed = "cs_load_failed"
