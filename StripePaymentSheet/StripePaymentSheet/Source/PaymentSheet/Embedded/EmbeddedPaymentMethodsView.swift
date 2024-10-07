@@ -27,7 +27,6 @@ class EmbeddedPaymentMethodsView: UIView {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = appearance.embeddedPaymentElement.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
-        stackView.setCustomSpacing(0, after: mandateView)
         return stackView
     }()
 

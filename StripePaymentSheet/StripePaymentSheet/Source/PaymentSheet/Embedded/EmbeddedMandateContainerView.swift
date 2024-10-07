@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-/// A simple container that holds a mandate text view for the embedded payment element
+/// A simple container that holds a mandate text view for the embedded payment element and applies constraints for it to be presented in the `EmbeddedPaymentMethodsView`'s `UIStackView`.
 class EmbeddedMandateContainerView: UIView {
     private let mandateView: SimpleMandateTextView
 
