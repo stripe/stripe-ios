@@ -19,7 +19,7 @@ final class AUBECSLegalTermsView: UIView {
     ]
     private let configuration: PaymentSheetFormFactoryConfig
 
-    private var theme: ElementsUITheme {
+    private var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
     }
 

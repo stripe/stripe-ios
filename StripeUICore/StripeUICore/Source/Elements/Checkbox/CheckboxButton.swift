@@ -104,7 +104,7 @@ import UIKit
         }
     }
 
-    public var theme: ElementsUITheme {
+    public var theme: ElementsAppearance {
         didSet {
             checkbox.theme = theme
             updateLabels()
@@ -113,7 +113,7 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(description: String? = nil, theme: ElementsUITheme = .default) {
+    public init(description: String? = nil, theme: ElementsAppearance = .default) {
         self.theme = theme
         super.init(frame: .zero)
 
@@ -130,12 +130,12 @@ import UIKit
         addGestureRecognizer(didTapGestureRecognizer)
     }
 
-    public convenience init(text: String, description: String? = nil, theme: ElementsUITheme = .default) {
+    public convenience init(text: String, description: String? = nil, theme: ElementsAppearance = .default) {
         self.init(description: description, theme: theme)
         setText(text)
     }
 
-    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsUITheme = .default) {
+    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsAppearance = .default) {
         self.init(description: description, theme: theme)
         setAttributedText(attributedText)
     }
@@ -268,7 +268,7 @@ class CheckBox: UIView {
         return theme.colors.parentBackground
     }
 
-    var theme: ElementsUITheme {
+    var theme: ElementsAppearance {
         didSet {
             layer.applyShadow(shadow: theme.shadow)
             setNeedsDisplay()
@@ -279,7 +279,7 @@ class CheckBox: UIView {
         return CGSize(width: 20, height: 20)
     }
 
-    init(theme: ElementsUITheme = .default) {
+    init(theme: ElementsAppearance = .default) {
         self.theme = theme
         super.init(frame: .zero)
 

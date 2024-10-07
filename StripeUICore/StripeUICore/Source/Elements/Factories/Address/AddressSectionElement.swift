@@ -148,7 +148,7 @@ import UIKit
 
     public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
-    let theme: ElementsUITheme
+    let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
     let didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
@@ -172,7 +172,7 @@ import UIKit
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
         additionalFields: AdditionalFields = .init(),
-        theme: ElementsUITheme = .default,
+        theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
     ) {
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries

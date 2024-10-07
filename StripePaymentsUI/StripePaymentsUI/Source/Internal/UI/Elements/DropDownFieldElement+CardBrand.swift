@@ -14,7 +14,7 @@ import UIKit
 extension DropdownFieldElement {
 
     @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(),
-                                                        theme: ElementsUITheme = .default,
+                                                        theme: ElementsAppearance = .default,
                                                         includePlaceholder: Bool = true,
                                                         maxWidth: CGFloat? = nil,
                                                         hasPadding: Bool = true,
@@ -32,7 +32,7 @@ extension DropdownFieldElement {
         )
     }
 
-    @_spi(STP) public static func items(from cardBrands: Set<STPCardBrand>, theme: ElementsUITheme, includePlaceholder: Bool = true, maxWidth: CGFloat? = nil) -> [DropdownItem] {
+    @_spi(STP) public static func items(from cardBrands: Set<STPCardBrand>, theme: ElementsAppearance, includePlaceholder: Bool = true, maxWidth: CGFloat? = nil) -> [DropdownItem] {
         let placeholderItem = DropdownItem(
             pickerDisplayName: NSAttributedString(string: .Localized.card_brand_dropdown_placeholder),
             labelDisplayName: STPCardBrand.unknown.brandIconAttributedString(theme: theme, maxWidth: maxWidth),

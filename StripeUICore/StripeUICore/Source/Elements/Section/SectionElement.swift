@@ -55,7 +55,7 @@ import UIKit
         elements.compactMap({ $0.subLabelText }).first
     }
 
-    let theme: ElementsUITheme
+    let theme: ElementsAppearance
 
     // MARK: - ViewModel
 
@@ -64,12 +64,12 @@ import UIKit
         let title: String?
         let errorText: String?
         var subLabel: String?
-        let theme: ElementsUITheme
+        let theme: ElementsAppearance
     }
 
     // MARK: - Initializers
 
-    public init(title: String? = nil, elements: [Element], theme: ElementsUITheme = .default) {
+    public init(title: String? = nil, elements: [Element], theme: ElementsAppearance = .default) {
         self.title = title
         self.elements = elements
         self.theme = theme
@@ -78,7 +78,7 @@ import UIKit
         }
     }
 
-    public convenience init(_ element: Element, theme: ElementsUITheme = .default) {
+    public convenience init(_ element: Element, theme: ElementsAppearance = .default) {
         self.init(title: nil, elements: [element], theme: theme)
     }
 }

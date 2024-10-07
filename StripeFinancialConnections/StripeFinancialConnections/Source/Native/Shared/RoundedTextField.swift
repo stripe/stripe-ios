@@ -98,9 +98,9 @@ final class RoundedTextField: UIView {
     }()
     private var currentFooterView: UIView?
     private lazy var keyboardToolbar: DoneButtonToolbar = {
-        var theme: ElementsUITheme = .default
+        var theme: ElementsAppearance = .default
         theme.colors = {
-            var colors = ElementsUITheme.Color()
+            var colors = ElementsAppearance.Color()
             colors.primary = self.theme.primaryColor
             colors.secondaryText = .textSubdued
             return colors
