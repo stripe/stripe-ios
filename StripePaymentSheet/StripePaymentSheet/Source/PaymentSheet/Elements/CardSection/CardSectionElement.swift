@@ -60,7 +60,6 @@ final class CardSectionElement: ContainerElement {
     let theme: ElementsUITheme
     let preferredNetworks: [STPCardBrand]?
     let hostedSurface: HostedSurface
-    let cardBrandFilter: CardBrandFilter
 
     init(
         collectName: Bool = false,
@@ -75,7 +74,6 @@ final class CardSectionElement: ContainerElement {
         self.hostedSurface = hostedSurface
         self.theme = theme
         self.analyticsHelper = analyticsHelper
-        self.cardBrandFilter = cardBrandFilter
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
