@@ -39,7 +39,7 @@ public class EmbeddedPaymentElement {
         /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
         /// If you set `configuration.hidesMandateText = true`, this text must be displayed to the customer near your “Buy” button to comply with regulations.
-        public let mandateText: NSAttributedString
+        public let mandateText: NSAttributedString?
     }
 
     /// The customer's currently selected payment option.

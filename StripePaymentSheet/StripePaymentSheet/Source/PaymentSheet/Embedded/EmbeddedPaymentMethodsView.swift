@@ -22,8 +22,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
     var displayData: EmbeddedPaymentElement.PaymentOptionDisplayData? {
         guard let selection else { return nil }
-        let mandateText = mandateView.attributedText ?? NSAttributedString(string: "")
-        return .init(selection: selection, mandateText: mandateProvider.merchantDisplaysMandate ? mandateText : NSAttributedString(string: ""))
+        return .init(selection: selection, mandateText: mandateView.attributedText)
     }
     
     private let appearance: PaymentSheet.Appearance
@@ -246,7 +245,9 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Style {
 
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
-    init(selection: EmbeddedPaymentMethodsView.Selection, mandateText: NSAttributedString) {
+    init(selection: EmbeddedPaymentMethodsView.Selection, mandateText: NSAttributedString?) {
+        self.mandateText = mandateText
+        
         switch selection {
         case .new(paymentMethodType: let paymentMethodType):
             image = paymentMethodType.makeImage(
@@ -272,7 +273,5 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             paymentMethodType = STPPaymentMethodType.link.identifier
             billingDetails = nil // TODO(porter) Handle billing details when we present forms
         }
-        
-        self.mandateText = mandateText // TOOD(porter) This should be optional
     }
 }
