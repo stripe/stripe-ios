@@ -95,7 +95,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
         
-        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption)
+        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: configuration.hidesMandateText)
     }
 
     private func setupLoadingIndicator() {
@@ -125,7 +125,7 @@ extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
     }
     
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
-        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption)
+        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: configuration.hidesMandateText)
     }
 }
 
@@ -204,11 +204,12 @@ private class EmbeddedPaymentOptionView: UIView {
         ])
     }
     
-    func configure(with data: EmbeddedPaymentElement.PaymentOptionDisplayData?) {
+    func configure(with data: EmbeddedPaymentElement.PaymentOptionDisplayData?, showMandate: Bool) {
         titleLabel.isHidden = data == nil
         imageView.image = data?.image
         label.text = data?.label
         mandateTextLabel.attributedText = data?.mandateText
+        mandateTextLabel.isHidden = !showMandate
     }
 }
 
