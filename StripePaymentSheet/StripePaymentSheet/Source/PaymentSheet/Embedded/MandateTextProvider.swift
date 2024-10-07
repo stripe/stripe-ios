@@ -34,7 +34,7 @@ class FormMandateProvider: MandateTextProvider {
     /// Builds the attributed string for a given payment method type
     /// - Parameter paymentMethodType: The payment method type who's mandate should be constructed
     /// - Parameter savedPaymentMethod: The currently selected saved payment method if any
-    /// - Parameter bottomNoticeAttributedString: Passing this in just makes this method return it as long as `configuration` doesn't hide mandate text
+    /// - Parameter bottomNoticeAttributedString: Passing this in just makes this method return it
     /// - Returns: An `NSAttributedString` representing the mandate to be displayed for `paymentMethodType`, returns `nil` if no mandate should be shown
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString? = nil) -> NSAttributedString? {
         let newMandateText: NSAttributedString? = {
