@@ -34,6 +34,15 @@ public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
+    
+    private var initEvent: STPAnalyticEvent {
+        switch self.integrationType {
+        case .customerAdapter:
+            STPAnalyticEvent.customerSheetInitWithCustomerAdapter
+        case .customerSession:
+            STPAnalyticEvent.customerSheetInitWithCustomerSession
+        }
+    }
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = {
@@ -120,7 +129,7 @@ public class CustomerSheet {
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
         let loadingStartDate = Date()
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: createInitEvent())
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.initEvent)
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadStarted)
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
@@ -220,15 +229,6 @@ public class CustomerSheet {
             return CustomerSheetDataSource(customerSessionAdapter)
         }
         return nil
-    }
-    
-    private func createInitEvent() -> STPAnalyticEvent {
-        switch integrationType {
-        case .customerAdapter:
-            STPAnalyticEvent.customerSheetInitWithCustomerAdapter
-        case .customerSession:
-            STPAnalyticEvent.customerSheetInitWithCustomerSession
-        }
     }
 
     // MARK: - Internal Properties
