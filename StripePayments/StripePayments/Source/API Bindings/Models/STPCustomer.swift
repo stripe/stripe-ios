@@ -97,6 +97,20 @@ public class STPCustomer: NSObject {
         return "<\(props.joined(separator: "; "))>"
     }
 
+    /// Replaces the customer's `sources` and `defaultSource` based on whether or not
+    /// they should include Apple Pay sources. More details on documentation for
+    /// `STPCustomerContext includeApplePaySources`
+    ///
+    /// @param filteringApplePay      If YES, Apple Pay sources will be ignored
+    @objc(updateSourcesFilteringApplePay:)
+    public func updateSources(filteringApplePay: Bool) {
+        let (defaultSource, sources) = STPCustomer.sources(
+            from: allResponseFields,
+            filterApplePay: filteringApplePay
+        )
+        self.defaultSource = defaultSource
+        self.sources = sources
+    }
 }
 
 extension STPCustomer: STPAPIResponseDecodable {

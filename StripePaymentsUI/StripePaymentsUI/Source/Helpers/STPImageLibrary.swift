@@ -13,6 +13,12 @@ import UIKit
 
 /// This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
 public class STPImageLibrary: NSObject {
+    /// An icon representing Apple Pay.
+    @objc
+    public class func applePayCardImage() -> UIImage {
+        return self.safeImageNamed("stp_card_applepay")
+    }
+
     /// An icon representing American Express.
     @objc
     public class func amexCardImage() -> UIImage {
@@ -105,6 +111,14 @@ public class STPImageLibrary: NSObject {
         -> UIImage
     {
         return self.safeImageNamed("stp_card_cbc", templateIfAvailable: false)
+    }
+
+    /// This returns the appropriate icon for the specified card brand as a
+    /// single color template that can be tinted
+    @objc(templatedBrandImageForCardBrand:) public class func templatedBrandImage(
+        for brand: STPCardBrand
+    ) -> UIImage {
+        return self.brandImage(for: brand, template: true)
     }
 
     /// This returns a small icon indicating the CVC location for the given card brand.

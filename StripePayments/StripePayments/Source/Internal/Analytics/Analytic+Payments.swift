@@ -46,7 +46,7 @@ extension GenericPaymentAnalytic {
 
         return params
     }
-    
+
     static let STPBasicUIAnalyticsSerializerClass: STPAnalyticsSerializer.Type? =
         NSClassFromString("Stripe.STPBasicUIAnalyticsSerializer") as? STPAnalyticsSerializer.Type
 

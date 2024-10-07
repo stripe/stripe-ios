@@ -42,10 +42,57 @@ public class STPAddress: NSObject {
 
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+    /// When creating a charge on your backend, you can attach shipping information
+    /// to prevent fraud on a physical good. You can use this method to turn your user's
+    /// shipping address and selected shipping method into a hash suitable for attaching
+    /// to a charge. You should pass this to your backend, and use it as the `shipping`
+    /// parameter when creating a charge.
+    /// - seealso: https://stripe.com/docs/api#create_charge-shipping
+    /// - Parameters:
+    ///   - address:  The user's shipping address. If nil, this method will return nil.
+    ///   - method:   The user's selected shipping method. May be nil.
+    @objc(shippingInfoForChargeWithAddress:shippingMethod:)
+    public class func shippingInfoForCharge(
+        with address: STPAddress?,
+        shippingMethod method: PKShippingMethod?
+    ) -> [AnyHashable: Any]? {
+        guard let address = address else {
+            return nil
+        }
+
+        var params: [AnyHashable: Any] = [:]
+        params["name"] = address.name
+        params["phone"] = address.phone
+        params["carrier"] = method?.label
+        // Re-use STPFormEncoder
+        params["address"] = STPFormEncoder.dictionary(forObject: address)
+        return params
+    }
+
     /// Initializes an empty STPAddress.
     @objc
     public override init() {
         super.init()
+    }
+
+    /// Initializes a new STPAddress with data from STPPaymentMethodBillingDetails.
+    /// - Parameter billingDetails: The STPPaymentMethodBillingDetails instance you want to populate the STPAddress from.
+    /// - Returns: A new STPAddress instance with data copied from the passed in billing details.
+    @objc
+    public init(
+        paymentMethodBillingDetails billingDetails: STPPaymentMethodBillingDetails
+    ) {
+        super.init()
+        name = billingDetails.name
+        phone = billingDetails.phone
+        email = billingDetails.email
+        let pmAddress = billingDetails.address
+        line1 = pmAddress?.line1
+        line2 = pmAddress?.line2
+        city = pmAddress?.city
+        state = pmAddress?.state
+        postalCode = pmAddress?.postalCode
+        country = pmAddress?.country
     }
 
     /// Initializes a new STPAddress with data from an PassKit contact.
@@ -72,6 +119,27 @@ public class STPAddress: NSObject {
             phone = nil
         }
         setAddressFromCNPostal(contact.postalAddress)
+    }
+
+    /// Generates a PassKit contact representation of this STPAddress.
+    /// - Returns: A new PassKit contact with data copied from this STPAddress instance.
+    @objc(PKContactValue)
+    public func pkContactValue() -> PKContact {
+        let contact = PKContact()
+        var personName = PersonNameComponents()
+        personName.givenName = firstName()
+        personName.familyName = lastName()
+        contact.name = personName
+        contact.emailAddress = email
+        let address = CNMutablePostalAddress()
+        address.street = street() ?? ""
+        address.city = city ?? ""
+        address.state = state ?? ""
+        address.postalCode = postalCode ?? ""
+        address.country = country ?? ""
+        contact.postalAddress = address
+        contact.phoneNumber = CNPhoneNumber(stringValue: phone ?? "")
+        return contact
     }
 
     /// Initializes a new STPAddress with a contact from the Contacts framework.
@@ -118,6 +186,50 @@ public class STPAddress: NSObject {
         country = stringIfHasContentsElseNil(address?.isoCountryCode.uppercased())
     }
 
+    private func firstName() -> String? {
+        if let givenName = givenName {
+            return givenName
+        } else {
+            let components = name?.components(separatedBy: " ")
+            return components?.first
+        }
+    }
+
+    private func lastName() -> String? {
+        if let familyName = familyName {
+            return familyName
+        } else {
+            if let components = name?.components(separatedBy: " "),
+                let firstName = components.first,
+                let lastName = name?.replacingOccurrences(of: firstName, with: "")
+                    .trimmingCharacters(
+                        in: .whitespaces
+                    )
+            {
+                return stringIfHasContentsElseNil(lastName)
+            }
+            return nil
+        }
+    }
+
+    private func street() -> String? {
+        var street: String?
+        if let line1 = line1 {
+            street = "" + line1
+        }
+        if let line2 = line2 {
+            street = [street ?? "", line2].joined(separator: " ")
+        }
+        return street
+    }
+
+    /// Does this STPAddress contain any data in the postal address fields?
+    /// If they are all empty or nil, returns NO. Even a single character in a
+    /// single field will return YES.
+    @_spi(STP) public func hasPartialPostalAddress() -> Bool {
+        return (line1?.count ?? 0) > 0 || (line2?.count ?? 0) > 0 || (city?.count ?? 0) > 0
+            || (country?.count ?? 0) > 0 || (state?.count ?? 0) > 0 || (postalCode?.count ?? 0) > 0
+    }
 }
 
 extension STPAddress: STPAPIResponseDecodable {
