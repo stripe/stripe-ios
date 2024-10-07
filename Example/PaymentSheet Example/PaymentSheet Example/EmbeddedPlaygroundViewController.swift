@@ -87,8 +87,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             embeddedPaymentElement.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             embeddedPaymentElement.view.widthAnchor.constraint(equalTo: view.widthAnchor),
             paymentOptionView.topAnchor.constraint(equalTo: embeddedPaymentElement.view.bottomAnchor, constant: 25),
-            paymentOptionView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            paymentOptionView.heightAnchor.constraint(equalToConstant: 50),
+            paymentOptionView.widthAnchor.constraint(equalTo: view.widthAnchor),
             paymentOptionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             checkoutButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50),
@@ -131,9 +130,16 @@ extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
 }
 
 
-class EmbeddedPaymentOptionView: UIView {
-    
-    // MARK: - Properties
+private class EmbeddedPaymentOptionView: UIView {
+        
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .body)
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Selected payment method"
+        return label
+    }()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -144,7 +150,7 @@ class EmbeddedPaymentOptionView: UIView {
     
     private let label: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = .preferredFont(forTextStyle: .subheadline)
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -152,15 +158,13 @@ class EmbeddedPaymentOptionView: UIView {
     
     private let mandateTextLabel: UILabel = {
         let mandateLabel = UILabel()
-        mandateLabel.font = UIFont.systemFont(ofSize: 12)
+        mandateLabel.font = .preferredFont(forTextStyle: .footnote)
         mandateLabel.numberOfLines = 0
         mandateLabel.textColor = .gray
         mandateLabel.translatesAutoresizingMaskIntoConstraints = false
         mandateLabel.textAlignment = .left
         return mandateLabel
     }()
-    
-    // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -172,41 +176,39 @@ class EmbeddedPaymentOptionView: UIView {
         setupView()
     }
     
-    // MARK: - Setup
-    
     private func setupView() {
+        addSubview(titleLabel)
         addSubview(imageView)
         addSubview(label)
         addSubview(mandateTextLabel)
-        // Setup constraints
+        
         NSLayoutConstraint.activate([
-            // Image View Constraints
-            imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            imageView.topAnchor.constraint(equalTo: self.topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
+            titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
+            titleLabel.widthAnchor.constraint(equalTo: self.widthAnchor),
+            titleLabel.heightAnchor.constraint(equalToConstant: 25),
+            
+            imageView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            imageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 25),
             imageView.heightAnchor.constraint(equalToConstant: 25),
             
-            // Label Constraints
             label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             label.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             label.topAnchor.constraint(equalTo: self.topAnchor),
             label.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
             
-            // Mandate Text Label Constraints
             mandateTextLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-            mandateTextLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            mandateTextLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
-            mandateTextLabel.heightAnchor.constraint(equalToConstant: 70),
+            mandateTextLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
+            mandateTextLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 12),
         ])
     }
     
-    // MARK: - Configuration
-    
     func configure(with data: EmbeddedPaymentElement.PaymentOptionDisplayData?) {
+        titleLabel.isHidden = data == nil
         imageView.image = data?.image
         label.text = data?.label
         mandateTextLabel.attributedText = data?.mandateText
-        mandateTextLabel.sizeToFit()
     }
 }
 
