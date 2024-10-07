@@ -23,7 +23,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -35,7 +36,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .viewMore)
+                                                      savedPaymentMethodAccessoryType: .viewMore,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -47,7 +49,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: .default,
                                                       shouldShowApplePay: false,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -59,7 +62,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: false,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -74,7 +78,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
         verify(embeddedView)
         // Assert height
         let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
@@ -95,7 +100,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: false,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
 
@@ -118,7 +124,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -133,7 +140,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -148,7 +156,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -163,7 +172,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -178,7 +188,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -193,7 +204,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button
         if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
@@ -213,7 +225,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -228,7 +241,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -244,7 +258,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -260,7 +275,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -277,7 +293,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -292,7 +309,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .viewMore)
+                                                      savedPaymentMethodAccessoryType: .viewMore,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -307,7 +325,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: false,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -322,7 +341,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: false,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -338,7 +358,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
 
@@ -362,7 +383,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: false,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
 
@@ -386,7 +408,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -403,7 +426,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button
         if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
@@ -425,7 +449,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button
         if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
@@ -446,7 +471,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -462,7 +488,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -479,7 +506,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -496,7 +524,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
@@ -512,7 +541,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         XCTAssertEqual(embeddedView.selection, initialSelection)
         verify(embeddedView)
@@ -526,7 +556,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none)
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider())
 
         XCTAssertEqual(embeddedView.selection, initialSelection)
         verify(embeddedView)
@@ -541,9 +572,163 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .edit)
+                                                      savedPaymentMethodAccessoryType: .edit,
+                                                      mandateProvider: MockMandateProvider())
 
         XCTAssertEqual(embeddedView.selection, initialSelection)
+        verify(embeddedView)
+    }
+
+    // MARK: Mandate tests
+
+    func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_noInitialSelection() {
+        let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider
+        )
+
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_withInitialSelection() {
+        let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .applePay,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider
+        )
+
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_withInitialSelection_withAppearance() {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.colors.textSecondary = .red
+        appearance.colors.componentBackground = .gray
+
+        let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .link,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: appearance,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider
+        )
+
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_savedPaymentMethod() {
+        let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
+        let savedPaymentMethod = STPPaymentMethod._testCard()
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .saved(paymentMethod: savedPaymentMethod),
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: savedPaymentMethod,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .edit,
+            mandateProvider: mockMandateProvider
+        )
+
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_floating_withMandateProviderAttributedText() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.style = .floatingButton
+        let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: appearance,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider
+        )
+
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_withMandateProviderEmptyAttributedText() {
+        let mandateText = NSAttributedString(string: "")
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider
+        )
+
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_withMandateProviderLongAttributedText() {
+        let longText = String(repeating: "This is a long mandate text. ", count: 20)
+        let mandateText = NSAttributedString(string: longText)
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider
+        )
+
+        verify(embeddedView)
+    }
+
+    func testEmbeddedPaymentMethodsView_withMandateProviderNilAttributedText() {
+        let mockMandateProvider = MockMandateProvider(attributedText: nil)
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .applePay,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider
+        )
+
         verify(embeddedView)
     }
 
@@ -555,5 +740,21 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 300)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+}
+
+class MockMandateProvider: MandateTextProvider {
+    private let mandateResolver: (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)
+
+    init(mandateResolver: @escaping (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)) {
+        self.mandateResolver = mandateResolver
+    }
+
+    init(attributedText: NSAttributedString? = nil) {
+        self.mandateResolver = { _ in return attributedText }
+    }
+
+    func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString? {
+        return mandateResolver(paymentMethodType)
     }
 }

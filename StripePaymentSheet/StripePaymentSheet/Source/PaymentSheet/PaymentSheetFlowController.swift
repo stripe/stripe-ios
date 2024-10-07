@@ -70,9 +70,13 @@ extension PaymentSheet {
                 return "wallet"
             } else if
                 case .new(let confirmParams) = self,
-                confirmParams.instantDebitsLinkedBank != nil
+                let linkedBank = confirmParams.instantDebitsLinkedBank
             {
-                return "instant_debits"
+                if linkedBank.linkMode == .linkCardBrand {
+                    return "link_card_brand"
+                } else {
+                    return "instant_debits"
+                }
             } else {
                 return nil
             }

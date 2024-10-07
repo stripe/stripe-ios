@@ -22,7 +22,7 @@ final class LinkInlineSignupView: UIView {
 
     let viewModel: LinkInlineSignupViewModel
 
-    private var theme: ElementsUITheme {
+    private var theme: ElementsAppearance {
         return viewModel.configuration.appearance.asElementsTheme
     }
 

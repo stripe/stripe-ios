@@ -61,7 +61,7 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
     }
     convenience init(
         _ textFieldElementConfiguration: TextFieldElementConfiguration,
-        theme: ElementsUITheme,
+        theme: ElementsAppearance,
         defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
     ) where WrappedElementType == TextFieldElement {

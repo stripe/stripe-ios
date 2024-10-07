@@ -75,10 +75,10 @@ struct IdentityUI {
     static let scanningViewLabelMinHeightNumberOfLines: Int = 3
     static let scanningViewLabelBottomPadding: CGFloat = 24
 
-    static let identityElementsUITheme: ElementsUITheme = {
-        var identityElementsUITheme = ElementsUITheme.default
+    static let identityElementsUITheme: ElementsAppearance = {
+        var identityElementsUITheme = ElementsAppearance.default
 
-        var fonts = ElementsUITheme.Font()
+        var fonts = ElementsAppearance.Font()
         fonts.subheadline = preferredFont(forTextStyle: .body).withSize(14)
         fonts.subheadlineBold = preferredFont(forTextStyle: .body, weight: .bold).withSize(14)
         fonts.sectionHeader = preferredFont(forTextStyle: .body, weight: .semibold).withSize(13)

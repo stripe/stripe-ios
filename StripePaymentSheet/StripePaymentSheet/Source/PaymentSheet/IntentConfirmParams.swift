@@ -83,7 +83,7 @@ final class IntentConfirmParams {
 
     /// Applies the values of `Configuration.defaultBillingDetails` to this IntentConfirmParams if `attachDefaultsToPaymentMethod` is true.
     /// - Note: This overwrites `paymentMethodParams.billingDetails`.
-    func setDefaultBillingDetailsIfNecessary(for configuration: PaymentSheet.Configuration) {
+    func setDefaultBillingDetailsIfNecessary(for configuration: PaymentElementConfiguration) {
         setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
     }
 

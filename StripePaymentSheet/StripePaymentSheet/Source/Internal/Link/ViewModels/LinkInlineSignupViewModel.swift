@@ -35,7 +35,7 @@ final class LinkInlineSignupViewModel {
 
     private let country: String?
 
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
 
     let mode: Mode
 
@@ -288,7 +288,7 @@ final class LinkInlineSignupViewModel {
     }
 
     init(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount? = nil,

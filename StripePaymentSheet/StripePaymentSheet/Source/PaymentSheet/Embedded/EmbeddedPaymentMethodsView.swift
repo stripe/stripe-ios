@@ -10,13 +10,18 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-// TODO(porter) Probably shouldn't be public, just easy for testing.
-@_spi(EmbeddedPaymentElementPrivateBeta) public class EmbeddedPaymentMethodsView: UIView {
+protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
+    func heightDidChange()
+}
+
+/// The view for an embedded payment element
+class EmbeddedPaymentMethodsView: UIView {
 
     typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
 
     private let appearance: PaymentSheet.Appearance
     private(set) var selection: Selection?
+    private let mandateProvider: MandateTextProvider
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -25,17 +30,23 @@ import UIKit
         return stackView
     }()
 
+    private lazy var mandateView = EmbeddedMandateContainerView(appearance: appearance)
+
+    weak var delegate: EmbeddedPaymentMethodsViewDelegate?
+
     init(initialSelection: Selection?,
          paymentMethodTypes: [PaymentSheet.PaymentMethodType],
          savedPaymentMethod: STPPaymentMethod?,
          appearance: PaymentSheet.Appearance,
          shouldShowApplePay: Bool,
          shouldShowLink: Bool,
-         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
+         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
+         mandateProvider: MandateTextProvider) {
         self.appearance = appearance
         self.selection = initialSelection
-
+        self.mandateProvider = mandateProvider
         super.init(frame: .zero)
+
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
 
         if let savedPaymentMethod {
@@ -125,11 +136,30 @@ import UIKit
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
 
+        // Setup mandate
+        stackView.setCustomSpacing(0, after: stackView.arrangedSubviews.last ?? UIView())
+        updateMandate(animated: false)
+        stackView.addArrangedSubview(mandateView)
         addAndPinSubview(stackView)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private var previousHeight: CGFloat?
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        guard let previousHeight else {
+            previousHeight = frame.height
+            return
+        }
+
+        if frame.height != previousHeight {
+            self.previousHeight = frame.height
+            delegate?.heightDidChange()
+        }
     }
 
     // MARK: Tap handling
@@ -139,10 +169,29 @@ import UIKit
         }
 
         self.selection = selection
+        updateMandate()
     }
 
     func didTapAccessoryButton() {
         // TODO(porter)
+    }
+
+    // MARK: Mandate handling
+    private func updateMandate(animated: Bool = true) {
+        self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType,
+                                                                  savedPaymentMethod: selection?.savedPaymentMethod,
+                                                                  bottomNoticeAttributedString: nil)
+
+        guard animated else {
+            self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+            return
+        }
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        })
     }
 }
 

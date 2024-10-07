@@ -279,6 +279,51 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "wallet")
     }
 
+    func testLogPaymentLinkContextWithLinkedBank() {
+        let instantDebitsLinkedBank = InstantDebitsLinkedBank(
+            paymentMethodId: "paymentMethodId",
+            bankName: nil,
+            last4: nil,
+            linkMode: .linkPaymentMethod
+        )
+        let linkCardBrandLinkedBank = InstantDebitsLinkedBank(
+            paymentMethodId: "paymentMethodId",
+            bankName: nil,
+            last4: nil,
+            linkMode: .linkCardBrand
+        )
+
+        let instantDebitConfirmParams = IntentConfirmParams(type: .instantDebits)
+        instantDebitConfirmParams.instantDebitsLinkedBank = instantDebitsLinkedBank
+
+        let linkCardBrandConfirmParams = IntentConfirmParams(type: .linkCardBrand)
+        linkCardBrandConfirmParams.instantDebitsLinkedBank = linkCardBrandLinkedBank
+
+        let instantDebits = PaymentOption.new(confirmParams: instantDebitConfirmParams)
+        let linkCardBrand = PaymentOption.new(confirmParams: linkCardBrandConfirmParams)
+
+        let sut = PaymentSheetAnalyticsHelper(
+            isCustom: true,
+            configuration: .init(),
+            analyticsClient: analyticsClient
+        )
+        sut.intent = ._testValue()
+
+        sut.logPayment(
+            paymentOption: instantDebits,
+            result: .completed,
+            deferredIntentConfirmationType: nil
+        )
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "instant_debits")
+
+        sut.logPayment(
+            paymentOption: linkCardBrand,
+            result: .completed,
+            deferredIntentConfirmationType: nil
+        )
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "link_card_brand")
+    }
+
     // MARK: - Helpers
 
     func makeConfig(
