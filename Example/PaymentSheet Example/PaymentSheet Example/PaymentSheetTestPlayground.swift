@@ -93,12 +93,16 @@ struct PaymentSheetTestPlayground: View {
                         SettingPickerView(setting: integrationTypeBinding).disabled(playgroundController.settings.uiStyle == .embedded)
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
-                        SettingPickerView(setting: $playgroundController.settings.amount)
-                        SettingPickerView(setting: $playgroundController.settings.currency)
+                        HStack {
+                            SettingPickerView(setting: $playgroundController.settings.amount)
+                            SettingPickerView(setting: $playgroundController.settings.currency)
+                        }
                         SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
-                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
-                            .autocapitalization(.none)
+                        if playgroundController.settings.apmsEnabled == .off {
+                            TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
+                                .autocapitalization(.none)
+                        }
                     }
                     Group {
                         if playgroundController.settings.customerKeyType == .customerSession {
@@ -240,12 +244,7 @@ struct PaymentSheetTestPlayground: View {
         Binding<String> {
             return playgroundController.settings.supportedPaymentMethods ?? ""
         } set: { newString in
-            playgroundController.settings.supportedPaymentMethods = (newString != "") ? newString : nil
-
-            // for supported payment methods to work, apms must be off
-            if playgroundController.settings.supportedPaymentMethods != nil {
-                playgroundController.settings.apmsEnabled = .off
-            }
+            playgroundController.settings.supportedPaymentMethods = newString
         }
     }
 
@@ -580,7 +579,7 @@ struct SettingPickerView<S: PickerEnum>: View {
                 ForEach(S.allCases, id: \.self) { t in
                     Text(t.displayName)
                 }
-            }
+            }.layoutPriority(0.8)
         }
     }
 }
