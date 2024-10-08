@@ -156,7 +156,9 @@ class EmbeddedPaymentMethodsView: UIView {
         stackView.setCustomSpacing(0, after: stackView.arrangedSubviews.last ?? UIView())
         updateMandate(animated: false)
         stackView.addArrangedSubview(mandateView)
-        addAndPinSubview(stackView)
+
+        // Our content should respect `directionalLayoutMargins`. The default margins is `.zero`.
+        addAndPinSubview(stackView, directionalLayoutMargins: .zero)
     }
 
     required init?(coder: NSCoder) {
