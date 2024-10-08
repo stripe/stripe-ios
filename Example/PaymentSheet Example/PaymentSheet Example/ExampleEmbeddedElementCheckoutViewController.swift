@@ -347,7 +347,7 @@ private class PaymentMethodsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
+    override func viewDidLoad() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         view.addSubview(scrollView)

@@ -24,11 +24,11 @@
 
 "Bank account" = "Banko sąskaita";
 
-"Buy now or pay later with <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami „<img/>“";
+"Buy now or pay later with <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami \"<img/>\"";
 
-"Buy now or pay later with Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami „Afterpay“";
+"Buy now or pay later with Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Afterpay\"";
 
-"Buy now or pay later with Clearpay" = "Pirkite dabar arba mokėkite vėliau naudodami „Clearpay“";
+"Buy now or pay later with Clearpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Clearpay\"";
 
 "Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami „Klarna“";
 
@@ -122,7 +122,7 @@
 
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 
-"Pay over time with Affirm" = "Mokėkite per tam tikrą laikotarpį naudodami „Affirm“";
+"Pay over time with Affirm" = "Mokėkite per tam tikrą laikotarpį naudodami \"Affirm\"";
 
 "Pay with Link" = "Mokėti naudojant „Link“";
 
