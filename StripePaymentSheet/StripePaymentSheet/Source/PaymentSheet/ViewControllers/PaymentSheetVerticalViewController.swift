@@ -71,7 +71,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
@@ -88,7 +88,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let shouldShowLinkInList: Bool
     /// Whether or not we are in the special case where we don't show the list and show the card form directly
     var shouldDisplayCardFormOnly: Bool {
-        return paymentMethodTypes.count == 1 && paymentMethodTypes[0] == .stripe(.card)
+        return paymentMethodTypes.count == 1
         && savedPaymentMethods.isEmpty
         && !shouldShowApplePayInList
         && !shouldShowLinkInList
@@ -142,7 +142,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // MARK: - Initializers
 
-    init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool, analyticsHelper: PaymentSheetAnalyticsHelper, previousPaymentOption: PaymentOption? = nil) {
+    init(configuration: PaymentElementConfiguration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool, analyticsHelper: PaymentSheetAnalyticsHelper, previousPaymentOption: PaymentOption? = nil) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
         self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
 
@@ -181,7 +181,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
         if shouldDisplayCardFormOnly {
             // If we'd only show one PM in the vertical list and it's `card`, display the form instead of the payment method list.
-            let formVC = makeFormVC(paymentMethodType: .stripe(.card))
+            let formVC = makeFormVC(paymentMethodType: paymentMethodTypes.first ?? .stripe(.card))
             self.paymentMethodFormViewController = formVC
             add(childViewController: formVC, containerView: paymentContainerView)
         } else {

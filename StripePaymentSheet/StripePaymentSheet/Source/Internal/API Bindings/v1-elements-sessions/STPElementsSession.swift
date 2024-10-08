@@ -18,13 +18,13 @@ final class STPElementsSession: NSObject {
     let sessionID: String
 
     /// The ordered payment method preference for this ElementsSession.
-    let orderedPaymentMethodTypes: [STPPaymentMethodType]
+    var orderedPaymentMethodTypes: [STPPaymentMethodType]
 
     /// A list of payment method types that are not activated in live mode, but activated in test mode.
     let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
 
     /// Link-specific settings for this ElementsSession.
-    let linkSettings: LinkSettings?
+    var linkSettings: LinkSettings?
     
     /// Flags for this ElementsSession.
     let flags: [String: Bool]
@@ -41,7 +41,7 @@ final class STPElementsSession: NSObject {
     /// Card brand choice settings for the merchant.
     let cardBrandChoice: STPCardBrandChoice?
 
-    let isApplePayEnabled: Bool
+    var isApplePayEnabled: Bool
 
     /// An ordered list of external payment methods to display
     let externalPaymentMethods: [ExternalPaymentMethod]

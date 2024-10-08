@@ -7,6 +7,7 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -46,13 +47,20 @@ public class EmbeddedPaymentElement {
     public var paymentOption: PaymentOptionDisplayData? {
         return (view as? EmbeddedPaymentMethodsView)?.displayData
     }
-
+    
+    private let loadResult: PaymentSheetLoader.LoadResult
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private var embeddedFormViewController: EmbeddedFormViewController?
+    private var bottomSheetController: BottomSheetViewController?
+    
     /// An asynchronous failable initializer
     /// This loads the Customer's payment methods, their default payment method, etc.
     /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the checkout.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
+    ///
+    /// 
     public static func create(
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
@@ -106,7 +114,7 @@ public class EmbeddedPaymentElement {
                                              intent: .deferredIntent(intentConfig: intentConfiguration))
         )
 
-        let embeddedPaymentElement: EmbeddedPaymentElement = .init(view: embeddedPaymentMethodsView, configuration: configuration)
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(view: embeddedPaymentMethodsView, configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper)
         await MainActor.run {
             embeddedPaymentMethodsView.delegate = embeddedPaymentElement
         }
@@ -135,21 +143,97 @@ public class EmbeddedPaymentElement {
         // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2524)
         return .succeeded
     }
+    
+    private lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// Completes the payment or setup.
     /// - Returns: The result of the payment after any presented view controllers are dismissed.
     /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
-    public func confirm() async -> EmbeddedPaymentElementResult {
-        // TODO
-        return .canceled
+    @MainActor public func confirm() async -> EmbeddedPaymentElementResult {
+        guard let authContext: STPAuthenticationContext = bottomSheetController ?? presentingViewController else { return .canceled }
+        
+        let result = await PaymentSheet.confirm(configuration: self.configuration, authenticationContext: authContext, intent: loadResult.intent, elementsSession: loadResult.elementsSession, paymentOption: _paymentOption, paymentHandler: self.paymentHandler, isFlowController: false)
+        return result.0
+        
+        
+        
+        
+        
+//        switch result.0 {
+//        case .completed:
+//            self.bottomSheetController?.transitionSpinnerToComplete(animated: true) {
+////                self.embeddedFormViewController?.dismiss(animated: true)
+//                print("Transitions")
+//            }
+//            break
+//        case .canceled:
+//            break
+//        case .failed(error: let error):
+//            print(error)
+//            break
+//        }
+        
+//        let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
+//            PaymentSheet.confirm(
+//                configuration: self.configuration,
+//                authenticationContext: self.bottomSheetViewController,
+//                intent: loadResult.intent,
+//                elementsSession: loadResult.elementsSession,
+//                paymentOption: paymentOption,
+//                paymentHandler: self.paymentHandler,
+//                isFlowController: false
+//            ) { result, deferredIntentConfirmationType in
+//                if case let .failed(error) = result {
+//                    self.mostRecentError = error
+//                }
+//
+//                if case .link = paymentOption {
+//                    // End special Link blur animation before calling completion
+//                    switch result {
+//                    case .canceled, .failed:
+//                        self.bottomSheetViewController.removeBlurEffect(animated: true) {
+//                            completion(result, deferredIntentConfirmationType)
+//                        }
+//                    case .completed:
+//                        self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
+//                            completion(result, deferredIntentConfirmationType)
+//                        }
+//                    }
+//                } else {
+//                    completion(result, deferredIntentConfirmationType)
+//                }
+//            }
+//        }
+//
+//        if case .applePay = paymentOption {
+//            // Don't present the Apple Pay sheet on top of the Payment Sheet
+//            embeddedFormViewController.dismiss(animated: true) {
+//                confirm { result, deferredIntentConfirmationType in
+//                    if case .completed = result {
+//                    } else {
+//                        // We dismissed the Payment Sheet to show the Apple Pay sheet
+//                        // Bring it back if it didn't succeed
+//                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
+//                                                                  appearance: self.configuration.appearance)
+//                    }
+//                    completion(result, deferredIntentConfirmationType)
+//                }
+//            }
+//        } else {
+//            confirm(completion)
+//        }
+//        
+//        return .canceled
     }
 
     // MARK: - Internal
 
-    private init(view: UIView, configuration: Configuration, delegate: EmbeddedPaymentElementDelegate? = nil) {
+    private init(view: UIView, configuration: Configuration, loadResult: PaymentSheetLoader.LoadResult, analyticsHelper: PaymentSheetAnalyticsHelper, delegate: EmbeddedPaymentElementDelegate? = nil) {
         self.view = view
         self.delegate = delegate
         self.configuration = configuration
+        self.loadResult = loadResult
+        self.analyticsHelper = analyticsHelper
     }
 }
 
@@ -213,6 +297,38 @@ extension EmbeddedPaymentElement {
             }
         }
     }
+    
+    var _paymentOption: PaymentOption {
+        if let selectedPaymentOption = embeddedFormViewController?.selectedPaymentOption {
+            return selectedPaymentOption
+        }
+        
+        guard let embeddedView = view as? EmbeddedPaymentMethodsView else {
+            return .applePay // todo
+        }
+        
+        switch embeddedView.selection {
+        case nil:
+            return .applePay//todo
+        case .applePay:
+            return .applePay
+        case .link:
+            return .link(option: .wallet)
+        case .new(paymentMethodType: let paymentMethodType):
+            let params = IntentConfirmParams(type: paymentMethodType)
+            params.setDefaultBillingDetailsIfNecessary(for: configuration)
+            switch paymentMethodType {
+            case .stripe:
+                return .new(confirmParams: params)
+            case .external(let type):
+                return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
+            case .instantDebits, .linkCardBrand:
+                return .new(confirmParams: params)
+            }
+        case .saved(paymentMethod: let paymentMethod):
+            return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+        }
+    }
 }
 
 // MARK: - Typealiases
@@ -237,5 +353,93 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+        
+        guard let embeddedView = view as? EmbeddedPaymentMethodsView, let selection = embeddedView.selection else { return }
+        let paymentMethodType: PaymentSheet.PaymentMethodType? = {
+            switch selection {
+            case .new(paymentMethodType: let paymentMethodType):
+                return paymentMethodType
+            case .saved:
+                return nil
+            case .applePay:
+                return nil
+            case .link:
+                return nil
+            }
+        }()
+        guard let paymentMethodType else { return }
+        
+        guard let presentingViewController else {
+            stpAssert(true, "Provide a presenting view controller, TODO better message")
+            return
+        }
+        embeddedFormViewController = EmbeddedFormViewController(configuration: configuration,
+                                            loadResult: loadResult,
+                                            isFlowController: false,
+                                            paymentMethodType: paymentMethodType,
+                                            analyticsHelper: analyticsHelper)
+        guard let embeddedFormViewController else { return }
+        embeddedFormViewController.paymentSheetDelegate = self
+        embeddedFormViewController.flowControllerDelegate = self
+        
+        guard embeddedFormViewController.collectsUserInput else { return }
+        bottomSheetController = BottomSheetViewController(contentViewController: embeddedFormViewController, appearance: configuration.appearance, isTestMode: true, didCancelNative3DS2: {})
+        
+        delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
+        presentingViewController.presentAsBottomSheet(bottomSheetController!, appearance: configuration.appearance)
     }
+}
+
+extension EmbeddedPaymentElement: PaymentSheetViewControllerDelegate {
+    func paymentSheetViewControllerShouldConfirm(_ paymentSheetViewController: PaymentSheetViewControllerProtocol, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+        confirm { result in
+            completion(result, .client)
+        }
+    }
+    
+    func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: PaymentSheetViewControllerProtocol, result: PaymentSheetResult) {
+        switch result {
+        case .completed:
+            paymentSheetViewController.dismiss(animated: true) {
+                switch self.configuration.formSheetAction {
+                case .confirm(let completion):
+                    completion(result)
+                case .continue:
+                    break
+                }
+            }
+        case .canceled:
+            break
+        case .failed:
+            break
+        }
+    }
+    
+    func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
+        paymentSheetViewController.dismiss(animated: true) {
+            // TODO?
+        }
+    }
+    
+    func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
+        // no-op
+    }
+    
+    
+}
+
+extension EmbeddedPaymentElement: FlowControllerViewControllerDelegate {
+    func flowControllerViewControllerShouldClose(_ PaymentSheetFlowControllerViewController: FlowControllerViewControllerProtocol, didCancel: Bool) {
+        PaymentSheetFlowControllerViewController.dismiss(animated: true) {
+            // TODO?
+        }
+    }
+}
+
+extension UIViewController: STPAuthenticationContext {
+    public func authenticationPresentingViewController() -> UIViewController {
+        return self
+    }
+    
+    
 }

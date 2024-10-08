@@ -16,7 +16,7 @@ final class SavedPaymentMethodManager {
         case missingEphemeralKey
     }
 
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
     let elementsSession: STPElementsSession
 
     private lazy var ephemeralKey: String? = {
@@ -31,7 +31,7 @@ final class SavedPaymentMethodManager {
         return ephemeralKey
     }()
 
-    init(configuration: PaymentSheet.Configuration, elementsSession: STPElementsSession) {
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) {
         self.configuration = configuration
         self.elementsSession = elementsSession
     }

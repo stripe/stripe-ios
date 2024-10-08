@@ -24,7 +24,7 @@ import Foundation
 
     @_spi(STP) public let fundingSources: Set<FundingSource>
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
-    @_spi(STP) public let passthroughModeEnabled: Bool?
+    @_spi(STP) public var passthroughModeEnabled: Bool?
     @_spi(STP) public let disableSignup: Bool?
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let linkFlags: [String: Bool]?

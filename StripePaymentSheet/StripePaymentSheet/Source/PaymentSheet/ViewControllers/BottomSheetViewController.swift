@@ -477,7 +477,7 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 // MARK: - PaymentSheetAuthenticationContext
 extension BottomSheetViewController: PaymentSheetAuthenticationContext {
 
-    func authenticationPresentingViewController() -> UIViewController {
+   override func authenticationPresentingViewController() -> UIViewController {
         return findTopMostPresentedViewController() ?? self
     }
 

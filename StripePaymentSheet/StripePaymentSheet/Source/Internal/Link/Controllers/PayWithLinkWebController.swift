@@ -69,7 +69,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
-        let configuration: PaymentSheet.Configuration
+        let configuration: PaymentElementConfiguration
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
 
@@ -82,7 +82,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             callToAction: ConfirmButton.CallToActionType?
         ) {
             self.intent = intent
@@ -99,7 +99,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     convenience init(
         intent: Intent,
         elementsSession: STPElementsSession,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         callToAction: ConfirmButton.CallToActionType? = nil
     ) {
         self.init(

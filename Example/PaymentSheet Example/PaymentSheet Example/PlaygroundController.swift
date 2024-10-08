@@ -182,7 +182,9 @@ class PlaygroundController: ObservableObject {
             switch settings.formSheetAction {
             case .confirm:
                 return .confirm { [weak self] result in
-                    self?.lastPaymentResult = result
+                    self?.embeddedPlaygroundController?.dismiss(animated: true, completion: {
+                        self?.lastPaymentResult = result
+                    })
                 }
             case .continue:
                 return .continue

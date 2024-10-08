@@ -31,6 +31,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.setTitle("Checkout", for: .normal)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
+        checkoutButton.addTarget(self, action: #selector(pay), for: .touchUpInside)
+        checkoutButton.isEnabled = false
         return checkoutButton
     }()
     
@@ -46,6 +48,23 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func pay() {
+        Task { @MainActor in
+            self.view.isUserInteractionEnabled = false
+            let result = await embeddedPaymentElement.confirm()
+            let alert = UIAlertController(title: "Result",
+                                          message: "\(result)",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            
+            DispatchQueue.main.async {
+                self.present(alert, animated: true) {
+                    self.view.isUserInteractionEnabled = true
+                }
+            }
+        }
     }
 
     override func viewDidLoad() {
@@ -76,6 +95,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         embeddedPaymentElement = try await EmbeddedPaymentElement.create(intentConfiguration: intentConfig,
                                                                          configuration: configuration)
         embeddedPaymentElement.delegate = self
+        embeddedPaymentElement.presentingViewController = self
         embeddedPaymentElement.view.translatesAutoresizingMaskIntoConstraints = false
         paymentOptionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(embeddedPaymentElement.view)
@@ -126,6 +146,7 @@ extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
     
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: configuration.hidesMandateText)
+        checkoutButton.isEnabled = embeddedPaymentElement.paymentOption != nil
     }
 }
 

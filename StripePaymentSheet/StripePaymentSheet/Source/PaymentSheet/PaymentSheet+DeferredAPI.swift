@@ -12,7 +12,7 @@ import Foundation
 extension PaymentSheet {
     static func handleDeferredIntentConfirmation(
         confirmType: ConfirmPaymentMethodType,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         intentConfig: PaymentSheet.IntentConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,

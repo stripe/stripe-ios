@@ -30,7 +30,7 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
 class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
-    private let configuration: PaymentSheet.Configuration
+    private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let isCBCEligible: Bool
@@ -152,7 +152,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
 
     init(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,

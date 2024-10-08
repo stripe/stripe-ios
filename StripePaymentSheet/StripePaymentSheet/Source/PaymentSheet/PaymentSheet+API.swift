@@ -19,7 +19,7 @@ extension PaymentSheet {
 
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -95,9 +95,35 @@ extension PaymentSheet {
             confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, completion: completion)
         }
     }
+    
+    static func confirm(
+        configuration: PaymentElementConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        paymentOption: PaymentOption,
+        paymentHandler: STPPaymentHandler,
+        isFlowController: Bool = false,
+        paymentMethodID: String? = nil
+    ) async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) {
+        await withCheckedContinuation { continuation in
+            confirm(
+                configuration: configuration,
+                authenticationContext: authenticationContext,
+                intent: intent,
+                elementsSession: elementsSession,
+                paymentOption: paymentOption,
+                paymentHandler: paymentHandler,
+                isFlowController: isFlowController,
+                paymentMethodID: paymentMethodID
+            ) { result, deferredType in
+                continuation.resume(returning: (result, deferredType))
+            }
+        }
+    }
 
     static fileprivate func confirmAfterHandlingLocalActions(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -497,7 +523,7 @@ extension PaymentSheet {
 
     /// A helper method that sets the Customer's default payment method if necessary.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
-    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: Configuration) {
+    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration) {
 
         guard
             // Did we successfully save this payment method?
@@ -513,7 +539,7 @@ extension PaymentSheet {
         CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: customer)
     }
 
-    static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentSheet.Configuration)
+    static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentElementConfiguration)
         -> STPPaymentIntentShippingDetailsParams?
     {
         let params = STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration)
@@ -542,7 +568,7 @@ extension PaymentSheet {
     static func makePaymentIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         mandateData: STPMandateDataParams? = nil
     ) -> STPPaymentIntentParams {
         let params: STPPaymentIntentParams
@@ -595,7 +621,7 @@ extension PaymentSheet {
     static func makeSetupIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         mandateData: STPMandateDataParams? = nil
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams

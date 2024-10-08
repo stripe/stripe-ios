@@ -24,9 +24,9 @@ final class PayWithLinkController {
 
     let intent: Intent
     let elementsSession: STPElementsSession
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
 
-    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) {
+    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration
