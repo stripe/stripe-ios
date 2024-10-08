@@ -151,7 +151,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
                     }
-                    
+
                     if playgroundController.settings.uiStyle == .embedded {
                         Divider()
                         Group {

@@ -257,7 +257,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateMandate(animated: Bool = true) {
-        let mandateProvider = FormMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
         let newMandateText = mandateProvider.mandate(for: selectedPaymentOption?.paymentMethodType,
                                                      savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
                                                      bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString)

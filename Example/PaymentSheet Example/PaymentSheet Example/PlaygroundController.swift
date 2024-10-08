@@ -188,7 +188,7 @@ class PlaygroundController: ObservableObject {
                 return .continue
             }
         }()
-        
+
         var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: formSheetAction)
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration

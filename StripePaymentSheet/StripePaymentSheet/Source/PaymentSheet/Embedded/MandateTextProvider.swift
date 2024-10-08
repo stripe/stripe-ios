@@ -14,8 +14,7 @@ protocol MandateTextProvider {
 }
 
 /// A class that can provide the attributed string for a given payment method type and configuration for the vertical list of PMs.
-// TODO: rename to VerticalListFormMandateProvider
-class FormMandateProvider: MandateTextProvider {
+class VerticalListMandateProvider: MandateTextProvider {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let intent: Intent
@@ -75,12 +74,11 @@ class FormMandateProvider: MandateTextProvider {
 
         return newMandateText
     }
-    
+
     var shouldDisplayMandateInVerticalList: Bool {
         if let embeddedConfig = configuration as? EmbeddedPaymentElement.Configuration {
             return embeddedConfig.embeddedViewDisplaysMandateText
         }
-
-        return false
+        return true
     }
 }

@@ -410,13 +410,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
-    
+
     enum DisplaysMandateTextEnabled: String, PickerEnum {
         static let enumName: String = "displaysMandateText"
         case on
         case off
     }
-    
+
     enum FormSheetAction: String, PickerEnum {
         static let enumName: String = "formSheetAction"
         case confirm
