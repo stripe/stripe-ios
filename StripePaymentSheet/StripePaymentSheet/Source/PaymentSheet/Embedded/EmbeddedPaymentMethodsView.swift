@@ -35,6 +35,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
     private let mandateProvider: MandateTextProvider
+    private let shouldShowMandate: Bool
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -54,10 +55,12 @@ class EmbeddedPaymentMethodsView: UIView {
          shouldShowApplePay: Bool,
          shouldShowLink: Bool,
          savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
-         mandateProvider: MandateTextProvider) {
+         mandateProvider: MandateTextProvider,
+         shouldShowMandate: Bool = true) {
         self.appearance = appearance
         self.selection = initialSelection
         self.mandateProvider = mandateProvider
+        self.shouldShowMandate = shouldShowMandate
         super.init(frame: .zero)
 
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
@@ -198,7 +201,7 @@ class EmbeddedPaymentMethodsView: UIView {
         guard animated else {
             self.mandateView.setHiddenIfNecessary(
                 (self.mandateView.attributedText?.string.isEmpty ?? true) ||
-                self.mandateProvider.merchantDisplaysMandate
+                !shouldShowMandate
             )
             return
         }
@@ -206,7 +209,7 @@ class EmbeddedPaymentMethodsView: UIView {
         UIView.animate(withDuration: 0.25, animations: {
             self.mandateView.setHiddenIfNecessary(
                 (self.mandateView.attributedText?.string.isEmpty ?? true) ||
-                self.mandateProvider.merchantDisplaysMandate
+                !self.shouldShowMandate
             )
             self.setNeedsLayout()
             self.layoutIfNeeded()
@@ -256,7 +259,7 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             )
             label = paymentMethodType.displayName
             self.paymentMethodType = paymentMethodType.identifier
-            billingDetails = nil // TODO(porter) Handle billing details when we present forms
+            billingDetails = nil // TODO(porter) Handle billing details when we present forms (maybe set this to defaultBillingDetails) if billingDetailsConfiguration.attachDefaultsToPaymentMethod is true
         case .saved(paymentMethod: let paymentMethod):
             image = paymentMethod.makeIcon()
             label = paymentMethod.paymentSheetLabel

@@ -95,7 +95,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
         
-        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: configuration.hidesMandateText)
+        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
 
     private func setupLoadingIndicator() {
@@ -125,7 +125,7 @@ extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
     }
     
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
-        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: configuration.hidesMandateText)
+        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
 }
 

@@ -10,8 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 protocol MandateTextProvider {
-    var merchantDisplaysMandate: Bool { get }
-    
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString?
 }
 
@@ -20,10 +18,6 @@ class VerticalListMandateProvider: MandateTextProvider {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let intent: Intent
-
-    var merchantDisplaysMandate: Bool {
-        return configuration.hidesMandateText
-    }
     
     init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
         self.configuration = configuration

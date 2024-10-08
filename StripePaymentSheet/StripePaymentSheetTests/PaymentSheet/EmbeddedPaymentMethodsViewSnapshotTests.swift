@@ -732,9 +732,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
     
-    func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_merchantDisplaysMandate() {
+    func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_shouldShowMandateFalse() {
         let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
-        let mockMandateProvider = MockMandateProvider(attributedText: mandateText, merchantDisplaysMandate: true)
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
 
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .applePay,
@@ -744,7 +744,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             shouldShowApplePay: true,
             shouldShowLink: true,
             savedPaymentMethodAccessoryType: .none,
-            mandateProvider: mockMandateProvider
+            mandateProvider: mockMandateProvider,
+            shouldShowMandate: false
         )
 
         verify(embeddedView)
@@ -762,18 +763,14 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 }
 
 class MockMandateProvider: MandateTextProvider {
-    let merchantDisplaysMandate: Bool
-    
     private let mandateResolver: (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)
 
-    init(mandateResolver: @escaping (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?), merchantDisplaysMandate: Bool = false) {
+    init(mandateResolver: @escaping (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)) {
         self.mandateResolver = mandateResolver
-        self.merchantDisplaysMandate = merchantDisplaysMandate
     }
 
-    init(attributedText: NSAttributedString? = nil, merchantDisplaysMandate: Bool = false) {
+    init(attributedText: NSAttributedString? = nil) {
         self.mandateResolver = { _ in return attributedText }
-        self.merchantDisplaysMandate = merchantDisplaysMandate
     }
 
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString? {
