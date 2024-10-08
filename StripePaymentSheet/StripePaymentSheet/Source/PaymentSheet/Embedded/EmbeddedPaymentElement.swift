@@ -52,8 +52,6 @@ public class EmbeddedPaymentElement {
     private let loadResult: PaymentSheetLoader.LoadResult
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var embeddedFormViewController: EmbeddedFormViewController?
-    private var bottomSheetController: BottomSheetViewController?
-    private lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// An asynchronous failable initializer
     /// This loads the Customer's payment methods, their default payment method, etc.
@@ -252,43 +250,44 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
-
+        
+        // Safely unwrap the current selection
         guard let selection = embeddedPaymentMethodsView.selection else { return }
-        let paymentMethodType: PaymentSheet.PaymentMethodType? = {
-            switch selection {
-            case .new(paymentMethodType: let paymentMethodType):
-                return paymentMethodType
-            case .saved:
-                return nil
-            case .applePay:
-                return nil
-            case .link:
-                return nil
-            }
-        }()
-        guard let paymentMethodType else { return }
-
-        guard let presentingViewController else {
-            stpAssert(true, "Provide a presenting view controller, TODO better message")
+        
+        // Extract the paymentMethodType if the selection is `.new`
+        guard case let .new(paymentMethodType) = selection else {
+            // If the selection is not `.new`, no further action is needed
             return
         }
-        embeddedFormViewController = EmbeddedFormViewController(configuration: configuration,
-                                            loadResult: loadResult,
-                                            isFlowController: false,
-                                            paymentMethodType: paymentMethodType,
-                                            analyticsHelper: analyticsHelper)
         
-        guard let embeddedFormViewController else { return }
-
-
-        guard embeddedFormViewController.collectsUserInput else { return }
-        let bottomSheetController = BottomSheetViewController(contentViewController: embeddedFormViewController,
-                                                          appearance: configuration.appearance,
-                                                          isTestMode: configuration.apiClient.isTestmode,
-                                                          didCancelNative3DS2: {})
-
+        // Ensure a presenting view controller is available
+        guard let presentingViewController = presentingViewController else {
+            assertionFailure("Presenting view controller is not provided. ")
+            return
+        }
+        
+        let embeddedFormVC = EmbeddedFormViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            isFlowController: false,
+            paymentMethodType: paymentMethodType,
+            analyticsHelper: analyticsHelper
+        )
+        self.embeddedFormViewController = embeddedFormVC
+        
+        // Only show forms that require user input
+        guard embeddedFormVC.collectsUserInput else { return }
+        
+        let bottomSheet = BottomSheetViewController(
+            contentViewController: embeddedFormVC,
+            appearance: configuration.appearance,
+            isTestMode: configuration.apiClient.isTestmode,
+            didCancelNative3DS2: {}
+        )
+        
+        // Notify the delegate about the presentation
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
-        presentingViewController.presentAsBottomSheet(bottomSheetController, appearance: configuration.appearance)
-        self.bottomSheetController = bottomSheetController
+        presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)t
     }
+
 }

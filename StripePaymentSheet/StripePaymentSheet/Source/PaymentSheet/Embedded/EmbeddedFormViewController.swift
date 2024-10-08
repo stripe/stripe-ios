@@ -23,7 +23,6 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
     }
 
     enum Error: Swift.Error {
-        case missingPaymentMethodListViewController
         case missingContentViewController
         case noPaymentOptionOnBuyButtonTap
     }
@@ -53,8 +52,6 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
     private var previousPaymentOption: PaymentOption?
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
-    /// The content offset % of the payment method list before we transitioned away from it
-    var paymentMethodListContentOffsetPercentage: CGFloat?
     /// True while we are showing the CVC recollection UI (`cvcRecollectionViewController`)
     var isRecollectingCVC: Bool = false
     /// Variable to decide we should collect CVC
@@ -119,7 +116,7 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
     }
 
     /// Regenerates the main content - either the PM list or the PM form and updates all UI elements (pay button, error, mandate)
-    func regenerateUI(updatedListSelection: VerticalPaymentMethodListSelection? = nil) {
+    func regenerateUI() {
         if let paymentMethodFormViewController {
             remove(childViewController: paymentMethodFormViewController)
         }
@@ -210,7 +207,7 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
         )
     }
 
-    func updateMandate(animated: Bool = true) {
+    func updateMandate() {
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
         let newMandateText = mandateProvider.mandate(for: selectedPaymentOption?.paymentMethodType,
                                                      savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
@@ -414,7 +411,6 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
             )
             self.cvcRecollectionViewController = cvcRecollectionViewController
             isRecollectingCVC = true
-            paymentMethodListContentOffsetPercentage = bottomSheetController?.contentOffsetPercentage
             switchContentIfNecessary(to: cvcRecollectionViewController, containerView: paymentContainerView)
             navigationBar.setStyle(.back(showAdditionalButton: false))
             error = nil
