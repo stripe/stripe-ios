@@ -33,6 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
     if (self) {
         _imageLoader = imageLoader;
         _customization = [STDSUICustomization defaultSettings];
+        
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        [appearance configureWithOpaqueBackground];
+        _customization.navigationBarCustomization.scrollEdgeAppearance = appearance;
     }
     
     return self;
