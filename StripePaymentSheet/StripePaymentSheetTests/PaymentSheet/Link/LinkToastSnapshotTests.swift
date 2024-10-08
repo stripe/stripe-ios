@@ -8,6 +8,7 @@
 
 import iOSSnapshotTestCase
 import UIKit
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -15,7 +16,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class LinkToastSnapshotTests: FBSnapshotTestCase {
+class LinkToastSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
