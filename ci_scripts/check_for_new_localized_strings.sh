@@ -11,22 +11,15 @@ do
 
   if [[ $? -eq 0 ]]; then
 
-    localizableFile="${directory}/Resources/Localizations/en.lproj/Localizable.strings"
-    
-    # Check if the file is non-empty
-    if grep -q '[^[:space:]]' "${localizableFile}"; then
-        # Genstrings outputs in utf16 but we want to store in utf8
-        iconv -f utf-16 -t utf-8 "${directory}/Resources/Localizations/en.lproj/Localizable.strings" > "${directory}/Resources/Localizations/en.lproj/Localizable.strings.utf8"
+    # Genstrings outputs in utf16 but we want to store in utf8
+    iconv -f utf-16 -t utf-8 "${directory}/Resources/Localizations/en.lproj/Localizable.strings" > "${directory}/Resources/Localizations/en.lproj/Localizable.strings.utf8"
 
-        if [[ $? -eq 0 ]]; then
-         rm "${directory}/Resources/Localizations/en.lproj/Localizable.strings"
-         mv "${directory}/Resources/Localizations/en.lproj/Localizable.strings.utf8" "${directory}/Resources/Localizations/en.lproj/Localizable.strings"
-        else
-         echo "Error recoding into utf8"
-         EXIT_CODE=1
-        fi
+    if [[ $? -eq 0 ]]; then
+      rm "${directory}/Resources/Localizations/en.lproj/Localizable.strings"
+      mv "${directory}/Resources/Localizations/en.lproj/Localizable.strings.utf8" "${directory}/Resources/Localizations/en.lproj/Localizable.strings"
     else
-     echo "Skipping empty Localizable.strings for ${directory}"
+      echo "Error recoding into utf8"
+      EXIT_CODE=1
     fi
   else
     echo "Error occurred generating english strings file."
