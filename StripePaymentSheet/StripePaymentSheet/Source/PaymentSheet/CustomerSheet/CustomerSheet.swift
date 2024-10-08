@@ -21,13 +21,28 @@ internal enum InternalCustomerSheetResult {
 }
 
 public class CustomerSheet {
+    private enum IntegrationType {
+        case customerAdapter
+        case customerSession
+    }
+    
     internal enum InternalError: Error {
         case expectedSetupIntent
         case invalidStateOnConfirmation
     }
+    private let integrationType: IntegrationType
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
+    
+    private var initEvent: STPAnalyticEvent {
+        switch self.integrationType {
+        case .customerAdapter:
+            STPAnalyticEvent.customerSheetInitWithCustomerAdapter
+        case .customerSession:
+            STPAnalyticEvent.customerSheetInitWithCustomerSession
+        }
+    }
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = {
@@ -65,6 +80,7 @@ public class CustomerSheet {
                 customer: CustomerAdapter) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
+        self.integrationType = .customerAdapter
         self.configuration = configuration
 
         self.customerAdapter = customer
@@ -82,6 +98,7 @@ public class CustomerSheet {
     public init(configuration: CustomerSheet.Configuration,
                 intentConfiguration: CustomerSheet.IntentConfiguration,
                 customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
+        self.integrationType = .customerSession
         self.configuration = configuration
         self.customerAdapter = nil
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
@@ -112,6 +129,7 @@ public class CustomerSheet {
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
         let loadingStartDate = Date()
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.initEvent)
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadStarted)
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
