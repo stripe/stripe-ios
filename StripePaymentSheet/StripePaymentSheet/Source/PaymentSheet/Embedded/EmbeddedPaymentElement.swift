@@ -282,12 +282,12 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             contentViewController: embeddedFormVC,
             appearance: configuration.appearance,
             isTestMode: configuration.apiClient.isTestmode,
-            didCancelNative3DS2: {}
+            didCancelNative3DS2: {} // TODO(porter) Cancel 3DS2 on the payment handler
         )
         
         // Notify the delegate about the presentation
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
-        presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)t
+        presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
     }
 
 }
