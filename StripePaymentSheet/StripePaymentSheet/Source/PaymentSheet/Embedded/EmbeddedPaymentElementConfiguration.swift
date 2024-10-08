@@ -141,7 +141,7 @@ extension EmbeddedPaymentElement {
 
         /// Controls whether the view displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
         /// - Note: This doesn't affect mandates displayed in the form sheet.
-        var embeddedViewDisplaysMandateText: Bool = true
+        public var embeddedViewDisplaysMandateText: Bool = true
 
         /// Initializes a Configuration with default values
         public init(formSheetAction: FormSheetAction) {

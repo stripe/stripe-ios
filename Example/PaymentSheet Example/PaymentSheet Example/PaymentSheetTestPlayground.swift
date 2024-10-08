@@ -161,7 +161,7 @@ struct PaymentSheetTestPlayground: View {
                                 Spacer()
                             }
                             SettingView(setting: $playgroundController.settings.formSheetAction)
-                            SettingView(setting: $playgroundController.settings.hidesMandateText)
+                            SettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText)
                         }
                     }
 

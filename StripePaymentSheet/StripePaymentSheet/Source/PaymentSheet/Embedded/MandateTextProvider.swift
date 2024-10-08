@@ -13,7 +13,8 @@ protocol MandateTextProvider {
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString?
 }
 
-/// A class that can provide the attributed string for a given payment method type and configuration
+/// A class that can provide the attributed string for a given payment method type and configuration for the vertical list of PMs.
+// TODO: rename to VerticalListFormMandateProvider
 class FormMandateProvider: MandateTextProvider {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
@@ -25,14 +26,14 @@ class FormMandateProvider: MandateTextProvider {
         self.intent = intent
     }
 
-    /// Builds the attributed string for a given payment method type
+    /// Builds the attributed string for a given payment method type.
     /// - Parameter paymentMethodType: The payment method type who's mandate should be constructed
     /// - Parameter savedPaymentMethod: The currently selected saved payment method if any
     /// - Parameter bottomNoticeAttributedString: Passing this in just makes this method return it as long as `configuration` doesn't hide mandate text
     /// - Returns: An `NSAttributedString` representing the mandate to be displayed for `paymentMethodType`, returns `nil` if no mandate should be shown
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString? = nil) -> NSAttributedString? {
-        // Merchant will display the mandate
-        guard !configuration.hidesMandateText else {  return nil }
+        // Merchant will display the mandate themselves, return nil.
+        guard shouldDisplayMandateInVerticalList else { return nil }
 
         let newMandateText: NSAttributedString? = {
             guard let paymentMethodType else { return nil }
@@ -74,12 +75,10 @@ class FormMandateProvider: MandateTextProvider {
 
         return newMandateText
     }
-}
-
-extension PaymentElementConfiguration {
-    var hidesMandateText: Bool {
-        if let embeddedConfig = self as? EmbeddedPaymentElement.Configuration {
-            return embeddedConfig.hidesMandateText
+    
+    var shouldDisplayMandateInVerticalList: Bool {
+        if let embeddedConfig = configuration as? EmbeddedPaymentElement.Configuration {
+            return embeddedConfig.embeddedViewDisplaysMandateText
         }
 
         return false

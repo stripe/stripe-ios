@@ -190,7 +190,7 @@ class PlaygroundController: ObservableObject {
         }()
         
         var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: formSheetAction)
-        configuration.hidesMandateText = settings.hidesMandateText == .on
+        configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
         case .paypal:
