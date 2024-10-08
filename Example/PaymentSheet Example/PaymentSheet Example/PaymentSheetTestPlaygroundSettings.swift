@@ -410,13 +410,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
-    
-    enum HidesMandateTextEnabled: String, PickerEnum {
-        static let enumName: String = "hidesMandateText"
+
+    enum DisplaysMandateTextEnabled: String, PickerEnum {
+        static let enumName: String = "displaysMandateText"
         case on
         case off
     }
-    
+
     enum FormSheetAction: String, PickerEnum {
         static let enumName: String = "formSheetAction"
         case confirm
@@ -464,7 +464,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
     var formSheetAction: FormSheetAction
-    var hidesMandateText: HidesMandateTextEnabled
+    var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -506,7 +506,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectPhone: .automatic,
             collectAddress: .automatic,
             formSheetAction: .confirm,
-            hidesMandateText: .off)
+            embeddedViewDisplaysMandateText: .on)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

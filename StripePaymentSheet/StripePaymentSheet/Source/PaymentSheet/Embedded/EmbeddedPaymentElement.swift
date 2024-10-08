@@ -101,7 +101,7 @@ public class EmbeddedPaymentElement {
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            mandateProvider: FormMandateProvider(configuration: configuration,
+            mandateProvider: VerticalListMandateProvider(configuration: configuration,
                                              elementsSession: loadResult.elementsSession,
                                              intent: .deferredIntent(intentConfig: intentConfiguration))
         )
