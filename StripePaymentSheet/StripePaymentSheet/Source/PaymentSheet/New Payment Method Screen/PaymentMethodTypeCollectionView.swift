@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -39,11 +40,15 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
+    
+    private var incentiveVisibility = [PaymentSheet.PaymentMethodType: Bool]()
+    private var incentive: PaymentMethodIncentive?
 
     init(
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
+        incentive: PaymentMethodIncentive?,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
@@ -59,6 +64,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         }()
         self.selected = paymentMethodTypes[selectedItemIndex]
         self.appearance = appearance
+        self.incentive = incentive
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -81,6 +87,11 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setPromoBadgeVisibility(_ visible: Bool, for paymentMethodType: PaymentSheet.PaymentMethodType) {
+        incentiveVisibility[paymentMethodType] = visible
+        reloadData()
     }
 
     override var intrinsicContentSize: CGSize {
@@ -113,7 +124,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.paymentMethodType = paymentMethodTypes[indexPath.item]
+        
+        let paymentMethodType = paymentMethodTypes[indexPath.item]
+        cell.paymentMethodType = paymentMethodType
+        
+        let applicableIncentive = incentive?.takeIfAppliesTo(paymentMethodType)
+        let showPromoBadge = incentiveVisibility[paymentMethodType] ?? true
+        cell.promoBadge = showPromoBadge ? applicableIncentive?.displayText : nil
+        
         cell.appearance = appearance
         return cell
     }
@@ -160,6 +178,12 @@ extension PaymentMethodTypeCollectionView {
                 update()
             }
         }
+        
+        var promoBadge: String? = nil {
+            didSet {
+                update()
+            }
+        }
 
         var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default {
             didSet {
@@ -181,6 +205,9 @@ extension PaymentMethodTypeCollectionView {
             let paymentMethodLogo = UIImageView()
             paymentMethodLogo.contentMode = .scaleAspectFit
             return paymentMethodLogo
+        }()
+        private lazy var incentiveTag: IncentiveTagView = {
+            IncentiveTagView(tinyMode: true)
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
             return ShadowedRoundedRectangle(appearance: appearance)
@@ -210,7 +237,7 @@ extension PaymentMethodTypeCollectionView {
         override init(frame: CGRect) {
             super.init(frame: frame)
 
-            [paymentMethodLogo, label].forEach {
+            [paymentMethodLogo, label, incentiveTag].forEach {
                 shadowRoundedRectangle.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
@@ -233,6 +260,9 @@ extension PaymentMethodTypeCollectionView {
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
                 label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
+                
+                incentiveTag.topAnchor.constraint(equalTo: shadowRoundedRectangle.topAnchor, constant: 12),
+                incentiveTag.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12),
             ])
 
             contentView.layer.cornerRadius = appearance.cornerRadius
@@ -308,6 +338,11 @@ extension PaymentMethodTypeCollectionView {
             if paymentMethodTypeOfCurrentImage != self.paymentMethodType || image.size != CGSize(width: 1, height: 1) {
                 updateImage(image)
             }
+            
+            incentiveTag.isHidden = promoBadge == nil
+            if let promoBadge {
+                incentiveTag.setText("Get \(promoBadge)")
+            }
 
             shadowRoundedRectangle.isSelected = isSelected
             // Set text color
@@ -330,3 +365,24 @@ extension PaymentMethodTypeCollectionView {
         }
     }
 }
+
+//private extension PaymentSheet.PaymentMethodType {
+//    
+//    func canDisplay(_ incentive: LinkConsumerIncentive?) -> Bool {
+//        switch self {
+//        case .stripe, .external:
+//            return false
+//        case .instantDebits, .linkCardBrand:
+//            return incentive?.paymentMethod == "link_instant_debits"
+//        }
+//    }
+//    
+//    var incentiveIdentifier: String? {
+//        switch self {
+//        case .stripe, .external:
+//            return nil
+//        case .instantDebits, .linkCardBrand:
+//            return "link_instant_debits"
+//        }
+//    }
+//}

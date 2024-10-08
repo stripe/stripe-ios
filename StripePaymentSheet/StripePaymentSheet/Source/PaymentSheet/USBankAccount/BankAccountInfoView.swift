@@ -18,25 +18,31 @@ protocol BankAccountInfoViewDelegate {
 class BankAccountInfoView: UIView {
     struct Constants {
         static let spacing: CGFloat = 12
+        static let spacingSmall: CGFloat = 8
     }
 
     private let theme: ElementsAppearance
 
     lazy var bankNameLabel: UILabel = {
         let label = UILabel()
-        label.font = theme.fonts.subheadline
+        label.font = theme.fonts.subheadlineBold
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 1
         label.adjustsFontSizeToFitWidth = false
         label.lineBreakMode = .byTruncatingTail
         return label
     }()
+    
     lazy var bankAccountNumberLabel: UILabel = {
         let label = UILabel()
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
         return label
+    }()
+    
+    lazy var incentiveTag: IncentiveTagView = {
+        IncentiveTagView(tinyMode: true)
     }()
 
     lazy var bankIconImageView: UIImageView = {
@@ -84,12 +90,14 @@ class BankAccountInfoView: UIView {
         bankIconImageView.translatesAutoresizingMaskIntoConstraints = false
         bankNameLabel.translatesAutoresizingMaskIntoConstraints = false
         bankAccountNumberLabel.translatesAutoresizingMaskIntoConstraints = false
+        incentiveTag.translatesAutoresizingMaskIntoConstraints = false
         xIcon.translatesAutoresizingMaskIntoConstraints = false
         xIconTappableArea.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(bankIconImageView)
         addSubview(bankNameLabel)
         addSubview(bankAccountNumberLabel)
+        addSubview(incentiveTag)
         xIconTappableArea.addSubview(xIcon)
         addSubview(xIconTappableArea)
 
@@ -100,11 +108,14 @@ class BankAccountInfoView: UIView {
             bankNameLabel.leadingAnchor.constraint(equalTo: bankIconImageView.trailingAnchor, constant: Constants.spacing),
             bankNameLabel.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, multiplier: 0.5),
             bankNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
-            bankNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
 
-            bankAccountNumberLabel.leadingAnchor.constraint(equalTo: bankNameLabel.trailingAnchor, constant: Constants.spacing),
-            bankAccountNumberLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
+            bankAccountNumberLabel.leadingAnchor.constraint(equalTo: bankIconImageView.trailingAnchor, constant: Constants.spacing),
+            bankAccountNumberLabel.topAnchor.constraint(equalTo: bankNameLabel.bottomAnchor, constant: Constants.spacingSmall),
             bankAccountNumberLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
+            
+            incentiveTag.leadingAnchor.constraint(equalTo: bankAccountNumberLabel.trailingAnchor, constant: Constants.spacing),
+            incentiveTag.topAnchor.constraint(equalTo: bankAccountNumberLabel.topAnchor, constant: Constants.spacing),
+            incentiveTag.bottomAnchor.constraint(equalTo: bankAccountNumberLabel.bottomAnchor, constant: -Constants.spacing),
 
             xIconTappableArea.leadingAnchor.constraint(greaterThanOrEqualTo: bankAccountNumberLabel.trailingAnchor, constant: Constants.spacing),
             xIconTappableArea.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -129,9 +140,19 @@ class BankAccountInfoView: UIView {
         self.delegate?.didTapXIcon()
     }
 
-    func setBankName(text: String) {
+    func setBankName(text: String?) {
+        self.bankNameLabel.isHidden = text == nil
         self.bankNameLabel.text = text
         bankIconImageView.image = PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: text))
+    }
+    
+    func setIncentive(_ incentive: String?) {
+        if let incentive {
+            self.incentiveTag.isHidden = false
+            self.incentiveTag.setText("Get \(incentive)")
+        } else {
+            self.incentiveTag.isHidden = true
+        }
     }
 
     func setLastFourOfBank(text: String) {

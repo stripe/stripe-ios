@@ -507,11 +507,14 @@ extension NativeFlowController {
         }
 
         // Bank account details extraction for the linked bank
+        var paymentDetailsID: String?
         var bankAccountDetails: BankAccountDetails?
+
         let elementsSessionContext = dataManager.elementsSessionContext
         let linkMode = elementsSessionContext?.linkMode
         let email = elementsSessionContext?.billingDetails?.email ?? dataManager.consumerSession?.emailAddress
         let phone = elementsSessionContext?.billingDetails?.phone
+
         dataManager.createPaymentDetails(
             consumerSessionClientSecret: consumerSession.clientSecret,
             bankAccountId: bankAccountId,
@@ -523,6 +526,7 @@ extension NativeFlowController {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
             }
 
+            paymentDetailsID = paymentDetails.redactedPaymentDetails.id
             bankAccountDetails = paymentDetails.redactedPaymentDetails.bankAccountDetails
 
             // Decide which API to call based on the payment mode
@@ -543,14 +547,57 @@ extension NativeFlowController {
                 )
             }
         }
+        .chained { [weak self] paymentMethod -> Future<(LinkBankPaymentMethod, Bool)> in
+            guard let self else {
+                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
+            }
+            
+            let promise = Promise<(LinkBankPaymentMethod, Bool)>()
+            
+            var paymentIntentID: String?
+            var setupIntentID: String?
+            
+            switch elementsSessionContext?.intentId {
+            case .payment(let intentID):
+                paymentIntentID = intentID
+            case .setup(let intentID):
+                setupIntentID = intentID
+            case nil:
+                break
+            }
+            
+            if dataManager.didSignUpToLink, let paymentDetailsID {
+                self.dataManager.apiClient.updateIncentiveEligibility(
+                    paymentDetailsId: paymentDetailsID,
+                    paymentIntentID: paymentIntentID,
+                    setupIntentID: setupIntentID
+                ).observe { result in
+                    switch result {
+                    case .success(let incentive):
+                        let result = (paymentMethod, incentive.eligible)
+                        promise.fullfill(with: .success(result))
+                    case .failure:
+                        // TODO: Log error
+                        let result = (paymentMethod, false)
+                        promise.fullfill(with: .success(result))
+                    }
+                }
+            } else {
+                let result = (paymentMethod, false)
+                promise.fullfill(with: .success(result))
+            }
+            
+            return promise
+        }
         .observe { result in
             switch result {
-            case .success(let paymentMethod):
+            case .success(let (paymentMethod, incentiveEligible)):
                 let linkedBank = InstantDebitsLinkedBank(
                     paymentMethod: paymentMethod,
                     bankName: bankAccountDetails?.bankName,
                     last4: bankAccountDetails?.last4,
-                    linkMode: linkMode
+                    linkMode: linkMode,
+                    incentiveEligible: incentiveEligible
                 )
                 completion(.success(linkedBank))
             case .failure(let error):
@@ -1181,6 +1228,7 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         _ viewController: LinkLoginViewController,
         signedUpAttachedAndSynchronized synchronizePayload: FinancialConnectionsSynchronize
     ) {
+        dataManager.didSignUpToLink = true
         dataManager.manifest = synchronizePayload.manifest
         pushPane(synchronizePayload.manifest.nextPane, animated: true, clearNavigationStack: true)
     }

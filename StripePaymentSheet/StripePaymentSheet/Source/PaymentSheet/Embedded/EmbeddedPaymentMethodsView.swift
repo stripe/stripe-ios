@@ -68,6 +68,7 @@ class EmbeddedPaymentMethodsView: UIView {
     init(
         initialSelection: Selection?,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        incentive: PaymentMethodIncentive?,
         savedPaymentMethod: STPPaymentMethod?,
         appearance: PaymentSheet.Appearance,
         shouldShowApplePay: Bool,
@@ -99,11 +100,13 @@ class EmbeddedPaymentMethodsView: UIView {
         // Add card before Apple Pay and Link if present and before any other LPMs
         if paymentMethodTypes.contains(.stripe(.card)) {
             let selection: Selection = .new(paymentMethodType: .stripe(.card))
+            
             let cardRowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
                 savedPaymentMethodType: savedPaymentMethod?.type,
                 appearance: rowButtonAppearance,
                 shouldAnimateOnPress: true,
+                rightAccessoryView: nil,
                 isEmbedded: true,
                 didTap: { [weak self] rowButton in
                     self?.didTap(selectedRowButton: rowButton, selection: selection)
@@ -155,6 +158,7 @@ class EmbeddedPaymentMethodsView: UIView {
                 savedPaymentMethodType: savedPaymentMethod?.type,
                 appearance: rowButtonAppearance,
                 shouldAnimateOnPress: true,
+                rightAccessoryView: nil, // TODO
                 isEmbedded: true,
                 didTap: { [weak self] rowButton in
                     self?.didTap(selectedRowButton: rowButton, selection: selection)

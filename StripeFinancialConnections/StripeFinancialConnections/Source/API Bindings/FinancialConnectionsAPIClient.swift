@@ -1023,6 +1023,32 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             useConsumerPublishableKeyIfNeeded: true
         )
     }
+    
+    func updateIncentiveEligibility(
+        paymentDetailsId: String,
+        paymentIntentID: String?,
+        setupIntentID: String?
+    ) -> Future<StripeAPI.ConsumerFinancialIncentive> {
+        var parameters: [String: Any] = [
+            "request_surface": requestSurface,
+            "type": "bank_account",
+            "bank_account[payment_details]": paymentDetailsId,
+        ]
+        
+        if let paymentIntentID{
+            parameters["payment_intent"] = paymentIntentID
+        }
+        
+        if let setupIntentID {
+            parameters["setup_intent"] = setupIntentID
+        }
+        
+        return post(
+            resource: APIEndpointFinancialIncentives,
+            parameters: parameters,
+            useConsumerPublishableKeyIfNeeded: false
+        )
+    }
 
     func sharePaymentDetails(
         consumerSessionClientSecret: String,
@@ -1138,3 +1164,4 @@ private let APIEndpointAttachLinkConsumerToLinkAccountSession = "consumers/attac
 private let APIEndpointPaymentDetails = "consumers/payment_details"
 private let APIEndpointSharePaymentDetails = "consumers/payment_details/share"
 private let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointFinancialIncentives = "consumers/experiments/financial_incentives"

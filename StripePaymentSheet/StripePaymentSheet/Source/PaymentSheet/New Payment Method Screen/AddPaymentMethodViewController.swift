@@ -72,6 +72,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
+            incentive: elementsSession.linkSettings?.linkConsumerIncentive.flatMap { PaymentMethodIncentive(from: $0) },
             delegate: self
         )
         return view
@@ -193,6 +194,12 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 extension AddPaymentMethodViewController: PaymentMethodFormViewControllerDelegate {
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         delegate?.didUpdate(self)
+        
+        if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
+            let showPromoBadge = instantDebitsFormElement.canShowPromoBadge
+            let paymentMethodType = viewController.paymentMethodType
+            paymentMethodTypesView.setPromoBadgeVisibility(showPromoBadge, for: paymentMethodType)
+        }
     }
 
     func updateErrorLabel(for error: Swift.Error?) {

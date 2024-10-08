@@ -323,13 +323,15 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             paymentMethod: LinkBankPaymentMethod(id: "paymentMethodId"),
             bankName: nil,
             last4: nil,
-            linkMode: .linkPaymentMethod
+            linkMode: .linkPaymentMethod,
+            incentiveEligible: false
         )
         let linkCardBrandLinkedBank = InstantDebitsLinkedBank(
             paymentMethod: LinkBankPaymentMethod(id: "paymentMethodId"),
             bankName: nil,
             last4: nil,
-            linkMode: .linkCardBrand
+            linkMode: .linkCardBrand,
+            incentiveEligible: false
         )
 
         let instantDebitConfirmParams = IntentConfirmParams(type: .instantDebits)

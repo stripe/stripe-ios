@@ -196,7 +196,7 @@ extension PayWithLinkViewController {
             // Dismiss keyboard
             view.endEditing(true)
 
-            if addPaymentMethodVC.selectedPaymentMethodType == .instantDebits {
+            if case .instantDebits = addPaymentMethodVC.selectedPaymentMethodType {
                 didSelectAddBankAccount()
                 return
             }
@@ -306,14 +306,27 @@ extension PayWithLinkViewController {
 extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodViewControllerDelegate {
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
-        if viewController.selectedPaymentMethodType == .instantDebits {
-            confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: .instantDebits))
-        } else {
+        let type = viewController.selectedPaymentMethodType
+        
+        switch type {
+        case .stripe, .external:
             confirmButton.update(
                 state: viewController.paymentOption != nil ? .enabled : .disabled,
                 callToAction: context.callToAction
             )
+        case .instantDebits:
+            confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: type))
+        case .linkCardBrand:
+            confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: type))
         }
+//        if case .instantDebits = viewController.selectedPaymentMethodType {
+//            confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: .instantDebits))
+//        } else {
+//            confirmButton.update(
+//                state: viewController.paymentOption != nil ? .enabled : .disabled,
+//                callToAction: context.callToAction
+//            )
+//        }
         updateErrorLabel(for: nil)
     }
 

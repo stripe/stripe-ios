@@ -31,6 +31,8 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let linkedBankInfoView: BankAccountInfoView
     private var linkedBank: InstantDebitsLinkedBank?
     private let theme: ElementsAppearance
+    private let incentive: PaymentMethodIncentive?
+    private let incentiveDisclaimerElement: StaticElement?
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
     var delegate: ElementDelegate?
@@ -163,6 +165,10 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
         return nameValid && emailValid && phoneValid && addressValid
     }
+    
+    var canShowPromoBadge: Bool {
+        linkedBank?.incentiveEligible ?? true
+    }
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
@@ -171,6 +177,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
+        incentive: PaymentMethodIncentive?,
         theme: ElementsAppearance = .default
     ) {
         self.configuration = configuration
@@ -188,7 +195,17 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
         self.linkedBank = nil
         self.linkedBankInfoSectionElement.view.isHidden = true
+        self.incentive = incentive
         self.theme = theme
+        
+        incentiveDisclaimerElement = incentive.flatMap {
+            let label = UILabel()
+            label.text = "Get \($0.displayText) back when you pay with your bank. See terms."
+            label.font = theme.fonts.footnote
+            label.textColor = theme.colors.secondaryText
+            label.numberOfLines = 0
+            return StaticElement(view: label)
+        }
 
         let allElements: [Element?] = [
             titleElement,
@@ -197,6 +214,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             phoneElement,
             addressElement,
             linkedBankInfoSectionElement,
+            incentiveDisclaimerElement,
         ]
         let autoSectioningElements = allElements.compactMap { $0 }
         self.formElement = FormElement(
@@ -209,18 +227,28 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
     func setLinkedBank(_ linkedBank: InstantDebitsLinkedBank) {
         self.linkedBank = linkedBank
-        if
-            let last4ofBankAccount = linkedBank.last4,
-            let bankName = linkedBank.bankName
-        {
-            linkedBankInfoView.setBankName(text: bankName)
-            linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
+        
+        linkedBankInfoView.setBankName(text: linkedBank.bankName)
+        linkedBankInfoView.setLastFourOfBank(text: "••••\(linkedBank.last4 ?? "")")
+        
+        if let incentive, linkedBank.incentiveEligible {
+            linkedBankInfoView.setIncentive(incentive.displayText)
+        }
+        
+        formElement.toggleElements(
+            linkedBankElements,
+            hidden: false,
+            animated: true
+        )
+        
+        if let incentiveDisclaimerElement {
             formElement.toggleElements(
-                linkedBankElements,
-                hidden: false,
+                [incentiveDisclaimerElement],
+                hidden: true,
                 animated: true
             )
         }
+        
         self.delegate?.didUpdate(element: self)
     }
 
@@ -240,6 +268,15 @@ extension InstantDebitsPaymentMethodElement: BankAccountInfoViewDelegate {
                 hidden: true,
                 animated: true
             )
+            
+            if let incentiveElement = self.incentiveDisclaimerElement {
+                self.formElement.toggleElements(
+                    [incentiveElement],
+                    hidden: false,
+                    animated: true
+                )
+            }
+            
             self.linkedBank = nil
             self.delegate?.didUpdate(element: self)
         }

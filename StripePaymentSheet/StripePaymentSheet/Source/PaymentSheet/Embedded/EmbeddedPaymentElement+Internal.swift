@@ -73,6 +73,7 @@ extension EmbeddedPaymentElement {
         return EmbeddedPaymentMethodsView(
             initialSelection: initialSelection,
             paymentMethodTypes: loadResult.paymentMethodTypes,
+            incentive: loadResult.elementsSession.linkSettings?.linkConsumerIncentive.flatMap { PaymentMethodIncentive(from: $0) },
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             appearance: configuration.appearance,
             shouldShowApplePay: shouldShowApplePay,

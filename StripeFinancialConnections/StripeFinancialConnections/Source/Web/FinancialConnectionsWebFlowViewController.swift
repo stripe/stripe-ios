@@ -175,7 +175,8 @@ extension FinancialConnectionsWebFlowViewController {
                                 // backend can return "+" instead of a more-common encoding of "%20" for spaces
                                     .replacingOccurrences(of: "+", with: " "),
                                 last4: returnUrl.extractValue(forKey: "last4"),
-                                linkMode: elementsSessionContext?.linkMode
+                                linkMode: elementsSessionContext?.linkMode,
+                                incentiveEligible: false // TODO: Update here
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
                         } else {

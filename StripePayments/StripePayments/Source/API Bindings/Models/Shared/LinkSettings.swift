@@ -28,6 +28,7 @@ import Foundation
     @_spi(STP) public let disableSignup: Bool?
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let linkFlags: [String: Bool]?
+    @_spi(STP) public let linkConsumerIncentive: LinkConsumerIncentive?
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
@@ -38,6 +39,7 @@ import Foundation
         disableSignup: Bool?,
         linkMode: LinkMode?,
         linkFlags: [String: Bool]?,
+        linkConsumerIncentive: LinkConsumerIncentive?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.fundingSources = fundingSources
@@ -46,6 +48,7 @@ import Foundation
         self.disableSignup = disableSignup
         self.linkMode = linkMode
         self.linkFlags = linkFlags
+        self.linkConsumerIncentive = linkConsumerIncentive
         self.allResponseFields = allResponseFields
     }
 
@@ -66,6 +69,15 @@ import Foundation
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
         let disableSignup = response["link_mobile_disable_signup"] as? Bool ?? false
         let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
+        
+        let linkIncentivesEnabled = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
+        let linkConsumerIncentive: LinkConsumerIncentive? = if linkIncentivesEnabled {
+            LinkConsumerIncentive.decodedObject(
+                fromAPIResponse: response["link_consumer_incentive"] as? [AnyHashable: Any]
+            )
+        } else {
+            nil
+        }
 
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
@@ -81,6 +93,7 @@ import Foundation
             disableSignup: disableSignup,
             linkMode: linkMode,
             linkFlags: linkFlags,
+            linkConsumerIncentive: linkConsumerIncentive,
             allResponseFields: response
         ) as? Self
     }

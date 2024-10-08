@@ -259,7 +259,10 @@ extension PaymentMethodFormViewController {
             } else {
                 return true
             }
-        } else if paymentMethodType == .instantDebits || paymentMethodType == .linkCardBrand {
+        } else if case .instantDebits = paymentMethodType {
+            // only override buy button (show "Continue") IF we don't have a linked bank
+            return instantDebitsFormElement?.getLinkedBank() == nil
+        } else if case .linkCardBrand = paymentMethodType {
             // only override buy button (show "Continue") IF we don't have a linked bank
             return instantDebitsFormElement?.getLinkedBank() == nil
         }

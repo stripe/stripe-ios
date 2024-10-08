@@ -313,6 +313,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum InstantDebitsIncentives: String, PickerEnum {
+        static var enumName: String { "Instant Debits Incentives" }
+
+        case on
+        case off
+    }
     enum ExternalPaymentMethods: String, PickerEnum {
         static let enumName: String = "External PMs"
         // Based on https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/55d7fd10/src/externalPaymentMethods/constants.ts#L13
@@ -470,6 +476,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var autoreload: Autoreload
     var shakeAmbiguousViews: ShakeAmbiguousViews
     var instantDebitsInDeferredIntents: InstantDebitsInDeferredIntents
+    var instantDebitsIncentives: InstantDebitsIncentives
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
@@ -516,6 +523,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             autoreload: .on,
             shakeAmbiguousViews: .off,
             instantDebitsInDeferredIntents: .off,
+            instantDebitsIncentives: .off,
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,

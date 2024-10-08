@@ -45,7 +45,16 @@ class RowButton: UIView {
     }
     var heightConstraint: NSLayoutConstraint?
 
-    init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) {
+    init(
+        appearance: PaymentSheet.Appearance,
+        imageView: UIImageView,
+        text: String,
+        subtext: String? = nil,
+        rightAccessoryView: UIView? = nil,
+        shouldAnimateOnPress: Bool = false,
+        isEmbedded: Bool = false,
+        didTap: @escaping DidTapClosure
+    ) {
         self.appearance = appearance
         self.shouldAnimateOnPress = true
         self.didTap = didTap
@@ -255,7 +264,16 @@ extension RowButton {
         return label
     }
 
-    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, savedPaymentMethodType: STPPaymentMethodType?, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForPaymentMethodType(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        subtitle: String? = nil,
+        savedPaymentMethodType: STPPaymentMethodType?,
+        appearance: PaymentSheet.Appearance,
+        shouldAnimateOnPress: Bool,
+        rightAccessoryView: UIView?,
+        isEmbedded: Bool = false,
+        didTap: @escaping DidTapClosure
+    ) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
         // Special case "New card" vs "Card" title
@@ -265,7 +283,7 @@ extension RowButton {
             }
             return paymentMethodType.displayName
         }()
-        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtitle, shouldAnimateOnPress: shouldAnimateOnPress, isEmbedded: isEmbedded, didTap: didTap)
+        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtitle, rightAccessoryView: rightAccessoryView, shouldAnimateOnPress: shouldAnimateOnPress, isEmbedded: isEmbedded, didTap: didTap)
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {

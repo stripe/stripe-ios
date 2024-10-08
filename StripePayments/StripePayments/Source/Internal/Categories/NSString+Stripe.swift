@@ -49,7 +49,8 @@ extension String {
     @_spi(STP) public static func localizedAmountDisplayString(
         for amount: Int,
         currency: String,
-        locale: Locale = NSLocale.autoupdatingCurrent
+        locale: Locale = NSLocale.autoupdatingCurrent,
+        compact: Bool = false
     ) -> String {
         let decimalizedAmount = NSDecimalNumber.stp_decimalNumber(
             withAmount: amount,
@@ -60,6 +61,11 @@ extension String {
         formatter.usesGroupingSeparator = true
         formatter.locale = locale
         formatter.currencyCode = currency
+        if compact {
+            // TODO: Figure out why this isn't deterministic
+            formatter.maximumFractionDigits = 0
+            formatter.currencySymbol = currencySymbol(for: currency.uppercased()) ?? formatter.currencySymbol
+        }
         let failsafeString = "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
         return formatter.string(from: decimalizedAmount) ?? failsafeString
     }
@@ -69,5 +75,11 @@ extension String {
     @_spi(STP) public func isUSCountryCode(_ caseSensitive: Bool = false) -> Bool {
         return caseSensitive ? self == "US" : self.caseInsensitiveCompare("US") == .orderedSame
     }
-
+    
+    private static func currencySymbol(for currencyCode: String) -> String? {
+        let locale = Locale.availableIdentifiers
+            .compactMap { Locale(identifier: $0) }
+            .first { $0.currencyCode == currencyCode }
+        return locale?.currencySymbol
+    }
 }

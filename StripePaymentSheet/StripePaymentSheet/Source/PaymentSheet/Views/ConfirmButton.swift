@@ -396,7 +396,8 @@ class ConfirmButton: UIView {
                 case .enabled, .disabled, .spinnerWithInteractionDisabled:
                     switch callToAction {
                     case .add(let paymentMethodType):
-                        if paymentMethodType == .instantDebits {
+                        // TODO Does this need to cover linkCardBrand?
+                        if paymentMethodType.isLinkBankPayment {
                             return STPLocalizedString("Add bank account", "Button prompt to add a bank account as a payment method.")
                         } else {
                             return String.Localized.continue
@@ -435,7 +436,7 @@ class ConfirmButton: UIView {
             switch callToAction {
             case .add(let paymentMethodType):
                 lockIcon.isHidden = true
-                addIcon.isHidden = paymentMethodType != .instantDebits
+                addIcon.isHidden = !paymentMethodType.isLinkBankPayment
             case .custom, .continue:
                 lockIcon.isHidden = true
                 addIcon.isHidden = true

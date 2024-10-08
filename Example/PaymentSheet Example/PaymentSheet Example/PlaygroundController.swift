@@ -443,6 +443,10 @@ class PlaygroundController: ObservableObject {
             // Hack to enable Instant Debits with deferred intents
             let enableInstantDebitsInDeferredIntents = newValue.instantDebitsInDeferredIntents == .on
             UserDefaults.standard.set(enableInstantDebitsInDeferredIntents, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_DEFERRED_INTENTS")
+            
+            // Hack to enable incentives in Instant Debits
+            let enableInstantDebitsIncentives = newValue.instantDebitsIncentives == .on
+            UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
         }.store(in: &subscribers)
 
         // Listen for analytics

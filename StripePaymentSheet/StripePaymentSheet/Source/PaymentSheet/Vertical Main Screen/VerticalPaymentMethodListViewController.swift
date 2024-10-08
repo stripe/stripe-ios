@@ -24,6 +24,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
+    
+    private let incentive: PaymentMethodIncentive?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -40,10 +42,12 @@ class VerticalPaymentMethodListViewController: UIViewController {
         appearance: PaymentSheet.Appearance,
         currency: String?,
         amount: Int?,
+        incentive: PaymentMethodIncentive?,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.delegate = delegate
         self.appearance = appearance
+        self.incentive = incentive
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
 
@@ -111,13 +115,18 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let paymentMethodTypes = paymentMethodTypes
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
+            let rightAccessoryView = incentive?.takeIfAppliesTo(paymentMethodType).flatMap { incentive in
+                IncentiveTagView(tinyMode: false, text: incentive.displayText)
+            }
+            
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
                 subtitle: Self.subtitleText(for: paymentMethodType),
                 savedPaymentMethodType: savedPaymentMethod?.type,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
-                shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)
+                shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection),
+                rightAccessoryView: rightAccessoryView
             ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
