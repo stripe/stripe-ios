@@ -8,6 +8,7 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripePayments
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
@@ -48,6 +49,11 @@ public class EmbeddedPaymentElement {
     }
     
     private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
+    private let loadResult: PaymentSheetLoader.LoadResult
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private var embeddedFormViewController: EmbeddedFormViewController?
+    private var bottomSheetController: BottomSheetViewController?
+    private lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// An asynchronous failable initializer
     /// This loads the Customer's payment methods, their default payment method, etc.
@@ -109,7 +115,10 @@ public class EmbeddedPaymentElement {
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText
         )
 
-        let embeddedPaymentElement: EmbeddedPaymentElement = .init(view: embeddedPaymentMethodsView, configuration: configuration)
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(view: embeddedPaymentMethodsView,
+                                                                   configuration: configuration,
+                                                                   loadResult: loadResult,
+                                                                   analyticsHelper: analyticsHelper)
         await MainActor.run {
             embeddedPaymentMethodsView.delegate = embeddedPaymentElement
         }
@@ -149,11 +158,13 @@ public class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
-    private init(view: EmbeddedPaymentMethodsView, configuration: Configuration, delegate: EmbeddedPaymentElementDelegate? = nil) {
+    private init(view: EmbeddedPaymentMethodsView, configuration: Configuration, loadResult: PaymentSheetLoader.LoadResult, analyticsHelper: PaymentSheetAnalyticsHelper, delegate: EmbeddedPaymentElementDelegate? = nil) {
         self.view = view
         self.embeddedPaymentMethodsView = view
         self.delegate = delegate
         self.configuration = configuration
+        self.loadResult = loadResult
+        self.analyticsHelper = analyticsHelper
     }
 }
 
@@ -241,5 +252,43 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+
+        guard let selection = embeddedPaymentMethodsView.selection else { return }
+        let paymentMethodType: PaymentSheet.PaymentMethodType? = {
+            switch selection {
+            case .new(paymentMethodType: let paymentMethodType):
+                return paymentMethodType
+            case .saved:
+                return nil
+            case .applePay:
+                return nil
+            case .link:
+                return nil
+            }
+        }()
+        guard let paymentMethodType else { return }
+
+        guard let presentingViewController else {
+            stpAssert(true, "Provide a presenting view controller, TODO better message")
+            return
+        }
+        embeddedFormViewController = EmbeddedFormViewController(configuration: configuration,
+                                            loadResult: loadResult,
+                                            isFlowController: false,
+                                            paymentMethodType: paymentMethodType,
+                                            analyticsHelper: analyticsHelper)
+        
+        guard let embeddedFormViewController else { return }
+
+
+        guard embeddedFormViewController.collectsUserInput else { return }
+        let bottomSheetController = BottomSheetViewController(contentViewController: embeddedFormViewController,
+                                                          appearance: configuration.appearance,
+                                                          isTestMode: configuration.apiClient.isTestmode,
+                                                          didCancelNative3DS2: {})
+
+        delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
+        presentingViewController.presentAsBottomSheet(bottomSheetController, appearance: configuration.appearance)
+        self.bottomSheetController = bottomSheetController
     }
 }
