@@ -151,7 +151,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
                     }
-                    
+
                     if playgroundController.settings.uiStyle == .embedded {
                         Divider()
                         Group {
@@ -161,7 +161,7 @@ struct PaymentSheetTestPlayground: View {
                                 Spacer()
                             }
                             SettingView(setting: $playgroundController.settings.formSheetAction)
-                            SettingView(setting: $playgroundController.settings.hidesMandateText)
+                            SettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText)
                         }
                     }
 

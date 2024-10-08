@@ -2428,7 +2428,7 @@ extension PaymentSheetUITestCase {
         vertical: Bool = false,
         useLinkCardBrand: Bool = false
     ) {
-        
+
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = mode
         settings.apmsEnabled = .off
@@ -2481,13 +2481,9 @@ extension PaymentSheetUITestCase {
         linkLoginCtaButton.tap()
 
         // "Institution picker" pane
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
-
-        let prepaneContinueButton = app.buttons["prepane_continue_button"]
-        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "Failed to open Partner Auth Prepane - \(#function) waiting failed")
-        prepaneContinueButton.tap()
 
         let accountPickerLinkAccountsButton = app.buttons["connect_accounts_button"]
         XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
