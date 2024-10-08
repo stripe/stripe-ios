@@ -12,6 +12,7 @@ import UIKit
 
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
+    func selectionDidUpdate()
 }
 
 /// The view for an embedded payment element
@@ -19,9 +20,22 @@ class EmbeddedPaymentMethodsView: UIView {
 
     typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
 
+    var displayData: EmbeddedPaymentElement.PaymentOptionDisplayData? {
+        guard let selection else { return nil }
+        return .init(selection: selection, mandateText: mandateView.attributedText)
+    }
+    
     private let appearance: PaymentSheet.Appearance
-    private(set) var selection: Selection?
+    private(set) var selection: Selection? {
+        didSet {
+            updateMandate()
+            if oldValue != selection {
+                delegate?.selectionDidUpdate()
+            }
+        }
+    }
     private let mandateProvider: MandateTextProvider
+    private let shouldShowMandate: Bool
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -41,10 +55,12 @@ class EmbeddedPaymentMethodsView: UIView {
          shouldShowApplePay: Bool,
          shouldShowLink: Bool,
          savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
-         mandateProvider: MandateTextProvider) {
+         mandateProvider: MandateTextProvider,
+         shouldShowMandate: Bool = true) {
         self.appearance = appearance
         self.selection = initialSelection
         self.mandateProvider = mandateProvider
+        self.shouldShowMandate = shouldShowMandate
         super.init(frame: .zero)
 
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
@@ -169,7 +185,6 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         self.selection = selection
-        updateMandate()
     }
 
     func didTapAccessoryButton() {
@@ -182,13 +197,20 @@ class EmbeddedPaymentMethodsView: UIView {
                                                                   savedPaymentMethod: selection?.savedPaymentMethod,
                                                                   bottomNoticeAttributedString: nil)
 
+        
         guard animated else {
-            self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+            self.mandateView.setHiddenIfNecessary(
+                (self.mandateView.attributedText?.string.isEmpty ?? true) ||
+                !shouldShowMandate
+            )
             return
         }
 
         UIView.animate(withDuration: 0.25, animations: {
-            self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+            self.mandateView.setHiddenIfNecessary(
+                (self.mandateView.attributedText?.string.isEmpty ?? true) ||
+                !self.shouldShowMandate
+            )
             self.setNeedsLayout()
             self.layoutIfNeeded()
         })
@@ -218,6 +240,41 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Style {
             return appearance
         case .floatingButton:
             return appearance
+        }
+    }
+}
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
+
+
+extension EmbeddedPaymentElement.PaymentOptionDisplayData {
+    init(selection: EmbeddedPaymentMethodsView.Selection, mandateText: NSAttributedString?) {
+        self.mandateText = mandateText
+        
+        switch selection {
+        case .new(paymentMethodType: let paymentMethodType):
+            image = paymentMethodType.makeImage(
+                forDarkBackground: UITraitCollection.current.isDarkMode,
+                updateHandler: nil
+            )
+            label = paymentMethodType.displayName
+            self.paymentMethodType = paymentMethodType.identifier
+            billingDetails = nil // TODO(porter) Handle billing details when we present forms (maybe set this to defaultBillingDetails) if billingDetailsConfiguration.attachDefaultsToPaymentMethod is true
+        case .saved(paymentMethod: let paymentMethod):
+            image = paymentMethod.makeIcon()
+            label = paymentMethod.paymentSheetLabel
+            paymentMethodType = paymentMethod.type.identifier
+            billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
+        case .applePay:
+            image = Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
+            label = .Localized.apple_pay
+            paymentMethodType = "apple_pay"
+            billingDetails = nil // TODO(porter) Handle billing details when we present forms
+        case .link:
+            image = Image.link_logo.makeImage()
+            label = STPPaymentMethodType.link.displayName
+            paymentMethodType = STPPaymentMethodType.link.identifier
+            billingDetails = nil // TODO(porter) Handle billing details when we present forms
         }
     }
 }
