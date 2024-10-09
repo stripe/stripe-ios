@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 extension Locale {
     /// Transforms the locale into a web locale
