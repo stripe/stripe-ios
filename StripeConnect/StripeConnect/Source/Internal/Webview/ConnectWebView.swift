@@ -291,7 +291,6 @@ extension ConnectWebView {
             return
         }
 
-        // File is not previewable, so directly open share sheet instead
         let activityViewController = UIActivityViewController(activityItems: [downloadedFile], applicationActivities: nil)
         activityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
             self?.cleanupDownloadedFile()
