@@ -242,7 +242,7 @@ protocol FinancialConnectionsAPI {
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String
-    ) -> Future<FinancialConnectionsPaymentMethod>
+    ) -> Future<LinkBankPaymentMethod>
 }
 
 extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
@@ -1021,7 +1021,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String
-    ) -> Future<FinancialConnectionsPaymentMethod> {
+    ) -> Future<LinkBankPaymentMethod> {
         let parameters: [String: Any] = [
             "link": [
                 "credentials": [
@@ -1033,7 +1033,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         ]
 
         return updateAndApplyFraudDetection(to: parameters)
-            .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsPaymentMethod> in
+            .chained { [weak self] parametersWithTelemetry -> Future<LinkBankPaymentMethod> in
                 guard let self else {
                     return Promise(
                         error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated.")
