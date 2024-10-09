@@ -20,41 +20,31 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     var clientSettings: some View {
-        // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
-        //  (each view can hold 10 direct subviews)
-        Group {
-            SettingView(setting: uiStyleBinding)
-            SettingView(setting: $playgroundController.settings.layout).disabled(playgroundController.settings.uiStyle == .embedded)
-            SettingView(setting: $playgroundController.settings.shippingInfo)
-            SettingView(setting: $playgroundController.settings.applePayEnabled)
-            SettingView(setting: $playgroundController.settings.applePayButtonType)
-            SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+        SettingView(setting: uiStyleBinding)
+        if playgroundController.settings.uiStyle != .embedded {
+            SettingView(setting: $playgroundController.settings.layout)
         }
-        Group {
-            SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
-            if playgroundController.settings.defaultBillingAddress == .customEmail {
-                TextField("Default email", text: customEmailBinding)
-                    .keyboardType(.emailAddress)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
-            }
+        SettingView(setting: $playgroundController.settings.shippingInfo)
+        SettingView(setting: $playgroundController.settings.applePayEnabled)
+        SettingView(setting: $playgroundController.settings.applePayButtonType)
+        SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+        SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
+        if playgroundController.settings.defaultBillingAddress == .customEmail {
+            TextField("Default email", text: customEmailBinding)
+                .keyboardType(.emailAddress)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
         }
-        Group {
-            SettingView(setting: $playgroundController.settings.linkMode)
-            SettingView(setting: $playgroundController.settings.userOverrideCountry)
-            SettingView(setting: $playgroundController.settings.externalPaymentMethods)
-            SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
-            SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
-        }
-        Group {
-            SettingView(setting: $playgroundController.settings.requireCVCRecollection)
-        }
-        Group {
-            SettingView(setting: $playgroundController.settings.autoreload)
-            SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
-        }
+        SettingView(setting: $playgroundController.settings.linkMode)
+        SettingView(setting: $playgroundController.settings.userOverrideCountry)
+        SettingView(setting: $playgroundController.settings.externalPaymentMethods)
+        SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+        SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
+        SettingView(setting: $playgroundController.settings.requireCVCRecollection)
+        SettingView(setting: $playgroundController.settings.autoreload)
+        SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
     }
-
+    
     var body: some View {
         VStack {
             ScrollView {
@@ -178,7 +168,7 @@ struct PaymentSheetTestPlayground: View {
             Divider()
             PaymentSheetButtons()
                 .environmentObject(playgroundController)
-        }
+        }.animation(.bouncy).transition(.opacity)
     }
     var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
         Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
