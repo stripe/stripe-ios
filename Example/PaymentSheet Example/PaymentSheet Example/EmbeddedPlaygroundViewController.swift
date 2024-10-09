@@ -76,6 +76,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         embeddedPaymentElement = try await EmbeddedPaymentElement.create(intentConfiguration: intentConfig,
                                                                          configuration: configuration)
         embeddedPaymentElement.delegate = self
+        embeddedPaymentElement.presentingViewController = self
         embeddedPaymentElement.view.translatesAutoresizingMaskIntoConstraints = false
         paymentOptionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(embeddedPaymentElement.view)
