@@ -200,7 +200,6 @@ struct OverridePrimaryButtonState {
 extension PaymentMethodFormViewController {
     enum Error: Swift.Error {
         case usBankAccountParamsMissing
-        case instantDebitsDeferredIntentNotSupported
         case instantDebitsParamsMissing
     }
 
@@ -432,7 +431,7 @@ extension PaymentMethodFormViewController {
         }
         let additionalParameters: [String: Any] = [
             "product": "instant_debits",
-            "attach_required": true,
+//            "attach_required": true,
             "hosted_surface": "payment_element",
         ]
         switch intent {
@@ -458,13 +457,29 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .deferredIntent: // not supported
-            let errorAnalytic = ErrorAnalytic(
-                event: .unexpectedPaymentSheetError,
-                error: Error.instantDebitsDeferredIntentNotSupported
+        case .deferredIntent(let intentConfig):
+            let amount: Int?
+            let currency: String?
+            switch intentConfig.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            client.collectBankAccountForDeferredIntent(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: intentConfig.onBehalfOf,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
             )
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
         }
     }
 }

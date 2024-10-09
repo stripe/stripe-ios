@@ -41,6 +41,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     // MARK: Deferred intent errors
     case intentConfigurationValidationFailed(message: String)
     case deferredIntentValidationFailed(message: String)
+    case invalidLinkBankPaymentMethod
 
     // MARK: - Link errors
     case linkSignUpNotRequired
@@ -79,6 +80,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "Attempted Apple Pay but it's not supported by the device, not configured, or missing a presenter"
             case .deferredIntentValidationFailed(message: let message):
                 return message
+            case .invalidLinkBankPaymentMethod:
+                return "The Stripe API sent an invalid payment_method parameter"
             case .alreadyPresented:
                 return "presentingViewController is already presenting a view controller"
             case .flowControllerConfirmFailed(message: let message):

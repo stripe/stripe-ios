@@ -238,7 +238,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
         billingDetails: ElementsSessionContext.BillingDetails?
-    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentMethod> {
-        Promise<StripeFinancialConnections.FinancialConnectionsPaymentMethod>()
+    ) -> StripeCore.Future<StripeFinancialConnections.LinkBankPaymentMethod> {
+        Promise<StripeFinancialConnections.LinkBankPaymentMethod>()
     }
 }
