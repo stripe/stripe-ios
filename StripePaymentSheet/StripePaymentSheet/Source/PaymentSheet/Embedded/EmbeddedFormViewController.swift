@@ -14,6 +14,20 @@ import UIKit
 
 class EmbeddedFormViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
 
+    enum PrimaryAction {
+        case confirm
+        case `continue`
+    }
+    
+    var twoStep: Bool {
+        switch configuration.formSheetAction {
+        case .confirm:
+            return false
+        case .continue:
+            return true
+        }
+    }
+    
     var collectsUserInput: Bool {
         return paymentMethodFormViewController?.form.collectsUserInput ?? false
     }
@@ -40,14 +54,13 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
     }
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodType: PaymentSheet.PaymentMethodType
-    let configuration: PaymentElementConfiguration
+    let configuration: EmbeddedPaymentElement.Configuration
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
-    let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private var previousPaymentOption: PaymentOption?
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
@@ -95,7 +108,7 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
 
     // MARK: - Initializers
 
-    init(configuration: PaymentElementConfiguration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool, paymentMethodType: PaymentSheet.PaymentMethodType, previousPaymentOption: PaymentOption? = nil, analyticsHelper: PaymentSheetAnalyticsHelper) {
+    init(configuration: EmbeddedPaymentElement.Configuration, loadResult: PaymentSheetLoader.LoadResult, paymentMethodType: PaymentSheet.PaymentMethodType, previousPaymentOption: PaymentOption? = nil, analyticsHelper: PaymentSheetAnalyticsHelper) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
         self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
 
@@ -104,7 +117,6 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
         self.elementsSession = loadResult.elementsSession
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
-        self.isFlowController = isFlowController
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
 
@@ -143,10 +155,10 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
                 return .custom(title: String.Localized.confirm)
             }
             if let customCtaLabel = configuration.primaryButtonLabel {
-                return isFlowController ? .custom(title: customCtaLabel) : .customWithLock(title: customCtaLabel)
+                return twoStep ? .custom(title: customCtaLabel) : .customWithLock(title: customCtaLabel)
             }
 
-            if isFlowController {
+            if twoStep {
                 return .continue
             }
             return .makeDefaultTypeForPaymentSheet(intent: intent)
@@ -163,16 +175,9 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
             }
             return selectedPaymentOption == nil ? .disabled : .enabled
         }()
-        let style: ConfirmButton.Style = {
-            // If the button invokes Apple Pay, it must be styled as the Apple Pay button
-            if case .applePay = selectedPaymentOption, !isFlowController {
-                return .applePay
-            }
-            return .stripe
-        }()
         primaryButton.update(
             state: state,
-            style: style,
+            style: .stripe,
             callToAction: callToAction,
             animated: true
         )
@@ -236,11 +241,11 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
     }
 
     func didCancel() {
-        if isFlowController {
-            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
-        } else {
-            paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)
-        }
+//        if isFlowController {
+//            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
+//        } else {
+//            paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)
+//        }
     }
 
     required init?(coder: NSCoder) {
@@ -396,13 +401,13 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
         // If FlowController, simply close the sheet
-        if isFlowController {
+        if twoStep {
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
         }
 
         // If the selected payment option is a saved card, CVC is enabled, and we are PS, handle CVC specially:
-        if case let .saved(paymentMethod, _) = selectedPaymentOption, paymentMethod.type == .card, isCVCRecollectionEnabled, !isFlowController, !isRecollectingCVC {
+        if case let .saved(paymentMethod, _) = selectedPaymentOption, paymentMethod.type == .card, isCVCRecollectionEnabled, !twoStep, !isRecollectingCVC {
             let cvcRecollectionViewController = CVCReconfirmationVerticalViewController(
                 paymentMethod: paymentMethod,
                 intent: intent,

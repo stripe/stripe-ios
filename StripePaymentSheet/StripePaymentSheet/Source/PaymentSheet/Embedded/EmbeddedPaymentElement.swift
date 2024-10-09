@@ -51,7 +51,6 @@ public class EmbeddedPaymentElement {
     private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     private let loadResult: PaymentSheetLoader.LoadResult
     private let analyticsHelper: PaymentSheetAnalyticsHelper
-    private var embeddedFormViewController: EmbeddedFormViewController?
 
     /// An asynchronous failable initializer
     /// This loads the Customer's payment methods, their default payment method, etc.
@@ -269,11 +268,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let embeddedFormVC = EmbeddedFormViewController(
             configuration: configuration,
             loadResult: loadResult,
-            isFlowController: false,
             paymentMethodType: paymentMethodType,
             analyticsHelper: analyticsHelper
         )
-        self.embeddedFormViewController = embeddedFormVC
         
         // Only show forms that require user input
         guard embeddedFormVC.collectsUserInput else { return }
