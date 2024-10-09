@@ -127,9 +127,6 @@
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
 
-/* Label for identifying the default payment method. */
-"Default" = "Default";
-
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
@@ -207,14 +204,8 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* US Bank Account copy title for Mobile payment element form */
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
-/* Label for a section displaying payment details. */
-"Payment" = "Payment";
-
 /* Text on a screen that indicates a payment has failed */
 "Payment failed" = "Payment failed";
-
-/* Title for a section listing one or more payment methods. */
-"Payment methods" = "Payment methods";
 
 /* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
 "Please go back and select another payment method" = "Please go back and select another payment method";
@@ -293,20 +284,11 @@ is not supported by the merchant */
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
 
-/* Accessibility hint to tell the user that they can tap to hide additional content. */
-"Tap to close" = "Tap to close";
-
-/* Accessibility hint to tell the user that they can tap to reveal additional content. */
-"Tap to expand" = "Tap to expand";
-
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
-
-/* Label shown when a payment method cannot be used for the current transaction. */
-"Unavailable for this purchase" = "Unavailable for this purchase";
 
 /* Title for a button that when tapped, updates a card brand. */
 "Update" = "Update";
