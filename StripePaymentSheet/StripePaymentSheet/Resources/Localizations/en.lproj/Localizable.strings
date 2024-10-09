@@ -70,6 +70,9 @@
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>.";
+
 /* Cash App mandate text */
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
 
@@ -123,6 +126,9 @@
 
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
+
+/* Label for identifying the default payment method. */
+"Default" = "Default";
 
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
@@ -201,8 +207,14 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* US Bank Account copy title for Mobile payment element form */
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Payment";
+
 /* Text on a screen that indicates a payment has failed */
 "Payment failed" = "Payment failed";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Payment methods";
 
 /* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
 "Please go back and select another payment method" = "Please go back and select another payment method";
@@ -281,11 +293,20 @@ is not supported by the merchant */
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
 
+/* Accessibility hint to tell the user that they can tap to hide additional content. */
+"Tap to close" = "Tap to close";
+
+/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+"Tap to expand" = "Tap to expand";
+
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
+
+/* Label shown when a payment method cannot be used for the current transaction. */
+"Unavailable for this purchase" = "Unavailable for this purchase";
 
 /* Title for a button that when tapped, updates a card brand. */
 "Update" = "Update";

@@ -20,12 +20,12 @@ extension UIColor {
     static var linkBrand: UIColor {
         UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0)
     }
-    
+
     /// Darker version of the brand color.
     ///
     /// Use it as accent color on small UI elements or text links.
     static let linkBrandDark: UIColor = UIColor(red: 0.020, green: 0.659, blue: 0.498, alpha: 1.0)
-    
+
     /// Main background color.
     static let linkBackground: UIColor = .dynamic(
         light: .white,
@@ -90,8 +90,7 @@ extension UIColor {
     static var linkPrimaryButtonForeground: UIColor {
         UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0)
     }
-    
-    
+
     /// Foreground color of the secondary button.
     static let linkSecondaryButtonForeground: UIColor = .dynamic(
         light: UIColor(red: 0.114, green: 0.224, blue: 0.267, alpha: 1.0),

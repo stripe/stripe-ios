@@ -7,8 +7,8 @@
 //
 
 import iOSSnapshotTestCase
-import UIKit
 import StripeCoreTestUtils
+import UIKit
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -18,11 +18,6 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeUICore
 
 class LinkInstantDebitMandateViewSnapshotTests: STPSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     func testDefault() {
         let sut = makeSUT()

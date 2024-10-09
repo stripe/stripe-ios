@@ -172,7 +172,7 @@ final class LinkNavigationBar: UIView {
 //        TODO(link): Set isLoggedIn once the SDK supports logging in again
 //        let isLoggedIn = linkAccount?.isLoggedIn ?? false
         let isLoggedIn = false
-        
+
         emailLabel.text = linkAccount?.email
         showEmailLabel = isLoggedIn && !showBackButton
 

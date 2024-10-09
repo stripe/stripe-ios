@@ -17,11 +17,6 @@ import UIKit
 
 class ButtonLinkSnapshotTests: STPSnapshotTestCase {
 
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
-
     func testPrimary() {
         let sut = makeSUT(configuration: .linkPrimary(), title: "Primary Button")
         verify(sut)

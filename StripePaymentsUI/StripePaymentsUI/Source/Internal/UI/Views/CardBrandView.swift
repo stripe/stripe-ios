@@ -73,7 +73,7 @@ import UIKit
 
     /// If `true`, will center the card brand icon horizontally in the containing view
     let centerHorizontally: Bool
-    
+
     /// If `true`, show a CBC indicator arrow
     var isShowingCBCIndicator: Bool = false {
         didSet {

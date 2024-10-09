@@ -22,7 +22,7 @@ extension LinkPaymentMethodPicker {
         var paymentMethod: ConsumerPaymentDetails? {
             didSet {
                 switch paymentMethod?.details {
-                case .card(_):
+                case .card:
 //                    TODO(link): Needs refactor
 //                    case .card(let card):
 //                    cardBrandView.cardBrand = card.stpBrand
