@@ -48,8 +48,8 @@ class EmbeddedFormViewController: UIViewController {
     let configuration: EmbeddedPaymentElement.Configuration
     let intent: Intent
     let elementsSession: STPElementsSession
-    let formCache: PaymentMethodFormCache = .init()
-    let analyticsHelper: PaymentSheetAnalyticsHelper
+    let formCache: PaymentMethodFormCache = .init() // TODO(porter) Use this somehow
+    let analyticsHelper: PaymentSheetAnalyticsHelper // TOOD(porter) Figure out the analytic story for embedded
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
@@ -88,7 +88,6 @@ class EmbeddedFormViewController: UIViewController {
         )
     }()
 
-    // TOOD(porter) Do we show mandates in the form?
     private lazy var mandateView = { SimpleMandateTextView(theme: configuration.appearance.asElementsTheme) }()
     private lazy var errorLabel: UILabel = {
         ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
@@ -219,6 +218,7 @@ class EmbeddedFormViewController: UIViewController {
         animateHeightChange({ [self] in
             errorLabel.setHiddenIfNecessary(error == nil)
             if error != nil {
+                // TODO(porter) Don't think we need this
                 // Without this, setting `contentOffsetPercentage = 1` uses the height of the scroll view without accounting for the error label
                 errorLabel.setNeedsLayout()
                 errorLabel.layoutIfNeeded()
