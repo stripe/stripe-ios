@@ -731,6 +731,25 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         verify(embeddedView)
     }
+    
+    func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_shouldShowMandateFalse() {
+        let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
+        let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .applePay,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider,
+            shouldShowMandate: false
+        )
+
+        verify(embeddedView)
+    }
 
     func verify(
         _ view: UIView,

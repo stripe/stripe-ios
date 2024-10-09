@@ -38,12 +38,16 @@ public class EmbeddedPaymentElement {
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
         /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
-        /// If you set `configuration.hidesMandateText = true`, this text must be displayed to the customer near your “Buy” button to comply with regulations.
-        public let mandateText: NSAttributedString
+        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed to the customer near your “Buy” button to comply with regulations.
+        public let mandateText: NSAttributedString?
     }
 
     /// The customer's currently selected payment option.
-    public var paymentOption: PaymentOptionDisplayData? { return nil /* computed */ }
+    public var paymentOption: PaymentOptionDisplayData? {
+        return embeddedPaymentMethodsView.displayData
+    }
+    
+    private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
 
     /// An asynchronous failable initializer
     /// This loads the Customer's payment methods, their default payment method, etc.
@@ -100,8 +104,9 @@ public class EmbeddedPaymentElement {
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: VerticalListMandateProvider(configuration: configuration,
-                                             elementsSession: loadResult.elementsSession,
-                                             intent: .deferredIntent(intentConfig: intentConfiguration))
+                                                         elementsSession: loadResult.elementsSession,
+                                                         intent: .deferredIntent(intentConfig: intentConfiguration)),
+            shouldShowMandate: configuration.embeddedViewDisplaysMandateText
         )
 
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(view: embeddedPaymentMethodsView, configuration: configuration)
@@ -144,8 +149,9 @@ public class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
-    private init(view: UIView, configuration: Configuration, delegate: EmbeddedPaymentElementDelegate? = nil) {
+    private init(view: EmbeddedPaymentMethodsView, configuration: Configuration, delegate: EmbeddedPaymentElementDelegate? = nil) {
         self.view = view
+        self.embeddedPaymentMethodsView = view
         self.delegate = delegate
         self.configuration = configuration
     }
@@ -231,5 +237,9 @@ extension EmbeddedPaymentElement {
 extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func heightDidChange() {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+    }
+    
+    func selectionDidUpdate() {
+        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
 }
