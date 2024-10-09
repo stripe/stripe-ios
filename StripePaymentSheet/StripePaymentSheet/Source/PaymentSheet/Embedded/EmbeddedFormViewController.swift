@@ -13,11 +13,6 @@ import Foundation
 import UIKit
 
 class EmbeddedFormViewController: UIViewController {
-
-    enum PrimaryAction {
-        case confirm
-        case `continue`
-    }
     
     var twoStep: Bool {
         switch configuration.formSheetAction {
@@ -30,10 +25,6 @@ class EmbeddedFormViewController: UIViewController {
     
     var collectsUserInput: Bool {
         return paymentMethodFormViewController?.form.collectsUserInput ?? false
-    }
-
-    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? {
-        return paymentMethodType
     }
 
     enum Error: Swift.Error {
@@ -241,11 +232,7 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     func didCancel() {
-//        if isFlowController {
-//            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
-//        } else {
-//            paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)
-//        }
+        delegate?.embeddedFormViewControllerDidCancel(self)
     }
 
     required init?(coder: NSCoder) {
@@ -402,7 +389,7 @@ class EmbeddedFormViewController: UIViewController {
 
         // If FlowController, simply close the sheet
         if twoStep {
-            self.delegate?.embeddedFormViewControllerShouldClose(self, didCancel: false)
+            self.delegate?.embeddedFormViewControllerShouldClose(self)
             return
         }
 
@@ -494,5 +481,5 @@ protocol EmbeddedFormViewControllerDelegate: AnyObject {
         result: PaymentSheetResult
     )
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController)
-    func embeddedFormViewControllerShouldClose(_ embeddedFormViewControllerShouldClose: EmbeddedFormViewController, didCancel: Bool)
+    func embeddedFormViewControllerShouldClose(_ embeddedFormViewControllerShouldClose: EmbeddedFormViewController)
 }

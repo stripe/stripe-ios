@@ -300,10 +300,10 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
     
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        // TOOD(porter) Handle dismiss/cancel
+        // TOOD(porter) Handle cancel
     }
     
-    func embeddedFormViewControllerShouldClose(_ embeddedFormViewControllerShouldClose: EmbeddedFormViewController, didCancel: Bool) {
-        // TOOD(porter) Handle dismiss/cancel
+    func embeddedFormViewControllerShouldClose(_ embeddedFormViewControllerShouldClose: EmbeddedFormViewController) {
+        // TOOD(porter) Handle dismiss
     }
 }
