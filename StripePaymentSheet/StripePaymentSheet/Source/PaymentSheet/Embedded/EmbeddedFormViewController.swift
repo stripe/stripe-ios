@@ -12,7 +12,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-class EmbeddedFormViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
+class EmbeddedFormViewController: UIViewController {
 
     enum PrimaryAction {
         case confirm
@@ -63,8 +63,6 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
     var isPaymentInFlight: Bool = false
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private var previousPaymentOption: PaymentOption?
-    weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
-    weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
     /// True while we are showing the CVC recollection UI (`cvcRecollectionViewController`)
     var isRecollectingCVC: Bool = false
     /// Variable to decide we should collect CVC
@@ -106,6 +104,8 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
     }()
     let stackView: UIStackView = UIStackView()
 
+    weak var delegate: EmbeddedFormViewControllerDelegate?
+    
     // MARK: - Initializers
 
     init(configuration: EmbeddedPaymentElement.Configuration, loadResult: PaymentSheetLoader.LoadResult, paymentMethodType: PaymentSheet.PaymentMethodType, previousPaymentOption: PaymentOption? = nil, analyticsHelper: PaymentSheetAnalyticsHelper) {
@@ -327,7 +327,7 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
 
         // Confirm the payment with the payment option
         let startTime = NSDate.timeIntervalSinceReferenceDate
-        paymentSheetDelegate?.paymentSheetViewControllerShouldConfirm(self, with: paymentOption) { result, deferredIntentConfirmationType in
+        delegate?.embeddedFormViewControllerShouldConfirm(self, with: paymentOption) { result, deferredIntentConfirmationType in
             let elapsedTime = NSDate.timeIntervalSinceReferenceDate - startTime
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
@@ -374,7 +374,7 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
                             // Wait a bit before closing the sheet
-                            self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
+                            self.delegate?.embeddedFormViewControllerDidFinish(self, result: .completed)
                         }
                     }
                 }
@@ -402,7 +402,7 @@ class EmbeddedFormViewController: UIViewController, FlowControllerViewController
 
         // If FlowController, simply close the sheet
         if twoStep {
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            self.delegate?.embeddedFormViewControllerShouldClose(self, didCancel: false)
             return
         }
 
@@ -481,4 +481,18 @@ extension EmbeddedFormViewController: ElementDelegate {
         self.error = nil
         updateUI()
     }
+}
+
+protocol EmbeddedFormViewControllerDelegate: AnyObject {
+    func embeddedFormViewControllerShouldConfirm(
+        _ embeddedFormViewController: EmbeddedFormViewController,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    )
+    func embeddedFormViewControllerDidFinish(
+        _ embeddedFormViewController: EmbeddedFormViewController,
+        result: PaymentSheetResult
+    )
+    func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController)
+    func embeddedFormViewControllerShouldClose(_ embeddedFormViewControllerShouldClose: EmbeddedFormViewController, didCancel: Bool)
 }

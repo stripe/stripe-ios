@@ -271,6 +271,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodType: paymentMethodType,
             analyticsHelper: analyticsHelper
         )
+        embeddedFormVC.delegate = self
         
         // Only show forms that require user input
         guard embeddedFormVC.collectsUserInput else { return }
@@ -287,4 +288,22 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
     }
 
+}
+
+extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
+    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: EmbeddedFormViewController, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+        // TODO(porter) Confirm the payment option
+    }
+    
+    func embeddedFormViewControllerDidFinish(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
+        // TODO(porter) Call form sheet handler
+    }
+    
+    func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
+        // TOOD(porter) Handle dismiss/cancel
+    }
+    
+    func embeddedFormViewControllerShouldClose(_ embeddedFormViewControllerShouldClose: EmbeddedFormViewController, didCancel: Bool) {
+        // TOOD(porter) Handle dismiss/cancel
+    }
 }
