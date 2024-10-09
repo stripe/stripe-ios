@@ -246,7 +246,7 @@ class MainViewController: UITableViewController {
 
 extension MainViewController: AccountOnboardingViewControllerDelegate {
     func accountOnboarding(_ accountOnboarding: AccountOnboardingViewController, didFailLoadWithError error: any Error) {
-        presentAlert(title: "Error loading account onboarding", message: "\((error as NSError).debugDescription)")
+        presentAlert(title: "Error loading account onboarding", message: (error as NSError).debugDescription)
     }
 }
 
@@ -254,7 +254,7 @@ extension MainViewController: AccountOnboardingViewControllerDelegate {
 
 extension MainViewController: PayoutsViewControllerDelegate {
     func payouts(_ payouts: PayoutsViewController, didFailLoadWithError error: any Error) {
-        presentAlert(title: "Error loading payouts", message: "\((error as NSError).debugDescription)")
+        presentAlert(title: "Error loading payouts", message: (error as NSError).debugDescription)
     }
 }
 
