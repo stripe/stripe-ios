@@ -44,7 +44,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.autoreload)
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
     }
-    
+
     var body: some View {
         VStack {
             ScrollView {
@@ -279,30 +279,33 @@ struct PaymentSheetButtons: View {
         playgroundController.load()
     }
 
+    var titleAndReloadView: some View {
+        HStack {
+            Text(playgroundController.settings.uiStyle.rawValue)
+                .font(.subheadline.smallCaps())
+            Spacer()
+            if playgroundController.isLoading {
+                ProgressView()
+            } else {
+                if playgroundController.settings != playgroundController.currentlyRenderedSettings {
+                    StaleView()
+                }
+                Button {
+                    reloadPlaygroundController()
+                } label: {
+                    Image(systemName: "arrow.clockwise.circle")
+                }
+                .accessibility(identifier: "Reload")
+                .frame(alignment: .topLeading)
+            }
+        }.padding(.horizontal)
+    }
+
     var body: some View {
         VStack {
             if playgroundController.settings.uiStyle == .paymentSheet {
                 VStack {
-                    HStack {
-                        Text("PaymentSheet")
-                            .font(.subheadline.smallCaps())
-                        Spacer()
-                        if playgroundController.isLoading {
-                            ProgressView()
-                        } else {
-                            if playgroundController.settings != playgroundController.currentlyRenderedSettings {
-                                StaleView()
-                            }
-                            Button {
-                                reloadPlaygroundController()
-                            } label: {
-                                Image(systemName: "arrow.clockwise.circle")
-                            }
-                            .accessibility(identifier: "Reload")
-                            .frame(alignment: .topLeading)
-                        }
-                    }.padding(.horizontal)
-
+                    titleAndReloadView
                     if let ps = playgroundController.paymentSheet,
                        playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
                         HStack {
@@ -332,25 +335,7 @@ struct PaymentSheetButtons: View {
                 }
             } else if playgroundController.settings.uiStyle == .flowController {
                 VStack {
-                    HStack {
-                        Text("PaymentSheet.FlowController")
-                            .font(.subheadline.smallCaps())
-                        Spacer()
-                        if playgroundController.isLoading {
-                            ProgressView()
-                        } else {
-                            if playgroundController.settings != playgroundController.currentlyRenderedSettings {
-                                StaleView()
-                            }
-                            Button {
-                                reloadPlaygroundController()
-                            } label: {
-                                Image(systemName: "arrow.clockwise.circle")
-                            }
-                            .accessibility(identifier: "Reload")
-                            .frame(alignment: .topLeading)
-                        }
-                    }.padding(.horizontal)
+                    titleAndReloadView
                     HStack {
                         if let psfc = playgroundController.paymentSheetFlowController,
                            playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
@@ -389,27 +374,8 @@ struct PaymentSheetButtons: View {
                 }
             } else if playgroundController.settings.uiStyle == .embedded {
                 VStack {
-                    HStack {
-                        Text("Embedded mobile payment element")
-                            .font(.subheadline.smallCaps())
-                        Spacer()
-                        if playgroundController.isLoading {
-                            ProgressView()
-                        } else {
-                            if playgroundController.settings != playgroundController.currentlyRenderedSettings {
-                                StaleView()
-                            }
-                            Button {
-                                reloadPlaygroundController()
-                            } label: {
-                                Image(systemName: "arrow.clockwise.circle")
-                            }
-                            .accessibility(identifier: "Reload")
-                            .frame(alignment: .topLeading)
-                        }
-                    }.padding(.horizontal)
-
-                    if playgroundController.embeddedPlaygroundController != nil,
+                    titleAndReloadView
+                    if playgroundController.embeddedPlaygroundViewController != nil,
                        playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
                         HStack {
                             Button {
