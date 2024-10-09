@@ -168,8 +168,9 @@ struct PaymentSheetTestPlayground: View {
             Divider()
             PaymentSheetButtons()
                 .environmentObject(playgroundController)
-        }.animation(.bouncy).transition(.opacity)
+        }.animationUnlessTesting()
     }
+    
     var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
         Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
             return playgroundController.settings.paymentMethodSave
@@ -264,6 +265,15 @@ struct PaymentSheetTestPlayground: View {
             }
             playgroundController.settings.integrationType = newIntegrationType
         }
+    }
+}
+
+extension View {
+    func animationUnlessTesting() -> some View {
+        if ProcessInfo.processInfo.environment["UITesting"] != nil {
+            return AnyView(animation(.bouncy).transition(.opacity))
+        }
+        return AnyView(self)
     }
 }
 
@@ -428,8 +438,10 @@ struct AnalyticsLogForTesting: View {
     var body: some View {
         Text(analyticsLogString)
             .frame(width: 0, height: 0)
+            .opacity(0)
             .accessibility(identifier: "_testAnalyticsLog")
             .accessibility(label: Text(analyticsLogString))
+            .accessibility(hidden: false)
     }
 }
 
