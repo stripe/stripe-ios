@@ -7,7 +7,6 @@
 
 import Foundation
 
-import QuickLook
 import SafariServices
 @testable import StripeConnect
 @_spi(STP) import StripeCore
@@ -20,19 +19,15 @@ class ConnectWebViewTests: XCTestCase {
     private var mockFileManager: MockFileManager!
     var webView: ConnectWebView!
 
-    var canPreviewFile = true
-
     override func setUp() {
         super.setUp()
         mockFileManager = .init()
         mockURLOpener = .init()
-        canPreviewFile = true
         webView = ConnectWebView(frame: .zero,
                                  configuration: .init(),
                                  urlOpener: mockURLOpener,
                                  fileManager: mockFileManager,
-                                 sdkVersion: "1.2.3",
-                                 canPreviewItem: { _ in self.canPreviewFile })
+                                 sdkVersion: "1.2.3")
     }
 
     func testUserAgent() {
@@ -252,32 +247,8 @@ class ConnectWebViewTests: XCTestCase {
         XCTAssertEqual(alertController?.preferredStyle, .alert)
     }
 
-    func testDownloadFinishedShowsPreview() throws {
+    func testDownloadFinishedShowsShareSheet() {
         let mockFileURL = URL(string: "file:///temp/example.csv")!
-
-        var previewController: QLPreviewController?
-        webView.presentPopup = { vc in
-            previewController = vc as? QLPreviewController
-        }
-        webView.downloadedFile = mockFileURL
-
-        webView.downloadDidFinish()
-        XCTAssertNotNil(previewController)
-
-        // Shows 1 item matching the downloaded file
-        XCTAssertEqual(previewController?.dataSource?.numberOfPreviewItems(in: try XCTUnwrap(previewController)), 1)
-        XCTAssertEqual(previewController?.dataSource?.previewController(try XCTUnwrap(previewController), previewItemAt: 0) as? URL, mockFileURL)
-
-        // Dismissing should cleanup downloaded file
-        previewController?.delegate?.previewControllerDidDismiss?(try XCTUnwrap(previewController))
-        XCTAssertNil(webView.downloadedFile)
-        wait(for: [mockFileManager.removeItemExpectation])
-        XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
-    }
-
-    func testUnsupportedFileTypeDownloadFinishedShowsShareSheet() {
-        let mockFileURL = URL(string: "file:///temp/example.exe")!
-        canPreviewFile = false
 
         var activityVC: UIActivityViewController?
         webView.presentPopup = { vc in

@@ -5,7 +5,6 @@
 //  Created by Mel Ludowise on 5/3/24.
 //
 
-import QuickLook
 import SafariServices
 @_spi(STP) import StripeCore
 import WebKit
@@ -22,9 +21,6 @@ class ConnectWebView: WKWebView {
 
     /// File URL for a downloaded file
     var downloadedFile: URL?
-
-    /// Injected for tests to determine if a file URL can be previewed in a QLPreviewController
-    private var canPreviewItem: (any QLPreviewItem) -> Bool
 
     private var optionalPresentPopup: ((UIViewController) -> Void)?
 
@@ -58,12 +54,10 @@ class ConnectWebView: WKWebView {
          // Only override for tests
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          fileManager: FileManager = .default,
-         sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion,
-         canPreviewItem: @escaping (any QLPreviewItem) -> Bool = QLPreviewController.canPreview) {
+         sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
         self.urlOpener = urlOpener
         self.fileManager = fileManager
         self.sdkVersion = sdkVersion
-        self.canPreviewItem = canPreviewItem
         configuration.applicationNameForUserAgent = "- stripe-ios/\(sdkVersion ?? "")"
         super.init(frame: frame, configuration: configuration)
 
@@ -297,22 +291,12 @@ extension ConnectWebView {
             return
         }
 
-        guard canPreviewItem(downloadedFile as QLPreviewItem) else {
-            // File is not previewable, so directly open share sheet instead
-            let activityViewController = UIActivityViewController(activityItems: [downloadedFile], applicationActivities: nil)
-            activityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
-                self?.cleanupDownloadedFile()
-            }
-            presentPopup(activityViewController)
-            return
+        // File is not previewable, so directly open share sheet instead
+        let activityViewController = UIActivityViewController(activityItems: [downloadedFile], applicationActivities: nil)
+        activityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
+            self?.cleanupDownloadedFile()
         }
-
-        // Display a preview of the file to the user
-        let previewController = QLPreviewController()
-        previewController.dataSource = self
-        previewController.delegate = self
-        previewController.modalPresentationStyle = .pageSheet
-        presentPopup(previewController)
+        presentPopup(activityViewController)
     }
 }
 
@@ -335,35 +319,5 @@ extension ConnectWebView: WKDownloadDelegate {
 
     func downloadDidFinish(_ download: WKDownload) {
         self.downloadDidFinish()
-    }
-}
-
-// MARK: - QLPreviewControllerDataSource
-
-@available(iOS 15, *)
-extension ConnectWebView: QLPreviewControllerDataSource {
-    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-        guard let downloadedFile,
-              fileManager.fileExists(atPath: downloadedFile.path) else {
-            // `downloadFile` should always be non-nil
-            // If the temp file doesn't exist, it was likely auto-deleted too quickly
-            // TODO: MXMOBILE-2491 Log error analytic
-            return 0
-        }
-        return 1
-    }
-
-    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem {
-        // Okay to force-unwrap since numberOfPreviewItems returns 0 when downloadFile is nil
-        downloadedFile! as QLPreviewItem
-    }
-}
-
-// MARK: - QLPreviewControllerDelegate
-
-@available(iOS 15, *)
-extension ConnectWebView: QLPreviewControllerDelegate {
-    func previewControllerDidDismiss(_ controller: QLPreviewController) {
-        cleanupDownloadedFile()
     }
 }
