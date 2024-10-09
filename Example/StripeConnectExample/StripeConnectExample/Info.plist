@@ -9,9 +9,9 @@
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>bg-BG</string>
-		<string>zh-Hans</string>
+		<string>zh_CN</string>
 		<string>zh-Hant-HK</string>
-		<string>zh-Hant-TW</string>
+		<string>zh_TW</string>
 		<string>hr-HR</string>
 		<string>cs-CZ</string>
 		<string>da-DK</string>
