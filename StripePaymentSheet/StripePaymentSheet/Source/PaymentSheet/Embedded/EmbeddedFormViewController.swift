@@ -283,12 +283,6 @@ class EmbeddedFormViewController: UIViewController {
         }
     }
 
-    // MARK: - PaymentSheetViewControllerProtocol
-
-    func clearTextFields() {
-        paymentMethodFormViewController?.clearTextFields()
-    }
-
     // MARK: - Helpers
 
     var isUserInteractionEnabled: Bool = true {
@@ -472,14 +466,18 @@ extension EmbeddedFormViewController: ElementDelegate {
 
 protocol EmbeddedFormViewControllerDelegate: AnyObject {
     func embeddedFormViewControllerShouldConfirm(
-        _ embeddedFormViewController: EmbeddedFormViewController,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-    )
+            _ embeddedFormViewController: EmbeddedFormViewController,
+            with paymentOption: PaymentOption,
+            completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
+    
     func embeddedFormViewControllerDidFinish(
         _ embeddedFormViewController: EmbeddedFormViewController,
         result: PaymentSheetResult
     )
+    
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController)
-    func embeddedFormViewControllerShouldClose(_ embeddedFormViewControllerShouldClose: EmbeddedFormViewController)
+    
+    /// Called when the embedded form view controller closes with a payment option that can be confirmed
+    /// - Parameter embeddedFormViewController: The `EmbeddedFormViewController`
+    func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController)
 }

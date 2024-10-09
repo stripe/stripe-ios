@@ -249,19 +249,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
-        
-        // Safely unwrap the current selection
-        guard let selection = embeddedPaymentMethodsView.selection else { return }
-        
-        // Extract the paymentMethodType if the selection is `.new`
-        guard case let .new(paymentMethodType) = selection else {
-            // If the selection is not `.new`, no further action is needed
+        guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
+            // If the selection is not `.new`, e.g. `link`, `applePay`, or `saved` we do not need to show a form.
             return
         }
         
-        // Ensure a presenting view controller is available
         guard let presentingViewController = presentingViewController else {
-            assertionFailure("Presenting view controller is not provided. ")
+            assertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
             return
         }
         
@@ -283,7 +277,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             didCancelNative3DS2: {} // TODO(porter) Cancel 3DS2 on the payment handler
         )
         
-        // Notify the delegate about the presentation
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
     }
@@ -291,19 +284,29 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 }
 
 extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
-    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: EmbeddedFormViewController, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
-        // TODO(porter) Confirm the payment option
+    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: EmbeddedFormViewController,
+                                                 with paymentOption: PaymentOption,
+                                                 completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+        // TODO(porter) Finish confirmation
     }
     
     func embeddedFormViewControllerDidFinish(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
-        // TODO(porter) Call form sheet handler
+        embeddedFormViewController.dismiss(animated: true) { [weak self] in
+            guard case let .confirm(completion) = self?.configuration.formSheetAction else {
+                return
+            }
+            
+            completion(result)
+        }
     }
     
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        // TOOD(porter) Handle cancel
+        embeddedFormViewController.dismiss(animated: true)
+        // TODO(porter) Notify formSheet completion handler?
     }
     
-    func embeddedFormViewControllerShouldClose(_ embeddedFormViewControllerShouldClose: EmbeddedFormViewController) {
+    func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
         // TOOD(porter) Handle dismiss
+        embeddedFormViewController.dismiss(animated: true)
     }
 }
