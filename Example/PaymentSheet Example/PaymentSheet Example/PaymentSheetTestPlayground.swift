@@ -303,7 +303,8 @@ struct PaymentSheetButtons: View {
 
     var body: some View {
         VStack {
-            if playgroundController.settings.uiStyle == .paymentSheet {
+            switch playgroundController.settings.uiStyle {
+            case .paymentSheet:
                 VStack {
                     titleAndReloadView
                     if let ps = playgroundController.paymentSheet,
@@ -333,7 +334,7 @@ struct PaymentSheetButtons: View {
                         ExamplePaymentStatusView(result: result)
                     }
                 }
-            } else if playgroundController.settings.uiStyle == .flowController {
+            case .flowController:
                 VStack {
                     titleAndReloadView
                     HStack {
@@ -372,7 +373,7 @@ struct PaymentSheetButtons: View {
                         ExamplePaymentStatusView(result: result)
                     }
                 }
-            } else if playgroundController.settings.uiStyle == .embedded {
+            case .embedded:
                 VStack {
                     titleAndReloadView
                     if playgroundController.embeddedPlaygroundViewController != nil,

@@ -21,7 +21,7 @@ import UIKit
 class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
-    @Published var embeddedPlaygroundController: EmbeddedPlaygroundViewController?
+    @Published var embeddedPlaygroundViewController: EmbeddedPlaygroundViewController?
     @Published var settings: PaymentSheetTestPlaygroundSettings
     @Published var currentlyRenderedSettings: PaymentSheetTestPlaygroundSettings
     @Published var addressDetails: AddressViewController.AddressDetails?
@@ -541,7 +541,7 @@ extension PlaygroundController {
         paymentSheetFlowController = nil
         addressViewController = nil
         paymentSheet = nil
-        embeddedPlaygroundController = nil
+        embeddedPlaygroundViewController = nil
         lastPaymentResult = nil
         isLoading = true
         let settingsToLoad = self.settings
@@ -883,21 +883,21 @@ class AnalyticsLogObserver: ObservableObject {
 // MARK: Embedded helpers
 extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
-        embeddedPlaygroundController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
+        embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
                                                                         intentConfig: intentConfig,
                                                                         appearance: appearance)
     }
 
     func presentEmbedded() {
-        guard let embeddedPlaygroundController else { return }
+        guard let embeddedPlaygroundViewController else { return }
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
-        embeddedPlaygroundController.navigationItem.leftBarButtonItem = closeButton
+        embeddedPlaygroundViewController.navigationItem.leftBarButtonItem = closeButton
 
-        let navController = UINavigationController(rootViewController: embeddedPlaygroundController)
+        let navController = UINavigationController(rootViewController: embeddedPlaygroundViewController)
         rootViewController.present(navController, animated: true)
     }
 
     @objc func dismissEmbedded() {
-        embeddedPlaygroundController?.dismiss(animated: true, completion: nil)
+        embeddedPlaygroundViewController?.dismiss(animated: true, completion: nil)
     }
 }
