@@ -40,8 +40,9 @@ final class LinkToast: UIView {
         label.font = LinkUI.font(forTextStyle: .detail, maximumPointSize: 20)
         return label
     }()
-
+    #if !os(visionOS)
     private let feedbackGenerator = UINotificationFeedbackGenerator()
+    #endif
 
     /// Creates a new toast.
     /// - Parameters:
@@ -127,7 +128,9 @@ extension LinkToast {
         }
 
         UIAccessibility.post(notification: .announcement, argument: text)
+        #if !os(visionOS)
         generateHapticFeedback()
+        #endif
 
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             self.hide()
@@ -154,12 +157,14 @@ extension LinkToast {
         }
     }
 
+#if !os(visionOS)
     private func generateHapticFeedback() {
         switch toastType {
         case .success:
             feedbackGenerator.notificationOccurred(.success)
         }
     }
+#endif
 
 }
 
