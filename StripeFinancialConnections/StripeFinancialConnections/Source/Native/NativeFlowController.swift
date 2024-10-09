@@ -513,7 +513,7 @@ extension NativeFlowController {
             consumerSessionClientSecret: consumerSession.clientSecret,
             bankAccountId: bankAccountId
         )
-        .chained { [weak self] paymentDetails -> Future<PaymentMethodIDProvider> in
+        .chained { [weak self] paymentDetails -> Future<LinkBankPaymentMethod> in
             guard let self else {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
             }
@@ -527,20 +527,19 @@ extension NativeFlowController {
                     paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
                     expectedPaymentMethodType: linkMode.expectedPaymentMethodType
                 )
-                .transformed { $0 as PaymentMethodIDProvider }
+                .transformed { $0.paymentMethod }
             } else {
                 return self.dataManager.createPaymentMethod(
                     consumerSessionClientSecret: consumerSession.clientSecret,
                     paymentDetailsId: paymentDetails.redactedPaymentDetails.id
                 )
-                .transformed { $0 as PaymentMethodIDProvider }
             }
         }
         .observe { result in
             switch result {
             case .success(let paymentMethod):
                 let linkedBank = InstantDebitsLinkedBank(
-                    paymentMethodId: paymentMethod.id,
+                    paymentMethod: paymentMethod,
                     bankName: bankAccountDetails?.bankName,
                     last4: bankAccountDetails?.last4,
                     linkMode: linkMode

@@ -6,10 +6,7 @@
 //
 
 import Foundation
-
-protocol PaymentMethodIDProvider {
-    var id: String { get }
-}
+@_spi(STP) import StripeCore
 
 struct FinancialConnectionsPaymentDetails: Decodable {
     let redactedPaymentDetails: RedactedPaymentDetails
@@ -25,15 +22,6 @@ struct BankAccountDetails: Decodable {
     let last4: String?
 }
 
-struct FinancialConnectionsPaymentMethod: Decodable {
-    let id: String
-}
-
 struct FinancialConnectionsSharePaymentDetails: Decodable {
-    let paymentMethod: FinancialConnectionsPaymentMethod
-}
-
-extension FinancialConnectionsPaymentMethod: PaymentMethodIDProvider {}
-extension FinancialConnectionsSharePaymentDetails: PaymentMethodIDProvider {
-    var id: String { paymentMethod.id }
+    let paymentMethod: LinkBankPaymentMethod
 }
